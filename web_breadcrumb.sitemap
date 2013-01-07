@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" enableLocalization="true" >
+    <siteMapNode url="~/Default.aspx" title="$resources:Kartris,ContentText_Home"  description="$resources:Kartris,ContentText_Home" >
+		<siteMapNode url="~/Default.aspx?" title="$resources:Kartris,ContentText_Home"  description="$resources:Kartris,ContentText_Home" />
+		<siteMapNode url="~/Category.aspx" title="$resources:Kartris,ContentText_Categories"  description="$resources:Kartris,ContentText_Categories" />
+		<siteMapNode url="~/Compare.aspx" title="$resources:Products,PageTitle_ProductComparision"  description="$resources:Products,PageTitle_ProductComparision" />
+		<siteMapNode url="~/News.aspx" title="$resources:News,PageTitle_SiteNews"  description="$resources:News,PageTitle_SiteNews" />
+		<siteMapNode url="~/Promotions.aspx" title="$resources:Kartris,SubHeading_Promotions"  description="$resources:Kartris,SubHeading_Promotions" />
+		<siteMapNode url="~/Search.aspx" title="$resources:Kartris,ContentText_Search"  description="$resources:Kartris,ContentText_Search" />
+		<siteMapNode url="~/CustomerAccount.aspx" title="$resources:Kartris,PageTitle_MyAccount"  description="$resources:Kartris,PageTitle_MyAccount" />
+		<siteMapNode url="~/Customer.aspx?action=home" title="$resources:Kartris,PageTitle_MyAccount"  description="$resources:Kartris,PageTitle_MyAccount" />
+		<siteMapNode url="~/Customer.aspx" title="$resources:Kartris,PageTitle_MyAccount"  description="$resources:Kartris,PageTitle_MyAccount">
+			<siteMapNode url="~/CustomerDetails.aspx" title="$resources:Kartris,ContentText_ChangeCustomerCode"  description="$resources:Kartris,ContentText_ChangeCustomerCode" />
+			<siteMapNode url="~/Customer.aspx?action=savebasket" title="$resources:Basket,PageTitle_SaveRecoverBasketContents"  description="$resources:Basket,PageTitle_SaveRecoverBasketContents" />
+			<siteMapNode url="~/Customer.aspx?action=wishlists" title="$resources:Basket,ContentText_SaveWishList"  description="$resources:Basket,ContentText_SaveWishList" />
+			<siteMapNode url="~/CustomerViewOrder.aspx" title="$resources:Kartris,PageTitle_OrderStatus"  description="$resources:Kartris,PageTitle_OrderStatus" />
+			<siteMapNode url="~/CustomerAffiliates.aspx" title="$resources:Kartris,PageTitle_Affiliates"  description="$resources:Kartris,PageTitle_Affiliates" />
+            <siteMapNode url="~/CustomerTickets.aspx" title="$resources:Tickets,PageTitle_SupportTickets"  description="$resources:Tickets,PageTitle_SupportTickets" />
+		</siteMapNode>
+		<siteMapNode url="~/Basket.aspx" title="$resources:Basket,PageTitle_ShoppingBasket"  description="$resources:Basket,PageTitle_ShoppingBasket" />
+		<siteMapNode url="~/Checkout.aspx" title="$resources:Checkout,PageTitle_CheckOut"  description="$resources:Checkout,PageTitle_CheckOut" />
+		<siteMapNode url="~/Knowledgebase.aspx" title="$resources:Knowledgebase,PageTitle_Knowledgebase"  description="$resources:Knowledgebase,PageTitle_Knowledgebase">
+			<siteMapNode url="~/Knowledgebase.aspx?list=all" title="$resources:Knowledgebase,ContentText_KnowledgebaseListing"  description="$resources:Knowledgebase,ContentText_KnowledgebaseListing" />
+		</siteMapNode>	
+		<siteMapNode url="~/Contact.aspx" title="$resources:Kartris,PageTitle_ContactUs"  description="$resources:Kartris,PageTitle_ContactUs" />
+		<siteMapNode url="~/Wishlist.aspx" title="$resources:Kartris,PageTitle_WishListLogin"  description="$resources:Kartris,PageTitle_WishListLogin" />
+	</siteMapNode>
+</siteMap>

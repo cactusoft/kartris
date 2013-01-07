@@ -1,0 +1,1815 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<List>
+ <Country>
+  <Name>Abu Dhabi (United Arab Emirates)</Name >
+  <ISOCode>AE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Admiralty Islands (Papua New Guinea)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Afghanistan</Name >
+  <ISOCode>AF</ISOCode >
+ </Country>
+ <Country>
+  <Name>Aitutaki, Cook Islands (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Ajman (United Arab Emirates)</Name >
+  <ISOCode>AE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Aland Island (Finland)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Albania</Name >
+  <ISOCode>AL</ISOCode >
+ </Country>
+ <Country>
+  <Name>Alderney (Channel Islands) (Great Britain and Northern Ireland)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Algeria</Name >
+  <ISOCode>DZ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Alhucemas (Spain)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Alofi Island (New Caledonia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Andaman Islands (India)</Name >
+  <ISOCode>IN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Andorra</Name >
+  <ISOCode>AD</ISOCode >
+ </Country>
+ <Country>
+  <Name>Angola</Name >
+  <ISOCode>AO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Anguilla</Name >
+  <ISOCode>AI</ISOCode >
+ </Country>
+ <Country>
+  <Name>Anjouan (Comoros)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Annobon Island (Equatorial Guinea)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Antigua and Barbuda</Name >
+  <ISOCode>AG</ISOCode >
+ </Country>
+ <Country>
+  <Name>Argentina</Name >
+  <ISOCode>AR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Armenia</Name >
+  <ISOCode>AM</ISOCode >
+ </Country>
+ <Country>
+  <Name>Aruba</Name >
+  <ISOCode>AW</ISOCode >
+ </Country>
+ <Country>
+  <Name>Ascension</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Astypalaia (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Atafu (Western Samoa)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Atiu, Cook Islands (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Australia</Name >
+  <ISOCode>AU</ISOCode >
+ </Country>
+ <Country>
+  <Name>Austria</Name >
+  <ISOCode>AT</ISOCode >
+ </Country>
+ <Country>
+  <Name>Avarua (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Azerbaijan</Name >
+  <ISOCode>AZ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Azores (Portugal)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Bahamas</Name >
+  <ISOCode>BS</ISOCode >
+ </Country>
+ <Country>
+  <Name>Bahrain</Name >
+  <ISOCode>BH</ISOCode >
+ </Country>
+ <Country>
+  <Name>Balearic Islands (Spain)</Name >
+  <ISOCode>ES</ISOCode >
+ </Country>
+ <Country>
+  <Name>Baluchistan (Pakistan)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Bangladesh</Name >
+  <ISOCode>BD</ISOCode >
+ </Country>
+ <Country>
+  <Name>Banks Island (Vanuatu)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Barbados</Name >
+  <ISOCode>BB</ISOCode >
+ </Country>
+ <Country>
+  <Name>Barbuda (Antigua and Barbuda)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Barthelemy (Guadeloupe)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Belarus</Name >
+  <ISOCode>BY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Belgium</Name >
+  <ISOCode>BE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Belize</Name >
+  <ISOCode>BZ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Benin</Name >
+  <ISOCode>BJ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Bermuda</Name >
+  <ISOCode>BM</ISOCode >
+ </Country>
+ <Country>
+  <Name>Bhutan</Name >
+  <ISOCode>BT</ISOCode >
+ </Country>
+ <Country>
+  <Name>Bismark Archipelago (Papua New Guinea)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Bolivia</Name >
+  <ISOCode>BO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Bonaire (Netherlands Antilles)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Borabora (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Borneo (Indonesia)</Name >
+  <ISOCode>ID</ISOCode >
+ </Country>
+ <Country>
+  <Name>Borneo (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Bosnia-Herzegovina</Name >
+  <ISOCode>BA</ISOCode >
+ </Country>
+ <Country>
+  <Name>Botswana</Name >
+  <ISOCode>BW</ISOCode >
+ </Country>
+ <Country>
+  <Name>Bougainville (Papua New Guinea)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Bourbon (Reunion)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Brazil</Name >
+  <ISOCode>BR</ISOCode >
+ </Country>
+ <Country>
+  <Name>British Guiana (Guyana)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>British Honduras (Belize)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>British Virgin Islands</Name >
+  <ISOCode>VG</ISOCode >
+ </Country>
+ <Country>
+  <Name>Brunei Darussalam</Name >
+  <ISOCode>BN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Buka (Papua New Guinea)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Bulgaria</Name >
+  <ISOCode>BG</ISOCode >
+ </Country>
+ <Country>
+  <Name>Burkina Faso</Name >
+  <ISOCode>BF</ISOCode >
+ </Country>
+ <Country>
+  <Name>Burma</Name >
+  <ISOCode>MM</ISOCode >
+ </Country>
+ <Country>
+  <Name>Burundi</Name >
+  <ISOCode>BI</ISOCode >
+ </Country>
+ <Country>
+  <Name>Caicos Islands (Turks and Caicos Islands)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Cambodia</Name >
+  <ISOCode>KH</ISOCode >
+ </Country>
+ <Country>
+  <Name>Cameroon</Name >
+  <ISOCode>CM</ISOCode >
+ </Country>
+ <Country>
+  <Name>Canada</Name >
+  <ISOCode>CA</ISOCode >
+ </Country>
+ <Country>
+  <Name>Canary Islands (Spain)</Name >
+  <ISOCode>ES-CN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Canton Island (Kiribati)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Cape Verde</Name >
+  <ISOCode>CV</ISOCode >
+ </Country>
+ <Country>
+  <Name>Cayman Islands</Name >
+  <ISOCode>KY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Central African Republic</Name >
+  <ISOCode>CF</ISOCode >
+ </Country>
+ <Country>
+  <Name>Ceuta (Spain)</Name >
+  <ISOCode>ES</ISOCode >
+ </Country>
+ <Country>
+  <Name>Ceylon (Sri Lanka)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Chad</Name >
+  <ISOCode>TD</ISOCode >
+ </Country>
+ <Country>
+  <Name>Chaferinas Islands (Spain)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Chalki (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Chile</Name >
+  <ISOCode>CL</ISOCode >
+ </Country>
+ <Country>
+  <Name>China</Name >
+  <ISOCode>CN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Christmas Island (Australia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Christmas Island (Kiribati)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Cocos Island (Australia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Colombia</Name >
+  <ISOCode>CO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Comoros</Name >
+  <ISOCode>KM</ISOCode >
+ </Country>
+ <Country>
+  <Name>Congo, Democratic Republic of the</Name >
+  <ISOCode>CD</ISOCode >
+ </Country>
+ <Country>
+  <Name>Congo, Republic of the</Name >
+  <ISOCode>CG</ISOCode >
+ </Country>
+ <Country>
+  <Name>Cook Islands (New Zealand)</Name >
+  <ISOCode>CK</ISOCode >
+ </Country>
+ <Country>
+  <Name>Corsica (France)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Corisco Island (Equatorial Guinea)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Costa Rica</Name >
+  <ISOCode>CR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Cote d'Ivoire</Name >
+  <ISOCode>CI</ISOCode >
+ </Country>
+ <Country>
+  <Name>Crete (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Croatia</Name >
+  <ISOCode>HR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Cuba</Name >
+  <ISOCode>CU</ISOCode >
+ </Country>
+ <Country>
+  <Name>Cumino Island (Malta)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Curacao (Netherlands Antilles)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Cyjrenaica (Libya)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Cyprus</Name >
+  <ISOCode>CY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Czech Republic</Name >
+  <ISOCode>CZ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Dahomey (Benin)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Damao (India)</Name >
+  <ISOCode>IN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Danger Islands (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Denmark</Name >
+  <ISOCode>DK</ISOCode >
+ </Country>
+ <Country>
+  <Name>Desirade Island (Guadeloupe)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Diu (India)</Name >
+  <ISOCode>IN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Djibouti</Name >
+  <ISOCode>DJ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Dodecanese Islands (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Doha (Qatar)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Dominica</Name >
+  <ISOCode>DM</ISOCode >
+ </Country>
+ <Country>
+  <Name>Dominican Republic</Name >
+  <ISOCode>DO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Dubai (United Arab Emirates)</Name >
+  <ISOCode>AE</ISOCode >
+ </Country>
+ <Country>
+  <Name>East Timor (Indonesia)</Name >
+  <ISOCode>TL</ISOCode >
+ </Country>
+ <Country>
+  <Name>Ecuador</Name >
+  <ISOCode>EC</ISOCode >
+ </Country>
+ <Country>
+  <Name>Egypt</Name >
+  <ISOCode>EG</ISOCode >
+ </Country>
+ <Country>
+  <Name>Eire (Ireland)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>El Salvador</Name >
+  <ISOCode>SV</ISOCode >
+ </Country>
+ <Country>
+  <Name>Ellice Islands (Tuvalu)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Elobey Islands (Equatorial Guinea)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Enderbury Island (Kiribati)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>England (Great Britain and Northern Ireland)</Name >
+  <ISOCode>GB-ENG</ISOCode >
+ </Country>
+ <Country>
+  <Name>Equatorial Guinea</Name >
+  <ISOCode>GQ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Eritrea</Name >
+  <ISOCode>ER</ISOCode >
+ </Country>
+ <Country>
+  <Name>Estonia</Name >
+  <ISOCode>EE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Ethiopia</Name >
+  <ISOCode>ET</ISOCode >
+ </Country>
+ <Country>
+  <Name>Fakaofo (Western Samoa)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Falkland Islands</Name >
+  <ISOCode>FK</ISOCode >
+ </Country>
+ <Country>
+  <Name>Fanning Island (Kiribati)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Faroe Islands</Name >
+  <ISOCode>FO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Fernando Po (Equatorial Guinea)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Fezzan (Libya)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Fiji</Name >
+  <ISOCode>FJ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Finland</Name >
+  <ISOCode>FI</ISOCode >
+ </Country>
+ <Country>
+  <Name>Formosa (Taiwan)</Name >
+  <ISOCode>TW</ISOCode >
+ </Country>
+ <Country>
+  <Name>France</Name >
+  <ISOCode>FR</ISOCode >
+ </Country>
+ <Country>
+  <Name>French Guiana</Name >
+  <ISOCode>GF</ISOCode >
+ </Country>
+ <Country>
+  <Name>French Oceania (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>French Polynesia</Name >
+  <ISOCode>PF</ISOCode >
+ </Country>
+ <Country>
+  <Name>French Somaliland (Djibouti)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>French Territory of the Afars and Issas (Djibouti)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>French West Indies (Guadeloupe or Martinique)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Friendly Islands (Tonga)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Fujairah (United Arab Emirates)</Name >
+  <ISOCode>AE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Futuna (Wallis and Futuna Islands)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Gabon</Name >
+  <ISOCode>GA</ISOCode >
+ </Country>
+ <Country>
+  <Name>Gambia</Name >
+  <ISOCode>GM</ISOCode >
+ </Country>
+ <Country>
+  <Name>Gambier (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Georgia Republic of</Name >
+  <ISOCode>GE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Germany</Name >
+  <ISOCode>DE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Ghana</Name >
+  <ISOCode>GH</ISOCode >
+ </Country>
+ <Country>
+  <Name>Gibraltar</Name >
+  <ISOCode>GI</ISOCode >
+ </Country>
+ <Country>
+  <Name>Gilbert Islands (Kiribati)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Goa (India)</Name >
+  <ISOCode>IN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Gozo Island (Malta)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Grand Comoro (Comoros)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Great Britain and Northern Ireland</Name >
+  <ISOCode>GB</ISOCode >
+ </Country>
+ <Country>
+  <Name>Greece</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Greenland</Name >
+  <ISOCode>GL</ISOCode >
+ </Country>
+ <Country>
+  <Name>Grenada</Name >
+  <ISOCode>GD</ISOCode >
+ </Country>
+ <Country>
+  <Name>Grenadines (St. Vincent and the Grenadines)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Guadeloupe</Name >
+  <ISOCode>GP</ISOCode >
+ </Country>
+ <Country>
+  <Name>Guatemala</Name >
+  <ISOCode>GT</ISOCode >
+ </Country>
+ <Country>
+  <Name>Guernsey (Channel Islands) (Great Britain and Northern Ireland)</Name >
+  <ISOCode>GB</ISOCode >
+ </Country>
+ <Country>
+  <Name>Guinea</Name >
+  <ISOCode>GN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Guinea-Bissau</Name >
+  <ISOCode>GW</ISOCode >
+ </Country>
+ <Country>
+  <Name>Guyana</Name >
+  <ISOCode>GY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Hainan Island (China)</Name >
+  <ISOCode>CN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Haiti</Name >
+  <ISOCode>HT</ISOCode >
+ </Country>
+ <Country>
+  <Name>Hashemite Kingdom (Jordan)</Name >
+  <ISOCode>JO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Hervey, Cook Islands (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Hivaoa (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Holland (Netherlands)</Name >
+  <ISOCode>NL</ISOCode >
+ </Country>
+ <Country>
+  <Name>Honduras</Name >
+  <ISOCode>HN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Hong Kong</Name >
+  <ISOCode>HK</ISOCode >
+ </Country>
+ <Country>
+  <Name>Huahine (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Huan Island (New Caledonia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Hungary</Name >
+  <ISOCode>HU</ISOCode >
+ </Country>
+ <Country>
+  <Name>Iceland</Name >
+  <ISOCode>IS</ISOCode >
+ </Country>
+ <Country>
+  <Name>India</Name >
+  <ISOCode>IN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Indonesia</Name >
+  <ISOCode>ID</ISOCode >
+ </Country>
+ <Country>
+  <Name>Iran</Name >
+  <ISOCode>IR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Iraq</Name >
+  <ISOCode>IQ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Ireland</Name >
+  <ISOCode>IE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Irian Barat (Indonesia)</Name >
+  <ISOCode>ID-IJ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Isle of Man (Great Britain and Northern Ireland)</Name >
+  <ISOCode>GB</ISOCode >
+ </Country>
+ <Country>
+  <Name>Isle of Pines (New Caledonia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Isle of Pines, West Indies (Cuba)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Israel</Name >
+  <ISOCode>IL</ISOCode >
+ </Country>
+ <Country>
+  <Name>Italy</Name >
+  <ISOCode>IT</ISOCode >
+ </Country>
+ <Country>
+  <Name>Jamaica</Name >
+  <ISOCode>JM</ISOCode >
+ </Country>
+ <Country>
+  <Name>Japan</Name >
+  <ISOCode>JP</ISOCode >
+ </Country>
+ <Country>
+  <Name>Jersey (Channel Islands) (Great Britain and Northern Ireland)</Name >
+  <ISOCode>GB</ISOCode >
+ </Country>
+ <Country>
+  <Name>Johore (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Jordan</Name >
+  <ISOCode>JO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Kalymnos (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Kampuchea (Cambodia)</Name >
+  <ISOCode>KH</ISOCode >
+ </Country>
+ <Country>
+  <Name>Karpathos (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Kassos (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Kastellorizon (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Kazakhstan</Name >
+  <ISOCode>KZ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Kedah (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Keeling Islands (Australia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Kelantan (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Kenya</Name >
+  <ISOCode>KE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Kiribati</Name >
+  <ISOCode>KI</ISOCode >
+ </Country>
+ <Country>
+  <Name>Korea, Republic of (South Korea)</Name >
+  <ISOCode>KR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Kos (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Kowloon (Hong Kong)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Kuwait</Name >
+  <ISOCode>KW</ISOCode >
+ </Country>
+ <Country>
+  <Name>Kyrgyzstan</Name >
+  <ISOCode>KG</ISOCode >
+ </Country>
+ <Country>
+  <Name>Labrador (Canada)</Name >
+  <ISOCode>CA</ISOCode >
+ </Country>
+ <Country>
+  <Name>Labuan (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Laos</Name >
+  <ISOCode>LA</ISOCode >
+ </Country>
+ <Country>
+  <Name>Latvia</Name >
+  <ISOCode>LV</ISOCode >
+ </Country>
+ <Country>
+  <Name>Lebanon</Name >
+  <ISOCode>LB</ISOCode >
+ </Country>
+ <Country>
+  <Name>Leipsos (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Leros (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Les Saints Island (Guadeloupe)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Lesotho</Name >
+  <ISOCode>LS</ISOCode >
+ </Country>
+ <Country>
+  <Name>Liberia</Name >
+  <ISOCode>LR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Libya</Name >
+  <ISOCode>LY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Liechtenstein</Name >
+  <ISOCode>LI</ISOCode >
+ </Country>
+ <Country>
+  <Name>Lithuania</Name >
+  <ISOCode>LT</ISOCode >
+ </Country>
+ <Country>
+  <Name>Lord Howe Island (Australia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Loyalty Islands (New Caledonia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Luxembourg</Name >
+  <ISOCode>LU</ISOCode >
+ </Country>
+ <Country>
+  <Name>Macao</Name >
+  <ISOCode>MO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Macau (Macao)</Name >
+  <ISOCode>MO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Macedonia, Republic of</Name >
+  <ISOCode>MK</ISOCode >
+ </Country>
+ <Country>
+  <Name>Madagascar</Name >
+  <ISOCode>MG</ISOCode >
+ </Country>
+ <Country>
+  <Name>Madeira Islands (Portugal)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Malacca (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Malagasy Republic (Madagascar)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Malawi</Name >
+  <ISOCode>MW</ISOCode >
+ </Country>
+ <Country>
+  <Name>Malaya (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Malaysia</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Maldives</Name >
+  <ISOCode>MV</ISOCode >
+ </Country>
+ <Country>
+  <Name>Mali</Name >
+  <ISOCode>ML</ISOCode >
+ </Country>
+ <Country>
+  <Name>Malta</Name >
+  <ISOCode>MT</ISOCode >
+ </Country>
+ <Country>
+  <Name>Manahiki (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Manchuria (China)</Name >
+  <ISOCode>CN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Mangaia (Cook Islands) (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Manuai (Cook Islands) (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Marie Galante (Guadeloupe)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Marquesas Islands (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Martinique</Name >
+  <ISOCode>MQ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Mauke (Cook Islands) (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Mauritania</Name >
+  <ISOCode>MR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Mauritius</Name >
+  <ISOCode>MU</ISOCode >
+ </Country>
+ <Country>
+  <Name>Mayotte (France)</Name >
+  <ISOCode>YT</ISOCode >
+ </Country>
+ <Country>
+  <Name>Melilla (Spain)</Name >
+  <ISOCode>ES</ISOCode >
+ </Country>
+ <Country>
+  <Name>Mexico</Name >
+  <ISOCode>MX</ISOCode >
+ </Country>
+ <Country>
+  <Name>Miquelon (Saint Pierre and Miquelon)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Mitiaro (Cook Islands) (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Moheli (Comoros)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Moldova</Name >
+  <ISOCode>MD</ISOCode >
+ </Country>
+ <Country>
+  <Name>Monaco (France)</Name >
+  <ISOCode>MC</ISOCode >
+ </Country>
+ <Country>
+  <Name>Mongolia</Name >
+  <ISOCode>MN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Montserrat</Name >
+  <ISOCode>MS</ISOCode >
+ </Country>
+ <Country>
+  <Name>Moorea (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Morocco</Name >
+  <ISOCode>MA</ISOCode >
+ </Country>
+ <Country>
+  <Name>Mozambique</Name >
+  <ISOCode>MZ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Muscat (Oman)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Myanmar (Burma)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Namibia</Name >
+  <ISOCode>NA</ISOCode >
+ </Country>
+ <Country>
+  <Name>Nansil Islands (Japan)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Nauru</Name >
+  <ISOCode>NR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Negri Sembilan (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Nepal</Name >
+  <ISOCode>NP</ISOCode >
+ </Country>
+ <Country>
+  <Name>Netherlands</Name >
+  <ISOCode>NL</ISOCode >
+ </Country>
+ <Country>
+  <Name>Netherlands Antilles</Name >
+  <ISOCode>AN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Netherlands West Indies (Netherlands Antilles)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Nevis (Saint Christopher and Nevis)</Name >
+  <ISOCode>KN</ISOCode >
+ </Country>
+ <Country>
+  <Name>New Britain (Papua New Guinea)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>New Caledonia</Name >
+  <ISOCode>NC</ISOCode >
+ </Country>
+ <Country>
+  <Name>New Hanover (Papua New Guinea)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>New Hebrides (Vanuatu)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>New Ireland (Papua New Guinea)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>New South Wales (Australia)</Name >
+  <ISOCode>AU</ISOCode >
+ </Country>
+ <Country>
+  <Name>New Zealand</Name >
+  <ISOCode>NZ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Newfoundland (Canada)</Name >
+  <ISOCode>CA-NL</ISOCode >
+ </Country>
+ <Country>
+  <Name>Nicaragua</Name >
+  <ISOCode>NI</ISOCode >
+ </Country>
+ <Country>
+  <Name>Niger</Name >
+  <ISOCode>NE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Nigeria</Name >
+  <ISOCode>NG</ISOCode >
+ </Country>
+ <Country>
+  <Name>Nissiros (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Niue (New Zealand)</Name >
+  <ISOCode>NU</ISOCode >
+ </Country>
+ <Country>
+  <Name>Norfolk Island (Australia)</Name >
+  <ISOCode>NF</ISOCode >
+ </Country>
+ <Country>
+  <Name>North Borneo (Malaysia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Norway</Name >
+  <ISOCode>NO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Nukahiva (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Nukunonu (Western Samoa)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Nyasaland (Malawi)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Ocean Island (Kiribati)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Okinawa (Japan)</Name >
+  <ISOCode>JP</ISOCode >
+ </Country>
+ <Country>
+  <Name>Oman</Name >
+  <ISOCode>OM</ISOCode >
+ </Country>
+ <Country>
+  <Name>Pahang (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Pakistan</Name >
+  <ISOCode>PK</ISOCode >
+ </Country>
+ <Country>
+  <Name>Palmerston, Avarua (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Panama</Name >
+  <ISOCode>PA</ISOCode >
+ </Country>
+ <Country>
+  <Name>Papua New Guinea</Name >
+  <ISOCode>PG</ISOCode >
+ </Country>
+ <Country>
+  <Name>Paraguay</Name >
+  <ISOCode>PY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Parry, Cook Islands (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Patmos (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Pemba (Tanzania)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Penang (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Penghu Islands (Taiwan)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Penon de Velez de la Gomera (Spain)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Penrhyn, Tongareva (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Perak (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Perlis (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Persia (Iran)</Name >
+  <ISOCode>IR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Peru</Name >
+  <ISOCode>PE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Pescadores Islands (Taiwan)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Petite Terre (Guadeloupe)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Philippines</Name >
+  <ISOCode>PH</ISOCode >
+ </Country>
+ <Country>
+  <Name>Pitcairn Island</Name >
+  <ISOCode>PN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Poland</Name >
+  <ISOCode>PL</ISOCode >
+ </Country>
+ <Country>
+  <Name>Portugal</Name >
+  <ISOCode>PT</ISOCode >
+ </Country>
+ <Country>
+  <Name>Province Wellesley (Malaysia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Pukapuka (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Qatar</Name >
+  <ISOCode>QA</ISOCode >
+ </Country>
+ <Country>
+  <Name>Queensland (Australia)</Name >
+  <ISOCode>AU-QL</ISOCode >
+ </Country>
+ <Country>
+  <Name>Quemoy (Taiwan)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Raiatea (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Rakaanga (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Rapa (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Rarotonga, Cook Islands (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Ras al Kaimah (United Arab Emirates)</Name >
+  <ISOCode>AE-RK</ISOCode >
+ </Country>
+ <Country>
+  <Name>Redonda (Antigua and Barbuda)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Reunion</Name >
+  <ISOCode>RE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Rhodesia (Zimbabwe)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Rio Muni (Equatorial Guinea)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Rodos (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Rodrigues (Mauritius)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Romania</Name >
+  <ISOCode>RO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Russia</Name >
+  <ISOCode>RU</ISOCode >
+ </Country>
+ <Country>
+  <Name>Rwanda</Name >
+  <ISOCode>RW</ISOCode >
+ </Country>
+ <Country>
+  <Name>Saba (Netherlands Antilles)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Sabah (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Saint Bartholomew (Guadeloupe)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Saint Christopher (Saint Kitts) and Nevis</Name >
+  <ISOCode>KN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Saint Eustatius (Netherlands Antilles)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Saint Helena</Name >
+  <ISOCode>SH</ISOCode >
+ </Country>
+ <Country>
+  <Name>Saint Kitts (Saint Christopher and Nevis)</Name >
+  <ISOCode>KN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Saint Lucia</Name >
+  <ISOCode>LC</ISOCode >
+ </Country>
+ <Country>
+  <Name>Saint Maarten (Dutch) (Netherlands Antilles)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Saint Martin (French) (Guadeloupe)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Saint Pierre and Miquelon</Name >
+  <ISOCode>PM</ISOCode >
+ </Country>
+ <Country>
+  <Name>Saint Vincent and the Grenadines</Name >
+  <ISOCode>VC</ISOCode >
+ </Country>
+ <Country>
+  <Name>Salvador (El Salvador)</Name >
+  <ISOCode>SV</ISOCode >
+ </Country>
+ <Country>
+  <Name>San Marino</Name >
+  <ISOCode>SM</ISOCode >
+ </Country>
+ <Country>
+  <Name>Santa Cruz Islands (Solomon Island)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Sao Tome and Principe</Name >
+  <ISOCode>ST</ISOCode >
+ </Country>
+ <Country>
+  <Name>Sarawak (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Sark (Channel Islands) (Great Britain and Northern Ireland)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Saudi Arabia</Name >
+  <ISOCode>SA</ISOCode >
+ </Country>
+ <Country>
+  <Name>Savage Island, Niue (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Savaii Island (Western Samoa)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Scotland (Great Britain and Northern Ireland)</Name >
+  <ISOCode>GB</ISOCode >
+ </Country>
+ <Country>
+  <Name>Selangor (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Senegal</Name >
+  <ISOCode>SN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Serbia, Repubic of</Name >
+  <ISOCode>CS</ISOCode >
+ </Country>
+ <Country>
+  <Name>Seychelles</Name >
+  <ISOCode>SC</ISOCode >
+ </Country>
+ <Country>
+  <Name>Sharja (United Arab Emirates)</Name >
+  <ISOCode>AE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Shikoku (Japan)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Siam (Thailand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Sierra Leone</Name >
+  <ISOCode>SL</ISOCode >
+ </Country>
+ <Country>
+  <Name>Sikkim (India)</Name >
+  <ISOCode>IN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Singapore</Name >
+  <ISOCode>SG</ISOCode >
+ </Country>
+ <Country>
+  <Name>Slovak Republic (Slovakia)</Name >
+  <ISOCode>SK</ISOCode >
+ </Country>
+ <Country>
+  <Name>Slovenia</Name >
+  <ISOCode>SI</ISOCode >
+ </Country>
+ <Country>
+  <Name>Society Islands (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Solomon Islands</Name >
+  <ISOCode>SB</ISOCode >
+ </Country>
+ <Country>
+  <Name>Somali Democratic Republic (Somalia)</Name >
+  <ISOCode>SO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Somalia</Name >
+  <ISOCode>SO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Somaliland (Somalia)</Name >
+  <ISOCode>SO</ISOCode >
+ </Country>
+ <Country>
+  <Name>South Africa</Name >
+  <ISOCode>ZA</ISOCode >
+ </Country>
+ <Country>
+  <Name>South Australia (Australia)</Name >
+  <ISOCode>AU-SA</ISOCode >
+ </Country>
+ <Country>
+  <Name>South Georgia (Falkland Islands)</Name >
+  <ISOCode>GS</ISOCode >
+ </Country>
+ <Country>
+  <Name>South Korea (Korea, Republic of)</Name >
+  <ISOCode>KR</ISOCode >
+ </Country>
+ <Country>
+  <Name>South-West Africa (Namibia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Spain</Name >
+  <ISOCode>ES</ISOCode >
+ </Country>
+ <Country>
+  <Name>Spitzbergen (Norway)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Sri Lanka</Name >
+  <ISOCode>LK</ISOCode >
+ </Country>
+ <Country>
+  <Name>Ste. Marie de Madagascar (Madagascar)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Sudan</Name >
+  <ISOCode>SD</ISOCode >
+ </Country>
+ <Country>
+  <Name>Suriname</Name >
+  <ISOCode>SR</ISOCode >
+ </Country>
+ <Country>
+  <Name>SuwarCountry Islands (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Swan Islands (Honduras)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Swaziland</Name >
+  <ISOCode>SZ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Sweden</Name >
+  <ISOCode>SE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Switzerland</Name >
+  <ISOCode>CH</ISOCode >
+ </Country>
+ <Country>
+  <Name>Symi (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Syrian Arab Republic (Syria)</Name >
+  <ISOCode>SY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Tahaa (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Tahiti (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Taiwan</Name >
+  <ISOCode>TW</ISOCode >
+ </Country>
+ <Country>
+  <Name>Tajikistan</Name >
+  <ISOCode>TJ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Tanzania</Name >
+  <ISOCode>TZ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Tasmania (Australia)</Name >
+  <ISOCode>AU</ISOCode >
+ </Country>
+ <Country>
+  <Name>Tchad (Chad)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Thailand</Name >
+  <ISOCode>TH</ISOCode >
+ </Country>
+ <Country>
+  <Name>Thursday Island (Australia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Tibet (China)</Name >
+  <ISOCode>CN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Tilos (Greece)</Name >
+  <ISOCode>GR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Timor (Indonesia)</Name >
+  <ISOCode>ID</ISOCode >
+ </Country>
+ <Country>
+  <Name>Tobago (Trinidad and Tobago)</Name >
+  <ISOCode>TT</ISOCode >
+ </Country>
+ <Country>
+  <Name>Togo</Name >
+  <ISOCode>TG</ISOCode >
+ </Country>
+ <Country>
+  <Name>Tokelau (Union Group) (Western Samoa)</Name >
+  <ISOCode>TK</ISOCode >
+ </Country>
+ <Country>
+  <Name>Tonga</Name >
+  <ISOCode>TO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Tongareva (New Zealand)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Tori Shima (Japan)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Torres Island (Vanuatu)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Trans-Jordan, Hashemite Kingdom (Jordan)</Name >
+  <ISOCode>JO</ISOCode >
+ </Country>
+ <Country>
+  <Name>Transkei (South Africa)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Trengganu (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Trinidad and Tobago</Name >
+  <ISOCode>TT</ISOCode >
+ </Country>
+ <Country>
+  <Name>Tripolitania (Libya)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Tristan da Cunha</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Trucial States (United Arab Emirates)</Name >
+  <ISOCode>AE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Tuamotou (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Tubuai (French Polynesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Tunisia</Name >
+  <ISOCode>TN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Turkey</Name >
+  <ISOCode>TR</ISOCode >
+ </Country>
+ <Country>
+  <Name>Turkmenistan</Name >
+  <ISOCode>TM</ISOCode >
+ </Country>
+ <Country>
+  <Name>Turks and Caicos Islands</Name >
+  <ISOCode>TC</ISOCode >
+ </Country>
+ <Country>
+  <Name>Tuvalu</Name >
+  <ISOCode>TV</ISOCode >
+ </Country>
+ <Country>
+  <Name>Uganda</Name >
+  <ISOCode>UG</ISOCode >
+ </Country>
+ <Country>
+  <Name>Umm Said (Qatar)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Umm al Quaiwain (United Arab Emirates)</Name >
+  <ISOCode>AE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Ukraine</Name >
+  <ISOCode>UA</ISOCode >
+ </Country>
+ <Country>
+  <Name>Union Group (Western Samoa)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>United Arab Emirates</Name >
+  <ISOCode>AE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Upolu Island (Western Samoa)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Uruguay</Name >
+  <ISOCode>UY</ISOCode >
+ </Country>
+ <Country>
+  <Name>Uzbekistan</Name >
+  <ISOCode>UZ</ISOCode >
+ </Country>
+ <Country>
+  <Name>Vanuatu</Name >
+  <ISOCode>VU</ISOCode >
+ </Country>
+ <Country>
+  <Name>Vatican City</Name >
+  <ISOCode>VA</ISOCode >
+ </Country>
+ <Country>
+  <Name>Venezuela</Name >
+  <ISOCode>VE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Victoria (Australia)</Name >
+  <ISOCode>AU</ISOCode >
+ </Country>
+ <Country>
+  <Name>Vietnam</Name >
+  <ISOCode>VN</ISOCode >
+ </Country>
+ <Country>
+  <Name>Wales (Great Britain and Northern Ireland)</Name >
+  <ISOCode>GB</ISOCode >
+ </Country>
+ <Country>
+  <Name>Wallis and Futuna Islands</Name >
+  <ISOCode>WF</ISOCode >
+ </Country>
+ <Country>
+  <Name>Wellesley Province (Malaysia)</Name >
+  <ISOCode>MY</ISOCode >
+ </Country>
+ <Country>
+  <Name>West New Guinea (Indonesia)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Western Australia (Australia)</Name >
+  <ISOCode>AU-WA</ISOCode >
+ </Country>
+ <Country>
+  <Name>Western Samoa</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Yemen</Name >
+  <ISOCode>YE</ISOCode >
+ </Country>
+ <Country>
+  <Name>Zafarani Islands (Spain)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Zambia</Name >
+  <ISOCode>ZM</ISOCode >
+ </Country>
+ <Country>
+  <Name>Zanzibar (Tanzania)</Name >
+  <ISOCode></ISOCode >
+ </Country>
+ <Country>
+  <Name>Zimbabwe</Name >
+  <ISOCode>ZW</ISOCode >
+ </Country>
+</List>

@@ -1,0 +1,310 @@
+﻿'[[[NEW COPYRIGHT NOTICE]]]
+Imports CkartrisDataManipulation
+Imports CkartrisImages
+
+''' <summary>
+''' Used in the Products.aspx, it loads all the sections (as UCs) that are related to the Current Product.
+'''   Attributes, Versions, Promotions, Reviews, and CarryOnShopping.
+''' </summary>
+''' <remarks>By Mohammad</remarks>
+Partial Class ProductView
+    Inherits System.Web.UI.UserControl
+
+    Private _ProductID As Integer
+    Private _LanguageID As Short
+    Private _ProductName As String
+    Private _DisplayType As Char
+    Private _ReviewsEnabled As Char
+    Private _IsProductExit As Boolean
+
+    Public ReadOnly Property ProductID() As Integer
+        Get
+            Return _ProductID
+        End Get
+    End Property
+
+    Public ReadOnly Property LanguageID() As Short
+        Get
+            Return _LanguageID
+        End Get
+    End Property
+
+    Public ReadOnly Property DisplayType() As Char
+        Get
+            Return _DisplayType
+        End Get
+    End Property
+
+    Public ReadOnly Property IsProductExist() As Boolean
+        Get
+            Return _IsProductExit
+        End Get
+    End Property
+
+    Public ReadOnly Property ProductName() As String
+        Get
+            Return _ProductName
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Loads/Shows the Product Info.
+    ''' </summary>
+    ''' <param name="pProductID"></param>
+    ''' <param name="pLanguageID"></param>
+    ''' <remarks>By Mohammad</remarks>
+    Public Sub LoadProduct(ByVal pProductID As Integer, ByVal pLanguageID As Short)
+        _ProductID = pProductID
+        _LanguageID = pLanguageID
+
+        'Gets the details of the current product
+        Dim tblProducts As New DataTable
+        tblProducts = ProductsBLL.GetProductDetailsByID(_ProductID, _LanguageID)
+
+        'If there is no products returned, then go to the categories page.
+        If tblProducts.Rows.Count = 0 Then _IsProductExit = False : Exit Sub
+
+        'Checking the customer group of the category
+        Dim numCGroupID As Short = 0, numParentGroup As Short = 0, numCurrentGroup As Short = 0
+        If HttpContext.Current.User.Identity.IsAuthenticated Then
+            numCGroupID = CShort(DirectCast(Page, PageBaseClass).CurrentLoggedUser.CustomerGroupID)
+        End If
+
+        numCurrentGroup = FixNullFromDB(tblProducts.Rows(0)("P_CustomerGroupID"))
+        Try
+            Dim node As SiteMapNode = SiteMap.CurrentNode
+            numParentGroup = node.ParentNode("CG_ID")
+            If numParentGroup <> 0 AndAlso numParentGroup <> numCGroupID Then
+                _IsProductExit = False : Exit Sub
+            ElseIf numCurrentGroup <> 0 AndAlso numCurrentGroup <> numCGroupID Then
+                _IsProductExit = False : Exit Sub
+            End If
+        Catch ex As Exception
+            If numCurrentGroup <> 0 AndAlso numCurrentGroup <> numCGroupID Then
+                _IsProductExit = False : Exit Sub
+            End If
+        End Try
+
+        _IsProductExit = True
+
+        _ProductName = FixNullFromDB(tblProducts.Rows(0)("P_Name"))
+        _DisplayType = FixNullFromDB(tblProducts.Rows(0)("P_VersionDisplayType"))
+
+        'Checking if the reviews are enabled for the Product.
+        _ReviewsEnabled = IIf(tblProducts.Rows(0)("P_Reviews") Is DBNull.Value, "n", tblProducts.Rows(0)("P_Reviews"))
+
+        'Product's Page Title
+        Dim strPageTitle As String = FixNullFromDB(tblProducts.Rows(0)("P_PageTitle"))
+        Page.Title = IIf(strPageTitle = "", _
+                         _ProductName & " | " & Server.HtmlEncode(GetGlobalResourceObject("Kartris", "Config_Webshopname")), _
+                         strPageTitle & " | " & Server.HtmlEncode(GetGlobalResourceObject("Kartris", "Config_Webshopname")))
+
+        tblProducts.Rows(0)("MinPrice") = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), FixNullFromDB(tblProducts.Rows(0)("MinPrice")))
+
+        'Set H1 tag
+        litProductName.Text = Server.HtmlEncode(_ProductName)
+
+        'Bind the DataTable to the FormView that is used to view the Product's Info.
+        fvwProduct.DataSource = tblProducts
+        fvwProduct.DataBind()
+
+        'Create the image view 
+        UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_ProductImage, _
+            _ProductID, _
+            KartSettingsManager.GetKartConfig("frontend.display.images.normal.height"), _
+            KartSettingsManager.GetKartConfig("frontend.display.images.normal.width"), _
+            "", _
+            "", , _ProductName)
+
+        'We have two types of largeview links, depending on the config settings.
+        'One type is an AJAX popup, with the large image resized to fit.
+        'The other is a new page, with the large image full size.
+        If KartSettingsManager.GetKartConfig("frontend.display.images.large.linktype") = "n" Then
+            
+        Else
+            If tblProducts.Rows(0)("P_Desc").ToString.Contains("<overridelargeimagelinktype>") Then
+                'Override triggered - for MTMC large images
+                phdImageColumn.Visible = False
+
+                'Set full size image visible
+                UC_ImageView2.CreateImageViewer(IMAGE_TYPE.enum_ProductImage, _
+                    _ProductID, _
+                    0, _
+                    0, _
+                    "", _
+                    "")
+                UC_ImageView2.Visible = True
+            End If
+
+        End If
+
+        UC_MediaGallery.ParentID = _ProductID
+
+        '-------------------------------------
+        'IMAGE POPUP
+        '-------------------------------------
+        'Here we create the whole large image popup, which will load in background
+        'but with a div around it with display:none;
+        'This way we can use a javascript to show/hide it, which is much
+        'faster than triggering it with a server-side callback
+        Dim numPopupWidth As Integer = KartSettingsManager.GetKartConfig("frontend.display.images.large.width") + 80
+        Dim numPopupHeight As Integer = KartSettingsManager.GetKartConfig("frontend.display.images.large.height") + 100
+
+        UC_PopUpLargeView.SetTitle = GetGlobalResourceObject("Product", "ContentText_LargeView") & " - " & _ProductName
+        UC_PopUpLargeView.SetImagePath = _ProductID
+        UC_PopUpLargeView.SetWidthHeight(numPopupWidth, numPopupHeight)
+
+        'Use new 'PreLoad' so we can trigger
+        'from javascript but popup is already
+        'formatted. Nice and fast for user!
+        UC_PopUpLargeView.PreLoadPopup()
+
+        '-------------------------------------
+        'MEDIA POPUP
+        '-------------------------------------
+        'We set width and height later with
+        'javascript, as popup size will vary
+        'depending on the media type
+
+        UC_PopUpMedia.SetTitle = _ProductName
+        UC_PopUpMedia.SetMediaPath = _ProductID
+
+        UC_PopUpMedia.PreLoadPopup()
+
+    End Sub
+
+    Protected Sub fvwProduct_DataBound(ByVal sender As Object, ByVal e As System.EventArgs) Handles fvwProduct.DataBound
+
+        'We will set number of visible tabs and
+        'keep track. This is only required for
+        'mobile display, so we can have numbered
+        'tabs instead of named ones to keep the
+        'page width down.
+        Dim numVisibleTabs As Integer = 1
+
+        'Handle compare link
+        SetCompareLink()
+
+        'Handle price display
+        Dim litPriceTemp As Literal = CType(fvwProduct.FindControl("litPrice"), Literal)
+
+        '=================================
+        'Handle main tab
+        '=================================
+        Dim litContentTextHome As Literal = CType(tabMain.FindControl("litContentTextHome"), Literal)
+
+        '=================================
+        'Handle attributes tab
+        '=================================
+        UC_ProductAttributes.LoadProductAttributes(_ProductID, LanguageID)
+
+        'If no attributes, then hide tab
+        If UC_ProductAttributes.Visible = False Then
+            Dim tabAttributes As AjaxControlToolkit.TabPanel = CType(tbcProduct.FindControl("tabAttributes"), AjaxControlToolkit.TabPanel) 'Finds tab panel in container
+            tabAttributes.Enabled = False
+            tabAttributes.Visible = False
+        Else
+            numVisibleTabs += 1
+            Dim litContentTextAttributes As Literal = CType(tabAttributes.FindControl("litContentTextAttributes"), Literal)
+        End If
+
+        '=================================
+        'Handle quantity discounts tab
+        '=================================
+        ' Check if Call for Price Product, will not process quantity discount
+        If ObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) <> 1 Then
+            UC_QuantityDiscounts.LoadProductQuantityDiscounts(_ProductID, _LanguageID)
+        Else
+            UC_QuantityDiscounts.Visible = False
+        End If
+
+        'If no quantity discounts, then hide tab
+        If UC_QuantityDiscounts.Visible = False Then
+            Dim tabQuantityDiscounts As AjaxControlToolkit.TabPanel = CType(tbcProduct.FindControl("tabQuantityDiscounts"), AjaxControlToolkit.TabPanel) 'Finds tab panel in container
+            tabQuantityDiscounts.Enabled = False
+            tabQuantityDiscounts.Visible = False
+        Else
+            numVisibleTabs += 1
+            Dim litContentTextViewQuantityDiscount As Literal = CType(tabQuantityDiscounts.FindControl("litContentTextViewQuantityDiscount"), Literal)
+        End If
+
+        '=================================
+        'Handle reviews tab
+        '=================================
+        Dim tabReviews As AjaxControlToolkit.TabPanel = CType(tbcProduct.FindControl("tabReviews"), AjaxControlToolkit.TabPanel) 'Finds tab panel in container
+        If KartSettingsManager.GetKartConfig("frontend.reviews.enabled") = "y" AndAlso _ReviewsEnabled = "y" Then
+            numVisibleTabs += 1
+            UC_Reviews.LoadReviews(_ProductID, _LanguageID, _ProductName)
+            Dim litContentTextCustomerReviews As Literal = CType(tabReviews.FindControl("litContentTextCustomerReviews"), Literal)
+        Else
+            tabReviews.Visible = False
+            tabReviews.Enabled = False
+        End If
+
+        'Handle versions
+        UC_ProductVersions.LoadProductVersions(_ProductID, _LanguageID, _DisplayType)
+
+        'Handle promotions
+        UC_Promotions.LoadProductPromotions(_ProductID, _LanguageID)
+        If KartSettingsManager.GetKartConfig("frontend.promotions.enabled") = "y" Then
+            UC_Promotions.Visible = True
+        Else
+            UC_Promotions.Visible = False
+        End If
+
+    End Sub
+
+    Sub SetCompareLink()
+        Dim tabMain As AjaxControlToolkit.TabPanel = CType(tbcProduct.FindControl("tabMain"), AjaxControlToolkit.TabPanel)
+        Dim fvwProduct As FormView = CType(tabMain.FindControl("fvwProduct"), FormView)
+
+        'If comparison is enabled, proceed, else hide link
+        If LCase(KartSettingsManager.GetKartConfig("frontend.products.comparison.enabled")) <> "n" Then
+
+            'Is this coming from comparison page?
+            If Request.QueryString.ToString.ToLower.Contains("strpagehistory=compare") Then
+                CType(fvwProduct.FindControl("phdCompareLink"), PlaceHolder).Visible = False
+            Else
+                CType(fvwProduct.FindControl("phdCompareLink"), PlaceHolder).Visible = True
+
+                'Setting the Compare URL ...
+                Dim strCompareLink As String = Request.Url.ToString.ToLower
+                If Request.Url.ToString.ToLower.Contains("category.aspx") Then
+                    strCompareLink = strCompareLink.Replace("category.aspx", "Compare.aspx")
+                ElseIf Request.Url.ToString.ToLower.Contains("product.aspx") Then
+                    strCompareLink = strCompareLink.Replace("product.aspx", "Compare.aspx")
+                Else
+                    strCompareLink = "~/Compare.aspx"
+                End If
+                If strCompareLink.Contains("?") Then
+                    strCompareLink += "&action=add&id=" & _ProductID
+                Else
+                    strCompareLink += "?action=add&id=" & _ProductID
+                End If
+
+                CType(fvwProduct.FindControl("lnkCompare"), HyperLink).NavigateUrl = strCompareLink
+            End If
+        Else
+            CType(fvwProduct.FindControl("phdCompareLink"), PlaceHolder).Visible = False
+        End If
+
+    End Sub
+
+    Function ShowLineBreaks(ByVal strInput As Object) As String
+        Dim strOutput As String = CStr(CkartrisDataManipulation.FixNullFromDB(strInput))
+        If strOutput IsNot Nothing Then
+            If InStr(strInput, "<") > 0 And InStr(strInput, ">") > 0 Then
+                'Input probably contains HTML, so we want to ignore line
+                'breaks for display purposes
+
+                'Do nothing
+            Else
+                strOutput = Replace(strOutput, vbCrLf, "<br />" & vbCrLf)
+                strOutput = Replace(strOutput, vbLf, "<br />" & vbCrLf)
+            End If
+        End If
+
+        Return strOutput
+    End Function
+
+End Class

@@ -1,0 +1,151 @@
+﻿<%@ Master Language="VB" CodeFile="Template.master.vb" Inherits="Skin_Kartris_Template" %>
+<%@ Register TagPrefix="user" TagName="AdminBar" Src="~/UserControls/Front/AdminBar.ascx" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server" enableviewstate="False">
+	<base id="baseTag" runat="server" />
+	<!--
+		===============================================================================
+		KARTRIS by cactusoft
+		Copyright 2012 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
+		All rights reserved.
+		===============================================================================
+		-->
+	<link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
+	<link id="lnkFavIcon2" rel="shortcut icon" href="~/favicon.ico" type="image/x-icon"
+		runat="server" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+	<link href="general.css" rel="stylesheet" type="text/css" />
+	<link href="menus.css" rel="stylesheet" type="text/css" />
+	<link href="sections.css" rel="stylesheet" type="text/css" />
+	<link href="template.css" rel="stylesheet" type="text/css" />
+	<title>Kartris v1</title>
+</head>
+<body class="main">
+	<div id="centre_container">
+		<form id="frmMain" runat="server" class="container">
+		<ajaxToolkit:ToolkitScriptManager ID="scrManager" runat="server" ScriptMode="Release"
+			EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"
+			CombineScripts="true" EnableViewState="False">
+			<Scripts>
+				<asp:ScriptReference Path="~/JavaScript/webkit.js" />
+			</Scripts>
+		</ajaxToolkit:ToolkitScriptManager>
+		<div id="topcontainer">
+			<div id="header">
+				<div id="header_top">
+					<user:BasketView ID="UC_MiniBasket" runat="server" ViewType="MINI_BASKET" />
+					<user:NavigationMenu ID="UC_NavigationMenu" runat="server" EnableViewState="False"
+						Visible="True" />
+					<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
+					<div class="spacer">
+					</div>
+				</div>
+				<div class="spacer">
+				</div>
+				<div id="header_top_right">
+					<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
+					<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
+				</div>
+				<div class="spacer">
+				</div>
+				<div id="header_centre">
+					<user:SearchBox runat="server" ID="UC_SearchBox" EnableViewState="False" />
+					<asp:HyperLink ID="lnkHome" NavigateUrl="~/" runat="server">
+						<asp:Image ID="imgLogo" runat="server" ImageUrl="~/Skins/Kartris/Images/logo.png"
+							CssClass="logo" AlternateText="logo" /></asp:HyperLink>
+					<div class="spacer">
+					</div>
+					<!--
+					MENU OPTIONS:
+					CategoryMenu
+					CategoryMenuAccordion
+					CategoryMenuDropDownSelect
+					-->
+					<user:CategoryMenu ID="UC_CategoryMenuCSSFoldout" runat="server" EnableViewState="False"
+						Visible="True" />
+				</div>
+				<div class="spacer">
+				</div>
+			</div>
+			<div id="pagebody">
+				<div id="pagecontent">
+					<div id="pagecontent_pad">
+						<asp:ContentPlaceHolder ID="cntMain" runat="server">
+						</asp:ContentPlaceHolder>
+					</div>
+					<user:ViewedProducts ID="UC_RecentlyViewedProducts" runat="server" EnableViewState="False" />
+				</div>
+			</div>
+			<div class="spacer">
+			</div>
+		</div>
+		<div class="spacer">
+		</div>
+		<div id="footer">
+			<div id="footer_inside">
+				<div id="footer_links">
+					<div class="footerblock" id="leftmostblock">
+						<h2>
+							Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="footerblock">
+						<h2>
+							Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="footerblock blockright" id="rightmostblock">
+						<h2>
+							Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink7" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink8" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink9" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="footerblock blockright">
+						<h2>
+							Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink10" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink11" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink12" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="spacer">
+					</div>
+				</div>
+				<div class="spacer">
+				</div>
+				<div class="copyright">
+					&copy;2012 Cactusoft International FZ LLC</div>
+			</div>
+		</div>
+	</div>
+	<user:AdminBar ID="UC_AdminBar" runat="server" />
+	</form> </div>
+</body>
+</html>

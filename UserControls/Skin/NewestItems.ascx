@@ -1,0 +1,16 @@
+<%@ Control Language="VB" AutoEventWireup="false" CodeFile="NewestItems.ascx.vb"
+    Inherits="UserControls_Skin_NewestItems" %>
+<div class="box" id="newestitems">
+    <h2 class="blockheader">
+        <span><span>
+            <asp:Literal ID="litContentTextNewProductsList" runat="server" Text='<%$ Resources: Kartris, ContentText_NewProductsList %>' /></span></span></h2>
+    <div class="products products_tabular">
+        <asp:Repeater ID="rptNewestItems" runat="server">
+            <ItemTemplate>
+                <user:ProductLinkTemplate ID="UC_ProductLinkTemplate" runat="server" />
+            </ItemTemplate>
+            <SeparatorTemplate>
+            </SeparatorTemplate>
+        </asp:Repeater>
+    </div>
+</div>

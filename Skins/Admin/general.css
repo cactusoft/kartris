@@ -1,0 +1,470 @@
+/* 
+========================================================================
+KARTRIS by cactusoft
+Copyright 2012 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
+This work is licensed under a
+Creative Commons Attribution-ShareAlike 3.0 Unported License
+
+http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
+========================================================================
+*/
+/* 
+========================================================================
+HEADINGS AND BASIC FONT STYLES
+========================================================================
+*/
+html                                    { height: 100%; background-color: #fff; }
+td,
+th,
+select,
+input,
+body                                    { font-family: "Segoe UI", Verdana, Arial, Helvetica; font-size: 13px; font-weight: normal; color: #333; padding: 0; margin: 0; }
+th                                      { text-align: left }
+p                                       { padding: 2px 0 5px 0; margin: 0; }
+h1                                      { font-family: "Segoe UI Light","Open Sans","Segoe UI",Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 210%; letter-spacing: 0px; color: #000; margin: 3px 0 10px 0; display: inline-block; }
+h2                                      { font-size: 120%; color: #000; margin: 4px 0 0 0; padding: 0 0 7px 0; letter-spacing: 0px; font-weight: bold; }
+h3                                      { font-size: 110%; color: #000; margin: 5px 0 0 0; padding: 0; letter-spacing: 0px; font-weight: bold; }
+h4                                      { font-size: 100%; color: #000; margin: 9px 0 0 0; padding: 0; letter-spacing: 0px; font-weight: bold; }
+h5                                      { font-size: 95%; color: #000; margin: 11px 0 0 0; padding: 0; letter-spacing: 0px; font-weight: bold; }
+h6                                      { font-size: 90%; color: #000; margin: 12px 0 0 0; padding: 0; letter-spacing: 0px; font-weight: bold; }
+.h1_light                               { color: #aaa }
+.h1_light_extra                         { color: #888; font-weight: normal; font-size: smaller; }
+strong                                  { color: #000 }
+/* --- breadcrumb trail --- */
+.breadcrumbtrail                        { display: block; font-weight: normal; text-decoration: none; color: #000; margin: 0 0 9px 0; padding-left: 10px; background-color: #abf; }
+.breadcrumbtrail span span              { font-weight: bold; color: #fff; }
+.breadcrumbtrail span span a            { display: inline-block; padding: 3px 15px 3px 0px; font-weight: normal; color: #000; background-image: url(Images/breadcrumb_back.png); background-position: right center; background-repeat: no-repeat; margin: 0; }
+.breadcrumbtrail span span a:hover      { color: #000 }
+/* --- hyperlinks --- */
+a                                       { text-decoration: none; color: #45d; font-weight: bold; }
+a:hover                                 { text-decoration: none; color: #000; }
+a:active                                { outline: none }
+/* 
+========================================================================
+GENERAL
+========================================================================
+*/
+div.spacer                              { clear: both }
+div.pixel                               { display: inline-block; width: 1px; overflow: hidden; }
+div.line                                { border-bottom: solid 3px #eee }
+div.menu_divider                        { float: left; height: 20px; margin: 0 25px 0 5px; border-left: solid 3px #ddd; }
+div.overflowhidden                      { overflow: hidden }
+div.halfwidth                           { display: block; float: left; width: 49%; }
+div.col2                                { float: right }
+div.chartcontrol                        { padding: 10px; width: auto; background-color: #eee; }
+.section                                { margin: 0 0 20px 0 }
+.floatright                             { float: right }
+.alignright                             { text-align: right }
+.aligncentre                            { text-align: center }
+.invisible                              { visibility: hidden; display: none; width: 0; padding: 0; margin: 0; }
+.hidecolumn                             { width: 0; padding: 0; margin: 0; }
+.bold                                   { font-weight: bold }
+img                                     { border: none }
+#updatemessage_holder                   { border: none; position: fixed; top: 0; left: 50%; width: 100px; margin: 0 0 0 -50px; z-index: 100; }
+div.updatemessage                       { background-color: #fc5; color: #000; padding: 1px 5px 1px 5px; text-align: center; font-weight: bold; font-size: inherit; z-index: 999999; white-space: nowrap; }
+div.updatemessage strong                { color: #080 }
+div#updatemessage_holder                { display: block; height: 50px; width: auto; }
+div.warnmessage                         { background-color: #fc5; color: #000; padding: 3px 10px 3px 10px; margin: 5px 0 10px 0; font-weight: bold; }
+div.warnmessage a.linkbutton            { padding: 0px 5px 0px 18px; color: #fff; text-decoration: underline; font-weight: normal; }
+div.warnmessage strong                  { color: #f50 }
+div.errormessage                        { background-color: #f00; color: #fff; padding: 3px 10px 3px 10px; margin: 5px 0 10px 0; font-weight: bold; }
+div.errormessage a.linkbutton           { padding: 0px 5px 0px 18px; color: #fff; text-decoration: underline; font-weight: normal; }
+div.infomessage                         { color: #666; margin: 5px 0 10px 0; font-weight: normal; }
+#noresults,
+.noresults                              { color: #666; margin: 5px 0 10px 0; font-weight: normal; }
+#fileuploader                           { padding: 2px 0 7px 0; border-bottom: solid 1px #000; }
+.fileuploader                           { width: 200px }
+.fileuploader input[file]               { }
+.checkbox_label                         { width: 300px; font-weight: normal; }
+.subtabsection							{ padding-top: 10px }
+/* 
+========================================================================
+ICON LINKS
+========================================================================
+*/
+.icon_user			{ background-image: url(Images/icon_user.png); }
+.icon_orders		{ background-image: url(Images/icon_orders.png); }
+.icon_delete		{ background-image: url(Images/icon_delete.png); }
+.icon_edit,
+.linkbuttonfield a	{ background-image: url(Images/icon_edit.png); }
+.icon_mail			{ background-image: url(Images/icon_mail.png); }
+.icon_new			{ background-image: url(Images/icon_new.png); }
+.icon_back			{ background-image: url(Images/icon_back.png); }
+.icon_upload		{ background-image: url(Images/icon_upload.png); }
+.icon_support		{ background-image: url(Images/icon_support.png); }
+.icon_html			{ border: none; background: none; margin: 0; padding: 0; }
+a.linkbutton:link,
+a.linkbutton:visited,
+.linkbuttonfield a			{ background-position: left top; background-repeat: no-repeat; margin: 1px 6px 1px 0; color: #04d; text-decoration: none; font-weight: bold; display: inline-block; font-size: 13px; padding: 0 4px 4px 20px; text-transform: none; }
+a.linkbutton:hover,
+.linkbuttonfield a:hover	{ color: #000; }
+a.normalweight:link,
+a.normalweight:visited		{ font-weight: normal }
+/* 
+========================================================================
+TABLES AND GRIDVIEWS
+========================================================================
+*/
+table.kartristable                      { width: 100%; font-size: inherit; border-collapse: collapse; margin: 10px 0 10px 0; }
+table.kartristable tr,
+table.kartristable tr.Kartris-GridView-Alternate
+                                        { background: #f3f3f3; color: #000; vertical-align: top; overflow: hidden; border-bottom: solid 1px #fff; }
+table.kartristable tr.Kartris-GridView-Alternate,
+table.kartristable td.Kartris-GridView-Alternate
+                                        { background: #fff; border-bottom: solid 1px #f3f3f3; }
+table.kartristable tr:hover,
+table.kartristable tr.Kartris-GridView-Alternate:hover,
+table.kartristable tr.Kartris-GridView-Green:hover,
+table.kartristable tr.Kartris-GridView-Alternate-Green:hover,
+table.kartristable tr.Kartris-GridView-Red:hover,
+table.kartristable tr.Kartris-GridView-Alternate-Red:hover,
+table.kartristable tr.Kartris-GridView-Blue:hover,
+table.kartristable tr.Kartris-GridView-Alternate-Blue:hover,
+table.kartristable tr.Kartris-GridView-Yellow:hover,
+table.kartristable tr.Kartris-GridView-Alternate-Yellow:hover,
+table.kartristable tr.Kartris-GridView-Done:hover,
+table.kartristable tr.Kartris-GridView-Alternate-Done:hover
+                                        { background-image: url(Images/row_highlight_back.png); background-position: left -1px; background-repeat: repeat-x; }
+table.kartristable td,
+table.kartristable th                   { padding: 2px 5px 2px 5px }
+table.kartristable tr th,
+table.kartristable tr td.header         { font-family: Tahoma,Verdana,Arial,Helvetica; font-size: smaller; text-transform: uppercase; background-color: #fff; color: #666; font-weight: normal; white-space: nowrap; padding: 2px 5px 2px 5px; min-height: 0; border-bottom: solid 1px #000; }
+table.notableheader                     { border-top: solid 1px #000 }
+/* Row status colors for orders/support tickets gridview */
+table.kartristable tr.Kartris-GridView-Green,
+table.kartristable tr.Kartris-GridView-Alternate-Green
+                                        { background-color: #beb; border-bottom: solid 1px #fff; }
+table.kartristable tr.Kartris-GridView-Red,
+table.kartristable tr.Kartris-GridView-Alternate-Red
+                                        { background-color: #fbb; border-bottom: solid 1px #fff; }
+table.kartristable tr.Kartris-GridView-Blue,
+table.kartristable tr.Kartris-GridView-Alternate-Blue
+                                        { background-color: #cdf; border-bottom: solid 1px #fff; }
+table.kartristable tr.Kartris-GridView-Violet,
+table.kartristable tr.Kartris-GridView-Alternate-Violet
+                                        { background-color: #ebe; border-bottom: solid 1px #fff; }
+table.kartristable tr.Kartris-GridView-Yellow,
+table.kartristable tr.Kartris-GridView-Alternate-Yellow
+                                        { background-color: #fff5a9; border-bottom: solid 1px #fff; }
+table.kartristable tr.Kartris-GridView-Done,
+table.kartristable tr.Kartris-GridView-Alternate-Done
+                                        { background-color: #ddd; border-bottom: solid 1px #fff; }
+table.kartristable tr.Kartris-DataList-SelectedItem,
+table.kartristable tr td.Kartris-DataList-SelectedItem
+                                        { background-color: #fff; padding: 15px 0px 20px 25px; }
+table.kartristable tr.Kartris-DataList-SelectedItem div.floatright,
+table tr.Kartris-DataList-SelectedItem div.floatright
+                                        { margin: 0 5px 10px 0 }
+table.kartristable td strong            { color: #000 }
+table.kartristable td.recordnumberfield { width: 30px; color: #bbb; }
+table.kartristable td.idfield           { width: 40px }
+table.kartristable td.datefield         { width: 120px }
+table.kartristable td.currencyfield     { text-align: right; font-weight: bold; width: 60px; padding-right: 20px; }
+table.kartristable th.currencyfield     { text-align: right; width: 60px; padding-right: 20px; }
+table.kartristable td.selectfield       { text-align: right; font-weight: bold; padding-left: 15px; width: 80px; white-space: nowrap; }
+table.kartristable td.optionsfield      { text-align: center; width: 40px; }
+table.kartristable td.itemname          { font-weight: bold }
+table.kartristable td.itemname a        { color: #000 }
+.nowrap                                 { white-space: nowrap }
+/* Nested table (within another table) */
+table.nested                            { border-collapse: collapse; margin-bottom: 3px; border-right: none; }
+table.nested th                         { color: #888; font-weight: bold; white-space: nowrap; }
+table.nested tr td                      { border-bottom: solid 1px #fff; color: #000; vertical-align: top; }
+table.nested tr.Kartris-GridView-Alternate td,
+table.nested tr td.Kartris-GridView-Alternate,
+table.nested tr td.Kartris-DataList-Alternate
+                                        { border-bottom: solid 1px #fff; color: #000; vertical-align: top; }
+/* 
+========================================================================
+LANGUAGE ELEMENT TEXT BOXES
+========================================================================
+*/
+input.elementname                       { width: 400px }
+textarea.elementdesc                    { width: 400px; height: 80px; }
+input.elementpagetitle                  { width: 400px }
+textarea.elementmetadesc                { width: 400px; height: 80px; }
+textarea.elementmetakeywords            { width: 400px; height: 80px; }
+textarea.elementtext                    { width: 400px; height: 80px; }
+textarea.elementstrapline               { width: 400px; height: 40px; }
+input.elementurl                        { width: 400px }
+li.elementpagetitle,
+li.elementmetadesc,
+li.elementmetakeywords,
+li.elementurl                           { background-color: #eee; padding-left: 10px; }
+li.elementpagetitle .Kartris-DetailsView-Name,
+li.elementmetadesc .Kartris-DetailsView-Name,
+li.elementmetakeywords .Kartris-DetailsView-Name,
+li.elementurl .Kartris-DetailsView-Name { width: 170px; color: #666; }
+/* 
+========================================================================
+DETAILS VIEW / SECTIONS
+========================================================================
+*/
+.Kartris-DetailsView-Data               { margin-bottom: 10px }
+.Kartris-DetailsView-Data ul            { list-style-type: none; padding: 0; margin-left: 0; }
+.Kartris-DetailsView-Data ul li         { min-height: 20px; padding-top: 5px; }
+.Kartris-DetailsView-Name               { display: -moz-inline-box; display: inline-block; width: 180px; color: #000; font-weight: bold; vertical-align: top; padding-right: 10px; }
+.Kartris-DetailsView-Value              { display: -moz-inline-box; display: inline-block; width: 490px; vertical-align: top; color: #000; overflow: visible; }
+.buttonfield .Kartris-DetailsView-Name  { vertical-align: top; width: auto; }
+.rightpad                               { margin: 7px 5px 0 0 }
+/* 
+========================================================================
+PAGINATION LINKS
+========================================================================
+*/
+div.Kartris-GridView-Pagination         { padding: 0; text-align: left; margin-bottom: 25px; }
+span.Kartris-GridView-Pagination        { padding: 0; text-align: left; margin-bottom: 2px; display: block; }
+.Kartris-GridView-Pagination a          { float: left; margin: 1px 3px 1px 0; color: #fff; background-color: #04d; text-transform: uppercase; text-decoration: none; font-weight: normal; display: inline-block; font-size: 110%; padding: 2px 5px; }
+.Kartris-GridView-Pagination a:hover    { background-color: #ddd; color: #000; text-decoration: none; }
+.Kartris-GridView-Pagination span,
+.Kartris-GridView-Pagination .currentpage,
+.Kartris-GridView-Pagination .currentpage:hover
+                                        { overflow: hidden; color: #000; background-color: #fff; padding: 1px 4px; font-weight: bold; margin: -5px 7px 0 5px; display: inline-block; float: left; font-size: 150%; text-align: center; }
+.Kartris-GridView-Pagination a.disabled,
+.Kartris-GridView-Pagination a.disabled:hover
+                                        { background-color: #ddd }
+/* 
+========================================================================
+ITEM SORTER (IMAGE RE-ORDERING)
+========================================================================
+*/
+#column_sorter_left                     { display: block; width: 0px; float: left; overflow: hidden; }
+#column_sorter_right                    { display: block }
+.placeholder_sorter                     { display: block; height: 90px; padding: 5px 0 5px 0; border-bottom: solid 3px #eee; }
+#column_sorter_right .updownbuttons     { float: left; width: 30px; }
+.sort_image_holder                      { float: left; width: 100px; height: 90px; }
+.sort_details_holder                    { float: left; width: 190px; font-size: 90%; }
+.sort_remove_holder                     { float: left; width: 100px; text-align: right; }
+span.media_label                        { display: inline-block; width: 120px; padding: 0 0 1px 0; font-weight: bold; }
+/* 
+========================================================================
+TRIGGER SWITCHES (+/-, UP/DOWN)
+========================================================================
+*/
+div.updownbuttons                       { display: inline-block; width: 30px; float: left; }
+a.triggerswitch                         { width: 13px; height: 12px; padding: 0; overflow: hidden; border: solid 1px transparent; text-indent: 4px; text-indent: 10px\0/; /* IE8 hack */ line-height: 0px; font-size: 0px; display: block; color: transparent; margin: 0; margin-right: 3px; font-family: Verdana,Arial,Helvetica; }
+a.triggerswitch_on                      { background: url(Images/button_up.png) no-repeat center }
+a.triggerswitch_off                     { background: url(Images/button_down.png) no-repeat center }
+a.triggerswitch:hover                   { background-color: #bbb }
+a.triggerswitch_disabled,
+a.triggerswitch_disabled:hover          { background-color: #d3d3d3; color: #888; }
+a.triggerswitch2                        { display: block; font-weight: bold; text-align: center; color: #fff; float: right; width: 12px; padding: 0px; }
+a.triggerswitch2_on                     { background-color: #6b6 }
+a.triggerswitch2_off                    { background-color: #ddd; color: #333; }
+a.triggerswitch2_disabled               { background-color: #d3d3d3; color: #888; }
+/* 
+========================================================================
+FORM ELEMENTS
+========================================================================
+*/
+form                                    { margin: 0; display: inline; padding: 0; }
+select,
+input,
+textarea                                { font-family: "Segoe UI", Verdana, Arial, Helvetica; font-size: 13px; font-weight: normal; color: #000; background-color: #e4e4e4; border: solid 1px #fff; margin: 0 0 3px 0; width: 300px; padding: 0; }
+select:focus,
+input:focus,
+textarea:focus                          { font-weight: normal; color: #000; background-color: #fff; border: solid 1px #c05; margin-bottom: 3px; }
+select[disabled],
+input[disabled],
+textarea[disabled],
+select:disabled,
+input:disabled,
+textarea:disabled                       { background: #999; border: solid 2px #fff; color: #888; }
+select.short                            { width: auto }
+textarea                                { width: 350px; height: 60px; }
+input.shorttext,
+select.shorttext                        { width: 40px }
+input.midtext,
+select.midtext                          { width: 110px }
+input.longishtext,
+select.longishgtext                     { width: 250px }
+input.longtext,
+select.longtext                         { width: 450px }
+
+input.button                            { cursor: pointer; background-color: #eee; border: solid 1px #333; color: #000; padding: 2px 6px 2px 6px; font-weight: normal; font-size: 11px; margin: 1px 0px 1px 2px; width: auto; display: inline-block; }
+input.button:focus                      { background-color: #ccc; color: #666; }
+input.button:hover                      { background-color: #f6f6f6 }
+input.cancelbutton                      { background-color: #666; border-color: #333; color: #fff; }
+input.cancelbutton:hover                { background-color: #888; border-color: #444; color: #fff; }
+.submitbuttons                          { display: block; white-space: nowrap; margin: 10px 0 0 0; padding: 10px 0 20px 0; z-index: 5; width: 100%; }
+.topsubmitbuttons                       { z-index: 1; position: fixed; top: 40px; border: none; margin: 0 200px 0 -22px; padding: 5px 5px 7px 22px; height: 35px; background-image: url(Images/background.png); background-position: right top; background-repeat: repeat-y; }
+#categorymenu .squarebuttons            { position: relative; padding: 0 0 8px 0; }
+.topsubmitbuttons .floatright           { float: left; padding-left: 0px; margin: 0 30px 0 5px; }
+.topsubmitbuttons .reassign             { display: inline-block; position: absolute; margin: 0 0 0 110px; padding: 4px 0 0 0; }
+.topsubmitbuttons input                 { margin: 3px 0 3px 0 }
+.topsubmitbuttons select                { width: auto; background-color: #eee; margin-left: 5px; }
+.hoverbutton                            { padding: 0; margin: 0 0 0 2px; cursor: pointer; background: none; border: none; }
+.topsubmitbuttons a:visited,
+.topsubmitbuttons a:link,
+.squarebuttons a:visited,
+.squarebuttons a:link                   { cursor: pointer; font-weight: normal; display: block; height: 24px; overflow: hidden; padding: 5px 10px 0px 31px; float: left; margin: 7px 1px 0 0; cursor: default; color: #000; background-color: #ddd; background-position: left -1px; background-repeat: no-repeat;  }
+.blackbuttons							{ padding: 0 0 10px 5px }
+.blackbuttons a:visited,
+.blackbuttons a:link                    { z-index: 2; width: 32px; height: 32px; padding: 0; line-height: 0; font-size: 0; margin: 7px 2px 0 0; }
+.bluebuttons a:visited,
+.bluebuttons a:link						{ z-index: 2; background-color: transparent; width: 32px; height: 32px; padding: 0; line-height: 0; font-size: 0; margin: 0 1px 0 0; }
+.topsubmitbuttons input.savebutton,
+.topsubmitbuttons a.savebutton:visited,
+.topsubmitbuttons a.savebutton:link     { background-image: url(Images/button_save.png); }
+.topsubmitbuttons input.cancelbutton,
+.topsubmitbuttons a.cancelbutton:visited,
+.topsubmitbuttons a.cancelbutton:link   { background-image: url(Images/button_cancel.png); }
+.topsubmitbuttons input.exportbutton,
+.topsubmitbuttons a.exportbutton:visited,
+.topsubmitbuttons a.exportbutton:link   { background-image: url(Images/button_export.png); }
+.topsubmitbuttons input.previewbutton,
+.topsubmitbuttons a.previewbutton:visited,
+.topsubmitbuttons a.previewbutton:link  { background-image: url(Images/button_preview.png); }
+.topsubmitbuttons input.deletebutton,
+.topsubmitbuttons a.deletebutton:visited,
+.topsubmitbuttons a.deletebutton:link   { background-image: url(Images/button_delete.png); }
+.topsubmitbuttons input.editbutton,
+.topsubmitbuttons a.editbutton:visited,
+.topsubmitbuttons a.editbutton:link     { background-image: url(Images/button_edit.png); }
+.squarebuttons a.homebutton				{ background-image: url(Images/button_home.png); }
+.squarebuttons a.categoriesbutton		{ background-image: url(Images/button_categories.png); }
+.topsubmitbuttons input:hover,
+.topsubmitbuttons a:hover,
+.squarebuttons input:hover,
+.squarebuttons a:hover                  { background-color: #fc5; cursor: pointer; }
+.blackbuttons input:hover,
+.blackbuttons a:hover					{ background-color: #fff; }
+.bluebuttons input:hover,
+.bluebuttons a:hover					{ z-index: 201; background-color: #888; }
+.blackbuttons input:hover,
+.blackbuttons a:hover                   { background-color: #fc5; }
+.squarebuttons input.refreshbutton,
+.squarebuttons a.refreshbutton:visited,
+.squarebuttons a.refreshbutton:link     { background-image: url(Images/button_refresh.png); background-position: left center; background-repeat: no-repeat; float: right; }
+label									{ display: inline-block; width: 140px; color: #000; font-weight: bold; vertical-align: top; padding-right: 10px; }
+label.nolabelwidth,
+.nolabelwidth label						{ width: auto }
+.checkbox input,
+.radio input							{ border-style: none; background-color: transparent; display: inline; width: 18px; margin: 0 2px 0 3px; }
+.radio label							{ font-weight: normal; color: #333; width: auto; }
+input[disabled='disabled'],
+textarea[disabled='disabled'],
+select[disabled='disabled']				{ background-color: #ccc }
+.imagebutton:link, .imagebutton:hover, .imagebutton:visited { display: block; font-family: Verdana; font-size: smaller; text-decoration: none; letter-spacing: 0px; display: inline-block; text-align: center; font-size: inherit; margin: 1px 2px 1px 0px; padding-left: 3px; padding-right: 3px; height: 12px; }
+.imagebutton:link,
+.imagebutton:hover,
+.imagebutton:visited { display: block; font-family: Verdana; font-size: smaller; text-decoration: none; letter-spacing: 0px; display: inline-block; text-align: center; font-size: inherit; margin: 1px 2px 1px 0px; padding-left: 3px; padding-right: 3px; height: 12px; }
+a.button_expand                         { text-align: center; padding: 1px 1px 1px 1px; font-family: Tahoma,Arial,Helvetica,Sans-Serif; font-size: 85%; font-weight: normal; color: #000; display: inline-block; }
+a.button_expand:hover                   { background-color: #bbb; color: #000; }
+.buttonbar                              { padding: 3px 0px 3px 0px }
+.pagebottom                             { padding: 0 0 20px 0px; width: auto; margin: 60px 0 10px 0; }
+.pagebottom a                           { background-image: url(Images/button_top.png); background-position: center center; background-repeat: no-repeat; width: 48px; height: 48px; display: block; position: fixed; bottom: 5px; right: 270px; }
+/* 
+========================================================================
+ERRORS
+========================================================================
+*/
+span.error                              { display: inline-block; color: #fff; font-weight: bold; font-size: inherit; padding: 1px 5px 1px 3px; text-decoration: blink; background-color: #f00; margin-left: 3px; border-radius: 3px; }
+.valsummary                             { display: inline-block; color: #fff; font-weight: bold; font-size: inherit; padding: 1px 5px 1px 3px; text-decoration: blink; background-color: #f00; margin: 5px 0 0 10px; border-radius: 3px; }
+.valsummary ul                          { display: none; visibility: hidden; }
+/* 
+========================================================================
+IMAGES
+========================================================================
+*/
+/* 
+========================================================================
+TABS MULTIVIEW CONTROL
+========================================================================
+*/
+.mvw__tab_default                       { margin: 0 0 2px 0; font-size: 85%; font-family: Tahoma,Verdana,Arial,Helvetica; font-weight: normal; display: block; background-image: url(Images/tab_bar.png); background-position: left bottom; background-repeat: repeat-x; padding: 5px 0 0 0; text-transform: uppercase; }
+.mvw__tab_default a                     { padding: 4px 11px 4px 11px; display: inline-block; font-weight: normal; overflow: hidden; color: #333; }
+.mvw__tab_default a:hover               { color: #000 }
+.mvw__tab_default a.active,
+.mvw__tab_default span.active           { padding: 3px 11px 4px 11px; color: #000; font-weight: bold; letter-spacing: 1px; border-top: solid 1px #000; border-left: solid 1px #000; border-right: solid 1px #000; border-bottom: none; background-color: #fff; text-decoration: none; }
+.mvw__tab_default span.active           { display: inline-block }
+/* 
+========================================================================
+TABS AJAX CONTROL
+========================================================================
+*/
+.ajax__tab_default .ajax__tab_header    { margin: 0 0 2px 0; color: #333; font-size: 85%; font-family: Tahoma,Verdana,Arial,Helvetica; font-weight: normal; display: block; vertical-align: middle; text-transform: uppercase; }
+.ajax__tab_default .ajax__tab_header .total
+                                        { font-weight: normal; color: #333; }
+.ajax__tab_default .ajax__tab_header .ajax__tab_outer
+                                        { padding: 4px 11px 4px 11px; display: inline-block; font-weight: normal; overflow: hidden; }
+.ajax__tab_default .ajax__tab_hover .ajax__tab_outer .ajax__tab_inner
+                                        { color: #000 }
+.ajax__tab_default .ajax__tab_active .ajax__tab_outer
+                                        { padding: 4px 8px 4px 8px; color: #000; font-weight: bold; border-top: solid 1px #000; border-left: solid 1px #000; border-right: solid 1px #000; border-bottom: none; background-color: #fff; text-decoration: none; }
+.ajax__tab_header a                     { color: #333; font-weight: normal; }
+.ajax__tab_default .ajax__tab_active .ajax__tab_outer span
+                                        { color: #000; font-weight: bold; letter-spacing: 1px; }
+.ajax__tab_header                       { background-image: url(Images/tab_bar.png); background-position: left bottom; background-repeat: repeat-x; padding: 5px 0 0 0; }
+.ajax__tab_active .ajax__tab_inner      { font-weight: bold }
+.ajax__tab_tab                          { outline: none }
+/* 
+========================================================================
+POPUP MESSAGE
+========================================================================
+*/
+.popup_background                       { background-color: #fff; filter: alpha(opacity=70); opacity: 0.7; z-index: 500 !important; }
+.popup                                  { position: fixed; margin: 0 auto; background-color: #fff; border: solid 2px #000; padding: 10px; width: 550px; padding-top: 30px; text-align: left; vertical-align: middle; }
+.popup h2                               { position: absolute; left: 10px; top: 5px; padding: 0px; margin: 0px; font-size: 100%; border: none; }
+.popup p                                { padding: 10px 0 0 0; margin: 0; color: #333; }
+.popup strong                           { color: #000 }
+.closebutton                            { position: absolute; right: 0px; top: 0px; background-image: url(Images/button_cancel.png); background-position: center center; background-repeat: no-repeat; width: 24px; height: 24px; color: transparent; overflow: hidden; }
+.closebutton:hover                      { color: transparent }
+.popup .imageholder                     { width: 150px; padding: 10px; float: left; text-align: center; }
+/* 
+========================================================================
+SECTION: HTML EDITOR
+========================================================================
+*/
+.htmleditor                             { padding: 25px 0 10px 0; height: 440px; width: 850px; background-color: #f3f3f3; }
+.ajax__html_editor_extender_texteditor  { background-color: #fff; height: 415px; }
+.htmltextbox                            { width: 100%; height: 439px; border: none; }
+.htmleditor .button                     { float: right; margin: -25px 10px 3px 10px; }
+/* 
+========================================================================
+AUTOCOMPLETE FLY-OUT
+========================================================================
+*/
+.autocomplete_completionListElement     { visibility: hidden; margin: 0px!important; color: #000; background-color: #fff; border: solid 1px #000; cursor: pointer; overflow: auto; height: 150px; text-align: left; list-style-type: none; }
+.autocomplete_highlightedListItem       { background-color: #fc5; color: #000; font-weight: bold; }
+.autocomplete_listItem                  { background-color: transparent }
+/* 
+========================================================================
+CALENDAR
+========================================================================
+*/
+.calendar                               { z-index: 999 }
+.calendarbutton                         { float: left; vertical-align: bottom; margin: 2px 3px 0 0; background: none; border: 0; }
+.calendar .ajax__calendar_title         { width: 160px; margin: auto; }
+.calendar .ajax__calendar_container     { border: 1px solid #000; background-color: #eee; font-size: inherit; z-index: 3; width: 200px; height: 180px; }
+.calendar .ajax__calendar_container .ajax__calendar_other
+                                        { background-color: #999; color: #fff; }
+.calendar td:hover                      { background-color: #c05; color: #fff; }
+.calendar .ajax__calendar_days table tr td
+                                        { padding: 0 2px 0 0; font-size: 100%; }
+/* 
+========================================================================
+UPDATE PROGRESS LIGHTBOX EFFECT
+========================================================================
+*/
+.updateprogress                         { position: fixed; top: 0px; left: 0px; width: 100%; height: 100%; background-color: #fff; z-index: 500; filter: alpha(opacity=70); opacity: 0.7; }
+.loadingimage                           { position: fixed; background-position: center center; background-image: url(Images/updateprogress.gif); background-repeat: no-repeat; top: 0px; left: 0px; width: 100%; height: 50%; padding: 5px; z-index: 600; }
+/* 
+========================================================================
+Category Tree View
+========================================================================
+*/
+div.Kartris-TreeView .Kartris-TreeView-Collapse
+                                        { background: url(Images/collapse.gif) no-repeat scroll 0 -3px transparent; cursor: pointer; float: left; width: 15px; padding-right: 5px; }
+div.Kartris-TreeView .Kartris-TreeView-Expand
+                                        { background: url(Images/expand.gif) no-repeat scroll 0 -3px transparent; cursor: pointer; float: left; width: 15px; padding-right: 5px; }
+
+
+
+
+
+
+
+
+
+

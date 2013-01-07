@@ -1,0 +1,416 @@
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="Install.aspx.vb" Inherits="Admin_Install"
+	UICulture="auto:en-GB" Culture="auto:en-GB" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="Head1" runat="server" enableviewstate="False">
+	<link rel="icon" href="../favicon.ico" type="image/x-icon" />
+	<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+	<title>
+		<asp:Literal runat="server" ID="PageTitle" meta:resourcekey="PageTitle" /></title>
+
+	<script language="javascript" type="text/javascript">
+		/* Hide new database 'this will take some time' alert */
+		function hideAlert() {
+			document.getElementById('delaywarning').style.display = 'none';
+		}
+		/* Show new database 'this will take some time' alert */
+		function showAlert() {
+			document.getElementById('delaywarning').style.display = 'block';
+		}
+		/* Check URL is install.aspx, otherwise we redirect */
+		/* This prevents CSS image issues due to path */
+		var url = location.href.toLowerCase()
+		if (url.indexOf("admin/install.aspx") != -1) {
+			/* nothing */
+		}
+		else {
+			/* redirect */
+			location.replace("Admin/Install.aspx")
+		}        
+		
+	</script>
+
+	<style type="text/css">
+	html                        { height: 100%; background-color: #333; }
+	body                        { font-family: "Segoe UI",Arial,Helvetica,Sans-Serif; font-size: 9.5pt; font-weight: normal; color: #ccc; padding: 0; margin: 0; }
+	h2                          { font-family: "Segoe UI Light","Open Sans","Segoe UI",Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 210%; color: #fff; margin: 20px 0 0 0; display: inline-block; }
+	body                        { overflow: scroll; overflow: -moz-scrollbars-vertical; height: 100%; padding: 0; margin: 0; }
+	#wizInstallation            { }
+	#leftbar                    { width: 190px; height: 600px; float: left; margin: 0 30px 0 0; }
+	form                        { display: block; margin: 0 auto; width: 680px; height: auto; min-height: 100%; }
+	.summarydetails             { background-color: #777; color: #fff; padding: 3px 10px 3px 10px; }
+	.summarydetails div.formrow { padding: 0 0 10px 0 }
+	div.sidebar                 { display: block; z-index: 10; height: 32px; top: 80px; margin: 0px -33px 0px 0px; padding: 100px 30px 0 0; width: auto; }
+	div.step                    { padding: 0; width: 600px; }
+	#stepshield                 { height: 36px; display: block; width: 310px; margin: 97px 0 0 0; padding: 0; z-index: 1000; position: absolute; background-color: #000; z-index: 1000; filter: alpha(opacity=0); opacity: 0.0; }
+	div.nav                     { margin: 0; padding: 30px 0 0 0; z-index: 2; }
+	div.nav input,
+	input.button                { cursor: pointer; background-color: #bbb; border: solid 1px #333; color: #000; padding: 2px 6px 2px 6px; font-weight: normal; font-size: 11px; margin: 1px 0px 1px 2px; width: auto; display: inline-block; }
+	div.nav input:focus,
+	input.button:focus          { background-color: #ccc; color: #666; }
+	div.nav input:hover         { background-color: #f6f6f6 }
+	.sidebar a                  { display: block; padding: 2px 8px 2px 8px; font-weight: bold; font-size: 13pt; color: #fff; background-color: #c05; float: left; margin: 0 3px 0 0; text-decoration: none; }
+	a.active                    { color: #000; background-color: #fff; }
+	#pagebody                   { padding: 0; margin: 0; }
+	p                           { padding: 5px 0 15px 0; margin: 0; }
+	label                       { font-size: 90%; text-transform: uppercase; display: inline-block; width: 150px; font-size: 100%; color: #999; font-weight: normal; }
+	span.checkbox input         { margin-left: 150px }
+	span.checkbox label         { width: 300px }
+	span.checkbox2 input        { margin-left: 0px }
+	span.checkbox2 label        { width: 420px; padding: 0 0 5px 0; }
+	span.checkbox input,
+	span.radio input            { border-style: none; background-color: transparent; display: inline; width: 20px; float: left; width: 20px; margin-right: 1px; }
+	span.checkbox2 input        { border-style: none; background-color: transparent; display: inline; width: 20px; float: left; width: 20px; margin-right: 1px; }
+	div.formrow                 { padding: 2px 0 5px 0 }
+	div.spacer                  { clear: both }
+	div.errormessage            { background-color: #c00; color: #fff; padding: 3px 10px 3px 10px; margin: 5px 0 10px 0; font-weight: normal; }
+	div.warnmessage             { background-color: #f50; color: #fff; padding: 3px 10px 3px 10px; margin: 5px 0 10px 0; font-weight: normal; margin-left: 150px; }
+	div.infomessage             { background-color: #777; color: #fff; padding: 3px 10px 3px 10px; margin: 10px 0 10px 0; font-weight: normal; }
+	span.error                  { display: inline-block; color: #fff; font-weight: bold; padding: 1px 5px 1px 3px; text-decoration: blink; background-color: #c00; margin-left: 3px; border-radius: 3px; }
+	select,
+	input,
+	textarea                    { font-weight: normal; font-size: inherit; color: #eee; background-color: #555; border: solid 1px #888; margin: 0 0 3px 0; width: 300px; padding: 1px; }
+	select:focus,
+	input:focus,
+	textarea:focus              { font-weight: normal; color: #fff; background-color: #777; border: solid 1px #ccc; margin-bottom: 3px; }
+	div.helplink                { }
+	a.helplink                  { font-size: 120%; text-decoration: none; color: #68f; padding: 1px 6px 1px 18px; min-height: 17px; margin: -30px 0 0 0; float: right; z-index: 2000; }
+	</style>
+</head>
+<body>
+
+	<form id="frmInstallation" runat="server">
+	<div id="pagebody">
+		<asp:DropDownList ID="ddlLanguage" runat="server" OnSelectedIndexChanged="ddlLanguage_SelectedIndexChanged"
+			AutoPostBack="True" Visible="false">
+		</asp:DropDownList>
+		<div id="stepshield">&nbsp;</div>
+		<asp:Wizard ID="wizInstallation" runat="server" ActiveStepIndex="0">
+			<WizardSteps>
+				<asp:WizardStep ID="ws1_LicenseNumber" runat="server" Title="1" StepType="Start">
+					<!-- -------- STEP 1 - LICENSE NUMBER CHECK -------- -->
+					<div class="helplink">
+						<asp:HyperLink ID="lnkStep1Help" runat="server" NavigateUrl="http://www.kartris.com/Knowledgebase/Installation---Step-1__k-5.aspx"
+							CssClass="helplink" meta:resourcekey="HelpAndFurtherInfo" Target="_blank"></asp:HyperLink>
+					</div>
+					<h2>
+						<asp:Literal runat="server" ID="Step1_Header" meta:resourcekey="Step1_Header" /></h2>
+					<asp:MultiView ID="mvwLicenseNumber" runat="server">
+						<asp:View ID="viwValidLicense" runat="server">
+							<p>
+								<asp:Literal ID="Step1_LicenseValid" runat="server" meta:resourcekey="Step1_LicenseValid"></asp:Literal></p>
+							<p>
+								<asp:Literal ID="Step1_IntroMessage" runat="server" meta:resourcekey="Step1_IntroMessage"></asp:Literal></p>
+						</asp:View>
+						<asp:View ID="viwInvalidLicense" runat="server">
+							<asp:Literal ID="Step1_InvalidLicense" runat="server" meta:resourcekey="Step1_InvalidLicense"></asp:Literal>
+							<br />
+							<br />
+							<asp:Button ID="btnCheckLicenseAgain" runat="server" CssClass="button" meta:resourcekey="Step1_CheckAgain" />
+						</asp:View>
+						<asp:View ID="viwCannotFindLicense" runat="server">
+							<p>
+								<asp:Literal runat="server" ID="Step1_Error_CannotFindLicenseFile" meta:resourcekey="Step1_Error_CannotFindLicenseFile" /></p>
+							<asp:TextBox ID="txtLicensePath" runat="server"></asp:TextBox>
+							<asp:Button ID="btnCheckLicensePath" runat="server" CssClass="button" Text="Check" />
+						</asp:View>
+						<asp:View ID="viwCannotReadLicense" runat="server">
+						</asp:View>
+					</asp:MultiView>
+					<!-- -------- // STEP 1 - LICENSE NUMBER CHECK -------- -->
+				</asp:WizardStep>
+				<asp:WizardStep ID="ws2_HashandMachineKey" runat="server" Title="2" StepType="Step">
+					<!-- -------- STEP 2 - HASH SALT KEY CHECK -------- -->
+					<div class="helplink">
+						<asp:HyperLink ID="lnkStep2Help" runat="server" NavigateUrl="http://www.kartris.com/Knowledgebase/Installation---Step-2__k-6.aspx"
+							CssClass="helplink" meta:resourcekey="HelpAndFurtherInfo" Target="_blank"></asp:HyperLink>
+					</div>
+					<h2>
+						<asp:Literal runat="server" ID="Step2_Header" meta:resourcekey="Step2_Header" /></h2>
+					<p>
+						<asp:Literal ID="litHashDesc" runat="server" Text="<%$ Resources: Step2_litHashDesc_Text %>" /></p>
+					<asp:TextBox ID="txtHashKey" runat="server"></asp:TextBox>
+					<!-- -------- // STEP 2 - HASH SALT KEY CHECK -------- -->
+				</asp:WizardStep>
+				<asp:WizardStep ID="ws3_ConnectionString" runat="server" Title="3" StepType="Step">
+					<!-- -------- STEP 3 - CONNECTION STRING CHECK -------- -->
+					<div class="helplink">
+						<asp:HyperLink ID="lnkStep3Help" runat="server" NavigateUrl="http://www.kartris.com/Knowledgebase/Installation---Step-3__k-7.aspx"
+							CssClass="helplink" meta:resourcekey="HelpAndFurtherInfo" Target="_blank"></asp:HyperLink>
+					</div>
+					<h2>
+						<asp:Literal runat="server" ID="Step3_Header" meta:resourcekey="Step3_Header" /></h2>
+					<asp:PlaceHolder ID="phdConnectionChecking" runat="server">
+						<h4>
+							<asp:Literal runat="server" ID="Step3_CheckingConnection" meta:resourcekey="Step3_CheckingConnection" /></h4>
+						<p>
+							<asp:Literal runat="server" ID="Step3_ConnectionString" meta:resourcekey="Step3_ConnectionStringFound" />
+							<div class="summarydetails">
+								<asp:Literal runat="server" ID="litConnectionString" /></div>
+							<p>
+								<asp:Button ID="btnUseSavedConnection" runat="server" meta:resourcekey="Step3_UseThisConnection"
+									CausesValidation="false" CssClass="button" Visible="false" /></p>
+						</p>
+					</asp:PlaceHolder>
+					<asp:MultiView ID="mvwConnectionString" runat="server">
+						<asp:View ID="viwSuccess" runat="server">
+							<p>
+								<asp:Literal runat="server" ID="Step3_Success" meta:resourcekey="Step3_Success" /></p>
+						</asp:View>
+						<asp:View ID="viwCannotConnect" runat="server">
+							<asp:PlaceHolder ID="phdRetryCheckButton" runat="server">
+								<p>
+									<asp:Button ID="btnRetryCheck" runat="server" meta:resourcekey="Retry" CausesValidation="false"
+										CssClass="button" /></p>
+							</asp:PlaceHolder>
+							<h4>
+								<asp:Literal runat="server" ID="Step3_EnterDetails" meta:resourcekey="Step3_EnterDetails" /></h4>
+								
+								<p><asp:Literal runat="server" ID="Step3_Help" meta:resourcekey="Step3_Help" /></p>
+							<div class="formrow">
+								<asp:Label ID="Step3_ServerName" runat="server" meta:resourcekey="Step3_ServerName"
+									AssociatedControlID="txtServerName"></asp:Label>
+								<asp:TextBox ID="txtServerName" runat="server"></asp:TextBox>
+								<asp:RequiredFieldValidator ID="valServerName" ForeColor="" CssClass="error" runat="server"
+									ControlToValidate="txtServerName" ErrorMessage="<%$ Resources: Error_RequiredField %>"></asp:RequiredFieldValidator>
+							</div>
+							<div class="spacer">
+							</div>
+							<div class="formrow">
+								<span class="checkbox">
+									<asp:CheckBox ID="chkUseWindowsAuthentication" runat="server" AutoPostBack="True"
+										Text="<%$ Resources: Step3_UseWindowsAuthentication%>" />
+								</span>
+							</div>
+							<div class="spacer">
+							</div>
+							<div class="formrow">
+								<asp:Label ID="Step3_Username" runat="server" meta:resourcekey="Username" AssociatedControlID="txtUsername"></asp:Label>
+								<asp:TextBox ID="txtUsername" runat="server"></asp:TextBox>
+								<asp:RequiredFieldValidator ID="valUsername" ForeColor="" CssClass="error" runat="server"
+									ControlToValidate="txtUsername" ErrorMessage="<%$ Resources: Error_RequiredField %>"></asp:RequiredFieldValidator>
+							</div>
+							<div class="spacer">
+							</div>
+							<div class="formrow">
+								<asp:Label ID="Step3_Password" runat="server" meta:resourcekey="Password" AssociatedControlID="txtPassword"></asp:Label>
+								<asp:TextBox ID="txtPassword" runat="server"></asp:TextBox>
+								<asp:RequiredFieldValidator ID="valPassword" ForeColor="" CssClass="error" runat="server"
+									ControlToValidate="txtPassword" ErrorMessage="<%$ Resources: Error_RequiredField %>"></asp:RequiredFieldValidator>
+							</div>
+							<div class="spacer">
+							</div>
+							<div class="formrow">
+								<span class="checkbox">
+									<asp:RadioButton ID="rbnUseExistingDB" onClick="hideAlert()" runat="server" meta:resourcekey="Step3_UseExistingDB"
+										GroupName="database_status" Checked="true" />
+								</span>
+							</div>
+							<div class="spacer">
+							</div>
+							<div class="formrow">
+								<span class="checkbox">
+									<asp:RadioButton ID="rbnCreateDB" onClick="showAlert()" runat="server" meta:resourcekey="Step3_CreateNewDB"
+										GroupName="database_status" />
+								</span>
+							</div>
+							<div class="spacer">
+							</div>
+							<div class="warnmessage" style="display: none;" id="delaywarning">
+								<asp:Literal runat="server" ID="litTimeDelayWarning" meta:resourcekey="Step3_TimeDelay" />
+							</div>
+							<div class="spacer">
+							</div>
+							<div class="formrow">
+								<asp:Label ID="Step3_DatabaseName" runat="server" meta:resourcekey="Step3_DatabaseName"
+									AssociatedControlID="txtDatabaseName"></asp:Label>
+								<asp:TextBox ID="txtDatabaseName" runat="server"></asp:TextBox>
+								<asp:RequiredFieldValidator ID="valDatabaseName" ForeColor="" CssClass="error" runat="server"
+									ControlToValidate="txtDatabaseName" ErrorMessage="<%$ Resources: Error_RequiredField %>"></asp:RequiredFieldValidator>
+							</div>
+							<div class="spacer">
+							</div>
+						</asp:View>
+					</asp:MultiView>
+					<!-- -------- // STEP 3 - CONNECTION STRING CHECK -------- -->
+				</asp:WizardStep>
+				<asp:WizardStep runat="server" Title="4" ID="ws4_SetUpDatabase">
+					<!-- -------- STEP 4 - DATABASE STRUCTURE CHECK -------- -->
+					<div class="helplink">
+						<asp:HyperLink ID="lnkStep4Help" runat="server" NavigateUrl="http://www.kartris.com/Knowledgebase/Installation---Step-4__k-8.aspx"
+							CssClass="helplink" meta:resourcekey="HelpAndFurtherInfo" Target="_blank"></asp:HyperLink>
+					</div>
+					<h2>
+						<asp:Literal runat="server" ID="Step4_Header" meta:resourcekey="Step4_Header" /></h2>
+					<h4>
+						<asp:Literal runat="server" ID="Step4_ConnectionSuccessful" meta:resourcekey="Step4_ConnectionSuccessful" /></h4>
+					<asp:MultiView ID="mvwSetUpDatabase" runat="server">
+						<asp:View ID="viwDatabaseAlreadySetUp" runat="server">
+							<p>
+								<asp:Literal runat="server" ID="Step4_DatabaseAlreadyContains" meta:resourcekey="Step4_DatabaseAlreadyContains" />
+							</p>
+						</asp:View>
+						<asp:View ID="viwBlankDatabase" runat="server">
+							<p>
+								<asp:Literal runat="server" ID="Step4_DatabaseSetupSuccess" meta:resourcekey="Step4_DatabaseSetupSuccess" /></p>
+							<p>
+								<asp:Literal runat="server" ID="Step4_DatabaseNowReady" meta:resourcekey="Step4_DatabaseNowReady" /></p>
+						</asp:View>
+						<asp:View ID="viwDatabaseCreationFailure" runat="server">
+						</asp:View>
+					</asp:MultiView>
+					<p>
+						<asp:Literal runat="server" ID="Step4_AccountGenerated" meta:resourcekey="Step4_AccountGenerated" /></p>
+					<div class="formrow">
+						<asp:Label ID="Step4_Username" runat="server" meta:resourcekey="Username" AssociatedControlID="Username"></asp:Label>
+						<strong>
+							<asp:Literal runat="server" ID="Username" Text="Admin" /></strong>
+					</div>
+					<div class="formrow">
+						<asp:Label ID="Step4_Password" runat="server" meta:resourcekey="Password" AssociatedControlID="litBackendPassword"></asp:Label>
+						<strong>
+							<asp:Literal runat="server" ID="litBackendPassword" /></strong>
+					</div>
+					<!-- -------- // STEP 4 - DATABASE STRUCTURE CHECK -------- -->
+				</asp:WizardStep>
+				<asp:WizardStep ID="ws5_ConfigSettings" runat="server" Title="5">
+					<!-- -------- STEP 5 - IMPORTANT CONFIG SETTINGS -------- -->
+					<div class="helplink">
+						<asp:HyperLink ID="lnkStep5Help" runat="server" NavigateUrl="http://www.kartris.com/Knowledgebase/Installation---Step-5__k-9.aspx"
+							CssClass="helplink" meta:resourcekey="HelpAndFurtherInfo" Target="_blank"></asp:HyperLink>
+					</div>
+					<h2>
+						<asp:Literal runat="server" ID="Step5_Header" meta:resourcekey="Step5_Header" /></h2>
+					<asp:PlaceHolder runat="server" ID="phdConfigSettings">
+					</asp:PlaceHolder>
+					
+					<p>
+					<asp:Label runat="server" ID="lblTaxRegime" Text="<%$ Resources: Step5_TaxRegime_Text %>" Font-Bold="true" />
+					<asp:DropDownList runat="server" ID="ddlTaxRegime" Width="200">
+						<asp:ListItem Text="-" Value="" Selected="True"/>
+						<asp:ListItem Value="European Union" />
+						<asp:ListItem Value="US" />
+						<asp:ListItem Value="Canada" />
+						<asp:ListItem Value="Other" />
+					</asp:DropDownList>
+					<asp:RequiredFieldValidator ID="valTaxRegime" ForeColor="" CssClass="error" runat="server"
+									ControlToValidate="ddlTaxRegime"
+									ErrorMessage="<%$ Resources: Error_RequiredField %>"></asp:RequiredFieldValidator>
+					<br/>
+					<asp:Literal ID="litTaxRegimeDesc" runat="server" Text="<%$ Resources: Step5_litTaxRegimeDesc_Text %>" /></p>
+					
+					<!-- -------- // STEP 5 - IMPORTANT CONFIG SETTINGS -------- -->
+				</asp:WizardStep>
+				<asp:WizardStep ID="ws6_FolderPermissions" runat="server" Title="6">
+					<!-- -------- STEP 6 - FOLDER PERMISSIONS CHECK-------- -->
+					<div class="helplink">
+						<asp:HyperLink ID="lnkStep6Help" runat="server" NavigateUrl="http://www.kartris.com/Knowledgebase/Installation---Step-6__k-10.aspx"
+							CssClass="helplink" meta:resourcekey="HelpAndFurtherInfo" Target="_blank"></asp:HyperLink>
+					</div>
+					<h2>
+						<asp:Literal runat="server" ID="Step6_Header" meta:resourcekey="Step6_Header" /></h2>
+					<p>
+						<asp:Literal runat="server" ID="Step6_TestingImages" meta:resourcekey="Step6_TestingImages" />
+						<asp:Literal runat="server" ID="litImagesStatus"></asp:Literal>
+					</p>
+					<p>
+						<asp:Literal runat="server" ID="Step6_TestingUploads" meta:resourcekey="Step6_TestingUploads" />
+						<asp:Literal runat="server" ID="litUploadsStatus"></asp:Literal>
+					</p>
+					<p>
+						<asp:Literal runat="server" ID="Step7_TestingPayment" meta:resourcekey="Step6_TestingPayment" />
+						<asp:Literal runat="server" ID="litPaymentStatus"></asp:Literal>
+					</p>
+					<asp:Button ID="btnRetryTests" runat="server" CssClass="button" Text="<%$ Resources: Step6_RetryTests %>" />
+					<!-- -------- // STEP 6 - FOLDER PERMISSIONS CHECK-------- -->
+				</asp:WizardStep>
+				<asp:WizardStep ID="ws7_ReviewSettings" runat="server" StepType="Finish" Title="7">
+					<!-- -------- STEP 7 - REVIEW SETTINGS -------- -->
+					<div class="helplink">
+						<asp:HyperLink ID="lnkStep7Help" runat="server" NavigateUrl="http://www.kartris.com/Knowledgebase/Installation---Step-7__k-11.aspx"
+							CssClass="helplink" meta:resourcekey="HelpAndFurtherInfo" Target="_blank"></asp:HyperLink>
+					</div>
+					<h2>
+						<asp:Literal runat="server" ID="Step7_Header" meta:resourcekey="Step7_Header" /></h2>
+					<p>
+						<asp:Literal ID="litReviewSettingsDesc" runat="server" Text="<%$ Resources: Step7_ReviewSettingsDesc %>"></asp:Literal></p>
+					<br />
+					<div class="summarydetails">
+					<asp:PlaceHolder runat="server" ID="phdLicensePath">
+						<div class="formrow">
+							<asp:Literal runat="server" ID="Step7_LicensePath" meta:resourcekey="Step7_LicensePath" />
+							<asp:Literal ID="litReviewLicensePath" runat="server" Mode="Encode"></asp:Literal>
+						</div>
+						<div class="spacer">
+						</div>
+					</asp:PlaceHolder>
+					<asp:PlaceHolder runat="server" ID="phdConnectionString">
+						<div class="formrow">
+							<asp:Literal runat="server" ID="Step7_ConnectionString" meta:resourcekey="ConnectionString" />
+							<asp:Literal ID="litReviewConnectionString" runat="server" Mode="Encode"></asp:Literal>
+						</div>
+						<div class="spacer">
+						</div>
+					</asp:PlaceHolder>
+					<asp:PlaceHolder runat="server" ID="phdHashSaltKey">
+						<div class="formrow">
+							<asp:Literal runat="server" ID="Step7_HashSaltKey" meta:resourcekey="Step7_HashSaltKey" />
+							<asp:Literal ID="litReviewHashSaltKey" runat="server" Mode="Encode"></asp:Literal>
+						</div>
+						<div class="spacer">
+						</div>
+					</asp:PlaceHolder>
+					<asp:PlaceHolder runat="server" ID="phdTaxRegime">
+						<div class="formrow">
+							<asp:Literal runat="server" ID="Step7_TaxRegime" meta:resourcekey="Step7_TaxRegime" />
+							<asp:Literal ID="litReviewTaxRegime" runat="server" Mode="Encode"></asp:Literal>
+						</div>
+						<div class="spacer">
+						</div>
+					</asp:PlaceHolder></div>
+					<asp:Literal ID="litReason" runat="server"></asp:Literal>
+					<!-- -------- // STEP 7 - REVIEW SETTINGS -------- -->
+				</asp:WizardStep>
+				<asp:WizardStep ID="ws7_SetupComplete" runat="server" StepType="Complete" Title="8">
+					<!-- -------- STEP 8 - SETUP COMPLETE -------- -->
+					<div class="helplink">
+						<asp:HyperLink ID="lnkStep8Help" runat="server" NavigateUrl="http://www.kartris.com/Knowledgebase/Installation---Step-8__k-12.aspx"
+							CssClass="helplink" meta:resourcekey="HelpAndFurtherInfo" Target="_blank"></asp:HyperLink>
+					</div>
+					<h2>
+						<asp:Literal runat="server" ID="Step8_Header" meta:resourcekey="Step8_Header" /></h2>
+					<h4>
+						<asp:Literal runat="server" ID="Step8_Congratulations" meta:resourcekey="Step8_Congratulations" /></h4>
+					<p>
+						<asp:Literal ID="litReminder" runat="server" Text="<%$ Resources: Step8_ReminderToUploadNewWebConfig %>"></asp:Literal></p>
+					<p>
+						<a href="../Default.aspx" target="_new">
+							<asp:Literal runat="server" ID="Step8_ViewFrontEnd" meta:resourcekey="Step8_ViewFrontEnd" /></a></p>
+					<p>
+						<a href="Default.aspx" target="_new">
+							<asp:Literal runat="server" ID="Step8_YouCanLoginBackend" meta:resourcekey="Step8_YouCanLoginBackend" /></a></p>
+					<!-- -------- // STEP 8 - SETUP COMPLETE -------- -->
+				</asp:WizardStep>
+			</WizardSteps>
+			<SideBarStyle Width="200px" />
+		</asp:Wizard>
+		<asp:PlaceHolder ID="phdError" runat="server" Visible="false">
+			<div class="errormessage">
+				<strong>Error:</strong>
+				<asp:Literal ID="litError" runat="server" Text=""></asp:Literal>
+			</div>
+		</asp:PlaceHolder>
+		<br />
+		<asp:Button runat="server" Text="<%$ Resources: Step8_DownloadWebConfigButtonText %>"
+			ID="btnSaveCopy" Visible="false" CssClass="button"></asp:Button>
+		<asp:PlaceHolder ID="phdNote" runat="server">
+			<div class="infomessage">
+				<asp:Label ID="lblNote" runat="server" Text="<%$ Resources: CannotUpdateWebConfigNote %>"></asp:Label>
+			</div>
+		</asp:PlaceHolder>
+	</div>
+	</form>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" enableLocalization="true" >
+	<siteMapNode url="~/Default.aspx" title="$resources:Kartris,ContentText_Home"  description="$resources:Kartris,ContentText_Home"  >
+
+		<siteMapNode url="~/Customer.aspx" title="$resources:Kartris,PageTitle_MyAccount"  description="$resources:Kartris,PageTitle_MyAccount" >
+			<siteMapNode url="~/CustomerDetails.aspx" title="$resources:Kartris,ContentText_ChangeCustomerCode"  description="$resources:Kartris,ContentText_ChangeCustomerCode"  />
+			<siteMapNode url="~/Customer.aspx?action=savebasket" title="$resources:Basket,PageTitle_SaveRecoverBasketContents"  description="$resources:Basket,PageTitle_SaveRecoverBasketContents"  />
+			<siteMapNode url="~/Customer.aspx?action=wishlists" title="$resources:Basket,ContentText_SaveWishList"  description="$resources:Basket,ContentText_SaveWishList"  />
+			<siteMapNode url="~/CustomerAffiliates.aspx" title="$resources:Kartris,PageTitle_Affiliates"  description="$resources:Kartris,PageTitle_Affiliates"  />
+			<siteMapNode url="~/CustomerTickets.aspx" title="$resources:Tickets,PageTitle_SupportTickets"  description="$resources:Tickets,PageTitle_SupportTickets" value="supporttickets"  />
+		</siteMapNode>
+		
+		<siteMapNode url="~/News.aspx" title="$resources:News,PageTitle_SiteNews"  description="$resources:News,PageTitle_SiteNews" value="news" />
+				
+		<siteMapNode url="~/Wishlist.aspx" title="$resources:Kartris,PageTitle_WishListLogin"  description="$resources:Kartris,PageTitle_WishListLogin" />
+		
+		<siteMapNode url="~/Knowledgebase.aspx?" title="$resources:Kartris,PageTitle_Support"  description="$resources:Kartris,PageTitle_Support" value="support">
+			<siteMapNode url="~/Knowledgebase.aspx" title="$resources:Knowledgebase,PageTitle_Knowledgebase"  description="$resources:Knowledgebase,PageTitle_Knowledgebase" value="knowledgebase" />
+			<siteMapNode url="~/CustomerTickets.aspx?" title="$resources:Tickets,PageTitle_SupportTickets"  description="$resources:Tickets,PageTitle_SupportTickets" value="supporttickets" />
+		</siteMapNode>
+		
+		<siteMapNode url="~/Contact.aspx" title="$resources:Kartris,PageTitle_ContactUs"  description="$resources:Kartris,PageTitle_ContactUs" />
+
+		</siteMapNode>
+</siteMap>

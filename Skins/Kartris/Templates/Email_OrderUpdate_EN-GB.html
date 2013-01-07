@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <style type="text/css">
+            p
+            {
+                font-family: Verdana;
+            }
+         </style>
+	    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	    <title>Order Update</title>
+    </head>
+    <body>
+        <!-- HTML comments are stripped out when the templates are retrieve so it wouldn't matter if we have a lot here -->
+        
+        <p>The status for your one of your orders has been updated.</p>
+
+        <p>=====================  ORDER STATUS  =====================</p>
+        
+        <p><a href="[webshopurl]CustomerViewOrder.aspx?O_ID=[orderid]">[webshopurl]CustomerViewOrder.aspx?O_ID=[orderid]</a></p>
+
+        <p>Order status: [orderstatus]</p>
+        
+        [orderdetails]
+
+        [ordernotesline]
+    </body>
+</html>

@@ -1,0 +1,115 @@
+﻿<%@ Master Language="VB" CodeFile="Template.master.vb" Inherits="Skins_Admin_Template" %>
+
+<%@ Register TagPrefix="_user" TagName="AdminBar" Src="~/UserControls/Back/_AdminBar.ascx" %>
+<%@ Register TagPrefix="_user" TagName="AnimatedText" Src="~/UserControls/Back/_AnimatedText.ascx" %>
+<%@ Register TagPrefix="_user" TagName="StoreStatus" Src="~/UserControls/Back/_StoreStatus.ascx" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server" enableviewstate="False">
+    <base id="baseTag" runat="server" />
+    <!--
+    ========================================================================
+    KARTRIS by cactusoft
+    Copyright 2012 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
+    This work is licensed under a
+    Creative Commons Attribution-ShareAlike 3.0 Unported License
+
+    http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
+    ========================================================================
+        -->
+    <title>Kartris Administration</title>
+    <link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
+    <link id="lnkFavIcon2" rel="shortcut icon" href="~/favicon.ico" type="image/x-icon"
+        runat="server" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+    <link href="general.css" rel="stylesheet" type="text/css" />
+    <link href="sections.css" rel="stylesheet" type="text/css" />
+    <link href="template.css" rel="stylesheet" type="text/css" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+    <asp:ContentPlaceHolder ID="phdHead" runat="server" EnableViewState="False">
+    </asp:ContentPlaceHolder>
+</head>
+<body class="main">
+    <form id="mainform" runat="server" class="container">
+    <ajaxToolkit:ToolkitScriptManager ID="scrManager" runat="server" ScriptMode="Release"
+        EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"
+        AsyncPostBackTimeout="1800" CombineScripts="true" EnableScriptGlobalization="true"
+        EnableScriptLocalization="true" EnableViewState="False">
+        <Scripts>
+            <asp:ScriptReference Path="~/JavaScript/Webkit.js" />
+            <asp:ScriptReference Path="~/JavaScript/VwdCmsSplitterBar.js" />
+        </Scripts>
+    </ajaxToolkit:ToolkitScriptManager>
+    <div id="centrecontainer">
+        <div id="pagebody">
+            <!-- Search -->
+            <_user:AdminSearch runat="server" ID="_UC_AdminSearch" />
+            <!-- Header bar -->
+            <div id="header">
+            <!-- Navigation Menu -->
+                <_user:NavigationMenu runat="server" ID="_UC_NavigationMenu" EnableViewState="false" />
+            </div>
+            <!-- Updated Message -->
+            <div id="updatemessage_holder">
+                <asp:UpdatePanel ID="updAnimation" runat="server" UpdateMode="Conditional">
+                    <ContentTemplate>
+                        <_user:AnimatedText ID="_UC_AnimatedText" runat="server" />
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+            <div id="mainarea">
+                <asp:Panel ID="pnlLeftSide" runat="server" Width="260px" CssClass="leftside">
+                    <div class="spacer">
+                    </div>
+                    <!-- Category Tree View -->
+                    <_user:CategoryMenu ID="_UC_CategoryMenu" runat="server" />
+                    <asp:Literal runat="server" ID="litHiddenCatMenu" Visible="False" />
+                </asp:Panel>
+                <div runat="server" id="divPageContent" class="pagecontent">
+                    <a name="top"></a>
+                    <div id="pagecontent_pad">
+                        <!-- Page Content -->
+                        <asp:ContentPlaceHolder ID="phdMain" runat="server">
+                        </asp:ContentPlaceHolder>
+                        <div class="spacer">
+                        </div>
+                        <div class="pagebottom squarebuttons blackbuttons">
+                            <a href="#top" title="Top">Top</a>
+                        </div>
+                    </div>
+                    <div class="spacer">
+                    </div>
+                </div>
+            </div>
+            <div id="rightside">
+                
+                <div class="spacer">
+                </div>
+                <!-- To Do List -->
+                <asp:UpdatePanel ID="updTaskList" runat="server" UpdateMode="Conditional">
+                    <ContentTemplate>
+                        <_user:TaskList ID="_UC_TaskList" runat="server" />
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+            </div>
+            <!-- Splitter Bar -->
+            <VwdCms:SplitterBar runat="server" ID="splMainPage" LeftResizeTargets="pnlLeftSide"
+                RightResizeTargets="divPageContent" MinWidth="170" MaxWidth="500" CssClass="splitterbar"
+                BackgroundColor="#eee" BackgroundColorHilite="#fc5" BackgroundColorResizing="#fc5" />
+            <div class="spacer">
+            </div>
+        </div>
+    </div>
+    <!-- Login Console -->
+    <_user:LoginConsole runat="server" ID="_UC_LoginConsole" />
+    <!-- Admin Bar -->
+    <_user:AdminBar ID="_UC_AdminBar" runat="server" />
+    <!-- Store
+    Status -->
+    <span class="storestatus squarebuttons bluebuttons">
+        <_user:StoreStatus ID="_UC_StoreStatus" runat="server" ClientIDMode="Predictable" />
+    </span>
+    </form>
+</body>
+</html>

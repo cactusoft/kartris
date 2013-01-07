@@ -1,0 +1,163 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+   <loc>http://localhost:52038/Kartris/Customer.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/News.aspx</loc>
+   <priority>1.0</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/Wishlist.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/Knowledgebase.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/Contact.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/CustomerDetails.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/Customer.aspx?action=savebasket</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/Customer.aspx?action=wishlists</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/CustomerAffiliates.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/CustomerTickets.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Category-1__c-p-0-0-1.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Customizable-Product__p-7.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Multiple-Version-Product__p-3.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Multiple-Version-Product-with-Images__p-9.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Options-Product-1__p-4.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Options-Product-2__p-5.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Product-with-Attributes__p-6.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Single-Item-Product__p-1.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Single-Item-Product-2__p-2.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Category-2__c-p-0-0-2.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Category-3__c-p-0-0-3.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Product-in-Category-with-Subcats__p-8.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Category-4__c-p-0-0-4.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Category-5__c-p-0-0-5.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Category-6__c-p-0-0-6.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Category-7__c-p-0-0-7.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Category-2/Subcategory-1__c-p-0-0-2-8.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Category-2/Subcategory-2__c-p-0-0-2-9.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Category-2/Subcategory-1/Sub-Subcategory-1__c-p-0-0-2-8-10.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Category-2/Subcategory-1/Sub-Subcategory-2__c-p-0-0-2-8-11.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Category-2/Subcategory-1/Sub-Subcategory-3__c-p-0-0-2-8-12.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:52038/Kartris/en-GB/Category-2/Subcategory-1/Sub-Subcategory-4__c-p-0-0-2-8-13.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+</urlset>

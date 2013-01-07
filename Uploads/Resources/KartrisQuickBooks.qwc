@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<QBWCXML>
+<AppName>Kartris</AppName>
+<AppID></AppID>
+<AppURL>WEBSHOPURL/KartrisQBService.asmx</AppURL>
+<AppDescription>Kartris Web Service for QuickBooks Web Connector</AppDescription>
+<AppSupport>http://www.kartris.com/support/</AppSupport>
+<OwnerID>{F42DBFB5-3F0E-493b-A965-B277FB6DC140}</OwnerID>
+<FileID>{TO_BE_GENERATED_RANDOMLY}</FileID>
+<UserName>Kartris</UserName>
+<QBType>QBFS</QBType>
+<Scheduler>
+  <RunEveryNMinutes>2</RunEveryNMinutes>
+</Scheduler>
+<Style>Document</Style>
+<AuthFlags>0xF</AuthFlags>
+</QBWCXML>

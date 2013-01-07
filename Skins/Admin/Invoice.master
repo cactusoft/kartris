@@ -1,0 +1,27 @@
+﻿<%@ Master Language="VB" CodeFile="Invoice.master.vb" Inherits="Skin_Admin_Invoice" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head runat="server">
+	<!--
+		===============================================================================
+		KARTRIS by cactusoft
+		Copyright 2012 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
+		All rights reserved.
+		===============================================================================
+		-->
+	<link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
+	<link id="lnkFavIcon2" rel="shortcut icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<link href="invoice.css" rel="stylesheet" type="text/css" />
+	<title>Kartris v1</title>
+</head>
+<body>
+	<form id="form1" runat="server">
+	<div>
+		<asp:ContentPlaceHolder id="cntMain" runat="server" EnableViewState="false">
+		
+		</asp:ContentPlaceHolder>
+	</div>
+	</form>
+</body>
+</html>

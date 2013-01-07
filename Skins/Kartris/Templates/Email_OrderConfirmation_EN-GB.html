@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head>
+        <style type="text/css">
+            p
+            {
+                font-family: Verdana;
+            }
+         </style>
+	    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	    <title>Order Confirmation</title>
+    </head>
+    <body>
+        <!-- HTML comments are stripped out when the templates are retrieve so it wouldn't matter if we have a lot here -->
+
+        <!-- header added to the store owner email when an order is made, tag is removed in customer emails -->
+        [storeowneremailheader]
+        
+        <p>
+            Thank you for your order!
+        </p>
+        <p>Order Number: [orderid]</p>
+        <!-- additional PO / offline payment info line, automatically removed when PO / offline payment is not used. 
+            You can remove this tag manually if not using this payment method -->
+        [poofflinepaymentdetails]
+        
+        <p>
+        <!-- basket contents, shipping, discounts, other adjustments and order total -->
+        [ordercontents]
+        </p>
+        <p>
+        <!-- You saved $$$ by buying from this store -->
+        [totalsavedline]
+        </p>
+        <p>
+        <!-- customer comment line -->
+        [ordercomments]
+        </p>
+        <p>
+        CUSTOMER DETAILS:
+        </p>
+        Carholder's Name: [billingname]<br />
+        [companylabel] [billingcompany]<br />
+        [euvatnumberlabel] [euvatnumbervalue]<br />
+        Email Address: [billingemail]<br />
+        Telephone: [billingphone]
+        <p>
+        Address:
+        </p>
+        [billingname]<br />
+        [billingcompany]<br />
+        [billingstreetaddress]<br />
+        [billingtowncity]<br />
+        [billingcounty]<br />
+        [billingpostcode]<br />
+        [billingcountry]
+        <p>
+        -------------------------------
+        </p>
+        <p>
+        SHIPPING DETAILS
+        </p>
+        [shippingname]<br />
+        [shippingcompany]<br />
+        [shippingstreetaddress]<br />
+        [shippingtowncity]<br />
+        [shippingcounty]<br />
+        [shippingpostcode]<br />
+        [shippingcountry]
+        <p>
+        -------------------------------
+        </p>
+        The order was placed at: [nowoffset]<br />
+        IP Address: [customerip]<br />
+        [customeruseragent]
+        <p>
+        You can log into your account on our website to view your order history at: <a href="[webshopurl]Customer.aspx">[webshopurl]Customer.aspx</a>
+        </p>
+        <p>
+        Kind regards,
+        </p>
+        [websitename]<br/>
+        <a href="[webshopurl]">[webshopurl]</a>
+
+    </body>
+</html>
