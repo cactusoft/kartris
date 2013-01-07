@@ -1,0 +1,77 @@
+﻿<parameters>
+
+	<!-- Prompts where to copy the content files and takes a web site path  -->
+	<parameter name="Application Path" description="Full site path where you would like to install your application (i.e., Default Web Site/kartris)" defaultValue="Default Web Site/kartris" tags="iisapp">
+		<parameterEntry type="ProviderPath" scope="iisapp" match="kartris" />
+	</parameter>
+
+	<parameter name="SetAcl0" description="Automatically sets write access for the app" defaultValue="{Application Path}" tags="hidden">
+        	<parameterEntry type="ProviderPath" scope="setAcl" match="kartris" />
+	</parameter>
+
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl1" description="Automatically sets write access for the app" defaultValue="{Application Path}/admin" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/admin" />
+	</parameter>
+
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl2" description="Automatically sets write access for the app" defaultValue="{Application Path}/App_Browsers" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/App_Browsers" />
+	</parameter>
+
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl3" description="Automatically sets write access for the app" defaultValue="{Application Path}/App_Themes" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/App_Themes" />
+	</parameter>
+
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl4" description="Automatically sets write access for the app" defaultValue="{Application Path}/bin" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/bin" />
+	</parameter>
+
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl5" description="Automatically sets write access for the app" defaultValue="{Application Path}/CuteSoft_Client" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/CuteSoft_Client" />
+	</parameter>
+
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl6" description="Automatically sets write access for the app" defaultValue="{Application Path}/Images" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/Images" />
+	</parameter>
+
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl7" description="Automatically sets write access for the app" defaultValue="{Application Path}/Javascript" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/Javascript" />
+	</parameter>
+
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl8" description="Automatically sets write access for the app" defaultValue="{Application Path}/MasterPages" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/MasterPages" />
+	</parameter>
+
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl9" description="Automatically sets write access for the app" defaultValue="{Application Path}/Plugins" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/Plugins" />
+	</parameter>
+
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl10" description="Automatically sets write access for the app" defaultValue="{Application Path}/Protected" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/Protected" />
+	</parameter>
+
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl11" description="Automatically sets write access for the app" defaultValue="{Application Path}/Templates" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/Templates" />
+	</parameter>
+
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl12" description="Automatically sets write access for the app" defaultValue="{Application Path}/Uploads" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/uploads" />
+	</parameter>
+	<!-- This is the parameter that is used to set ACLs, it's set to the application path filled in by the user -->
+	<parameter name="SetAcl13" description="Automatically sets write access for the app" defaultValue="{Application Path}/UserControls" tags="hidden">
+		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/UserControls" />
+	</parameter>
+
+
+</parameters>

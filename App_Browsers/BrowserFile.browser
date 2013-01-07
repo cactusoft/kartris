@@ -1,0 +1,45 @@
+<!--
+    You can find existing browser definitions at
+    <windir>\Microsoft.NET\Framework\<ver>\CONFIG\Browsers
+-->
+<browsers>
+    <browser id="NewBrowser" parentID="Mozilla">
+        <identification>
+            <userAgent match="Unique User Agent Regular Expression" />
+        </identification>
+
+        <capture>
+            <userAgent match="NewBrowser (?'version'\d+\.\d+)" />
+        </capture>
+
+        <capabilities>
+            <capability name="browser" value="My New Browser" />
+            <capability name="version" value="${version}" />
+        </capabilities>
+    </browser>
+
+    <browser refID="Mozilla">
+        <capabilities>
+            <capability name="xml" value="true" />
+        </capabilities>
+    </browser>
+
+  <browser refID="Default">
+    <controlAdapters>
+      <adapter controlType="System.Web.UI.WebControls.Menu" adapterType="Kartris.MenuAdapter" />
+	  <adapter controlType="System.Web.UI.WebControls.FormView" adapterType="Kartris.FormViewAdapter" />
+      <!--<adapter controlType="System.Web.UI.WebControls.TreeView" adapterType="Kartris.TreeViewAdapter" />-->
+	  <adapter controlType="System.Web.UI.HtmlControls.HtmlForm" adapterType="Kartris.FormRewriterControlAdapter" />
+	  <adapter controlType="System.Web.UI.WebControls.GridView" adapterType="Kartris.GridViewAdapter" />
+      <adapter controlType="System.Web.UI.WebControls.DetailsView" adapterType="Kartris.DetailsViewAdapter" />
+      <!--<adapter controlType="System.Web.UI.WebControls.DataList" adapterType="Kartris.DataListAdapter" />-->
+	  <adapter controlType="System.Web.UI.WebControls.ChangePassword" adapterType="Kartris.ChangePasswordAdapter" />
+      <adapter controlType="System.Web.UI.WebControls.Login" adapterType="Kartris.LoginAdapter" />
+      <adapter controlType="System.Web.UI.WebControls.LoginStatus" adapterType="Kartris.LoginStatusAdapter" />
+      <adapter controlType="System.Web.UI.WebControls.CreateUserWizard" adapterType="Kartris.CreateUserWizardAdapter" />
+      <adapter controlType="System.Web.UI.WebControls.PasswordRecovery" adapterType="Kartris.PasswordRecoveryAdapter" />
+	  <adapter controlType="System.Web.UI.WebControls.RadioButtonList" adapterType="Kartris.RadioButtonListAdapter" />
+	  <adapter controlType="System.Web.UI.WebControls.Wizard" adapterType="Kartris.WizardAdapter" />
+    </controlAdapters>
+  </browser>
+</browsers>

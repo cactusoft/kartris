@@ -1,0 +1,142 @@
+﻿'[[[NEW COPYRIGHT NOTICE]]]
+Imports KartSettingsManager
+
+''' <summary>
+''' Shown in Products.aspx page.
+''' Contains the following sections:
+'''    1.(Related Products)    : List of the products that are related to the current product.
+'''                               -> Read the data from "tblKartrisRelatedProducts"
+'''    2.(Try These Categories): List of the categories that are linked with the current product.
+'''                               -> Read the data from "tblKartrisProductCategoryLink"
+''' </summary>
+''' <remarks>By Mohammad</remarks>
+Partial Class CarryOnShopping
+    Inherits System.Web.UI.UserControl
+
+    Private _ProductID As Integer
+    Private _LanguageID As Short
+
+    Public ReadOnly Property ProductID() As Integer
+        Get
+            Return _ProductID
+        End Get
+    End Property
+
+    ''' <summary>
+    ''' Loads the data on the UI.
+    ''' </summary>
+    ''' <param name="pProductID">The ProductID of the Current Page.</param>
+    ''' <param name="pLanguageID"></param>
+    ''' <remarks></remarks>
+    Public Sub LoadCarryOnShopping(ByVal pProductID As Integer, ByVal pLanguageID As Short)
+
+        _ProductID = pProductID
+        _LanguageID = pLanguageID
+
+        '' Calls to load the list of Related Products & Linked Categories as well.
+        LoadRelatedProducts()
+        LoadLinkedCategories()
+        LoadPeopleWhoBoughtThis()
+
+        '' Gets the Title of CarryOnShopping's section, if one of the lists has data.
+        If rptRelatedProducts.Items.Count > 0 OrElse rptLinkedCategories.Items.Count > 0 OrElse rptPeopleWhoBoughtThis.Items.Count > 0 Then
+            litCarryOnShoppingHeader.Text = GetGlobalResourceObject("Products", "ContentText_CarryOnShopping")
+        End If
+
+    End Sub
+
+    ''' <summary>
+    ''' Loads the list of related products.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub LoadRelatedProducts()
+
+        '' Add the related products to a DataTable
+        Dim tblProducts As New DataTable
+        tblProducts = ProductsBLL.GetRelatedProducts(_ProductID, _LanguageID)
+
+        '' If there is no related products, then exit this section.
+        If tblProducts.Rows.Count = 0 Then Exit Sub
+
+        '' Bind the linked categories in to rptRelatedProducts, and View its container.
+        phdRelatedProducts.Visible = True
+        rptRelatedProducts.DataSource = tblProducts.DefaultView
+        rptRelatedProducts.DataBind()
+    End Sub
+
+    ''' <summary>
+    ''' Loads the list of People Who Bought This Also Bought This products.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub LoadPeopleWhoBoughtThis()
+
+        Dim intPeopleWhoBoughtThisMax As Integer
+
+        Try
+            intPeopleWhoBoughtThisMax = CInt(GetKartConfig("frontend.crossselling.peoplewhoboughtthis.max"))
+        Catch ex As Exception
+            intPeopleWhoBoughtThisMax = 0
+        End Try
+
+        If intPeopleWhoBoughtThisMax > 0 Then
+            '' Add the products to a DataTable
+            Dim tblProducts As New DataTable
+            tblProducts = ProductsBLL.GetPeopleWhoBoughtThis(_ProductID, _LanguageID, intPeopleWhoBoughtThisMax)
+
+            '' If there are no products, then exit this section.
+            If tblProducts.Rows.Count = 0 Then Exit Sub
+
+            '' Bind the linked categories in to rptPeopleWhoAlsoBoughtThis, and View its container.
+            phdPeopleWhoBoughtThis.Visible = True
+            rptPeopleWhoBoughtThis.DataSource = tblProducts.DefaultView
+            rptPeopleWhoBoughtThis.DataBind()
+        Else
+            '' Hide people who bought this section
+            phdPeopleWhoBoughtThis.Visible = False
+        End If
+    End Sub
+    ''' <summary>
+    ''' Loads the list of linked categories.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Sub LoadLinkedCategories()
+
+        '' Add the linked categories to a DataTable
+        Dim tblCategories As New DataTable
+        tblCategories = CategoriesBLL.GetCategoriesByProductID(_ProductID, _LanguageID)
+
+        '' If there is no linked categories, then exit this section.
+        If tblCategories.Rows.Count = 0 Then Exit Sub
+
+        '' Bind the linked categories in to rptLinkedCategories, and View its container.
+        phdLinkedCategories.Visible = True
+        rptLinkedCategories.DataSource = tblCategories.DefaultView
+        rptLinkedCategories.DataBind()
+    End Sub
+
+    Protected Sub rptLinkedCategories_ItemDataBound(ByVal Sender As Object, ByVal e As RepeaterItemEventArgs) Handles rptLinkedCategories.ItemDataBound
+        If (e.Item.ItemType = ListItemType.Item) Or (e.Item.ItemType = ListItemType.AlternatingItem) Then
+            CType(e.Item.FindControl("lnkParentCategories"), HyperLink).NavigateUrl = _
+                SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalCategory, CType(e.Item.DataItem, DataRowView).Item(0))
+        End If
+    End Sub
+
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        If Not IsPostBack Then
+            Dim strCurrentPath As String = Request.RawUrl.ToString.ToLower
+            If Not (InStr(strCurrentPath, "/skins/") > 0 Or InStr(strCurrentPath, "/javascript/") > 0 Or InStr(strCurrentPath, "/images/") > 0) Then
+                Try
+                    Dim intProductID As Integer = Request.QueryString("ProductID")
+
+                    If intProductID > 0 Then
+                        Dim numLangID As Short = CShort(Session("LANG"))
+                        LoadCarryOnShopping(intProductID, numLangID)
+                    End If
+
+                Catch ex As Exception
+                    CkartrisFormatErrors.ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
+                End Try
+            End If
+        End If
+    End Sub
+End Class

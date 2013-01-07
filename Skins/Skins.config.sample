@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<CustomerSkinRules>
+		<!--<Customer ID="187" SkinName="Kartris"/>-->
+	</CustomerSkinRules>
+	<CustomerGroupSkinRules>
+		<!--<Customergroup ID="" SkinName=""/>-->
+	</CustomerGroupSkinRules>
+	<ProductSkinRules>
+		<!--<Product ID="" SkinName=""/>-->
+	</ProductSkinRules>
+	<CategorySkinRules>
+		<Category ID="7" SkinName="BlackAndOrange"/>
+	</CategorySkinRules>
+	<ScriptSkinRules>
+		<!--<Script Name="" SkinName=""/>-->
+	</ScriptSkinRules>
+</configuration>

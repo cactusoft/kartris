@@ -1,0 +1,698 @@
+/* 
+========================================================================
+KARTRIS by cactusoft
+Copyright 2012 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
+This work is licensed under a
+Creative Commons Attribution-ShareAlike 3.0 Unported License
+
+http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
+========================================================================
+*/
+/* 
+========================================================================
+PAGE: LOGIN PAGE
+========================================================================
+*/
+#page_login								{ width: 100%; height: 100%; margin: 0; background-color: #333; }
+#page_login h1							{ margin: 0; color: #fff; font-size: 200%; }
+#page_login #loginbox                   { display: block; height: 450px; width: 400px; margin: 0 auto 0 auto; z-index: 4; padding: 100px 0 0 0; }
+#page_login ul li                       { padding: 2px 10px 0 0; margin: 0; float: left; }
+#page_login .Kartris-DetailsView		{ padding: 5px 0 0 0; margin: none; }
+#page_login .Kartris-DetailsView-Name   { width: 110px }
+#page_login .Kartris-DetailsView-Value  { width: 140px; display: block; }
+#page_login label						{ font-size: 85%; text-transform: uppercase; font-weight: normal; color: #bbb; letter-spacing: 1px; }
+#page_login #loginbox .midtext          { width: 140px; margin-top: 3px; background-color: #555; border: solid 1px #888; color: #eee; }
+#page_login #loginbox .midtext:focus    { background-color: #777; border: solid 1px #ccc; color: #fff;}
+#page_login a							{ font-weight: normal; color: #68f; font-size: 120%; }
+#page_login .errormessage               { display: block; font-size: 99%; background-color: #c00; width: auto; margin: 5px 0 0 0; }
+#page_login .button						{ margin: 18px 0 0 0; background-color: #bbb; }
+#page_login .gotofront					{ display: inline-block; margin: 18px 0 0 0 }
+/* 
+========================================================================
+PAGE: HOME / DEFAULT
+========================================================================
+*/
+#page_default h2                        { font-weight: lighter; font-family: "Segoe UI Light","Segoe UI",Tahoma,Arial,Sans-Serif; font-size: 170%; }
+#page_default div.halfwidth             { display: block; float: left; width: 300px; background-color: #eee; padding: 10px; margin: 0 10px 10px 0; height: 200px; }
+#page_default h2 .h2_small              { font-size: 70%; color: #777; }
+/* 
+========================================================================
+PAGE: GATEWAY SETTINGS
+========================================================================
+*/
+#page_gatewaysettings .Kartris-DetailsView-Value
+                                        { width: 300px }
+#page_gatewaysettings .checkbox label   { width: 500px; font-weight: normal; }
+/* 
+========================================================================
+PAGE: CONFIG SETTINGS
+========================================================================
+*/
+#page_config input.midtext              { width: 180px }
+#page_config div.searchboxline          { }
+#page_config table .configname          { font-weight: bold }
+#page_config .itemname                  { width: 370px; overflow: hidden; }
+#page_config .valuefield                { overflow: hidden }
+#page_config select                     { width: 130px }
+#page_config .Kartris-DetailsView-Data  { border-top: solid 1px #000; margin-top: 10px; }
+/* 
+========================================================================
+SECTION: CONFIG SETTING DROPDOWNMENU
+========================================================================
+*/
+/* 
+========================================================================
+CONFIG SETTING DROPDOWNMENU    
+========================================================================
+*/
+.dropdownmenu2                          { z-index: 1; display: block; float: left; width: 190px; letter-spacing: 0px; font-size: 90%; }
+.dropdownmenu2 ul                       { position: relative; width: 100px; padding: 0; border: 0; margin: 0; border: solid 1px #333; }
+.dropdownmenu2 ul ul                    { position: absolute; left: 100px; top: -1px; visibility: hidden; width: 200px; border: solid 1px #333; }
+.dropdownmenu2 ul ul ul                 { left: 200px }
+.dropdownmenu2 ul li                    { position: relative; list-style: none; float: none; margin: 0; width: 100px; }
+.dropdownmenu2 ul li a                  { padding: 1px 8px; display: block; color: #333; background-color: #eee; border-bottom: dotted 1px #000; font-weight: normal; }
+.dropdownmenu2 ul li:hover a            { background-color: #fc5; color: #000; }
+.dropdownmenu2 ul li:hover ul ul,
+.dropdownmenu2 ul li:hover ul ul ul,
+.dropdownmenu2 ul li:hover ul ul ul ul,
+.dropdownmenu2 ul li:hover ul ul ul ul ul   { visibility: hidden }
+.dropdownmenu2 ul ul li                     { float: left; width: 200px; }
+.dropdownmenu2 ul li:hover ul li a          { display: block; color: #333; padding: 1px 8px; background-color: #eee; }
+.dropdownmenu2 ul li ul li:hover a          { display: block; background-color: #fc5; color: #000; }
+.dropdownmenu2 ul li ul li:hover ul a       { display: block; color: #333; padding: 1px 8px; background-color: #eee; }
+.dropdownmenu2 ul li ul li ul li:hover a    { background-color: #fc5; color: #000; }
+.dropdownmenu2 ul li ul li ul li:hover ul a             { display: block; color: #333; padding: 1px 8px; background-color: #eee; }
+.dropdownmenu2 ul li ul li ul li ul li:hover a          { background-color: #fc5; color: #000; }
+.dropdownmenu2 ul li ul li ul li ul li:hover ul a       { display: block; color: #333; padding: 1px 8px; background-color: #eee; }
+.dropdownmenu2 ul li ul li ul li ul li ul li:hover a    { background-color: #fc5; color: #000; }
+.dropdownmenu2 ul li:hover ul,
+.dropdownmenu2 ul li li:hover ul,
+.dropdownmenu2 ul li li li:hover ul,
+.dropdownmenu2 ul li li li li:hover ul,
+.dropdownmenu2 ul li li li li li:hover ul { visibility: visible }
+/* 
+========================================================================
+PAGE: COUPONS
+========================================================================
+*/
+#page_coupons table tr td.column1       { font-weight: bold }
+#page_coupons table tr td.column2       { width: 80px }
+#page_coupons table tr td.column3       { width: 90px }
+#page_coupons table tr td.column4       { width: 100px }
+#page_coupons table tr td.column5       { width: 50px }
+#page_coupons table tr td.column6       { width: 50px }
+#page_coupons table tr td.column7       { width: 35px }
+#page_coupons table tr td.column8       { width: 50px }
+/* 
+========================================================================
+PAGE: LANGUAGES & EMAIL
+========================================================================
+*/
+#page_languages label,
+#page_languages span.Kartris-DetailsView-Name
+                                        { width: 200px }
+#page_languages span.Kartris-DetailsView-Value
+                                        { width: 450px }
+#page_languages td.recordnumberfield    { width: 30px }
+#page_languages td.flagfield            { width: 40px }
+/* 
+========================================================================
+PAGE: STOCK WARNING
+========================================================================
+*/
+#page_stockwarning .section label       { width: 70px; padding-top: 2px; }
+#page_stockwarning select               { width: 250px }
+/* 
+========================================================================
+PAGE: SEARCH RESULTS
+========================================================================
+*/
+#page_searchresults div.sidebar         { display: block; float: left; width: 20%; min-width: 190px; }
+#page_searchresults h2 em               { color: #999; font-size: smaller; font-style: normal; }
+#page_searchresults table               { min-width: 320px; max-width: 80%; }
+#page_searchresults .Kartris-GridView-Pagination /* Google Chrome fix */
+                                        { display: block; width: 100%; border-top: solid 1px white; }
+#page_searchresults table tr td         { overflow: hidden }
+/* 
+========================================================================
+PAGE: LANGUAGE STRINGS
+========================================================================
+*/
+#page_languagestrings .searchboxrow     { margin-bottom: 10px }
+#page_languagestrings .Kartris-DetailsView-Data
+                                        { border-top: solid 1px #000 }
+#page_languagestrings .section_languagestrings textarea
+                                        { width: 520px; height: 100px; }
+#page_languagestrings .popup .Kartris-DetailsView-Data
+                                        { border-top: none; margin-top: 0px; }
+#page_languagestrings .popup .Kartris-DetailsView-Data pre
+                                        { overflow: auto; overflow-y: visible; height: 80px; width: 350px; }
+#page_languagestrings .section_languagestringstranslation .Kartris-DetailsView-Name
+                                        { width: 150px }
+#page_languagestrings .section_languagestringstranslation .Kartris-DetailsView-Value
+                                        { width: 370px }
+#page_languagestrings td.column1        { width: 10px; margin: 0; }
+#page_languagestrings td.column2        { width: 260px }
+#page_languagestrings td.column3        { width: 160px; padding-right: 15px; }
+#page_languagestrings td.column4        { width: 130px }
+#page_languagestrings div.column1       { display: inline-block; width: 15px; float: left; }
+#page_languagestrings div.column2       { display: inline-block; width: 220px; font-weight: bold; float: left; margin-right: 5px; overflow: hidden; }
+#page_languagestrings div.column3       { display: inline-block; width: 180px; float: left; margin-right: 5px; overflow: hidden; }
+#page_languagestrings div.column4       { display: inline-block; width: 180px; float: left; margin-right: 5px; overflow: hidden; }
+#page_languagestrings div.column5       { display: inline-block; width: 70px; float: right; text-align: right; }
+/* 
+========================================================================
+PAGE: ORDER (Single Order)
+========================================================================
+*/
+#page_order .warnmessage                { position: fixed; top: 0; }
+/* 
+========================================================================
+PAGE: ORDERS (Orders List)
+========================================================================
+*/
+#page_orders .breadcrumbtrail span span.middle
+                                        { display: inline-block; padding: 3px 15px 3px 0px; font-weight: bold; color: #000; background-image: url(Images/breadcrumb_back.png); background-position: right center; background-repeat: no-repeat; margin: 0; }
+#page_orders label                      { width: 250px; font-weight: normal; }
+#page_orders .idfield                   { width: 50px }
+#page_orders .datefield                 { width: 110px }
+#page_orders .valuefield                { width: 60px }
+/* 
+========================================================================
+PAGE: MODIFY ORDER (Editing)
+========================================================================
+*/
+#page_modifyorder .checkoutaddress      { width: 45%; height: 220px; margin: 0 20px 0 0; overflow: hidden; float: left; }
+#page_modifyorder .checkbox label       { width: auto; font-weight: normal; }
+#page_modifyorder #section_addresses    { padding-bottom: 10px; margin-bottom: 20px; border-bottom: solid 2px #eee; }
+#page_modifyorder .popup .price         { font-weight: bold; color: #090; }
+#page_modifyorder .popup .Kartris-DetailsView-Name,
+#page_modifyorder .popup label          { width: 140px }
+#page_modifyorder .popup .Kartris-DetailsView-Value
+                                        { width: 390px }
+/* 
+========================================================================
+PAGE: CUSTOMER GROUPS
+========================================================================
+*/
+#page_customergroupslist td.editlink a:link,
+#page_customergroupslist td.editlink a:visited
+                                        { text-decoration: none; color: #45d; font-weight: bold; padding: 2px 5px 0px 18px; min-height: 17px; border: solid 1px transparent; display: inline-block; background-image: url(Images/icon_edit.png); background-position: left top; background-repeat: no-repeat; }
+#page_customergroupslist td.editlink a:hover
+                                        { color: #000; background-image: url(Images/icon_click.png); background-position: left top; background-repeat: no-repeat; }
+/* 
+========================================================================
+PAGE: ORDER
+========================================================================
+*/
+#page_order                             { }
+#page_order .Kartris-DetailsView-Value textarea
+                                        { height: 90px }
+/* 
+========================================================================
+PAGE: CUSTOM PAGES
+========================================================================
+*/
+#page_custompages table tr td.column1   { width: 15px }
+#page_custompages table tr td.column2   { font-weight: bold }
+#page_custompages table tr td.column3   { width: 35px }
+#page_custompages table tr td.column4,
+#page_custompages table tr td.column5   { width: 120px }
+#page_custompages .elementtext textarea { height: 200px; width: 460px; }
+/* 
+========================================================================
+PAGE: SITE NEWS
+========================================================================
+*/
+#page_sitenews table tr td.column1      { width: 15px }
+#page_sitenews table tr td.column2      { font-weight: bold }
+#page_sitenews table tr td.column3,
+#page_sitenews table tr td.column4      { width: 120px }
+/* 
+========================================================================
+PAGE: SUPPORT TICKETS
+========================================================================
+*/
+#page_supporttickets div.halfwidth .Kartris-DetailsView-Value
+                                        { width: 190px; overflow: hidden; }
+#page_supporttickets .idfield           { width: 35px }
+#page_supporttickets .datefield         { width: 110px }
+#page_supporttickets .valuefield        { width: 150px }
+#page_supporttickets div.userreply      { margin: 3px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #fff5a9; border-top: solid 1px #fd8; border-bottom: solid 1px #fd8; }
+#page_supporttickets div.ownerreply     { margin: 3px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #f5f5f5; border-top: solid 1px #ccc; border-bottom: solid 1px #ccc; }
+#page_supporttickets p.details          { color: #999; padding-bottom: 5px; }
+#page_supporttickets p.details strong   { color: #999 }
+#page_supporttickets p.message          { white-space: pre-wrap }
+#page_supporttickets textarea           { width: 100%; height: 150px; }
+#page_supporttickets textarea.tags      { width: 550px; height: 25px; position: absolute; }
+/* 
+========================================================================
+PAGE: USER
+========================================================================
+*/
+#page_user                              { }
+#page_user .Kartris-DetailsView-Value textarea
+                                        { height: 90px }
+#page_user table tr td.amount,
+#page_user table tr th.amount           { text-align: right }
+#page_user table tr td.amount           { font-weight: bold }
+/* 
+========================================================================
+PAGE: PROMOTIONS
+========================================================================
+*/
+#page_promotions table td.column0       { width: 30px; overflow: hidden; }
+#page_promotions table td.column1,
+#page_promotions table td.column2       { width: 120px; overflow: hidden; }
+#page_promotions table td.column3       { width: 310px; overflow: hidden; }
+#page_promotions table td.column4       { width: 30px; overflow: hidden; }
+#page_promotions #promotion_part_A,
+#page_promotions #promotion_part_B      { width: 290px; margin: 0 30px 10px 0; float: left; }
+#page_promotions .promotion_part        { margin: 0 0 20px 0 }
+#page_promotions .promotion_part .row   { padding: 2px 0px 10px 0 }
+#page_promotions select                 { width: 200px }
+#page_promotions .stringbuilder input   { width: 200px }
+#page_promotions .stringbuilder input.shorttext
+                                        { width: 40px }
+/* 
+========================================================================
+PAGE: AFFILIATE COMMISSION
+========================================================================
+*/
+#page_affiliatecommission               { }
+#page_affiliatecommission th.checkboxfield,
+#page_affiliatecommission td.checkboxfield
+                                        { width: 20px; text-align: left; }
+#page_affiliatecommission th.amount,
+#page_affiliatecommission td.amount     { width: 100px; text-align: right; font-weight: bold; }
+#page_affiliatecommission th.date,
+#page_affiliatecommission td.date       { width: 110px }
+/* 
+========================================================================
+PAGE: AFFILIATE STATS
+========================================================================
+*/
+#page_affiliatestats table tr td.amount,
+#page_affiliatestats table tr th.amount { text-align: right; font-weight: bold; }
+/* 
+========================================================================
+PAGE: OPTION GROUPS
+========================================================================
+*/
+#page_optiongroups div.column_optionname,
+#page_optiongroups div.column_displaytype
+                                        { width: 150px; display: block; float: left; padding-top: 4px; }
+#page_optiongroups div.column_misc      { width: 100px; display: block; float: left; padding-top: 4px; text-align: right; }
+#page_optiongroups select               { width: 120px }
+#page_optiongroups div.column_optionname a
+                                        { color: #000 }
+/* 
+========================================================================
+PAGE: SHIPPING
+========================================================================
+*/
+#page_shipping .configsettingbox        { border-top: solid 1px #ddd; border-bottom: solid 1px #ddd; background-color: #f5f5f5; padding: 10px; margin: 10px 0 0 0; }
+#page_shipping .configsettingbox p      { margin: 5px 0 0 0 }
+#page_shipping #section_shippingmethods td.itemname
+                                        { padding-top: 3px }
+#page_shipping #section_shippingmethods td.itemname a,
+#page_shipping #section_shippingzones td.itemname a
+                                        { color: #000 }
+#page_shipping span.zonename            { color: #000; font-weight: bold; }
+#page_shipping .all_higher_orders td    { background-color: #fff }
+#page_shipping .add_new td              { background-color: #fff }
+#page_shipping .padding                 { padding: 10px 0 10px 0 }
+/* 
+========================================================================
+PAGE: KNOWLEDGEBASE
+========================================================================
+*/
+#page_knowledgebase table tr td.column1 { width: 35px }
+#page_knowledgebase table tr td.column2 { font-weight: bold }
+#page_knowledgebase table tr td.column3 { width: 35px }
+#page_knowledgebase table tr td.column4 { width: 90px }
+#page_knowledgebase table tr td.column5 { width: 90px }
+/* 
+========================================================================
+PAGE: MARK-UP PRICES
+========================================================================
+*/
+#page_markupprices #markup_categories   { margin: 10px 0; border-top: solid 1px #ccc; background-color: #eee; padding: 5px; }
+#page_markupprices #markup_categories label
+                                        { font-weight: normal; color: #444; font-size: 99%; width: auto; }
+/* 
+========================================================================
+SECTION: EDIT COUPON POPUP
+========================================================================
+*/
+#section_editcoupon .Kartris-DetailsView-Value
+                                        { width: 300px }
+/* 
+========================================================================
+SECTION: VERSIONS
+========================================================================
+*/
+#section_versions .valsummary           { margin: 5px 0 0 120px }
+.section_versions .itemname             { width: 190px; font-weight: bold; }
+/* 
+========================================================================
+SECTION: DESTINATIONS
+========================================================================
+*/
+#section_destination_default            { padding: 0 0 10px 0 }
+#section_destination_default .Kartris-DetailsView-Name
+                                        { width: 200px }
+#section_destination_default .Kartris-DetailsView-Value
+                                        { width: 400px }
+#section_shippingdestinations           { }
+#section_shippingdestinations div.column1,
+#section_shippingdestinations div.column2,
+#section_shippingdestinations div.column3,
+#section_shippingdestinations div.column4,
+#section_shippingdestinations div.column5,
+#section_shippingdestinations div.column6,
+#section_shippingdestinations div.column7
+                                        { display: inline-block; width: 60px; float: left; }
+#section_shippingdestinations div.column1
+                                        { width: 160px }
+#section_shippingdestinations div.column5
+                                        { width: 140px }
+#section_shippingdestinations div.column1 a
+                                        { color: #000 }
+#section_shippingdestinations .submitbuttons
+                                        { position: relative; left: 0px; width: 650px; /* narrower since 25px of left padding on this */ }
+#section_shippingdestinations p         { margin: 10px 0 10px 0 }
+#section_shippingdestinations .toplinks a
+                                        { margin-right: 7px }
+/* 
+========================================================================
+SECTION: ATTRIBUTES
+========================================================================
+*/
+#section_attributes table               { border: none }
+#section_attributes table td            { background-color: #fff }
+#section_attributes table td.itemname,
+#section_attributes table th.itemname   { width: 200px }
+#section_attributes table td.itemname a { color: #000 }
+/* 
+========================================================================
+SECTION: CURRENCIES
+========================================================================
+*/
+#section_currencies span.undervalue     { color: #f53; font-weight: bold; }
+#section_currencies span.overvalue      { color: #090; font-weight: bold; }
+/* 
+========================================================================
+SECTION: STATS
+========================================================================
+*/
+.section_stats table.stats td,
+.section_stats table.stats th           { padding: 0 }
+.section_stats table td.itemname        { width: 215px }
+.section_stats table td.graph           { width: 225px }
+.section_stats table td.hitcount,
+.section_stats table th.hitcount        { width: 40px; text-align: right; }
+.section_stats table.stats div.itemname { display: inline-block; float: left; width: 220px; padding: 2px 0px 5px 5px; }
+.section_stats table.stats th div.itemname
+                                        { padding: 4px 0px 4px 5px }
+.section_stats table.stats div.itemname a
+                                        { color: #000 }
+.section_stats table.stats div.graph    { display: inline-block; float: left; width: 225px; padding: 2px 5px 2px 5px; }
+.section_stats table.stats th div.graph { padding: 4px 5px 4px 5px }
+.section_stats table.stats div.hitcount { display: inline-block; float: left; width: 40px; padding: 2px 0px 2px 5px; text-align: right; }
+.section_stats table.stats th div.hitcount
+                                        { padding: 4px 0px 4px 5px; text-align: right; }
+.section_stats table.stats div.selectfield
+                                        { display: block; float: right; width: 80px; text-align: right; padding: 2px 5px 0px 5px; }
+.section_stats div.foldout              { background-color: #fff; padding: 10px 0 10px 10px; border-top: solid 2px #ddd; border-bottom: solid 2px #ddd; }
+.section_stats div.foldout th           { padding: 4px 5px 4px 5px }
+.section_stats div.foldout td           { padding: 1px 5px 1px 5px }
+.section_stats div.foldout td.itemname  { width: 205px }
+.section_stats div.foldout td.graph     { width: 225px }
+.section_stats div.foldout td.hitcount  { text-align: right; width: 40px; }
+.stat_container                         { display: block; height: 10px; padding: 5px 0 6px 0; width: 190px; }
+.stat_outside                           { display: block; background-color: #ddd; height: auto; border: solid 1px #fff; border-top: solid 1px #aaa; border-left: solid 1px #aaa; }
+.stat_inside                            { display: block; background-color: #8c8; height: 8px; border-right: solid 1px #050; background-image: url(Images/statbar_back.png); background-position: left top; background-repeat: repeat-x; }
+/* 
+========================================================================
+SECTION: RELATED PRODUCTS
+========================================================================
+*/
+#section_relatedproducts div.minheight  { min-height: 100px }
+#section_relatedproducts table tr td.itemname
+                                        { padding-top: 5px }
+#section_relatedproducts table tr td.itemname a
+                                        { color: #000 }
+/* 
+========================================================================
+SECTION: REVIEWS
+========================================================================
+*/
+#section_reviews td.itemname            { width: 190px; font-weight: bold; }
+#section_reviews td.rating              { width: 90px }
+#section_reviews td.date                { width: 120px }
+/* 
+========================================================================
+SECTION: OPTIONS
+========================================================================
+*/
+#section_options .submitbuttons input   { margin-right: 5px }
+#section_options td a                   { color: #000 }
+#section_options td.optionsfield,
+#section_options th.optionsfield        { width: 450px; text-align: right; }
+#section_options div.optionsfield       { display: inline-block; width: 80px; text-align: right; overflow: hidden; float: right; }
+#section_options div.optionsfield input { width: 30px; float: right; }
+#section_options input.optionsfield     { width: 60px; text-align: right; }
+#section_options input.mediumfield,
+#section_options select.mediumfield     { width: 120px }
+#section_options .checkbox label        { width: 200px; font-weight: normal; }
+#section_options td.indent              { padding-left: 25px }
+#section_options .icon_delete           { float: right }
+/* 
+========================================================================
+SECTION: COMBINATIONS
+========================================================================
+*/
+#section_combinations .codenumber       { width: 100px }
+#section_combinations input.itemname    { width: 200px }
+#section_combinations table td          { padding-top: 9px }
+/* 
+========================================================================
+SECTION: PRODUCTS
+========================================================================
+*/
+#section_products strong                { display: inline-block; width: 210px; }
+#section_products strong a              { color: #000 }
+#section_products a,
+#section_products strong                { vertical-align: top }
+/* 
+========================================================================
+SECTION: CATEGORIES
+========================================================================
+*/
+#section_categories strong              { display: inline-block; width: 240px; }
+#section_categories strong a            { color: #000 }
+/* 
+========================================================================
+SECTION: DBADMIN: ADMIN LOG
+========================================================================
+*/
+#section_adminlog label                 { width: auto }
+#section_adminlog input                 { margin-top: -20px }
+#section_adminlog .calendarbutton       { float: none; display: inline; }
+/* 
+========================================================================
+SECTION: DBADMIN: ERROR LOGS
+========================================================================
+*/
+#section_errorlogs #boxes               { margin: 10px 0 0 0; padding: 10px 0 0 0; }
+#section_errorlogs .leftlist            { width: 110px; height: 350px; float: left; }
+#section_errorlogs .rightlist           { width: 550px; height: 350px; }
+/* 
+========================================================================
+SECTION: DBADMIN: CLEAR DATA
+========================================================================
+*/
+#section_cleardata h2                   { border: none }
+/* 
+========================================================================
+SECTION: DBADMIN: EXECUTE QUERY
+========================================================================
+*/
+#section_executequery textarea          { margin-top: 10px; width: 99%; }
+#section_executequery pre               { background-color: #fff; border: none; white-space: pre-wrap; font-size: 100%; padding: 5px; margin: 0 0 5px 0; overflow: hidden; width: 99%; color: #080; }
+#section_executequery h2                { border: none }
+#section_executequery table input       { width: auto; border: none; background-color: Transparent; }
+/* 
+========================================================================
+SECTION: ITEM INDICATOR
+========================================================================
+*/
+.section_itemindicator                  { }
+.section_itemindicator div.leftcolumn   { display: inline-block; padding-right: 20px; vertical-align: top; }
+.section_itemindicator div.rightcolumn  { display: inline-block; width: 330px; vertical-align: top; }
+.section_itemindicator ul               { list-style-type: square; padding-left: 20px; margin: 0; font-weight: normal; }
+/* 
+========================================================================
+SECTION: FEED: NEWS
+========================================================================
+*/
+.section_newsfeed                       { padding: 10px 10px 10px 10px; margin: 0 10px 10px 0; font-weight: normal; height: 120px; background-color: #eee; width: 300px; height: 200px; float: left; }
+.section_newsfeed div                   { padding: 0 80px 0 0 }
+.section_newsfeed span.title            { font-weight: bold; display: block; padding: 0 0 5px 0; }
+.section_newsfeed span.title a          { font-weight: bold; color: #333; }
+.section_newsfeed span.date             { color: #777; display: block; padding: 0 0 5px 0; font-size: 90%; }
+.section_newsfeed span.description      { display: block; color: #000; }
+.section_newsfeed span.description a    { font-weight: normal; color: #333; }
+.section_newsfeed .links                { display: inline-block; padding: 1px 5px 1px 5px; font-weight: bold; font-size: 30px; color: #999; float: left; margin: 0 2px 2px 0; }
+.section_newsfeed .links:hover          { color: #000; background-color: #ddd; text-decoration: none; }
+.section_newsfeed .linkback             { float: right }
+.section_newsfeed .linknext             { float: right }
+.section_newsfeed .links[disabled='disabled']
+                                        { background-color: #f6f6f6; color: #f6f6f6; }
+/* 
+========================================================================
+SECTION: FEED: CHANGE LOG / REVISIONS / SOFTWARE UPDATE
+========================================================================
+*/
+.section_softwareupdate h2              { font-family: "Segoe UI Light","Segoe UI",Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 210%; color: #fff; }
+.section_softwareupdate                 { padding: 10px 10px 10px 10px; margin: 0 10px 10px 0; font-weight: normal; height: 120px; width: 300px; height: 200px; float: left; }
+.softwareupdate_OK                      { background-color: #9e9; color: #060; }
+.softwareupdate_OK h2                   { color: #060 }
+.softwareupdate_Available               { background-color: #fd5; color: #000; }
+.softwareupdate_Available h2            { color: #000 }
+.softwareupdate_Available a             { color: #000; text-decoration: underline; font-weight: normal; }
+.softwareupdate_Prerelease              { background-color: #7bf; color: #fff; }
+.softwareupdate_Prerelease h2           { color: #fff }
+.softwareupdate_Prerelease a            { color: #fff; text-decoration: underline; font-weight: normal; }
+.section_softwareupdate span.title      { font-weight: bold }
+.section_softwareupdate span.currentlyinstalled
+                                        { display: block }
+.section_softwareupdate span.type       { }
+.section_softwareupdate span.minorversion
+                                        { display: block; font-size: 250%; }
+.section_softwareupdate .moreinfo       { display: block; margin-top: 20px; }
+/* 
+========================================================================
+SECTION: CHANGE LOG / REVISIONS / SOFTWARE UPDATE
+========================================================================
+*/
+.section_revisions div                  { padding-left: 160px; margin-bottom: 2px; }
+.section_revisions div div              { padding-left: 0 }
+.revisions_Prerelease                   { background-color: #04d; color: #fff; display: inline-block; }
+.revisions_Minor                        { background-color: #aaa; color: #fff; display: inline-block; }
+.revisions_Recommended                  { background-color: #090; color: #fff; display: inline-block; }
+.revisions_Critical                     { background-color: #f33; color: #fff; display: inline-block; }
+.section_revisions div div span.minorversion,
+.section_revisions div div span.type    { font-weight: bold; padding: 0 5px; }
+.section_revisions div div span.date    { padding: 0 5px }
+.section_revisions blockquote           { margin-left: 20px; margin-top: 0; }
+.section_revisions blockquote.bugfixes:before
+                                        { content: "Bug fixes"; /* Revisions list in English so can hardcode this */ font-weight: bold; }
+.section_revisions blockquote.improvements:before
+                                        { content: "Improvements"; /* Revisions list in English so can hardcode this */ font-weight: bold; }
+.section_revisions span.versionlabel    { background-image: url(Images/currentlyinstalled_arrow.png); background-position: center right; background-repeat: no-repeat; float: left; background-color: #fff; display: block; padding: 0 30px 3px 0; font-weight: bold; }
+/* 
+========================================================================
+BACKEND BASKET
+========================================================================
+*/
+.basket table.baskettable               { width: 100%; font-size: inherit; border-collapse: collapse; margin: 10px 0 10px 0; }
+.basket table.baskettable td            { background: #f3f3f3; color: #000; vertical-align: top; overflow: hidden; border-bottom: solid 1px #ddd; padding: 2px 5px 2px 5px; }
+.basket table.baskettable tr th         { font-family: Tahoma,Verdana,Arial,Helvetica; font-size: smaller; text-transform: uppercase; background-color: #fff; color: #666; font-weight: normal; white-space: nowrap; padding: 2px 5px 2px 5px; min-height: 0; border-bottom: solid 1px #000; }
+.basket table.baskettable tr:hover td   { background-image: url(Images/row_highlight_back.png); background-position: left -1px; background-repeat: repeat-x; }
+.basket table.baskettable div           { float: left; margin-bottom: 3px; }
+a.link2,
+span.link2 a                            { background-position: left top; background-repeat: no-repeat; border: medium none; color: #0044DD; font-size: 90%; font-weight: bold; min-height: 17px; padding: 2px 5px 2px 18px; text-decoration: none; }
+.basket .basketwarning                  { display: block; width: auto; border: dotted 1px #f00; color: #f00; background-color: #f6e6e6; padding: 3px 9px 3px 9px; margin: 2px 0 15px 0; }
+.basket .baskettable td.name strong     { display: block; padding: 0; }
+.basket .extax,
+.basket .inctax,
+.basket .price,
+.basket .quantity,
+.basket .remove,
+.basket .tax,
+.basket .total                          { text-align: right; white-space: nowrap; }
+.basket table.baskettable tr td div.name strong a,
+.basket table.baskettable tr td div.name strong
+                                        { display: block; width: 100%; font-weight: bold; padding: 0; color: #000; }
+.basket table.baskettable tr td div.details
+                                        { display: block; color: #000; vertical-align: top; width: 100%; margin: 0; padding: 0; }
+.basket table.baskettable tr td div.details div.info
+                                        { display: block; padding: 0 0 0 0; }
+.basket table.baskettable tr td div.details div.info strong
+                                        { color: #777 }
+.basket table.baskettable tr td div.info
+                                        { padding: 0 5px 0 0; width: 230px; }
+.basket table.baskettable tr.product_row td div.info
+                                        { width: 200px }
+.basket table.baskettable td.quantity   { vertical-align: top; width: 40px; text-align: right; }
+.basket table.baskettable td.quantity div
+                                        { float: right }
+.basket table.baskettable td.quantity input
+                                        { width: 25px; text-align: right; }
+.basket td.quantity div.smallupdateprogress
+                                        { position: relative; float: left; }
+.basket table.baskettable td.extax,
+.basket table.baskettable td.inctax,
+.basket table.baskettable td.tax,
+.basket table.baskettable td.price      { font-weight: bold; color: #090; width: 65px; }
+.basket table.baskettable td.total      { font-weight: bold; color: #f00; width: 65px; }
+.basket table.baskettable td.remove     { font-weight: bold; text-align: right; width: 25px; vertical-align: top; }
+.basket table.baskettable .couponrow td,
+.basket table.baskettable .applycoupon td,
+.basket table.baskettable .shippingrow td,
+.basket table.baskettable .orderhandlingrow td,
+.basket table.baskettable .customerdiscountrow td,
+.basket table.baskettable .promotiondiscountrow td
+                                        { background-color: #fff; border-top: dotted 1px #bbb; }
+.basket table.baskettable .applycoupon td label
+                                        { color: #000; font-weight: bold; }
+.basket table.baskettable .applycoupon .couponbox
+                                        { width: 120px; margin-right: 5px; }
+.basket select                          { width: 240px }
+.basket table.baskettable tr.shippingrow div.smallupdateprogress
+                                        { float: left; margin-top: -20px; margin-left: 250px; }
+.basket table.baskettable tr.couponrow div.smallupdateprogress
+                                        { }
+.basket table.baskettable .totals       { border-bottom: solid 1px #eee; background-color: #fff; }
+.basket table.baskettable tr.footerrow td
+                                        { background: none; font-weight: bold; text-align: right; white-space: nowrap; border-top: dotted 1px #bbb; }
+.basket table.baskettable tr.footerrow td.subtotal
+                                        { border-top: dotted 1px #bbb; color: #bbb; }
+.basket table.baskettable tr.footerrow td.subtotal span.totallabel
+                                        { color: #bbb }
+.basket table.baskettable tr.footerrow td.grandtotal
+                                        { border-top: dotted 1px #daa; border-bottom: dotted 1px #daa; background-color: #fdd; }
+.basket table.baskettable tr.footerrow td span.totallabel
+                                        { float: left; width: 150px; color: #000; text-align: left; }
+.basket table.baskettable tr.footerrow td span.total
+                                        { color: #f00 }
+/* 
+------------------------------------------------------------------------
+OPTIONS
+------------------------------------------------------------------------
+*/
+.options                                { margin-top: 5px; padding-bottom: 20px; }
+.options .pad                           { background-image: url(Images/element_back.png); background-position: top left; background-repeat: repeat-x; }
+.options .addtobasket                   { text-align: right; padding: 5px; clear: both; }
+.outofstockmessage em                   { display: block; margin-top: 10px; }
+.options .option                        { clear: both; padding: 8px 5px 3px 5px; margin: 0; }
+.options .option label                  { display: block; width: 320px !important; /* !important added to force the width */ float: left; margin-right: 5px; text-align: left; }
+.options .option label.optiontitle      { display: inline-block; color: #000; font-weight: bold; width: 130px; float: left; }
+.options .option div                    { display: inline-block; margin: 0px; float: left; }
+.options .option table.checkboxlist input,
+.options .option table.radiobuttonlist input
+                                        { display: block; float: left; margin-right: 5px; border-style: none; background-color: transparent; display: inline; width: 20px; }
+.options .option ul.radiobuttonlist li  { }
+.options .highlight_error               { display: inline-block; color: #fff; font-weight: bold; padding: 1px 5px 1px 3px; text-decoration: blink; background-color: #f00; border-radius: 3px; }
+.options div.addtobasket img            { float: none; text-align: right; }
+div.addtobasket                         { width: auto; text-align: right; padding: 5px; background-image: url(Images/element_back.png); background-position: top left; background-repeat: repeat-x; }
+div.addtobasket div                     { display: inline }
+/* Individual options lines */
+.options table,
+.options table tr td                    { border: none; background-image: none; background-color: Transparent; }
+/* Added From "Kartris" Skin general.css */
+.Kartris-RadioButtonList ul li          { border: 0 none; clear: both; float: none; height: 20px; list-style: none outside none; margin: 0; }
+.Kartris-RadioButtonList ul li input    { background: none repeat scroll 0 0 transparent; border: medium none; float: left; width: 25px; }
+

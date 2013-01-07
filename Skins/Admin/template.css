@@ -1,0 +1,128 @@
+/* 
+========================================================================
+KARTRIS by cactusoft
+Copyright 2012 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
+This work is licensed under a
+Creative Commons Attribution-ShareAlike 3.0 Unported License
+
+http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
+========================================================================
+*/
+/* 
+========================================================================
+MAIN LAYOUT
+========================================================================
+*/
+body.main                               { overflow: hidden; height: 100%; background-image: url(Images/background.png); background-position: right top; background-repeat: repeat-y; }
+form.container                          { display: block; margin: 0 auto; padding: 0; height: auto; border-bottom: solid 1px transparent; }
+#centrecontainer                        { display: block; padding: 0; margin: 0; }
+#pagebody                               { padding: 20px 0px 0px 0px; margin: 0px 0px 0px 0px; }
+/* 
+========================================================================
+LOGIN STATUS
+========================================================================
+*/
+#loginstatus                            { position: fixed; top: 0px; right: 0; color: #111; padding: 9px 3px 5px 10px; height: 24px; z-index: 200; width: 237px; }
+#loginstatus .ticks img                 { position: relative; top: 4px; float: left; margin: 6px 4px 0 0; }
+#loginstatus .logout                    { display: inline-block; position: relative; float: right; }
+#loginstatus .logout .button            { display: block; width: 32px; height: 32px; overflow: hidden; color: transparent; padding: 0; line-height: 0px; font-size: 0px; float: left; margin: -5px 2px 0 0; cursor: pointer; background-image: url(Images/button_logout.png); background-position: center center; background-repeat: no-repeat; background-color: transparent; border: none; }
+#loginstatus .logout .button:hover      { background-color: #888 }
+#loginstatus strong                     { color: #fff; margin: 0 20px 0 7px; padding: 3px 0 0 0; display: inline-block; font-weight: normal; }
+/* 
+========================================================================
+SEARCH BOX
+========================================================================
+*/
+#section_searchbox                      { position: fixed; top: 50px; right: 30px; width: 210px; z-index: 200; }
+#section_searchbox h2                   { font-family: "Open Sans","Segoe UI Light","Segoe UI",Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 180%; color: #000; text-transform: lowercase; }
+#section_searchbox #searchboxes input.searchtextbox
+										{ border: none; background-color: #eee; color: #000; width: 190px; padding: 1px; margin-top: 1px; height: 18px; border: solid 1px #c05; height: 18px; }
+#section_searchbox #searchboxes input.searchtextbox:focus
+										{ background-color: #fff; }
+#section_searchbox .searchbutton        { border: none; background-color: #c05; color: transparent; width: 22px; height: 22px; font-weight: normal; font-size: 85%; position: fixed; margin-left: -22px; border: solid 2px transparent; background-image: url(Images/button_search.png); background-position: center center; background-repeat: no-repeat; cursor: pointer; }
+/* 
+========================================================================
+COLUMNS - SIDE & CENTRAL
+========================================================================
+*/
+/* --- main column --- */
+#header                                 { z-index: 2; position: fixed; top: 0; width: 100%; height: 40px; background-color: #666; }
+#mainarea                               { position: fixed; top: 40px; left: 0; right: 0; bottom: 43px; }
+#tablecontainer                         { width: 100% }
+.leftside                               { float: left; height: 100%; background-color: #eee; overflow-y: auto; overflow-x: auto; padding: 4px 0 39px 0; width: 260px; }
+.leftside #buttonbar1 a                 { float: right }
+.splitterbar                            { position: fixed; width: 3px; }
+.pagecontent                            { position: relative; overflow-y: scroll; overflow-x: auto; height: 100%; margin: 43px 0px 1px 0px; padding: 0 250px 0 0; }
+#pagecontent_pad                        { padding: 8px 18px 18px 28px }
+/* --- side column --- */
+#rightside                              { position: fixed; top: 54px; right: 20px; bottom: 0; width: 220px; padding: 80px 0 0 20px; }
+#sidemenu                               { padding: 0 0 10px 0 }
+/* 
+========================================================================
+HORIZONTAL BACK END DROPDOWN MENU SYSTEM
+========================================================================
+*/
+/* 
+========================================================================
+HORIZONTAL BACK END DROPDOWN MENU SYSTEM
+========================================================================
+*/
+#backendmenu                            { position: fixed; top: 0; margin: 0 0 0 72px; display: block; z-index: 100; height: 22px; padding: 0 0 0 0; width: auto; font-size: 13px; letter-spacing: 0px; }
+.dropdownmenu ul						{ padding: 0; border: 0; margin: 0; }
+.dropdownmenu ul li						{ position: relative; list-style: none; float: left; margin: 0; border-top: solid 2px transparent; border-left: solid 2px transparent; border-right: solid 2px transparent; }
+.dropdownmenu ul li a					{ color: #fff; font-weight: normal; z-index: 200; display: block; text-decoration: none; padding: 9px 16px 9px 10px; background: url(Images/background_menulink.png) right 0px no-repeat; }
+.dropdownmenu ul li:hover a				{ display: block; color: #fff; padding: 9px 16px 9px 10px; background: #888 url(Images/background_menulink_hover.png) right 0px no-repeat; }
+.dropdownmenu ul ul						{ z-index: 200; position: absolute; visibility: hidden; border: solid 2px #333; border-top: none; margin: 0 0 0 -2px; }
+.dropdownmenu ul ul li					{ border: none; background: none; width: 240px; }
+.dropdownmenu ul li:hover ul li a		{ display: block; font-weight: normal; text-decoration: none; color: #000; padding: 2px 11px 4px 10px; background-color: #fff; background-image: none; }
+.dropdownmenu ul li ul li:hover a       { color: #000; background-color: #eee; font-weight: bold; }
+.dropdownmenu ul li:hover ul ul			{ visibility: hidden; color: #fff; }
+.dropdownmenu ul li:hover ul,
+.dropdownmenu ul li li:hover ul			{ visibility: visible }
+.dropdownmenu ul ul ul					{ top: 0 }
+.dropdownmenu ul li ul li ul			{ margin: 0 0 0 240px; border: solid 2px #333; }
+.dropdownmenu ul li ul li:hover ul a	{ font-weight: normal; background-color: #fff; }
+.dropdownmenu ul li ul li ul li:hover a	{ background-color: #eee; font-weight: bold; }
+/* 
+========================================================================
+TASKLIST
+========================================================================
+*/
+#section_tasklist                       { margin: 20px 0 0 0; padding: 0 0 5px 0; }
+#section_tasklist h2                    { font-family: "Open Sans","Segoe UI Light","Segoe UI",Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 180%; color: #000; text-transform: lowercase; padding: 0; }
+#section_tasklist .task_section         { padding: 5px 10px 5px 0px }
+#section_tasklist .level_1 a            { display: block; text-decoration: none; padding: 1px 9px 1px 23px; color: #000; font-weight: bold; margin: 0 0 0 -24px; width: 208px; }
+#section_tasklist .level_2              { margin-bottom: 1px }
+#section_tasklist .level_2 a            { display: block; text-decoration: none; padding: 1px 9px 1px 23px; color: #000; font-weight: normal; margin: 0 0 0 -24px; width: 208px; }
+#section_tasklist a:hover               { background-color: #eee; color: #000; }
+#section_tasklist .noresults            { padding: 1px 0px 1px 0; color: #ccc; font-weight: normal; border: none; }
+/* 
+========================================================================
+CATEGORIES BACK END NAVIGATION MENU
+========================================================================
+*/
+#categorymenu                           { margin: 8px 0 30px 0px; padding: 3px 0 7px 4px; }
+#categorymenu h2                        { margin: 0 0 10px 12px; font-weight: lighter; white-space: nowrap; }
+#categorymenu h2 a                      { font-family: "Open Sans","Segoe UI Light","Segoe UI",Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 140%; color: #000; text-transform: lowercase; }
+#categorymenu .treeview                 { margin: 0 0 4px 12px }
+#categorymenu td a                      { font-weight: normal; display: block; vertical-align: middle; color: #333; }
+#categorymenu .leafnode a,
+#categorymenu .nodestyle a              { font-weight: normal; padding: 0px 2px 0px 2px; height: 16px; margin: 1px 0 1px 0; }
+#categorymenu .hovernode a              { background-color: #eee; color: #000; font-weight: bold; padding: 0px 2px 0px 2px; height: 16px; margin: 1px 0 1px 0; }
+#categorymenu .selecteditem             { background-color: #c05; color: #fff; font-weight: bold; padding: 0px 2px 0px 2px; margin: 1px 0 1px 0; }
+#categorymenu .squarebuttons            { width: 36px; float: right; padding: 0; margin: -3px 0 0 0; border: none; }
+/* 
+========================================================================
+ADMIN BUTTON
+========================================================================
+*/
+#adminbar a                             { position: fixed; display: block; top: 4px; left: 4px; background-image: url(Images/button_frontback.png); background-position: center center; background-repeat: no-repeat; }
+/* 
+========================================================================
+STORE STATUS
+========================================================================
+*/
+.storestatus                            { z-index: 2; position: fixed; left: 40px; top: 4px; }
+.storestatus a.openedstore              { background-image: url(Images/button_back_open.png); background-position: center center; background-repeat: no-repeat; }
+.storestatus a.closedstore              { background-image: url(Images/button_back_closed.png); background-position: center center; background-repeat: no-repeat; }
+

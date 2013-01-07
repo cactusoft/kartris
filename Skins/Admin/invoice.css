@@ -1,0 +1,38 @@
+/* 
+========================================================================
+KARTRIS by cactusoft
+Copyright 2012 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
+This work is licensed under a
+Creative Commons Attribution-ShareAlike 3.0 Unported License
+
+http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
+========================================================================
+*/
+/* 
+========================================================================
+INVOICE.CSS
+========================================================================
+*/
+html                { height: 100%; background-color: #fff; }
+body                { font-family: Verdana,Arial,Helvetica,Sans-Serif; font-size: 8pt; font-weight: normal; color: #000; }
+h1                  { font-size: 13pt; font-weight: bold; color: black; }
+table               { border-collapse: collapse; width: 100%; }
+table td            { padding: 5px 0 5px 0px; text-align: right; vertical-align: top; }
+table th            { padding: 5px 0 5px 0; border-top: solid 1px black; border-bottom: solid 1px black; text-align: right; }
+#invoice            { padding: 20px; width: 600px; }
+#topinfo            { display: block; border-top: solid 1px black; }
+#midinfo            { clear: both; display: block; }
+.box                { width: 190px; margin-right: 10px; float: left; height: 150px; }
+.pad                { padding: 10px 10px 10px 0px }
+.col1               { width: 30%; text-align: left; }
+.col1 div           { margin: 5px 0 0 10px }
+.fullline           { font-weight: bold; text-align: left; width: 100%; }
+.section            { border-top: solid 1px black }
+#processcurrency td,
+#total td           { font-weight: bold; border-top: solid 1px black; border-bottom: solid 1px black; }
+.box strong         { display: block; padding-bottom: 5px; }
+#customercomments   { width: 100% }
+.label              { display: block; float: left; width: 100px; }
+.value              { }
+.bold               { font-weight: bold }
+
