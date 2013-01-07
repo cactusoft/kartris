@@ -242,7 +242,6 @@ All rights reserved.
 		</compilation>
 		<httpHandlers>
 			<add path="ChartImg.axd" verb="GET,HEAD,POST" type="System.Web.UI.DataVisualization.Charting.ChartHttpHandler, System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" validate="false"/>
-			<remove verb="OPTIONS" path="*"/>
 		</httpHandlers>
 		<httpModules>
 			<add type="KartrisHttpModule" name="KartrisHttpModule"/>
@@ -251,9 +250,8 @@ All rights reserved.
 	</system.web>
 	<system.webServer>
 		<handlers>
-			<add name="ChartImg" path="ChartImg.axd" verb="*" type="System.Web.UI.DataVisualization.Charting.ChartHttpHandler, System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
+			<add name="ChartImg" path="ChartImg.axd" verb="*" type="System.Web.UI.DataVisualization.Charting.ChartHttpHandler, System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
 		</handlers>
-		<validation validateIntegratedModeConfiguration="false"/>
 		<modules>
 			<remove name="KartrisHttpModule"/>
 			<add type="KartrisHttpModule" name="KartrisHttpModule"/>
