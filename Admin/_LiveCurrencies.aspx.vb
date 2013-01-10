@@ -1,4 +1,18 @@
-﻿Imports CkartrisEnumerations
+﻿'========================================================================
+'Kartris - www.kartris.com
+'Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC
+
+'GNU GENERAL PUBLIC LICENSE v2
+'This program is free software distributed under the GPL without any
+'warranty.
+'www.gnu.org/licenses/gpl-2.0.html
+
+'KARTRIS COMMERCIAL LICENSE
+'If a valid license.config issued by Cactusoft is present, the KCL
+'overrides the GPL v2.
+'www.kartris.com/t-Kartris-Commercial-License.aspx
+'========================================================================
+Imports CkartrisEnumerations
 Imports CkartrisDataManipulation
 Imports CkartrisDisplayFunctions
 Imports CkartrisFormatErrors
@@ -13,17 +27,6 @@ Partial Class Admin_LiveCurrencies
 
         Page.Title = GetGlobalResourceObject("_Currency", "PageTitle_Currencies") & " | " & GetGlobalResourceObject("_Kartris", "ContentText_KartrisName")
 
-        ''********************************* License Code ****************************************************
-        '' This code checks the license validity. If you remove this, it won't disable or bypass the license
-        ''  functionality, but it will prevent you seeing clear errors or warnings relating to the license.
-        ''  License issues will still be added to the error logs.
-        'If LCase(LicenseChecker.GetLicenseFeatureSet) = "free" OrElse LCase(LicenseChecker.GetLicenseFeatureSet) = "limited" Then
-        '    'This is free version, disable live currency update page
-        '    phdMainContent.Visible = False
-        '    litMessage.Text = Kartris.LicenseChecker.FreeVersionDisabledTag
-        '    litMessage.Visible = True
-        'Else
-        'Run normal functionality
         If Not Page.IsPostBack Then
             Try
                 GetCurrenciesUpdate()
@@ -34,8 +37,6 @@ Partial Class Admin_LiveCurrencies
                 phdCurrenciesNotAccessible.Visible = True
             End Try
         End If
-        'End If
-        ''************************************ End of License Code ***************************************
 
     End Sub
 
