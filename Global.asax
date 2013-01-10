@@ -1,9 +1,21 @@
 <%@ Application Language="VB" %>
 <%@ Import Namespace="System.IO" %>
 
-
 <script runat="server">
-    '[[[NEW COPYRIGHT NOTICE]]]
+    '========================================================================
+    'Kartris - www.kartris.com
+    'Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC
+
+    'GNU GENERAL PUBLIC LICENSE v2
+    'This program is free software distributed under the GPL without any
+    'warranty.
+    'www.gnu.org/licenses/gpl-2.0.html
+
+    'KARTRIS COMMERCIAL LICENSE
+    'If a valid license.config issued by Cactusoft is present, the KCL
+    'overrides the GPL v2.
+    'www.kartris.com/t-Kartris-Commercial-License.aspx
+    '========================================================================
 	
     Sub Application_Start(ByVal sender As Object, ByVal e As EventArgs)
         ' Code that runs on application startup
@@ -11,15 +23,15 @@
         Try
             'detect application trust
             Dim p As System.Reflection.PropertyInfo = GetType(HttpRuntime).GetProperty("FileChangesMonitor", System.Reflection.BindingFlags.NonPublic Or _
-                  System.Reflection.BindingFlags.[Public] Or _
-                  System.Reflection.BindingFlags.[Static])
+               System.Reflection.BindingFlags.[Public] Or _
+               System.Reflection.BindingFlags.[Static])
             Dim o As Object = p.GetValue(Nothing, Nothing)
             Dim f As System.Reflection.FieldInfo = o.[GetType]().GetField("_dirMonSubdirs", System.Reflection.BindingFlags.Instance Or _
-                  System.Reflection.BindingFlags.NonPublic Or _
-                  System.Reflection.BindingFlags.IgnoreCase)
+               System.Reflection.BindingFlags.NonPublic Or _
+               System.Reflection.BindingFlags.IgnoreCase)
             Dim monitor As Object = f.GetValue(o)
             Dim m As System.Reflection.MethodInfo = monitor.[GetType]().GetMethod("StopMonitoring", System.Reflection.BindingFlags.Instance Or _
-                   System.Reflection.BindingFlags.NonPublic)
+             System.Reflection.BindingFlags.NonPublic)
             m.Invoke(monitor, New Object() {})
             Application("isMediumTrust") = False
         Catch

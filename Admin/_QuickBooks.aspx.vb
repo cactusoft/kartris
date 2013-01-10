@@ -1,4 +1,17 @@
-﻿
+﻿'========================================================================
+'Kartris - www.kartris.com
+'Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC
+
+'GNU GENERAL PUBLIC LICENSE v2
+'This program is free software distributed under the GPL without any
+'warranty.
+'www.gnu.org/licenses/gpl-2.0.html
+
+'KARTRIS COMMERCIAL LICENSE
+'If a valid license.config issued by Cactusoft is present, the KCL
+'overrides the GPL v2.
+'www.kartris.com/t-Kartris-Commercial-License.aspx
+'========================================================================
 Partial Class Admin_QuickBooks
     Inherits _PageBaseClass
 
@@ -6,16 +19,6 @@ Partial Class Admin_QuickBooks
 
         Page.Title = GetGlobalResourceObject("_QuickBooks", "PageTitle_QBIntegration") & " | " & GetGlobalResourceObject("_Kartris", "ContentText_KartrisName")
 
-        ''********************************* License Code ****************************************************
-        '' This code checks the license validity. If you remove this, it won't disable or bypass the license
-        ''  functionality, but it will prevent you seeing clear errors or warnings relating to the license.
-        ''  License issues will still be added to the error logs.
-        'If LCase(LicenseChecker.GetLicenseFeatureSet) = "free" OrElse LCase(LicenseChecker.GetLicenseFeatureSet) = "limited" Then
-        '    'This is free version, disable live currency update page
-        '    phdMainContent.Visible = False
-        '    litMessage.Text = Kartris.LicenseChecker.FreeVersionDisabledTag
-        '    litMessage.Visible = True
-        'Else
         'Reset page elements visibility
         phdMainContent.Visible = True
         litMessage.Visible = False
@@ -27,8 +30,7 @@ Partial Class Admin_QuickBooks
 
             lblFormLabelPassword.Text = "QBWC " & GetGlobalResourceObject("_Kartris", "FormLabel_Password")
         End If
-        'End If
-        ''************************************ End of License Code ***************************************
+
     End Sub
 
     Protected Sub btnUpdate_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnUpdate.Click
