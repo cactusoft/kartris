@@ -1623,7 +1623,7 @@ Public NotInheritable Class CkartrisBLL
         Else
             Return "NOT ENABLED"
         End If
-        
+
     End Function
 End Class
 
