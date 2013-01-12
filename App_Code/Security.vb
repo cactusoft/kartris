@@ -21,8 +21,6 @@ Imports KartSettingsManager
 Imports System.Threading
 Imports Microsoft.VisualBasic
 Imports System.Xml
-Imports System.Security.Cryptography.Xml
-Imports System.Security.Cryptography
 Imports System
 Imports CkartrisFormatErrors
 Imports CkartrisDisplayFunctions
@@ -104,7 +102,6 @@ Public NotInheritable Class HttpSecureCookie
         Return False
     End Function
 
-    'License Code
     Public Shared Sub ForceLogout(Optional ByVal blnRedirect As Boolean = True)
         Dim cokKartris As HttpCookie
         cokKartris = New HttpCookie(KartSettingsManager.GetKartConfig("general.webshopurl"), "")
@@ -117,10 +114,10 @@ Public NotInheritable Class HttpSecureCookie
 
 End Class
 
- ''' <summary>
- ''' Is SSL required?
- ''' Checks config setting and Kartris license type
- ''' </summary>
+''' <summary>
+''' Is SSL required?
+''' Checks config setting
+''' </summary>
 Public NotInheritable Class SSLHandler
     Public Shared Function IsSSLEnabled() As Boolean
         Dim blnIsSSLEnabled As Boolean = False
