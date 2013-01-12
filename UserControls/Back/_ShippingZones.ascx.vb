@@ -229,7 +229,4 @@ Partial Class UserControls_Back_ShippingZones
 
     End Sub
 
-    Private Function DeleteZone() As Boolean
-
-    End Function
 End Class
