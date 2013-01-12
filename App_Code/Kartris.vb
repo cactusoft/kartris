@@ -1364,7 +1364,7 @@ Public NotInheritable Class CkartrisBLL
     ''' Load Skin config to cache
     ''' (if there is one)
     ''' </summary>
-    Public Shared Function LoadSkinConfigToCache() As Boolean
+    Public Shared Sub LoadSkinConfigToCache()
         Try
             If File.Exists(Current.Server.MapPath("~/Skins/Skins.config")) Then
                 Dim tblSkinRules As New DataTable
@@ -1391,7 +1391,7 @@ Public NotInheritable Class CkartrisBLL
         Catch ex As Exception
 
         End Try
-    End Function
+    End Sub
 
     ''' <summary>
     ''' Read skin rules

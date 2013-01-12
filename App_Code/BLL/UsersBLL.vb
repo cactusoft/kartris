@@ -165,7 +165,7 @@ Public Class UsersBLL
         Catch ex As Exception
             ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
         End Try
-
+        Return Nothing
     End Function
     Public Shared Function GetSaltByEmail(ByVal U_EmailAddress As String) As String
         Try
@@ -173,6 +173,7 @@ Public Class UsersBLL
         Catch ex As Exception
             ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
         End Try
+        Return Nothing
     End Function
 
     Public Shared Function EncryptSHA256Managed(ByVal ClearString As String, ByVal SaltString As String, Optional ByVal blnIsBackend As Boolean = False) As String

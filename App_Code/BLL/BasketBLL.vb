@@ -1647,7 +1647,7 @@ Public Class BasketBLL
 
     Public Sub CalculateOrderHandlingCharge(ByVal numShippingCountryID As Integer)
         Dim numOrderHandlingPriceValue As Double, numOrderHandlingTaxBand1 As Double = 0, numOrderHandlingTaxBand2 As Double = 0
-        Dim tblCustomers As CustomersDataTable
+        'Dim tblCustomers As CustomersDataTable
 
         If numShippingCountryID = 0 Then Exit Sub
 

@@ -731,7 +731,7 @@ Partial Class _ProductOptionGroups
             End If
         Next
 
-        If tblCurrentCombinations.Rows.Count = 0 Then Exit Function
+        If tblCurrentCombinations.Rows.Count = 0 Then Return True
         Dim strMsg As String = ""
         If VersionsBLL._UpdateCurrentCombinations(tblCurrentCombinations, strMsg) Then
             RaiseEvent VersionChanged()
