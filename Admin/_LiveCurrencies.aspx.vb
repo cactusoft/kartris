@@ -17,7 +17,6 @@ Imports CkartrisDataManipulation
 Imports CkartrisDisplayFunctions
 Imports CkartrisFormatErrors
 Imports KartSettingsManager
-Imports CKartrisLimitedServices
 Imports System.Xml
 
 Partial Class Admin_LiveCurrencies
