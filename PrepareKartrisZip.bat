@@ -17,14 +17,6 @@ ECHO DONE!
 ECHO **
 cd "\CleanKartris\Kartris"
 del "c:\CleanKartris\Kartris\PrepareKartrisZip.bat"
-ECHO DELETING LICENSE SERVICE SCRIPT...
-Del "c:\CleanKartris\Kartris\LicenseService.*"
-ECHO DONE!
-ECHO **
-ECHO DELETING KARTRISCORE DEBUG FILES...
-del "c:\CleanKartris\Kartris\Bin\KartrisCore.pdb"
-del "c:\CleanKartris\Kartris\Bin\KartrisCore.xml"
-ECHO DONE!
 ECHO **
 ECHO CLEANING ERROR LOGS...
 IF EXIST "c:\CleanKartris\Kartris\Uploads\Errors" rd "c:\CleanKartris\Kartris\Uploads\Errors" /S /Q
@@ -34,13 +26,11 @@ ECHO REMOVING SAMPLE MEDIA FILES...
 del "c:\CleanKartris\Kartris\Uploads\Media\*.*" /Q
 ECHO DONE!
 ECHO **
-REM ECHO REMOVING UPDATE SCRIPTS...
-REM del "c:\CleanKartris\Kartris\uploads\resources\*Update*.sql"
 del "c:\CleanKartris\Kartris\uploads\resources\*UpdateData*.sql"
 del "c:\CleanKartris\Kartris\uploads\resources\UpdateSQL.sql"
 REM ECHO DONE!
 REM ECHO **
-ECHO Copying default web.config and license.config files...
+ECHO Copying default web.config file...
 copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\*.default" "c:\CleanKartris\Kartris\*.config"
 ECHO DONE!
 ECHO **
