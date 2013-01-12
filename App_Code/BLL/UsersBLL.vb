@@ -122,6 +122,7 @@ Public Class UsersBLL
         Catch ex As Exception
             ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
         End Try
+        Return 0
     End Function
     Public Shared Function GetEmailByID(ByVal U_ID As Integer) As String
         Return DetailsAdptr.GetEmailByID(U_ID)
@@ -134,7 +135,7 @@ Public Class UsersBLL
         Catch ex As Exception
             ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
         End Try
-
+        Return 0
     End Function
 
     Public Shared Function ChangePassword(ByVal U_ID As Integer, ByVal U_Password As String, ByVal strNewPassword As String) As Integer
@@ -145,7 +146,7 @@ Public Class UsersBLL
         Catch ex As Exception
             ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
         End Try
-
+        Return 0
     End Function
 
     Public Shared Function ChangePasswordViaRecovery(ByVal U_ID As Integer, ByVal strNewPassword As String) As Integer
@@ -155,7 +156,7 @@ Public Class UsersBLL
         Catch ex As Exception
             ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
         End Try
-
+        Return 0
     End Function
 
     Public Shared Function ResetPassword(ByVal U_ID As Integer, ByVal strNewPassword As String) As Integer
@@ -165,7 +166,7 @@ Public Class UsersBLL
         Catch ex As Exception
             ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
         End Try
-        Return Nothing
+        Return 0
     End Function
     Public Shared Function GetSaltByEmail(ByVal U_EmailAddress As String) As String
         Try
