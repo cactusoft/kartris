@@ -18,7 +18,7 @@
                 <asp:Button ID="btnSubmitSupplier" runat="server" Text="<%$ Resources: _Kartris, FormButton_Submit %>"
                     CssClass="button" />
                 <asp:Button ID="btnExportCSV" runat="server" Text="<%$ Resources: _StockLevel, FormSupport_ExportStockWarnings %>"
-                    CssClass="button"/>
+                    CssClass="button" />
             </ContentTemplate>
             <Triggers>
                 <asp:PostBackTrigger ControlID="btnExportCSV" />
@@ -38,9 +38,10 @@
             <asp:MultiView ID="mvwStockWarning" runat="server" ActiveViewIndex="0">
                 <asp:View ID="viwStockData" runat="server">
                     <div id="section_reviews">
-                        <asp:GridView CssClass="kartristable" ID="gvwStockLevel" runat="server" AllowSorting="true" AutoGenerateColumns="False"
-                            DataKeyNames="V_ID" AutoGenerateEditButton="False" GridLines="None" PagerSettings-PageButtonCount="10"
-                            SelectedIndex="0" AllowPaging="true" PageSize="10">
+                        <asp:GridView CssClass="kartristable" ID="gvwStockLevel" runat="server" AllowSorting="true"
+                            AutoGenerateColumns="False" DataKeyNames="V_ID" AutoGenerateEditButton="False"
+                            GridLines="None" PagerSettings-PageButtonCount="10" SelectedIndex="0" AllowPaging="true"
+                            PageSize="10">
                             <Columns>
                                 <asp:TemplateField>
                                     <HeaderTemplate>
@@ -92,7 +93,7 @@
                                 </asp:TemplateField>
                                 <asp:TemplateField>
                                     <ItemTemplate>
-                                        <asp:Hyperlink ID="lnkEditVersion" CssClass="linkbutton icon_edit" Text='<%$ Resources:_Kartris, FormButton_Edit %>'
+                                        <asp:HyperLink ID="lnkEditVersion" CssClass="linkbutton icon_edit" Text='<%$ Resources:_Kartris, FormButton_Edit %>'
                                             runat="server" NavigateUrl='<%# "~/Admin/_ModifyProduct.aspx?ProductID=" & Eval("P_ID") & "&strTab=versions&VersionID=" & Eval("V_ID")  %>' />
                                     </ItemTemplate>
                                     <ItemStyle CssClass="selectfield" />
@@ -102,8 +103,7 @@
                     </div>
                     <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
                         <asp:LinkButton ID="btnSave" runat="server" Text="<%$ Resources: _Kartris, FormButton_Save %>"
-                        ToolTip="<%$ Resources: _Kartris, FormButton_Save %>"
-                            CssClass="button savebutton" />
+                            ToolTip="<%$ Resources: _Kartris, FormButton_Save %>" CssClass="button savebutton" />
                     </div>
                 </asp:View>
                 <asp:View ID="viwNoItems" runat="server">
@@ -124,4 +124,61 @@
             </div>
         </ProgressTemplate>
     </asp:UpdateProgress>
+    <div class="spacer">
+    </div>
+    <div style="margin-top: 20px">
+        <h1>
+            <asp:Literal ID="Literal1" runat="server" Text="<%$ Resources:_StockLevel, ContentText_ImportStockLevel %>"></asp:Literal></h1>
+        <div class="section">
+            <p>
+                <asp:Literal ID="Literal2" runat="server" Text="<%$ Resources:_StockLevel, ContentText_BrowseStockLevelImportFile %>"></asp:Literal></p>
+        </div>
+        <asp:FileUpload ID="filUpload" runat="server" />
+        <asp:Button ID="btnUpload" runat="server" Text="<%$ Resources: _Kartris, ContentText_Upload %>" CssClass="button" />
+        <asp:Button ID="btnSaveImport" runat="server" Text="Save" CssClass="button" Visible="false" /><br />
+        <asp:GridView CssClass="kartristable" ID="gvwImportStockLevel" runat="server" AllowSorting="true"
+            AutoGenerateColumns="False" DataKeyNames="SKU" AutoGenerateEditButton="False"
+            GridLines="None" PagerSettings-PageButtonCount="10" SelectedIndex="0" AllowPaging="true"
+            PageSize="10">
+            <Columns>
+                <asp:TemplateField>
+                    <HeaderTemplate>
+                        <asp:Literal ID="litFormLabelCodeNumber" runat="server" Text="<%$ Resources:_Version, FormLabel_CodeNumer %>" />
+                    </HeaderTemplate>
+                    <HeaderStyle CssClass="itemname" />
+                    <ItemTemplate>
+                        <asp:Literal runat="server" ID="litVersionCode" Text='<%# Eval("SKU") %>' />
+                    </ItemTemplate>
+                    <ItemStyle CssClass="itemname" />
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
+                        <asp:Literal ID="litFormLabelStockQuantity" runat="server" Text="<%$ Resources:_Version, FormLabel_StockQuantity %>" />
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:TextBox ID="txtStockQty" runat="server" CssClass="shorttext" MaxLength="5" Text='<%# Eval("StockQty") %>' />
+                        <asp:CompareValidator ID="valCompareStockQuantity" runat="server" ControlToValidate="txtStockQty"
+                            Display="Dynamic" ErrorMessage="*" Operator="DataTypeCheck" ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoShort %>"
+                            Type="Double" SetFocusOnError="true" ValidationGroup="StockLevel" />
+                        <ajaxToolkit:FilteredTextBoxExtender ID="filStockQuantity" runat="server" TargetControlID="txtStockQty"
+                            FilterType="Numbers,Custom" ValidChars=".," />
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField>
+                    <HeaderTemplate>
+                        <asp:Literal ID="litFormLabelWarnLevel" runat="server" Text="<%$ Resources:_Version, FormLabel_WarningLevel %>" />
+                    </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:TextBox ID="txtWarnLevel" runat="server" CssClass="shorttext" MaxLength="5"
+                            Text='<%# Eval("WarnLevel") %>' />
+                        <asp:CompareValidator ID="valCompareWarningLevel" runat="server" ControlToValidate="txtWarnLevel"
+                            Display="Dynamic" ErrorMessage="*" Operator="DataTypeCheck" ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoShort %>"
+                            Type="Double" SetFocusOnError="true" ValidationGroup="NewCombinationsGrp" />
+                        <ajaxToolkit:FilteredTextBoxExtender ID="filWarningLevel" runat="server" TargetControlID="txtWarnLevel"
+                            FilterType="Numbers,Custom" ValidChars=".," />
+                    </ItemTemplate>
+                </asp:TemplateField>
+            </Columns>
+        </asp:GridView>
+    </div>
 </div>

@@ -15,6 +15,8 @@
 Imports CkartrisEnumerations
 Imports CkartrisDataManipulation
 Imports KartSettingsManager
+Imports System.Data.OleDb
+
 Partial Class UserControls_Back_StockWarning
 
     Inherits System.Web.UI.UserControl
@@ -128,5 +130,155 @@ Partial Class UserControls_Back_StockWarning
         Next
 
         CKartrisCSVExporter.WriteToCSV(tblExport, strFileName, 44, 0)
+    End Sub
+
+    Protected Sub btnUpload_Click(sender As Object, e As System.EventArgs) Handles btnUpload.Click
+        If filUpload.HasFile Then
+            Dim arrTemp = Split(filUpload.PostedFile.FileName, ".")
+            If arrTemp.Length = 0 Then _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_ErrorOnlyXLSorCSV")) : Exit Sub
+            Dim numSegments = UBound(arrTemp)
+            Dim strFileExt As String = arrTemp(numSegments)
+
+            If strFileExt = "xls" OrElse strFileExt = "csv" Then
+                Dim strTempName As String = Guid.NewGuid.ToString & "." & strFileExt
+                Dim strFilePath As String = KartSettingsManager.GetKartConfig("general.uploadfolder") & "Temp/" & strTempName
+                filUpload.SaveAs(Server.MapPath(strFilePath))
+                If File.Exists(Server.MapPath(strFilePath)) Then
+                    ImportStockLevel(strFilePath)
+                    File.Delete(Server.MapPath(strFilePath))
+                Else
+                    _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgFileUpload"))
+                End If
+            Else
+                _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_ErrorOnlyXLSorCSV"))
+            End If
+        Else
+            _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgFileUpload"))
+        End If
+    End Sub
+    Sub ImportStockLevel(strFilePath As String)
+        Dim connString As String
+        Dim connFile As OleDbConnection
+        Dim cmd As OleDbCommand
+        Dim fi As New FileInfo(Server.MapPath(strFilePath))
+        Dim strFileName As String = fi.Name
+
+        If LCase(strFileName).EndsWith(".xls") Then
+            connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & Server.MapPath(strFilePath) & _
+                        ";Extended Properties='Excel 8.0;HDR=Yes;MAXSCANROWS=1;IMEX=1'"
+        Else
+            connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & Server.MapPath(strFilePath.Replace(strFileName, "")) & _
+                        ";Extended Properties='text;HDR=Yes;FMT=Delimited;MAXSCANROWS=1;IMEX=1'"
+        End If
+
+        connFile = New OleDbConnection(connString)
+        Try
+            connFile.Open()
+        Catch ex As Exception
+            _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_ErrorCantReadSheetFile"))
+            Exit Sub
+        End Try
+
+        If LCase(strFileName).EndsWith(".xls") Then
+            Dim strSheetName As String = Nothing
+            Dim dtSheets As DataTable = connFile.GetOleDbSchemaTable(OleDb.OleDbSchemaGuid.Tables, Nothing)
+            For Each row As DataRow In dtSheets.Rows
+                If Not row("Table_Name").ToString().Replace("'", "").EndsWith("$") Then Continue For
+                strSheetName = row("Table_Name").ToString().Replace("'", "")
+                Exit For
+            Next
+            If connFile.State = ConnectionState.Open Then connFile.Close()
+            If String.IsNullOrEmpty(strSheetName) Then
+                _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_ErrorEmptyXLSFile"))
+                Exit Sub
+            End If
+            cmd = New OleDbCommand("SELECT * FROM [" & strSheetName & "]", connFile)
+        Else
+            cmd = New OleDbCommand("SELECT * FROM [" & strFileName & "]", connFile)
+        End If
+
+        Dim strSKUCode As String = Nothing, strQty As String = Nothing, strWarnLevel As String = Nothing
+        Dim intRecords As Integer = 0
+
+        Dim tblVersionsToUpdate As New DataTable
+        tblVersionsToUpdate.Columns.Add(New DataColumn("SKU", Type.GetType("System.String")))
+        tblVersionsToUpdate.Columns.Add(New DataColumn("StockQty", Type.GetType("System.Single")))
+        tblVersionsToUpdate.Columns.Add(New DataColumn("WarnLevel", Type.GetType("System.Single")))
+        Dim strMessage As String = Nothing
+
+        If connFile.State <> ConnectionState.Open Then connFile.Open()
+        Dim rdr As OleDbDataReader = cmd.ExecuteReader
+        Do While rdr.Read()
+            If intRecords = 0 AndAlso LCase(strFileName).EndsWith(".xls") Then
+                intRecords += 1 : Continue Do
+            Else
+                Try
+                    strSKUCode = FixNullFromDB(rdr("SKU"))
+                    strQty = FixNullFromDB(rdr("Stock Quantity"))
+                    strWarnLevel = FixNullFromDB(rdr("Warning Level"))
+
+                    '' Check if this is the of records
+                    If String.IsNullOrEmpty(strSKUCode) OrElse String.IsNullOrEmpty(strQty) OrElse String.IsNullOrEmpty(strWarnLevel) Then Continue Do
+
+                    If Not IsValidString(strSKUCode) Then Continue Do
+                    If Not IsNumeric(strQty) Then Continue Do
+                    If Not IsNumeric(strWarnLevel) Then Continue Do
+
+                    tblVersionsToUpdate.Rows.Add(strSKUCode, CSng(strQty), CSng(strWarnLevel))
+
+                Catch ex As Exception
+                End Try
+                intRecords += 1
+            End If
+        Loop
+
+        rdr.Close()
+        connFile.Close()
+
+        If tblVersionsToUpdate.Rows.Count > 0 Then
+            gvwImportStockLevel.DataSource = tblVersionsToUpdate
+            gvwImportStockLevel.DataBind()
+            gvwImportStockLevel.Visible = True
+            btnSaveImport.Visible = True
+        Else
+            gvwImportStockLevel.Visible = False
+            _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.Information, GetGlobalResourceObject("_Kartris", "ContentText_NoItemsFound"))
+        End If
+
+    End Sub
+    Function IsValidString(ByVal strText As String) As Boolean
+        If strText IsNot Nothing Then
+            If Not String.IsNullOrEmpty(strText) Then
+                Return True
+            End If
+        End If
+        Return False
+    End Function
+    Protected Sub btnSaveImport_Click(sender As Object, e As System.EventArgs) Handles btnSaveImport.Click
+        If gvwImportStockLevel.Rows.Count = 0 Then Exit Sub
+        Dim tblVersionsToUpdate As New DataTable
+        tblVersionsToUpdate.Columns.Add(New DataColumn("VersionCode", Type.GetType("System.String")))
+        tblVersionsToUpdate.Columns.Add(New DataColumn("StockQty", Type.GetType("System.Single")))
+        tblVersionsToUpdate.Columns.Add(New DataColumn("WarnLevel", Type.GetType("System.Single")))
+
+        For Each rowStock As GridViewRow In gvwImportStockLevel.Rows
+            If rowStock.RowType = DataControlRowType.DataRow Then
+                Dim strStockQty As String = CType(rowStock.Cells(1).FindControl("txtStockQty"), TextBox).Text
+                Dim strWarnLevel As String = CType(rowStock.Cells(2).FindControl("txtWarnLevel"), TextBox).Text
+                If strStockQty <> "" AndAlso strWarnLevel <> "" Then
+                    Dim strVersionCode As String = CType(rowStock.Cells(0).FindControl("litVersionCode"), Literal).Text
+                    tblVersionsToUpdate.Rows.Add(strVersionCode, CSng(strStockQty), CSng(strWarnLevel))
+                End If
+            End If
+        Next
+        Dim strMessage As String = ""
+        If Not VersionsBLL._UpdateVersionStockLevelByCode(tblVersionsToUpdate, strMessage) Then
+            _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
+        Else
+            'success, show updated message
+            RaiseEvent ShowMasterUpdate()
+            LoadStockLevel()
+            gvwImportStockLevel.Visible = False
+        End If
     End Sub
 End Class

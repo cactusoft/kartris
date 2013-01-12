@@ -2493,3 +2493,47 @@ BEGIN
 
 END
 GO
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_UpdateStockLevelByCode]    Script Date: 01/12/2013 03:01:11 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisVersions_UpdateStockLevelByCode]
+(
+	@V_CodeNumber as nvarchar(25),
+	@V_Quantity as real,
+	@V_QuantityWarnLevel as real
+)							
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	UPDATE tblKartrisVersions
+	SET V_Quantity = @V_Quantity, V_QuantityWarnLevel = @V_QuantityWarnLevel
+	WHERE V_CodeNumber = @V_CodeNumber;
+
+END
+
+GO
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ErrorCantReadSheetFile', N'Error: Can''t read file, make sure the trust level is ''Full'' in web.config and/or file is not used by another process.', NULL, 2, N'Error: Can''t read file, make sure the trust level is ''Full'' in web.config and/or file is not used by another process.', NULL, N'_Kartris', 1)
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ErrorEmptyXLSFile', N'Error: No sheets were found in the uploaded excel file!', NULL, 2, N'Error: No sheets were found in the uploaded excel file!', NULL, N'_Kartris', 1)
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ErrorOnlyXLSorCSV', N'Error: Only xls and csv files are allowed.', NULL, 2, N'Error: Only xls and csv files are allowed.', NULL, N'_Kartris', 1)
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ImportStockLevel', N'Import Stock Level', NULL, 2, N'Import Stock Level', NULL, N'_StockLevel', 1)
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_BrowseStockLevelImportFile', N'Browse an xls or csv file to import stock level.<br />
+IMPORTANT: Make sure to have at least the following field titles (SKU, Stock Quantity and Warning Level). For example:<br /><br />
+SKU,Name,Stock Quantity,Warning Level<br />
+pcpc-5,PC Power Cable - 5m,500,80<br />
+pcpc-10,PC Power Cable - 10m,500,80<br />
+pcpc-15,PC Power Cable - 15m,500,80<br />', NULL, 2, N'Browse an xls or csv file to import stock level.<br />
+IMPORTANT: Make sure to have at least the following field titles (SKU, StockQty and WarnLevel). For example:<br /><br />
+SKU,Name,Stock Quantity,Warning Level<br />
+pcpc-5,PC Power Cable - 5m,500,80<br />
+pcpc-10,PC Power Cable - 10m,500,80<br />
+pcpc-15,PC Power Cable - 15m,500,80<br />', NULL, N'_StockLevel', 1)
+GO
