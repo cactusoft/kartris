@@ -1647,7 +1647,6 @@ Public Class BasketBLL
 
     Public Sub CalculateOrderHandlingCharge(ByVal numShippingCountryID As Integer)
         Dim numOrderHandlingPriceValue As Double, numOrderHandlingTaxBand1 As Double = 0, numOrderHandlingTaxBand2 As Double = 0
-        'Dim tblCustomers As CustomersDataTable
 
         If numShippingCountryID = 0 Then Exit Sub
 
@@ -1700,14 +1699,6 @@ Public Class BasketBLL
                 numOrderHandlingTaxBand2 = KartSettingsManager.GetKartConfig("frontend.checkout.orderhandlingchargetaxband2")
             Catch ex As Exception
             End Try
-
-            'tblCustomers = _CustomersAdptr.GetOrderHandlingCharge(numShippingCountryID, numOrderHandlingTaxBand)
-
-            'If tblCustomers.Rows.Count > 0 Then
-            '    OrderHandlingPrice.TaxRate = tblCustomers.Rows(0).Item("T_Taxrate") / 100
-            'Else
-            '    OrderHandlingPrice.TaxRate = 0
-            'End If
 
             OrderHandlingPrice.TaxRate = TaxRegime.CalculateTaxRate(TaxBLL.GetTaxRate(numOrderHandlingTaxBand1), TaxBLL.GetTaxRate(numOrderHandlingTaxBand2), DestinationCountry.TaxRate1,
                                                             DestinationCountry.TaxRate2, DestinationCountry.TaxExtra)
