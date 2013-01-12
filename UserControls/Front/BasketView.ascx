@@ -196,10 +196,17 @@ MAIN BASKET
                                                 <strong>
                                                     <asp:LinkButton ID="lnkBtnProductName" runat="server" Text='<%# Server.HtmlEncode(Eval("ProductName")) %>'
                                                         OnCommand="ProductName_Click" CommandArgument='<%#Eval("ID") & ";" & eval("VersionID") & ";" & eval("Quantity") & ";" & eval("ProductType") %> ' /></strong>
-                                                <asp:LinkButton ID="lnkCustomize" CssClass="link2 icon_new" runat="server" CommandName="Customize"
-                                                    CommandArgument='<%#Eval("ID")%>' OnCommand="CustomText_Click" Text="<%$ Resources: Basket, ContentText_Customize %>" /></div>
-                                            <div class="spacer">
-                                            </div>
+                                                <asp:UpdatePanel ID="updCustomize" runat="server" UpdateMode="Conditional">
+                                                    <ContentTemplate>
+                                                        <asp:LinkButton ID="lnkCustomize" CssClass="link2 icon_new" runat="server" CommandName="Customize"
+                                                            CommandArgument='<%#Eval("ID")%>' OnCommand="CustomText_Click" Text="<%$ Resources: Basket, ContentText_Customize %>" /></div>
+                                                    </ContentTemplate>
+                                                    <Triggers>
+                                                        <asp:AsyncPostBackTrigger ControlID="lnkCustomize" EventName="Click" />
+                                                    </Triggers>
+                                                </asp:UpdatePanel>
+                                                <div class="spacer">
+                                                </div>
                                             <div class="details">
                                                 <div class="info">
                                                     <asp:PlaceHolder ID="phdProductType1" runat="server" Visible="false">
