@@ -26542,12 +26542,13 @@ GO
 -- *******************************************************************************
 -- ****** Extra SKU Object Config
 -- *******************************************************************************
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CactuShopName_DEPRECATED], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.email.enablehtml', NULL, N'y', N's', N'b', N'y|n', N'Whether to allow HTML emails', 2, N'y', 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CactuShopName_DEPRECATED], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'frontend.versions.display.showextrasku', NULL, N'n', N's', N'b', N'y|n', N'Whether to show the ''extra sku'' on the version display on the front end.', 2, N'n', 0);
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (N'K:version.extrasku', N'Version', N's', NULL, N'Extra code number for versions (store specific).', 0, 2)
 GO
 
 
--- ****** tblKartrisLogins - New Language Strings for (2.0)
+-- ****** tblKartrisLanguageStrings - New Language Strings for (2.0)
 -- *******************************************************************************
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'BackMenu_Cancelled', N'Cancelled', NULL, 2, N'Cancelled', NULL, N'_Kartris', 1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_OrderStatusCancelled', N'This order has been cancelled', NULL, 2, N'This order has been cancelled', NULL, N'_Orders', 1)
