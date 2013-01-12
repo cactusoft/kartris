@@ -64,7 +64,7 @@ Partial Class Admin_LiveCurrencies
         Next
 
         Dim strMessage As String = Nothing
-        If CKartrisLimitedServices.ReadLiveCurrencyRates(strBaseISO, sbdIsoList.ToString, tblCurrencies, strMessage) Then
+        If ReadLiveCurrencyRates(strBaseISO, sbdIsoList.ToString, tblCurrencies, strMessage) Then
             rptCurrencies.DataSource = tblCurrencies
             rptCurrencies.DataBind()
             lnkUpdateCurrencies.Visible = True
@@ -127,6 +127,65 @@ Partial Class Admin_LiveCurrencies
         End Try
 
         Return False
+    End Function
+
+    Private Function ReadLiveCurrencyRates( _
+            ByVal strBaseIso As String, ByVal strIsoList As String, ByRef tblCurrencies As DataTable, _
+            ByRef strMessage As String) As Boolean
+
+        Dim url As String = "http://www.ecb.int/stats/eurofxref/eurofxref-daily.xml"
+        Dim doc As XDocument = XDocument.Load(url)
+
+        Dim gesmes As XNamespace = "http://www.gesmes.org/xml/2002-08-01"
+        Dim ns As XNamespace = "http://www.ecb.int/vocabulary/2002-08-01/eurofxref"
+
+        Dim decGBPRate As Decimal = 0
+
+        'This line retrieves the individual "cube" entries and outputs then as an object with currencyiso and rate properties
+        Dim cubes = doc.Descendants(ns + "Cube").Where(Function(x) x.Attribute("currency") IsNot Nothing).Select(Function(x) New With
+                                {Key .Currency = CStr(x.Attribute("currency")), Key .Rate = CDec(x.Attribute("rate"))})
+
+        If cubes Is Nothing Then
+            Try
+                Throw New ApplicationException(GetGlobalResourceObject("_Currency", "ContentText_LiveCurrencyReadError"))
+            Catch ex As Exception
+                CkartrisFormatErrors.ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
+            End Try
+            strMessage = GetGlobalResourceObject("_Currency", "ContentText_LiveCurrencyReadError")
+            Return False
+        Else
+            'retrieve the GBP rate first to use as the base converter value
+            For Each result As Object In cubes
+                If result.Currency = "GBP" Then decGBPRate = result.Rate : Exit For
+            Next
+        End If
+
+        'loop through the results and add the new values to the currencies table
+        If cubes.Count > 0 Then
+            For Each row As DataRow In tblCurrencies.Rows
+                For Each result As Object In cubes
+                    If row("ISOCode") = result.Currency Then
+                        'rates needs to be divided to the GBP value as they are originally computed against 1 EUR
+                        row("NewRate") = Math.Round(result.Rate / decGBPRate, 5)
+                        Exit For
+                    ElseIf row("ISOCode") = "EUR" Then
+                        'EUR is not in the returned XML so just always consider its value as 1 - its the XML's base currency 
+                        'To get its actual rate, just divide it against the GBP rate
+                        row("NewRate") = Math.Round(1 / decGBPRate, 5)
+                    End If
+                Next
+            Next
+        Else
+            Try
+                Throw New ApplicationException(GetGlobalResourceObject("_Currency", "ContentText_LiveCurrencyRequestError"))
+            Catch ex As Exception
+                CkartrisFormatErrors.ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
+            End Try
+            strMessage = GetGlobalResourceObject("_Currency", "ContentText_LiveCurrencyRequestError")
+            Return False
+        End If
+
+        Return True
     End Function
 
     Protected Sub ShowMasterUpdateMessage()
