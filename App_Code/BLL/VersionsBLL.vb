@@ -845,9 +845,40 @@ Public Class VersionsBLL
         End Using
         Return False
     End Function
+    Public Shared Function _UpdateVersionStockLevelByCode(ByVal tblVersionsToUpdate As DataTable, ByRef strMsg As String) As Boolean
+
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Using sqlConn As New SqlConnection(strConnString)
+            Dim cmdUpdateVersionStock As SqlCommand = sqlConn.CreateCommand
+            cmdUpdateVersionStock.CommandText = "_spKartrisVersions_UpdateStockLevelByCode"
+            Dim savePoint As SqlTransaction = Nothing
+            cmdUpdateVersionStock.CommandType = CommandType.StoredProcedure
+            Try
+                sqlConn.Open()
+                savePoint = sqlConn.BeginTransaction()
+                cmdUpdateVersionStock.Transaction = savePoint
+                For Each row As DataRow In tblVersionsToUpdate.Rows
+                    cmdUpdateVersionStock.Parameters.AddWithValue("@V_CodeNumber", row("VersionCode"))
+                    cmdUpdateVersionStock.Parameters.AddWithValue("@V_Quantity", FixNullToDB(row("StockQty"), "g"))
+                    cmdUpdateVersionStock.Parameters.AddWithValue("@V_QuantityWarnLevel", FixNullToDB(row("WarnLevel"), "g"))
+                    cmdUpdateVersionStock.ExecuteNonQuery()
+                    cmdUpdateVersionStock.Parameters.Clear()
+                Next
+                savePoint.Commit()
+                strMsg = GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully")
+                Return True
+            Catch ex As Exception
+                If Not savePoint Is Nothing Then savePoint.Rollback()
+                ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod(), strMsg)
+            Finally
+                If sqlConn.State = ConnectionState.Open Then sqlConn.Close() : savePoint.Dispose()
+            End Try
+        End Using
+        Return False
+    End Function
     Private Shared Function _UpdateCombinationsFromBasicInfo(ByVal intProductID As Integer, ByVal snglPrice As Single, ByVal intTax As Byte, _
-          ByVal intTax2 As Byte, strTaxExtra As String, ByVal snglWeight As Single, ByVal snglRRP As Single, _
-          ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean
+              ByVal intTax2 As Byte, strTaxExtra As String, ByVal snglWeight As Single, ByVal snglRRP As Single, _
+              ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean
         Try
             Dim cmd As New SqlCommand("_spKartrisVersions_UpdateCombinationsFromBasicInfo", sqlConn)
             cmd.CommandType = CommandType.StoredProcedure
