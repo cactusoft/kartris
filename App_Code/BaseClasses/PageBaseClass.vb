@@ -454,7 +454,7 @@ Public MustInherit Class PageBaseClass
 
             'Copyright
             Dim litLicenceNo As New WebControls.Literal
-            litLicenceNo.Text = vbCrLf & vbCrLf & "<!-- Kartris - Copyright 2012 Cactusoft International FZ LLC - www.kartris.com -->"
+            litLicenceNo.Text = vbCrLf & vbCrLf & "<!-- Kartris - Copyright 2013 Cactusoft International FZ LLC - www.kartris.com -->"
             Page.Controls.Add(litLicenceNo)
 
             'Add the Canonical Tag if set
