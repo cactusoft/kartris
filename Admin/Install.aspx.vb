@@ -25,10 +25,8 @@ Partial Class Admin_Install
     '---------------------------------------
     'Private Shared strResLangs As String() = {"en", "ar", "de", "es", "fr", "ja"}
     Private Shared strResLangs As String() = {"en"}
-    Private Shared strLicenseNumber As String = ""
     Private Shared strConnectionString As String = ""
     Private Shared strUploadsPath As String = ""
-    Private Shared strLicensePath As String = ""
     Private Shared blnPermissionsOK As Boolean = False
     Private Shared blnConfigDownloadedOnce As Boolean = False
     Private Shared ModifiedConfig As Configuration = Nothing
@@ -266,26 +264,10 @@ Partial Class Admin_Install
     End Sub
 
     '---------------------------------------
-    '1. LICENSE NUMBER CHECK
+    '1. WELCOM TO KARTRIS
     '---------------------------------------
-    Protected Sub ws1_LicenseNumber_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles ws1_LicenseNumber.Activate
-        If Not IsPostBack Then
-            'Dim LicenseStatus As LicenseChecker.EnumLicenseStatus = LicenseChecker.CheckLicense(True)
-            'If LicenseStatus <> LicenseChecker.EnumLicenseStatus.NOT_EXIST Then
-            '    If LicenseStatus = LicenseChecker.EnumLicenseStatus.VALID Or LicenseStatus = LicenseChecker.EnumLicenseStatus.WILL_EXPIRE_SOON Then
-            '        strLicenseNumber = LicenseChecker.GetLicenseNo
-            '        mvwLicenseNumber.SetActiveView(viwValidLicense)
-            '    Else
-            '        mvwLicenseNumber.SetActiveView(viwInvalidLicense)
-            '        litError.Text = "Invalid License File"
-            '        phdError.Visible = True
-            '    End If
-            'Else
-            '    'Cant find the license file
-            '    mvwLicenseNumber.SetActiveView(viwCannotFindLicense)
-            'End If
-            mvwLicenseNumber.SetActiveView(viwValidLicense)
-        End If
+    Protected Sub ws1_Welcome_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles ws1_Welcome.Activate
+        ' Do nothing
     End Sub
 
     '---------------------------------------
@@ -413,13 +395,7 @@ Partial Class Admin_Install
     '---------------------------------------
     Protected Sub ws7_ReviewSettings_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles ws7_ReviewSettings.Activate
         Dim strTaxRegime As String = ddlTaxRegime.SelectedValue
-        If String.IsNullOrEmpty(strLicensePath) Then
-            phdLicensePath.Visible = False
-        Else
-            phdLicensePath.Visible = True
-            litReviewLicensePath.Text = strLicensePath
-        End If
-
+        
         If String.IsNullOrEmpty(strConnectionString) Then
             phdConnectionString.Visible = False
         Else
@@ -449,13 +425,6 @@ Partial Class Admin_Install
                     element.Value = txtHashKey.Text
                 End If
 
-                If Not String.IsNullOrEmpty(strLicensePath) Then
-                    element = CType(ModifiedConfig.AppSettings.Settings("LicensePath"), KeyValueConfigurationElement)
-                    If element IsNot Nothing And phdLicensePath.Visible Then
-                        element.Value = strLicensePath
-                    End If
-                End If
-
                 element = CType(ModifiedConfig.AppSettings.Settings("TaxRegime"), KeyValueConfigurationElement)
                 If element IsNot Nothing And ddlTaxRegime.SelectedValue <> "Select One" Then
                     If strTaxRegime = "European Union" Then strTaxRegime = "EU"
@@ -477,7 +446,7 @@ Partial Class Admin_Install
                 End If
             End If
 
-            If phdConnectionString.Visible Or phdHashSaltKey.Visible Or phdLicensePath.Visible Or phdTaxRegime.Visible Then
+            If phdConnectionString.Visible Or phdHashSaltKey.Visible Or phdTaxRegime.Visible Then
                 If blnConfigUpdatable Then
                     btnSaveCopy.Visible = False
                 Else
@@ -508,24 +477,6 @@ Partial Class Admin_Install
         btnSaveCopy.Visible = False
 
         Select Case e.NextStepIndex
-            Case 1
-                'Dim LicenseStatus As LicenseChecker.EnumLicenseStatus = LicenseChecker.CheckLicense()
-                'If LicenseStatus <> LicenseChecker.EnumLicenseStatus.NOT_EXIST Then
-                '    If LicenseStatus = LicenseChecker.EnumLicenseStatus.VALID Or LicenseStatus = LicenseChecker.EnumLicenseStatus.WILL_EXPIRE_SOON Then
-                '        strLicenseNumber = LicenseChecker.GetLicenseNo
-                '        mvwLicenseNumber.SetActiveView(viwValidLicense)
-                '    Else
-                '        mvwLicenseNumber.SetActiveView(viwInvalidLicense)
-                '        litError.Text = "Invalid License File"
-                '        phdError.Visible = True
-                '        e.Cancel = True
-                '    End If
-                'Else
-                '    'Cant find the license file
-                '    mvwLicenseNumber.SetActiveView(viwCannotFindLicense)
-                '    e.Cancel = True
-                'End If
-                mvwLicenseNumber.SetActiveView(viwValidLicense)
             Case 2
                 Dim strHashKey As String = ConfigurationManager.AppSettings("hashsalt")
                 If (String.IsNullOrEmpty(strHashKey) Or strHashKey = "PutSomeRandomTextHere") Then
@@ -923,57 +874,6 @@ Partial Class Admin_Install
 
 #Region "CONTROL EVENTS IN DIFFERENT WIZARD STEPS"
     ''' <summary>
-    ''' (STEP 1 - License Number) - VERIFY LICENSE PATH BUTTON Click Event Handler *this only shows up if licensepath config is wrong*
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
-    ''' <remarks></remarks>
-    Protected Sub btnCheckLicensePath_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCheckLicensePath.Click
-        Dim strLicenseFile As String = txtLicensePath.Text & "license.config"
-
-        Try
-            If File.Exists(Server.MapPath(strLicenseFile)) Then
-                Dim reader As XmlTextReader = New XmlTextReader(Server.MapPath(strLicenseFile))
-                Dim docToVerify As XmlDocument = New XmlDocument()
-                docToVerify.PreserveWhitespace = True
-                docToVerify.Load(reader)
-                reader.Close()
-
-                Dim _xmlNode As XmlNode = docToVerify.DocumentElement
-                Dim _xmlNodeList As XmlNodeList = docToVerify.SelectNodes("/cactusoft")
-
-                If _xmlNodeList.Count = 0 Then Throw New Exception("Invalid license")
-
-                For x As Integer = 0 To _xmlNodeList.Count - 1
-                    For Each Node As XmlNode In _xmlNodeList.Item(x).ChildNodes
-                        If Node.Name = "licenseinfo" Then
-                            For Each innerNode As XmlNode In Node.ChildNodes
-                                If innerNode.Name = "number" Then strLicenseNumber = innerNode.InnerText : Exit For : Exit For : Exit For
-                            Next
-                        End If
-                    Next
-                Next
-
-                If Not String.IsNullOrEmpty(strLicenseNumber) Then
-                    phdError.Visible = False
-                    mvwLicenseNumber.ActiveViewIndex = 0
-                    strLicensePath = txtLicensePath.Text
-                Else
-                    phdError.Visible = True
-                    litError.Text = GetLocalResourceObject("Error_CannotReadLicenseText") & " " & Server.HtmlEncode(Server.MapPath(strLicensePath))
-                End If
-
-            Else
-                phdError.Visible = True
-                litError.Text = GetLocalResourceObject("Error_StillCannotReadLicenseText") & " " & Server.HtmlEncode(Server.MapPath(strLicensePath))
-            End If
-        Catch ex As Exception
-            phdError.Visible = True
-            litError.Text = GetLocalResourceObject("Error_InvalidLicensePathEnteredText")
-        End Try
-
-    End Sub
-    ''' <summary>
     ''' (STEP 3 - Connection String) Use Windows Authentication checkbox -> Disable/Enable Username and Password fields
     ''' </summary>
     ''' <param name="sender"></param>
@@ -1066,7 +966,6 @@ Partial Class Admin_Install
         Dim _xmlNodeList As XmlNodeList = docSave.SelectNodes("/configuration/appSettings/add")
         If _xmlNodeList.Count > 0 Then
             Dim blnHashFound As Boolean = Not (Not String.IsNullOrEmpty(txtHashKey.Text) And phdHashSaltKey.Visible)
-            Dim blnLicenseFound As Boolean = String.IsNullOrEmpty(strLicensePath)
             Dim blnTaxRegimeSet As Boolean = False
             For Each Node As XmlNode In _xmlNodeList
                 For Each attrib As XmlAttribute In Node.Attributes
@@ -1078,13 +977,7 @@ Partial Class Admin_Install
                                 blnHashFound = True
                             End If
                         End If
-                        If Not String.IsNullOrEmpty(strLicensePath) And Not blnLicenseFound Then
-                            If attrib.Value.ToLower = "licensepath" Then
-                                Node.Attributes("value").Value = strLicensePath
-                                blnLicenseFound = True
-                            End If
-                        End If
-
+                        
                         If attrib.Value.ToLower = "TaxRegime" Then
                             Dim strTaxRegime As String = ddlTaxRegime.SelectedValue
                             If strTaxRegime = "European Union" Then strTaxRegime = "EU"
@@ -1096,7 +989,7 @@ Partial Class Admin_Install
                         Exit For
                     End If
                 Next
-                If blnHashFound And blnLicenseFound And blnTaxRegimeSet Then Exit For
+                If blnHashFound And blnTaxRegimeSet Then Exit For
             Next
         End If
 
@@ -1121,28 +1014,6 @@ Partial Class Admin_Install
         Return t
     End Function
 
-    ''' <summary>
-    ''' (Step 1 - Force to check the license again)
-    ''' </summary>
-    ''' <param name="sender"></param>
-    ''' <param name="e"></param>
-    ''' <remarks>by mohammad</remarks>
-    Protected Sub btnCheckLicenseAgain_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCheckLicenseAgain.Click
-        'Dim LicenseStatus As LicenseChecker.EnumLicenseStatus = LicenseChecker.CheckLicense(True)
-        'If LicenseStatus <> LicenseChecker.EnumLicenseStatus.NOT_EXIST Then
-        '    If LicenseStatus = LicenseChecker.EnumLicenseStatus.VALID Or LicenseStatus = LicenseChecker.EnumLicenseStatus.WILL_EXPIRE_SOON Then
-        '        strLicenseNumber = LicenseChecker.GetLicenseNo
-        '        mvwLicenseNumber.SetActiveView(viwValidLicense)
-        '    Else
-        '        mvwLicenseNumber.SetActiveView(viwInvalidLicense)
-        '        litError.Text = "Invalid License File"
-        '        phdError.Visible = True
-        '    End If
-        'Else
-        '    mvwLicenseNumber.SetActiveView(viwCannotFindLicense)
-        'End If
-        mvwLicenseNumber.SetActiveView(viwValidLicense)
-    End Sub
     ''' <summary>
     ''' (Setp 3 - continue with exiting connection)
     ''' </summary>

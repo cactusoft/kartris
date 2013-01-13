@@ -17,7 +17,6 @@ All rights reserved.
 		Please refer to the user manual for further information.
 		-->
 		<add key="BackEndIpLock" value=""/>
-		<add key="LicensePath" value=""/>
 		<add key="ErrorLogPath" value="Uploads/Logs/"/>
 		<add key="ExcludedUserAgents" value="scooter,mercator,ia_archiver,FAST-WebCrawler,Googlebot,Slurp,MSNBOT"/>
 		<add key="ExcludedUploadFiles" value="config,master,aspx,ascx,ashx,asax,asp,asa,php,cgi,pl,cfm,vb,cs,js,exe"/>
@@ -65,8 +64,6 @@ All rights reserved.
 				<add namespace="System.Data.SqlClient"/>
 				<add namespace="System.Diagnostics"/>
 				<add namespace="System.Xml"/>
-				<add namespace="System.Security.Cryptography"/>
-				<add namespace="System.Security.Cryptography.Xml"/>
 				<add namespace="Microsoft.VisualBasic"/>
 				<add namespace="Kartris"/>
 			</namespaces>
@@ -75,7 +72,6 @@ All rights reserved.
 				<!-- Assembly reference to Ajax Toolkit -->
 				<add assembly="AjaxControlToolkit" namespace="AjaxControlToolkit" tagPrefix="ajaxToolkit"/>
 				<add tagPrefix="VwdCms" namespace="VwdCms"/>
-				<!--<add assembly="System.Web.DataVisualization" namespace="System.Web.UI.DataVisualization.Charting" tagPrefix="asp"  />-->
 				<!-- FRONT END SKIN ELEMENT USER CONTROLS -->
 				<add tagPrefix="user" tagName="CategoryMenu" src="~/UserControls/Skin/CategoryMenu.ascx"/>
 				<add tagPrefix="user" tagName="CategoryMenuAccordion" src="~/UserControls/Skin/CategoryMenuAccordion.ascx"/>
@@ -153,7 +149,6 @@ All rights reserved.
 				<add tagPrefix="_user" tagName="LanguageContent" src="~/UserControls/Back/_LanguageContent.ascx"/>
 				<add tagPrefix="_user" tagName="LanguageStrings" src="~/UserControls/Back/_LanguageStrings.ascx"/>
 				<add tagPrefix="_user" tagName="LanguageStringsTranslation" src="~/UserControls/Back/_LanguageStringsTranslation.ascx"/>
-				<add tagPrefix="_user" tagName="LicenseStatus" src="~/UserControls/Back/_LicenseStatus.ascx"/>
 				<add tagPrefix="_user" tagName="LoginConsole" src="~/UserControls/Back/_LoginConsole.ascx"/>
 				<add tagPrefix="_user" tagName="ModifyCategory" src="~/UserControls/Back/_ModifyCategory.ascx"/>
 				<add tagPrefix="_user" tagName="ObjectConfig" src="~/UserControls/Back/_ObjectConfig.ascx"/>
