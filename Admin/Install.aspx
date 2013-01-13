@@ -91,10 +91,6 @@
 			<WizardSteps>
 				<asp:WizardStep ID="ws1_Welcome" runat="server" Title="1" StepType="Start">
 					<!-- -------- STEP 1 - WELCOME TO KARTRIS  -------- -->
-					<%--<div class="helplink">
-						<asp:HyperLink ID="lnkStep1Help" runat="server" NavigateUrl="http://www.kartris.com/Knowledgebase/Installation---Step-1__k-5.aspx"
-							CssClass="helplink" meta:resourcekey="HelpAndFurtherInfo" Target="_blank"></asp:HyperLink>
-					</div>--%>
 					<h2>
 						<asp:Literal runat="server" ID="Step1_Header" meta:resourcekey="Step1_Header" /></h2>
 					
