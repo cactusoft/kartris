@@ -7,15 +7,12 @@
 	<setAcl path="kartris" setAclAccess="ReadAndExecute,Write,Modify" />
 	<setAcl path="kartris/admin" setAclAccess="ReadAndExecute" />
 	<setAcl path="kartris/App_Browsers" setAclAccess="Read" />
-	<setAcl path="kartris/App_Themes" setAclAccess="Read" />
 	<setAcl path="kartris/bin" setAclAccess="ReadAndExecute" />
-	<setAcl path="kartris/CuteSoft_Client" setAclAccess="Read" />
 	<setAcl path="kartris/Images" setAclAccess="Read,Write,Modify" />
 	<setAcl path="kartris/Javascript" setAclAccess="Read" />
-	<setAcl path="kartris/MasterPages" setAclAccess="Read" />
 	<setAcl path="kartris/Plugins" setAclAccess="Read,Write,Modify" />
 	<setAcl path="kartris/Protected" setAclAccess="Read" />
-	<setAcl path="kartris/Templates" setAclAccess="Read" />
+  <setAcl path="kartris/Skins" setAclAccess="Read" />
 	<setAcl path="kartris/Uploads" setAclAccess="Read,Write,Modify" />
 	<setAcl path="kartris/UserControls" setAclAccess="ReadAndExecute" />
 

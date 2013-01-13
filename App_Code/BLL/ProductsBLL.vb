@@ -346,13 +346,6 @@ Public Class ProductsBLL
             cmd.CommandType = CommandType.StoredProcedure
             Try
 
-                ''********************************* License Code ****************************************************
-                '' This code checks the license validity. If you remove this, it won't disable or bypass the license
-                ''  functionality, but it will prevent you seeing clear errors or warnings relating to the license.
-                ''  License issues will still be added to the error logs.
-                'If Kartris.VersionsBLL._ExceedLimit() Then Throw New ApplicationException(LicenseChecker.FreeVersionDisabledTag)
-                ''************************************ End of License Code ***************************************
-
                 cmd.Parameters.AddWithValue("@NewP_ID", pProductID).Direction = ParameterDirection.Output
                 cmd.Parameters.AddWithValue("@P_Live", pLive)
                 cmd.Parameters.AddWithValue("@P_Featured", pFeatured)

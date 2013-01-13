@@ -26,8 +26,6 @@ Imports System.Xml
 Public Class KartrisQBService
     Inherits QBWebConnectorSvc
 
-    '' Kartris Unique OwnerID {F42DBFB5-3F0E-493b-A965-B277FB6DC140}
-
     ''' <summary>
     ''' WebMethod - clientVersion()
     ''' To enable web service with QBWC version control
@@ -97,10 +95,6 @@ Public Class KartrisQBService
         Else
             authReturn(1) = "nvu"
         End If
-        'If LCase(DigitalSignatureHelper.FeatureSet) = "free" OrElse LCase(DigitalSignatureHelper.FeatureSet) = "limited" Then
-        '    authReturn(1) = "nvu"
-        '    'Session("QBLastError") = "The license for your Kartris store does not support access to this particular feature."
-        'End If
         ' "none" to indicate there is no work to do
         If OrdersBLL.GetQBQueue.Rows.Count = 0 Then authReturn(1) = "none"
         ' or a company filename in the format C:\full\path\to\company.qbw

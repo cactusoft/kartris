@@ -326,7 +326,6 @@ Public Class VersionsBLL
         Using sqlConn As New SqlConnection(strConnString)
             Dim savePoint As SqlTransaction = Nothing
             Try
-                'If Kartris.VersionsBLL._ExceedLimit(ptblNewData.Rows.Count) Then Throw New ApplicationException(LicenseChecker.FreeVersionDisabledTag)
 
                 sqlConn.Open()
                 savePoint = sqlConn.BeginTransaction()
@@ -604,13 +603,7 @@ Public Class VersionsBLL
             cmdAddVersion.CommandType = CommandType.StoredProcedure
             Dim tblClone As DataTable = tblElements
             Try
-                ''********************************* License Code ****************************************************
-                '' This code checks the license validity. If you remove this, it won't disable or bypass the license
-                ''  functionality, but it will prevent you seeing clear errors or warnings relating to the license.
-                ''  License issues will still be added to the error logs.
-                'If Kartris.VersionsBLL._ExceedLimit() Then Throw New ApplicationException(LicenseChecker.FreeVersionDisabledTag)
-                ''************************************ End of License Code ***************************************
-
+                
                 cmdAddVersion.Parameters.AddWithValue("@V_CodeNumber", FixNullToDB(strCodeNumber, "s"))
                 cmdAddVersion.Parameters.AddWithValue("@V_ProductID", FixNullToDB(intProductID, "i"))
                 cmdAddVersion.Parameters.AddWithValue("@V_Price", snglPrice)

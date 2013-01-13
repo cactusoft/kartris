@@ -273,28 +273,6 @@ Partial Class _ConfigSetting
         txtCFG_VersionAdded.Enabled = SetExpertSetting()
         chkCFG_Important.Enabled = SetExpertSetting()
 
-        'Disable page for free version
-        'If LCase(LicenseChecker.GetLicenseFeatureSet) = "free" OrElse LCase(LicenseChecker.GetLicenseFeatureSet) = "limited" Then
-        '    Select Case FixNullFromDB(drConfig("CFG_Value"))
-        '        'SSL is disabled in free version
-        '        'We disable it in security.vb, but flag
-        '        'message here so users know why it doesn't
-        '        'work if they try to switch it on
-        '        Case "general.security.ssl"
-        '            litMessage.Text = Kartris.LicenseChecker.FreeVersionDisabledTag
-        '            mvwConfig.SetActiveView(viwKartrisLimitation)
-
-        '            'QuickBooks config setting has no effect,
-        '            'QB support disabled on free version
-        '        Case "general.quickbooks.pass"
-        '            litMessage.Text = Kartris.LicenseChecker.FreeVersionDisabledTag
-        '            mvwConfig.SetActiveView(viwKartrisLimitation)
-
-        '        Case Else
-        '            'do nothing
-        '    End Select
-        'End If
-
     End Sub
 
     Private Sub ClearTextControls()

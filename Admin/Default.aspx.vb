@@ -21,7 +21,6 @@ Imports CkartrisDisplayFunctions
 Partial Class Admin_Default
 
     Inherits System.Web.UI.Page
-    'Dim LicenseStatus As LicenseChecker.EnumLicenseStatus
 
     Protected Sub Page_Error(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Error
         LogError()

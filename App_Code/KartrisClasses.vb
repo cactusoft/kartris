@@ -130,12 +130,6 @@ Public Class KartrisClasses
             m_name = CType(reader("D_Name"), String)
             m_codeISO3166 = CType(reader("D_ISOCode"), String)
 
-            'If GetKartConfig("general.tax.usmultistatetax") = "y" Then
-
-            'Else
-            'If reader("D_Tax") = 1 Then m_tax = True Else m_tax = False
-            'End If
-
             _TaxRate1 = CDbl(FixNullFromDB(reader("D_Tax")))
             _TaxRate2 = CDbl(FixNullFromDB(reader("D_Tax2")))
 
@@ -360,9 +354,6 @@ Public Class KartrisClasses
             If numShippingTaxRate = -1 Then
                 If blnUStaxEnabled Then
                     numShippingTaxRate = ShippingCountry.ComputedTaxRate
-                    'If numShippingTaxRate = 1 Then
-                    '    blnNormalShippingTax = True
-                    'End If
                 Else
                     blnNormalShippingTax = True
                 End If
@@ -440,9 +431,6 @@ Public Class KartrisClasses
             If numShippingTaxRate = -1 Then
                 If blnUStaxEnabled Then
                     numShippingTaxRate = ShippingCountry.ComputedTaxRate
-                    'If numShippingTaxRate = 1 Then
-                    '    blnNormalShippingTax = True
-                    'End If
                 Else
                     blnNormalShippingTax = True
                 End If

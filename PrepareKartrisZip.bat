@@ -26,6 +26,7 @@ ECHO REMOVING SAMPLE MEDIA FILES...
 del "c:\CleanKartris\Kartris\Uploads\Media\*.*" /Q
 ECHO DONE!
 ECHO **
+del "c:\CleanKartris\Kartris\uploads\resources\*.bak"
 del "c:\CleanKartris\Kartris\uploads\resources\*UpdateData*.sql"
 del "c:\CleanKartris\Kartris\uploads\resources\UpdateSQL.sql"
 REM ECHO DONE!

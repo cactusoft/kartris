@@ -123,23 +123,14 @@
   <data name="ConnectionString.Text" xml:space="preserve">
     <value>Connection String</value>
   </data>
-  <data name="Error_CannotReadLicenseText" xml:space="preserve">
-    <value>Cannot read license number from License config file in </value>
-  </data>
   <data name="Error_ConnectionFailedText" xml:space="preserve">
     <value>Connection failed to database. Error returned:</value>
-  </data>
-  <data name="Error_InvalidLicensePathEnteredText" xml:space="preserve">
-    <value>You've entered an invalid path</value>
   </data>
   <data name="Error_KartrisAlreadyInstalled" xml:space="preserve">
     <value>Kartris is already installed.</value>
   </data>
   <data name="Error_OpeningWebConfig" xml:space="preserve">
     <value>Error opening web.config file. Installation cancelled.</value>
-  </data>
-  <data name="Error_StillCannotReadLicenseText" xml:space="preserve">
-    <value>Still cannot find License config file in </value>
   </data>
   <data name="PageTitle.Text" xml:space="preserve">
     <value>Kartris Installation</value>
@@ -150,17 +141,8 @@
   <data name="PressNextToContinue.Text" xml:space="preserve">
     <value>Please press &amp;#39;Next&amp;#39; to continue.</value>
   </data>
-  <data name="Step1_Description.Text" xml:space="preserve">
-    <value>To continue, please enter in your &lt;strong&gt;license number&lt;/strong&gt; in the box below. This will act as a password for the installation process. If you cannot locate this or don't have a record of it, check your &lt;em&gt;license.config&lt;/em&gt; file - the license number should be clearly listed in the 'licenseinfo' block.</value>
-  </data>
-  <data name="Step1_Error_CannotFindLicenseFile.Text" xml:space="preserve">
-    <value>Cannot find your license config file. Please enter the correct license config path in the box below and hit the &amp;#39;check&amp;#39; button. (e.g. &amp;quot;~/&amp;quot; or &amp;quot;~/licensefolder&amp;quot;)</value>
-  </data>
-  <data name="Step1_Error_LicenseDontMatchText" xml:space="preserve">
-    <value>The license number you entered does not match the one in the license.config file placed on the root of this web site. Check your order email and the license.config file and ensure you copy it exactly, with no leading or trailing spaces.</value>
-  </data>
   <data name="Step1_Header.Text" xml:space="preserve">
-    <value>Step 1 - Welcome</value>
+    <value>Step 1 - Welcome to Kartris</value>
   </data>
   <data name="Step2_Error_HashKeyRequiredText" xml:space="preserve">
     <value>You need to enter a new Hash Key!</value>
@@ -252,9 +234,6 @@
   <data name="Step7_Header.Text" xml:space="preserve">
     <value>Step 7 - Review Settings</value>
   </data>
-  <data name="Step7_LicensePath.Text" xml:space="preserve">
-    <value>License Path:</value>
-  </data>
   <data name="Step7_NoChangesToWebConfigText" xml:space="preserve">
     <value>None of the new settings require changes to the web.config file. Please click 'Finish' to complete the setup.</value>
   </data>
@@ -304,12 +283,8 @@
   <data name="Step1_CheckAgain.Text" xml:space="preserve">
     <value>Check Again</value>
   </data>
-  <data name="Step1_InvalidLicense.Text" xml:space="preserve">
-    <value>Your license file is not valid. Please ensure you don't change the license.config file supplied in any way.</value>
-  </data>
-  <data name="Step1_LicenseValid.Text" xml:space="preserve">
-    <value> </value>
-    <comment>Your license file (license.config) is valid. (OLDVALUE)</comment>
+  <data name="Step1_WelcomeMessage.Text" xml:space="preserve">
+    <value>Welcome to the Kartris setup wizard. This will finalize your installation of Kartris, link to the database and configure a few other things for you.</value>
   </data>
   <data name="Step3_CreateNewDB.Text" xml:space="preserve">
     <value>Create a new database</value>

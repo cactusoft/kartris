@@ -89,37 +89,21 @@
 		<div id="stepshield">&nbsp;</div>
 		<asp:Wizard ID="wizInstallation" runat="server" ActiveStepIndex="0">
 			<WizardSteps>
-				<asp:WizardStep ID="ws1_LicenseNumber" runat="server" Title="1" StepType="Start">
-					<!-- -------- STEP 1 - LICENSE NUMBER CHECK -------- -->
-					<div class="helplink">
+				<asp:WizardStep ID="ws1_Welcome" runat="server" Title="1" StepType="Start">
+					<!-- -------- STEP 1 - WELCOME TO KARTRIS  -------- -->
+					<%--<div class="helplink">
 						<asp:HyperLink ID="lnkStep1Help" runat="server" NavigateUrl="http://www.kartris.com/Knowledgebase/Installation---Step-1__k-5.aspx"
 							CssClass="helplink" meta:resourcekey="HelpAndFurtherInfo" Target="_blank"></asp:HyperLink>
-					</div>
+					</div>--%>
 					<h2>
 						<asp:Literal runat="server" ID="Step1_Header" meta:resourcekey="Step1_Header" /></h2>
-					<asp:MultiView ID="mvwLicenseNumber" runat="server">
-						<asp:View ID="viwValidLicense" runat="server">
+					
 							<p>
-								<asp:Literal ID="Step1_LicenseValid" runat="server" meta:resourcekey="Step1_LicenseValid"></asp:Literal></p>
+								<asp:Literal ID="Step1_WelcomeMessage" runat="server" meta:resourcekey="Step1_WelcomeMessage"></asp:Literal></p>
 							<p>
 								<asp:Literal ID="Step1_IntroMessage" runat="server" meta:resourcekey="Step1_IntroMessage"></asp:Literal></p>
-						</asp:View>
-						<asp:View ID="viwInvalidLicense" runat="server">
-							<asp:Literal ID="Step1_InvalidLicense" runat="server" meta:resourcekey="Step1_InvalidLicense"></asp:Literal>
-							<br />
-							<br />
-							<asp:Button ID="btnCheckLicenseAgain" runat="server" CssClass="button" meta:resourcekey="Step1_CheckAgain" />
-						</asp:View>
-						<asp:View ID="viwCannotFindLicense" runat="server">
-							<p>
-								<asp:Literal runat="server" ID="Step1_Error_CannotFindLicenseFile" meta:resourcekey="Step1_Error_CannotFindLicenseFile" /></p>
-							<asp:TextBox ID="txtLicensePath" runat="server"></asp:TextBox>
-							<asp:Button ID="btnCheckLicensePath" runat="server" CssClass="button" Text="Check" />
-						</asp:View>
-						<asp:View ID="viwCannotReadLicense" runat="server">
-						</asp:View>
-					</asp:MultiView>
-					<!-- -------- // STEP 1 - LICENSE NUMBER CHECK -------- -->
+						
+					<!-- -------- // STEP 1 - WELCOME TO KARTRIS -------- -->
 				</asp:WizardStep>
 				<asp:WizardStep ID="ws2_HashandMachineKey" runat="server" Title="2" StepType="Step">
 					<!-- -------- STEP 2 - HASH SALT KEY CHECK -------- -->
@@ -338,14 +322,6 @@
 						<asp:Literal ID="litReviewSettingsDesc" runat="server" Text="<%$ Resources: Step7_ReviewSettingsDesc %>"></asp:Literal></p>
 					<br />
 					<div class="summarydetails">
-					<asp:PlaceHolder runat="server" ID="phdLicensePath">
-						<div class="formrow">
-							<asp:Literal runat="server" ID="Step7_LicensePath" meta:resourcekey="Step7_LicensePath" />
-							<asp:Literal ID="litReviewLicensePath" runat="server" Mode="Encode"></asp:Literal>
-						</div>
-						<div class="spacer">
-						</div>
-					</asp:PlaceHolder>
 					<asp:PlaceHolder runat="server" ID="phdConnectionString">
 						<div class="formrow">
 							<asp:Literal runat="server" ID="Step7_ConnectionString" meta:resourcekey="ConnectionString" />

@@ -55,10 +55,7 @@ Public MustInherit Class PageBaseClass
         writer.Write(sbdPageSource.ToString())
     End Sub
 
-    'This creates the 'powered by kartris' tag in bottom right
-    'for free and trial licenses. We can add more code if necessary
-    'such as javascript to dynamically position the tag and make it
-    'harder to remove.
+    'This creates the 'powered by kartris' tag in bottom right.
     Protected Sub RunGlobalReplacements(ByVal sbdPageSource As StringBuilder)
         Dim blnReplacedTag As Boolean = False
         Dim strReplacement As String = ""
@@ -66,7 +63,7 @@ Public MustInherit Class PageBaseClass
 
         'Build up string of the 'powered by kartris' tag
         sbdLink.Append("<a onmouseover=""this.style.backgroundColor = '#c05';this.style.color = '#fff';"" onmouseout=""this.style.backgroundColor = '#fff';this.style.color = '#f07';"" style=""display:inline-block;padding:1px 2px 1px 3px;font-size:7pt;font-family:tahoma,arial,helvetica;position:fixed;bottom:0;right:30px;color:#c05;background-color:#fff;""" & vbCrLf)
-        sbdLink.Append(" href=""http://www.kartris.com/"" title=""Kartris - &copy;2012, Cactusoft International FZ LLC. Distributed free and without warranty under the terms of the GNU GPL."">Powered by <span style=""font-weight: bold"">kartris</span></a>")
+        sbdLink.Append(" href=""http://www.kartris.com/"" title=""Kartris - &copy;2013, Cactusoft International FZ LLC. Distributed free and without warranty under the terms of the GNU GPL."">Powered by <span style=""font-weight: bold"">kartris</span></a>")
 
         'Try to replace closing body tag with this
         Try
