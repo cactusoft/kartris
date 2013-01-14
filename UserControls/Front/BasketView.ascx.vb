@@ -541,7 +541,11 @@ Partial Class Templates_BasketView
             Catch ex As Exception
             End Try
 
+            'order weight or value changed, so need to refresh
+            'the shipping options available and force reselection
+            RefreshShippingMethods()
 
+            'refresh updatepanel
             updPnlMainBasket.Update()
         End If
 
