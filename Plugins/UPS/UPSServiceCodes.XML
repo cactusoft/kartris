@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<List>
+ <Service>
+  <Name>Next Day Air</Name >
+  <Code>01</Code >
+ </Service>
+ <Service>
+  <Name>2nd Day Air</Name >
+  <Code>02</Code >
+ </Service>
+ <Service>
+  <Name>Ground</Name >
+  <Code>03</Code >
+ </Service>
+ <Service>
+  <Name>Worldwide Express</Name >
+  <Code>07</Code >
+ </Service>
+ <Service>
+  <Name>Worldwide Expedited</Name >
+  <Code>08</Code >
+ </Service>
+ <Service>
+  <Name>Standard</Name >
+  <Code>11</Code >
+ </Service>
+ <Service>
+  <Name>3 Day Select</Name >
+  <Code>12</Code >
+ </Service>
+ <Service>
+  <Name>Next Day Air Saver</Name >
+  <Code>13</Code >
+ </Service>
+ <Service>
+  <Name>Next Day Air Early AM</Name >
+  <Code>14</Code >
+ </Service>
+ <Service>
+  <Name>Worldwide Express Plus</Name >
+  <Code>54</Code >
+ </Service>
+ <Service>
+  <Name>2nd Day Air AM</Name >
+  <Code>59</Code >
+ </Service>
+ <Service>
+  <Name>World Wide Saver</Name >
+  <Code>65</Code >
+ </Service>
+ <Service>
+  <Name>Today Standard</Name >
+  <Code>82</Code >
+ </Service>
+ <Service>
+  <Name>Today Dedicated Courier</Name >
+  <Code>83</Code >
+ </Service>
+ <Service>
+  <Name>Today Intercity</Name >
+  <Code>84</Code >
+ </Service>
+ <Service>
+  <Name>Today Express</Name >
+  <Code>85</Code >
+ </Service>
+ <Service>
+  <Name>Today Express Saver</Name >
+  <Code>86</Code >
+ </Service>
+</List>
