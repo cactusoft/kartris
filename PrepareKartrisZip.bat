@@ -35,19 +35,19 @@ ECHO Copying default web.config file...
 copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\*.default" "c:\CleanKartris\Kartris\*.config"
 ECHO DONE!
 ECHO **
-ECHO Copying default payment gateway config files...
-copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\2Checkout\*.default" "c:\CleanKartris\Kartris\Plugins\2Checkout\*.config"
-copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\GoogleCheckout\*.default" "c:\CleanKartris\Kartris\Plugins\GoogleCheckout\*.config"
-copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\Paypal\*.default" "c:\CleanKartris\Kartris\Plugins\Paypal\*.config"
-copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\PO_OfflinePayment\*.default" "c:\CleanKartris\Kartris\Plugins\PO_OfflinePayment\*.config"
-copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\RBSWorldPay\*.default" "c:\CleanKartris\Kartris\Plugins\RBSWorldPay\*.config"
-copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\SagePay\*.default" "c:\CleanKartris\Kartris\Plugins\SagePay\*.config"
-copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\SagePayDirect\*.default" "c:\CleanKartris\Kartris\Plugins\SagePayDirect\*.config"
-copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\SecureTrading\*.default" "c:\CleanKartris\Kartris\Plugins\SecureTrading\*.config"
-copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\UPS\*.default" "c:\CleanKartris\Kartris\Plugins\UPS\*.config"
-copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\USPS\*.default" "c:\CleanKartris\Kartris\Plugins\USPS\*.config"
-ECHO DONE!
-ECHO **
+REM ECHO Copying default payment gateway config files...
+REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\2Checkout\*.default" "c:\CleanKartris\Kartris\Plugins\2Checkout\*.config"
+REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\GoogleCheckout\*.default" "c:\CleanKartris\Kartris\Plugins\GoogleCheckout\*.config"
+REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\Paypal\*.default" "c:\CleanKartris\Kartris\Plugins\Paypal\*.config"
+REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\PO_OfflinePayment\*.default" "c:\CleanKartris\Kartris\Plugins\PO_OfflinePayment\*.config"
+REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\RBSWorldPay\*.default" "c:\CleanKartris\Kartris\Plugins\RBSWorldPay\*.config"
+REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\SagePay\*.default" "c:\CleanKartris\Kartris\Plugins\SagePay\*.config"
+REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\SagePayDirect\*.default" "c:\CleanKartris\Kartris\Plugins\SagePayDirect\*.config"
+REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\SecureTrading\*.default" "c:\CleanKartris\Kartris\Plugins\SecureTrading\*.config"
+REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\UPS\*.default" "c:\CleanKartris\Kartris\Plugins\UPS\*.config"
+REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\USPS\*.default" "c:\CleanKartris\Kartris\Plugins\USPS\*.config"
+REM ECHO DONE!
+REM ECHO **
 ECHO Copying default WPI files...
 copy "c:\CleanKartris\Kartris\defaultbuildfiles\*.*" "c:\CleanKartris\*.*"
 ECHO DONE!
