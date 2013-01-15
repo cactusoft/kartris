@@ -151,8 +151,7 @@ Partial Class UserControls_Front_TicketDetails
             SendEmail(LanguagesBLL.GetEmailFrom(CkartrisBLL.GetLanguageIDfromSession), strAdminEmail, strEmailSubject, strTicketMessage, , , , , blnHTMLEmail, , BccAddresses)
 
             'Send a support notification request to Windows Store App if enabled
-            'get the first 30 characters of the support ticket message
-            CkartrisBLL.PushKartrisNotification("SUPPORT", intTicketID, Left(strTicketMessage, 30))
+            If intAssignedID = 0 Then CkartrisBLL.PushKartrisNotification("s")
 
             UC_Updated.ShowAnimatedText()
 

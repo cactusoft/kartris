@@ -246,8 +246,10 @@ Partial Class UserControls_Back_EditTicket
 
     Protected Sub lnkAssignToMe_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAssignToMe.Click
         ddlAssignedLogin.SelectedValue = CInt(hidPresentAdminUserID.Value)
+        'Send a support notification request to Windows Store App if enabled
         UpdateTicket()
         DisplayReplyBox()
+        CkartrisBLL.PushKartrisNotification("s")
         updMain.Update()
     End Sub
 

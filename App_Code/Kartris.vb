@@ -1602,21 +1602,29 @@ Public NotInheritable Class CkartrisBLL
     ''' Push Kartris Notification to an installed Windows Store App
     ''' </summary>
     ''' <param name="DataType"></param>
-    ''' <param name="DataID"></param>
-    ''' <param name="DataValue"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function PushKartrisNotification(ByVal DataType As String, ByVal DataID As Long, ByVal DataValue As String) As String
+    Public Shared Function PushKartrisNotification(ByVal DataType As String) As String
 
+      
         'send push notification request if channel URI config is set
         If Not String.IsNullOrEmpty(GetKartConfig("general.windowsstoreappchanneluri")) Then
+            Dim DataValue As Long = 0
+            If DataType.ToLower = "s" Then
+                Dim numUnassignedTickets As Integer, numAwaitingTickets As Integer
+                TicketsBLL._TicketsCounterSummary(numUnassignedTickets, numAwaitingTickets, 0)
+                DataValue = numUnassignedTickets
+            ElseIf DataType.ToLower = "o" Then
+                DataValue = OrdersBLL._GetByStatusCount(OrdersBLL.ORDERS_LIST_CALLMODE.INVOICE)
+            End If
+
             Dim svcNotifications As New com.kartris.livetile.Service1
             Dim KartrisNotification As New com.kartris.livetile.KartrisNotificationData
             With KartrisNotification
                 .ClientWindowsStoreAppChannelURI = GetKartConfig("general.windowsstoreappchanneluri")
-                .NotificationDataID = DataID
                 .NotificationDataType = DataType
-                .NotificationDataValue = DataValue
+                .NotificationDataCount = DataValue
+                .NotificationDataCountSpecified = True
                 .KartrisWebShopURL = WebShopURL()
             End With
             Return svcNotifications.SendNotification(KartrisNotification)
