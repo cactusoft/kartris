@@ -58,7 +58,7 @@ Partial Class Templates_WriteTicketTemplate
                         If String.IsNullOrEmpty(strAdminEmail) Then
                             strAdminEmail = strTempEmail
                         Else
-                            BccAddresses = New System.Net.Mail.MailAddressCollection
+                            If BccAddresses Is Nothing Then BccAddresses = New System.Net.Mail.MailAddressCollection
                             BccAddresses.Add(New System.Net.Mail.MailAddress(strTempEmail))
                         End If
                     End If
@@ -73,6 +73,8 @@ Partial Class Templates_WriteTicketTemplate
 
                 SendEmail(LanguagesBLL.GetEmailFrom(CkartrisBLL.GetLanguageIDfromSession), strAdminEmail, strEmailSubject, strTicketMessage, , , , , , , BccAddresses)
 
+                'Send a support notification request to Windows Store App if enabled         
+                CkartrisBLL.PushKartrisNotification("s")
 
                 litResult.Text = GetGlobalResourceObject("Tickets", "ContentText_TicketSuccessfullySubmited")
             Else

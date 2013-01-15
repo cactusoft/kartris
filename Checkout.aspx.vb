@@ -1508,7 +1508,7 @@ Partial Class _Checkout
                                         End If
 
                                         'Send an order notification to Windows Store App if enabled
-                                        PushKartrisNotification("ORDER", O_ID, objOrder.Amount)
+                                        PushKartrisNotification("o")
                                     End If
                                 End If
 

@@ -4,9 +4,8 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="ClientWindowsStoreAppChannelURI" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="KartrisWebShopURL" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="NotificationDataID" type="xs:long" />
+      <xs:element minOccurs="0" name="NotificationDataCount" type="xs:long" />
       <xs:element minOccurs="0" name="NotificationDataType" nillable="true" type="xs:string" />
-      <xs:element minOccurs="0" name="NotificationDataValue" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="KartrisNotificationData" nillable="true" type="tns:KartrisNotificationData" />

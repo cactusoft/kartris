@@ -200,7 +200,7 @@ Partial Class Callback
                             End If
 
                             'Send an order notification to Windows Store App if enabled
-                            PushKartrisNotification("ORDER", O_ID, O_TotalPriceGateway)
+                            PushKartrisNotification("o")
 
                         Try
                             'This handles setting the order and customer ID
