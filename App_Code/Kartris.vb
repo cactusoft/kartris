@@ -2009,6 +2009,49 @@ Public NotInheritable Class CkartrisImages
         End If
     End Sub
 
+    ''' <summary>
+    ''' compress images
+    ''' </summary>
+    Public Shared Sub CompressImage(ByVal strImagePath As String, ByVal numQuality As Long)
+        Dim numMaxWidth As Integer = 1500, numMaxHeight As Integer = 1500
+        Try
+            Dim numImageNewWidth, numImageNewHeight As Integer
+
+            Dim objImgOriginal As System.Drawing.Image
+            objImgOriginal = System.Drawing.Image.FromFile(strImagePath)
+            objImgOriginal.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipNone)
+            objImgOriginal.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipNone)
+
+            If objImgOriginal.Height / numMaxHeight < objImgOriginal.Width / numMaxWidth Then
+                'Resize by width
+                numImageNewWidth = numMaxWidth
+                numImageNewHeight = objImgOriginal.Height / (objImgOriginal.Width / numMaxWidth)
+            Else
+                'Resize by height
+                numImageNewHeight = numMaxHeight
+                numImageNewWidth = objImgOriginal.Width / (objImgOriginal.Height / numMaxHeight)
+            End If
+
+            'If new height/width bigger than old ones, cancel
+            If numImageNewHeight > objImgOriginal.Height Or numImageNewWidth > objImgOriginal.Width Then
+                numImageNewHeight = objImgOriginal.Height
+                numImageNewWidth = objImgOriginal.Width
+            End If
+
+            Dim objImgCompressed As System.Drawing.Image = objImgOriginal.GetThumbnailImage(numImageNewWidth, numImageNewHeight, Nothing, Nothing)
+            objImgOriginal.Dispose()
+
+            Dim Info = System.Drawing.Imaging.ImageCodecInfo.GetImageEncoders()
+            Dim Params = New System.Drawing.Imaging.EncoderParameters(1)
+            Params.Param(0) = New System.Drawing.Imaging.EncoderParameter(System.Drawing.Imaging.Encoder.Quality, numQuality)
+
+            objImgCompressed.Save(strImagePath, Info(1), Params)
+            objImgCompressed.Dispose()
+
+        Catch ex As Exception
+
+        End Try
+    End Sub
 End Class
 
 Public NotInheritable Class CkartrisMedia
