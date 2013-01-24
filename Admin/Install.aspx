@@ -212,6 +212,13 @@
 							</div>
 							<div class="spacer">
 							</div>
+                            <div class="formrow">
+								<span class="checkbox">
+									<asp:CheckBox ID="chkCreateSampleData" runat="server" Text="<%$ Resources: Step3_CreateSampleData%>" />
+								</span>
+							</div>
+							<div class="spacer">
+							</div>
 						</asp:View>
 					</asp:MultiView>
 					<!-- -------- // STEP 3 - CONNECTION STRING CHECK -------- -->
