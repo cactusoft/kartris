@@ -74,6 +74,26 @@ DROP TRIGGER [dbo].[trigKartrisVersions_OrderValue]
 DROP TRIGGER [dbo].[trigKartrisWishLists_DML]
 GO
 
+-- ****** tblKartrisConfig - Remove field "CactuShopName_DEPRECATED"
+-- *******************************************************************************
+BEGIN TRANSACTION
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+COMMIT
+BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.tblKartrisConfig
+	DROP COLUMN CactuShopName_DEPRECATED
+GO
+ALTER TABLE dbo.tblKartrisConfig SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+
 -- ****** tblKartrisCurrencies - Change data type of "CUR_ISOCodeNumeric"
 -- *******************************************************************************
 BEGIN TRANSACTION
@@ -26542,8 +26562,9 @@ GO
 -- *******************************************************************************
 -- ****** Extra SKU Object Config
 -- *******************************************************************************
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CactuShopName_DEPRECATED], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.email.enablehtml', NULL, N'y', N's', N'b', N'y|n', N'Whether to allow HTML emails', 2, N'y', 0)
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CactuShopName_DEPRECATED], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'frontend.versions.display.showextrasku', NULL, N'n', N's', N'b', N'y|n', N'Whether to show the ''extra sku'' on the version display on the front end.', 2, N'n', 0);
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.email.enablehtml', N'y', N's', N'b', N'y|n', N'Whether to allow HTML emails', 2, N'y', 0)
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'frontend.versions.display.showextrasku', N'n', N's', N'b', N'y|n', N'Whether to show the ''extra sku'' on the version display on the front end.', 2, N'n', 0);
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.imagequality', N'85', N'n', N'n', N'1-99', N'Compression quality for uploaded images. This will allow the uploaded images to be compressed to improve performance and save disk space. To disable image compression set the value to 0 or 100', 2, N'85', 0)
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (N'K:version.extrasku', N'Version', N's', NULL, N'Extra code number for versions (store specific).', 0, 2)
 GO
 

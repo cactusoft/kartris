@@ -173,7 +173,7 @@ generateNewName:
 
             If Not File.Exists(Server.MapPath(c_strUploadPath & strTempName)) Then
                 _UC_UploaderPopup.SaveFile(Server.MapPath(c_strUploadPath & strTempName))
-                Dim strCompressQuality As String = KartSettingsManager.GetKartConfig("")
+                Dim strCompressQuality As String = KartSettingsManager.GetKartConfig("general.imagequality")
                 If IsNumeric(strCompressQuality) AndAlso strCompressQuality > 0 AndAlso strCompressQuality < 100 Then CompressImage(Server.MapPath(c_strUploadPath & strTempName), CLng(strCompressQuality))
                 _UC_ItemSorter.AddNewItem(strTempName)
             Else
