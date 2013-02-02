@@ -101,7 +101,7 @@ Partial Class UserControls_Back_ShippingRates
         RaiseEvent _UCEvent_DataUpdated()
     End Sub
 
-    Private Sub DeleteShippingRate(ByVal numShippingRateID As Byte)
+    Private Sub DeleteShippingRate(ByVal numShippingRateID As Integer)
         Dim strMessage As String = ""
         If Not ShippingBLL._DeleteShippingRate(numShippingRateID, strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
