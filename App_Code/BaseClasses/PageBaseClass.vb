@@ -162,7 +162,7 @@ Public MustInherit Class PageBaseClass
         End Set
     End Property
 
-    Public Property MetaKeywords() As String
+    Public Overloads Property MetaKeywords() As String
         Get
             Return _MetaKeywords
         End Get
@@ -171,7 +171,7 @@ Public MustInherit Class PageBaseClass
         End Set
     End Property
 
-    Public Property MetaDescription() As String
+    Public Overloads Property MetaDescription() As String
         Get
             Return _MetaDescription
         End Get

@@ -172,11 +172,11 @@ Public Class KartrisMembershipProvider
     End Property
 
     Public Overrides Function ChangePassword(ByVal username As String, ByVal oldPassword As String, ByVal newPassword As String) As Boolean
-
+        Return Nothing
     End Function
 
     Public Overrides Function ChangePasswordQuestionAndAnswer(ByVal username As String, ByVal password As String, ByVal newPasswordQuestion As String, ByVal newPasswordAnswer As String) As Boolean
-
+        Return Nothing
     End Function
 
     Public Overrides Function CreateUser(ByVal username As String, ByVal password As String, ByVal email As String, ByVal passwordQuestion As String, ByVal passwordAnswer As String, ByVal isApproved As Boolean, ByVal providerUserKey As Object, ByRef status As System.Web.Security.MembershipCreateStatus) As System.Web.Security.MembershipUser
@@ -207,18 +207,18 @@ Public Class KartrisMembershipProvider
     End Function
 
     Public Overrides Function DeleteUser(ByVal username As String, ByVal deleteAllRelatedData As Boolean) As Boolean
-
+        Return Nothing
     End Function
 
     Public Overrides ReadOnly Property EnablePasswordReset() As Boolean
         Get
-
+            Return Nothing
         End Get
     End Property
 
     Public Overrides ReadOnly Property EnablePasswordRetrieval() As Boolean
         Get
-
+            Return Nothing
         End Get
     End Property
 
@@ -235,7 +235,7 @@ Public Class KartrisMembershipProvider
     End Function
 
     Public Overrides Function GetNumberOfUsersOnline() As Integer
-
+        Return Nothing
     End Function
 
     Public Overrides Function GetPassword(ByVal username As String, ByVal answer As String) As String
@@ -282,31 +282,31 @@ Public Class KartrisMembershipProvider
 
     Public Overrides ReadOnly Property MaxInvalidPasswordAttempts() As Integer
         Get
-
+            Return Nothing
         End Get
     End Property
 
     Public Overrides ReadOnly Property MinRequiredNonAlphanumericCharacters() As Integer
         Get
-
+            Return Nothing
         End Get
     End Property
 
     Public Overrides ReadOnly Property MinRequiredPasswordLength() As Integer
         Get
-
+            Return Nothing
         End Get
     End Property
 
     Public Overrides ReadOnly Property PasswordAttemptWindow() As Integer
         Get
-
+            Return Nothing
         End Get
     End Property
 
     Public Overrides ReadOnly Property PasswordFormat() As System.Web.Security.MembershipPasswordFormat
         Get
-
+            Return Nothing
         End Get
     End Property
 
@@ -328,7 +328,7 @@ Public Class KartrisMembershipProvider
 
     Public Overrides ReadOnly Property RequiresUniqueEmail() As Boolean
         Get
-
+            Return Nothing
         End Get
     End Property
 
@@ -337,7 +337,7 @@ Public Class KartrisMembershipProvider
     End Function
 
     Public Overrides Function UnlockUser(ByVal userName As String) As Boolean
-
+        Return Nothing
     End Function
 
     Public Overrides Sub UpdateUser(ByVal user As System.Web.Security.MembershipUser)
