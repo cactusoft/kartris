@@ -206,7 +206,7 @@ Public Class ShippingBLL
         Return ShippingRatesAdptr._GetZonesByMethod(numShippingMethodID)
     End Function
 
-    Public Shared Function _UpdateShippingRate(ByVal numShippingRateID As Byte, ByVal numNewRate As Single, ByVal strShippingGateways As String, ByRef strMsg As String) As Boolean
+    Public Shared Function _UpdateShippingRate(ByVal numShippingRateID As Integer, ByVal numNewRate As Single, ByVal strShippingGateways As String, ByRef strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
             Dim cmdUpdateShippingRate As SqlCommand = sqlConn.CreateCommand
@@ -236,7 +236,7 @@ Public Class ShippingBLL
         End Using
         Return False
     End Function
-    Public Shared Function _DeleteShippingRate(ByVal numShippingRateID As Byte, ByRef strMsg As String) As Boolean
+    Public Shared Function _DeleteShippingRate(ByVal numShippingRateID As Integer, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)

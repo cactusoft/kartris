@@ -13431,7 +13431,7 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_s
 BEGIN
 EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[_spKartrisShippingRates_Update]
 (
-	@S_ID as tinyint,
+	@S_ID as int,
 	@NewRate as real,
 	@S_ShippingGateways as nvarchar(255)
 )
@@ -13590,7 +13590,7 @@ IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_s
 BEGIN
 EXEC dbo.sp_executesql @statement = N'CREATE PROCEDURE [dbo].[_spKartrisShippingRates_DeleteByID]
 (
-	@S_ID as tinyint
+	@S_ID as int
 )
 AS
 	SET NOCOUNT ON;

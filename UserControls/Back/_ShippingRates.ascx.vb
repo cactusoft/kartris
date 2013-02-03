@@ -83,7 +83,7 @@ Partial Class UserControls_Back_ShippingRates
         End Select
     End Sub
 
-    Private Sub UpdateShippingRate(ByVal numShippingRateID As Byte, ByVal numRate As Single, ByVal strShippingGateways As String)
+    Private Sub UpdateShippingRate(ByVal numShippingRateID As Integer, ByVal numRate As Single, ByVal strShippingGateways As String)
         Dim strMessage As String = ""
         If Not ShippingBLL._UpdateShippingRate(numShippingRateID, numRate, strShippingGateways, strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
@@ -202,7 +202,7 @@ Partial Class UserControls_Back_ShippingRates
     End Sub
 
     Protected Sub _UC_PopupMsg_Rate_Confirmed() Handles _UC_PopupMsg_Rate.Confirmed
-        If litShippingIDToDelete.Text <> "" Then DeleteShippingRate(CByte(litShippingIDToDelete.Text))
+        If litShippingIDToDelete.Text <> "" Then DeleteShippingRate(CInt(litShippingIDToDelete.Text))
     End Sub
 
     Private Function GetShippingMethodID() As Byte
