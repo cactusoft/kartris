@@ -1403,7 +1403,7 @@ Public Class BasketBLL
                 End With
             Next
         End If
-
+        Return True
     End Function
 
     Public Sub DeleteBasket(Optional ByVal numParentID As Long = 0)
