@@ -25084,7 +25084,7 @@ CREATE PROCEDURE [dbo].[_spKartrisVersions_GetStockLevel]
 )
 AS
 	SET NOCOUNT ON;
-SELECT        V_ID, V_Name, V_CodeNumber, V_Quantity, V_QuantityWarnLevel, P_SupplierID, P_ID
+SELECT DISTINCT V_ID, V_Name, V_CodeNumber, V_Quantity, V_QuantityWarnLevel, P_SupplierID, P_ID
 FROM           dbo.vKartrisProductsVersions
 WHERE        (LANG_ID = @LANG_ID) AND (V_Quantity <= V_QuantityWarnLevel) AND (V_QuantityWarnLevel <> 0)
 ORDER BY V_Quantity , V_QuantityWarnLevel 
