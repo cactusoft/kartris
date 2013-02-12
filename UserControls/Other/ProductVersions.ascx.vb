@@ -457,6 +457,11 @@ Partial Class ProductVersions
                       _ProductID, _
                       ImageViewer.SmallImagesType.enum_ImageButton)
 
+                    'Hide whole image and container if no image available, otherwise can end up
+                    'with small square visible if there is a border and background set for the 
+                    'image holder in CSS
+                    If UC_ImageView.FoundImage = False Then CType(e.Item.FindControl("phdVersionImage"), PlaceHolder).Visible = False
+
                 Case "phdMediaGallery"
                     If Not c_blnShowMediaGallery Then
                         e.Item.FindControl("UC_VersionMediaGallery").Visible = False
