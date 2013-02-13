@@ -25814,7 +25814,7 @@ EXEC dbo.sp_executesql @statement = N'CREATE VIEW [dbo].[vKartrisCombinationPric
 AS
 SELECT     V_ProductID, V_ID, V_CodeNumber, V_Price, dbo.fnKartrisVersions_GetSortedOptionsByVersion(V_ID) AS V_OptionsIDs
 FROM         dbo.tblKartrisVersions
-WHERE     (V_Type = ''c'')
+WHERE     (V_Type = ''c'') AND (V_Live = 1)
 '
 GO
 IF NOT EXISTS (SELECT * FROM ::fn_listextendedproperty(N'MS_DiagramPane1' , N'SCHEMA',N'dbo', N'VIEW',N'vKartrisCombinationPrices', NULL,NULL))
