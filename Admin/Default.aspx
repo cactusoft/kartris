@@ -8,16 +8,26 @@
     <base id="baseTag" runat="server" />
     <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
     <!--
-        ===============================================================================
-        KARTRIS by cactusoft
-        Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
-        All rights reserved.
-        ===============================================================================
+        '========================================================================
+        'Kartris - www.kartris.com
+        'Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC
+
+        'GNU GENERAL PUBLIC LICENSE v2
+        'This program is free software distributed under the GPL without any
+        'warranty.
+        'www.gnu.org/licenses/gpl-2.0.html
+
+        'KARTRIS COMMERCIAL LICENSE
+        'If a valid license.config issued by Cactusoft is present, the KCL
+        'overrides the GPL v2.
+        'www.kartris.com/t-Kartris-Commercial-License.aspx
+        '========================================================================
         -->
     <title>Kartris</title>
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
 </head>
 <body id="page_login">
     <div id="centrecontainer">
@@ -35,7 +45,7 @@
                     in an emergency. -->
 
                         <!--[if lte IE 7]>
-                        <div style="color: #fff;background-color: #f50;padding: 5px;"><strong style="color: #fff;">Warning!</strong>
+                        <div style="color: #fff;background-color: #f55;padding: 5px;"><strong style="color: #fff;">Warning!</strong>
                         You're using a very old browser. Parts of the Kartris back end will display incorrectly and other
                         features may not work at all. Please update your browser, or install a new one for the best
                         experience. Latest versions of <a href="http://windows.microsoft.com/en-US/internet-explorer/download-ie">IE</a>,

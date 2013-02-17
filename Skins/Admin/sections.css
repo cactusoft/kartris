@@ -13,19 +13,19 @@ http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
 PAGE: LOGIN PAGE
 ========================================================================
 */
-#page_login								{ width: 100%; height: 100%; margin: 0; background-color: #333; }
-#page_login h1							{ margin: 0; color: #fff; font-size: 200%; }
-#page_login #loginbox                   { display: block; height: 450px; width: 400px; margin: 0 auto 0 auto; z-index: 4; padding: 100px 0 0 0; }
-#page_login ul li                       { padding: 2px 10px 0 0; margin: 0; float: left; }
+#page_login								{ width: 100%; height: 100%; margin: 0; background-color: #fff; }
+#page_login h1							{ margin: 0; color: #000; font-size: 200%; }
+#page_login #loginbox                   { background-image: url(Images/kartris_square.png); background-position: 20px 110px; background-repeat: no-repeat; display: block; height: 450px; width: 310px; margin: 0 auto 0 auto; z-index: 4; padding: 100px 0 0 140px; }
+#page_login ul li                       { padding: 2px 10px 0 0; margin: 0; }
 #page_login .Kartris-DetailsView		{ padding: 5px 0 0 0; margin: none; }
 #page_login .Kartris-DetailsView-Name   { width: 110px }
 #page_login .Kartris-DetailsView-Value  { width: 140px; display: block; }
-#page_login label						{ font-size: 85%; text-transform: uppercase; font-weight: normal; color: #bbb; letter-spacing: 1px; }
-#page_login #loginbox .midtext          { width: 140px; margin-top: 3px; background-color: #555; border: solid 1px #888; color: #eee; }
-#page_login #loginbox .midtext:focus    { background-color: #777; border: solid 1px #ccc; color: #fff;}
-#page_login a							{ font-weight: normal; color: #68f; font-size: 120%; }
+#page_login label						{ font-size: 85%; text-transform: uppercase; font-weight: normal; color: #888; letter-spacing: 1px; }
+#page_login #loginbox .midtext          { width: 240px; margin-top: 3px; background-color: #f5f5f5; border: solid 1px #999; color: #444; }
+#page_login #loginbox .midtext:focus    { background-color: #fff; border: solid 1px #c05; color: #000;}
+#page_login a							{ font-weight: normal; }
 #page_login .errormessage               { display: block; font-size: 99%; background-color: #c00; width: auto; margin: 5px 0 0 0; }
-#page_login .button						{ margin: 18px 0 0 0; background-color: #bbb; }
+#page_login .button						{ margin: 18px 0 0 0; }
 #page_login .gotofront					{ display: inline-block; margin: 18px 0 0 0 }
 /* 
 ========================================================================
