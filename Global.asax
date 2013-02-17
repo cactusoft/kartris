@@ -60,18 +60,27 @@
         End If
     End Sub
 	
-    'This is for payment gateway callbacks. Typically we set the
-    'callback URL to something like Callback.aspx?g=paypal. But some
-    'gateways seem not to pass back the querystrings, even if the specific
-    'path is setup in their back end. For this reason, we want to support 
-    'apparently static callback page names like Callback-paypal.aspx,
-    'and then map this to the appropriate querystring value.
     Private Sub Application_BeginRequest(ByVal sender As Object, ByVal e As EventArgs)
+        'This is for payment gateway callbacks. Typically we set the
+        'callback URL to something like Callback.aspx?g=paypal. But some
+        'gateways seem not to pass back the querystrings, even if the specific
+        'path is setup in their back end. For this reason, we want to support 
+        'apparently static callback page names like Callback-paypal.aspx,
+        'and then map this to the appropriate querystring value.
         Dim strFullOriginalPath As String = Request.Url.ToString()
         If strFullOriginalPath.ToLower.Contains("/callback-") Then
             Dim strGateway As String = Replace(strFullOriginalPath.ToLower.Substring(strFullOriginalPath.ToLower.IndexOf("callback-") + 9), ".aspx", "")
             Context.RewritePath("~/Callback.aspx?g=" & strGateway)
         End If
+		
+        'This is due to a breaking change in ASP.NET 4.0 that can stop
+        'postbacks working on the default document if only folder URL
+        'given (e.g. site/ instead of site/default.aspx)
+        Dim objApp = DirectCast(sender, HttpApplication)
+        If objApp.Context.Request.Url.LocalPath.EndsWith("/") Then
+            objApp.Context.RewritePath(String.Concat(objApp.Context.Request.Url.LocalPath, "Default.aspx"))
+        End If
+
     End Sub
 
     Sub Application_Error(ByVal sender As Object, ByVal e As EventArgs)
