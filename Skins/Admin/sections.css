@@ -669,9 +669,9 @@ span.link2 a                            { background-position: left top; backgro
 .basket table.baskettable tr.footerrow td span.total
                                         { color: #f00 }
 /* 
-------------------------------------------------------------------------
+========================================================================
 OPTIONS
-------------------------------------------------------------------------
+========================================================================
 */
 .options                                { margin-top: 5px; padding-bottom: 20px; }
 .options .pad                           { background-image: url(Images/element_back.png); background-position: top left; background-repeat: repeat-x; }
@@ -695,4 +695,19 @@ div.addtobasket div                     { display: inline }
 /* Added From "Kartris" Skin general.css */
 .Kartris-RadioButtonList ul li          { border: 0 none; clear: both; float: none; height: 20px; list-style: none outside none; margin: 0; }
 .Kartris-RadioButtonList ul li input    { background: none repeat scroll 0 0 transparent; border: medium none; float: left; width: 25px; }
-
+/* 
+========================================================================
+HTML EMAIL STYLING
+The emails themselves contain this stylesheet, but we include it here
+so that email text displayed in the back end is formatted the same (or
+at least differently to the H1 and other tags used elsewhere in the 
+back end).
+========================================================================
+*/
+#mail_container                         { border: solid 1px #999; padding: 20px;  width: 600px; }
+#mail_container p                       { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 13px; font-weight: normal; color: #555; padding: 5px 0; margin: 0; }
+#mail_container h1                      { font-family: "Segoe UI Light", Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: lighter; font-size: 150%; letter-spacing: 0px; color: #000; margin: 3px 0 10px 0; }
+#mail_container h2                      { font-family: "Segoe UI Light", Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: lighter; font-size: 110%; letter-spacing: 0px; color: #000; margin: 8px 0 3px 0; }
+#mail_container .line                   { margin-top: 10px; border-bottom: solid 1px #ccc; }
+#mail_container table                   { border: solid 2px #555; border-collapse: collapse; width: 100%; }
+#mail_container td                      { border-bottom: solid 1px #555; }

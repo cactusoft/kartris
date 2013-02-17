@@ -780,17 +780,20 @@ Public NotInheritable Class CkartrisDataManipulation
     ''' <remarks></remarks>
     Public Shared Function RetrieveHTMLEmailTemplate(ByVal strTemplateType As String, Optional ByVal intLanguageID As Short = 0) As String
         Dim strEmailTemplateText As String = ""
-        Dim strLanguageCulture As String = ""
+        Dim strCulture As String = ""
+        Dim strLanguage As String = ""
         Dim strSkinFolder As String = ""
-        Dim strEmailTemplatePath As String = ""
+        Dim strEmailTemplatePath_Culture As String = ""
+        Dim strEmailTemplatePath_Language As String = ""
 
         'if language ID is not passed then retrieve the ID from session
         If intLanguageID = 0 Then
             intLanguageID = CkartrisBLL.GetLanguageIDfromSession
         End If
 
-        'retrieve the language culture
-        strLanguageCulture = LanguagesBLL.GetCultureByLanguageID_s(intLanguageID)
+        'retrieve the culture, and derive the language code too
+        strCulture = LanguagesBLL.GetCultureByLanguageID_s(intLanguageID) 'full culture, e.g. EN-GB
+        strLanguage = Left(strCulture, 2) 'basic language part, e.g. EN
 
         'retrieve the currently used skin
         strSkinFolder = LanguagesBLL.GetTheme(intLanguageID)
@@ -798,14 +801,38 @@ Public NotInheritable Class CkartrisDataManipulation
             strSkinFolder = "Kartris"
         End If
 
-        strEmailTemplatePath = Current.Server.MapPath("~/Skins/" & strSkinFolder & "/Templates/Email_" &
-                                                strTemplateType & "_" & strLanguageCulture & ".html")
+        'This is where a culture-specific template would be found (e.g. EN-GB)
+        strEmailTemplatePath_Culture = Current.Server.MapPath("~/Skins/" & strSkinFolder & "/Templates/Email_" &
+                                        strTemplateType & "_" & strCulture & ".html")
 
-        If File.Exists(strEmailTemplatePath) Then
-            Dim fs As New FileStream(strEmailTemplatePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
-            Dim sr As New StreamReader(fs)
-            strEmailTemplateText = sr.ReadToEnd()
-            fs.Close()
+        'This is where a general language template would be found (e.g. EN)
+        strEmailTemplatePath_Language = Current.Server.MapPath("~/Skins/" & strSkinFolder & "/Templates/Email_" &
+                                        strTemplateType & "_" & strLanguage & ".html")
+
+
+        'We first look for exact culture template, if not found,
+        'we look for a broader one for just the language
+        If File.Exists(strEmailTemplatePath_Culture) Then
+
+            'We have an exact culture match for template, e.g. EN-GB
+            'This means you can have different templates for US and British
+            'English, Portuguese from Portugal or Brazil, etc.
+            Dim objFileStream As New FileStream(strEmailTemplatePath_Culture, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+            Dim objStreamReader As New StreamReader(objFileStream)
+            strEmailTemplateText = objStreamReader.ReadToEnd()
+            objFileStream.Close()
+
+        ElseIf File.Exists(strEmailTemplatePath_Language) Then
+
+            'We have an basic culture match for template, e.g. EN 
+            'This means we can use a single template for all
+            'versions of English; most stores will probably want
+            'to go this route for simplicity
+            Dim objFileStream As New FileStream(strEmailTemplatePath_Language, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)
+            Dim objStreamReader As New StreamReader(objFileStream)
+            strEmailTemplateText = objStreamReader.ReadToEnd()
+            objFileStream.Close()
+
         End If
 
         'strip out HTML comments in the template as we don't need them in the emails
