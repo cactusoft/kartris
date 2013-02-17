@@ -1543,13 +1543,13 @@ Public NotInheritable Class CkartrisBLL
         End If
 
         Dim sbdHTMLRowText As StringBuilder = New StringBuilder
-        sbdHTMLRowText.Append("<tr><td class=""col1"">")
+        sbdHTMLRowText.Append("<tr class=""row_item""><td class=""col1"">")
 
         'Put the name and description on the first column
-        sbdHTMLRowText.Append(strName & "<br/>")
+        sbdHTMLRowText.Append("<strong>" & strName & "</strong><br/>")
         If strDescription <> "" Then sbdHTMLRowText.Append(" " & strDescription.Replace(vbCrLf, "<br />") & "<br/>")
 
-        sbdHTMLRowText.Append("</td><td>")
+        sbdHTMLRowText.Append("</td><td class=""col2""> @ ")
         'Then put the price on the second
         If GetKartConfig("general.tax.pricesinctax") = "n" Or GetKartConfig("frontend.display.showtax") = "y" Then
             sbdHTMLRowText.Append(CurrenciesBLL.FormatCurrencyPrice(CUR_ID, numExTax, , False))

@@ -591,7 +591,6 @@ NEWS - News page and front page news items (summary)
 #news div.news_text                     { margin: 5px 0 45px 0 }
 #news #summary ul li                    { border-top: solid 2px #eee; padding: 0 0 10px 0; }
 #news #summary ul                       { margin: 0; list-style-type: none; padding: 0; }
-#news #summary ul li                    { padding: 0 0 5px 0 }
 #news #summary ul div.news_lastupdated,
 #news #summary ul div.news_datecreated  { display: block; width: 90px; margin: 5px 0 5px 0; color: #999; float: left; }
 #news #summary ul div.news_link         { font-weight: bold; margin: 5px 0 5px 0; float: left; font-size: 110%; }
@@ -615,8 +614,14 @@ match the same format as the email
 */
 #mail_container                         { border: solid 1px #999; padding: 20px;  width: 600px; }
 #mail_container p                       { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 13px; font-weight: normal; color: #555; padding: 5px 0; margin: 0; }
-#mail_container h1                      { font-family: "Segoe UI Light", Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: lighter; font-size: 150%; letter-spacing: 0px; color: #000; margin: 3px 0 10px 0; }
-#mail_container h2                      { font-family: "Segoe UI Light", Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: lighter; font-size: 110%; letter-spacing: 0px; color: #000; margin: 8px 0 3px 0; }
+#mail_container h1                      { font-family: "Segoe UI Light", Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: lighter; font-size: 180%; letter-spacing: 0px; color: #000; margin: 3px 0 10px 0; }
+#mail_container h2                      { font-family: "Segoe UI Light", Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: lighter; font-size: 140%; letter-spacing: 0px; color: #000; margin: 8px 0 3px 0; }
 #mail_container .line                   { margin-top: 10px; border-bottom: solid 1px #ccc; }
-#mail_container table                   { border: solid 2px #555; border-collapse: collapse; width: 100%; }
-#mail_container td                      { border-bottom: solid 1px #555; }
+#mail_container table                   { background-color: #eee; border-collapse: collapse; width: 100%; }
+#mail_container th                      { background-color: #fff; border-bottom: solid 1px #000; padding: 2px 5px; text-transform: uppercase; font-size: 85%; color: #999; }
+#mail_container td                      { border-bottom: solid 1px #ccc; padding: 2px 5px; text-align: right; }
+#mail_container .col1                   { text-align: left; }
+#mail_container .col2                   { text-align: right; vertical-align: top; }
+#mail_container .row_totals strong      { color: #f00; }
+#mail_container .row_item .col2         { color: #090; }
+#mail_container a                       { font-weight: normal; color: #04d; }
