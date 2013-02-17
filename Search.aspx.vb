@@ -36,7 +36,7 @@ Partial Class Search
         'way it is possible to use remote search boxes that
         'submit to the search page, or send someone a link
         'in an email, for example, that runs a search.
-        Dim strSearchText As String = Request.QueryString("strSearchText")
+        Dim strSearchText As String = Trim(Request.QueryString("strSearchText"))
         Dim strSearchMethod As String = Request.QueryString("strSearchMethod")
         Dim strType As String = Request.QueryString("strType")
         If strSearchMethod = "" Then strSearchMethod = "any" 'default to 'any' search if no method specified
@@ -62,7 +62,7 @@ Partial Class Search
         'If no searchtext value via querystring, we try to recover from cookie.
         'The cookie lets us store details so we can view products etc. and come
         'back to the search result we were looking at.
-        If Len(strSearchText) < 1 And Request.QueryString("strResults") <> "" Then
+        If Len(strSearchText) < 1 AndAlso Trim(Request.QueryString("strResults")) <> "" Then
             Try
                 strSearchText = Request.Cookies("KartrisSearch").Values("exactPhrase")
             Catch ex As Exception
