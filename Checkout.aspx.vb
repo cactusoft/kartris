@@ -861,7 +861,7 @@ Partial Class _Checkout
                     strTempEmailTextHolder = GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf & " " & GetGlobalResourceObject("Basket", "ContentText_ApplyCouponCode") & vbCrLf & " " & objBasket.CouponName & vbCrLf
                     sbdBodyText.AppendLine(strTempEmailTextHolder)
                     If blnUseHTMLOrderEmail Then
-                        sbdHTMLOrderContents.Append("<tr><td colspan=""2"">" & strTempEmailTextHolder.Replace(vbCrLf, "<br/>") &
+                        sbdHTMLOrderContents.Append("<tr class=""row_promotioncoupons""><td colspan=""2"">" & strTempEmailTextHolder.Replace(vbCrLf, "<br/>") &
                                                     "</td></tr>")
                     End If
                 End If
@@ -911,9 +911,6 @@ Partial Class _Checkout
                 End If
 
                 sbdBodyText.AppendLine(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
-                If blnUseHTMLOrderEmail Then
-                    sbdHTMLOrderContents.Append("<tr><td colspan=""2""></td></tr>")
-                End If
 
                 'Order totals
                 If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
@@ -929,19 +926,18 @@ Partial Class _Checkout
                                     ")" & vbCrLf)
                 sbdBodyText.AppendLine(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
                 If blnUseHTMLOrderEmail Then
-                    sbdHTMLOrderContents.Append("<tr><td colspan=""2"" class=""total"">")
+                    sbdHTMLOrderContents.Append("<tr class=""row_totals""><td colspan=""2"">")
                     If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
                         sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & "<br/>")
                         sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
                              IIf(blnAppUSmultistatetax, " (" & (objBasket.D_Tax * 100) & "%)", "") & "<br/>")
                     End If
-                    sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
-                                                " (" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
+                    sbdHTMLOrderContents.Append("(" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
                                                     LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
                                                     CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                                     CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, CUR_ID) &
-                                                ")" & "<br/>" & "</td></tr>")
-                    sbdHTMLOrderContents.Append("<tr><td colspan=""2""></td></tr>")
+                                                ") <strong>" & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
+                                                "</strong></td></tr>")
                 End If
 
                 'Handle order total conversion to different currency.
@@ -964,7 +960,7 @@ Partial Class _Checkout
                     sbdBodyText.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
 
                     If blnUseHTMLOrderEmail Then
-                        sbdHTMLOrderContents.Append("<tr><td colspan=""2"">")
+                        sbdHTMLOrderContents.Append("<tr class=""row_processcurrency""><td colspan=""2"">")
                         sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & "<br/>")
                         sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) &
                                                     " (" & CurrenciesBLL.CurrencyCode(intGatewayCurrency) & " - " &
@@ -975,7 +971,6 @@ Partial Class _Checkout
                         sbdHTMLOrderContents.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & "<br/>")
 
                         sbdHTMLOrderContents.Append("</td></tr>")
-                        sbdHTMLOrderContents.Append("<tr><td colspan=""2""></td></tr>")
                     End If
                 Else
                     'User was using same currency as the gateway requires, or
@@ -1174,7 +1169,9 @@ Partial Class _Checkout
                 sbdBodyText.Insert(0, sbdBasketItems.ToString)
                 If blnUseHTMLOrderEmail Then
                     'build up the table and the header tags, insert basket contents
-                    sbdHTMLOrderContents.Insert(0, "<table id=""orderitems""><thead><tr><th></th><th></th></thead><tbody>" &
+                    sbdHTMLOrderContents.Insert(0, "<table id=""orderitems""><thead><tr>" & vbCrLf & _
+                                                "<th class=""col1"">" & GetGlobalResourceObject("Kartris", "ContentText_Item") & "</th>" & vbCrLf & _
+                                                "<th class=""col2"">" & GetGlobalResourceObject("Kartris", "ContentText_Price") & "</th></thead><tbody>" & vbCrLf &
                                                 sbdHTMLOrderBasket.ToString)
                     'finally close the order contents HTML table
                     sbdHTMLOrderContents.Append("</tbody></table>")
@@ -1413,9 +1410,9 @@ Partial Class _Checkout
                                         '---------------------------------------
                                         If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
                                             Dim strPOline As String = ""
-                                            strPOline = "********************************************************" & vbCrLf
+
                                             strPOline += GetGlobalResourceObject("Invoice", "ContentText_PONumber") & ": " & O_PurchaseOrderNo & vbCrLf
-                                            strPOline += "********************************************************" & vbCrLf & vbCrLf
+                                            strPOline += vbCrLf
 
                                             If blnUseHTMLOrderEmail Then
                                                 strCallBodyText = CStr(tblOrder.Rows(0)("O_Details"))
