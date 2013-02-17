@@ -33,51 +33,51 @@
 	</script>
 
 	<style type="text/css">
-	html                        { height: 100%; background-color: #333; }
-	body                        { font-family: "Segoe UI",Arial,Helvetica,Sans-Serif; font-size: 9.5pt; font-weight: normal; color: #ccc; padding: 0; margin: 0; }
-	h2                          { font-family: "Segoe UI Light","Open Sans","Segoe UI",Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 210%; color: #fff; margin: 20px 0 0 0; display: inline-block; }
-	body                        { overflow: scroll; overflow: -moz-scrollbars-vertical; height: 100%; padding: 0; margin: 0; }
+	html                        { height: 100%; background-color: #fff; }
+	body                        { font-family: "Segoe UI",Arial,Helvetica,Sans-Serif; font-size: 13px; font-weight: normal; color: #333; padding: 0; margin: 0; overflow: scroll; overflow: -moz-scrollbars-vertical; height: 100%; }
+	h2                          { font-family: "Segoe UI Light","Open Sans","Segoe UI",Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 210%; color: #000; margin: 20px 0 10px 0; display: inline-block; }
 	#wizInstallation            { }
-	#leftbar                    { width: 190px; height: 600px; float: left; margin: 0 30px 0 0; }
-	form                        { display: block; margin: 0 auto; width: 680px; height: auto; min-height: 100%; }
+	form                        { background-image: url(../Skins/Admin/Images/kartris_square.png); background-position: 0 160px; background-repeat: no-repeat; display: block; margin: 0 auto; width: 500px; padding: 0 0 0 120px; height: auto; min-height: 100%; }
 	.summarydetails             { background-color: #777; color: #fff; padding: 3px 10px 3px 10px; }
 	.summarydetails div.formrow { padding: 0 0 10px 0 }
 	div.sidebar                 { display: block; z-index: 10; height: 32px; top: 80px; margin: 0px -33px 0px 0px; padding: 100px 30px 0 0; width: auto; }
-	div.step                    { padding: 0; width: 600px; }
+	div.step                    { padding: 0; width: 500px; }
 	#stepshield                 { height: 36px; display: block; width: 310px; margin: 97px 0 0 0; padding: 0; z-index: 1000; position: absolute; background-color: #000; z-index: 1000; filter: alpha(opacity=0); opacity: 0.0; }
 	div.nav                     { margin: 0; padding: 30px 0 0 0; z-index: 2; }
 	div.nav input,
-	input.button                { cursor: pointer; background-color: #bbb; border: solid 1px #333; color: #000; padding: 2px 6px 2px 6px; font-weight: normal; font-size: 11px; margin: 1px 0px 1px 2px; width: auto; display: inline-block; }
+	input.button                { cursor: pointer; background-color: #eee; border: solid 1px #333; color: #000; padding: 2px 6px 2px 6px; font-weight: normal; font-size: 11px; margin: 1px 0px 1px 2px; width: auto; display: inline-block; }
 	div.nav input:focus,
 	input.button:focus          { background-color: #ccc; color: #666; }
 	div.nav input:hover         { background-color: #f6f6f6 }
-	.sidebar a                  { display: block; padding: 2px 8px 2px 8px; font-weight: bold; font-size: 13pt; color: #fff; background-color: #c05; float: left; margin: 0 3px 0 0; text-decoration: none; }
-	a.active                    { color: #000; background-color: #fff; }
+	.sidebar a                  { border: solid 1px #5d4; display: block; padding: 2px 8px 2px 8px; font-weight: normal; font-size: 13pt; color: #fff; background-color: #5d4; float: left; margin: 0 3px 0 0; text-decoration: none; }
+	a.active                    { border: solid 1px #000; color: #000; background-color: #fff; font-weight: bold; }
 	#pagebody                   { padding: 0; margin: 0; }
 	p                           { padding: 5px 0 15px 0; margin: 0; }
-	label                       { font-size: 90%; text-transform: uppercase; display: inline-block; width: 150px; font-size: 100%; color: #999; font-weight: normal; }
-	span.checkbox input         { margin-left: 150px }
+	label                       { font-size: 85%; text-transform: uppercase; font-weight: normal; color: #888; letter-spacing: 1px; width: 120px; display: inline-block; }
+	span.checkbox input         { margin-left: 120px }
 	span.checkbox label         { width: 300px }
 	span.checkbox2 input        { margin-left: 0px }
-	span.checkbox2 label        { width: 420px; padding: 0 0 5px 0; }
+	span.checkbox2 label        { width: 320px; padding: 0 0 5px 0; }
 	span.checkbox input,
 	span.radio input            { border-style: none; background-color: transparent; display: inline; width: 20px; float: left; width: 20px; margin-right: 1px; }
 	span.checkbox2 input        { border-style: none; background-color: transparent; display: inline; width: 20px; float: left; width: 20px; margin-right: 1px; }
 	div.formrow                 { padding: 2px 0 5px 0 }
 	div.spacer                  { clear: both }
-	div.errormessage            { background-color: #c00; color: #fff; padding: 3px 10px 3px 10px; margin: 5px 0 10px 0; font-weight: normal; }
-	div.warnmessage             { background-color: #f50; color: #fff; padding: 3px 10px 3px 10px; margin: 5px 0 10px 0; font-weight: normal; margin-left: 150px; }
-	div.infomessage             { background-color: #777; color: #fff; padding: 3px 10px 3px 10px; margin: 10px 0 10px 0; font-weight: normal; }
+	div.errormessage            { background-color: #fcc; color: #d00; padding: 3px 10px 3px 10px; margin: 5px 0 10px 0; font-weight: normal; }
+	div.warnmessage             { border: solid 1px #f50; color: #f50; padding: 3px 10px 3px 10px; margin: 5px 0 10px 0; font-weight: normal; margin-left: 125px; }
+	div.infomessage             { background-color: #777; color: #fff; padding: 3px 10px 3px 10px; margin: 10px 0 10px 3px; font-weight: normal; }
 	span.error                  { display: inline-block; color: #fff; font-weight: bold; padding: 1px 5px 1px 3px; text-decoration: blink; background-color: #c00; margin-left: 3px; border-radius: 3px; }
 	select,
 	input,
-	textarea                    { font-weight: normal; font-size: inherit; color: #eee; background-color: #555; border: solid 1px #888; margin: 0 0 3px 0; width: 300px; padding: 1px; }
+	textarea                    { font-weight: normal; font-size: inherit; color: #444; background-color: #f5f5f5; border: solid 1px #999; margin: 0 0 3px 0; width: 270px; padding: 1px; }
 	select:focus,
 	input:focus,
-	textarea:focus              { font-weight: normal; color: #fff; background-color: #777; border: solid 1px #ccc; margin-bottom: 3px; }
+	textarea:focus              { font-weight: normal; color: #000; background-color: #fff; border: solid 1px #c05; margin-bottom: 3px; }
 	div.helplink                { }
-	a.helplink                  { font-size: 120%; text-decoration: none; color: #68f; padding: 1px 6px 1px 18px; min-height: 17px; margin: -30px 0 0 0; float: right; z-index: 2000; }
-	</style>
+	a.helplink                  { margin: -29px 0 0 0; float: right; z-index: 2000; display: block; padding: 3px 8px 3px 8px; font-weight: normal; font-size: 100%; color: #04d; text-decoration: none; }
+	a.helplink:hover            { background-color: #04d; text-decoration: none; color: #fff; }
+
+</style>
 </head>
 <body>
 
@@ -212,7 +212,7 @@
 							</div>
 							<div class="spacer">
 							</div>
-                            <div class="formrow">
+							<div class="formrow">
 								<span class="checkbox">
 									<asp:CheckBox ID="chkCreateSampleData" runat="server" Text="<%$ Resources: Step3_CreateSampleData%>" />
 								</span>
