@@ -244,7 +244,7 @@
                                     <asp:Literal ID="litContentTextCouponCode" runat="server" Text="<%$ Resources: _Coupons, ContentText_CouponCode %>" />
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:CheckBox ID="chkFixedCouponCode" runat="server" CssClass="checkbox" AutoPostBack="true" />
-                                    <asp:TextBox ID="txtCouponCode" runat="server" CssClass="midtext" MaxLength="8" Visible="false" />
+                                    <asp:TextBox ID="txtCouponCode" runat="server" CssClass="midtext" MaxLength="15" Visible="false" />
                                     <asp:RequiredFieldValidator ID="valRequiredCouponCode" runat="server" CssClass="error"
                                         ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                         Display="Dynamic" ControlToValidate="txtCouponCode" ValidationGroup="grpNewCoupon"
