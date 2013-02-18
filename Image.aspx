@@ -1,4 +1,5 @@
 <%@ Page Language="VB" Theme="" %>
+<%@ OutputCache Duration="1800" VaryByParam="*" %>
 <%@ Import Namespace="System.Drawing" %>
 <%@ Import Namespace="System.Drawing.Drawing2D" %>
 <%@ Import Namespace="System.Drawing.Image" %>
