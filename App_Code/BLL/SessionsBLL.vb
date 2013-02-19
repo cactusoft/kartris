@@ -63,48 +63,48 @@ Public Class SessionsBLL
 			Get
                 _AdptrSessionValues = New SessionValuesTblAdptr
                 Return _AdptrSessionValues
-			End Get
-		End Property
+            End Get
+        End Property
 
-	End Class
+    End Class
 
-	''//
-	Public ReadOnly Property SessionCode() As String
-		Get
-			If _SessionCode = "" Then NewSession()
-			Return _SessionCode
-		End Get
-	End Property
+    ''//
+    Public ReadOnly Property SessionCode() As String
+        Get
+            If _SessionCode = "" Then NewSession()
+            Return _SessionCode
+        End Get
+    End Property
 
-	Public ReadOnly Property SessionIP() As String
-		Get
-			Return Current.Request.ServerVariables("REMOTE_ADDR")
-		End Get
-	End Property
+    Public ReadOnly Property SessionIP() As String
+        Get
+            Return Current.Request.ServerVariables("REMOTE_ADDR")
+        End Get
+    End Property
 
-	Public ReadOnly Property SessionID() As Long
-		Get
-			If SessionID = 0 Then NewSession()
-			Return _SessionID
-		End Get
-	End Property
-	''//
+    Public ReadOnly Property SessionID() As Long
+        Get
+            If SessionID = 0 Then NewSession()
+            Return _SessionID
+        End Get
+    End Property
+    ''//
 
-	Protected ReadOnly Property AdptrSessions() As SessionsTblAdptr
-		Get
+    Protected ReadOnly Property AdptrSessions() As SessionsTblAdptr
+        Get
             _AdptrSessions = New SessionsTblAdptr
             Return _AdptrSessions
-		End Get
-	End Property
+        End Get
+    End Property
 
-	Protected ReadOnly Property AdptrSessionValues() As SessionValuesTblAdptr
-		Get
+    Protected ReadOnly Property AdptrSessionValues() As SessionValuesTblAdptr
+        Get
             _AdptrSessionValues = New SessionValuesTblAdptr
             Return _AdptrSessionValues
-		End Get
-	End Property
+        End Get
+    End Property
 
-	Public ReadOnly Property IsBrowser() As Boolean
+    Public ReadOnly Property IsBrowser() As Boolean
         Get
             Try
                 Dim strHTTPUserAgent As String
@@ -116,9 +116,9 @@ Public Class SessionsBLL
                 End If
             Catch ex As Exception
                 Return False
-            End Try            
+            End Try
         End Get
-	End Property
+    End Property
 
 	Private Shared Function GetRandomString(ByVal numLength As Integer) As String
 		Dim strRandomString As String = ""
