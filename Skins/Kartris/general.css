@@ -10,12 +10,12 @@ select,
 input,
 body                                    { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 13px; font-weight: normal; color: #555; padding: 0; margin: 0; }
 p                                       { margin: 5px 0 10px 0 }
-h1                                      { font-size: 170%; color: #000; margin: 0 0 4px 0; padding: 15px 10px 1px 0; display: inline-block; }
+h1                                      { font-family: 'Open Sans',"Segoe UI Light",Arial,Sans-Serif; font-size: 210%; letter-spacing: -0.5px; color: #000; margin: 0; padding: 15px 0 5px 0; display: inline-block; font-weight: 100; line-height: 33px; }
 h2                                      { font-size: 130%; color: #000; margin: 5px 0 5px 0; padding: 0; }
 h2.blockheader                          { width: 100%; margin: 10px 0 10px 0; }
 .h2_light_extra                         { color: #aaa; font-weight: bold; }
 h3                                      { font-size: 95%; font-weight: normal; margin: 0 0 5px 0; padding: 0; }
-h4                                      { font-size: 130%; color: #000; margin: 5px 0 5px 0; padding: 0; }
+h4                                      { font-family: 'Open Sans',"Segoe UI Light",Arial,Sans-Serif; font-weight: 100; font-size: 140%; color: #000; margin: 0; padding: 10px 0 15px 0; }
 h5                                      { margin: 0px 0px 5px 0px; color: #000; text-transform: uppercase; padding: 2px 2px 2px 0px; text-align: left; }
 pre                                     { color: #008800 }
 iframe                                  { border: none }
@@ -28,15 +28,15 @@ BREADCRUMBS
 ========================================================================
 */
 .breadcrumbtrail                        { padding: 5px 17px 5px 0; display: block; font-weight: normal; text-decoration: none; margin: 2px 0 9px 0px; font-size: 85%; text-transform: uppercase; }
-.breadcrumbtrail span span              { font-weight: bold; color: #999; display: inline-block; padding: 0 0 0 6px; }
-.breadcrumbtrail span span a            { padding: 0 17px 0 0; display: inline-block; font-weight: normal; margin: 0; color: #999; background-image: url(Images/breadcrumb_back.png); background-position: right center; background-repeat: no-repeat; }
+.breadcrumbtrail span span              { font-weight: bold; color: #555; display: inline-block; padding: 0 0 0 6px; }
+.breadcrumbtrail span span a            { padding: 0 17px 0 0; display: inline-block; font-weight: normal; margin: 0; color: #555; background-image: url(Images/breadcrumb_back.png); background-position: right center; background-repeat: no-repeat; }
 /* 
 ========================================================================
 HYPERLINKS
 ========================================================================
 */
 a:link,
-a:visited                               { text-decoration: none; color: #222; outline: 0; }
+a:visited                               { text-decoration: none; color: #777; outline: 0; }
 a:hover                                 { text-decoration: none; color: #000; }
 a.link2,
 span.link2 a                            { text-decoration: none; color: #777; border-bottom: dotted 1px #777; margin-right: 10px; }
@@ -58,13 +58,13 @@ img                                     { border: none }
 TABLES
 ========================================================================
 */
-table                                   { border-collapse: collapse; width: 100%; padding: 1px; border-bottom: solid 1px #ddd; }
-table tr td                             { border-top: solid 1px #ddd; vertical-align: top; padding: 5px 10px 5px 3px; }
+table                                   { border-collapse: collapse; width: 100%; }
+table tr td                             { background-color: #FFEEDD; border-bottom: solid 2px #fff; vertical-align: top; padding: 5px 10px 5px 5px; }
 table tr.alt                            { }
 table tr.headrow,
 table thead tr                          { }
 table tr.headrow th,
-table thead tr th                       { font-weight: normal; color: #888; text-align: left; }
+table thead tr th                       { border-bottom: solid 2px #fc5; font-weight: normal; color: #888; text-align: left; text-transform: uppercase; font-size: 85%;}
 table td,
 table th                                { padding: 3px }
 table td strong                         { color: #000 }
@@ -97,15 +97,15 @@ FORM ELEMENTS
 form                                    { margin: 0; display: inline; padding: 0; }
 select,
 input,
-textarea                                { font-weight: normal; color: #111; background-color: #fff; border: solid 1px #999; background-image: url(Images/textbox_background.png); background-position: left top; background-repeat: no-repeat; margin: 0 0 3px 0; padding: 2px; }
+textarea                                { font-weight: normal; color: #111; background-color: #eee; border: solid 1px #999; margin: 0 0 3px 0; padding: 2px; }
 select:focus,
 input:focus,
 textarea:focus                          { color: #000; background-color: #fff; border: solid 1px #c00; }
 textarea                                { width: 100%; max-width: 600px; }
 input                                   { width: 250px }
 input.longtext                          { width: 400px }
-input.button                            { background-color: #888; color: #fff; padding: 4px 16px 4px 16px; border: none; font-weight: bold; font-size: 110%; text-transform: uppercase; margin: 1px 0px 1px 2px; width: auto; font-family: Arial, Helvetica, Sans-Serif; display: inline-block; background-image: none; }
-input.button:hover                      { background-color: #AAA }
+input.button                            { font-weight: bold; background-color: #eee; color: #000; border: solid 1px #aaa; padding: 2px 8px 2px 8px; margin: 1px 0px 1px 2px; width: auto; display: inline-block; }
+input.button:hover                      { background-color: #fff }
 input.button:focus                      { background-color: #ccc; color: #666; }
 input.cancelbutton                      { background-color: #ddd; border-color: #bbb; color: #666; }
 input.highpriority                      { }
@@ -127,7 +127,7 @@ ERRORS & VALIDATION
 ========================================================================
 */
 span.error,
-div.errortext                           { font-family: Arial, Helvetica, Sans-Serif; display: inline-block; color: #fff; font-weight: bold; padding: 1px 5px 1px 3px; text-decoration: blink; background-color: #f00; margin-left: 3px; border-radius: 3px; }
+div.errortext                           { display: inline-block; color: #fff; font-weight: bold; padding: 1px 5px 1px 3px; text-decoration: blink; background-color: #f00; margin-left: 3px; border-radius: 3px; }
 .requiredfield                          { font-weight: bold }
 .valsummary                             { font-family: Arial, Helvetica, Sans-Serif; display: inline; color: #fff; font-weight: bold; padding: 1px 5px 1px 3px; text-decoration: blink; background-color: #f00; margin-left: 10px; border-radius: 3px; }
 .valsummary ul                          { display: none; visibility: hidden; }
@@ -143,11 +143,11 @@ IMAGES
 .imageviewer .gallery .scrollarea       { display: inline-block }
 #frmLargeImage div                      { }
 #frmLargeImage .imageviewer .gallery    { padding: 5px 0 0 0; background-color: #fff; text-align: center; border-top: solid 1px #fff; overflow-x: auto; overflow-y: hidden; white-space: nowrap; position: absolute; bottom: 5px; left: 2px; width: 99%; white-space: nowrap; }
-.imageviewer .gallery .imageholder      { display: inline-block; float: left; border: solid 1px #555; margin: 5px 1px 0 1px; vertical-align: middle; height: 60px; width: 60px; overflow: visible; }
+.imageviewer .gallery .imageholder      { display: inline-block; float: left; border: solid 1px #fc5; margin: 5px 1px 0 1px; vertical-align: middle; height: 60px; width: 60px; overflow: visible; }
 html>body .imageviewer .gallery .imageholder
                                         { float: none; nowhitespace: afterproperty; float: *right; /*IE7 hack */ }
 .imageviewer .gallery .imageholder:hover
-                                        { border: solid 1px #aaa }
+                                        { border: solid 1px #000 }
 .imageviewer .gallery .imageholder img  { vertical-align: middle; margin: 5px; }
 .singleimage                            { margin: auto }
 .product .promotions .singleimage       { float: left }
@@ -160,12 +160,12 @@ MEDIA (Video, audio, etc.)
 */
 /* media gallery for product */
 .imagecolumn .media_gallery             { padding: 5px 0 0 5px }
-.imagecolumn .media_gallery h2			{ font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 13px; margin: 0; padding: 3px 0 0 0; color: #000; font-weight: bold; }
+.imagecolumn .media_gallery h2			{ font-size: 13px; margin: 0; padding: 3px 0 0 0; color: #000; font-weight: bold; }
 .imagecolumn .media_gallery_inner       { margin: 1px 0 1px 0 }
 .media_links .mediaholder a             { text-align: center; padding: 0px; display: block; margin: auto auto auto auto; height: 52px; }
-.media_links .mediaholder:hover			{ border: solid 1px #aaa }
+.media_links .mediaholder:hover			{ border: solid 1px #000 }
 .media_links .mediaholder img           { vertical-align: middle; margin: 5px; height: 50px; width: 50px; }
-.media_links .mediaholder               { display: inline-block; float: left; margin: 5px 1px 0 1px; vertical-align: middle; border: solid 1px #555; width: 60px; height: 60px; overflow: visible; }
+.media_links .mediaholder               { display: inline-block; float: left; margin: 5px 1px 0 1px; vertical-align: middle; border: solid 1px #fc5; width: 60px; height: 60px; overflow: visible; }
 .media_downloadlink                     { }
 /* media gallery for versions, hide title */
 .versions .media_gallery h2             { display: none }
@@ -174,7 +174,7 @@ MEDIA (Video, audio, etc.)
 TABS AJAX CONTROL
 ========================================================================
 */
-.ajax__tab_default .ajax__tab_header    { margin: 8px 0 10px 0; font-weight: normal; text-transform: uppercase; font-size: 85%; }
+.ajax__tab_default .ajax__tab_header    { border-bottom: solid 3px #fc5; margin: 8px 0 10px 0; font-weight: normal; }
 .ajax__tab_default .ajax__tab_header .total
                                         { font-weight: normal }
 .ajax__tab_default .ajax__tab_active .ajax__tab_outer,
@@ -184,25 +184,22 @@ TABS AJAX CONTROL
 .ajax__tab_default .ajax__tab_active .ajax__tab_inner,
 .ajax__tab_default .ajax__tab_header .ajax__tab_inner,
 .ajax__tab_default .ajax__tab_hover .ajax__tab_inner
-                                        { padding: 0; nowhitespace: afterproperty; margin-left: 3px; /* offset the width of the left image */ }
-.ajax__tab_default .ajax__tab_active .ajax__tab_tab,
-.ajax__tab_default .ajax__tab_hover .ajax__tab_tab,
-.ajax__tab_default .ajax__tab_header .ajax__tab_tab
-                                        { margin: 2px 10px 1px 3px; padding: 2px 5px; }
-.ajax__tab_default .ajax__tab_hover .ajax__tab_tab
-                                        { color: #000; padding: 2px 5px; }
-.ajax__tab_default .ajax__tab_active .ajax__tab_tab
-                                        { color: #000; padding: 2px 5px; }
+                                        { padding: 0; margin-left: 3px; /* offset the width of the left image */ }
+.ajax__tab_tab                          { margin: 2px 10px 1px 3px; padding: 1px 5px 0 5px; }
+.ajax__tab_default .ajax__tab_header .ajax__tab_inner a
+                                        { color: #000 }
+.ajax__tab_default .ajax__tab_hover .ajax__tab_inner a
+                                        { color: #000 }
+.ajax__tab_default .ajax__tab_active .ajax__tab_inner a
+                                        { color: #000 }
 .ajax__tab_default .ajax__tab_hover .ajax__tab_tab strong,
 .ajax__tab_default .ajax__tab_active .ajax__tab_tab strong
                                         { font-weight: bold }
 .ajax__tab_default .ajax__tab_body      { background-color: transparent }
-.ajax__tab_header                       { background-image: url(Images/tab_bar.png); background-repeat: repeat-x; background-position: bottom left; }
-.ajax__tab_outer                        { background-color: #eee; border: solid 1px #444; border-bottom: none; background-image: url(Images/tab_bar.png); background-repeat: repeat-x; background-position: bottom left; }
-.ajax__tab_hover .ajax__tab_outer       { background-color: #ccc }
-.ajax__tab_active .ajax__tab_outer      { background-color: #fff; border: solid 1px #444; border-bottom: none; background-image: none; color: #000; font-weight: bold; }
-.ajax__tab_hover .ajax__tab_inner,
-.ajax__tab_active .ajax__tab_inner      { }
+.ajax__tab_header                       { }
+.ajax__tab_outer                        { background-color: #eb3; border-bottom: solid 1px #fff; }
+.ajax__tab_hover .ajax__tab_outer       { background-color: #fb4; }
+.ajax__tab_active .ajax__tab_outer      { background-color: #fc5; border-bottom: solid 1px #fc5; color: #000; font-weight: bold; }
 /* 
 ========================================================================
 ACCORDION AJAX CONTROL

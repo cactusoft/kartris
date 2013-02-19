@@ -19,20 +19,20 @@ HORIZONTAL DROPDOWN MENU SYSTEM
 -- css fold-style
 ========================================================================
 */
-#categorymenu							{ position: relative; top: 0; margin: 8px 0 0 0; display: block; z-index: 90; padding: 0 0 0 0; width: 100%; background-color: #047; }
+#categorymenu							{ height: 25px; background-color: #444; position: relative; margin: 8px 0 0 0; display: block; z-index: 90; padding: 0 0 0 0; width: 100%;  }
 .cssfoldout ul							{ padding: 0; border: 0; margin: 0; }
 .cssfoldout ul li						{ position: relative; list-style: none; float: left; margin: 0; }
-.cssfoldout ul li a						{ display: block; color: #999; font-weight: normal; z-index: 200; text-decoration: none; padding: 3px 17px 2px 4px; }
-.cssfoldout ul li:hover a				{ color: #000; }
-.cssfoldout ul ul						{ z-index: 200; position: absolute; visibility: hidden; background-color: #eee; border: solid 1px #333; margin: 0; padding: 0; }
+.cssfoldout ul li a						{ display: block; border-right: dotted 1px #ddd; color: #fff; font-weight: bold; z-index: 200; text-decoration: none; padding: 3px 17px 4px 9px; }
+.cssfoldout ul li:hover a				{ color: #fff; background-color: #777; }
+.cssfoldout ul ul						{ z-index: 200; position: absolute; visibility: hidden; margin: 0; padding: 0; }
 .cssfoldout ul ul li					{ border: none; width: 240px; }
-.cssfoldout ul li:hover ul li a			{ display: block; font-weight: normal; text-decoration: none; color: #000; }
-.cssfoldout ul li:hover ul li:hover a	{ color: #fff; background-color: #666; font-weight: bold; }
+.cssfoldout ul li:hover ul li a			{ display: block; font-weight: normal; text-decoration: none; color: #fff; border-none; }
+.cssfoldout ul li:hover ul li:hover a	{ color: #fc5; }
 .cssfoldout ul li:hover ul ul			{ visibility: hidden; color: #fff; }
 .cssfoldout ul li:hover ul,
 .cssfoldout ul li li:hover ul			{ visibility: visible }
 .cssfoldout ul ul ul					{ top: 0 }
-.cssfoldout ul li ul li ul				{ margin: 0 0 0 240px; border: solid 1px #333; }
-.cssfoldout ul li:hover ul li:hover ul a			{ font-weight: normal; background-color: #eee; color: #000; }
-.cssfoldout ul li:hover ul li:hover ul li:hover a	{ background-color: #666; font-weight: bold; color: #fff; }
+.cssfoldout ul li ul li ul				{ margin: 0 0 0 240px; }
+.cssfoldout ul li:hover ul li:hover ul a			{ font-weight: normal; background-color: #777; color: #fff; }
+.cssfoldout ul li:hover ul li:hover ul li:hover a	{ color: #fc5; }
 

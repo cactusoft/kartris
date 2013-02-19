@@ -3,8 +3,8 @@
 <%@ OutputCache Duration="300" Shared="true" VaryByCustom="culture" VaryByParam="*" %>
 <div class="section carryonshopping">
     <div class="pad">
-        <h2 class="boxheader">
-            <asp:Literal ID="litCarryOnShoppingHeader" runat="server"></asp:Literal></h2>
+        <h4>
+            <asp:Literal ID="litCarryOnShoppingHeader" runat="server"></asp:Literal></h4>
     </div>
     <div>
         <!-- Related products -->
@@ -43,15 +43,12 @@
         <asp:PlaceHolder ID="phdLinkedCategories" runat="server" Visible="false">
             <h3>
                 <asp:Literal ID="litTryTheseCategories" runat="server" Text="<%$ Resources:Products, ContentText_TryTheseCategories %>"></asp:Literal></h3>
-            <ul>
-                <asp:Repeater ID="rptLinkedCategories" runat="server">
-                    <ItemTemplate>
-                        <li>
-                            <asp:HyperLink ID="lnkParentCategories" runat="server" Text='<%# Server.HtmlEncode(Eval("CAT_Name")) %>' />
-                        </li>
-                    </ItemTemplate>
-                </asp:Repeater>
-            </ul>
+
+            <asp:Repeater ID="rptLinkedCategories" runat="server">
+                <ItemTemplate><asp:HyperLink ID="lnkParentCategories" runat="server" Text='<%# Server.HtmlEncode(Eval("CAT_Name")) %>' /></ItemTemplate>
+                <SeparatorTemplate>, </SeparatorTemplate>
+            </asp:Repeater>
+
             <div class="spacer">
             </div>
         </asp:PlaceHolder>

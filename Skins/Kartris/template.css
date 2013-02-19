@@ -13,9 +13,9 @@ div#topcontainer                        { margin: 0 10px; padding: 0 20px; backg
 HEADER
 ========================================================================
 */
-#header                                 { height: 179px; padding: 0; display: block; border-bottom: solid 3px #f90; }
-#header .logo                           { margin: 0 0 0 0 }
-#header_top                             { border-bottom: dotted 1px #bbb; margin: 0 0 0 0; padding: 12px 0 8px 0; display: block; }
+#header                                 { height: 169px; padding: 0; display: block; }
+#header .logo                           { margin: -10px 0 0 0 }
+#header_top                             { margin: 0 0 0 0; padding: 12px 0 8px 0; display: block; }
 #header_top_right                       { width: 220px; float: right; margin: 0 0 0 0; }
 #header_centre                          { }
 /* 
@@ -44,12 +44,12 @@ SEARCH BOX
 */
 #section_searchbox                      { margin: 2px 0 0 0; float: right; width: 400px; }
 #section_searchbox #searchprogress      { display: block; position: relative; float: left; width: 25px; padding: 2px 0 0 0; }
-#section_searchbox #searchboxes         { font-weight: normal; color: #111; background-color: #fff; border: solid 1px #999; background-image: url(Images/textbox_background.png); background-position: left top; background-repeat: no-repeat; margin: 0 0 3px 0; padding: 2px; overflow: visible; float: right; }
-#section_searchbox #searchboxes input   { height: 20px; width: 155px; margin: 0; border: none; color: #000; padding-left: 5px; background-color: transparent; background: none; }
+#section_searchbox #searchboxes         { margin: 0 0 3px 0; padding: 2px; overflow: visible; float: right; }
+#section_searchbox #searchboxes input   { width: 205px; margin: 0; }
 #section_searchbox #searchboxes input:focus
                                         { }
 #section_searchbox #searchboxes input.button
-                                        { background-color: transparent; height: 20px; width: 55px; margin: 0; color: #000; font-size: 8pt; }
+                                        { height: auto; width: auto; }
 /* 
 ========================================================================
 GENERAL SKIN SECTION BLOCKS
@@ -75,46 +75,45 @@ OTHER CONTROLS language, currency, etc.
 #currencymenu                           { float: right; text-align: right; display: block; padding: 0 0 5px 0; margin: 10px 0 5px 0; border: none; width: 70px; }
 #currencymenu select					{ border: none; background: none; }
 #languagemenu                           { float: right; text-align: right; display: block; width: 110px; padding: 15px 20px 0 0; margin: 0 0 5px 0; border: none; }
-#recentlyviewed                         { border-top: dotted 1px #bbb; padding: 10px 0 0 0; }
+#recentlyviewed                         { border-top: solid 3px #fc5; padding: 10px 0 0 0; }
 /* 
 ========================================================================
 BASKET SUMMARY
 ========================================================================
 */
-#minibasket                             { float: right; border: none; width: 200px; margin: 0; padding: 0; }
-#minibasket_header                      { height: 21px; display: block; z-index: 999; text-transform: uppercase; }
-#minibasket h4                          { padding: 2px 0 5px 0; margin: 0; color: #aaa; font-size: 100%; text-align: right; }
-#minibasket h4 a                        { color: #222; font-size: 100%; font-weight: normal; }
-#minibasket #minibasket_main            { visibility: hidden; z-index: 101; height: 0px; width: 200px; text-align: left; position: absolute; }
-#minibasket:hover #minibasket_main      { visibility: visible; height: auto; background-color: #eee; border: solid 1px #000; padding: 10px; }
-#minibasket:hover h4 a                  { color: #888 }
+#minibasket                             { float: right; border: none; width: 230px; margin: -3px 20px 0 0; padding: 3px 0 0 0; }
+#minibasket_header                      { height: 21px; display: inline-block; z-index: 1999; position: absolute; background-color: transparent; }
+#minibasket h4                          { text-transform: uppercase; font-size: 90%; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0 0 0 82px; height: 13px; display: block; color: #fff; text-align: right; width: 156px; border-left: solid 1px transparent; border-top: solid 1px transparent; border-right: solid 1px transparent; z-index: 9992; background: none; padding: 1px 4px 10px 2px; }
+#minibasket h4 strong                   { color: #999; font-weight: normal; }
+#minibasket h4 a                        { background-position: -2px -8px; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #333; padding: 2px 0 1px 29px; z-index: 9992; font-weight: normal; }
+#minibasket #minibasket_main            { visibility: hidden; z-index: 111; height: 0px; width: 230px; text-align: left; margin-top: -13px; position: absolute; letter-spacing: 0; }
+#minibasket:hover #minibasket_main      { visibility: visible; height: auto; position: absolute; background-color: #777; border: solid 1px #666; padding: 40px 8px 8px 8px;  margin-left: 12px; z-index: 500; }
+#minibasket:hover h4 a                  { color: #fff; }
+
 #minibasket #contents #numberofitems,
 #minibasket #contents #orderinprogress,
-#minibasket #contents #basketisempty    { padding: 1px 5px 2px 10px; font-weight: bold; }
+#minibasket #contents #basketisempty    { padding: 1px 5px 2px 5px; font-weight: normal; font-size: 95%; color: #fff; }
 #minibasket #contents ul                { margin: 0; padding: 0; }
-#minibasket ul li                       { list-style: none; float: none; clear: both; margin: 1px 0 0 0; padding: 0; }
+#minibasket ul li                       { list-style: none; float: none; clear: both; margin: 0 0 0 0; padding: 2px 0 0 0; }
 #minibasket li                          { display: inline-block }
-/* The line above is needed to stop menus going bonkers in IE6/7,
-but the line below is needed to ensure the correct behaviour in
-standards compliant browsers. The html>body part is not understood
-by IE6/7, so they will ignore it and still assume the line above
-holds true. */
-html>body #minibasket li                { display: block }
-#minibasket #contents ul #totals        { text-align: right; padding: 4px 5px 6px 10px; font-weight: normal; text-transform: uppercase; font-size: 90%; color: #777; }
+html>body #minibasket li                { display: block; font-size: 100%; }
+#minibasket #contents ul #totals        { border-top: solid 1px #aaa; text-align: right; padding: 4px 5px 6px 10px; font-weight: normal; text-transform: uppercase; color: #ccc; font-size: 90%; }
 #minibasket #contents ul #totals span.price
-                                        { color: #090; font-weight: bold; font-size: 140%; }
+                                        { color: #6e4; font-weight: normal; font-size: 120%; }
 #minibasket #contents ul #totals span.total
-                                        { color: #f00; font-weight: bold; font-size: 140%; }
+                                        { color: #6e4; font-weight: bold; font-size: 140%; }
+#minibasket #contents ul #totals #minibasket_whereapplicable
+                                        { margin: 10px 0 0 0; font-size: 85%; letter-spacing: 1px; }
 #minibasket #contents ul #totals strong { font-weight: bold }
-#minibasket #contents ul li a           { color: #333; border-bottom: dotted 1px #999; font-weight: bold; }
-#minibasket #contents ul li a:hover     { color: #000; background-color: #fff; }
+#minibasket #contents ul li a           { color: #fff; border-top: solid 1px #aaa; font-weight: normal; padding: 2px 5px 2px 5px; }
+#minibasket #contents ul li a:hover     { color: #fc5; background-color: #777; }
 #minibasket #links                      { margin-bottom: 10px }
-#minibasket #links a                    { color: #fff; background-color: #888; font-size: 95%; font-weight: bold; text-transform: uppercase; }
-#minibasket #links a:hover              { color: #fff; background-color: #aaa; }
+#minibasket #links li                   { display: inline; float: left; }
+#minibasket #links a                    { background-color: #ddd; border: solid 1px #333; color: #333; padding: 1px 5px 1px 5px; font-weight: normal; font-size: smaller; text-transform: uppercase; text-align: center; margin: 1px 0px 1px 2px; width: 98px; font-family: Tahoma,Verdana,Arial,Helvetica; display: inline-block; }
+#minibasket #links a:hover              { background-color: #eee; }
 #minibasket #links ul                   { margin: 0; padding: 0; }
 #minibasket #links ul li                { list-style: none; float: none; clear: both; margin: 1px 0 0 0; padding: 0; }
-#minibasket #links ul li input /* google checkout image */
-                                        { margin: 5px 0 2px 0 }
+#minibasket #links ul li input          { margin: 5px 0 2px 0 }
 /* 
 ========================================================================
 FOOTER
@@ -122,7 +121,7 @@ FOOTER
 */
 #footer                                 { margin: 0 auto; padding: 0 1px; height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; bottom: 0px; }
 #footerspacer                           { height: 232px }
-#footer_inside                          { margin: 0 auto; width: 950px; color: #aaa; padding: 10px 0 0 0; border-top: dotted 1px #bbb; }
+#footer_inside                          { margin: 0 auto; width: 950px; color: #aaa; padding: 10px 0 0 0; border-top: solid 3px #fc5; }
 #footer a                               { color: #034; font-weight: normal; }
 #footer .copyright                      { font-size: 90%; margin: 45px 0 0 0; }
 #footer #footer_links                   { height: 120px; width: 100%; }
