@@ -39,9 +39,7 @@ Partial Class LargeImage
                 "", _
                 "")
         End If
-
     End Sub
-
 
     Protected Sub Page_PreInit(ByVal sender As Object, ByVal e As EventArgs) Handles Me.PreInit
 

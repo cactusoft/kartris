@@ -31,11 +31,11 @@ Partial Class Customer_ViewOrder
         Dim tblOrder As Data.DataTable
 
 
-		If Not (User.Identity.IsAuthenticated) Then
+        If Not (User.Identity.IsAuthenticated) Then
             Response.Redirect("~/CustomerAccount.aspx")
-		Else
-			numCustomerID = CurrentLoggedUser.ID
-		End If
+        Else
+            numCustomerID = CurrentLoggedUser.ID
+        End If
 
         If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Then
             APP_PricesIncTax = False
@@ -46,11 +46,11 @@ Partial Class Customer_ViewOrder
         End If
 
 
-		numOrderID = Val(Request.QueryString("O_ID"))
+        numOrderID = Val(Request.QueryString("O_ID"))
 
         UC_CustomerOrder.ShowOrderSummary = True
         UC_CustomerOrder.OrderID = numOrderID
-		
+
         tblOrder = objBasket.GetCustomerOrderDetails(numOrderID)
 
         If tblOrder.Rows.Count > 0 Then
@@ -62,11 +62,11 @@ Partial Class Customer_ViewOrder
         End If
 
 
-	End Sub
+    End Sub
 
-	Sub Popup_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
+    Sub Popup_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         Response.Redirect("~/Customer.aspx")
-	End Sub
+    End Sub
 
 
 End Class

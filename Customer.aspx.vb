@@ -16,7 +16,6 @@ Imports CkartrisBLL
 Imports System.Web.HttpContext
 Imports CkartrisDataManipulation
 
-
 Partial Class Customer
     Inherits PageBaseClass
 
