@@ -21,6 +21,7 @@
 	<link href="menus.css" rel="stylesheet" type="text/css" />
 	<link href="sections.css" rel="stylesheet" type="text/css" />
 	<link href="template.css" rel="stylesheet" type="text/css" />
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
 	<title>Kartris v1</title>
 </head>
 <body class="main">
@@ -37,9 +38,9 @@
 			<div id="header">
 				<div id="header_top">
 					<user:BasketView ID="UC_MiniBasket" runat="server" ViewType="MINI_BASKET" />
+					<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
 					<user:NavigationMenu ID="UC_NavigationMenu" runat="server" EnableViewState="False"
 						Visible="True" />
-					<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
 					<div class="spacer">
 					</div>
 				</div>
@@ -58,6 +59,7 @@
 							CssClass="logo" AlternateText="logo" /></asp:HyperLink>
 					<div class="spacer">
 					</div>
+					
 					<!--
 					MENU OPTIONS:
 					CategoryMenu
