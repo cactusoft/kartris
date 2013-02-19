@@ -17,7 +17,6 @@ Partial Class UserControls_Skin_CurrencyDropdown
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         
-
         If Not Page.IsPostBack Then
             Dim tblCurrenceis As DataTable = KartSettingsManager.GetCurrenciesFromCache() 'CurrenciesBLL.GetCurrencies()
             Dim drLiveCurrencies As DataRow() = tblCurrenceis.Select("CUR_Live = 1")
@@ -30,7 +29,6 @@ Partial Class UserControls_Skin_CurrencyDropdown
             ddlCurrency.SelectedIndex = ddlCurrency.Items.IndexOf(ddlCurrency.Items.FindByValue(Session("CUR_ID")))
         End If
     End Sub
-
 
     Protected Sub ddlCurrency_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlCurrency.SelectedIndexChanged
         Session("CUR_ID") = ddlCurrency.SelectedValue

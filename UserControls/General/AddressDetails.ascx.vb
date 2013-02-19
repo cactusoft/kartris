@@ -12,7 +12,6 @@
 'overrides the GPL v2.
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
-
 Imports System.Configuration
 Imports System.Collections
 Imports System.Web

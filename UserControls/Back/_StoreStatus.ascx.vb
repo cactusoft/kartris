@@ -13,6 +13,7 @@
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
 Imports KartSettingsManager
+
 Partial Class UserControls_Back_StoreStatus
     Inherits System.Web.UI.UserControl
 

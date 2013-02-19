@@ -14,9 +14,9 @@
 '========================================================================
 Imports CkartrisDataManipulation
 Imports CkartrisEnumerations
+
 Partial Class UserControls_Back_PromotionStringBuilder
     Inherits System.Web.UI.UserControl
-
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         BuildForm()

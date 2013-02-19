@@ -14,6 +14,7 @@
 '========================================================================
 Imports CkartrisEnumerations
 Imports KartSettingsManager
+
 Partial Class UserControls_Back_SiteNews
 
     Inherits System.Web.UI.UserControl

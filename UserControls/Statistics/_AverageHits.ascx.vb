@@ -15,6 +15,7 @@
 Partial Class UserControls_Statistics_AverageHits
     Inherits System.Web.UI.UserControl
     Private blnMiniDisplay As Boolean = True
+
     Public WriteOnly Property IsMiniDisplay() As Boolean
         Set(ByVal value As Boolean)
             blnMiniDisplay = value
@@ -26,6 +27,7 @@ Partial Class UserControls_Statistics_AverageHits
             LoadAverageVisits()
         End If
     End Sub
+
     Sub LoadAverageVisits()
         Using tblDummy As DataTable = StatisticsBLL._GetAverageVisits()
             Using tblHits As New DataTable
@@ -72,6 +74,7 @@ Partial Class UserControls_Statistics_AverageHits
             End Using
         End Using
     End Sub
+
     Protected Sub ddlDisplayType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlDisplayType.SelectedIndexChanged
         LoadAverageVisits()
     End Sub

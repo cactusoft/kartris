@@ -26,6 +26,4 @@ Partial Class UserControls_Skin_LoginStatus
         End If
 
     End Sub
-
-
 End Class

@@ -14,6 +14,7 @@
 '========================================================================
 Imports CkartrisEnumerations
 Imports KartSettingsManager
+
 Partial Class UserControls_Back_AdminErrorLogs
     Inherits System.Web.UI.UserControl
 
@@ -25,9 +26,7 @@ Partial Class UserControls_Back_AdminErrorLogs
                                     GetGlobalResourceObject("_Kartris", "ContentText_Enabled"), _
                                     GetGlobalResourceObject("_Kartris", "ContentText_Disabled"))
         End If
-
     End Sub
-
 
     Sub GetErrorLogs()
         ClearErrorText()

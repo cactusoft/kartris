@@ -16,6 +16,7 @@ Partial Class UserControls_Skin_LanguageDropdown
     Inherits System.Web.UI.UserControl
 
     Dim strLanguageImages As String = "~/Images/Languages/"
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If KartSettingsManager.GetKartConfig("frontend.languages.display") = "dropdown" Then
             selLanguage.Visible = True
@@ -41,6 +42,7 @@ Partial Class UserControls_Skin_LanguageDropdown
             End If
         End If
     End Sub
+
     Protected Sub rptLanguages_ItemCommand(ByVal source As Object, ByVal e As System.Web.UI.WebControls.RepeaterCommandEventArgs) Handles rptLanguages.ItemCommand
         If e.CommandName = "ChangeLanguage" Then
             ChangeLanguage(e.CommandArgument)
@@ -78,10 +80,10 @@ Partial Class UserControls_Skin_LanguageDropdown
         Response.Cookies.Add(aCookie)
         Session("Skin_Location") = LanguagesBLL.GetSkinURLByCulture(strCulture)
 
-
         'Reload the page
         Response.Redirect(Request.Url.GetLeftPart(UriPartial.Path) & CQSC.ToString())
     End Sub
+
     ''' <summary>
     ''' This class allows us to get and modify any QueryString value from the URL. See usage above.
     ''' </summary>
