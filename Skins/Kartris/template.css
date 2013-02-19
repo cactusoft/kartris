@@ -13,7 +13,7 @@ div#topcontainer                        { margin: 0 10px; padding: 0 20px; backg
 HEADER
 ========================================================================
 */
-#header                                 { height: 159px; padding: 0; display: block; }
+#header                                 { height: 179px; padding: 0; display: block; border-bottom: solid 3px #f90; }
 #header .logo                           { margin: 0 0 0 0 }
 #header_top                             { border-bottom: dotted 1px #bbb; margin: 0 0 0 0; padding: 12px 0 8px 0; display: block; }
 #header_top_right                       { width: 220px; float: right; margin: 0 0 0 0; }
@@ -33,7 +33,7 @@ COLUMNS - LEFT, RIGHT AND CENTRAL
 LOGIN STATUS
 ========================================================================
 */
-#loginstatus                            { font-size: 95%; position: absolute; top: 12px; display: block; width: 350px; margin: 0 0 0 430px; color: #bbb; padding: 2px 25px 0 0; height: 20px; }
+#loginstatus                            { float: left; font-size: 95%; display: block; width: 330px; margin: 0; color: #bbb; padding: 2px 15px 0 0; height: 20px; }
 #loginstatus .logout                    { display: inline-block; position: relative; height: 15px; }
 #loginstatus a.icon_logout:hover        { color: #000 }
 #loginstatus strong                     { color: #000; font-weight: normal; }
@@ -81,7 +81,7 @@ OTHER CONTROLS language, currency, etc.
 BASKET SUMMARY
 ========================================================================
 */
-#minibasket                             { float: right; border: none; width: 220px; margin: 0; padding: 0; }
+#minibasket                             { float: right; border: none; width: 200px; margin: 0; padding: 0; }
 #minibasket_header                      { height: 21px; display: block; z-index: 999; text-transform: uppercase; }
 #minibasket h4                          { padding: 2px 0 5px 0; margin: 0; color: #aaa; font-size: 100%; text-align: right; }
 #minibasket h4 a                        { color: #222; font-size: 100%; font-weight: normal; }
