@@ -3,7 +3,7 @@
 SECTION
 ========================================================================
 */
-.section                                { border-top: dotted 1px #bbb; margin: 15px 0 0 0; padding: 10px 0 10px 0; width: 100%; }
+.section                                { border-top: solid 3px #fc5; margin: 15px 0 0 0; padding: 10px 0 10px 0; width: 100%; }
 /* 
 ========================================================================
 PAGE - Home page and custom page (CMS)
@@ -35,6 +35,7 @@ SUBCATEGORIES - Multiple categories/subcategories per page listing
 */
 .subcategories                          { padding: 0px 0px 10px 0px; overflow: hidden; }
 .subcategories .pad                     { margin-bottom: 8px; padding: 0px; zoom: 100%; /* To fix IE 'invisible text' rendering bug (http: //archivist.incutio.com/viewlist/css-discuss/57305) */; overflow: hidden; /* To fix image flow in extended view, mozz/opera */ }
+.subcategories h2 a                     { color: #000;}
 /* 
 ------------------------------------------------------------------------
 SUBCATEGORIES - NORMAL FORMAT
@@ -89,7 +90,7 @@ PRODUCT - Single page product
 */
 .product #strapline                     { display: block; margin: 10px 0px 12px 0px; padding: 0; color: #111; font-weight: bold; font-style: normal; font-size: 110%; font-style: italic; }
 .product #description                   { margin: 0 0 15px 0px }
-.product div.imagecolumn                { width: 265px; float: left; margin: 0 20x 20px 0; padding: 10px 20px 0 0; }
+.product div.imagecolumn                { width: 265px; float: left; margin: 0 0 40px 0; padding: 10px 20px 0 0; }
 .product div.imagecolumn div.pad        { padding: 10px 0 10px 0 }
 .product div.imagecolumn .imageviewer   { width: 100% }
 .product div.imagecolumn .singleimage   { }
@@ -106,6 +107,7 @@ PRODUCTS - Multiple products per page listing
 .products .minprice                     { display: block; font-weight: bold; padding-top: 10px; color: #090; }
 .products .pad                          { margin-bottom: 8px; padding: 0px; zoom: 100%; /* To fix IE 'invisible text' rendering bug (http: //archivist.incutio.com/viewlist/css-discuss/57305) */; overflow: hidden; /* To fix image flow in extended view, mozz/opera */ }
 #popup .pad                             { padding: 10px }
+.products h2 a                          { color: #000; }
 /* 
 ------------------------------------------------------------------------
 PRODUCTS - NORMAL FORMAT
@@ -113,12 +115,12 @@ PRODUCTS - NORMAL FORMAT
 */
 .products_normal                        { padding-top: 0px }
 .products_normal .item					{ padding: 10px 0; border-top: dotted 1px #bbb; }
-.products_normal .item .imageblock      { text-align: center; float: left; width: 170px; overflow: visible; display: inline-block; margin: 10px 30px 0 0; }
+.products_normal .item .imageblock      { text-align: center; float: left; width: 170px; overflow: visible; display: inline-block; margin: 6px 20px 4px 0; }
 .products_normal .item .details         { display: inline-block; width: 570px; text-align: left; overflow: visible; }
 .products_normal .item .details h2      { font-size: 110%; margin: 10px 0 0 0; }
 .products_normal .item h2 a,
 .products_normal .item h2 a:hover       { margin-top: 0; font-weight: bold; text-decoration: none; }
-.products_normal .item .minprice        { font-weight: bold; padding: 0 0 10px 0; }
+.products_normal .item .minprice        { font-weight: normal; padding: 0 0 10px 0; }
 .products_normal .item .strapline       { display: block; margin: 4px 0px 4px 0px; padding: 0; color: #888; font-weight: normal; }
 .products_normal .item p.description    { padding: 0 0 0 0 }
 .products_normal .item a.link2          { font-size: 90% }
@@ -127,27 +129,26 @@ PRODUCTS - NORMAL FORMAT
 PRODUCTS - SHORTENED FORMAT
 ------------------------------------------------------------------------
 */
-.products_shortened                     { padding-top: 10px }
-.products_shortened .item               { display: inline; float: left; margin: 0 20px 30px 0; }
-.products_shortened .item .box          { text-align: center; width: 200px; height: 270px; }
-.products_shortened .item .box .pad     { overflow: hidden; padding: 10px 3px 10px 3px; text-align: center; }
+.products_shortened                     { width: 1000px; background-color: #f7f7f7; }
+.products_shortened .item               { display: inline; float: left; margin: 5px 6px 5px 4px; }
+.products_shortened .item .box          { text-align: center; width: 178px; height: 270px; border: solid 1px #fc5; background-color: #fff; }
+.products_shortened .item .box .pad     { overflow: hidden; padding: 10px 6px 10px 6px; text-align: center; }
 .products_shortened .item h2            { margin: 0; padding: 0; }
 .products_shortened .item h2 a          { font-size: 80% }
 .products_shortened .item .strapline    { }
 .products_shortened .item .imageholder  { display: block; margin: 0 auto; padding-bottom: 10px; }
 .products_shortened .imagelink          { display: block; float: left; margin: 0 10px 10px 0; text-align: center; }
-.products_shortened .minprice           { font-weight: bold }
+.products_shortened .minprice           { font-weight: normal }
 /* 
 ------------------------------------------------------------------------
 PRODUCTS - TABULAR FORMAT
 ------------------------------------------------------------------------
 */
 .products_tabular                       { padding-top: 0px }
-.products_tabular .item                 { padding: 0 20px 10px 0; width: 210px; float: left; }
-.products_tabular .item .imageblock     { text-align: center; float: left; margin: 0 8px 0 0; overflow: visible; width: 50px; }
+.products_tabular .item                 { padding: 10px 20px 10px 0; width: 210px; float: left; }
+.products_tabular .item .imageblock     { padding: 5px; border: solid 1px #fc5; text-align: center; float: left; margin: 0 8px 0 0; overflow: visible; width: 50px; }
 .products_tabular .item h2              { margin: 0; font-size: 100%; font-weight: bold; }
-.products_tabular .item h2 a,
-.products_tabular .item h2 a:hover      { margin-top: 0; text-decoration: none; }
+.products_tabular .item h2 a            { margin-top: 0; text-decoration: none; }
 .products_tabular .item .minprice       { font-weight: bold; padding: 5px 0 0 0; }
 /* 
 ------------------------------------------------------------------------
@@ -155,7 +156,7 @@ PRODUCTS - IMAGE ONLY FORMAT
 ------------------------------------------------------------------------
 */
 .products_imageonly                     { padding-top: 0px; text-align: center; float: left; }
-.products_imageonly .item               { padding: 5px 0 0 0; text-align: center; margin: 0 3px 0 0; }
+.products_imageonly .item               { padding: 3px; background-color: #fff; border: solid 1px #fc5; text-align: center; margin: 3px 8px 3px 0; }
 .products_imageonly img                 { margin: 0 auto; float: none; }
 /* 
 ------------------------------------------------------------------------
@@ -181,11 +182,11 @@ VERSIONS
 */
 .versions                               { margin: 10px 0 10px 10px; float: right; width: 650px; }
 .versions table                         { border: none }
-.versions table tr.description          { background-image: none; background-color: transparent; }
-.versions table tr td                   { border-top: solid 1px #eee; background: none; text-align: right; padding-right: 5px; vertical-align: top; }
+.versions table tr.description          { }
+.versions table tr td                   { background-color: #fff; border-bottom: solid 1px #ddd; text-align: right; padding-right: 5px; vertical-align: top; }
 .versions table tr.description td       { border: none }
 .versions table tr.headrow th,
-.versions table thead tr th             { text-align: right; padding-right: 5px; background: none; border: none; font-weight: normal; color: #777; }
+.versions table thead tr th             { text-align: right; padding-right: 5px; }
 .versions td.extra                      { padding: 5px 0 15px 4px; background-image: none; background-color: transparent; }
 /* --- cells (td and th) --- */
 .versions .info,
@@ -221,7 +222,7 @@ OPTIONS
 ------------------------------------------------------------------------
 */
 .options                                { margin-top: 5px; padding-bottom: 20px; }
-.options .pad                           { border-top: solid 1px #eee }
+.options .pad                           { border-top: solid 2px #fc5 }
 .options .addtobasket                   { text-align: right; padding: 5px; clear: both; }
 .outofstockmessage em                   { display: block; margin-top: 10px; }
 .options .option                        { clear: both; padding: 8px 5px 3px 5px; margin: 0; }
@@ -234,7 +235,7 @@ OPTIONS
 .options .option table.radiobuttonlist input
                                         { display: block; float: left; margin-right: 5px; border-style: none; background-color: transparent; display: inline; width: 20px; }
 .options .option ul.radiobuttonlist li  { }
-.options .highlight_error               { display: inline-block; color: #fff; font-weight: bold; padding: 1px 5px 1px 3px; text-decoration: blink; background-color: #f00; border-radius: 3px; }
+.options .highlight_error               { padding: 0 5px 0 3px; display: inline-block; color: #fff; font-weight: bold; text-decoration: blink; background-color: #f00; border-radius: 3px; }
 .boxinset .addtobasket .prices			{ display: block; text-align: right; }
 .options div.addtobasket img            { float: none; text-align: right; }
 div.addtobasket                         { width: auto; text-align: left; padding: 5px; }
@@ -356,7 +357,7 @@ PRODUCT ATTRIBUTES
 PRODUCT PROMOTIONS
 ========================================================================
 */
-.section_promotions                     { border-top: dotted 1px #bbb; padding: 10px 0 0 0; }
+.section_promotions                     { padding: 10px 0 0 0; }
 .section_promotions .promotion          { clear: both; vertical-align: middle; margin: 8px 0px 8px 0px; display: block; }
 .section_promotions .promotion .box     { width: 100%; margin: 0px 5px 5px 0px; }
 .section_promotions .promotion .box .pad
@@ -409,10 +410,6 @@ CARRY ON SHOPPING / CROSS SELLING
 ========================================================================
 */
 .carryonshopping                        { margin: 30px 0 0 0 }
-.carryonshopping h2                     { }
-.carryonshopping h3                     { margin: 0 0 20px 0 }
-.carryonshopping ul                     { padding: 0 }
-.carryonshopping ul li                  { list-style: none }
 /* 
 ========================================================================
 CHECKOUT
@@ -452,9 +449,9 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket .basketwarning                  { display: block; width: auto; border: dotted 1px #f00; color: #f00; background-color: #f6e6e6; padding: 3px 9px 3px 9px; margin: 2px 0 15px 0; }
 .basket .baskettable                    { }
 .basket .baskettable tr th              { }
-.basket table.baskettable tr td         { }
-.basket .products_imageonly             { padding: 0 0 0 0; text-align: center; margin: 3px 0 3px 0; }
-.basket td.image_cell                   { width: 50px; text-align: center; padding: 0 10px 5px 5px; }
+.basket table.baskettable tr td         { background-color: #fff; border-bottom: solid 1px #ddd; }
+.basket .products_imageonly             { }
+.basket td.image_cell                   { width: 70px; text-align: center; padding: 0 10px 5px 5px; }
 .basket .extax,
 .basket .inctax,
 .basket .price,
@@ -492,7 +489,7 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket .applycoupon .Kartris-DetailsView-Name
                                         { background: none }
 .basket .applycoupon .couponbox         { width: 120px; margin-right: 5px; }
-.basket table tr.totals td              { }
+.basket table tr.totals td              { background-color: #fff; border-bottom: solid 1px #fc5; }
 .basket table tr.totals #totallabel     { text-align: right }
 .basket table tr.totals .total			{ font-size: 180% }
 .basket .controls                       { text-align: right; margin: 8px 0 20px 0; }
@@ -520,10 +517,10 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
                                         { border-top: dotted 1px #daa; border-bottom: dotted 1px #daa; background-color: #fdd; }
 .basket table.baskettable tr.footerrow td span.totallabel
                                         { float: left; width: 150px; color: #000; text-align: left; }
-#shippingestimate                       { margin: 15px 0 30px 0; background-color: #eee; padding: 20px; }
-#shippingestimate select                { background-color: #eee }
+#shippingestimate                       { margin: 15px 0 30px 0; }
+#shippingestimate select                { }
 #shippingestimate table                 { margin: 10px 0 0 0 }
-#shippingestimate table td.name         { width: 200px; font-weight: bold; padding-right: 16px; }
+#shippingestimate table td.name         { width: 200px; font-weight: bold; color: #000; padding-right: 16px; }
 #shippingestimate table td.datafield    { padding-right: 12px }
 /* 
 ========================================================================
@@ -587,14 +584,14 @@ NEWS - News page and front page news items (summary)
 */
 #news div.news_strapline                { font-weight: bold; padding: 0 0 5px 0; color: #111; }
 #news div.news_lastupdated,
-#news div.news_datecreated              { margin: 5px 0 5px 0; color: #999; }
+#news div.news_datecreated              { margin: 5px 0; color: #999; }
 #news div.news_text                     { margin: 5px 0 45px 0 }
-#news #summary ul li                    { border-top: solid 2px #eee; padding: 0 0 10px 0; }
-#news #summary ul                       { margin: 0; list-style-type: none; padding: 0; }
+#news #summary ul li                    { background-color: #FFEEDD; border-bottom: solid 2px #fff; padding: 0 0 10px 0; }
+#news #summary ul                       { border-top: solid 2px #fc5; margin: 0 0 20px 0; list-style-type: none; padding: 0; }
 #news #summary ul div.news_lastupdated,
-#news #summary ul div.news_datecreated  { display: block; width: 90px; margin: 5px 0 5px 0; color: #999; float: left; }
+#news #summary ul div.news_datecreated  { display: block; width: 90px; margin: 5px; color: #999; float: left; }
 #news #summary ul div.news_link         { font-weight: bold; margin: 5px 0 5px 0; float: left; font-size: 110%; }
-#news #summary ul div.news_text         { margin: 0 0 5px 90px }
+#news #summary ul div.news_text         { margin: 0 0 5px 100px }
 /* 
 ========================================================================
 POPUPS - customization, add to basket, etc.
