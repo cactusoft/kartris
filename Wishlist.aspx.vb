@@ -16,7 +16,6 @@ Partial Class Wishlist
     Inherits PageBaseClass
     Private blnPrivate As Boolean = False
 
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Dim numCustomerID As Integer = 0
         Dim numWishlistID As Integer = 0
@@ -229,7 +228,4 @@ Partial Class Wishlist
         updWishlist.Update()
 
     End Sub
-
-
-
 End Class

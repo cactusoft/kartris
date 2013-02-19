@@ -15,6 +15,7 @@
 Partial Class checkout_process
     Inherits System.Web.UI.Page
     Private clsPlugin As Kartris.Interfaces.PaymentGateway
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Dim strOutput As String = ""
         Dim strGatewayStatus As String = ""

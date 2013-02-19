@@ -13,6 +13,7 @@
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
 Imports KartSettingsManager
+
 Partial Class Compare
     Inherits PageBaseClass
 
