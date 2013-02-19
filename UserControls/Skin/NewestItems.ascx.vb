@@ -15,7 +15,6 @@
 Partial Class UserControls_Skin_NewestItems
     Inherits System.Web.UI.UserControl
 
-
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             LoadNewestProducts()
@@ -40,10 +39,4 @@ Partial Class UserControls_Skin_NewestItems
         rptNewestItems.DataBind()
 
     End Sub
-
-    'Protected Sub rptNewestItems_ItemDataBound(ByVal Sender As Object, ByVal e As RepeaterItemEventArgs) Handles rptNewestItems.ItemDataBound
-    '    If (e.Item.ItemType = ListItemType.Item) Or (e.Item.ItemType = ListItemType.AlternatingItem) Then
-    '        CType(e.Item.FindControl("lnkProduct"), HyperLink).NavigateUrl = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, CType(e.Item.DataItem, DataRowView).Item(0))
-    '    End If
-    'End Sub
 End Class

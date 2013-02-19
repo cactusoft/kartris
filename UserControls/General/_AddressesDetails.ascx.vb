@@ -12,7 +12,6 @@
 'overrides the GPL v2.
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
-
 Imports KartrisClasses
 
 Partial Class UserControls_General_AddressesDetails

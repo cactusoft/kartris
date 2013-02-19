@@ -44,6 +44,7 @@ Partial Class UserControls_Back_KartrisChart
     Private numMaxWidth As Integer = 800   '' Max allowed width (used for the dynamic size)
 
     Private numHeight As Integer = 30 '' 30px for each vertical point (used for the dynamic size)
+
     Public WriteOnly Property SetHeight() As Integer
         Set(ByVal value As Integer)
             numHeight = value

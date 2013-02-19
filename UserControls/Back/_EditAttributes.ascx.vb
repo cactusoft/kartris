@@ -14,6 +14,7 @@
 '========================================================================
 Imports CkartrisDataManipulation
 Imports CkartrisEnumerations
+
 Partial Class UserControls_Back_EditAttributes
     Inherits System.Web.UI.UserControl
 

@@ -29,32 +29,6 @@ Partial Class _NoMasterCSS
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
-        ''We'll try to put a skin in place, if one exists
-        'Try
-        '    'Set the skin folder
-        '    Dim strSkin As String = Server.MapPath("~/Skins/Admin/")
-
-        '    'We will use this later
-        '    Dim strFileName = ""
-
-        '    'Find files in this folder
-        '    If Directory.Exists(strSkin) Then
-
-        '        For Each strCSSFile As String In Directory.GetFiles(strSkin, "*.css")
-        '            Dim Include As New HtmlGenericControl("link")
-        '            Include.Attributes.Add("type", "text/css")
-        '            Include.Attributes.Add("rel", "stylesheet")
-        '            Include.Attributes.Add("href", CkartrisBLL.WebShopURL & "Skins/Admin/" & Mid(strCSSFile, strCSSFile.LastIndexOf("\") + 2))
-        '            phdNoMasterCSS.Controls.Add(Include)
-        '        Next
-
-        '    End If
-
-        'Catch ex As Exception
-        '    'Something went wrong, but popup should still
-        '    'work although without CSS links
-        'End Try
-
         Dim Include As New HtmlGenericControl("link")
         Include.Attributes.Add("type", "text/css")
         Include.Attributes.Add("rel", "stylesheet")

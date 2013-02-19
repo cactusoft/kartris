@@ -12,7 +12,6 @@
 'overrides the GPL v2.
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
-Imports Interfaces.objOrder
 Imports System
 Imports KartSettingsManager
 Imports System.Web.HttpContext

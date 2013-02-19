@@ -19,6 +19,7 @@ Partial Class UserControls_Statistics_AverageOrders
     Inherits System.Web.UI.UserControl
 
     Private blnMiniDisplay As Boolean = True
+
     Public WriteOnly Property IsMiniDisplay() As Boolean
         Set(ByVal value As Boolean)
             blnMiniDisplay = value
@@ -30,6 +31,7 @@ Partial Class UserControls_Statistics_AverageOrders
             LoadAverageOrders()
         End If
     End Sub
+
     Sub LoadAverageOrders()
         Try
             Dim tblDummy As DataTable = StatisticsBLL._GetAverageOrders()
