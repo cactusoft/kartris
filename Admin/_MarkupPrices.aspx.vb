@@ -14,7 +14,9 @@
 '========================================================================
 Imports System.IO
 Imports CkartrisDataManipulation
+
 Partial Class Admin_MarkupPrices
+
     Inherits _PageBaseClass
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -157,7 +159,7 @@ Partial Class Admin_MarkupPrices
         gvwVersions.DataSource = dtbVersions
         gvwVersions.DataBind()
 
-        
+
         mvwMain.SetActiveView(viwStep2)
         updMain.Update()
     End Sub

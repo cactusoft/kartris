@@ -15,7 +15,6 @@
 Imports KartSettingsManager
 
 Partial Class Admin_Search
-
     Inherits _PageBaseClass
 
     Dim numPageSize As Integer = GetKartConfig("backend.search.pagesize")
