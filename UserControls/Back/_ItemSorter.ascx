@@ -28,7 +28,7 @@
                         </div>
                         <div class="sort_image_holder">
                             <img src="../Image.aspx?strFullPath=<asp:Literal ID="litImgName2" runat="server"
-                            Text='<%# Bind("ImageURL") %>' />&numMaxHeight=80&numMaxWidth=80" />
+                            Text='<%# Bind("ImageURL") %>' />&numMaxHeight=80&numMaxWidth=80&nocache=<% =Now.Hour & Now.Minute & Now.Second%>" />
                         </div>
                         <div class="sort_details_holder">
                             <asp:Literal ID="litNo" runat="server" Text='<%# Bind("No") %>' Visible="false"></asp:Literal>
