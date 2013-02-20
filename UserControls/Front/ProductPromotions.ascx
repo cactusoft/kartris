@@ -3,8 +3,8 @@
 <asp:Panel ID="pnlPromotions" runat="server">
     <div class="section_promotions">
         <asp:PlaceHolder ID="phdSubHeading" runat="server">
-            <h2>
-                <asp:Literal ID="litSubHeaderPromotions" runat="server" Text="<%$ Resources: Kartris, SubHeading_Promotions %>" /></h2>
+            <h4>
+                <asp:Literal ID="litSubHeaderPromotions" runat="server" Text="<%$ Resources: Kartris, SubHeading_Promotions %>" /></h4>
         </asp:PlaceHolder>
         <asp:Repeater ID="rptProductPromotion" runat="server">
             <ItemTemplate>

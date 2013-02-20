@@ -823,9 +823,8 @@ MAIN BASKET
                 <asp:PlaceHolder ID="phdPromotions" runat="server" Visible="false">
                     <div class="section section_promotions">
                         <div class="pad">
-                            <h2 class="boxheader">
-                                <asp:Literal ID="litSubHeaderPromotions" runat="server" Text="<%$ Resources:Kartris, SubHeading_Promotions %>"
-                                    EnableViewState="false"></asp:Literal></h2>
+                            <h4><asp:Literal ID="litSubHeaderPromotions" runat="server" Text="<%$ Resources:Kartris, SubHeading_Promotions %>"
+                                    EnableViewState="false"></asp:Literal></h4>
                             <asp:Repeater ID="rptPromotions" runat="server">
                                 <ItemTemplate>
                                     <%--<user:PromotionTemplate ID="UC_PromotionTemplate" runat="server" />--%>
