@@ -357,16 +357,16 @@ PRODUCT ATTRIBUTES
 PRODUCT PROMOTIONS
 ========================================================================
 */
-.section_promotions                     { padding: 10px 0 0 0; }
+.section_promotions                     { border-top: solid 1px #fc5; padding: 10px 0 0 0; }
 .section_promotions .promotion          { clear: both; vertical-align: middle; margin: 8px 0px 8px 0px; display: block; }
 .section_promotions .promotion .box     { width: 100%; margin: 0px 5px 5px 0px; }
 .section_promotions .promotion .box .pad
-                                        { padding: 10px 10px 10px 0px; overflow: hidden; }
+                                        { padding: 0 10px 10px 0px; overflow: hidden; }
 .section_promotions .promotion .box .pad strong
                                         { color: #000 }
-.section_promotions a                   { text-decoration: none; color: #222; border-bottom: dotted 1px #ddd; font-weight: normal; }
+.section_promotions a                   { text-decoration: none; color: #777; border-bottom: dotted 1px #777; }
 .section_promotions .promotion .box .pad .imageblock
-                                        { float: left; margin: 0 20px 0 0px; width: 100px; text-align: left; }
+                                        { border: solid 1px #fc5; float: left; padding: 5px; margin: 0 20px 0 0px; width: 50px; text-align: left; }
 .section_promotions .promotion .box .pad .imageblock img
                                         { float: none }
 /* 
