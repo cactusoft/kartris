@@ -3,23 +3,17 @@
 HORIZONTAL DROPDOWN MENU SYSTEM
 ========================================================================
 */
-#menubar								{ display: inline-block; z-index: 100; padding: 2px 0 0 0; width: 400px; }
-.dropdownmenu ul						{ padding: 0; margin: 0; }
+#menubar								{ display: inline-block; z-index: 100; padding: 0; margin: -1px 150px 0 0; width: 370px; float: right; }
+.dropdownmenu ul						{ text-transform: uppercase; font-size: 85%; font-weight: normal; padding: 0; margin: 0; }
 .dropdownmenu ul li						{ position: relative; list-style: none; float: left; margin: 0; }
-.dropdownmenu ul li a					{ color: #999; font-weight: normal; z-index: 200; display: block; text-decoration: none; padding: 3px 17px 0px 0; }
-.dropdownmenu ul li:hover a				{ display: block; color: #000; padding: 3px 17px 4px 0; }
-.dropdownmenu ul ul						{ z-index: 270; position: absolute; visibility: hidden; border: solid 1px #333; background-color: #eee; margin: 0; padding: 0; }
-.dropdownmenu ul ul li					{ border: none; width: 240px; }
-.dropdownmenu ul li:hover ul li a		{ display: block; color: #000; padding: 3px 11px 3px 10px; }
-.dropdownmenu ul li:hover ul li:hover a	{ color: #fff; background-color: #666; font-weight: bold; }
-.dropdownmenu ul li:hover ul ul			{ visibility: hidden; color: #fff; }
-.dropdownmenu ul li:hover ul			{ visibility: visible }
+.dropdownmenu ul li a					{ color: #333; font-weight: normal; z-index: 200; display: block; text-decoration: none; padding: 3px 17px 0px 0; }
+.dropdownmenu ul li:hover a				{ display: block; color: #000; }
 /* 
 ========================================================================
 -- css fold-style
 ========================================================================
 */
-#categorymenu							{ height: 25px; background-color: #444; position: relative; margin: 8px 0 0 0; display: block; z-index: 90; padding: 0 0 0 0; width: 100%;  }
+#categorymenu							{ height: 26px; background-color: #444; position: relative; margin: 18px 0 0 0; display: block; z-index: 90; padding: 0 0 0 0; width: 100%;  }
 .cssfoldout ul							{ padding: 0; border: 0; margin: 0; }
 .cssfoldout ul li						{ position: relative; list-style: none; float: left; margin: 0; }
 .cssfoldout ul li a						{ display: block; border-right: dotted 1px #ddd; color: #fff; font-weight: bold; z-index: 200; text-decoration: none; padding: 3px 17px 4px 9px; }

@@ -6,7 +6,7 @@
     </div>
     <div class="media_gallery">
         <div class="media_gallery_inner">
-        <h2 class="blockheader"><span><span>
+        <h2><span><span>
             <asp:Literal ID="litContentTextMediaGallery" runat="server" Text="<%$ Resources: Media, ContentText_MediaGallery %>"></asp:Literal></span></span></h2>
             <asp:Repeater ID="rptMediaLinks" runat="server">
                 <ItemTemplate>
