@@ -3,7 +3,7 @@
 SECTION
 ========================================================================
 */
-.section                                { border-top: solid 3px #fc5; margin: 15px 0 0 0; padding: 10px 0 10px 0; width: 100%; }
+.section                                { border-top: solid 1px #fc5; margin: 15px 0 0 0; padding: 10px 0 10px 0; width: 100%; }
 /* 
 ========================================================================
 PAGE - Home page and custom page (CMS)
@@ -41,8 +41,8 @@ SUBCATEGORIES - Multiple categories/subcategories per page listing
 SUBCATEGORIES - NORMAL FORMAT
 ------------------------------------------------------------------------
 */
-.subcategories_normal                   { padding-top: 10px }
-.subcategories_normal .item             { padding: 10px 0; border-top: dotted 1px #bbb; }
+.subcategories_normal                   { padding-top: 0 }
+.subcategories_normal .item             { padding: 3px 0; border-top: solid 1px #fc5; }
 .subcategories_normal .item .imageblock { text-align: center; float: left; width: 170px; overflow: visible; display: inline-block; margin: 10px 30px 0 0; }
 .subcategories_normal .item .details    { display: inline-block; width: 570px; text-align: left; margin: 0 0 0 0; overflow: visible; }
 .subcategories_normal .item h2          { font-size: 110%; margin: 10px 0 0 0; }
@@ -57,16 +57,15 @@ SUBCATEGORIES - NORMAL FORMAT
 SUBCATEGORIES - SHORTENED FORMAT
 ------------------------------------------------------------------------
 */
-.subcategories_shortened                { padding-top: 10px }
-.subcategories_shortened .item          { display: inline; float: left; margin: 0 30px 20px 0; }
-.subcategories_shortened .item .box     { text-align: center; width: 200px; height: 230px; }
-.subcategories_shortened .item .box .pad
-                                        { overflow: hidden; padding: 10px 0 10px 0; text-align: center; }
-.subcategories_shortened .item h2       { margin: 0; padding: 0; }
-.subcategories_shortened .item h2 a     { font-size: 80% }
-.subcategories_shortened .item .imageholder
-                                        { display: block; margin: 0 auto; padding-bottom: 10px; height: 200px; }
-.subcategories_shortened .imagelink     { display: block; float: left; margin: 0 10px 10px 0; text-align: center; }
+.subcategories_shortened                    { width: 1000px; }
+.subcategories_shortened .item              { display: inline; float: left; margin: 5px 6px 5px 4px; }
+.subcategories_shortened .item .box         { text-align: center; width: 178px; height: 270px; border: solid 1px #fc5; background-color: #fff; }
+.subcategories_shortened .item .box .pad    { overflow: hidden; padding: 4px; text-align: center; }
+.subcategories_shortened .item h2           { margin: 0; padding: 0; }
+.subcategories_shortened .item h2 a         { font-size: 80% }
+.subcategories_shortened .item .imageholder { display: block; margin: 0 auto; padding-bottom: 10px; }
+.subcategories_shortened .imagelink         { display: block; float: left; margin: 0 0 10px 0; text-align: center; }
+
 /* 
 ------------------------------------------------------------------------
 SUBCATEGORIES - LINK FORMAT
@@ -114,7 +113,7 @@ PRODUCTS - NORMAL FORMAT
 ------------------------------------------------------------------------
 */
 .products_normal                        { padding-top: 0px }
-.products_normal .item					{ padding: 10px 0; border-top: dotted 1px #bbb; }
+.products_normal .item					{ padding: 3px 0; border-top: solid 1px #fc5; }
 .products_normal .item .imageblock      { text-align: center; float: left; width: 170px; overflow: visible; display: inline-block; margin: 6px 20px 4px 0; }
 .products_normal .item .details         { display: inline-block; width: 570px; text-align: left; overflow: visible; }
 .products_normal .item .details h2      { font-size: 110%; margin: 10px 0 0 0; }
@@ -129,10 +128,10 @@ PRODUCTS - NORMAL FORMAT
 PRODUCTS - SHORTENED FORMAT
 ------------------------------------------------------------------------
 */
-.products_shortened                     { width: 1000px; background-color: #f7f7f7; }
+.products_shortened                     { width: 1000px; }
 .products_shortened .item               { display: inline; float: left; margin: 5px 6px 5px 4px; }
 .products_shortened .item .box          { text-align: center; width: 178px; height: 270px; border: solid 1px #fc5; background-color: #fff; }
-.products_shortened .item .box .pad     { overflow: hidden; padding: 10px 6px 10px 6px; text-align: center; }
+.products_shortened .item .box .pad     { overflow: hidden; padding: 4px; text-align: center; }
 .products_shortened .item h2            { margin: 0; padding: 0; }
 .products_shortened .item h2 a          { font-size: 80% }
 .products_shortened .item .strapline    { }
@@ -147,9 +146,9 @@ PRODUCTS - TABULAR FORMAT
 .products_tabular                       { padding-top: 0px }
 .products_tabular .item                 { padding: 10px 20px 10px 0; width: 210px; float: left; }
 .products_tabular .item .imageblock     { padding: 5px; border: solid 1px #fc5; text-align: center; float: left; margin: 0 8px 0 0; overflow: visible; width: 50px; }
-.products_tabular .item h2              { margin: 0; font-size: 100%; font-weight: bold; }
+.products_tabular .item h2              { margin: 0; font-size: 100%; font-weight: normal; }
 .products_tabular .item h2 a            { margin-top: 0; text-decoration: none; }
-.products_tabular .item .minprice       { font-weight: bold; padding: 5px 0 0 0; }
+.products_tabular .item .minprice       { font-weight: normal; padding: 5px 0 0 0; }
 /* 
 ------------------------------------------------------------------------
 PRODUCTS - IMAGE ONLY FORMAT
@@ -163,18 +162,17 @@ PRODUCTS - IMAGE ONLY FORMAT
 PRODUCTS - EXTENDED FORMAT
 ------------------------------------------------------------------------
 */
-.products_extended                      { padding-top: 10px }
-.products_extended .item                { padding: 10px 0; border-top: dotted 1px #bbb; }
+.products_extended                      { padding-top: 0 }
+.products_extended .item                { padding: 10px 0; border-top: solid 1px #fc5; }
 .products_extended .item .imageblock    { text-align: center; float: left; width: 170px; overflow: visible; display: inline-block; margin: 0 30px 0 0; }
 .products_extended .item .details       { display: inline-block; width: 570px; text-align: left; overflow: visible; }
 .products_extended .item h2             { font-size: 110%; margin: 10px 0 0 0; margin: 0; padding: 0; }
 .products_extended .item h2 a,
 .products_extended .item h2 a:hover		{ margin-top: 0; font-weight: bold; text-decoration: none; }
 .products_extended .item .strapline     { display: block; margin: 4px 0px 4px 0px; padding: 0; color: #888; font-weight: normal;  }
-.products_extended .item p.description  { padding: 0 0 10px 0 }
-.products_extended .item .minprice      { font-weight: bold; padding: 0 0 10px 0; text-align: right; }
+.products_extended .item p.description  { padding: 0 }
 .products_extended .item a.link2        { font-size: 90% }
-.products_extended .item .versions		{ width: 750px; }
+.products_extended .item .versions		{ width: 750px; float: right; margin: 10px 0 0 0; }
 /* 
 ------------------------------------------------------------------------
 VERSIONS
@@ -263,10 +261,10 @@ SEARCH
 */
 .search .inputform                      { padding: 0; height: 70px; }
 .search .inputform .small               { width: 50px; text-align: right; }
-.search .inputform label                { display: inline; width: auto; float: none; margin: 0px 5px 0px 5px; }
+.search .inputform label                { display: inline; float: none; margin: 0px 5px 0px 5px; }
 .search .inputform div.advanceline      { margin: 5px 0px 0px 0px; display: block; width: 100%; }
-.search .results                        { border-top: dotted 1px #bbb; padding-top: 10px; margin-top: 25px; }
-.search .results #searchsummary         { padding: 0; margin: 0 0 0 0; color: #666; }
+.search .results                        { border-top: solid 1px #fc5; padding-top: 10px; margin-top: 25px; }
+.search .results #searchsummary         { padding: 0; margin: 0; color: #666; }
 .search .results #searchsummary strong  { color: #000 }
 .search .results .products_classicsearch
                                         { padding: 15px 0 17px 0 }
@@ -277,13 +275,15 @@ SEARCH
 .search .results .products_classicsearch .item .imageblock
                                         { text-align: center; float: left; margin: 0 14px 0 0; overflow: visible; width: 50px; }
 .search .results .products_classicsearch .item .details
-                                        { float: left; width: 430px; }
+                                        { float: left; width: 500px; }
 .search .results .products_classicsearch .item h2
                                         { font-size: 110%; padding: 0; margin: 0 0 3px 0; }
+.search .results .products_classicsearch .item h2 a
+                                        { color: #04d; font-weight: normal; text-decoration: underline; }
 .search .results .products_classicsearch .item .highlight
-                                        { background-color: #fd6; font-style: italic; }
+                                        { background-color: #fd6; color: #d30; }
 .search .results .products_classicsearch .item .minprice
-                                        { font-weight: bold; color: #090; padding: 5px 0 5px 0; }
+                                        { font-weight: normal; color: #090; padding: 5px 0 5px 0; }
 /* 
 ========================================================================
 KNOWLEDGEBASE
@@ -450,7 +450,7 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket .baskettable                    { }
 .basket .baskettable tr th              { }
 .basket table.baskettable tr td         { background-color: #fff; border-bottom: solid 1px #ddd; }
-.basket .products_imageonly             { }
+.basket .products_imageonly             { margin-top: 8px; }
 .basket td.image_cell                   { width: 70px; text-align: center; padding: 0 10px 5px 5px; }
 .basket .extax,
 .basket .inctax,

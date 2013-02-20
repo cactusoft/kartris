@@ -19,5 +19,6 @@
         <asp:HyperLink ID="lnkLogin" runat="server" NavigateUrl="~/CustomerAccount.aspx">
             <asp:Literal ID="litContentTextLogin" runat="server" Text='<%$ Resources: Kartris, PageTitle_LogInToSite %>' /></asp:HyperLink>
     </span></asp:PlaceHolder>
-
+    <% '---------My account link--------- %>
+    <span id="login_myaccountlink"><asp:HyperLink ID="lnkMyAccount" Text='<%$ Resources: Kartris, PageTitle_MyAccount %>' runat="server" NavigateUrl="~/Customer.aspx"></asp:HyperLink></span>
 </div>

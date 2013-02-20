@@ -102,7 +102,7 @@
                     <strong>
                         <asp:Literal ID="litVersionName" runat="server" Text='<%#Eval("IR_VersionName")%>' /></strong>
                     <asp:Literal ID="litVersionCode" runat="server" Text='' />
-                    <div class="optionstext" style="padding-left: 10px; padding-top: 3px;">
+                    <br /><div class="optionstext" style="padding-left: 10px; padding-top: 3px;">
                         <asp:Literal ID="litOptionsText" runat="server" Text='<%#Eval("IR_OptionsText")%>' />
                     </div>
                 </td>

@@ -12,10 +12,11 @@ body                                    { font-family: Segoe UI, Arial, Helvetic
 p                                       { margin: 5px 0 10px 0 }
 h1                                      { font-family: 'Open Sans',"Segoe UI Light",Arial,Sans-Serif; font-size: 210%; letter-spacing: -0.5px; color: #000; margin: 0; padding: 15px 0 5px 0; display: inline-block; font-weight: 100; line-height: 33px; }
 h2                                      { font-size: 130%; color: #000; margin: 5px 0 5px 0; padding: 0; }
-h2.blockheader                          { width: 100%; margin: 10px 0 10px 0; }
+
 .h2_light_extra                         { color: #aaa; font-weight: bold; }
 h3                                      { font-size: 95%; font-weight: normal; margin: 0 0 5px 0; padding: 0; }
-h4                                      { font-family: 'Open Sans',"Segoe UI Light",Arial,Sans-Serif; font-weight: 100; font-size: 140%; color: #000; margin: 0; padding: 10px 0 15px 0; }
+h4,
+h2.blockheader                          { font-family: 'Open Sans',"Segoe UI Light",Arial,Sans-Serif; font-weight: 100; font-size: 140%; color: #000; margin: 0; padding: 10px 0 15px 0; }
 h5                                      { margin: 0px 0px 5px 0px; color: #000; text-transform: uppercase; padding: 2px 2px 2px 0px; text-align: left; }
 pre                                     { color: #008800 }
 iframe                                  { border: none }
@@ -104,7 +105,7 @@ textarea:focus                          { color: #000; background-color: #fff; b
 textarea                                { width: 100%; max-width: 600px; }
 input                                   { width: 250px }
 input.longtext                          { width: 400px }
-input.button                            { font-weight: bold; background-color: #eee; color: #000; border: solid 1px #aaa; padding: 2px 8px 2px 8px; margin: 1px 0px 1px 2px; width: auto; display: inline-block; }
+input.button                            { font-family: Tahoma,Verdana,Arial,Helvetica; text-transform: uppercase; font-size: 85%; font-weight: normal; background-color: #eee; color: #000; border: solid 1px #aaa; padding: 3px 9px 3px 9px; margin: 1px 0px 1px 2px; width: auto; display: inline-block; }
 input.button:hover                      { background-color: #fff }
 input.button:focus                      { background-color: #ccc; color: #666; }
 input.cancelbutton                      { background-color: #ddd; border-color: #bbb; color: #666; }
@@ -160,7 +161,7 @@ MEDIA (Video, audio, etc.)
 */
 /* media gallery for product */
 .imagecolumn .media_gallery             { padding: 5px 0 0 5px }
-.imagecolumn .media_gallery h2			{ font-size: 13px; margin: 0; padding: 3px 0 0 0; color: #000; font-weight: bold; }
+.imagecolumn .media_gallery h2			{ font-size: 100%; margin: 0; padding: 3px 0 5px 0; color: #000; font-weight: bold; }
 .imagecolumn .media_gallery_inner       { margin: 1px 0 1px 0 }
 .media_links .mediaholder a             { text-align: center; padding: 0px; display: block; margin: auto auto auto auto; height: 52px; }
 .media_links .mediaholder:hover			{ border: solid 1px #000 }
@@ -206,11 +207,11 @@ ACCORDION AJAX CONTROL
 ========================================================================
 */
 .accordionHeader,
-.accordionHeaderSelected                { border-top: dotted 1px #bbb; cursor: pointer; }
+.accordionHeaderSelected                { border-top: solid 1px #fc5; cursor: pointer; }
 .accordionHeader h2,
-.accordionHeaderSelected h2             { cursor: pointer; margin-bottom: 10px; padding: 5px 0 0 0; }
-.accordionHeader h2:before              { content: "[+]"; color: #777; font-size: 70%; width: 25px; display: inline-block; }
-.accordionHeaderSelected h2:before      { content: "-"; color: #777; font-size: 70%; width: 25px; display: inline-block; }
+.accordionHeaderSelected h2             { cursor: pointer; margin-bottom: 10px; padding: 3px 0 0 0; }
+.accordionHeader h2:before              { content: "[+]"; color: #666; font-size: 70%; width: 25px; display: inline-block; }
+.accordionHeaderSelected h2:before      { content: "-"; color: #666; font-size: 70%; width: 25px; display: inline-block; }
 /* 
 ========================================================================
 UPDATE MESSAGE ('the record was updated')
@@ -223,14 +224,14 @@ PAGE LINKS
 ========================================================================
 */
 .itempager                              { display: block; font-weight: normal; text-decoration: none; padding: 12px 5px 22px 0px; }
-.itempager a                            { display: inline-block; padding: 2px 7px 2px 7px; font-weight: normal; margin-right: 3px; color: #000; background-color: #ddd; }
-.itempager a:hover                      { background-color: #000; color: #fff; text-decoration: none; }
+.itempager a                            { border: solid 1px #333; display: inline-block; padding: 2px 7px 2px 7px; font-weight: normal; margin-right: 3px; color: #333; background-color: #ddd; }
+.itempager a:hover                      { background-color: #fff; color: #000; text-decoration: none; }
 .itempager a.arrow                      { text-align: center }
-.itempager a.currentpage                { background-color: #fff; background-image: none; color: #000; }
+.itempager a.currentpage                { background-color: #fff; background-image: none; color: #000; font-weight: bold; }
 .itempager .previous                    { padding: 2px 7px 2px 7px }
 .itempager .next                        { padding: 2px 7px 2px 7px }
 .itempager a.disabled,
-.itempager a.disabled:hover             { background-color: #fff; color: #555; padding: 2px 7px 2px 7px; }
+.itempager a.disabled:hover             { background-color: #fff; color: #999; padding: 2px 7px 2px 7px; }
 /* 
 ========================================================================
 POPUP MESSAGE
