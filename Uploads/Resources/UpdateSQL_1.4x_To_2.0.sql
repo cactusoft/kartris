@@ -17835,7 +17835,7 @@ AS
 	SET NOCOUNT ON;
 SELECT        vKartrisTypeCategories.*
 FROM            vKartrisTypeCategories
-WHERE        (CAT_ID = @CAT_ID) AND (LANG_ID = @LANG_ID)
+WHERE        (CAT_ID = @CAT_ID) AND (LANG_ID = @LANG_ID) AND CAT_Live=1
 
 
 ' 
