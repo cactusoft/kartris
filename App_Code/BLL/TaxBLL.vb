@@ -270,7 +270,7 @@ Public Class TaxRegime
         strCorrectFormula = Replace(strCorrectFormula, "V_Tax2", V_Tax2)
 
         Dim expr As String = String.Format(formula, strCorrectFormula)
-
+        expr = expr.Replace(",", GetCurrenciesFromCache().Select("CUR_ID=" & HttpContext.Current.Session("CUR_ID"))(0)("CUR_DecimalPoint"))
         'this line does the actual computation
         Return CDec(tblCalculate.Compute(expr, ""))
     End Function
