@@ -58,6 +58,11 @@
                                 <asp:HiddenField ID="hidLoginLanguageID" runat="server" Value='<%# Bind("LOGIN_LanguageID") %>' />
                             </ItemTemplate>
                         </asp:TemplateField>
+                        <asp:TemplateField HeaderStyle-CssClass="invisible" ItemStyle-CssClass="invisible">
+                            <ItemTemplate>
+                                <asp:HiddenField ID="hidLoginPushNotifications" runat="server" Value='<%# Bind("LOGIN_PushNotifications")%>' />
+                            </ItemTemplate>
+                        </asp:TemplateField>
                         <asp:ButtonField Text="<%$ Resources: _Kartris, FormButton_Delete %>" CommandName="DeleteLogins"
                             HeaderStyle-CssClass="invisible" ItemStyle-CssClass="invisible" />
                         <asp:ButtonField Text="<%$ Resources: _Kartris, FormButton_Edit %>" CommandName="EditLogins"
@@ -154,6 +159,36 @@
                             </ul>
                         </div>
                     </div>
+                    <div id="pushnotifications">
+                        <div class="floatright">
+                            <asp:LinkButton ID="lnkNewDevice" Text="<%$ Resources: _Kartris, FormButton_New %>" CssClass="linkbutton icon_new" runat="server" />
+                        </div>
+                        <h2>
+                            <asp:Literal ID="litPushNoticationsList" runat="server" Text="<%$Resources: _Logins, ContentText_PushNotifications%>"></asp:Literal>
+                        </h2>
+                        <asp:HiddenField ID="hidEditPushNotifications" runat="server" Value='' />
+                        <asp:GridView ID="gvwPushNoticationsList" CssClass="kartristable" runat="server" AutoGenerateColumns="False"
+                            GridLines="None" AllowPaging="False" >
+                            <Columns>
+                                <asp:BoundField DataField="Name" HeaderText='<%$ Resources: _Kartris, FormLabel_Name %>'
+                                    SortExpression="Name" ItemStyle-CssClass="itemname" />
+                                <asp:BoundField DataField="Platform" HeaderText='<%$Resources: _Logins, ContentText_Platform%>'
+                                    SortExpression="Platform" ItemStyle-CssClass="itemname" />
+                                <asp:BoundField DataField="URI" HeaderText="<%$Resources: _Logins, ContentText_URI%>" Visible="false" />
+                                <asp:TemplateField HeaderText="<%$Resources: _Kartris, ContentText_Live%>" SortExpression="Device_Live">
+                                    <ItemTemplate>
+                                        <span class="checkbox">
+                                            <asp:CheckBox ID="chkDeviceLive" runat="server" Checked='<%# Bind("Live")%>'
+                                                Enabled="false" /></span>
+                                    </ItemTemplate>
+                                </asp:TemplateField>
+                                <asp:ButtonField Text="<%$ Resources: _Kartris, FormButton_Delete %>" CommandName="DeleteDevice"
+                            HeaderStyle-CssClass="invisible" ItemStyle-CssClass="linkbuttonfield alignright selectfield" />
+                                <asp:ButtonField Text="<%$ Resources: _Kartris, FormButton_Edit %>" CommandName="EditDevice"
+                                    ItemStyle-CssClass="linkbuttonfield alignright selectfield" />
+                            </Columns>
+                        </asp:GridView>
+                    </div>
                     <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
                         <asp:LinkButton ID="btnUpdate" ValidationGroup="UserDetails" runat="server" ToolTip='<%$ Resources: _Kartris, FormButton_Save %>'
                             CssClass="button savebutton" Text='<%$ Resources: _Kartris, FormButton_Save %>' />
@@ -167,6 +202,64 @@
                     </asp:ObjectDataSource>
                 </asp:Panel>
             </div>
+             <asp:LinkButton ID="lnkDummy" runat="server" CausesValidation="false" />
+            <asp:Panel ID="pnlNewDevice" runat="server" CssClass="popup" Style="display: none" DefaultButton="btnAccept">
+                <asp:HiddenField runat="server" ID="hidOrigDeviceLabel" />
+                <h2>
+                    <asp:Literal ID="litContentTextAddEditDevices" Text='<%$ Resources: _Kartris, ContentText_AddNew %>' runat="server" /></h2>
+                <div class="inputform">
+                    <div class="Kartris-DetailsView">
+                        <div class="Kartris-DetailsView-Data">
+                            <ul>
+                                <li><span class="Kartris-DetailsView-Name">
+                                    <asp:Label ID="lblDeviceLabel" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Name %>" EnableViewState="false"
+                                        AssociatedControlID="txtDeviceLabel" CssClass="requiredfield" /></span><span class="Kartris-DetailsView-Value">
+                                            <asp:TextBox runat="server" ID="txtDeviceLabel"></asp:TextBox>
+                                            <asp:RequiredFieldValidator ID="valLabelRequired" ValidationGroup="PushNotifications" runat="server"
+                                                ControlToValidate="txtDeviceLabel" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"
+                                                CssClass="error" ForeColor="" EnableClientScript="true"></asp:RequiredFieldValidator></span></li>
+                                <li><span class="Kartris-DetailsView-Name">
+                                    <asp:Label ID="lblPlatform" runat="server" Text="<%$Resources: _Logins, ContentText_Platform%>" EnableViewState="false"
+                                        AssociatedControlID="ddlDevicePlatform" CssClass="requiredfield" /></span><span class="Kartris-DetailsView-Value">
+                                            <asp:DropDownList  runat="server" ID="ddlDevicePlatform" EnableViewState="false">
+                                                <asp:ListItem Text="<%$ Resources: Kartris, ContentText_DropdownSelectDefault %>" Value="0" />
+                                                <asp:ListItem Text="Windows 8" Value="win8" />
+                                                <asp:ListItem Text="Windows Phone" Value="wp" />
+                                                <asp:ListItem Text="Android" Value="and" />
+                                                <asp:ListItem Text="iOS" Value="ios" />
+                                            </asp:DropDownList>
+                                            <asp:RequiredFieldValidator ID="valDevicePlatform" ValidationGroup="PushNotifications" runat="server"
+                                                InitialValue="0" ControlToValidate="ddlDevicePlatform" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"
+                                                CssClass="error" ForeColor="" EnableClientScript="true"></asp:RequiredFieldValidator></span></li>
+                                <li><span class="Kartris-DetailsView-Name">
+                                    <asp:Label ID="lblURI" runat="server" Text="<%$Resources: _Logins, ContentText_URI%>" EnableViewState="false"
+                                        AssociatedControlID="txtDeviceURI" CssClass="requiredfield" /></span><span class="Kartris-DetailsView-Value">
+                                            <asp:TextBox runat="server" ID="txtDeviceURI" CssClass="phone" TextMode="MultiLine"></asp:TextBox>
+                                            <asp:RequiredFieldValidator ID="valDeviceURI" ValidationGroup="PushNotifications" runat="server"
+                                                ControlToValidate="txtDeviceURI" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"
+                                                CssClass="error" ForeColor="" EnableClientScript="true"></asp:RequiredFieldValidator></span></li>
+                                                                <li><span class="Kartris-DetailsView-Name">
+                                <asp:Label ID="lblLive" runat="server" Text="<%$ Resources: _Kartris, ContentText_Live %>" EnableViewState="false"
+                                    AssociatedControlID="chkDeviceLive" /></span><span class="Kartris-DetailsView-Value">
+                                                <span class="checkbox">
+                                                    <asp:CheckBox ID="chkDeviceLive" runat="server" />
+                                                </span>   
+                                    </span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="spacer">
+                </div>
+                <div class="submitbuttons">
+                    <asp:LinkButton ID="btnCancelDevice" runat="server" Text="X" CssClass="closebutton linkbutton2" />
+                    <asp:Button ID="btnAccept" CssClass="button" runat="server" Text='<%$ Resources: Kartris, FormButton_Submit %>'
+                        CausesValidation="true"  />
+                </div>
+            </asp:Panel>
+            <ajaxToolkit:ModalPopupExtender ID="popPushNotification" runat="server" TargetControlID="lnkDummy"
+                CancelControlID="btnCancelDevice" PopupControlID="pnlNewDevice" BackgroundCssClass="popup_background" />
+
             <_user:PopupMessage ID="_UC_PopupMsg" runat="server" />
         </ContentTemplate>
     </asp:UpdatePanel>

@@ -130,7 +130,7 @@ Public Class LoginsBLL
     End Function
     Public Shared Sub Update(ByVal LOGIN_ID As Integer, ByVal LOGIN_UserName As String, ByVal LOGIN_Password As String, ByVal LOGIN_Live As Boolean, _
                                   ByVal LOGIN_Orders As Boolean, ByVal LOGIN_Products As Boolean, ByVal LOGIN_Config As Boolean, ByVal LOGIN_Protected As Boolean, _
-                                  ByVal LOGIN_LanguageID As Integer, ByVal LOGIN_EmailAddress As String, ByVal LOGIN_Tickets As Boolean)
+                                  ByVal LOGIN_LanguageID As Integer, ByVal LOGIN_EmailAddress As String, ByVal LOGIN_Tickets As Boolean, ByVal LOGIN_Pushnotifications As String)
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Dim strRandomSalt As String = Membership.GeneratePassword(20, 0)
@@ -157,6 +157,7 @@ Public Class LoginsBLL
                     .Parameters.AddWithValue("@LOGIN_EmailAddress", LOGIN_EmailAddress)
                     .Parameters.AddWithValue("@LOGIN_Tickets", LOGIN_Tickets)
                     .Parameters.AddWithValue("@LOGIN_SaltValue", strRandomSalt)
+                    .Parameters.AddWithValue("@LOGIN_PushNotifications", LOGIN_Pushnotifications)
                     sqlConn.Open()
                     savePoint = sqlConn.BeginTransaction()
                     .Transaction = savePoint
@@ -183,7 +184,7 @@ Public Class LoginsBLL
     End Sub
     Public Shared Sub Add(ByVal LOGIN_UserName As String, ByVal LOGIN_Password As String, ByVal LOGIN_Live As Boolean, _
                                   ByVal LOGIN_Orders As Boolean, ByVal LOGIN_Products As Boolean, ByVal LOGIN_Config As Boolean, ByVal LOGIN_Protected As Boolean, _
-                                  ByVal LOGIN_LanguageID As Integer, ByVal LOGIN_EmailAddress As String, ByVal LOGIN_Tickets As Boolean)
+                                  ByVal LOGIN_LanguageID As Integer, ByVal LOGIN_EmailAddress As String, ByVal LOGIN_Tickets As Boolean, ByVal LOGIN_Pushnotifications As String)
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Dim strRandomSalt As String = Membership.GeneratePassword(20, 0)
@@ -209,6 +210,7 @@ Public Class LoginsBLL
                     .Parameters.AddWithValue("@LOGIN_EmailAddress", LOGIN_EmailAddress)
                     .Parameters.AddWithValue("@LOGIN_Tickets", LOGIN_Tickets)
                     .Parameters.AddWithValue("@LOGIN_SaltValue", strRandomSalt)
+                    .Parameters.AddWithValue("@LOGIN_PushNotifications", LOGIN_Pushnotifications)
                     sqlConn.Open()
                     savePoint = sqlConn.BeginTransaction()
                     .Transaction = savePoint
@@ -244,5 +246,8 @@ Public Class LoginsBLL
     End Function
     Public Shared Function _GetSaltByUserName(ByVal UserName As String) As String
         Return Adptr._GetSaltByUserName(UserName)
+    End Function
+    Public Shared Function GetLoginsList() As DataTable
+        Return Adptr._GetList()
     End Function
 End Class
