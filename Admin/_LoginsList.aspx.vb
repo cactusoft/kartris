@@ -36,7 +36,7 @@ Partial Class Admin_LoginsList
             Dim LoginRow As DataRowView = CType(e.Row.DataItem, DataRowView)
             Login_Protected = LoginRow("LOGIN_Protected")
             If Login_Protected Then
-                DirectCast(e.Row.Cells(8).Controls(0), LinkButton).Visible = False
+                DirectCast(e.Row.Cells(9).Controls(0), LinkButton).Visible = False
             End If
         End If
     End Sub
@@ -73,9 +73,10 @@ Partial Class Admin_LoginsList
             Dim LOGIN_Orders As CheckBox = rowLogins.Cells(3).Controls(5)
             Dim LOGIN_Tickets As CheckBox = rowLogins.Cells(3).Controls(7)
             Dim LOGIN_Live As CheckBox = rowLogins.Cells(4).Controls(1)
-
+            Dim LOGIN_PushNotifications = DirectCast(rowLogins.Cells(8).Controls(1), HiddenField).Value
 
             LOGIN_LanguageID = CInt(DirectCast(rowLogins.Cells(7).Controls(1), HiddenField).Value)
+
 
             radNo.Checked = Not LOGIN_Live.Checked
             radYes.Checked = LOGIN_Live.Checked
@@ -97,9 +98,16 @@ Partial Class Admin_LoginsList
             txtPassword.Text = LOGIN_Password
             txtUsername.Text = LOGIN_UserName
             txtEmailAddress.Text = LOGIN_EmailAddress
+            hidEditPushNotifications.Value = LOGIN_PushNotifications
+
+
+            Dim xmlDoc As New XmlDocument
+
+            If Not String.IsNullOrEmpty(LOGIN_PushNotifications) Then xmlDoc.LoadXml(LOGIN_PushNotifications)
+            BindXMLtoGridView(xmlDoc)
 
             ddlLanguages.SelectedValue = LOGIN_LanguageID
-
+            lnkNewLogin.Visible = False
             ' hide the gridview
             gvwLogins.Visible = False
         End If
@@ -118,12 +126,13 @@ Partial Class Admin_LoginsList
 
     Protected Sub btnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCancel.Click
         pnlEdit.Visible = False
+        lnkNewLogin.Visible = True
         gvwLogins.Visible = True
     End Sub
 
     Protected Sub lnkNewLogin_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkNewLogin.Click
         Call EnableAll()
-
+        lnkNewLogin.Visible = False
         intSelectedLoginID = 0
         Login_Protected = False
         LOGIN_LanguageID = 1
@@ -164,18 +173,24 @@ Partial Class Admin_LoginsList
         Page.Validate("UserDetails")
         If Page.IsValid Then
             If intSelectedLoginID = 0 Then
-                LoginsBLL.Add(txtUsername.Text, txtPassword.Text, radYes.Checked, chkLoginEditOrders.Checked, chkLoginEditProducts.Checked, chkLoginEditConfig.Checked, Login_Protected, ddlLanguages.SelectedValue, txtEmailAddress.Text, chkLoginEditTickets.Checked)
+                LoginsBLL.Add(txtUsername.Text, txtPassword.Text, radYes.Checked, chkLoginEditOrders.Checked, chkLoginEditProducts.Checked,
+                              chkLoginEditConfig.Checked, Login_Protected, ddlLanguages.SelectedValue, txtEmailAddress.Text,
+                              chkLoginEditTickets.Checked, hidEditPushNotifications.Value)
             ElseIf intSelectedLoginID > 0 Then
                 Dim strPassword As String
                 If txtPassword.Visible Then strPassword = txtPassword.Text Else strPassword = ""
-                LoginsBLL.Update(intSelectedLoginID, txtUsername.Text, strPassword, radYes.Checked, chkLoginEditOrders.Checked, chkLoginEditProducts.Checked, chkLoginEditConfig.Checked, Login_Protected, ddlLanguages.SelectedValue, txtEmailAddress.Text, chkLoginEditTickets.Checked)
+                LoginsBLL.Update(intSelectedLoginID, txtUsername.Text, strPassword, radYes.Checked, chkLoginEditOrders.Checked,
+                                 chkLoginEditProducts.Checked, chkLoginEditConfig.Checked, Login_Protected, ddlLanguages.SelectedValue,
+                                 txtEmailAddress.Text, chkLoginEditTickets.Checked, hidEditPushNotifications.Value)
                 txtPassword.Visible = False
                 valRequiredUserPassword.Enabled = False
                 lblPassword.Visible = True
                 btnChangePassword.Text = GetGlobalResourceObject("_Kartris", "ContentText_ConfigChange2")
             End If
+            lnkNewLogin.Visible = True
             pnlEdit.Visible = False
             gvwLogins.Visible = True
+            lnkNewLogin.Visible = True
             gvwLogins.DataBind()
             CType(Me.Master, Skins_Admin_Template).DataUpdated()
         End If
@@ -207,5 +222,159 @@ Partial Class Admin_LoginsList
             lblPassword.Visible = False
             btnChangePassword.Text = GetGlobalResourceObject("_Kartris", "FormButton_Cancel")
         End If
+    End Sub
+    Protected Sub lnkNew_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkNewDevice.Click
+        txtDeviceLabel.Text = ""
+        txtDeviceURI.Text = ""
+        ddlDevicePlatform.SelectedIndex = 0
+        hidOrigDeviceLabel.Value = ""
+        chkDeviceLive.Checked = True
+        litContentTextAddEditDevices.Text = GetGlobalResourceObject("_Kartris", "ContentText_AddNew")
+        popPushNotification.Show()
+    End Sub
+    Private Sub EditDevice(ByVal src As Object, ByVal e As GridViewCommandEventArgs) Handles gvwPushNoticationsList.RowCommand
+
+        litContentTextAddEditDevices.Text = GetGlobalResourceObject("_Kartris", "FormButton_Edit")
+
+        ' get the row index stored in the CommandArgument property 
+        Dim intRowIndex As Integer = Convert.ToInt32(e.CommandArgument)
+
+        ' get the GridViewRow where the command is raised 
+        Dim rowLogins As GridViewRow = DirectCast(e.CommandSource, GridView).Rows(intRowIndex)
+
+        Dim Device_Name As String = rowLogins.Cells(0).Text
+
+            'an existing device - search entry and update XML
+            'retrieve push notification XML for this user
+            Dim Login_Notifications As String = Trim(hidEditPushNotifications.Value)
+            Dim xmlDoc As New XmlDocument
+            xmlDoc.LoadXml(Login_Notifications)
+            Dim xmlNodeList As XmlNodeList = xmlDoc.GetElementsByTagName("Device")
+        For Each node As XmlNode In xmlNodeList
+            If node.ChildNodes(0).InnerText = Device_Name Then
+                If e.CommandName = "DeleteDevice" Then
+                    node.ParentNode.RemoveChild(node)
+                    'Bind the new XML data to the push notifications gridview
+                    Dim ds As New DataSet()
+                    ds.ReadXml(New XmlNodeReader(xmlDoc))
+                    hidEditPushNotifications.Value = xmlDoc.OuterXml
+
+                    BindXMLtoGridView(xmlDoc)
+
+                Else
+                    hidOrigDeviceLabel.Value = Device_Name
+                    txtDeviceLabel.Text = Device_Name
+                    ddlDevicePlatform.SelectedValue = node.ChildNodes(1).InnerText
+                    txtDeviceURI.Text = node.ChildNodes(2).InnerText
+                    chkDeviceLive.Checked = node.ChildNodes(3).InnerText
+
+                    popPushNotification.Show()
+                End If
+                Exit For
+            End If
+        Next
+
+
+    End Sub
+    Protected Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAccept.Click
+        Page.Validate("PushNotifications")
+        If IsValid Then
+            'retrieve push notification XML for this user
+            Dim Login_Notifications As String = Trim(hidEditPushNotifications.Value)
+            Dim xmlDoc As New XmlDocument
+
+            If String.IsNullOrEmpty(Login_Notifications) Then
+                'this is first push notification device entry so still need to build up XML
+
+                ' XML declaration
+                Dim declaration As XmlNode = xmlDoc.CreateNode(XmlNodeType.XmlDeclaration, Nothing, Nothing)
+                xmlDoc.AppendChild(declaration)
+
+                ' Root element: PushNotifications
+                Dim root As XmlElement = xmlDoc.CreateElement("PushNotifications")
+                xmlDoc.AppendChild(root)
+
+                ' Sub-element: Device
+                Dim Device As XmlElement = xmlDoc.CreateElement("Device")
+
+                root.AppendChild(Device)
+
+                SetAllChild(Device, True)
+                'doc.Save(Response.OutputStream)
+            Else
+                'xml structure is already present
+                xmlDoc.LoadXml(Login_Notifications)
+
+                If String.IsNullOrEmpty(hidOrigDeviceLabel.Value) Then
+                    'new device so just need to add it to the XML
+                    Dim root As XmlElement = xmlDoc.DocumentElement
+                    ' Sub-element: Device
+                    Dim Device As XmlElement = xmlDoc.CreateElement("Device")
+
+                    SetAllChild(Device, True)
+
+                    root.AppendChild(Device)
+                Else
+                    'an existing device - search entry and update XML
+                    Dim xmlNodeList As XmlNodeList = xmlDoc.GetElementsByTagName("Device")
+                    For Each node As XmlNode In xmlNodeList
+                        If node.ChildNodes(0).InnerText = hidOrigDeviceLabel.Value Then
+                            SetAllChild(node, False)
+                        End If
+                    Next
+                End If
+            End If
+
+            hidEditPushNotifications.Value = xmlDoc.OuterXml
+
+            BindXMLtoGridView(xmlDoc)
+        Else
+            popPushNotification.Show()
+        End If
+
+
+    End Sub
+    Private Sub BindXMLtoGridView(ByVal xmlDoc As XmlDocument)
+        'Bind the XML data to the push notifications gridview
+        Dim ds As New DataSet()
+        ds.ReadXml(New XmlNodeReader(xmlDoc))
+        If ds.Tables.Count > 0 Then
+            gvwPushNoticationsList.DataSource = ds.Tables(0)
+        Else
+            gvwPushNoticationsList.DataSource = Nothing
+        End If
+        gvwPushNoticationsList.DataBind()
+    End Sub
+    Private Sub SetAllChild(ByRef DeviceNode As XmlElement, ByVal blnNewNode As Boolean)
+        With DeviceNode
+            If blnNewNode Then
+                ' Sub-element: Name
+                Dim DeviceName As XmlElement = .OwnerDocument.CreateElement("Name")
+                DeviceName.InnerText = txtDeviceLabel.Text
+                .AppendChild(DeviceName)
+
+                ' Sub-element: Platform
+                Dim Platform As XmlElement = .OwnerDocument.CreateElement("Platform")
+                Platform.InnerText = ddlDevicePlatform.SelectedValue
+                .AppendChild(Platform)
+
+                ' Sub-element: URI (CDATA)
+                Dim URI As XmlElement = .OwnerDocument.CreateElement("URI")
+                Dim cdata As XmlNode = .OwnerDocument.CreateCDataSection(txtDeviceURI.Text)
+                URI.AppendChild(cdata)
+                .AppendChild(URI)
+
+                ' Sub-element: Live ?
+                Dim Live As XmlElement = .OwnerDocument.CreateElement("Live")
+                Live.InnerText = chkDeviceLive.Checked
+                .AppendChild(Live)
+            Else
+                .ChildNodes(0).InnerText = txtDeviceLabel.Text
+                .ChildNodes(1).InnerText = ddlDevicePlatform.SelectedValue
+                .ChildNodes(2).InnerText = txtDeviceURI.Text
+                .ChildNodes(3).InnerText = chkDeviceLive.Checked
+            End If
+        End With
+        
     End Sub
 End Class

@@ -1626,35 +1626,56 @@ Public NotInheritable Class CkartrisBLL
     End Function
 
     ''' <summary>
-    ''' Push Kartris Notification to an installed Windows Store App
+    ''' Push Kartris Notification to User Devices
     ''' </summary>
     ''' <param name="DataType"></param>
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Shared Function PushKartrisNotification(ByVal DataType As String) As String
 
-      
-        'send push notification request if channel URI config is set
-        If Not String.IsNullOrEmpty(GetKartConfig("general.windowsstoreappchanneluri")) Then
-            Dim DataValue As Long = 0
-            If DataType.ToLower = "s" Then
-                Dim numUnassignedTickets As Integer, numAwaitingTickets As Integer
-                TicketsBLL._TicketsCounterSummary(numUnassignedTickets, numAwaitingTickets, 0)
-                DataValue = numUnassignedTickets
-            ElseIf DataType.ToLower = "o" Then
-                DataValue = OrdersBLL._GetByStatusCount(OrdersBLL.ORDERS_LIST_CALLMODE.INVOICE)
-            End If
+        'send push notification requests if pushnotification config is enabled
+        If GetKartConfig("general.pushnotifications.enabled") = "y" Then
+            Try
+                Dim DataValue As Long = 0
+                If DataType.ToLower = "s" Then
+                    Dim numUnassignedTickets As Integer, numAwaitingTickets As Integer
+                    TicketsBLL._TicketsCounterSummary(numUnassignedTickets, numAwaitingTickets, 0)
+                    DataValue = numUnassignedTickets
+                ElseIf DataType.ToLower = "o" Then
+                    DataValue = OrdersBLL._GetByStatusCount(OrdersBLL.ORDERS_LIST_CALLMODE.INVOICE)
+                End If
 
-            Dim svcNotifications As New com.kartris.livetile.Service1
-            Dim KartrisNotification As New com.kartris.livetile.KartrisNotificationData
-            With KartrisNotification
-                .ClientWindowsStoreAppChannelURI = GetKartConfig("general.windowsstoreappchanneluri")
-                .NotificationDataType = DataType
-                .NotificationDataCount = DataValue
-                .NotificationDataCountSpecified = True
-                .KartrisWebShopURL = WebShopURL()
-            End With
-            Return svcNotifications.SendNotification(KartrisNotification)
+                Dim svcNotifications As New com.kartris.livetile.Service1
+                Dim KartrisNotification As New com.kartris.livetile.KartrisNotificationData
+
+                Dim tblLoginsList As DataTable = LoginsBLL.GetLoginsList
+                For Each dtLogin As DataRow In tblLoginsList.Rows
+                    Dim strXML As String = dtLogin.Item("LOGIN_PushNotifications")
+                    Dim blnLoginLive As Boolean = dtLogin.Item("LOGIN_Live")
+                    If Not String.IsNullOrEmpty(strXML) AndAlso blnLoginLive Then
+                        Dim xmlDoc As New XmlDocument
+                        xmlDoc.LoadXml(strXML)
+                        Dim xmlNodeList As XmlNodeList = xmlDoc.GetElementsByTagName("Device")
+                        For Each node As XmlNode In xmlNodeList
+                            'check first if the push notification device is set to live
+                            If node.ChildNodes(3).InnerText.ToLower = "true" Then
+                                With KartrisNotification
+                                    .ClientWindowsStoreAppChannelURI = node.ChildNodes(2).InnerText
+                                    .NotificationDataType = DataType
+                                    .NotificationDataCount = DataValue
+                                    .NotificationDataCountSpecified = True
+                                    .KartrisWebShopURL = WebShopURL()
+                                End With
+                                svcNotifications.SendNotification(KartrisNotification)
+                            End If
+                        Next
+                    End If
+                Next
+                Return "Success"
+            Catch ex As Exception
+                Return " - Error encountered while trying to send notification  - " & ex.Message
+            End Try
+
         Else
             Return "NOT ENABLED"
         End If

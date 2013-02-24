@@ -57,7 +57,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisLogins_GetSaltByUserName]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_GetSaltByUserName" Modifier="Public" Name="_GetSaltByUserName" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="_GetSaltByUserName">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisLogins_GetSaltByUserName]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_GetSaltByUserName" Modifier="Public" Name="_GetSaltByUserName" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="_GetSaltByUserName">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisLogins_GetSaltByUserName]</CommandText>
@@ -78,7 +78,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisLogins_Validate]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_Validate" Modifier="Public" Name="_Validate" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="_Validate">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisLogins_Validate]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_Validate" Modifier="Public" Name="_Validate" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="_Validate">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisLogins_Validate]</CommandText>
@@ -110,7 +110,7 @@
   <xs:element name="kartrisLoginData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:Generator_DataSetName="kartrisLoginData" msprop:Generator_UserDSName="kartrisLoginData">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Logins" msprop:Generator_UserTableName="Logins" msprop:Generator_RowEvArgName="LoginsRowChangeEvent" msprop:Generator_TableVarName="tableLogins" msprop:Generator_TablePropName="Logins" msprop:Generator_RowDeletingName="LoginsRowDeleting" msprop:Generator_RowChangingName="LoginsRowChanging" msprop:Generator_RowDeletedName="LoginsRowDeleted" msprop:Generator_TableClassName="LoginsDataTable" msprop:Generator_RowChangedName="LoginsRowChanged" msprop:Generator_RowEvHandlerName="LoginsRowChangeEventHandler" msprop:Generator_RowClassName="LoginsRow">
+        <xs:element name="Logins" msprop:Generator_UserTableName="Logins" msprop:Generator_RowEvArgName="LoginsRowChangeEvent" msprop:Generator_TableVarName="tableLogins" msprop:Generator_TablePropName="Logins" msprop:Generator_RowDeletingName="LoginsRowDeleting" msprop:Generator_RowChangingName="LoginsRowChanging" msprop:Generator_RowDeletedName="LoginsRowDeleted" msprop:Generator_RowEvHandlerName="LoginsRowChangeEventHandler" msprop:Generator_TableClassName="LoginsDataTable" msprop:Generator_RowChangedName="LoginsRowChanged" msprop:Generator_RowClassName="LoginsRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="LOGIN_ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnLOGIN_ID" msprop:Generator_ColumnPropNameInRow="LOGIN_ID" msprop:Generator_ColumnPropNameInTable="LOGIN_IDColumn" msprop:Generator_UserColumnName="LOGIN_ID" type="xs:short" />
