@@ -6,6 +6,7 @@
 <%@ Register TagPrefix="user" TagName="ProductPromotions" Src="~/UserControls/Front/ProductPromotions.ascx" %>
 <%@ Register TagPrefix="user" TagName="ProductQuantityDiscounts" Src="~/UserControls/Front/ProductQuantityDiscounts.ascx" %>
 <%@ Register TagPrefix="user" TagName="ProductReviews" Src="~/UserControls/Front/ProductReviews.ascx" %>
+<%@ Register TagPrefix="user" TagName="RichSnippets" Src="~/UserControls/Front/RichSnippets.ascx" %>
 
 <script type="text/javascript" language="javascript">
     //<![CDATA[
@@ -93,8 +94,12 @@
                                     <div id="strapline">
                                         <asp:Literal ID="litProductStrapLine" runat="server" Text='<%# Eval("P_StrapLine") %>' EnableViewState="false"></asp:Literal>
                                     </div>
-                                    <div id="description">
-                                        <asp:Literal EnableViewState="False" ID="litProductDescription" runat="server" Text='<%# ShowLineBreaks(Eval("P_Desc")) %>'></asp:Literal>
+                                    <div id="description" itemscope itemtype="http://data-vocabulary.org/Product">
+                                        <span itemprop="name" style="display:none;"><%# Eval("P_Name") %></span>
+                                        <user:RichSnippets ID="UC_RichSnippets" runat="server" ProductID='<%# Eval("P_ID") %>' />
+                                        <span itemprop="description">
+                                            <asp:Literal EnableViewState="False" ID="litProductDescription" runat="server" Text='<%# ShowLineBreaks(Eval("P_Desc")) %>'></asp:Literal>
+                                        </span>
                                     </div>
                                     <%--
                 COMPARE LINK

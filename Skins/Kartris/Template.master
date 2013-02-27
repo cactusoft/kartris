@@ -1,9 +1,9 @@
 ﻿<%@ Master Language="VB" CodeFile="Template.master.vb" Inherits="Skin_Kartris_Template" %>
 <%@ Register TagPrefix="user" TagName="AdminBar" Src="~/UserControls/Front/AdminBar.ascx" %>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server" enableviewstate="False">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML+RDFa 1.0//EN" "http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" version="XHTML+RDFa 1.0" xml:lang="en">
+<head id="Head1" runat="server" enableviewstate="true">
 	<base id="baseTag" runat="server" />
 	<!--
 		===============================================================================
@@ -15,13 +15,12 @@
 	<link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
 	<link id="lnkFavIcon2" rel="shortcut icon" href="~/favicon.ico" type="image/x-icon"
 		runat="server" />
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=UTF-8" />
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
 	<link href="general.css" rel="stylesheet" type="text/css" />
 	<link href="menus.css" rel="stylesheet" type="text/css" />
 	<link href="sections.css" rel="stylesheet" type="text/css" />
 	<link href="template.css" rel="stylesheet" type="text/css" />
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
 	<title>Kartris v1</title>
 </head>
 <body class="main">
@@ -29,7 +28,7 @@
 		<form id="frmMain" runat="server" class="container">
 		<ajaxToolkit:ToolkitScriptManager ID="scrManager" runat="server" ScriptMode="Release"
 			EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"
-			CombineScripts="true" EnableViewState="False">
+			CombineScripts="true" EnableViewState="True">
 			<Scripts>
 				<asp:ScriptReference Path="~/JavaScript/webkit.js" />
 			</Scripts>

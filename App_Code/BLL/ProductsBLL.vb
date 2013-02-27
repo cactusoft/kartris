@@ -572,4 +572,8 @@ Public Class ProductsBLL
     Public Shared Sub _ChangeSortValue(ByVal numCategoryID As Integer, ByVal numProductID As Integer, ByVal chrDirection As Char)
         ProductCategoryLinkAdptr._ChangeSortValue(numProductID, numCategoryID, chrDirection)
     End Sub
+
+    Public Shared Function GetRichSnippetProperties(numProductID As Integer, numLanguageID As Byte) As DataTable
+        Return Adptr.GetRichSnippetProperties(numProductID, numLanguageID)
+    End Function
 End Class
