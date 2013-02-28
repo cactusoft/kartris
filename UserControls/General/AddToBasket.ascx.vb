@@ -202,10 +202,12 @@ Partial Class UserControls_General_AddToBasket
 
         'If nothing specified, set selector type based
         'on config setting.
-        If LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID))) <> "" Then
-            c_strSelectorType = LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID)))
-        Else
-            c_strSelectorType = KartSettingsManager.GetKartConfig("frontend.basket.addtobasketdisplay")
+        If c_strSelectorType = "" Then
+            If LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID))) <> "" Then
+                c_strSelectorType = LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID)))
+            Else
+                c_strSelectorType = KartSettingsManager.GetKartConfig("frontend.basket.addtobasketdisplay")
+            End If
         End If
 
         'Create onclientclick event to launch

@@ -160,6 +160,7 @@ Partial Class ProductVersions
             Case "p"
                 If Not Page.IsPostBack Then
                     mvwVersion.SetActiveView(PrepareDropDownView(tblVersions))
+                    UC_AddToBasketQty3.SelectorType = LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", _ProductID))
                 End If
             Case "o", "g"
                 'options
