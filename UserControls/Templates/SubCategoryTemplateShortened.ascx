@@ -3,7 +3,7 @@
 <div class="item">
     <div class="box">
         <div class="pad">
-            <asp:Literal EnableViewState="false" ID="litCategoryID" runat="server" Visible="false" Text='<%# Eval("CAT_ID") %>'></asp:Literal>
+            <asp:Literal EnableViewState="true" ID="litCategoryID" runat="server" Visible="false" Text='<%# Eval("CAT_ID") %>'></asp:Literal>
             <user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="False" />      
             <h2><asp:HyperLink EnableViewState="false" ID="lnkCategoryName" runat="server" Text='<%# Server.HtmlEncode(Eval("CAT_Name")) %>'></asp:HyperLink></h2>
 
