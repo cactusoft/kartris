@@ -5,7 +5,7 @@
         <div class="item">
             <div class="box">
                 <div class="pad">
-                    <asp:Literal ID="litCategoryID" runat="server" Visible="false" Text='<%# Eval("CAT_ID") %>'></asp:Literal>
+                    <asp:Literal ID="litCategoryID" runat="server" Visible="true" Text='<%# Eval("CAT_ID") %>'></asp:Literal>
                     <h2>
                         <asp:HyperLink EnableViewState="false" ID="lnkCategoryName" runat="server" Text='<%# Server.HtmlEncode(Eval("CAT_Name")) %>'></asp:HyperLink></h2>
                     <asp:Literal EnableViewState="false" ID="litCategoryDescHidden" runat="server" Text='<%# Eval("CAT_Desc") %>'

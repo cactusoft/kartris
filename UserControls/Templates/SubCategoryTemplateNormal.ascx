@@ -8,7 +8,7 @@
                 <user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="False" />
             </div>
             <div class="details">
-                <asp:Literal EnableViewState="false" ID="litCategoryID" runat="server" Visible="false"
+                <asp:Literal EnableViewState="true" ID="litCategoryID" runat="server" Visible="false"
                     Text='<%# Eval("CAT_ID") %>'></asp:Literal>
                 <h2>
                     <asp:HyperLink EnableViewState="false" ID="lnkCategoryName" runat="server" Text='<%# Server.HtmlEncode(Eval("CAT_Name")) %>'></asp:HyperLink></h2>
