@@ -896,7 +896,7 @@ Partial Class ProductVersions
 
         If Not [String].IsNullOrEmpty(strOptionString) Then CleanOptionString(strOptionString)
 
-        If strOptionString = 0 Then Return
+        If [String].IsNullOrEmpty(strOptionString) OrElse strOptionString = "0" Then Return
 
         phdOutOfStock4.Visible = False
         phdNotOutOfStock4.Visible = True
