@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="OptionsContainer.ascx.vb"
-    Inherits="OptionsContainer" %>
+    Inherits="OptionsContainer" ClientIDMode="AutoID" %>
 <%@ Register TagPrefix="user" TagName="Options" Src="~/UserControls/General/Options.ascx" %>
 <div class="options">
     <div class="pad">
