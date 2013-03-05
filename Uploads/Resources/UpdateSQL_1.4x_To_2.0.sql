@@ -9925,6 +9925,8 @@ BEGIN
 	SET NOCOUNT ON;
 	SELECT *
 	FROM dbo.vKartrisTypeShippingMethods
+	WHERE LANG_ID = @LANG_ID
+	ORDER BY SM_OrderByValue;
 
 END
 ' 
