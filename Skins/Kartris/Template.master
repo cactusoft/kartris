@@ -21,6 +21,7 @@
 	<link href="menus.css" rel="stylesheet" type="text/css" />
 	<link href="sections.css" rel="stylesheet" type="text/css" />
 	<link href="template.css" rel="stylesheet" type="text/css" />
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
 	<title>Kartris v1</title>
 </head>
 <body class="main">
@@ -142,7 +143,7 @@
 				<div class="spacer">
 				</div>
 				<div class="copyright">
-					&copy;2012 Cactusoft International FZ LLC</div>
+					&copy;2013 Cactusoft International FZ LLC</div>
 			</div>
 		</div>
 	</div>
