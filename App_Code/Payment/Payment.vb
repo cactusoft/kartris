@@ -115,6 +115,7 @@ Public Class Payment
         'that assembly, and we can look for any classes that implement our PaymentGateway interface...
         Try
             Dim GatewayPath As String = System.Web.HttpContext.Current.Request.PhysicalApplicationPath & "Plugins\" & Path & "\" & Path & ".dll"
+            If InStr(Path, "GoogleCheckout") Then Return Nothing
             clsAssembly = System.Reflection.Assembly.LoadFrom(GatewayPath)
         Catch ex As Exception
             CkartrisFormatErrors.LogError("An error occured while attempting to access the specified Assembly. - " & ex.Message)
@@ -147,7 +148,7 @@ Public Class Payment
             Next
             Return Nothing
         Catch ex As System.Exception
-            CkartrisFormatErrors.LogError("Assembly loaded but there seem to be a problem reading it. - " & ex.Message)
+            CkartrisFormatErrors.LogError("Assembly loaded but there seem to be a problem reading it. - " & Path & " - " & ex.Message)
         End Try
         Return Nothing
     End Function
