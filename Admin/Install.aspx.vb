@@ -180,16 +180,16 @@ Partial Class Admin_Install
             txtHashKey.Text = Guid.NewGuid.ToString
 
             'Check if this shop is already set up
-            If Application("DBConnected") Then
-                Dim conKartris As New SqlConnection(ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString)
-                Dim comCheck As New SqlCommand("SELECT COUNT(*) as LoginCount FROM tblKartrisLogins", conKartris)
-                conKartris.Open()
-                If comCheck.ExecuteScalar() > 0 Then
-                    'There's an existing Login record! This shop is already set up.
-                    Page_Load_Error(GetLocalResourceObject("Error_KartrisAlreadyInstalled"))
-                    Exit Sub
-                End If
-            End If
+            'If Application("DBConnected") Then
+            '    Dim conKartris As New SqlConnection(ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString)
+            '    Dim comCheck As New SqlCommand("SELECT COUNT(*) as LoginCount FROM tblKartrisLogins", conKartris)
+            '    conKartris.Open()
+            '    If comCheck.ExecuteScalar() > 0 Then
+            '        'There's an existing Login record! This shop is already set up.
+            '        Page_Load_Error(GetLocalResourceObject("Error_KartrisAlreadyInstalled"))
+            '        Exit Sub
+            '    End If
+            'End If
             Dim webConfigFile As String = Path.Combine(HttpContext.Current.Request.PhysicalApplicationPath, "web.config")
             'Also on first load, check if the web.config is updatable
             Try
@@ -375,7 +375,7 @@ Partial Class Admin_Install
                 Dim hash() As Byte = sha.ComputeHash(bytClearString)
                 Dim strEncryptedPass As String = Convert.ToBase64String(hash)
                 objSQLCommand = New SqlCommand("DELETE FROM tblKartrisLogins WHERE LOGIN_Username = 'Admin';" &
-                                        "INSERT INTO tblKartrisLogins VALUES ('Admin','" & strEncryptedPass & "',1,1,1,1,1,1,'',1,'" & strNewRandomSalt & "');",
+                                        "INSERT INTO tblKartrisLogins VALUES ('Admin','" & strEncryptedPass & "',1,1,1,1,1,1,'',1,'" & strNewRandomSalt & "',NULL);",
                                         objSQLConnection)
                 objSQLConnection.Open()
                 objSQLCommand.ExecuteNonQuery()
