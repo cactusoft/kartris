@@ -46,7 +46,7 @@ All rights reserved.
 		<trace enabled="false" localOnly="false" pageOutput="false" requestLimit="20" mostRecent="true" traceMode="SortByTime"/>
 		<!-- IMPORTANT!! COMMENT OUT THE GLOBALIZATION TAG BELOW TO TRIGGER THE INSTALL ROUTINE
 		You might also need to 'break' the KartrisSQLConnection above, so the db isn't found -->
-		<!--<globalization resourceProviderFactoryType="Kartris.SqlResourceProviderFactory" culture="auto" uiCulture="auto" enableClientBasedCulture="true"/>-->
+		<!--<globalization resourceProviderFactoryType="SqlResourceProviderFactory" culture="auto" uiCulture="auto" enableClientBasedCulture="true"/>-->
 		<identity impersonate="false"/>
 		<!-- 
 		Set compilation debug="true" to insert debugging 
@@ -181,8 +181,8 @@ All rights reserved.
 		</pages>
 		<siteMap defaultProvider="CategorySiteMapProvider">
 			<providers>
-				<add name="CategorySiteMapProvider" type="Kartris.CategorySiteMapProvider" connectionStringName="KartrisSQLConnection" navigateUrl="~/Category.aspx"/>
-				<add name="_CategorySiteMapProvider" type="Kartris._CategorySiteMapProvider" connectionStringName="KartrisSQLConnection" navigateUrl="~/Admin/_Default.aspx"/>
+				<add name="CategorySiteMapProvider" type="CategorySiteMapProvider" connectionStringName="KartrisSQLConnection" navigateUrl="~/Category.aspx"/>
+				<add name="_CategorySiteMapProvider" type="_CategorySiteMapProvider" connectionStringName="KartrisSQLConnection" navigateUrl="~/Admin/_Default.aspx"/>
 				<add name="MenuSiteMap" type="System.Web.XmlSiteMapProvider" siteMapFile="~/web_menu.sitemap"/>
 				<add name="BreadCrumbSiteMap" type="System.Web.XmlSiteMapProvider" siteMapFile="~/web_breadcrumb.sitemap"/>
 				<add name="_KartrisSiteMap" type="System.Web.XmlSiteMapProvider" siteMapFile="~/Admin/_web.sitemap"/>
@@ -199,7 +199,7 @@ All rights reserved.
 		<membership defaultProvider="KartrisMembershipProvider" userIsOnlineTimeWindow="30">
 			<providers>
 				<clear/>
-				<add name="KartrisMembershipProvider" type="Kartris.KartrisMembershipProvider" connectionStringName="KartrisSQLConnection" applicationName="Kartris" enablePasswordRetrieval="true" enablePasswordReset="true" requiresQuestionAndAnswer="false" requiresUniqueEmail="true" passwordFormat="Hashed"/>
+				<add name="KartrisMembershipProvider" type="KartrisMembershipProvider" connectionStringName="KartrisSQLConnection" applicationName="Kartris" enablePasswordRetrieval="true" enablePasswordReset="true" requiresQuestionAndAnswer="false" requiresUniqueEmail="true" passwordFormat="Hashed"/>
 			</providers>
 		</membership>
 		<authorization>

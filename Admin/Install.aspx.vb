@@ -288,6 +288,21 @@ Partial Class Admin_Install
     '3. DB CONNECTION SETUP
     '---------------------------------------
     Protected Sub ws3_ConnectionString_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles ws3_ConnectionString.Activate
+
+        'check if we can connect to the database
+        strConnectionString = ConfigurationManager.ConnectionStrings("kartrisSQLConnection").ToString
+        Dim sqlconKartris As New SqlConnection(strConnectionString)
+        Try
+            sqlconKartris.Open()
+            Application("DBConnected") = True
+        Catch ex As Exception
+            Application("DBConnected") = False
+            strConnectionString = String.Empty
+        Finally
+            If sqlconKartris.State = ConnectionState.Open Then sqlconKartris.Close()
+        End Try
+
+
         If String.IsNullOrEmpty(strConnectionString) Then
             Application("DBConnected") = False
             phdRetryCheckButton.Visible = False
@@ -347,20 +362,21 @@ Partial Class Admin_Install
                 phdError.Visible = True
                 wizInstallation.ActiveStepIndex = 2
             End Try
-            If chkCreateSampleData.checked Then
-                Try
-                    Dim strSQLPath As String = Server.MapPath("~/Uploads/resources/kartrisSQL_SampleData.sql")
-                    Dim strError As String = ""
-                    If File.Exists(strSQLPath) Then
-                        ExecuteSQLScript(strSQLPath, objSQLConnection, strError)
-                        If Not String.IsNullOrEmpty(strError) Then Throw New Exception(strError)
-                    End If
-                Catch SQLex As Exception
-                    litError.Text = " Database Sample Creation Failed - " & SQLex.Message
-                    phdError.Visible = True
-                    wizInstallation.ActiveStepIndex = 2
-                End Try
+        End Try
+
+        Try
+            If chkCreateSampleData.Checked Then
+                Dim strSQLPath As String = Server.MapPath("~/Uploads/resources/kartrisSQL_SampleData.sql")
+                Dim strError As String = ""
+                If File.Exists(strSQLPath) Then
+                    ExecuteSQLScript(strSQLPath, objSQLConnection, strError)
+                    If Not String.IsNullOrEmpty(strError) Then Throw New Exception(strError)
+                End If
             End If
+        Catch ex As Exception
+            litError.Text = " Database Sample Creation Failed - " & ex.Message
+            phdError.Visible = True
+            wizInstallation.ActiveStepIndex = 2
         Finally
             If objSQLConnection.State = ConnectionState.Open Then objSQLConnection.Close()
         End Try
