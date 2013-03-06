@@ -19,11 +19,12 @@ cd "\CleanKartris\Kartris"
 del "c:\CleanKartris\Kartris\PrepareKartrisZip.bat"
 ECHO **
 ECHO CLEANING ERROR LOGS...
-IF EXIST "c:\CleanKartris\Kartris\Uploads\Errors" rd "c:\CleanKartris\Kartris\Uploads\Errors" /S /Q
+IF EXIST "c:\CleanKartris\Kartris\Uploads\Logs\Errors" rd "c:\CleanKartris\Kartris\Uploads\Logs\Errors" /S /Q
 ECHO DONE!
 ECHO **
 ECHO REMOVING TFS CACHE FILES...
-IF EXIST "c:\CleanKartris\Kartris\$TF*" rd "c:\CleanKartris\Kartris\$TF*" /S /Q
+IF EXIST "c:\CleanKartris\Kartris\$tf" rd "c:\CleanKartris\Kartris\$tf" /S /Q
+IF EXIST "c:\CleanKartris\Kartris\$tf1" rd "c:\CleanKartris\Kartris\$tf1" /S /Q
 ECHO DONE!
 ECHO **
 ECHO REMOVING SAMPLE MEDIA FILES...
