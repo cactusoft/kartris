@@ -69,7 +69,7 @@ Public Class KartrisHttpModule
             Dim webConfigFile As String = Path.Combine(HttpContext.Current.Request.PhysicalApplicationPath, "web.config")
             Dim webConfigReader As New System.Xml.XmlTextReader(New StreamReader(webConfigFile))
 
-            If Not ((webConfigReader.ReadToFollowing("globalization")) AndAlso (webConfigReader.GetAttribute("resourceProviderFactoryType") = "Kartris.SqlResourceProviderFactory")) Then
+            If Not ((webConfigReader.ReadToFollowing("globalization")) AndAlso (webConfigReader.GetAttribute("resourceProviderFactoryType") = "SqlResourceProviderFactory")) Then
                 'display 
                 If InStr(strCurrentPath.ToLower, "admin/install.aspx") = 0 AndAlso InStr(strCurrentPath.ToLower, ".css") = 0 AndAlso _
                 InStr(strCurrentPath.ToLower, ".png") = 0 AndAlso InStr(strCurrentPath.ToLower, ".axd") = 0 Then
