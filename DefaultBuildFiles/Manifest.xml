@@ -15,5 +15,6 @@
   <setAcl path="kartris/Skins" setAclAccess="Read" />
 	<setAcl path="kartris/Uploads" setAclAccess="Read,Write,Modify" />
 	<setAcl path="kartris/UserControls" setAclAccess="ReadAndExecute" />
-
+  <dbFullSql path="InstallSQL.sql" />
+  <dbFullSql path="kartris/Uploads/Resources/kartrisSQL_MainData.sql" />
 </MSDeploy.iisApp>

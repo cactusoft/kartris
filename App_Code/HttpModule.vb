@@ -63,7 +63,7 @@ Public Class KartrisHttpModule
     Sub Kartris_BeginRequest(ByVal sender As Object, ByVal e As EventArgs)
         Dim context As HttpContext = HttpContext.Current
         Dim strCurrentPath As String = context.Request.RawUrl.ToString
-        If Not context.Application("DBConnected") Then
+        If Not context.Application("CorrectGlobalizationTag") Then
             'read the web.config file and check if the globalization tags and language string providers are properly set
             ' - if not then we probably need to redirect to 'admin/install.aspx'
             Dim webConfigFile As String = Path.Combine(HttpContext.Current.Request.PhysicalApplicationPath, "web.config")
@@ -77,7 +77,7 @@ Public Class KartrisHttpModule
                     context.Response.End()
                 End If
             Else
-                context.Application("DBConnected") = True
+                context.Application("CorrectGlobalizationTag") = True
             End If
 
             webConfigReader.Close()
