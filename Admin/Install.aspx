@@ -212,15 +212,15 @@
 							</div>
 							<div class="spacer">
 							</div>
-							<div class="formrow">
-								<span class="checkbox">
-									<asp:CheckBox ID="chkCreateSampleData" runat="server" Text="<%$ Resources: Step3_CreateSampleData%>" />
-								</span>
-							</div>
 							<div class="spacer">
 							</div>
 						</asp:View>
 					</asp:MultiView>
+                    <div class="formrow">
+						<span class="checkbox">
+							<asp:CheckBox ID="chkCreateSampleData" runat="server" Text="<%$ Resources: Step3_CreateSampleData%>" />
+						</span>
+					</div>
 					<!-- -------- // STEP 3 - CONNECTION STRING CHECK -------- -->
 				</asp:WizardStep>
 				<asp:WizardStep runat="server" Title="4" ID="ws4_SetUpDatabase">
