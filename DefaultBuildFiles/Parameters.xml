@@ -58,5 +58,8 @@
 		<parameterEntry type="ProviderPath" scope="setAcl" match="kartris/UserControls" />
 	</parameter>
 
+  <!-- For db user -->
+  <parameter name="Dummy parameter" description="To allow portal to identify the app requires sql database. This does not do any changes to the package" defaultValue="None"
+  	tags="SQL,SQLConnectionString,Hidden,NoStore"/>
 
 </parameters>

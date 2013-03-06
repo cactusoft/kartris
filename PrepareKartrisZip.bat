@@ -33,9 +33,8 @@ ECHO **
 del "c:\CleanKartris\Kartris\uploads\resources\*.bak"
 del "c:\CleanKartris\Kartris\uploads\resources\*UpdateData*.sql"
 del "c:\CleanKartris\Kartris\uploads\resources\UpdateSQL.sql"
-ECHO Copying MainData SQL script to root...
-copy "c:\CleanKartris\Kartris\uploads\resources\kartrisSQL_MainData.sql" "c:\CleanKartris\InstallSQL.SQL"
-ECHO DONE!
+REM ECHO Copying MainData SQL script to root...
+REM copy "c:\CleanKartris\Kartris\uploads\resources\kartrisSQL_MainData.sql" "c:\CleanKartris\InstallSQL.SQL"
 REM ECHO DONE!
 REM ECHO **
 ECHO Copying default web.config file...
