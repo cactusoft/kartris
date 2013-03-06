@@ -1,6 +1,6 @@
 /**********************************************************************/
 /* Install.SQL                                                        */
-/* Creates a login and makes the user a member of db_owner            */
+/* Creates a login and makes the user a member of db roles            */
 /*                                                                    */
 /**********************************************************************/
 
@@ -10,9 +10,9 @@ DECLARE @dbName sysname,
       @dbPwd nvarchar(max);
 
 -- Set variables for database name, username and password
-SET @dbName = 'PlaceholderForDbName';
-SET @dbUser = 'PlaceholderForDbUsername';
-SET @dbPwd = 'PlaceholderForDbPassword';
+SET @dbName = 'PlaceHolderForDb';
+SET @dbUser = 'PlaceHolderForUser';
+SET @dbPwd = 'PlaceHolderForPassword';
 
 DECLARE @cmd nvarchar(max)
 
@@ -27,13 +27,14 @@ END
 -- Create database user and map to login
 -- and add user to the datareader, datawriter, ddladmin and securityadmin roles
 --
-SET @cmd = N'USE ' + quotename(@DBName) + N'; 
+SET @cmd = N'USE ' + quotename(@DBName) + N';
 IF( NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = ''' + replace(@dbUser, '''', '''''') + N'''))
 BEGIN
     print ''-- Creating user'';
     CREATE USER ' + quotename(@dbUser) + N' FOR LOGIN ' + quotename(@dbUser) + N';
     print ''-- Adding user'';
     EXEC sp_addrolemember ''db_owner'', ''' + replace(@dbUser, '''', '''''') + N''';
+    print ''-- Adding user'';
 END'
 EXEC(@cmd)
 GO
