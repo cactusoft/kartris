@@ -33,9 +33,8 @@ ECHO **
 del "c:\CleanKartris\Kartris\uploads\resources\*.bak"
 del "c:\CleanKartris\Kartris\uploads\resources\*UpdateData*.sql"
 del "c:\CleanKartris\Kartris\uploads\resources\UpdateSQL.sql"
-ECHO Copying SQL scripts to Web root...
+ECHO Copying MainData SQL script to Web root...
 copy "c:\CleanKartris\Kartris\uploads\resources\kartrisSQL_MainData.sql" "c:\CleanKartris\Kartris\kartrisSQL_MainData.SQL"
-copy "c:\CleanKartris\Kartris\uploads\resources\kartrisSQL_SampleData.sql" "c:\CleanKartris\Kartris\kartrisSQL_SampleData.SQL"
 ECHO DONE!
 REM ECHO DONE!
 REM ECHO **
