@@ -22,6 +22,10 @@ ECHO CLEANING ERROR LOGS...
 IF EXIST "c:\CleanKartris\Kartris\Uploads\Errors" rd "c:\CleanKartris\Kartris\Uploads\Errors" /S /Q
 ECHO DONE!
 ECHO **
+ECHO REMOVING TFS CACHE FILES...
+IF EXIST "c:\CleanKartris\Kartris\$TF*" rd "c:\CleanKartris\Kartris\$TF*" /S /Q
+ECHO DONE!
+ECHO **
 ECHO REMOVING SAMPLE MEDIA FILES...
 del "c:\CleanKartris\Kartris\Uploads\Media\*.*" /Q
 ECHO DONE!
@@ -29,6 +33,10 @@ ECHO **
 del "c:\CleanKartris\Kartris\uploads\resources\*.bak"
 del "c:\CleanKartris\Kartris\uploads\resources\*UpdateData*.sql"
 del "c:\CleanKartris\Kartris\uploads\resources\UpdateSQL.sql"
+ECHO Copying SQL scripts to Web root...
+copy "c:\CleanKartris\Kartris\uploads\resources\kartrisSQL_MainData.sql" "c:\CleanKartris\Kartris\kartrisSQL_MainData.SQL"
+copy "c:\CleanKartris\Kartris\uploads\resources\kartrisSQL_SampleData.sql" "c:\CleanKartris\Kartris\kartrisSQL_SampleData.SQL"
+ECHO DONE!
 REM ECHO DONE!
 REM ECHO **
 ECHO Copying default web.config file...
