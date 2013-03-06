@@ -199,13 +199,13 @@ Partial Class Admin_Install
                         ModifiedConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration(Request.ApplicationPath)
                         Dim configSection As System.Web.Configuration.GlobalizationSection = CType(ModifiedConfig.GetSection("system.web/globalization"),  _
                         System.Web.Configuration.GlobalizationSection)
-                        If configSection.ResourceProviderFactoryType = "Kartris.SqlResourceProviderFactory" Then result = True
+                        If configSection.ResourceProviderFactoryType = "SqlResourceProviderFactory" Then result = True
                     End If
                 Catch ex As Exception
                     'Hmmm....Kartris must be running under medium trust
                     ModifiedConfig = Nothing
                     Dim webConfigReader As New XmlTextReader(New StreamReader(webConfigFile))
-                    result = ((webConfigReader.ReadToFollowing("globalization")) AndAlso (webConfigReader.GetAttribute("resourceProviderFactoryType") = "Kartris.SqlResourceProviderFactory"))
+                    result = ((webConfigReader.ReadToFollowing("globalization")) AndAlso (webConfigReader.GetAttribute("resourceProviderFactoryType") = "SqlResourceProviderFactory"))
                     webConfigReader.Close()
                 End Try
 
@@ -453,7 +453,7 @@ Partial Class Admin_Install
 
                 Dim configSection As System.Web.Configuration.GlobalizationSection = CType(ModifiedConfig.GetSection("system.web/globalization"),  _
                 System.Web.Configuration.GlobalizationSection)
-                configSection.ResourceProviderFactoryType = "Kartris.SqlResourceProviderFactory"
+                configSection.ResourceProviderFactoryType = "SqlResourceProviderFactory"
 
                 If phdConnectionString.Visible Then
                     ModifiedConfig.ConnectionStrings.ConnectionStrings("KartrisSQLConnection").ConnectionString = strConnectionString
@@ -1018,7 +1018,7 @@ Partial Class Admin_Install
         Dim elemWeb As XmlElement = docSave.CreateElement("globalization")
 
         Dim Resourceattrib As XmlAttribute = docSave.CreateAttribute("resourceProviderFactoryType")
-        Resourceattrib.Value = "Kartris.SqlResourceProviderFactory"
+        Resourceattrib.Value = "SqlResourceProviderFactory"
         elemWeb.Attributes.Append(Resourceattrib)
 
         xmlSystemWebnode.AppendChild(elemWeb)
