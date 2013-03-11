@@ -121,7 +121,7 @@
     description="Connection string to enter into config"
     defaultValue="Data Source={Database Server};database={Database Name};user id={Database Username};password={Database Password}"
     tags="Hidden, SQL">
-    <parameterEntry kind="XmlFile" scope="\\web\.config$" match="//*[local-name()='connectionStrings']/*[local-name()='add'][@name='KartrisSQLConnection']/@connectionString" tags="Sql, SqlConnectionString, Hidden" />
+    <parameterEntry type="XmlFile" scope="\\web\.config$" match="//*[local-name()='connectionStrings']/*[local-name()='add'][@name='KartrisSQLConnection']/@connectionString" />
   </parameter>
 
 
