@@ -136,10 +136,9 @@
         <asp:FileUpload ID="filUpload" runat="server" />
         <asp:Button ID="btnUpload" runat="server" Text="<%$ Resources: _Kartris, ContentText_Upload %>" CssClass="button" />
         <asp:Button ID="btnSaveImport" runat="server" Text="Save" CssClass="button" Visible="false" /><br />
-        <asp:GridView CssClass="kartristable" ID="gvwImportStockLevel" runat="server" AllowSorting="true"
+        <asp:GridView CssClass="kartristable" ID="gvwImportStockLevel" runat="server" AllowSorting="false"
             AutoGenerateColumns="False" DataKeyNames="SKU" AutoGenerateEditButton="False"
-            GridLines="None" PagerSettings-PageButtonCount="10" SelectedIndex="0" AllowPaging="true"
-            PageSize="10">
+            GridLines="None" PagerSettings-PageButtonCount="10" SelectedIndex="0" AllowPaging="false">
             <Columns>
                 <asp:TemplateField>
                     <HeaderTemplate>
