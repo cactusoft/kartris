@@ -1,8 +1,11 @@
 ﻿<%@ Page Title="" Language="VB" MasterPageFile="~/Skins/Admin/Template.master" AutoEventWireup="false" CodeFile="_GeneralFiles.aspx.vb" Inherits="Admin_GeneralFiles" %>
 
-<asp:Content ID="Content1" ContentPlaceHolderID="phdHead" runat="Server">
+<asp:Content ID="cntHead" ContentPlaceHolderID="phdHead" runat="Server">
 </asp:Content>
-<asp:Content ID="Content2" ContentPlaceHolderID="phdMain" runat="Server">
+<asp:Content ID="cntMain" ContentPlaceHolderID="phdMain" runat="Server">
+    <asp:UpdatePanel ID="updMain" runat="server" UpdateMode="Conditional">
+    <ContentTemplate>
+    <div id="page_generalfiles">
     <h1>
         <asp:Literal ID="litPageTitleGeneralFiles" runat="server" Text="<%$ Resources: _Kartris, PageTitle_GeneralFiles %>" /></h1>
     <asp:MultiView ID="mvwGeneralFiles" runat="server" ActiveViewIndex="0">
@@ -19,8 +22,15 @@
                                     <asp:Literal ID="litNumber" runat="server" Text='<%# Container.DataItemIndex + 1 %>' />
                                 </ItemTemplate>
                             </asp:TemplateField>
-                            <asp:BoundField DataField="F_Name" HeaderText="<%$ Resources:_Kartris, ContentText_Filename %>"
-                                ItemStyle-CssClass="column2" />
+                            <asp:TemplateField>
+                                <ItemStyle CssClass="column2" />
+                                <HeaderTemplate>
+                                    <asp:Literal runat="server" ID="litContentFilename" Text='<%$ Resources:_Kartris, ContentText_Filename %>'></asp:Literal>
+                                </HeaderTemplate>
+                                <ItemTemplate>
+                                    <asp:HyperLink ID="lnkFile" runat="server" Text='<%# Eval("F_Name") %>' NavigateUrl='<%# FormatFilePath(Eval("F_Name")) %>' Target="_blank"></asp:HyperLink>
+                                </ItemTemplate>
+                            </asp:TemplateField>
                             <asp:BoundField DataField="F_Type" HeaderText="<%$ Resources:_Kartris, ContentText_FileType %>"
                                 ItemStyle-CssClass="column2" />
                             <asp:BoundField DataField="F_Size" HeaderText="<%$ Resources:_Kartris, ContentText_FileSize %>"
@@ -88,6 +98,11 @@
                 <asp:FileUpload ID="filUploader" runat="server" />
             </ContentTemplate>
         </asp:UpdatePanel>
+    <ajaxToolkit:ModalPopupExtender ID="popExtender" runat="server" TargetControlID="lnkBtn"
+        PopupControlID="pnlMessage" OnOkScript="onUpload" BackgroundCssClass="popup_background"
+        OkControlID="lnkExtenderOk" CancelControlID="lnkExtenderCancel" DropShadow="False"
+        RepositionMode="None">
+    </ajaxToolkit:ModalPopupExtender>
     </asp:Panel>
     <asp:UpdatePanel ID="updConfirmationMessage" runat="server">
         <ContentTemplate>
@@ -108,10 +123,9 @@
             </ajaxToolkit:ModalPopupExtender>
         </ContentTemplate>
     </asp:UpdatePanel>
-    <ajaxToolkit:ModalPopupExtender ID="popExtender" runat="server" TargetControlID="lnkBtn"
-        PopupControlID="pnlMessage" OnOkScript="onUpload" BackgroundCssClass="popup_background"
-        OkControlID="lnkExtenderOk" CancelControlID="lnkExtenderCancel" DropShadow="False"
-        RepositionMode="None">
-    </ajaxToolkit:ModalPopupExtender>
+
+
+    </div>
+        </ContentTemplate></asp:UpdatePanel>
 </asp:Content>
 
