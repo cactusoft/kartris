@@ -846,14 +846,15 @@ Public Class VersionsBLL
             cmdUpdateVersionStock.CommandText = "_spKartrisVersions_UpdateStockLevelByCode"
             Dim savePoint As SqlTransaction = Nothing
             cmdUpdateVersionStock.CommandType = CommandType.StoredProcedure
+            cmdUpdateVersionStock.CommandTimeout = 2700
             Try
                 sqlConn.Open()
                 savePoint = sqlConn.BeginTransaction()
                 cmdUpdateVersionStock.Transaction = savePoint
                 For Each row As DataRow In tblVersionsToUpdate.Rows
                     cmdUpdateVersionStock.Parameters.AddWithValue("@V_CodeNumber", row("VersionCode"))
-                    cmdUpdateVersionStock.Parameters.AddWithValue("@V_Quantity", FixNullToDB(row("StockQty"), "g"))
-                    cmdUpdateVersionStock.Parameters.AddWithValue("@V_QuantityWarnLevel", FixNullToDB(row("WarnLevel"), "g"))
+                    cmdUpdateVersionStock.Parameters.AddWithValue("@V_Quantity", row("StockQty"))
+                    cmdUpdateVersionStock.Parameters.AddWithValue("@V_QuantityWarnLevel", row("WarnLevel"))
                     cmdUpdateVersionStock.ExecuteNonQuery()
                     cmdUpdateVersionStock.Parameters.Clear()
                 Next
