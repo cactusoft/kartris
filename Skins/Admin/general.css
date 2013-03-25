@@ -303,6 +303,9 @@ input.cancelbutton:hover                { background-color: #888; border-color: 
 .blackbuttons a:link                    { z-index: 2; width: 32px; height: 32px; padding: 0; line-height: 0; font-size: 0; margin: 7px 2px 0 0; }
 .bluebuttons a:visited,
 .bluebuttons a:link						{ z-index: 2; background-color: transparent; width: 32px; height: 32px; padding: 0; line-height: 0; font-size: 0; margin: 0 1px 0 0; }
+.topsubmitbuttons input.addbutton,
+.topsubmitbuttons a.addbutton:visited,
+.topsubmitbuttons a.addbutton:link     { background-image: url(Images/button_add.png); }
 .topsubmitbuttons input.savebutton,
 .topsubmitbuttons a.savebutton:visited,
 .topsubmitbuttons a.savebutton:link     { background-image: url(Images/button_save.png); }
