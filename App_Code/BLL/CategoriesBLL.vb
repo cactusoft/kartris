@@ -328,6 +328,7 @@ Public Class CategoriesBLL
             cmd.ExecuteNonQuery()
 
             If pNewParents.EndsWith(",") Then pNewParents = pNewParents.TrimEnd(",")
+            If pNewParents.Length = 0 Then pNewParents = "0"
 
             Dim cmdAddParents As New SqlCommand("_spKartrisCategoryHierarchy_AddParentList", sqlConn, savePoint)
             cmdAddParents.CommandType = CommandType.StoredProcedure
