@@ -192,9 +192,9 @@
                             <br /><br />
                             <div class="spacer line"></div>
 
-                            <h2 style='<%# FormatTotalColour(Eval("U_CustomerBalance"))%>'>
+                            <h2 style='<%# FormatTotalColour(CkartrisDataManipulation.FixNullFromDB(Eval("U_CustomerBalance")))%>'>
                             <span class="totallabel"><asp:Label ID="litUserBalanceLabel" runat="server" Text="<%$ Resources: _Users, ContentText_CustomerBalance %>" /></span>
-                            <span class="total"><asp:Literal ID="litUserBalance" runat="server" Text='<%#CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, Eval("U_CustomerBalance"))%>'></asp:Literal></span>
+                            <span class="total"><asp:Literal ID="litUserBalance" runat="server" Text='<%#CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, CkartrisDataManipulation.FixNullFromDB(Eval("U_CustomerBalance")))%>'></asp:Literal></span>
                             </h2>
                             
                         </ContentTemplate>
