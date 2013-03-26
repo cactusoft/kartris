@@ -310,9 +310,9 @@ SUPPORT TICKETS
 */
 #supporttickets td.idfield              { width: 45px }
 #supporttickets td.subject              { font-weight: bold }
-#supporttickets td.opened               { width: 59px }
-#supporttickets td.closed               { width: 59px }
-#supporttickets td.selectfield          { width: 55px }
+#supporttickets td.opened               { width: 100px }
+#supporttickets td.closed               { width: 100px }
+#supporttickets td.selectfield          { width: 55px; text-align: right; }
 #supporttickets div.userreply           { margin: 10px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #f5f5f5; -moz-border-radius: 8px; -webkit-border-radius: 8px; }
 #supporttickets div.ownerreply          { margin: 10px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #ded; -moz-border-radius: 8px; -webkit-border-radius: 8px; }
 #supporttickets p.details               { color: #999; padding-bottom: 5px; }
