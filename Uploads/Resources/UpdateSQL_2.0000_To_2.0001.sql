@@ -16,3 +16,7 @@ DECLARE @LanguageID as tinyint;
 	DEALLOCATE langCursor;
 	
 GO
+
+-- ****** Drop FK between Products and Customer Groups
+ALTER TABLE [dbo].[tblKartrisProducts] DROP CONSTRAINT [FK_tblKartrisProducts_tblKartrisCustomerGroups]
+GO
