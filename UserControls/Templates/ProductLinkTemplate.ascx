@@ -10,7 +10,7 @@
             <div class="details">
                 <h2>
                     <asp:HyperLink EnableViewState="false" ID="lnkProductName" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>'
-                        Text='<%# Server.HtmlEncode(Eval("P_Name")) %>'></asp:HyperLink></h2>
+                        Text='<% DisplayProductName() %>'></asp:HyperLink></h2>
             </div>
         </div>
     </div>
