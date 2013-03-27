@@ -8,7 +8,7 @@
             <user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="False" />
             <h2>
                 <asp:HyperLink EnableViewState="false" ID="lnkProductName" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>'
-                    Text='<%# Server.HtmlEncode(Eval("P_Name")) %>'></asp:HyperLink></h2>
+                    Text='<% DisplayProductName() %>'></asp:HyperLink></h2>
             <%--            <% If Len(litStrapLine.Text) > 0 Then %>
                 <em class="strapline">
                     <asp:Literal ID="litStrapLine" runat="server" Text='<%#Eval("P_StrapLine")%>'></asp:Literal>

@@ -16,7 +16,7 @@
                                 <div class="details">
                                     <h2>
                                         <asp:HyperLink EnableViewState="false" ID="lnkProductName" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>'
-                                            Text='<%# Eval("P_Name") %>' />
+                                            Text='<% DisplayProductName() %>' />
                                     </h2>
                                     <%--<em class="strapline">
                                             <asp:Literal ID="litStrapLine" runat="server" Text='<%# Eval("P_StrapLine") %>'></asp:Literal></em>--%>
