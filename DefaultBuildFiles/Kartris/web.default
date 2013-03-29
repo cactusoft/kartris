@@ -37,7 +37,12 @@ All rights reserved.
 			<httpRuntime requestValidationMode="2.0" />
 		</system.web>
 	</location>
-	
+	<location path="Callback.aspx">
+		<system.web>
+			<pages validateRequest="false" enableEventValidation="false" viewStateEncryptionMode="Always" />
+			<httpRuntime requestValidationMode="2.0" />
+		</system.web>
+	</location>
 	<system.web>
 		<caching>
 			<cache disableExpiration="true"/>
@@ -244,7 +249,7 @@ All rights reserved.
 		<machineKey validationKey="AutoGenerate,IsolateApps" decryptionKey="AutoGenerate,IsolateApps" validation="SHA1" decryption="Auto"/>
 	</system.web>
 	<system.webServer>
-    <validation validateIntegratedModeConfiguration="false"/>
+		<validation validateIntegratedModeConfiguration="false"/>
 		<handlers>
 			<add name="ChartImg" path="ChartImg.axd" verb="*" type="System.Web.UI.DataVisualization.Charting.ChartHttpHandler, System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35"/>
 		</handlers>
