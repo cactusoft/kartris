@@ -5,9 +5,9 @@
 //------------------------------------------------------------------------------
 
 function pageLoad() {
-    var backgroundElementLargeImage = $get('ctl00_cntMain_UC_ProductView_tbcProduct_tabMain_fvwProduct_UC_PopUpLargeView_popMessage_backgroundElement');
-    var backgroundElementMedia = $get('ctl00_cntMain_UC_ProductView_tbcProduct_tabMain_fvwProduct_UC_PopUpMedia_popMessage_backgroundElement');
-    var backgroundElementEmptyBasket = $get('ctl00_cntMain_UC_BasketMain_popEmptyBasket_backgroundElement');
+    var backgroundElementLargeImage = $get('cntMain_UC_ProductView_tbcProduct_tabMain_fvwProduct_UC_PopUpLargeView_popMessage_backgroundElement');
+    var backgroundElementMedia = $get('cntMain_UC_ProductView_tbcProduct_tabMain_fvwProduct_UC_PopUpMedia_popMessage_backgroundElement');
+    var backgroundElementEmptyBasket = $get('cntMain_UC_BasketMain_popEmptyBasket_backgroundElement');
 
     if (backgroundElementLargeImage)
         $addHandler(backgroundElementLargeImage, 'click', hideModalPopupViaClientLargeImage);
@@ -20,17 +20,17 @@ function pageLoad() {
 }
 
 function hideModalPopupViaClientLargeImage(e) {
-    var modalPopupBehaviorLargeImage = $find('ctl00_cntMain_UC_ProductView_tbcProduct_tabMain_fvwProduct_UC_PopUpLargeView_popMessage');
+    var modalPopupBehaviorLargeImage = $find('cntMain_UC_ProductView_tbcProduct_tabMain_fvwProduct_UC_PopUpLargeView_popMessage');
     if (modalPopupBehaviorLargeImage) modalPopupBehaviorLargeImage.hide();
 }
 
 function hideModalPopupViaClientMedia(e) {
-    var modalPopupBehaviorMedia = $find('ctl00_cntMain_UC_ProductView_tbcProduct_tabMain_fvwProduct_UC_PopUpMedia_popMessage');
+    var modalPopupBehaviorMedia = $find('cntMain_UC_ProductView_tbcProduct_tabMain_fvwProduct_UC_PopUpMedia_popMessage');
     if (modalPopupBehaviorMedia) modalPopupBehaviorMedia.hide();
 }
 
 function hideModalPopupViaClientEmptyBasket(e) {
-    var modalPopupBehaviorEmptyBasket = $find('ctl00_cntMain_UC_BasketMain_popEmptyBasket');
+    var modalPopupBehaviorEmptyBasket = $find('cntMain_UC_BasketMain_popEmptyBasket');
     if (modalPopupBehaviorEmptyBasket) modalPopupBehaviorEmptyBasket.hide();
 }
 
