@@ -146,22 +146,6 @@ Partial Class _Checkout
                         'this customer
                         If blnOkToAdd Then
                             Dim strGatewayName As String = arrGateway(0)
-                            If strGatewayName.ToLower = "po_offlinepayment" Then
-
-                                'Default name for PO (offline payment)
-                                strGatewayName = GetGlobalResourceObject("Checkout", "ContentText_Po")
-
-                                txtPurchaseOrderNo.Style.Item("display") = ""
-                                phdPONumber.Style.Item("display") = ""
-
-                                'script to show PO Number input when PO is selected as the payment option
-                                Dim strScript As String = String.Empty
-                                strScript += "var textBox = document.getElementById('" & txtPurchaseOrderNo.ClientID & "');"
-                                strScript += "var placeholder = document.getElementById('" & phdPONumber.ClientID & "');"
-                                strScript += "if(document.getElementById('" & ddlPaymentGateways.ClientID & "').value=='" & arrGateway(0).ToString & "')"
-                                strScript += "{placeholder.style.display='';textBox.style.display='';} else {placeholder.style.display='none';textBox.value=''}"
-                                ddlPaymentGateways.Attributes.Add("onChange", strScript)
-                            End If
 
                             'Get the 'friendly' name of the payment system from 
                             'the gateway's config. Note you can have friendly
@@ -180,6 +164,23 @@ Partial Class _Checkout
                                 ddlPaymentGateways.Items.Add(New ListItem(strFriendlyName, arrGateway(0).ToString))
                             Else
                                 ddlPaymentGateways.Items.Add(New ListItem(strGatewayName, arrGateway(0).ToString))
+                            End If
+
+                            If strGatewayName.ToLower = "po_offlinepayment" Then
+
+                                'Default name for PO (offline payment)
+                                strGatewayName = GetGlobalResourceObject("Checkout", "ContentText_Po")
+
+                                txtPurchaseOrderNo.Style.Item("display") = ""
+                                phdPONumber.Style.Item("display") = ""
+
+                                'script to show PO Number input when PO is selected as the payment option
+                                Dim strScript As String = String.Empty
+                                strScript += "var textBox = document.getElementById('" & txtPurchaseOrderNo.ClientID & "');"
+                                strScript += "var placeholder = document.getElementById('" & phdPONumber.ClientID & "');"
+                                strScript += "if(document.getElementById('" & ddlPaymentGateways.ClientID & "').value=='" & arrGateway(0).ToString & "')"
+                                strScript += "{placeholder.style.display='';textBox.style.display='';} else {placeholder.style.display='none';textBox.value=''}"
+                                ddlPaymentGateways.Attributes.Add("onChange", strScript)
                             End If
 
                         End If
