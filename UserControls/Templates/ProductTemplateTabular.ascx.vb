@@ -55,4 +55,15 @@ Partial Class ProductTemplateTabular
         End Select
     End Sub
 
+    'Do this with function as can use try catch,
+    'easier to trap errors if bad data import,
+    'or apply other rules
+    Public Function DisplayProductName() As String
+        Try
+            Return Server.HtmlEncode(Eval("P_Name"))
+        Catch ex As Exception
+            'do nowt
+            Return ""
+        End Try
+    End Function
 End Class
