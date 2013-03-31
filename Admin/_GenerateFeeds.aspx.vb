@@ -147,7 +147,7 @@ Partial Class Admin_GenerateFeeds
     ''' Generate start lines of sitemap.xml file
     ''' </summary>
     Private Function CreateXMLSiteMap(ByVal strFileName As String) As XmlTextWriter
-        Dim xmlSiteMap As New XmlTextWriter(Server.MapPath(strAppUploadsFolder) & "\temp\" & strFileName, System.Text.Encoding.UTF8)
+        Dim xmlSiteMap As New XmlTextWriter(Server.MapPath("~/") & strFileName, System.Text.Encoding.UTF8)
         With xmlSiteMap
             .WriteStartDocument()
             .WriteWhitespace(vbCrLf)
