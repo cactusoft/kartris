@@ -118,7 +118,7 @@ Partial Class Admin_SupportTickets
 
     Protected Sub gvwTickets_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvwTickets.PageIndexChanging
         gvwTickets.PageIndex = e.NewPageIndex
-        LoadSupportTickets()
+        If litListingType.Text = "Search" Then FindTickets() Else LoadSupportTickets()
     End Sub
 
     Protected Sub gvwTickets_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles gvwTickets.RowCommand
@@ -248,6 +248,8 @@ Partial Class Admin_SupportTickets
     End Sub
 
     Protected Sub btnClear_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnClear.Click
+        txtSearchStarting.Text = ""
+        txtUser.Text = ""
         ddlLanguages.SelectedValue = LanguagesBLL.GetDefaultLanguageID()
         ddlAssignedLogin.SelectedIndex = 0
         ddlTicketType.SelectedIndex = 0
