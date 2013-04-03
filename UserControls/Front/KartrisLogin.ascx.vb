@@ -212,6 +212,21 @@ Partial Class KartrisLogin
                         sbEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerCode") & strPassword & vbCrLf & vbCrLf)
                         sbEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpFooter1") & CkartrisBLL.WebShopURL & "customer.aspx" & GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpFooter2"))
                         sbEmailText.Replace("<br>", vbCrLf).Replace("<br />", vbCrLf)
+
+                        Dim blnHTMLEmail As Boolean = KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y"
+                        If blnHTMLEmail Then
+                            Dim strHTMLEmailText As String = RetrieveHTMLEmailTemplate("NewCustomerSignUp")
+                            'build up the HTML email if template is found
+                            If Not String.IsNullOrEmpty(strHTMLEmailText) Then
+                                strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
+                                strHTMLEmailText = strHTMLEmailText.Replace("[websitename]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
+                                strHTMLEmailText = strHTMLEmailText.Replace("[customeremail]", strEmail)
+                                strHTMLEmailText = strHTMLEmailText.Replace("[customerpassword]", strPassword)
+                                sbEmailText.Clear()
+                                sbEmailText.Append(strHTMLEmailText)
+                            End If
+                        End If
+
                         'Send the email
                         SendEmail(LanguagesBLL.GetEmailFrom(CInt(Session("LANG"))), strEmail, strSubject, sbEmailText.ToString)
                     End If
