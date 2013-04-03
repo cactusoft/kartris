@@ -778,7 +778,7 @@ Partial Class _Checkout
                 Dim strSubject As String = ""
                 Dim strTempEmailTextHolder As String = ""
 
-                Dim sbdEmailText As StringBuilder = New StringBuilder
+                Dim sbdNewCustomerEmailText As StringBuilder = New StringBuilder
                 Dim sbdBodyText As StringBuilder = New StringBuilder
                 Dim sbdBasketItems As StringBuilder = New StringBuilder
 
@@ -1119,11 +1119,11 @@ Partial Class _Checkout
                     'Build up email text
                     strSubject = GetGlobalResourceObject("Email", "Config_Subjectline5")
 
-                    sbdEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpHeader") & vbCrLf & vbCrLf)
-                    sbdEmailText.Append(GetGlobalResourceObject("Email", "EmailText_EmailAddress") & UC_KartrisLogin.UserEmailAddress & vbCrLf)
-                    sbdEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerCode") & UC_KartrisLogin.UserPassword & vbCrLf & vbCrLf)
-                    sbdEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpFooter1") & CkartrisBLL.WebShopURL & "Customer.aspx" & GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpFooter2"))
-                    sbdEmailText.Replace("<br>", vbCrLf).Replace("<br />", vbCrLf)
+                    sbdNewCustomerEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpHeader") & vbCrLf & vbCrLf)
+                    sbdNewCustomerEmailText.Append(GetGlobalResourceObject("Email", "EmailText_EmailAddress") & UC_KartrisLogin.UserEmailAddress & vbCrLf)
+                    sbdNewCustomerEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerCode") & UC_KartrisLogin.UserPassword & vbCrLf & vbCrLf)
+                    sbdNewCustomerEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpFooter1") & CkartrisBLL.WebShopURL & "Customer.aspx" & GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpFooter2"))
+                    sbdNewCustomerEmailText.Replace("<br>", vbCrLf).Replace("<br />", vbCrLf)
                 End If
 
                 sbdBodyText.Insert(0, sbdBasketItems.ToString)
@@ -1256,7 +1256,21 @@ Partial Class _Checkout
 
                     'Send new account email to new customer
                     If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" And blnNewUser Then
-                        SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, strSubject, sbdEmailText.ToString)
+
+                        Dim blnHTMLEmail As Boolean = KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y"
+                        If blnHTMLEmail Then
+                            Dim strHTMLEmailText As String = RetrieveHTMLEmailTemplate("NewCustomerSignUp")
+                            'build up the HTML email if template is found
+                            If Not String.IsNullOrEmpty(strHTMLEmailText) Then
+                                strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
+                                strHTMLEmailText = strHTMLEmailText.Replace("[websitename]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
+                                strHTMLEmailText = strHTMLEmailText.Replace("[customeremail]", UC_KartrisLogin.UserEmailAddress)
+                                strHTMLEmailText = strHTMLEmailText.Replace("[customerpassword]", UC_KartrisLogin.UserPassword)
+                                sbdNewCustomerEmailText.Clear()
+                                sbdNewCustomerEmailText.Append(strHTMLEmailText)
+                            End If
+                        End If
+                        SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, strSubject, sbdNewCustomerEmailText.ToString)
                     End If
 
                     'Mailing List
