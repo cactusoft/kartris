@@ -24,6 +24,13 @@ Partial Class Admin_MarkupPrices
             Page.Title = GetGlobalResourceObject("_MarkupPrices", "PageTitle_MarkupPrices") & " | " & GetGlobalResourceObject("_Kartris", "ContentText_KartrisName")
             InitializeContents()
         End If
+        If ddlSupplier.Items.Count <= 1 Then
+            Dim drwSuppliers As DataRow() = KartSettingsManager.GetSuppliersFromCache.Select("SUP_Live = 1")
+            ddlSupplier.DataTextField = "SUP_Name"
+            ddlSupplier.DataValueField = "SUP_ID"
+            ddlSupplier.DataSource = drwSuppliers
+            ddlSupplier.DataBind()
+        End If
     End Sub
 
     Sub InitializeContents()
@@ -53,6 +60,10 @@ Partial Class Admin_MarkupPrices
         Dim numFromPrice As Single = -1 '' default min price
         Dim numToPrice As Single = 99999999999 '' default max price
         Dim strCategories As String = Nothing, strCategoryIDs As String = "0"
+        Dim numSupplierID As Integer
+
+        'Collect value of supplier dropdown
+        numSupplierID = ddlSupplier.SelectedValue
 
         If Not String.IsNullOrEmpty(txtFromPrice.Text) AndAlso IsNumeric(txtFromPrice.Text) Then
             numFromPrice = CSng(txtFromPrice.Text)
@@ -75,14 +86,24 @@ Partial Class Admin_MarkupPrices
             Exit Sub
         End If
 
-        Dim dtbVersions As DataTable = VersionsBLL._GetVersionsByCategoryList(Session("_LANG"), numFromPrice, numToPrice, strCategoryIDs)
+        Dim dtbVersionsRaw As DataTable = VersionsBLL._GetVersionsByCategoryList(Session("_LANG"), numFromPrice, numToPrice, strCategoryIDs)
 
+        'Here we filter the raw versions by supplier ID if the supplier ID is not zero
+        If numSupplierID > 0 Then
+            dtbVersionsRaw.DefaultView.RowFilter = ("P_SupplierID=" & numSupplierID)
+        Else
+            'Just leave as is
+        End If
+
+        Dim dtbVersions As DataTable = dtbVersionsRaw.DefaultView.ToTable
+
+        'Build up list of version IDs in order to pull
+        'out qty discounts
         Dim strVersionIDs As String = ""
         For Each drwVersion As DataRow In dtbVersions.Rows
             If strVersionIDs <> "" Then strVersionIDs += ","
             strVersionIDs &= drwVersion("V_ID")
         Next
-
 
         If ddlTargetField.SelectedValue = "qd" Then
             dtbVersions = VersionsBLL._GetQuantityDiscountsByVersionIDList(strVersionIDs, Session("_LANG"))
