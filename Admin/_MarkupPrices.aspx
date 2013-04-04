@@ -60,6 +60,18 @@
                                             </ContentTemplate>
                                         </asp:UpdatePanel>
                                     </li>
+
+
+                                    <!-- Supplier (SupplierID) -->
+                                    <li><span class="Kartris-DetailsView-Name">
+                                        <asp:Label ID="litFormLabelSupplier" runat="server" Text="<%$ Resources: _Product, FormLabel_Supplier %>"
+                                            AssociatedControlID="ddlSupplier"></asp:Label>
+                                    </span><span class="Kartris-DetailsView-Value">
+                                        <asp:DropDownList ID="ddlSupplier" runat="server" AppendDataBoundItems="true">
+                                            <asp:ListItem Text="<%$ Resources: _Kartris, ContentText_None %>" Value="0"></asp:ListItem>
+                                        </asp:DropDownList>
+                                    </span></li>
+
                                 </ul>
                                 <h2>
                                     <asp:Literal ID="litContentTextPriceModification" runat="server" Text="<%$ Resources: _MarkupPrices, ContentText_PriceModification %>" />
@@ -98,10 +110,8 @@
                     </asp:View>
                     <asp:View ID="viwStep2" runat="server">
                         <asp:LinkButton ID="lnkBtnBack" runat="server" Text='<%$ Resources: _Kartris, ContentText_BackLink %>'
-                            CssClass="linkbutton icon_back floatright" CausesValidation="false"></asp:LinkButton>
+                            CssClass="linkbutton icon_back floatright" CausesValidation="false"></asp:LinkButton><br />
                         <strong>
-                            <%--                <asp:Literal ID="litProcessDetails" runat="server"></asp:Literal><br /><br /></strong>--%>
-                            <%--                <asp:Literal ID="litContentTextMarkupConfirmText" runat="server" Text="<%$ Resources: _MarkupPrices, ContentText_MarkupConfirmText %>"></asp:Literal>--%>
                             <asp:GridView ID="gvwVersions" runat="server" CssClass="kartristable" AllowPaging="false"
                                 AllowSorting="false" AutoGenerateColumns="False">
                                 <Columns>
