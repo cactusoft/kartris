@@ -1268,9 +1268,11 @@ Partial Class _Checkout
                                 strHTMLEmailText = strHTMLEmailText.Replace("[customerpassword]", UC_KartrisLogin.UserPassword)
                                 sbdNewCustomerEmailText.Clear()
                                 sbdNewCustomerEmailText.Append(strHTMLEmailText)
+                            Else
+                                blnHTMLEmail = False
                             End If
                         End If
-                        SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, strSubject, sbdNewCustomerEmailText.ToString)
+                        SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, strSubject, sbdNewCustomerEmailText.ToString, , , , , blnHTMLEmail)
                     End If
 
                     'Mailing List
@@ -1711,3 +1713,5 @@ Partial Class _Checkout
         Return blnPassed
     End Function
 End Class
+
+
