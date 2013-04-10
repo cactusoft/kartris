@@ -62,7 +62,7 @@ Partial Class UserControls_Back_ShippingRates
                     End If
                 Next
 
-                UpdateShippingRate(CByte(e.CommandArgument), _
+                UpdateShippingRate(CInt(e.CommandArgument), _
                                    HandleDecimalValues(CType(e.Item.FindControl("txtHigherOrdersRate"), TextBox).Text), strGatewaysList)
 
             Case "NewRate"
