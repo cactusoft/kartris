@@ -13,6 +13,7 @@
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
 Partial Class UserControls_Back_HTMLEditor
+
     Inherits System.Web.UI.UserControl
 
     ''' <summary>
@@ -20,6 +21,8 @@ Partial Class UserControls_Back_HTMLEditor
     ''' </summary>
     ''' <remarks></remarks>
     Public Event Saved()
+
+    Dim strFilesFolder As String = KartSettingsManager.GetKartConfig("general.uploadfolder") & "General/"
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         '' The following line is important for the confirmation msg box
@@ -36,7 +39,6 @@ Partial Class UserControls_Back_HTMLEditor
     End Sub
 
     Protected Sub lnkYes_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkYes.Click
-
         RaiseEvent Saved()
     End Sub
 
@@ -50,5 +52,19 @@ Partial Class UserControls_Back_HTMLEditor
         Return htmlEditorExtender1.Decode(txtHTMLEditor.Text)
     End Function
 
-    
+    Protected Sub ajaxFileUpload_OnUploadComplete(sender As Object, e As AjaxControlToolkit.AjaxFileUploadEventArgs)
+        htmlEditorExtender1.AjaxFileUpload.SaveAs(strFilesFolder + e.FileName)
+        e.PostedUrl = Page.ResolveUrl(strFilesFolder + e.FileName)
+    End Sub
+
+    Protected Sub SaveFile(sender As Object, e As AjaxControlToolkit.AjaxFileUploadEventArgs)
+
+        Dim strFullPath As String = strFilesFolder & e.FileName
+        ' Save your File
+        htmlEditorExtender1.AjaxFileUpload.SaveAs(Server.MapPath(strFullPath))
+
+        ' Tells the HtmlEditorExtender where the file is otherwise it will render as: <img src="" />
+        e.PostedUrl = strFullPath
+    End Sub
+
 End Class
