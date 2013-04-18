@@ -76,3 +76,19 @@ AS
 	SELECT  *
 	FROM	dbo.tblKartrisSuppliers
 	ORDER BY SUP_Name
+
+/****** Object:  StoredProcedure [dbo].[spKartrisCategories_GetByID]    Script Date: 04/18/2013 13:10:23 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[spKartrisCategories_GetByID]
+(
+	@CAT_ID int,
+	@LANG_ID tinyint
+)
+AS
+	SET NOCOUNT ON;
+SELECT        vKartrisTypeCategories.*
+FROM            vKartrisTypeCategories
+WHERE        (CAT_ID = @CAT_ID) AND (LANG_ID = @LANG_ID) AND CAT_Live=1
