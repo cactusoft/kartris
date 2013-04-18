@@ -1,6 +1,6 @@
 <%@ Control Language="VB" AutoEventWireup="false" EnableViewState="false" CodeFile="CategoryMenu.ascx.vb"
     Inherits="UserControls_Skin_CategoryMenu" %>
-<%@ OutputCache Duration="300" VaryByCustom="culture" VaryByParam="CategoryID" Shared="true" %>
+<%@ OutputCache Duration="300" VaryByCustom="culture;user" VaryByParam="CategoryID" Shared="true" %>
 <%
     '-----------------------------------
     'We cache this control for 300 secs,
@@ -10,6 +10,7 @@
     '-----------------------------------
 %>
 <!-- CategoryMenu - dropdown -->
+<%=Page.User.Identity.Name%>
 <div id="categorymenu">
     <div class="box">
         <div class="cssfoldout">
