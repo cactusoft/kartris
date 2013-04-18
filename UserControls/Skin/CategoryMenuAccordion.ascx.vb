@@ -65,30 +65,50 @@ Partial Class UserControls_Skin_CategoryMenuAccordion
 
                 Dim nodSiteMap As SiteMapNode = DirectCast(nodeStarting.ChildNodes(numCounter), SiteMapNode)
                 Dim acpCategory As New AjaxControlToolkit.AccordionPane()
+                Dim intCategory_CGID As Integer = CInt(nodSiteMap("CG_ID")) 'Need to hide items user not allowed to see
+                Dim intThisUser As Integer = 0
+                Try
+                    intThisUser = DirectCast(Page, PageBaseClass).CurrentLoggedUser.CustomerGroupID
+                Catch ex As Exception
+                    'Ignore, will be 
+                End Try
 
-                'Each accordion pane needs a unique ID
-                acpCategory.ID = "Pane" & nodeStarting.ChildNodes(numCounter).Key
+                If intThisUser = intCategory_CGID Or intCategory_CGID = 0 Then
+                    'Each accordion pane needs a unique ID
+                    acpCategory.ID = "Pane" & nodeStarting.ChildNodes(numCounter).Key
 
-                Dim lnkCatName As New HyperLink()
-                lnkCatName.NavigateUrl = nodeStarting.ChildNodes(numCounter).Url.ToString()
-                lnkCatName.Text = nodeStarting.ChildNodes(numCounter).Title.ToString()
+                    Dim lnkCatName As New HyperLink()
+                    lnkCatName.NavigateUrl = nodeStarting.ChildNodes(numCounter).Url.ToString()
+                    lnkCatName.Text = nodeStarting.ChildNodes(numCounter).Title.ToString()
 
-                'link added to pane
-                acpCategory.HeaderContainer.Controls.Add(lnkCatName)
+                    'link added to pane
+                    acpCategory.HeaderContainer.Controls.Add(lnkCatName)
 
-                'produce list of children
-                Dim objMenu As New BulletedList()
-                objMenu.DisplayMode = BulletedListDisplayMode.HyperLink
+                    'produce list of children
+                    Dim objMenu As New BulletedList()
+                    objMenu.DisplayMode = BulletedListDisplayMode.HyperLink
 
-                'If child nodes, then loop to produce submenu
-                If nodSiteMap.HasChildNodes Then
-                    'since this pane has childnodes, blank the navigateurl to suppress postback when header is clicked
-                    lnkCatName.NavigateUrl = ""
+                    'If child nodes, then loop to produce submenu
+                    If nodSiteMap.HasChildNodes Then
 
-                    'items list added to menu
-                    For numSubCounter As Integer = nodSiteMap.ChildNodes.Count - 1 To 0 Step -1
-                        objMenu.Items.Insert(0, (New ListItem(nodSiteMap.ChildNodes(numSubCounter).Title.ToString(), nodSiteMap.ChildNodes(numSubCounter).Url.ToString())))
-                    Next
+                        'since this pane has childnodes, blank the navigateurl to suppress postback when header is clicked
+                        lnkCatName.NavigateUrl = ""
+
+                        'items list added to menu
+                        For numSubCounter As Integer = nodSiteMap.ChildNodes.Count - 1 To 0 Step -1
+                            Dim intCategory_sub_CGID As Integer = CInt(nodSiteMap.ChildNodes(numSubCounter)("CG_ID")) 'Need to hide items user not allowed to see
+                            If intThisUser = intCategory_sub_CGID Or intCategory_sub_CGID = 0 Then
+                                objMenu.Items.Insert(0, (New ListItem(nodSiteMap.ChildNodes(numSubCounter).Title.ToString(), nodSiteMap.ChildNodes(numSubCounter).Url.ToString())))
+                            End If
+                        Next
+                        'adds menu to container pane
+                        acpCategory.ContentContainer.Controls.Add(objMenu)
+
+                        'adds pane to accordion
+                        accCategories.Panes.Add(acpCategory)
+                    End If
+
+
                     'adds menu to container pane
                     acpCategory.ContentContainer.Controls.Add(objMenu)
 
@@ -96,11 +116,6 @@ Partial Class UserControls_Skin_CategoryMenuAccordion
                     accCategories.Panes.Add(acpCategory)
                 End If
 
-                'adds menu to container pane
-                acpCategory.ContentContainer.Controls.Add(objMenu)
-
-                'adds pane to accordion
-                accCategories.Panes.Add(acpCategory)
             Next
 
             If SiteMap.CurrentNode Is Nothing Then
