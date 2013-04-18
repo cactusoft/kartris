@@ -1,6 +1,6 @@
 <%@ Control Language="VB" AutoEventWireup="false" EnableViewState="false" CodeFile="CategoryMenuDropDownSelect.ascx.vb"
     Inherits="UserControls_Skin_CategoryMenuDropDownSelect" %>
-<%@ OutputCache Duration="300" VaryByCustom="culture" VaryByParam="none" Shared="true" %>
+<%@ OutputCache Duration="300" VaryByCustom="culture;user" VaryByParam="none" Shared="true" %>
 <%
     '-----------------------------------
     'We cache this control for 300 secs,

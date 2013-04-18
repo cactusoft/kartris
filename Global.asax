@@ -115,9 +115,11 @@
     End Sub
 
     Public Overrides Function GetVaryByCustomString(context As HttpContext, arg As String) As String
-        If arg.ToLower() = "culture" Then Return context.Session("KartrisUserCulture").ToString()
+        'This lets us store different caches for different cultures (e.g. en-EN, de-DE)
+        Dim Page = TryCast(context.Handler, PageBaseClass)
+
+        If arg.ToLower() = "culture;user" Then Return context.Session("KartrisUserCulture").ToString() & ";" & Page.User.Identity.Name
         Return MyBase.GetVaryByCustomString(context, arg)
     End Function
-	
 
 </script>
