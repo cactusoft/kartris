@@ -95,7 +95,7 @@ Partial Class Templates_ProductTemplateSearchResult
     'or apply other rules
     Public Function DisplayProductName() As String
         Try
-            Return Server.HtmlEncode(Eval("P_Name"))
+            Return (Eval("P_Name"))
         Catch ex As Exception
             'do nowt
             Return ""
