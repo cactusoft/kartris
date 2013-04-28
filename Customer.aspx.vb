@@ -115,15 +115,15 @@ Partial Class Customer
     'We use the code below to hide the one that isn't
     'needed when the item is databound.
     Protected Sub rptDownloadableProducts_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptDownloadableProducts.ItemDataBound
-        Dim strFileName As String
+        Dim strDownloadType As String
         If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
-            strFileName = e.Item.DataItem("V_DownloadInfo")
-            If Left(strFileName, 4).ToLower = "http" Then
+            strDownloadType = e.Item.DataItem("V_DownloadType")
+            If strDownloadType = "l" Then
                 'Full qualified path
                 'Hide link button
                 CType(e.Item.FindControl("lnkDownload"), LinkButton).Visible = False
             Else
-                'local file
+                'local file, type "u"
                 'Hide hyperlink
                 CType(e.Item.FindControl("hlnkDownload"), HyperLink).Visible = False
             End If
