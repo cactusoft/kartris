@@ -10,7 +10,6 @@
     '-----------------------------------
 %>
 <!-- CategoryMenu - dropdown -->
-<%=Page.User.Identity.Name%>
 <div id="categorymenu">
     <div class="box">
         <div class="cssfoldout">
