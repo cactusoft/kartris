@@ -109,6 +109,27 @@ Partial Class Customer
 
     End Sub
 
+    'We create two download links on the page (.aspx),
+    'one is a linkbutton to trigger local file download,
+    'the other is a hyperlink to a fully-qualified URL.
+    'We use the code below to hide the one that isn't
+    'needed when the item is databound.
+    Protected Sub rptDownloadableProducts_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptDownloadableProducts.ItemDataBound
+        Dim strFileName As String
+        If e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
+            strFileName = e.Item.DataItem("V_DownloadInfo")
+            If Left(strFileName, 4).ToLower = "http" Then
+                'Full qualified path
+                'Hide link button
+                CType(e.Item.FindControl("lnkDownload"), LinkButton).Visible = False
+            Else
+                'local file
+                'Hide hyperlink
+                CType(e.Item.FindControl("hlnkDownload"), HyperLink).Visible = False
+            End If
+        End If
+    End Sub
+
     Protected Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
 
         If Not IsPostBack Then

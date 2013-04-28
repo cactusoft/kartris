@@ -253,7 +253,7 @@
                                 <asp:PlaceHolder ID="phdLink" runat="server" Visible="false">
                                     <br />
                                     <asp:Literal ID="litURL" runat="server" Text="<%$ Resources: _Version, FormLabel_DownLoadURL %>" />
-                                    &nbsp;http://<asp:TextBox ID="txtURL" runat="server" />
+                                    &nbsp;<asp:TextBox ID="txtURL" runat="server" />
                                 </asp:PlaceHolder>
                                 <asp:PlaceHolder ID="phdUpload" runat="server" Visible="false">
                                     <asp:UpdatePanel ID="updUpload" runat="server" UpdateMode="Conditional">
