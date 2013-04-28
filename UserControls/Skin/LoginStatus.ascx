@@ -11,7 +11,9 @@
         <asp:LoginStatus ID="KartrisLoginStatus" runat="server" CssClass="link2 icon_logout"
             LoginText="" LogoutText='<%$ Resources: Kartris, ContentText_LogMeOut %>' LogoutAction="Redirect"
             LogoutPageUrl="~/Default.aspx" />
-    </span></asp:PlaceHolder>
+    </span>
+    <span id="login_myaccountlink"><asp:HyperLink ID="lnkMyAccount" Text='<%$ Resources: Kartris, PageTitle_MyAccount %>' runat="server" NavigateUrl="~/Customer.aspx"></asp:HyperLink></span>
+    </asp:PlaceHolder>
     <% '---------Not logged in--------- %>
     <asp:PlaceHolder ID="phdLoggedOut" runat="server" Visible="False"><span id="statuslabel">
         <asp:Literal ID="litContentTextNotLoggedIn" runat="server" Text="<%$ Resources: Kartris, ContentText_NotLoggedIn %>"></asp:Literal>
@@ -19,6 +21,4 @@
         <asp:HyperLink ID="lnkLogin" runat="server" NavigateUrl="~/CustomerAccount.aspx">
             <asp:Literal ID="litContentTextLogin" runat="server" Text='<%$ Resources: Kartris, PageTitle_LogInToSite %>' /></asp:HyperLink>
     </span></asp:PlaceHolder>
-    <% '---------My account link--------- %>
-    <span id="login_myaccountlink"><asp:HyperLink ID="lnkMyAccount" Text='<%$ Resources: Kartris, PageTitle_MyAccount %>' runat="server" NavigateUrl="~/Customer.aspx"></asp:HyperLink></span>
 </div>
