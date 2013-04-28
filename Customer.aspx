@@ -221,9 +221,12 @@
                                                                     <td class="select">
                                                                         <asp:UpdatePanel ID="updDownloadLinks" runat="server" UpdateMode="Conditional">
                                                                             <ContentTemplate>
+                                                                                
                                                                                 <asp:LinkButton OnCommand="lnkDownload_Click" CommandArgument='<%#Eval("V_DownloadInfo")%>'
                                                                                     ID="lnkDownload" runat="server" Text='<%$ Resources: ContentText_Download%>'
                                                                                     CssClass="link2" />
+                                                                                <asp:HyperLink ID="hlnkDownload" runat="server" NavigateUrl='<%#Eval("V_DownloadInfo")%>'
+                                                                                    Text='<%$ Resources: ContentText_Download%>' CssClass="link2" />
                                                                             </ContentTemplate>
                                                                             <Triggers>
                                                                                 <asp:PostBackTrigger ControlID="lnkDownload" />
@@ -233,7 +236,7 @@
                                                                 </tr>
                                                             </ItemTemplate>
                                                             <FooterTemplate>
-                                                                </tbody></table></div>
+                                                                </tbody></table>
                                                             </FooterTemplate>
                                                         </asp:Repeater>
                                                     </div>
