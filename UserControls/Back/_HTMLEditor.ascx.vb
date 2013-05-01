@@ -48,8 +48,7 @@ Partial Class UserControls_Back_HTMLEditor
     End Sub
 
     Public Function GetText() As String
-
-        Return htmlEditorExtender1.Decode(txtHTMLEditor.Text)
+        Return Server.HtmlDecode(txtHTMLEditor.Text)
     End Function
 
     Protected Sub ajaxFileUpload_OnUploadComplete(sender As Object, e As AjaxControlToolkit.AjaxFileUploadEventArgs)
