@@ -82,6 +82,12 @@
                     </div>
                     <asp:HyperLink ID="lnkFrontOfSite" runat="server" NavigateUrl="~/Default.aspx" Text="<%$ Resources:_Kartris, ContentText_FrontOfSite %>"
                         CssClass="gotofront" />
+                    <asp:PlaceHolder ID="phdASPNETWarning" runat="server">
+                        <div class="errormessage">Please make sure your web site
+                            is set to run as ASP.NET 4.x. Otherwise Kartris will not
+                            run correctly.
+                        </div>
+                    </asp:PlaceHolder>
                 </asp:View>
             </asp:MultiView>
         </div>

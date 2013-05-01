@@ -53,6 +53,12 @@ Partial Class Admin_Default
                 End If
             End If
             divError.Visible = False
+
+            'Warn if wrong ASP.NET version running. With 2.0, the software may
+            'partially function, so it's easy for users not to realize why
+            'it's not running perfectly.
+            Dim strASPNETVersion As String = Environment.Version.ToString
+            If Left(strASPNETVersion, 1) <> "4" Then phdASPNETWarning.Visible = True Else phdASPNETWarning.Visible = False
         End If
 
     End Sub
