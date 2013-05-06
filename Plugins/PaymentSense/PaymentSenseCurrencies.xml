@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<List>
+  <Currency>
+    <ISOCode>GBP</ISOCode>
+    <NumericCode>826</NumericCode>
+  </Currency>
+  <Currency>
+    <ISOCode>EUR</ISOCode>
+    <NumericCode>978</NumericCode>
+  </Currency>
+  <Currency>
+    <ISOCode>USD</ISOCode>
+    <NumericCode>840</NumericCode>
+  </Currency>
+  <Currency>
+    <ISOCode>AUD</ISOCode>
+    <NumericCode>036</NumericCode>
+  </Currency>
+  <Currency>
+    <ISOCode>CAD</ISOCode>
+    <NumericCode>124</NumericCode>
+  </Currency>
+  <Currency>
+    <ISOCode>NZD</ISOCode>
+    <NumericCode>554</NumericCode>
+  </Currency>
+  <Currency>
+    <ISOCode>CHF</ISOCode>
+    <NumericCode>756</NumericCode>
+  </Currency>
+</List>
