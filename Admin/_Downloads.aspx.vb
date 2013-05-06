@@ -148,8 +148,8 @@ Partial Class Admin_Downloads
                 mvwPopup.SetActiveView(viwPopupLink)
                 gvwLinks.SelectedIndex = e.CommandArgument Mod gvwLinks.PageSize
                 litPopupVersionName.Text = CType(gvwLinks.SelectedRow.Cells(1).FindControl("litVersionName"), Literal).Text
-                litPopupLinkLocation.Text = "http://" & CType(gvwLinks.SelectedRow.Cells(2).FindControl("lnkLinkLocation"), HyperLink).Text
-                txtPopupLinkLocation.Text = "http://" & CType(gvwLinks.SelectedRow.Cells(2).FindControl("lnkLinkLocation"), HyperLink).Text
+                litPopupLinkLocation.Text = CType(gvwLinks.SelectedRow.Cells(2).FindControl("lnkLinkLocation"), HyperLink).Text
+                txtPopupLinkLocation.Text = CType(gvwLinks.SelectedRow.Cells(2).FindControl("lnkLinkLocation"), HyperLink).Text
                 popExtender.Show()
         End Select
     End Sub
@@ -280,4 +280,14 @@ Partial Class Admin_Downloads
         CType(Me.Master, Skins_Admin_Template).DataUpdated()
         LoadDownloads()
     End Sub
+
+    Function FormatFileURL(ByVal strURL As String) As String
+        If Left(strURL.ToLower, 4) = "http" Then
+            'absolute link
+            Return strURL
+        Else
+            'local url
+            Return "../" & strURL
+        End If
+    End Function
 End Class

@@ -76,7 +76,7 @@
                                             </asp:TemplateField>
                                             <asp:TemplateField ItemStyle-CssClass="selectfield">
                                                 <ItemTemplate>
-                                                    <asp:LinkButton ID="lnkBtnRenameFile" runat="server" Text="<%$ Resources: _Kartris, ContentText_Rename %>"
+                                                    <asp:LinkButton visible="false" ID="lnkBtnRenameFile" runat="server" Text="<%$ Resources: _Kartris, ContentText_Rename %>"
                                                         CommandName="RenameFile" CommandArgument='<%# Container.DataItemIndex %>' CssClass="linkbutton icon_edit" />
                                                     <asp:LinkButton ID="lnkBtnChangeDownloadFile" runat="server" Text="<%$ Resources: _Kartris, FormButton_Change %>"
                                                         CommandName="ChangeFile" CommandArgument='<%# Container.DataItemIndex %>' CssClass="linkbutton icon_edit" />
@@ -134,7 +134,7 @@
                                                 <ItemTemplate>
                                                     <asp:Literal ID="litLinkLocation" runat="server" Text='<%# Eval("V_DownLoadInfo") %>'
                                                         Visible="false" />
-                                                    <asp:HyperLink ID="lnkLinkLocation" runat="server" NavigateUrl='<%# "http://" & Eval("V_DownLoadInfo") %>'
+                                                    <asp:HyperLink ID="lnkLinkLocation" runat="server" NavigateUrl='<%# FormatFileURL(Eval("V_DownLoadInfo"))%>'
                                                         Text='<%# Eval("V_DownLoadInfo") %>' CssClass="normalweight" />
                                                 </ItemTemplate>
                                             </asp:TemplateField>
@@ -244,7 +244,7 @@
                                                 <asp:Literal ID="litContentTextFiles" runat="server" Text="<%$ Resources: _Kartris, ContentText_Files %>" /></strong>:
                                             <asp:Literal ID="litTempFiles" runat="server" /></p>
                                         <p>
-                                            <asp:LinkButton ID="lnkBtnDeleteTempFiles" runat="server" Text="<%$ Resources: _Kartris, ContentText_DeleteAll %>" /></p>
+                                            <asp:LinkButton ID="lnkBtnDeleteTempFiles" CssClass="linkbutton icon_delete" runat="server" Text="<%$ Resources: _Kartris, ContentText_DeleteAll %>" /></p>
                                     </asp:PlaceHolder>
                                 </div>
                             </div>
