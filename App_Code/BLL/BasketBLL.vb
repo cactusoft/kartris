@@ -2115,7 +2115,7 @@ Public Class BasketBLL
 
             If strText.Contains("[X]") Then
                 If strText.Contains("[£]") Then
-                    strText = strText.Replace("[X]", CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), drwPromotionParts("PP_Value")))
+                    strText = strText.Replace("[X]", CurrenciesBLL.FormatCurrencyPrice(Current.Session("CUR_ID"), CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), drwPromotionParts("PP_Value"))))
                 Else
                     strText = strText.Replace("[X]", drwPromotionParts("PP_Value"))
                 End If
@@ -2143,7 +2143,7 @@ Public Class BasketBLL
             End If
 
             If strText.Contains("[£]") Then
-                strText = strText.Replace("[£]", CurrenciesBLL.CurrencySymbol(Current.Session("CUR_ID")))
+                strText = strText.Replace("[£]", "")
             End If
 
             intTextCounter += 1

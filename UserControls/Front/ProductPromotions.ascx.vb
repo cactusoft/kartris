@@ -222,7 +222,7 @@ Partial Class ProductPromotions
 
             If strText.Contains("[X]") Then
                 If strText.Contains("[£]") Then
-                    strText = strText.Replace("[X]", CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), drwPromoParts("PP_Value")))
+                    strText = strText.Replace("[X]", CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), drwPromoParts("PP_Value"))))
                 Else
                     strText = strText.Replace("[X]", drwPromoParts("PP_Value"))
                 End If
@@ -249,7 +249,7 @@ Partial Class ProductPromotions
             End If
 
             If strText.Contains("[£]") Then
-                strText = strText.Replace("[£]", CurrenciesBLL.CurrencySymbol(Session("CUR_ID")))
+                strText = strText.Replace("[£]", "")
             End If
 
             intTextCounter += 1

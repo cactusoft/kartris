@@ -8,8 +8,8 @@
         </asp:PlaceHolder>
         <asp:Repeater ID="rptProductPromotion" runat="server">
             <ItemTemplate>
-                <user:PromotionTemplate ID="UC_PromotionTemplate" runat="server" PromotionID='<%#Eval("PROM_ID")%>'
-                    PromotionName='<%# Server.HtmlEncode(Eval("PROM_Name")) %>' PromotionText='<%#eval("PROM_Text")%>' />
+                <user:PromotionTemplate ID="UC_PromotionTemplate" runat="server" PromotionID='<%# Eval("PROM_ID") %>'
+                    PromotionName='<%# Eval("PROM_Name") %>' PromotionText='<%# Eval("PROM_Text" )%>' />
             </ItemTemplate>
         </asp:Repeater>
         <asp:PlaceHolder ID="phdNoResults" runat="server">
