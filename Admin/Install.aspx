@@ -218,7 +218,7 @@
 					</asp:MultiView>
                     <div class="formrow">
 						<span class="checkbox">
-							<asp:CheckBox ID="chkCreateSampleData" runat="server" Text="<%$ Resources: Step3_CreateSampleData%>" />
+							<asp:CheckBox ID="chkCreateSampleData" runat="server" meta:resourcekey="Step3_CreateSampleData" />
 						</span>
 					</div>
 					<!-- -------- // STEP 3 - CONNECTION STRING CHECK -------- -->
