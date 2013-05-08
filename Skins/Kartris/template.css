@@ -26,14 +26,13 @@ COLUMNS - LEFT, RIGHT AND CENTRAL
 #pagecontent                            { width: 100%; float: left; min-height: 300px; margin: 0px; padding: 0px; }
 #pagecontent_homepage                   { width: 100%; float: left; min-height: 300px; margin: 0px; padding: 0px; }
 #pagecontent_pad                        { min-height: 300px; padding: 0 0 15px 0; margin: 0 0 0 0; }
-#right                                  { width: 220px; float: right; padding: 0px; }
-#right_pad                              { padding: 7px 0 0 0; margin: 0; }
+
 /* 
 ========================================================================
 LOGIN STATUS
 ========================================================================
 */
-#loginstatus                            { float: left; font-size: 95%; display: block; width: 410px; margin: 0; color: #bbb; padding: 1px 15px 0 0; height: 20px; }
+#loginstatus                            { float: left; font-size: 95%; display: block; width: 310px; margin: 0; color: #bbb; padding: 1px 15px 0 0; height: 20px; }
 #loginstatus .logout                    { display: inline-block; position: relative; height: 15px; }
 #loginstatus a.icon_logout:hover        { color: #000 }
 #loginstatus strong                     { color: #000; font-weight: normal; }
@@ -66,7 +65,6 @@ GENERAL SKIN SECTION BLOCKS
 .infoblock ul li                        { list-style: none; float: none; clear: both; padding: 0; }
 .infoblock ul li a                      { display: block; font-weight: normal; text-decoration: none; padding: 2px 5px 3px 10px; }
 .infoblock ul li a:hover                { background-color: #fff; font-weight: bold; }
-.infoblock ul li a                      { display: block; font-weight: normal; text-decoration: none; padding: 2px 5px 3px 10px; }
 .infoblock .infoblock_pad               { padding: 0 0 0 10px }
 /* 
 ========================================================================
