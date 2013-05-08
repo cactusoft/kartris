@@ -2,10 +2,8 @@
     Inherits="UserControls_Skin_LoginStatus" %>
 <div id="loginstatus">
     <% '----------Logged in--------- %>
-    <asp:PlaceHolder ID="phdLoggedIn" runat="server" Visible="False"><span id="statuslabel"
-        runat="server">
-        <asp:Literal ID="litContentTextLoginStatus" runat="server" Text="<%$ Resources: Kartris, ContentText_LoginStatus %>"></asp:Literal>
-    </span><span id="username"><strong>
+    <asp:PlaceHolder ID="phdLoggedIn" runat="server" Visible="False">
+<span id="username"><strong>
         <asp:LoginName ID="KartrisLoginName" FormatString="{0}" runat="server" />
     </strong></span><span class="logout">
         <asp:LoginStatus ID="KartrisLoginStatus" runat="server" CssClass="link2 icon_logout"

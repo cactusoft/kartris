@@ -43,7 +43,7 @@ Partial Class Knowledgebase
                 'Er, just start page
             End If
         Else
-            Response.End()
+            'do nothing
         End If
 
     End Sub

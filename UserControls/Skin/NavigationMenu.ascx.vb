@@ -22,18 +22,82 @@ Partial Class UserControls_Front_NavigationMenu
             Case "support"
                 If KartSettingsManager.GetKartConfig("frontend.knowledgebase.enabled") <> "y" AndAlso _
                         KartSettingsManager.GetKartConfig("frontend.supporttickets.enabled") <> "y" Then
-                    menFrontEnd.Items.Remove(e.Item)
+                    Try
+                        menFrontEnd.Items.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
+                    Try
+                        e.Item.Parent.ChildItems.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
                 End If
             Case "news"
-                If KartSettingsManager.GetKartConfig("frontend.navigationmenu.sitenews") <> "y" Then menFrontEnd.Items.Remove(e.Item)
+                If KartSettingsManager.GetKartConfig("frontend.navigationmenu.sitenews") <> "y" Then
+                    Try
+                        menFrontEnd.Items.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
+                    Try
+                        e.Item.Parent.ChildItems.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
+                End If
             Case "promotions"
-                If KartSettingsManager.GetKartConfig("frontend.promotions.enabled") <> "y" Then e.Item.Parent.ChildItems.Remove(e.Item)
+                If KartSettingsManager.GetKartConfig("frontend.promotions.enabled") <> "y" Then
+                    Try
+                        menFrontEnd.Items.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
+                    Try
+                        e.Item.Parent.ChildItems.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
+                End If
             Case "comparison"
-                If KartSettingsManager.GetKartConfig("frontend.products.comparison.enabled") <> "y" Then e.Item.Parent.ChildItems.Remove(e.Item)
+                If KartSettingsManager.GetKartConfig("frontend.products.comparison.enabled") <> "y" Then
+                    Try
+                        menFrontEnd.Items.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
+                    Try
+                        e.Item.Parent.ChildItems.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
+                End If
             Case "knowledgebase"
-                If KartSettingsManager.GetKartConfig("frontend.knowledgebase.enabled") <> "y" Then e.Item.Parent.ChildItems.Remove(e.Item)
+                If KartSettingsManager.GetKartConfig("frontend.knowledgebase.enabled") <> "y" Then
+                    Try
+                        menFrontEnd.Items.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
+                    Try
+                        e.Item.Parent.ChildItems.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
+                End If
             Case "supporttickets"
-                If KartSettingsManager.GetKartConfig("frontend.supporttickets.enabled") <> "y" Then e.Item.Parent.ChildItems.Remove(e.Item)
+                If KartSettingsManager.GetKartConfig("frontend.supporttickets.enabled") <> "y" Then
+                    Try
+                        menFrontEnd.Items.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
+                    Try
+                        e.Item.Parent.ChildItems.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
+                End If
         End Select
     End Sub
 

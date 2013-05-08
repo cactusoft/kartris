@@ -3,7 +3,7 @@
 HORIZONTAL DROPDOWN MENU SYSTEM
 ========================================================================
 */
-#menubar								{ display: inline-block; z-index: 100; padding: 0; margin: -1px 150px 0 0; width: 370px; float: right; }
+#menubar								{ height: 40px; display: inline-block; z-index: 100; padding: 0; margin: -1px 150px 0 0; width: 370px; float: right; }
 .dropdownmenu ul						{ text-transform: uppercase; font-size: 85%; font-weight: normal; padding: 0; margin: 0; }
 .dropdownmenu ul li						{ position: relative; list-style: none; float: left; margin: 0; }
 .dropdownmenu ul li a					{ color: #333; font-weight: normal; z-index: 200; display: block; text-decoration: none; padding: 3px 17px 0px 0; }
@@ -13,7 +13,7 @@ HORIZONTAL DROPDOWN MENU SYSTEM
 -- css fold-style
 ========================================================================
 */
-#categorymenu							{ height: 26px; background-color: #444; position: relative; margin: 18px 0 0 0; display: block; z-index: 90; padding: 0 0 0 0; width: 100%;  }
+#categorymenu							{ height: 26px; background-color: #444; position: relative; margin: 8px 0 0 0; display: block; z-index: 90; padding: 0 0 0 0; width: 100%;  }
 .cssfoldout ul							{ padding: 0; border: 0; margin: 0; }
 .cssfoldout ul li						{ position: relative; list-style: none; float: left; margin: 0; }
 .cssfoldout ul li a						{ display: block; border-right: dotted 1px #ddd; color: #fff; font-weight: bold; z-index: 200; text-decoration: none; padding: 3px 17px 4px 9px; }
