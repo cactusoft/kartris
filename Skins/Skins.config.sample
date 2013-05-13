@@ -4,7 +4,7 @@
 		<!--<Customer ID="187" SkinName="Kartris"/>-->
 	</CustomerSkinRules>
 	<CustomerGroupSkinRules>
-		<!--<Customergroup ID="" SkinName=""/>-->
+		<!--<CustomerGroup ID="" SkinName=""/>-->
 	</CustomerGroupSkinRules>
 	<ProductSkinRules>
 		<!--<Product ID="" SkinName=""/>-->
