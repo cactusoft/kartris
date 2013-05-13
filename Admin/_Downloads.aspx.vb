@@ -38,6 +38,21 @@ Partial Class Admin_Downloads
         End If
     End Sub
 
+    Protected Sub gvwLinks_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvwLinks.PageIndexChanging
+        gvwLinks.PageIndex = e.NewPageIndex
+        LoadLinks()
+    End Sub
+
+    Protected Sub gvwNonLinkedFiles_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvwNonLinkedFiles.PageIndexChanging
+        gvwNonLinkedFiles.PageIndex = e.NewPageIndex
+        LoadDownloads()
+    End Sub
+
+    Protected Sub gvwDownloads_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvwDownloads.PageIndexChanging
+        gvwDownloads.PageIndex = e.NewPageIndex
+        LoadDownloads()
+    End Sub
+
     Sub LoadDownloads()
         mvwDownloads.SetActiveView(viwDownloadData)
         Dim tblDownloads As DataTable = VersionsBLL._GetDownloadableFiles(Session("_LANG"))
