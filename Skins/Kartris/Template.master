@@ -141,11 +141,12 @@
 				<div class="spacer">
 				</div>
 				<div class="copyright">
-					&copy;2013 Cactusoft International FZ LLC</div>
+					&copy;2013 Cactusoft International FZ LLC
+				</div>
 			</div>
 		</div>
+			<user:AdminBar ID="UC_AdminBar" runat="server" />
+		</form>
 	</div>
-	<user:AdminBar ID="UC_AdminBar" runat="server" />
-	</form> </div>
 </body>
 </html>
