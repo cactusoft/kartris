@@ -26,7 +26,7 @@
                                 <asp:View ID="viwDownloadData" runat="server">
                                     <asp:GridView ID="gvwDownloads" CssClass="kartristable" runat="server" AllowSorting="true"
                                         AutoGenerateColumns="False" AutoGenerateEditButton="False" GridLines="None" SelectedIndex="0"
-                                        DataKeyNames="V_ID" AllowPaging="true" PageSize="10">
+                                        DataKeyNames="V_ID" AllowPaging="true" PageSize="15">
                                         <Columns>
                                             <asp:TemplateField>
                                                 <HeaderTemplate>
@@ -105,7 +105,7 @@
                                 <asp:View ID="viwLinksData" runat="server">
                                     <asp:GridView ID="gvwLinks" CssClass="kartristable" runat="server" AllowSorting="true"
                                         AutoGenerateColumns="False" AutoGenerateEditButton="False" GridLines="None" SelectedIndex="0"
-                                        DataKeyNames="V_ID" AllowPaging="true" PageSize="10">
+                                        DataKeyNames="V_ID" AllowPaging="true" PageSize="15">
                                         <Columns>
                                             <asp:TemplateField>
                                                 <HeaderTemplate>
@@ -172,7 +172,7 @@
                                         <asp:ListBox ID="lstNonRelatedFiles" runat="server" Visible="false" />
                                         <asp:GridView ID="gvwNonLinkedFiles" CssClass="kartristable" runat="server" AllowSorting="true"
                                             AutoGenerateColumns="False" AutoGenerateEditButton="False" GridLines="None" SelectedIndex="0"
-                                            AllowPaging="true" PageSize="10">
+                                            AllowPaging="true" PageSize="15">
                                             <Columns>
                                                 <asp:TemplateField>
                                                     <HeaderTemplate>
