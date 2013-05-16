@@ -658,10 +658,18 @@ Public Class OrdersBLL
                 If HttpContext.Current.Session("C_AffiliateID") IsNot Nothing Then
                     intAffiliateID = CInt(HttpContext.Current.Session("C_AffiliateID"))
                     If intAffiliateID > 0 Then
-                        Dim intDBaffiliateID As Integer = objBasket.GetCustomerAffiliateID(C_ID)
-                        If intDBaffiliateID > 0 Then intAffiliateID = intDBaffiliateID
-                        objBasket.UpdateCustomerAffiliateID(C_ID, intAffiliateID)
-                        numAffiliatePercentage = CDbl(Adptr.GetAffiliateCommission(intAffiliateID))
+                        If objBasket.IsCustomerAffiliate(intAffiliateID) Then
+                            Dim cmdUpdateAffiliate As New SqlCommand("spKartrisCustomer_UpdateAffiliate", sqlConn, savePoint)
+                            cmdUpdateAffiliate.CommandType = CommandType.StoredProcedure
+                            With cmdUpdateAffiliate.Parameters
+                                .AddWithValue("@Type", 3)
+                                .AddWithValue("@UserID", C_ID)
+                                .AddWithValue("@AffiliateCommission", 0)
+                                .AddWithValue("@AffiliateID", intAffiliateID)
+                            End With
+                            cmdUpdateAffiliate.ExecuteNonQuery()
+                            numAffiliatePercentage = CDbl(Adptr.GetAffiliateCommission(intAffiliateID))
+                        End If
                     End If
                 End If
 
