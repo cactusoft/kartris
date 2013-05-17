@@ -78,7 +78,7 @@ Namespace Kartris
                 If isRoot Then
                     writer.WriteAttribute("class", "KartrisMenu")
                 Else
-                    writer.WriteAttribute("class", "KartrisSubMenu")
+                    writer.WriteAttribute("class", "KartrisSubMenu dropdown")
                 End If
                 writer.Write(HtmlTextWriter.TagRightChar)
                 writer.Indent += 1
@@ -99,7 +99,7 @@ Namespace Kartris
                 writer.WriteLine()
                 writer.WriteBeginTag("li")
 
-                Dim theClass As String = IIf((item.ChildItems.Count > 0), "KartrisMenu-WithChildren", "KartrisMenu-Leaf")
+                Dim theClass As String = IIf((item.ChildItems.Count > 0), "KartrisMenu-WithChildren has-dropdown", "KartrisMenu-Leaf")
                 Dim selectedStatusClass As String = GetSelectStatusClass(item)
                 If Not [String].IsNullOrEmpty(selectedStatusClass) Then
                     theClass += " " + selectedStatusClass

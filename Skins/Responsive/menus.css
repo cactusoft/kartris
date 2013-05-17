@@ -1,0 +1,63 @@
+/* 
+========================================================================
+HORIZONTAL DROPDOWN MENU SYSTEM
+========================================================================
+*/
+#menubar								{  }
+.dropdownmenu ul						{ text-transform: uppercase; font-size: 85%; font-weight: normal; padding: 0; margin: 0; }
+.dropdownmenu ul li						{ position: relative; list-style: none; float: left; margin: 0; }
+.dropdownmenu ul li a					{ color: #333; font-weight: normal; z-index: 200; display: block; text-decoration: none; padding: 3px 17px 0px 0; }
+.dropdownmenu ul li:hover a				{ display: block; color: #000; }
+/* 
+========================================================================
+CATEGORY NAVIGATION MENU
+The primary styles are created by foundation.css. Rather than change
+styles there (which would be overwritten if we upgrade Foundation to
+a newer version), just just grab the bits we need to change here.
+========================================================================
+*/
+#categorymenu .top-bar                  { background-color: #333; }
+
+/* depending on the width of your site, you will need to adjust the
+    breakpoint where the nav menu collapses to the mobile version. You need to
+    find the following styles in foundation.css and tweak the width up or down.
+
+    .top-bar-js-breakpoint .... (tweak the 'width')
+    @media only screen and .... (tweak the 'min-width')
+    
+    Also, match the min-width in the style belo to the same value as 
+    the one you use in the foundation.css */
+
+@media only screen and (min-width: 930px) {
+  #categorymenu .title-area li.name { display: none;
+     }
+  }
+
+/* Mobile menu */
+#categorymenu .top-bar .title-area .name a
+                                        { font-weight: bold; color: #fff; display: block; padding: 0 10px; height: 100%; }
+#categorymenu .top-bar .title-area .name a:hover
+                                        { color: #000; background-color: #aaa; }
+
+/* Controls height of main category nav bar */
+#categorymenu .top-bar-section li a:not(.button)
+                                        { background-color: #333; }
+
+/* Down arrow on each menu in main category nav bar - control position and colour */
+#categorymenu .top-bar-section .has-dropdown > a:after
+                                        { border-color: rgba(255, 255, 255, 0.5) transparent transparent transparent; top: 13.5px; }
+
+/* Links within the dropdown menus */
+#categorymenu .top-bar-section .dropdown li a
+                                        { font-weight: normal; padding: 6px 15px; color: #ddd; border-right:solid 1px #999; max-width: 200px;}
+#categorymenu .top-bar-section .dropdown li a:hover
+                                        { color: #000; background-color: #aaa; }
+
+/* Button to replace main nav menu in small devices */
+#categorymenu .mobile-link              { font-weight: bold; padding: 2px 15px; color: #ddd; display: block; }
+#categorymenu .mobile-link:hover        { color: #000; background-color: #aaa; }
+
+/* Style top level links */
+#categorymenu .top-bar-section li       { border-right:solid 1px #999; }
+#categorymenu .top-bar-section li a:hover
+                                        { background-color:#666; }
