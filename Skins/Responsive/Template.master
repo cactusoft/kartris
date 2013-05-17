@@ -1,0 +1,157 @@
+﻿<%@ Master Language="VB" CodeFile="Template.master.vb" Inherits="Skin_Kartris_Template" %>
+
+<%@ Register TagPrefix="user" TagName="AdminBar" Src="~/UserControls/Front/AdminBar.ascx" %>
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+
+<head id="Head1" runat="server" enableviewstate="true">
+	<base id="baseTag" runat="server" />
+	<!--
+		===============================================================================
+		KARTRIS by cactusoft
+		Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
+		All rights reserved.
+		===============================================================================
+		-->
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+
+	<link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
+	<link href="foundation.css" rel="stylesheet" type="text/css" />
+	<link href="normalize.css" rel="stylesheet" type="text/css" />
+
+	<link href="general.css" rel="stylesheet" type="text/css" />
+	<link href="menus.css" rel="stylesheet" type="text/css" />
+	<link href="sections.css" rel="stylesheet" type="text/css" />
+	<link href="template.css" rel="stylesheet" type="text/css" />
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+	<title>Kartris v1</title>
+</head>
+<body class="main">
+	<form id="frmMain" runat="server" class="container">
+		<ajaxToolkit:ToolkitScriptManager ID="scrManager" runat="server" ScriptMode="Release"
+			EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"
+			CombineScripts="true" EnableViewState="True">
+			<Scripts>
+				<asp:ScriptReference Path="~/JavaScript/webkit.js" />
+				<asp:ScriptReference Path="~/JavaScript/custom.modernizr.js" />
+			</Scripts>
+		</ajaxToolkit:ToolkitScriptManager>
+		<div class="row" id="centre_container">
+			<div class="row">
+				<div class="small-12 large-8 columns">
+					<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
+				</div>
+				<div id="minibasketholder" class="small-12 large-4 columns">
+					<user:BasketView ID="UC_MiniBasket" runat="server" ViewType="MINI_BASKET" />
+				</div>
+				<div id="header" class="small-12 large-8 columns">
+
+					<asp:HyperLink ID="lnkHome" NavigateUrl="~/" runat="server">
+						<asp:Image ID="imgLogo" runat="server" ImageUrl="~/Skins/Responsive/Images/logo.png"
+							CssClass="logo" AlternateText="logo" />
+					</asp:HyperLink>
+				</div>
+				<div class="small-12 large-4 columns">
+					<user:SearchBox runat="server" ID="UC_SearchBox" EnableViewState="False" />
+				</div>
+				<div class="small-12 large-8 columns">
+					<user:NavigationMenu ID="UC_NavigationMenu" runat="server" EnableViewState="False"
+						Visible="True" />
+				</div>
+				<div class="small-12 large-4 columns">
+					<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
+					<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
+				</div>
+				<div class="small-12 large-12 columns">
+					<!--
+						MENU OPTIONS:
+						CategoryMenu
+						CategoryMenuAccordion
+						CategoryMenuDropDownSelect
+						-->
+					<user:CategoryMenu ID="UC_CategoryMenuCSSFoldout" runat="server" EnableViewState="False"
+						Visible="True" />
+				</div>
+
+			</div>
+
+
+			<div class="row" id="pagebody">
+				<div class="small-12 large-12 columns" id="pagecontent_pad">
+					<asp:ContentPlaceHolder ID="cntMain" runat="server">
+					</asp:ContentPlaceHolder>
+				</div>
+				<div class="small-12 large-12 columns">
+					<user:ViewedProducts ID="UC_RecentlyViewedProducts" runat="server" EnableViewState="False" />
+				</div>
+
+				
+
+
+			</div><div class="row" id="footer">
+					<div class="small-12 large-3 columns">
+						<h2>Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="small-12 large-3 columns">
+						<h2>Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="small-12 large-3 columns">
+						<h2>Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink10" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink11" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink12" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="small-12 large-3 columns">
+						<h2>Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink7" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink8" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink9" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="small-12 large-12 columns" id="copyright">
+						&copy;2013 Cactusoft International FZ LLC
+					</div>
+				</div>
+		</div>
+
+		<user:AdminBar ID="UC_AdminBar" runat="server" />
+	</form>
+	<!-- Check for Zepto support, load jQuery if necessary -->
+	<asp:Literal runat="server" ID="litZeptoJquery"></asp:Literal>
+	<script>
+		$(function () {
+			$(document).foundation();
+		})
+	</script>
+
+</body>
+</html>

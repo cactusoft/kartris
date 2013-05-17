@@ -920,7 +920,7 @@ MINI BASKET
                     </h4>
                 </div>
                 <div id="minibasket_main">
-                    <div id="contents">
+                    <div id="contents" class="hide-for-small">
                         <div class="box">
                             <asp:PlaceHolder ID="phdOrderInProgress" runat="server" Visible="false">
                                 <div id="orderinprogress">

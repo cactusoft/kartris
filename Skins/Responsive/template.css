@@ -1,0 +1,100 @@
+/* 
+========================================================================
+MAIN LAYOUT
+========================================================================
+*/
+.xxxcolumns {
+    border: solid 1px red;
+}
+
+html                                    { height: 100%; }
+body									{ background-color: #fff; }
+body.main                               { background: #ddd; overflow: scroll; overflow: -moz-scrollbars-vertical; height: 100%; }
+#centre_container                       { background-color: #fff; min-height: 100%; padding: 0 20px; max-width: 900px; }
+/* 
+========================================================================
+HEADER
+========================================================================
+*/
+#header .logo                           { margin: 20px 0 10px 0; }
+
+/* 
+========================================================================
+LOGIN STATUS
+========================================================================
+*/
+#loginstatus                            { padding: 5px 0 10px 0; }
+#loginstatus .logout                    { display: inline-block; position: relative; height: 15px; }
+#loginstatus a.icon_logout:hover        { color: #000 }
+#loginstatus strong                     { color: #000; font-weight: normal; }
+#loginstatus #login_myaccountlink a     { text-transform: uppercase; font-size: 85%; font-weight: normal; color: #333; margin: 0 0 0 30px; }
+/* 
+========================================================================
+SEARCH BOX
+========================================================================
+*/
+#section_searchbox                      { padding: 10px 0 5px 0; }
+#section_searchbox input.button         { width: 100%; margin: 0 5px 0 0; }
+
+/* 
+========================================================================
+OTHER CONTROLS language, currency, etc.
+========================================================================
+*/
+#currencymenu                           { float: right; text-align: right; display: block; padding: 5px 0 5px 10px; margin: 0 0 5px 0; border: none; width: 90px; }
+#currencymenu select					{ }
+#languagemenu                           { float: right; text-align: right; display: block; width: 110px; padding: 5px 0 5px 10px; margin: 0 0 5px 0; border: none; }
+#recentlyviewed                         { border-top: solid 1px #fc5; padding: 10px 0 0 0; }
+/* 
+========================================================================
+BASKET SUMMARY
+========================================================================
+*/
+#minibasketholder                       { }
+#minibasket                             { width: auto; margin: 0; padding: 5px 0 5px 0; }
+#minibasket #minibasket_header          { position:absolute; width: 100%; z-index: 2000; background-color: transparent; }
+#minibasket h4                          { height: 31px; float: right; background: none; text-transform: uppercase; font-size: 85%; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0 0 0 0; height: 13px; display: inline-block; color: #fff; text-align: right; z-index: 9992; padding: 1px 10px 10px 2px; }
+#minibasket h4 strong                   { color: #999; font-weight: normal; }
+#minibasket h4 a                        { background-position: -2px -8px; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #333; padding: 2px 0 1px 29px; font-weight: normal; }
+#minibasket #minibasket_main            { display: none; height: 0px; width: 100%; }
+#minibasket:hover #minibasket_main      { display: block; z-index: 1999; text-align: left; height: auto; position: absolute; background-color: #777; padding: 40px 8px 8px 8px; margin: -10px 0 0 0; }
+#minibasket:hover                       { background-color: #777; z-index: 1999;}
+
+#minibasket:hover h4 strong             { color: #fff; }
+#minibasket:hover h4 a                  { color: #fff; }
+#minibasket #content                    { width: 100%; }
+#minibasket #contents #numberofitems,
+#minibasket #contents #orderinprogress,
+#minibasket #contents #basketisempty    { padding: 1px 5px 2px 5px; font-weight: normal; font-size: 95%; color: #fff; }
+#minibasket #contents ul                { margin: 0; padding: 0; }
+#minibasket ul li                       { list-style: none; float: none; clear: both; margin: 0 0 0 0; padding: 2px 0 0 0; }
+#minibasket #contents ul #totals        { border-top: solid 1px #aaa; text-align: right; padding: 4px 5px 6px 10px; font-weight: normal; text-transform: uppercase; color: #ccc; font-size: 90%; }
+#minibasket #contents ul #totals span.price
+                                        { color: #6e4; font-weight: normal; font-size: 120%; }
+#minibasket #contents ul #totals span.total
+                                        { color: #6e4; font-weight: bold; font-size: 140%; }
+#minibasket #contents ul #totals #minibasket_whereapplicable
+                                        { margin: 10px 0 0 0; font-size: 85%; letter-spacing: 1px; }
+#minibasket #contents ul #totals strong { font-weight: bold }
+#minibasket #contents ul li a           { display: block; color: #fff; border-top: solid 1px #aaa; font-weight: normal; padding: 2px 5px 2px 5px; }
+#minibasket #contents ul li a:hover     { color: #fc5; background-color: #777; }
+#minibasket #links                      { margin-bottom: 10px }
+#minibasket #links a                    { background-color: #ddd; border: solid 1px #333; color: #333; padding: 1px 5px 1px 5px; font-weight: normal; font-size: smaller; text-transform: uppercase; text-align: center; margin: 1px 0px 1px 2px; font-family: Tahoma,Verdana,Arial,Helvetica; display: block; }
+#minibasket #links a:hover              { background-color: #eee; }
+#minibasket #links ul                   { margin: 0; padding: 0; }
+#minibasket #links ul li                { display: inline; float: left; list-style: none; float: none; clear: both; margin: 1px 0 0 0; padding: 0; }
+#minibasket #links ul li input          { margin: 5px 0 2px 0 }
+/* 
+========================================================================
+FOOTER
+========================================================================
+*/
+#footer                                 { border-top: solid 3px #fc5; margin: 0 auto; padding: 0 1px; height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; bottom: 0px; }
+#footer_inside                          { margin: 0 auto; width: 950px; color: #aaa; padding: 10px 0 0 0; border-top: solid 3px #fc5; }
+#footer a                               { color: #034; font-weight: normal; }
+#footer #copyright                      { font-size: 90%; margin: 45px 0 0 0; }
+#footer h2                              { color: #000 }
+#footer ul                              { text-transform: uppercase; font-size: 90%; padding: 0; list-style-type: none; }
+#footer ul li a                         { padding: 2px; display: block; }
+#footer ul li a:hover                   { background-color: #eee; color: #000; }
+

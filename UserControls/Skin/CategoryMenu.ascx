@@ -7,21 +7,38 @@
     'this improves performance but delay
     'in any changes going live is kept
     'to minimum (=5 mins)
+    
+    'Note that we vary cache by culture
+    'and user. This way, when a user
+    'is logged in, they get a personal
+    'cached version. This is necessary
+    'because some categories may be
+    'available only to some customer
+    'groups, so we cannot service same
+    'menu to each user.
     '-----------------------------------
 %>
 <!-- CategoryMenu - dropdown -->
 <div id="categorymenu">
-    <div class="box">
-        <div class="cssfoldout">
-            <asp:Menu ID="menCategory" DataSourceID="srcSiteMap" Orientation="Horizontal" runat="server">
-                <DataBindings>
-                    <asp:MenuItemBinding DataMember="MenuItem" NavigateUrlField="NavigateUrl" TextField="Text"
-                        ToolTipField="ToolTip" ValueField="Value" />
-                </DataBindings>
-            </asp:Menu>
+    <nav class="top-bar">
+        <div class="box">
+            <ul class="title-area show-for-medium-down" style="display:none;">
+                <li class="name"><asp:Hyperlink ID="lnkCategories" runat="server" Text="<%$ Resources: Kartris, ContentText_Categories %>" EnableViewState="False" NavigateUrl="~/Category.aspx"></asp:Hyperlink></li>
+                <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+                <li class="toggle-topbar menu-icon"><a href=""><span></span></a></li>
+            </ul>
+            <section class="cssfoldout top-bar-section">
+                <asp:Menu ID="menCategory" DataSourceID="srcSiteMap" Orientation="Horizontal" runat="server">
+                    <DataBindings>
+                        <asp:MenuItemBinding DataMember="MenuItem" NavigateUrlField="NavigateUrl" TextField="Text"
+                            ToolTipField="ToolTip" ValueField="Value" />
+                    </DataBindings>
+                </asp:Menu>
+            </section>
         </div>
-    </div>
+    </nav>
 </div>
+
 <%  'DataSource %>
 <asp:SiteMapDataSource ID="srcSiteMap" SiteMapProvider="CategorySiteMapProvider"
     ShowStartingNode="false" runat="server" />
