@@ -64,9 +64,14 @@ Partial Class CarryOnShopping
     ''' <remarks></remarks>
     Private Sub LoadRelatedProducts()
 
+        Dim numCGroupID As Short = 0
+        If HttpContext.Current.User.Identity.IsAuthenticated Then
+            numCGroupID = CShort(DirectCast(Page, PageBaseClass).CurrentLoggedUser.CustomerGroupID)
+        End If
+
         '' Add the related products to a DataTable
         Dim tblProducts As New DataTable
-        tblProducts = ProductsBLL.GetRelatedProducts(_ProductID, _LanguageID)
+        tblProducts = ProductsBLL.GetRelatedProducts(_ProductID, _LanguageID, numCGroupID)
 
         '' If there is no related products, then exit this section.
         If tblProducts.Rows.Count = 0 Then Exit Sub
