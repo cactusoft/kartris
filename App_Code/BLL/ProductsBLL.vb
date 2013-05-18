@@ -202,8 +202,8 @@ Public Class ProductsBLL
         Return MinPrice
     End Function
 
-    Public Shared Function GetRelatedProducts(ByVal _ProductID As Integer, ByVal _LangaugeID As Short) As DataTable
-        Return Adptr.GetRelatedProducts(_ProductID, _LangaugeID)
+    Public Shared Function GetRelatedProducts(ByVal _ProductID As Integer, ByVal _LangaugeID As Short, ByVal _CustomerGroupID As Short) As DataTable
+        Return Adptr.GetRelatedProducts(_ProductID, _LangaugeID, _CustomerGroupID)
     End Function
 
     Public Shared Function GetPeopleWhoBoughtThis(ByVal ProductID As Integer, ByVal LanguageID As Short, ByVal numPeopleWhoBoughtThis As Integer) As DataTable
