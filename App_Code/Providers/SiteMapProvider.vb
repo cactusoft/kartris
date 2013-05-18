@@ -846,7 +846,7 @@ Public Class SiteMapHelper
                 '' There is no webshopurl (coming from no webshop folder), means we need to
                 ''   skip the first character because the strCurrentPath will be similar to
                 ''      "/nl-NL/CATEGORY_OR_PRODUCT_NAME", so to read the language do:
-                strURLCultureInfo = Mid(strCurrentPath, 1, 5)
+                strURLCultureInfo = Mid(strCurrentPath, 2, 5)
             Else
                 strURLCultureInfo = Left(Mid(strCurrentPath, InStr(strCurrentPath, strWebShopURL) + Len(strWebShopURL)), 5)
             End If
