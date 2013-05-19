@@ -1650,7 +1650,7 @@ Public NotInheritable Class CkartrisBLL
 
                 Dim tblLoginsList As DataTable = LoginsBLL.GetLoginsList
                 For Each dtLogin As DataRow In tblLoginsList.Rows
-                    Dim strXML As String = dtLogin.Item("LOGIN_PushNotifications")
+                    Dim strXML As String = CkartrisDataManipulation.FixNullFromDB(dtLogin.Item("LOGIN_PushNotifications"))
                     Dim blnLoginLive As Boolean = dtLogin.Item("LOGIN_Live")
                     If Not String.IsNullOrEmpty(strXML) AndAlso blnLoginLive Then
                         Dim xmlDoc As New XmlDocument
