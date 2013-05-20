@@ -9,15 +9,15 @@ MAIN LAYOUT
 
 html                                    { height: 100%; }
 body									{ background-color: #fff; }
-body.main                               { background: #ddd; overflow: scroll; overflow: -moz-scrollbars-vertical; height: 100%; }
+body.main                               { background: #ddd; overflow: scroll; overflow: -moz-scrollbars-vertical; min-height: 100%; }
 #centre_container                       { background-color: #fff; min-height: 100%; padding: 0 20px; max-width: 900px; }
 /* 
 ========================================================================
-HEADER
+SECTIONS
 ========================================================================
 */
 #header .logo                           { margin: 20px 0 10px 0; }
-
+#pagecontent_pad                        { min-height: 300px; padding-bottom: 15px; }
 /* 
 ========================================================================
 LOGIN STATUS
@@ -92,7 +92,7 @@ FOOTER
 #footer                                 { border-top: solid 3px #fc5; margin: 0 auto; padding: 0 1px; height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; bottom: 0px; }
 #footer_inside                          { margin: 0 auto; width: 950px; color: #aaa; padding: 10px 0 0 0; border-top: solid 3px #fc5; }
 #footer a                               { color: #034; font-weight: normal; }
-#footer #copyright                      { font-size: 90%; margin: 45px 0 0 0; }
+#footer #copyright                      { font-size: 90%; margin: 45px 0 20px 0; }
 #footer h2                              { color: #000 }
 #footer ul                              { text-transform: uppercase; font-size: 90%; padding: 0; list-style-type: none; }
 #footer ul li a                         { padding: 2px; display: block; }

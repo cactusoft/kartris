@@ -10,7 +10,6 @@ PAGE - Home page and custom page (CMS)
 ========================================================================
 */
 #custompagetext                         { margin: 10px 0 10px 0 }
-#homepage div.chunk                     { display: block; float: left; width: 25%; min-height: 200px; }
 #homepage div.chunk h2.blockheader      { width: 93%; border: none; padding: 0 0 5px 0; }
 #homepage div.chunk ul                  { list-style: none; margin: 0; padding: 0; }
 #homepage div.chunk ul li               { padding: 0 0 5px 0 }
@@ -59,8 +58,8 @@ SUBCATEGORIES - SHORTENED FORMAT
 */
 .subcategories_shortened                    { width: 1000px; }
 .subcategories_shortened .item              { display: inline; float: left; margin: 5px 6px 5px 4px; }
-.subcategories_shortened .item .box         { text-align: center; width: 178px; height: 270px; border: solid 1px #fc5; background-color: #fff; }
-.subcategories_shortened .item .box .pad    { overflow: hidden; padding: 4px; text-align: center; }
+.subcategories_shortened .item .box         { text-align: center; width: 200px; height: 260px; border: solid 1px #fc5; background-color: #fff; }
+.subcategories_shortened .item .box .pad    { overflow: hidden; padding: 10px; text-align: center; }
 .subcategories_shortened .item h2           { margin: 0; padding: 0; }
 .subcategories_shortened .item h2 a         { font-size: 80% }
 .subcategories_shortened .item .imageholder { display: block; margin: 0 auto; padding-bottom: 10px; }
@@ -89,13 +88,14 @@ PRODUCT - Single page product
 */
 .product #strapline                     { display: block; margin: 10px 0px 12px 0px; padding: 0; color: #111; font-weight: bold; font-style: normal; font-size: 110%; font-style: italic; }
 .product #description                   { margin: 0 0 15px 0px }
-.product div.imagecolumn                { width: 265px; float: left; margin: 0 0 40px 0; padding: 10px 20px 0 0; }
+.product div.imagecolumn                { margin: 0 0 40px 0; padding: 10px 20px 0 0; }
 .product div.imagecolumn div.pad        { padding: 10px 0 10px 0 }
 .product div.imagecolumn .imageviewer   { width: 100% }
 .product div.imagecolumn .singleimage   { }
 .product div.imagecolumn .largeview     { }
 .product div.textcolumn #comparelink    { margin: 5px 0 0 0 }
-.product div.textcolumn                 { padding: 0 0 20px 10px; width: 650px; float: right; }
+.product div.textcolumn                 { padding: 0 0 20px 10px; }
+.product div.versions-holder            { float: right; }
 .product .section_promotions            { }
 /* 
 ========================================================================
@@ -128,10 +128,10 @@ PRODUCTS - NORMAL FORMAT
 PRODUCTS - SHORTENED FORMAT
 ------------------------------------------------------------------------
 */
-.products_shortened                     { width: 1000px; }
+.products_shortened                     { }
 .products_shortened .item               { display: inline; float: left; margin: 5px 6px 5px 4px; }
-.products_shortened .item .box          { text-align: center; width: 178px; height: 270px; border: solid 1px #fc5; background-color: #fff; }
-.products_shortened .item .box .pad     { overflow: hidden; padding: 4px; text-align: center; }
+.products_shortened .item .box          { text-align: center; width: 200px; height: 260px; border: solid 1px #fc5; background-color: #fff; }
+.products_shortened .item .box .pad     { overflow: hidden; padding: 10px; text-align: center; }
 .products_shortened .item h2            { margin: 0; padding: 0; }
 .products_shortened .item h2 a          { font-size: 80% }
 .products_shortened .item .strapline    { }
@@ -178,7 +178,7 @@ PRODUCTS - EXTENDED FORMAT
 VERSIONS
 ------------------------------------------------------------------------
 */
-.versions                               { margin: 10px 0 10px 10px; float: right; width: 650px; }
+.versions                               { margin: 10px 0 10px 0; width: auto; }
 .versions table                         { border: none }
 .versions table tr.description          { }
 .versions table tr td                   { background-color: #fff; border-bottom: solid 1px #ddd; text-align: right; padding-right: 5px; vertical-align: top; }
@@ -227,11 +227,11 @@ OPTIONS
 .options .option label                  { display: block; width: 220px; float: left; margin-right: 5px; text-align: left; }
 .options .option label.optiontitle      { display: inline-block; color: #000; font-weight: bold; width: 180px; float: left; }
 .options .option label.optiontitle span.optiondesc
-                                        { display: block; font-weight: normal; font-size: 95%; color: #666; }
+                                        { display: block; font-weight: normal; color: #666; }
 .options .option div                    { display: inline-block; margin: 0px; float: left; }
 .options .option table.checkboxlist input,
 .options .option table.radiobuttonlist input
-                                        { display: block; float: left; margin-right: 5px; border-style: none; background-color: transparent; display: inline; width: 20px; }
+                                        { display: block; float: left; margin-right: 5px; border-style: none; background-color: transparent; width: 20px; }
 .options .option ul.radiobuttonlist li  { }
 .options .highlight_error               { padding: 0 5px 0 3px; display: inline-block; color: #fff; font-weight: bold; text-decoration: blink; background-color: #f00; border-radius: 3px; }
 .boxinset .addtobasket .prices			{ display: block; text-align: right; }

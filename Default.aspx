@@ -9,17 +9,17 @@
         <div class="spacer">
         </div>
         <% '--------Various highlighted products and info---------- %>
-        <div class="chunks">
-            <div class="chunk">
+        <div class="chunks row">
+            <div class="chunk small-12 large-3 columns">
                 <user:NewestItems ID="UC_NewestItems" runat="server" EnableViewState="False" />
             </div>
-            <div class="chunk">
+            <div class="chunk small-12 large-3 columns">
                 <user:FeaturedProducts ID="UC_FeaturedProducts" runat="server" />
             </div>
-            <div class="chunk">
+            <div class="chunk small-12 large-3 columns">
                 <user:TopListProducts ID="UC_TopListProducts" runat="server" EnableViewState="False" />
             </div>
-            <div class="chunk">
+            <div class="chunk small-12 large-3 columns">
                 <user:SiteNews ID="UC_SiteNews" runat="server" TitleTagType="h2" EnableViewState="False" />
             </div>
             <div class="spacer">
