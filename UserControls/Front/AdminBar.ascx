@@ -17,7 +17,7 @@
 #adminbarmenu a:hover                   { cursor: pointer }
 #adminbarmenu ul li a                   { display: block; text-decoration: none; padding: 1px 6px 2px 6px; }
 </style>
-<div id="adminbarmenu">
+<div id="adminbarmenu" class="hide-for-small">
 	<div class="KartrisMenu-Horizontal">
 		<ul class="KartrisMenu">
 			<li class="KartrisMenu-WithChildren">

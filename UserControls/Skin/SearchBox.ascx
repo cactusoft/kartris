@@ -1,10 +1,10 @@
 <%@ Control Language="VB" AutoEventWireup="false" CodeFile="SearchBox.ascx.vb" Inherits="UserControls_Skin_SearchBox" %>
 <div id="section_searchbox">
-    <div id="searchboxes" class="row">
+    <div id="searchboxes" class="row collapse">
         <asp:Panel ID="pnlSearchBox" runat="server">
             <span class="small-9 columns"><input type="text" size="40" class="textbox" id="searchbox" onkeypress="javascript:presssearchkey(event);" /></span>
             <span class="small-3 columns"><input id="searchbutton" type="button" value='<asp:Literal ID="litContentText_Search" runat="server" Text="<%$ Resources: Kartris, ContentText_Search%>" />'
-                class="button" onclick="javascript:submitsearchbox()" /></span>
+                class="button prefix" onclick="javascript:submitsearchbox()" /></span>
             <div class="spacer">
             </div>
             <script type="text/javascript">

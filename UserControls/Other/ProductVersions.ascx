@@ -104,7 +104,6 @@
                 </asp:View>
                 <!-- multi-version rows -->
                 <asp:View ID="viwVersionRows" runat="server">
-                    <div class="versions">
                         <asp:UpdatePanel ID="updVersions" runat="server" UpdateMode="Conditional">
                             <ContentTemplate>
                                 <asp:DropDownList ID="ddlVersionImages" runat="server" Visible="true" />
@@ -345,12 +344,11 @@
                                 </table>
                             </ContentTemplate>
                         </asp:UpdatePanel>
-                    </div>
                 </asp:View>
                 <asp:View ID="viwVersionDropDown" runat="server">
                  <!-- multi-version dropdown -->
                     <div class="boxinset line">
-                        <div id="Div2" class="addtobasket" runat="server">
+                        <div class="addtobasket" runat="server">
                             <asp:UpdatePanel ID="updVersionDropdown" runat="server" UpdateMode="Conditional">
                                 <ContentTemplate>
                                     <asp:DropDownList ID="ddlName_DropDown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlName_DropDown_SelectedIndexChanged">
