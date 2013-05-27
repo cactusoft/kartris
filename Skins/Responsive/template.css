@@ -47,9 +47,9 @@ BASKET SUMMARY
 ========================================================================
 */
 #minibasketholder                       { }
-#minibasket                             { width: auto; margin: 0; padding: 5px 0 5px 0; }
+#minibasket                             { width: auto; padding: 5px 0 5px 0; }
 #minibasket #minibasket_header          { position:absolute; width: 100%; z-index: 2000; background-color: transparent; }
-#minibasket h4                          { height: 31px; float: right; background: none; text-transform: uppercase; font-size: 85%; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0 0 0 0; height: 13px; display: inline-block; color: #fff; text-align: right; z-index: 9992; padding: 1px 10px 10px 2px; }
+#minibasket h4                          { height: 31px; float: right; background: none; text-transform: uppercase; font-size: 85%; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0 0 0 0; display: inline-block; color: #fff; text-align: right; z-index: 9992; padding: 1px 10px 10px 2px; }
 #minibasket h4 strong                   { color: #999; font-weight: normal; }
 #minibasket h4 a                        { background-position: -2px -8px; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #333; padding: 2px 0 1px 29px; font-weight: normal; }
 #minibasket #minibasket_main            { display: none; height: 0px; width: 100%; }
@@ -74,8 +74,8 @@ BASKET SUMMARY
 #minibasket #contents ul #totals strong { font-weight: bold }
 #minibasket #contents ul li a           { display: block; color: #fff; border-top: solid 1px #aaa; font-weight: normal; padding: 2px 5px 2px 5px; }
 #minibasket #contents ul li a:hover     { color: #fc5; background-color: #777; }
-#minibasket #links                      { margin-bottom: 10px }
-#minibasket #links a                    { width: 100%; display: block; }
+#minibasket .button                     { background-color: #999; color: #fff; width: 100%; }
+#minibasket .button:hover               { background-color: #ddd; color: #000; }
 /* 
 ========================================================================
 FOOTER

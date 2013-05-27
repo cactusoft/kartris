@@ -48,19 +48,6 @@
                             CausesValidation="false" />
                     </asp:Panel>
                     <!--
-                    -------------------------------
-                    MODAL POPUP 'UPDATING' DISPLAY
-                    -------------------------------
-                    -->
-                    <asp:UpdateProgress ID="prgAddresses" runat="server" AssociatedUpdatePanelID="updAddresses">
-                        <ProgressTemplate>
-                            <div class="loadingimage">
-                            </div>
-                            <div class="updateprogress">
-                            </div>
-                        </ProgressTemplate>
-                    </asp:UpdateProgress>
-                    <!--
                     ===============================
                     STREET ADDRESSES
                     Billing / Shipping
@@ -119,9 +106,13 @@
                                     <h2>
                                         <asp:Literal ID="litEnterEUVAT" runat="server" Text="<%$ Resources: ContentText_EnterEUVat %>"
                                             EnableViewState="false" /></h2>
-                                    <strong>
-                                        <asp:Literal ID="litMSCode" runat="server" EnableViewState="true" /></strong>&nbsp;
+                                    <div class="row">
+                                        <div class="small-12 large-4 columns">
+                                            <strong>
+                                                <asp:Literal ID="litMSCode" runat="server" EnableViewState="true" /></strong>&nbsp;
                                     <asp:TextBox ID="txtEUVAT" runat="server" EnableViewState="true" AutoPostBack="true"></asp:TextBox>
+                                        </div>
+                                    </div>
                                 </div>
                             </asp:PlaceHolder>
                         </ContentTemplate>
@@ -142,12 +133,14 @@
                         <h2>
                             <asp:Literal ID="litCheckoutPaymentMethod" runat="server" Text="<%$ Resources: FormLabel_SelectPayment %>"
                                 EnableViewState="false" /></h2>
-                        <p>
-                            <asp:DropDownList ID="ddlPaymentGateways" runat="server" />
-                            <asp:RequiredFieldValidator EnableClientScript="True" ID="valPaymentGateways" runat="server"
-                                ControlToValidate="ddlPaymentGateways" CssClass="error" ForeColor="" ValidationGroup="Checkout"
-                                Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator>
-                        </p>
+                        <div class="row">
+                            <div class="small-12 large-4 columns">
+                                <asp:DropDownList ID="ddlPaymentGateways" runat="server" />
+                                <asp:RequiredFieldValidator EnableClientScript="True" ID="valPaymentGateways" runat="server"
+                                    ControlToValidate="ddlPaymentGateways" CssClass="error" ForeColor="" ValidationGroup="Checkout"
+                                    Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator>
+                            </div>
+                        </div>
                     </div>
                 </asp:PlaceHolder>
                 <!--

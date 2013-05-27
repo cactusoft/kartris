@@ -123,7 +123,7 @@
                                     <%
                                         If KartSettingsManager.GetKartConfig("frontend.versions.display.showrrp") = "y" Then
                                     %>
-                                    <colgroup class="col_rrp" />
+                                    <colgroup class="col_rrp hide-for-small" />
                                     <% End If%>
                                     <!-- Stock level -->
                                     <%
@@ -148,7 +148,7 @@
                                                 If KartSettingsManager.GetKartConfig("frontend.versions.display.showrrp") = "y" andalso _
                                                     ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) <> 1 Then
                                             %>
-                                            <th class="rrp">
+                                            <th class="rrp hide-for-small">
                                                 <asp:Literal ID="litLS_RRP" runat="server" Text="<%$ Resources: Versions, ContentText_RRP %>" EnableViewState="false" />
                                             </th>
                                             <% End If%>
@@ -261,7 +261,7 @@
                                                             ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) <> 1 Then
                                                             intColSpan += 1
                                                     %>
-                                                    <td class="rrp">
+                                                    <td class="rrp hide-for-small">
                                                         <asp:Literal ID="litRRP_Rows" runat="server" Text='<%# Eval("V_RRP") %>' Visible='<%# Eval("V_RRP") > 0 %>' EnableViewState="false" />
                                                     </td>
                                                     <% End If%>
@@ -348,20 +348,22 @@
                 <asp:View ID="viwVersionDropDown" runat="server">
                  <!-- multi-version dropdown -->
                     <div class="boxinset line">
-                        <div class="addtobasket" runat="server">
+                        <div class="addtobasket row" runat="server">
                             <asp:UpdatePanel ID="updVersionDropdown" runat="server" UpdateMode="Conditional">
                                 <ContentTemplate>
-                                    <asp:DropDownList ID="ddlName_DropDown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlName_DropDown_SelectedIndexChanged">
-                                    </asp:DropDownList>
-                                    <asp:TextBox runat="server" ID="txtOutOfStockItems" Visible="false">
-                                    </asp:TextBox>
+                                    <div class="small-12 large-9 columns">
+                                        <asp:DropDownList ID="ddlName_DropDown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlName_DropDown_SelectedIndexChanged">
+                                        </asp:DropDownList><asp:TextBox runat="server" ID="txtOutOfStockItems" Visible="false">
+                                        </asp:TextBox>
+                                    </div>
+
                                     <%  'Hide 'add' button and selector if in cataloguemode or for partial access
                                         '(hidden prices unless user logged in)
                                         If KartSettingsManager.GetKartConfig("frontend.cataloguemode") <> "y" And Not CheckHideAddButton() Then%>
-                                    <div class="selector">
+                                    <div class="selector small-12 large-3 columns">
                                         <asp:UpdatePanel ID="updVersionQty3" runat="server" UpdateMode="Conditional" RenderMode="Block">
                                             <ContentTemplate>
-                                            <asp:Literal runat="server" ID="litShow"></asp:Literal>
+                                                <asp:Literal runat="server" ID="litShow"></asp:Literal>
                                                 <asp:PlaceHolder ID="phdNotOutOfStock3" runat="server">
                                                     <asp:PlaceHolder ID="phdDropdownCustomizable" runat="server">
                                                         <div class="cancustomizetag" title="<asp:Literal ID='litContentTextCanCustomize3' Text='<%$ Resources: Products, ContentText_CanCustomize %>' runat='server'></asp:Literal>">
@@ -376,10 +378,11 @@
                                                 </asp:PlaceHolder>
                                                 <asp:PlaceHolder ID="phdOutOfStock3" runat="server" Visible="false">
                                                     <div class="outofstock">
-                                                        <asp:Literal ID="litOutOfStockMessage3" runat="server" Text="<%$ Resources: Versions, ContentText_AltOutOfStock %>" /></div>
+                                                        <asp:Literal ID="litOutOfStockMessage3" runat="server" Text="<%$ Resources: Versions, ContentText_AltOutOfStock %>" />
+                                                    </div>
                                                 </asp:PlaceHolder>
                                                 <asp:PlaceHolder ID="phdCalForPrice3" runat="server" Visible="false">
-                                                        <asp:Literal ID="litCallForPrice3" runat="server" Text="<%$ Resources: Versions, ContentText_CallForPrice %>" />
+                                                    <asp:Literal ID="litCallForPrice3" runat="server" Text="<%$ Resources: Versions, ContentText_CallForPrice %>" />
                                                 </asp:PlaceHolder>
                                             </ContentTemplate>
                                         </asp:UpdatePanel>
