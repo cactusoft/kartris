@@ -10,7 +10,6 @@
             LoginText="" LogoutText='<%$ Resources: Kartris, ContentText_LogMeOut %>' LogoutAction="Redirect"
             LogoutPageUrl="~/Default.aspx" />
     </span>
-    <span id="login_myaccountlink"><asp:HyperLink ID="lnkMyAccount" Text='<%$ Resources: Kartris, PageTitle_MyAccount %>' runat="server" NavigateUrl="~/Customer.aspx"></asp:HyperLink></span>
     </asp:PlaceHolder>
     <% '---------Not logged in--------- %>
     <asp:PlaceHolder ID="phdLoggedOut" runat="server" Visible="False"><span id="statuslabel">

@@ -74,15 +74,6 @@
                         </asp:MultiView>
                     </ContentTemplate>
                 </asp:UpdatePanel>
-                <asp:UpdateProgress ID="prgMain" runat="server" AssociatedUpdatePanelID="updMain"
-                    DynamicLayout="true" DisplayAfter="10">
-                    <ProgressTemplate>
-                        <div class="loadingimage">
-                        </div>
-                        <div class="updateprogress">
-                        </div>
-                    </ProgressTemplate>
-                </asp:UpdateProgress>
             </asp:View>
             <asp:View ID="viwNotExist" runat="server">
                 <p>

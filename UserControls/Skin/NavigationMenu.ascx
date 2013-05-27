@@ -9,10 +9,18 @@
     '------------------------------------
 %>
 <div id="menubar">
-    <div class="dropdownmenu">
-        <asp:SiteMapDataSource ID="MenuSitemap" SiteMapProvider="MenuSitemap" runat="server"
-            ShowStartingNode="false"></asp:SiteMapDataSource>
-        <asp:Menu ID="menFrontEnd" runat="server" Orientation="Horizontal" DataSourceID="MenuSitemap">
-        </asp:Menu>
-    </div>
+    <nav class="top-bar">
+        <ul class="title-area show-for-medium-down" style="display: none;">
+            <li class="name"><span><asp:Literal ID="litNavMenu" runat="server" Text="<%$ Resources: Kartris, ContentText_NavMenu %>" EnableViewState="False"></asp:Literal></span></li>
+            <li class="toggle-topbar menu-icon"><a href=""><span></span></a></li>
+        </ul>
+        <section class="top-bar-section">
+            <div class="dropdownmenu">
+                <asp:SiteMapDataSource ID="MenuSitemap" SiteMapProvider="MenuSitemap" runat="server"
+                    ShowStartingNode="false"></asp:SiteMapDataSource>
+                <asp:Menu ID="menFrontEnd" runat="server" Orientation="Horizontal" DataSourceID="MenuSitemap">
+                </asp:Menu>
+            </div>
+        </section>
+    </nav>
 </div>

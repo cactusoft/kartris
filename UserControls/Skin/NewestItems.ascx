@@ -1,6 +1,6 @@
 <%@ Control Language="VB" AutoEventWireup="false" CodeFile="NewestItems.ascx.vb"
     Inherits="UserControls_Skin_NewestItems" %>
-<div class="box" id="newestitems">
+<div id="newestitems">
     <h2 class="blockheader">
         <span><span>
             <asp:Literal ID="litContentTextNewProductsList" runat="server" Text='<%$ Resources: Kartris, ContentText_NewProductsList %>' /></span></span></h2>

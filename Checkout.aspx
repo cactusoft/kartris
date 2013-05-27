@@ -68,26 +68,28 @@
                     -->
                     <asp:UpdatePanel runat="server" ID="updAddresses" UpdateMode="Conditional">
                         <ContentTemplate>
-                            <!--
-                            -------------------------------
-                            BILLING ADDRESS
-                            -------------------------------
-                            -->
-                            <div class="checkoutaddress">
-                                <user:CheckoutAddress runat="server" ID="UC_BillingAddress" Title="<%$ Resources: Address, FormLabel_BillingAddress %>"
-                                    ErrorMessagePrefix="Billing " ValidationGroup="Billing" EnableValidation="true" />
-                            </div>
-                            <!--
-                            -------------------------------
-                            SHIPPING ADDRESS
-                            -------------------------------
-                            -->
-                            <div class="checkoutaddress">
+                            <div class="row">
+                                <!--
+                                -------------------------------
+                                BILLING ADDRESS
+                                -------------------------------
+                                -->
+                                <div class="checkoutaddress small-12 large-6 columns">
+                                    <user:CheckoutAddress runat="server" ID="UC_BillingAddress" Title="<%$ Resources: Address, FormLabel_BillingAddress %>"
+                                        ErrorMessagePrefix="Billing " ValidationGroup="Billing" EnableValidation="true" />
+                                </div>
+                                <!--
+                                -------------------------------
+                                SHIPPING ADDRESS
+                                -------------------------------
+                                -->
                                 <!-- Shipping Address Selection/Input Control-->
-                                <asp:Panel ID="pnlShippingAddress" runat="server" Visible="false">
+                                <asp:Panel ID="pnlShippingAddress" runat="server" Visible="false" CssClass="checkoutaddress small-12 large-6 columns">
+
                                     <user:CheckoutAddress ID="UC_ShippingAddress" runat="server" ErrorMessagePrefix="Shipping "
                                         ValidationGroup="Shipping" Title="<%$ Resources: Address, FormLabel_ShippingAddress %>" />
                                 </asp:Panel>
+
                             </div>
                             <div class="spacer">
                             </div>
@@ -160,9 +162,11 @@
                     <h2>
                         <asp:Literal ID="litPONumber" runat="server" Text="<%$ Resources: Invoice, ContentText_PONumber %>"
                             EnableViewState="false" /></h2>
-                    <p>
-                         <asp:TextBox ID="txtPurchaseOrderNo" style="display: none" runat="server" />
-                    </p>
+                    <div class="row">
+                        <div class="small-12 large-4 columns">
+                            <asp:TextBox ID="txtPurchaseOrderNo" Style="display: none" runat="server" />
+                        </div>
+                    </div>
                 </div>
                 
                 <!--
@@ -352,7 +356,7 @@
                     BILLING ADDRESS
                     -------------------------------
                     -->
-                    <div class="checkoutaddress">
+                    <div class="checkoutaddress small-12 large-6 columns">
                         <h2>
                             <asp:Literal ID="litBillingDetails" runat="server" Text="<%$ Resources: Address, ContentText_BillingAddress %>" EnableViewState="false" /></h2>
                         <user:AddressDetails ID="UC_Billing" runat="server" ShowLabel="false" ShowButtons="false" />
@@ -362,7 +366,7 @@
                     SHIPPING ADDRESS
                     -------------------------------
                     -->
-                    <div class="checkoutaddress">
+                    <div class="checkoutaddress small-12 large-6 columns">
                         <h2>
                             <asp:Literal ID="litShippingDetails" runat="server" Text="<%$ Resources: Address, ContentText_Shipping %>"
                                 EnableViewState="false" /></h2>

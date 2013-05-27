@@ -30,8 +30,8 @@ Partial Class Templates_ProductLinkTemplate
 
         UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_ProductImage, _
             litProductID.Text, _
-            KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height"), _
-            KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width"), _
+            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.height"), _
+            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.width"), _
             strNavigateURL, _
             "")
 

@@ -10,15 +10,19 @@ PAGE - Home page and custom page (CMS)
 ========================================================================
 */
 #custompagetext                         { margin: 10px 0 10px 0 }
-#homepage div.chunk h2.blockheader      { width: 93%; border: none; padding: 0 0 5px 0; }
 #homepage div.chunk ul                  { list-style: none; margin: 0; padding: 0; }
 #homepage div.chunk ul li               { padding: 0 0 5px 0 }
-#homepage .products_tabular             { }
-#homepage .products_tabular a           { }
 #homepage .news ul div.news_lastupdated,
-#homepage .news ul div.news_datecreated  { display: block; margin: 5px 0 5px 0; color: #999; }
-#homepage .news ul div.news_link         { font-weight: bold; margin: 5px 0 5px 0; }
-#homepage .news ul div.news_text         {  }
+#homepage .news ul div.news_datecreated { display: block; margin: 5px 0 5px 0; color: #999; }
+#homepage .news ul div.news_link        { font-weight: bold; margin: 5px 0 5px 0; }
+#homepage .news ul div.news_text        {  }
+#homepage .products_tabular .item               { width: 200px; display: inline; float: left; padding: 0; margin: 5px 6px 5px 4px; }
+#homepage .products_tabular .item .imageblock   { margin: 0; }
+#homepage .products_tabular .item .box          { text-align: center; height: 230px; border: solid 1px #fc5; background-color: #fff; }
+#homepage .products_tabular .item .box .pad     { overflow: hidden; padding: 10px; text-align: center; }
+#homepage .products_tabular .item h2            { margin: 0; padding: 0; line-height: 15px; font-weight: bold; }
+#homepage .products_tabular .item .imageholder  { display: block; margin: 0 auto; padding-bottom: 10px; }
+
 /* 
 ========================================================================
 CATEGORY - Single page category
@@ -132,7 +136,7 @@ PRODUCTS - SHORTENED FORMAT
 .products_shortened .item               { display: inline; float: left; margin: 5px 6px 5px 4px; }
 .products_shortened .item .box          { text-align: center; width: 200px; height: 260px; border: solid 1px #fc5; background-color: #fff; }
 .products_shortened .item .box .pad     { overflow: hidden; padding: 10px; text-align: center; }
-.products_shortened .item h2            { margin: 0; padding: 0; }
+.products_shortened .item h2            { margin: 0; padding: 0; line-height: 15px; }
 .products_shortened .item h2 a          { font-size: 80% }
 .products_shortened .item .strapline    { }
 .products_shortened .item .imageholder  { display: block; margin: 0 auto; padding-bottom: 10px; }
@@ -145,7 +149,7 @@ PRODUCTS - TABULAR FORMAT
 */
 .products_tabular                       { padding-top: 0px }
 .products_tabular .item                 { padding: 10px 20px 10px 0; width: 210px; float: left; }
-.products_tabular .item .imageblock     { padding: 5px; border: solid 1px #fc5; text-align: center; float: left; margin: 0 8px 0 0; overflow: visible; width: 50px; }
+.products_tabular .item .imageblock     { padding: 5px; border: solid 1px #fc5; text-align: center; float: left; margin: 0 8px 0 0; overflow: visible; width: 70px; }
 .products_tabular .item h2              { margin: 0; font-size: 100%; font-weight: normal; }
 .products_tabular .item h2 a            { margin-top: 0; text-decoration: none; }
 .products_tabular .item .minprice       { font-weight: normal; padding: 5px 0 0 0; }
@@ -154,8 +158,9 @@ PRODUCTS - TABULAR FORMAT
 PRODUCTS - IMAGE ONLY FORMAT
 ------------------------------------------------------------------------
 */
-.products_imageonly                     { padding-top: 0px; text-align: center; float: left; }
-.products_imageonly .item               { padding: 3px; background-color: #fff; border: solid 1px #fc5; text-align: center; margin: 3px 8px 3px 0; }
+.products_imageonly                     { padding-top: 0px; }
+.products_imageonly .item               { display: inline-block; width: 76px; float: left; border: solid 1px #fc5; margin: 3px 8px 3px 0; padding: 3px; background-color: #fff; text-align: center; }
+.products_imageonly .box                { background-color: #fff; text-align: center; }
 .products_imageonly img                 { margin: 0 auto; float: none; }
 /* 
 ------------------------------------------------------------------------
@@ -209,7 +214,7 @@ VERSIONS
 .versions span.figure                   { color: #090; font-weight: bold; font-size: 130%; }
 .versions .line                         { text-align: right; padding: 5px; }
 .versions .addtobasket                  { clear: both }
-.versions .addtobasket .dropdown        { width: 60px }
+.versions .addtobasket .dropdown        { width: 45px }
 .versions .addtobasket .textbox         { width: 30px }
 .versions .addtobasket div.selector     { white-space: nowrap; float: right; }
 .versions .addtobasket div.outofstock   { color: #f00; font-weight: bold; }
@@ -412,33 +417,12 @@ CARRY ON SHOPPING / CROSS SELLING
 .carryonshopping                        { margin: 30px 0 0 0 }
 /* 
 ========================================================================
-CHECKOUT
-========================================================================
-*/
-/* shipping */
-#checkout .basket table.baskettable tr.product_row td div.info
-                                        { width: 180px }
-#checkout span.ship_currency            { display: block; padding: 5px; text-align: left; color: #bbb; font-weight: bold; padding: 5px 0 5px 0; }
-#checkout span.ship_currency span.figure
-                                        { color: #090; font-weight: bold; padding: 0 0 0 5px; }
-#checkout span.free                     { color: #090; font-weight: bold; padding: 0; }
-#checkout span.extax,
-#checkout span.inctax                   { padding-right: 10px }
-#checkout textarea                      { width: 100% }
-#checkout span.checkbox                 { display: block; padding: 10px 0 10px 0; }
-#checkout span.checkbox label           { width: 300px }
-#checkout .checkoutaddress              { width: 45%; height: 240px; margin: 0 20px 0 0; overflow: hidden; float: left; }
-#checkout #confirmation .checkoutaddress
-                                        { height: 160px }
-#checkout .checkoutaddress .noaddress   { width: 90%; height: 120px; margin: 10px 30px 10px 0; overflow: hidden; float: left; padding: 10px; border: dashed 1px #999; }
-#checkout #checkoutbasket               { margin: 20px 0 20px 0 }
-/* 
-========================================================================
 ADDRESSES
 ========================================================================
 */
 .address                                { padding: 0 0 10px 0 }
-.address .inputform select              { margin: 3px 10px 10px 0; width: 330px; }
+.address .inputform div.Kartris-DetailsView-Value
+                                        { width: 260px; }
 .address .inputform .bold               { font-weight: bold }
 .address div.phone                      { font-weight: bold; padding: 5px 0 5px 0; }
 /* 
@@ -449,6 +433,7 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket .basketwarning                  { display: block; width: auto; border: dotted 1px #f00; color: #f00; background-color: #f6e6e6; padding: 3px 9px 3px 9px; margin: 2px 0 15px 0; }
 .basket .baskettable                    { }
 .basket .baskettable tr th              { }
+.basket .baskettable tr th.name         {  }
 .basket table.baskettable tr td         { background-color: #fff; border-bottom: solid 1px #ddd; }
 .basket .products_imageonly             { margin-top: 8px; }
 .basket td.image_cell                   { width: 70px; text-align: center; padding: 0 10px 5px 5px; }
@@ -456,7 +441,7 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket .inctax,
 .basket .price,
 .basket .quantity,
-.basket .remove,
+.basket .remove                         { width: 10%; text-align: right; white-space: nowrap; }
 .basket .tax,
 .basket .total                          { text-align: right; white-space: nowrap; }
 .basket table.baskettable tr td div.name strong a,
@@ -469,10 +454,10 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket table.baskettable tr td div.details div.info strong
                                         { color: #777 }
 .basket table.baskettable tr td div.info
-                                        { padding: 0px 10px 1px 0px; width: 310px; }
+                                        { padding: 0px 5px 1px 0px;  }
 .basket table.baskettable tr.product_row td div.info
-                                        { width: 280px }
-.basket td.quantity                     { vertical-align: top; width: 45px; text-align: right; }
+                                        {  }
+.basket td.quantity                     { vertical-align: top; width: 10%; text-align: right; }
 .basket td.quantity div                 { float: right }
 .basket td.quantity input               { width: 25px; text-align: right; }
 .basket td.quantity div.smallupdateprogress
@@ -480,9 +465,9 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket td.extax,
 .basket td.inctax,
 .basket td.tax,
-.basket td.price                        { font-weight: bold; color: #090; width: 75px; font-size: 100%; vertical-align: top; }
-.basket td.total                        { font-weight: bold; color: #f00; width: 165px; font-size: 110%; }
-.basket td.remove                       { font-weight: bold; text-align: right; width: 25px; vertical-align: top; }
+.basket td.price                        { font-weight: bold; color: #090; width: 10%; font-size: 100%; vertical-align: top; white-space: nowrap;}
+.basket td.total                        { font-weight: bold; color: #f00; width: 20%; font-size: 110%; white-space: nowrap; }
+.basket td.remove                       { }
 .basket td.remove a.basket_delete_button
                                         { margin-top: 2px; display: block; height: 16px; width: 16px; background-image: url(Images/trashcan.png); background-position: top left; background-repeat: no-repeat; }
 .basket .applycoupon td label           { color: #000; font-size: 110%; font-weight: bold; }
@@ -501,9 +486,8 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket .continueshopping               { margin-top: 8px; text-align: right; }
 .basket .continueshopping .submit       { float: left; text-align: left; }
 /* shipping select dropdown menu */
-.basket select                          { width: 240px }
 .basket tr.shippingrow div.smallupdateprogress
-                                        { float: left; margin-top: -20px; margin-left: 250px; }
+                                        { float: left; margin-top: -20px; }
 .basket tr.couponrow div.smallupdateprogress
                                         { }
 .basket table .totals                   { border-bottom: solid 1px #eee; background-color: #fff; }
@@ -520,8 +504,32 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 #shippingestimate                       { margin: 15px 0 30px 0; }
 #shippingestimate select                { }
 #shippingestimate table                 { margin: 10px 0 0 0 }
-#shippingestimate table td.name         { width: 200px; font-weight: bold; color: #000; padding-right: 16px; }
+#shippingestimate table td.name         { width: 50%; font-weight: bold; color: #000; padding-right: 16px; }
 #shippingestimate table td.datafield    { padding-right: 12px }
+/* 
+========================================================================
+CHECKOUT
+========================================================================
+*/
+/* shipping */
+#checkout .basket table.baskettable tr.product_row td div.info
+                                        { }
+#checkout span.ship_currency            { display: block; padding: 5px; text-align: left; color: #bbb; font-weight: bold; padding: 5px 0 5px 0; }
+#checkout span.ship_currency span.figure
+                                        { color: #090; font-weight: bold; padding: 0 0 0 5px; }
+#checkout span.free                     { color: #090; font-weight: bold; padding: 0; }
+#checkout span.extax,
+#checkout span.inctax                   { padding-right: 10px }
+#checkout textarea                      { width: 100% }
+#checkout span.checkbox                 { display: block; padding: 10px 0 10px 0; }
+#checkout span.checkbox label           { width: 300px }
+#checkout .checkoutaddress              { height: 240px; }
+#checkout #confirmation .checkoutaddress
+                                        { height: 180px }
+#checkout .checkoutaddress .noaddress   { width: 90%; height: 120px; margin: 10px 30px 10px 0; overflow: hidden; float: left; padding: 10px; border: dashed 1px #999; }
+#checkout #checkoutbasket               { margin: 20px 0 20px 0 }
+#checkout .basket th.total,
+#checkout .basket td.total              { width: 10%; }
 /* 
 ========================================================================
 WISHLIST
@@ -599,7 +607,7 @@ POPUPS - customization, add to basket, etc.
 */
 .popup_customization textarea           { width: 100% }
 .popup_customization .price             { font-weight: bold; color: #090; }
-.popup_addtobasket                      { width: 350px; height: 60px; }
+.popup_addtobasket                      { width: 350px; height: 120px; }
 .popup_addtobasket p                    { margin: 0 0 15px 0 }
 /* 
 ========================================================================

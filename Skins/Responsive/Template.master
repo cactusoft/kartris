@@ -42,10 +42,14 @@
 		</ajaxToolkit:ToolkitScriptManager>
 		<div class="row" id="centre_container">
 			<div class="row">
-				<div class="small-12 large-8 columns">
+				<div class="small-12 large-6 columns">
 					<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
 				</div>
-				<div id="minibasketholder" class="small-12 large-4 columns">
+				<div id="localization" class="small-12 large-3 columns">
+					<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
+					<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
+				</div>
+				<div id="minibasketholder" class="small-12 large-3 columns">
 					<user:BasketView ID="UC_MiniBasket" runat="server" ViewType="MINI_BASKET" />
 				</div>
 				<div id="header" class="small-12 large-8 columns">
@@ -58,15 +62,14 @@
 				<div class="small-12 large-4 columns">
 					<user:SearchBox runat="server" ID="UC_SearchBox" EnableViewState="False" />
 				</div>
-				<div class="small-12 large-8 columns">
+			</div>
+			<div class="row">
+				<div class="small-12 columns">
 					<user:NavigationMenu ID="UC_NavigationMenu" runat="server" EnableViewState="False"
 						Visible="True" />
 				</div>
-				<div class="small-12 large-4 columns">
-					<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
-					<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
-				</div>
-				<div class="small-12 large-12 columns">
+				
+				<div class="small-12 columns">
 					<!--
 						MENU OPTIONS:
 						CategoryMenu

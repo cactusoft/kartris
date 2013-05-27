@@ -5,6 +5,8 @@
     <ContentTemplate>
     <h2><asp:Literal ID="litContentTextEstimatedShipping" runat="server" Text='<%$ Resources: Basket, ContentText_EstimateShipping %>'
                                                     EnableViewState="false" Visible="true"></asp:Literal></h2>
+        <div class="row">
+            <div class="small-12 large-4 columns">
             <asp:ObjectDataSource ID="KartrisCountryList" runat="server" TypeName="KartrisClasses+Country"
                 SelectMethod="GetAll" EnableCaching="false" CacheDuration="30">
                 <SelectParameters>
@@ -16,6 +18,8 @@
                 <asp:ListItem Text="<%$ Resources: Kartris, ContentText_DropdownSelectDefault %>"
                     Value="0" />
             </asp:DropDownList>
+            </div>
+        </div>
         
         <asp:Gridview ID="gvwShippingMethods" runat="server" AutoGenerateColumns="false" >
         <Columns>
@@ -24,7 +28,7 @@
                     <asp:Literal ID="litShippingMethodName" runat="server" Text='<%# Eval("Name") %>'> </asp:Literal>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField ItemStyle-CssClass="datafield" HeaderText='<%$ Resources: _Kartris, ContentText_Description %>'>
+            <asp:TemplateField ItemStyle-CssClass="datafield hide-for-small" HeaderText='<%$ Resources: _Kartris, ContentText_Description %>'>
                 <ItemTemplate>
                     <asp:Literal ID="litShippingMethodDescription" runat="server" Text='<%# Eval("Description") %>'> </asp:Literal>
                 </ItemTemplate>
