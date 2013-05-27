@@ -38,11 +38,11 @@
                                             <HeaderStyle />
                                         </asp:BoundField>
                                         <asp:BoundField DataField="DateOpened" HeaderText="<%$ Resources:Tickets, ContentText_TicketOpened %>"
-                                            ItemStyle-CssClass="opened">
+                                            ItemStyle-CssClass="opened hide-for-small">
                                             <HeaderStyle />
                                         </asp:BoundField>
                                         <asp:BoundField DataField="DateClosed" HeaderText="<%$ Resources:Tickets, ContentText_TicketClosed %>"
-                                            ItemStyle-CssClass="closed">
+                                            ItemStyle-CssClass="closed hide-for-small">
                                             <HeaderStyle />
                                         </asp:BoundField>
                                         <asp:TemplateField ItemStyle-CssClass="selectfield">
