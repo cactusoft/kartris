@@ -2,7 +2,9 @@
 <siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" enableLocalization="true" >
 	<siteMapNode url="~/Default.aspx" title="$resources:Kartris,ContentText_Home"  description="$resources:Kartris,ContentText_Home"  >
 
-    <siteMapNode url="~/Customer.aspx" title="$resources:Kartris,PageTitle_MyAccount"  description="$resources:Kartris,PageTitle_MyAccount" value="myaccount" />
+		<siteMapNode url="~/Search.aspx" title="$resources:Search,PageTitle_ProductSearch"  description="$resources:Search,PageTitle_ProductSearch" value="search" />
+		
+		<siteMapNode url="~/Customer.aspx" title="$resources:Kartris,PageTitle_MyAccount"  description="$resources:Kartris,PageTitle_MyAccount" value="myaccount" />
 		
 		<siteMapNode url="~/News.aspx" title="$resources:News,PageTitle_SiteNews"  description="$resources:News,PageTitle_SiteNews" value="news" />
 				

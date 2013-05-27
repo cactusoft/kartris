@@ -23,7 +23,7 @@
                             <asp:View ID="viwTickets" runat="server">
                                 <p>
                                     <asp:Literal ID="litContentTextSupportTicketExplanation" runat="server" Text="<%$ Resources:Tickets, ContentText_SupportTicketExplanation %>" /></p>
-                                <asp:LinkButton ID="btnOpenTicket" runat="server" CssClass="linkbutton link2 floatright"
+                                <asp:LinkButton ID="btnOpenTicket" runat="server" CssClass="linkbutton link2"
                                     Text="<%$ Resources: Kartris, ContentText_AddNew %>" />
                                 <asp:GridView CssClass="filled" ID="gvwTickets" runat="server" AllowPaging="True"
                                     AutoGenerateColumns="False" DataKeyNames="TIC_ID" AutoGenerateEditButton="False"

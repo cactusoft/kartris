@@ -3,11 +3,17 @@
 HORIZONTAL DROPDOWN MENU SYSTEM
 ========================================================================
 */
-#menubar								{  }
-.dropdownmenu ul						{ text-transform: uppercase; font-size: 85%; font-weight: normal; padding: 0; margin: 0; }
-.dropdownmenu ul li						{ position: relative; list-style: none; float: left; margin: 0; }
-.dropdownmenu ul li a					{ color: #333; font-weight: normal; z-index: 200; display: block; text-decoration: none; padding: 3px 17px 0px 0; }
-.dropdownmenu ul li:hover a				{ display: block; color: #000; }
+#menubar								{ }
+
+#menubar .top-bar                       { background-color: #ddd; margin: 0 0 6px 0; }
+#menubar .top-bar.expanded .title-area  { background: #ccc; }
+#menubar .top-bar-section li a:not(.button)
+                                        { background-color: #ddd; color: #333; font-weight: normal; font-size: 70%; text-transform: uppercase; }
+/* Style top level links */
+#menubar .top-bar-section li            { border-left: solid 1px #fff; }
+#menubar .top-bar-section li a:hover
+                                        { background-color:#eee; }
+#menubar .top-bar li.name span          { display: inline-block; padding: 0 0 0 10px; }
 /* 
 ========================================================================
 CATEGORY NAVIGATION MENU
@@ -39,7 +45,7 @@ a newer version), just just grab the bits we need to change here.
 #categorymenu .top-bar .title-area .name a:hover
                                         { color: #000; background-color: #aaa; }
 
-/* Controls height of main category nav bar */
+/* Controls link background */
 #categorymenu .top-bar-section li a:not(.button)
                                         { background-color: #333; }
 
@@ -49,7 +55,7 @@ a newer version), just just grab the bits we need to change here.
 
 /* Links within the dropdown menus */
 #categorymenu .top-bar-section .dropdown li a
-                                        { font-weight: normal; padding: 6px 15px; color: #ddd; border-right:solid 1px #999; max-width: 200px;}
+                                        { font-weight: normal; padding: 6px 15px; color: #ddd; border-right:solid 1px #999; }
 #categorymenu .top-bar-section .dropdown li a:hover
                                         { color: #000; background-color: #aaa; }
 
@@ -61,3 +67,20 @@ a newer version), just just grab the bits we need to change here.
 #categorymenu .top-bar-section li       { border-right:solid 1px #999; }
 #categorymenu .top-bar-section li a:hover
                                         { background-color:#666; }
+
+/* 
+========================================================================
+ORBIT SLIDESHOW
+========================================================================
+*/
+#front-slideshow                        { background-color: #fd5; }
+#front-slideshow li                     { padding: 10px 80px; min-height: 200px; }
+
+/* 
+========================================================================
+GENERAL 
+========================================================================
+*/
+table tr td                             { font-size: 100%; }
+table thead,
+table tfoot                             { background: #fff; }
