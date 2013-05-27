@@ -4,9 +4,7 @@
     <div class="box">
         <div class="pad">
             <asp:Literal EnableViewState="false" ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>
-            <div class="imageblock">
-                <user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="False" />
-            </div>
+            <user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="False" />
             <div class="details">
                 <h2>
                     <asp:HyperLink EnableViewState="false" ID="lnkProductName" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>'

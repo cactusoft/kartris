@@ -1200,3 +1200,6 @@ BEGIN
 
 END
 GO
+
+-- ****** New language strings
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_NavMenu', N'Navigation Menu', 'Title on the nav menu that shows in small responsive mode', 2.0003, N'Navigation Menu', NULL, N'Kartris', 1)

@@ -129,7 +129,8 @@ MAIN BASKET
                                 <table class="baskettable">
                                     <thead>
                                         <tr class="headrow">
-                                            <th class="name" colspan="2">
+                                            <th class="hide-for-small"></th>
+                                            <th class="name">
                                                 <asp:Literal ID="litContentTextNameDetails" runat="server" Text='<%$ Resources: Kartris, ContentText_NameDetails %>'
                                                     EnableViewState="false"></asp:Literal>
                                             </th>
@@ -140,7 +141,7 @@ MAIN BASKET
                                                     EnableViewState="false"></asp:Literal>
                                             </th>
                                             <th class="inctax">
-                                                <asp:Literal ID="litIContentTextncTax1" runat="server" Text='<%$ Resources: Kartris, ContentText_IncTax %>'
+                                                <asp:Literal ID="litContentTextIncTax1" runat="server" Text='<%$ Resources: Kartris, ContentText_IncTax %>'
                                                     EnableViewState="false"></asp:Literal>
                                             </th>
                                             <% Else%>
@@ -185,8 +186,8 @@ MAIN BASKET
                             <ItemTemplate>
                                 <tr class="product_row">
                                     <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
-                                    <td class="image_cell">
-                                        <user:ProductTemplateImageOnly ID="ProductTemplateImageOnly1" runat="server" />
+                                    <td class="image_cell hide-for-small">
+                                        <user:ProductTemplateImageOnly ID="UC_ProductTemplateImageOnly" runat="server" />
                                     </td>
                                     <td>
                                         <% Else%>
@@ -306,7 +307,7 @@ MAIN BASKET
                                 <ItemTemplate>
                                     <tr>
                                         <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
-                                        <td class="image_cell">
+                                        <td class="image_cell hide-for-small">
                                         </td>
                                         <td>
                                             <% Else%>
@@ -373,7 +374,7 @@ MAIN BASKET
                         %>
                         <tr>
                             <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
-                            <td class="image_cell">
+                            <td class="image_cell hide-for-small">
                             </td>
                             <td>
                                 <% Else%>
@@ -449,7 +450,7 @@ MAIN BASKET
                         <% If BSKT_CustomerDiscount > 0 Then%>
                         <tr>
                             <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
-                            <td class="image_cell">
+                            <td class="image_cell hide-for-small">
                             </td>
                             <td>
                                 <% Else%>
@@ -516,7 +517,7 @@ MAIN BASKET
                         <asp:PlaceHolder ID="phdShipping" runat="server" Visible="false">
                             <tr class="shippingrow">
                                 <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
-                                <td class="image_cell">
+                                <td class="image_cell hide-for-small">
                                 </td>
                                 <td>
                                     <% Else%>
@@ -533,7 +534,6 @@ MAIN BASKET
                                                     <user:ShippingMethods ID="UC_ShippingMethodsDropdown" runat="server" />
                                                     <br />
                                                 </asp:PlaceHolder>
-                                                <%=""%>
                                                 <%	If ViewOnly Then%>
                                                 <strong>
                                                     <%=Basket.ShippingName%></strong> -
@@ -590,7 +590,7 @@ MAIN BASKET
                         <asp:PlaceHolder ID="phdOrderHandling" runat="server">
                             <tr>
                                 <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
-                                <td class="image_cell">
+                                <td class="image_cell hide-for-small">
                                 </td>
                                 <td>
                                     <% Else%>
@@ -647,7 +647,7 @@ MAIN BASKET
                         <%	If Basket.CouponName = "" Then%>
                         <tr class="applycoupon">
                             <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
-                            <td class="image_cell">
+                            <td class="image_cell hide-for-small">
                             </td>
                             <td colspan="5">
                                 <% Else%>
@@ -697,7 +697,8 @@ MAIN BASKET
                         <!-- Show Total Tax Row if USmultistatetax is on -->
                         <%If APP_USMultiStateTax And ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then%>
                         <tr class="totals">
-                            <td colspan="3" id="totaltaxrow">
+                            <td class="hide-for-small"></td>
+                            <td colspan="2" id="totaltaxrow">
                                 <asp:Literal ID="litTax" runat="server" Text='<%$ Resources: Kartris, ContentText_Tax %>'
                                     EnableViewState="false" />
                             </td>
@@ -711,7 +712,8 @@ MAIN BASKET
                         <%End If%>
                         <!-- Grand Totals Rows -->
                         <tr class="totals">
-                            <td colspan="2" id="totallabel">
+                            <td class="hide-for-small"></td>
+                            <td id="totallabel">
                                 <asp:Literal ID="litTotal2" runat="server" Text='<%$ Resources: Basket, ContentText_Total %>'
                                     EnableViewState="false"></asp:Literal>
                             </td>
@@ -896,11 +898,10 @@ MINI BASKET
     
                 'See these config settings:
     
-                'frontend.minibasket.compactversion
                 'frontend.minibasket.hidelinks
                 'frontend.minibasket.hiderows
                 'frontend.minibasket.compactversion
-                'frontend.minibasket.countversions (formerly frontend.basket.countversions)
+                'frontend.minibasket.countversions
                 '------------------------------------------
             %>
             <%  If KartSettingsManager.GetKartConfig("frontend.minibasket.compactversion") = "y" Then%>
@@ -988,12 +989,12 @@ MINI BASKET
                     <asp:PlaceHolder ID="phdMiniBasketLinks" runat="server" Visible="true">
                         <div id="links">
                             <ul id="basketlinks">
-                                <li><a href="<%=CkartrisBLL.WebShopURL%>Basket.aspx" id="basket_button">
+                                <li><a class="button" href="<%=CkartrisBLL.WebShopURL%>Basket.aspx" id="basket_button">
                                     <asp:Literal ID="litViewBasket" runat="server" Text="<%$ Resources:Kartris, ContentText_MinibasketViewBasket  %>"
                                         EnableViewState="false"></asp:Literal>
                                 </a></li>
                                 <% If BasketItems.Count > 0 Then%>
-                                <li><a href="<%=CkartrisBLL.WebShopURL%>Checkout.aspx" id="checkout_button">
+                                <li><a class="button" href="<%=CkartrisBLL.WebShopURL%>Checkout.aspx" id="checkout_button">
                                     <asp:Literal ID="litCheckout" runat="server" Text="<%$ Resources:Kartris, ContentText_MinibasketCheckout  %>"
                                         EnableViewState="false"></asp:Literal>
                                 </a></li>
@@ -1001,17 +1002,17 @@ MINI BASKET
                                     <user:GCheckoutButton ID="UC_MiniGCheckoutButton" Size="Small" BackColor="Transparent"
                                         Background="Transparent" OnClick="GoogleCheckoutPost" UseHttps="true" runat="server" /></li>
                                 <%End If%>
-                                <li><a href="<%=CkartrisBLL.WebShopURL%>Contact.aspx" id="enquiry_button">
+                                <li><a class="button" href="<%=CkartrisBLL.WebShopURL%>Contact.aspx" id="enquiry_button">
                                     <asp:Literal ID="litEnquiry" runat="server" Text="<%$ Resources:Kartris, ContentText_MinibasketMakeEnquiry  %>"
                                         EnableViewState="false"></asp:Literal>
                                 </a></li>
                                 <%	If BasketItems.Count > 0 Then%>
-                                <li><a href="<%=CkartrisBLL.WebShopURL%>Customer.aspx?action=savebasket" id="saverecoverbasket_button">
+                                <li><a class="button" href="<%=CkartrisBLL.WebShopURL%>Customer.aspx?action=savebasket" id="saverecoverbasket_button">
                                     <asp:Literal ID="litSaveRecoverBasket" runat="server" Text="<%$ Resources:Kartris, ContentText_MinibasketSaveBasket  %>"
                                         EnableViewState="false"></asp:Literal>
                                 </a></li>
                                 <%If KartSettingsManager.GetKartConfig("frontend.users.wishlists.enabled") <> "n" Then%>
-                                <li><a href="<%=CkartrisBLL.WebShopURL%>Customer.aspx?action=wishlists" id="wishlist_button">
+                                <li><a class="button" href="<%=CkartrisBLL.WebShopURL%>Customer.aspx?action=wishlists" id="wishlist_button">
                                     <asp:Literal ID="litWishlist" runat="server" Text="<%$ Resources:Kartris, ContentText_MinibasketWishList  %>"
                                         EnableViewState="false"></asp:Literal>
                                 </a></li>

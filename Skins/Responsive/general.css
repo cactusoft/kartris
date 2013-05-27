@@ -18,7 +18,7 @@ h4,
 h2.blockheader                          { font-family: 'Open Sans',"Segoe UI Light",Arial,Sans-Serif; font-weight: 100; font-size: 140%; color: #000; margin: 0; padding: 10px 0 15px 0; }
 h5                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0px 0px 5px 0px; color: #000; text-transform: uppercase; padding: 2px 2px 2px 0px; text-align: left; }
 pre                                     { color: #008800 }
-iframe                                  { border: none }
+iframe                                  { border: none; }
 iframe body                             { padding: 5px 0 0 0 }
 .strong                                 { font-weight: bold }
 .floatright                             { float: right }
@@ -58,7 +58,7 @@ img                                     { border: none }
 TABLES
 ========================================================================
 */
-table                                   { background-color: transparent; border-collapse: collapse; width: 100%; border:none; }
+table                                   { background-color: transparent; border-collapse: collapse; width: 100%; max-width: 100%; border:none; }
 table tr td                             { background-color: #FFEEDD; border-bottom: solid 2px #fff; vertical-align: top; padding: 5px 10px 5px 5px; }
 table tr.alt                            { }
 table tr.headrow,
@@ -83,21 +83,20 @@ DETAILS VIEW / SECTIONS
 */
 .Kartris-DetailsView                    { width: 100% }
 .Kartris-DetailsView-Data               { margin-bottom: 10px }
-.Kartris-DetailsView-Data ul            { list-style-type: none; padding: 0; margin-left: 0; }
+.Kartris-DetailsView-Data ul            { list-style-type: none; padding: 0; margin-left: 0;  }
 .Kartris-DetailsView-Data ul li         { padding-top: 5px }
-.Kartris-DetailsView-Name               { display: -moz-inline-box; display: inline-block; color: #666; margin-bottom: 3px; width: 130px; font-weight: normal; vertical-align: top; padding-right: 10px; }
-.Kartris-DetailsView-Value              { display: -moz-inline-box; display: inline-block; width: 370px; vertical-align: top; color: #000; overflow: visible; }
-.popup .Kartris-DetailsView-Value       { width: 330px }
-.Kartris-DetailsView-Value label        { font-size: 89%; color: #222; margin-bottom: 3px; font-weight: normal; vertical-align: top; padding-left: 10px; }
+.Kartris-DetailsView-Name               { display: inline-block; color: #666; margin-bottom: 3px; width: 150px; font-weight: normal; vertical-align: top; padding-right: 10px; }
+.Kartris-DetailsView-Value              { display: inline-block; width: 250px; max-width: 100%; vertical-align: top; color: #000; overflow: visible; }
+.Kartris-DetailsView-Value label        { white-space: nowrap; max-width: 100%; }
 /* 
 ========================================================================
 FORM ELEMENTS
 ========================================================================
 */
 form                                    { margin: 0; display: inline; padding: 0; }
-select                                  { font-weight: normal; color: #111; border: solid 1px #999; margin: 0 0 3px 0; padding: 0px; }
-textarea                                { min-height: 80px; }
-input                                   { width: 250px; }
+select                                  { font-weight: normal; color: #111; border: solid 1px #bbb; margin: 0 0 3px 0; padding: 0px; }
+textarea                                { min-height: 80px; max-width: 100%; }
+input                                   { width: 250px; max-width: 100%; }
 input.longtext                          { width: 400px }
 select:focus,
 input:focus,
@@ -113,7 +112,7 @@ input.highpriority                      { }
 .inputform br                           { display: block; clear: both; }
 .checkbox input,
 .radio input                            { border-style: none; background-color: transparent; display: inline-block; width: 20px; float: left; width: 20px; margin-right: 1px; }
-label                                   { display: inline-block; width: auto; letter-spacing: 0px; color: #777; margin-bottom: 3px; font-weight: normal; vertical-align: top; }
+label                                   { font-size: 99%; display: inline-block; letter-spacing: 0px; color: #777; margin-bottom: 3px; font-weight: normal; vertical-align: top; }
 .inputform .column2                     { padding: 0px; margin-left: 130px; }
 .inputform .column2 label               { width: auto }
 div.formdivider                         { display: block; border-top: dotted 1px #bbb; width: 100%; }
@@ -136,14 +135,14 @@ IMAGES
 */
 .imageholder                            { display: block; text-align: center; }
 .imageholder img                        { margin: 0; padding: 0; }
-.imageviewer                            { text-align: center }
+.imageviewer                            { text-align: center; }
 .imageviewer .gallery                   { padding: 5px 0 10px 5px; width: 100%; text-align: left; }
 .imageviewer .gallery .scrollarea       { display: inline-block }
 #frmLargeImage div                      { }
-#frmLargeImage .imageviewer .gallery    { padding: 5px 0 0 0; background-color: #fff; text-align: center; border-top: solid 1px #fff; overflow-x: auto; overflow-y: hidden; white-space: nowrap; position: absolute; bottom: 5px; left: 2px; width: 99%; white-space: nowrap; }
-.imageviewer .gallery .imageholder      { display: inline-block; float: left; border: solid 1px #fc5; margin: 5px 1px 0 1px; vertical-align: middle; height: 60px; width: 60px; overflow: visible; }
+#frmLargeImage .imageviewer .gallery    { padding: 5px 0 0 0; background-color: #fff; text-align: center; border-top: solid 1px #fff; overflow-x: auto; overflow-y: hidden; white-space: nowrap; position: absolute; bottom: 5px; left: 2px; width: 99%; }
+.imageviewer .gallery .imageholder      { display: inline-block; float: left; border: solid 1px #fc5; margin: 5px 1px 0 1px; vertical-align: middle; height: 80px; width: 80px; overflow: visible; }
 html>body .imageviewer .gallery .imageholder
-                                        { float: none; nowhitespace: afterproperty; float: *right; /*IE7 hack */ }
+                                        { float: none; float: *right; /*IE7 hack */ }
 .imageviewer .gallery .imageholder:hover
                                         { border: solid 1px #000 }
 .imageviewer .gallery .imageholder img  { vertical-align: middle; margin: 5px; }
@@ -236,11 +235,11 @@ POPUP MESSAGE
 */
 #largeimagepopup                        { overflow: hidden; background-image: none; }
 .popup_background                       { background-color: #000; filter: alpha(opacity=30); opacity: 0.3; }
-.popup                                  { background-color: #fff; border: solid 2px #222; padding: 45px 10px 13px 10px; width: 550px; max-width: 100%; max-height: 100%; text-align: left; top: 0px; left: 0px; }
+.popup                                  { background-color: #fff; border: solid 2px #222; padding: 45px 10px 13px 10px; width: 550px; max-width: 100%; max-height: 100%; text-align: left; top: 0px; left: 0px; overflow-y: auto; }
 .popup h2                               { position: absolute; left: 10px; top: 0; padding: 10px 0 10px 0; margin: 0px; font-size: 125%; }
 .popup p                                { padding: 10px 0 0 0; margin: 0; }
 .popup strong                           { color: #000 }
-.popup .closebutton                     { position: absolute; right: 5px; top: 4px; text-align: center; padding: 1px 6px 1px 6px; border-bottom: solid 1px #333; border-right: solid 1px #333; background-color: #ccc; font-family: Verdana,Arial,Helvetica,Sans-Serif; font-size: 9pt; font-weight: bold; color: #000; width: 8px; }
+.popup .closebutton                     { position: absolute; right: 5px; top: 4px; text-align: center; padding: 1px 6px 1px 6px; border-bottom: solid 1px #333; border-right: solid 1px #333; background-color: #ccc; font-family: Verdana,Arial,Helvetica,Sans-Serif; font-size: 9pt; font-weight: bold; color: #000; width: 21px; }
 .popup .closebutton:active              { background-color: #ccc; border-top: none; border-left: none; border-bottom: solid 1px #ccc; border-right: solid 1px #ccc; color: #666; }
 /* 
 ========================================================================
@@ -255,8 +254,8 @@ AUTOCOMPLETE FLY-OUT
 RADIO BUTTON LIST ADAPTOR
 ========================================================================
 */
-.Kartris-RadioButtonList ul             { margin: 0 0 0 0; padding: 0; border: 0; }
-.Kartris-RadioButtonList ul li          { list-style: none; float: none; clear: both; margin: 0; height: 20px; border: 0; }
+.Kartris-RadioButtonList ul             { margin: 0 0 0 0; padding: 0; border: 0; overflow: hidden; }
+.Kartris-RadioButtonList ul li          { white-space: nowrap; list-style: none; float: none; clear: both; margin: 0; height: 20px; border: 0; }
 .Kartris-RadioButtonList ul li input    { width: 25px; float: left; border: none; background: none; }
 /* 
 ========================================================================

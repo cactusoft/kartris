@@ -3,12 +3,8 @@
 MAIN LAYOUT
 ========================================================================
 */
-.xxxcolumns {
-    border: solid 1px red;
-}
-
 html                                    { height: 100%; }
-body									{ background-color: #fff; }
+body									{ background-color: #fff; min-height: 100%; }
 body.main                               { background: #ddd; overflow: scroll; overflow: -moz-scrollbars-vertical; min-height: 100%; }
 #centre_container                       { background-color: #fff; min-height: 100%; padding: 0 20px; max-width: 900px; }
 /* 
@@ -41,9 +37,9 @@ SEARCH BOX
 OTHER CONTROLS language, currency, etc.
 ========================================================================
 */
-#currencymenu                           { float: right; text-align: right; display: block; padding: 5px 0 5px 10px; margin: 0 0 5px 0; border: none; width: 90px; }
-#currencymenu select					{ }
-#languagemenu                           { float: right; text-align: right; display: block; width: 110px; padding: 5px 0 5px 10px; margin: 0 0 5px 0; border: none; }
+#currencymenu                           { margin: 5px 0 0 0; float: right; text-align: right; display: block; border: none; max-width: 90px; }
+#currencymenu select					{ border: none; }
+#languagemenu                           { float: right; text-align: right; display: block; max-width: 110px; border: none; margin: 5px 10px 0 0; }
 #recentlyviewed                         { border-top: solid 1px #fc5; padding: 10px 0 0 0; }
 /* 
 ========================================================================
@@ -79,11 +75,7 @@ BASKET SUMMARY
 #minibasket #contents ul li a           { display: block; color: #fff; border-top: solid 1px #aaa; font-weight: normal; padding: 2px 5px 2px 5px; }
 #minibasket #contents ul li a:hover     { color: #fc5; background-color: #777; }
 #minibasket #links                      { margin-bottom: 10px }
-#minibasket #links a                    { background-color: #ddd; border: solid 1px #333; color: #333; padding: 1px 5px 1px 5px; font-weight: normal; font-size: smaller; text-transform: uppercase; text-align: center; margin: 1px 0px 1px 2px; font-family: Tahoma,Verdana,Arial,Helvetica; display: block; }
-#minibasket #links a:hover              { background-color: #eee; }
-#minibasket #links ul                   { margin: 0; padding: 0; }
-#minibasket #links ul li                { display: inline; float: left; list-style: none; float: none; clear: both; margin: 1px 0 0 0; padding: 0; }
-#minibasket #links ul li input          { margin: 5px 0 2px 0 }
+#minibasket #links a                    { width: 100%; display: block; }
 /* 
 ========================================================================
 FOOTER

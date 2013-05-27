@@ -154,8 +154,8 @@ PRODUCTS - TABULAR FORMAT
 PRODUCTS - IMAGE ONLY FORMAT
 ------------------------------------------------------------------------
 */
-.products_imageonly                     { padding-top: 0px; text-align: center; float: left; }
-.products_imageonly .item               { padding: 3px; background-color: #fff; border: solid 1px #fc5; text-align: center; margin: 3px 8px 3px 0; }
+.products_imageonly                     { padding-top: 0px; text-align: center;  }
+.products_imageonly .item               { float: left; padding: 3px; background-color: #fff; border: solid 1px #fc5; text-align: center; margin: 3px 8px 3px 0; }
 .products_imageonly img                 { margin: 0 auto; float: none; }
 /* 
 ------------------------------------------------------------------------

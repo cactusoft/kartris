@@ -109,10 +109,10 @@
                                                                                 <th class="number">
                                                                                     <asp:Literal ID="litContentTextSmallNumber" runat="server" Text='<%$ Resources: Kartris, ContentText_SmallNumber %>' />
                                                                                 </th>
-                                                                                <th class="orderdate">
+                                                                                <th class="orderdate hide-for-small">
                                                                                     <asp:Literal ID="litContentTextOrderDate" runat="server" Text='<%$ Resources: Kartris, ContentText_OrderDate %>' />
                                                                                 </th>
-                                                                                <th class="lastupdate">
+                                                                                <th class="lastupdate hide-for-small">
                                                                                     <asp:Literal ID="litContentTextLastUpdate" runat="server" Text='<%$ Resources: Kartris, ContentText_LastUpdate %>' />
                                                                                 </th>
                                                                                 <th class="amount">
@@ -138,10 +138,10 @@
                                                                         <td class="name">
                                                                             <%#Eval("O_ID")%>
                                                                         </td>
-                                                                        <td class="orderdate">
+                                                                        <td class="orderdate hide-for-small">
                                                                             <%#CkartrisDisplayFunctions.FormatDate(Eval("O_Date"), "t", Session("LANG"))%>
                                                                         </td>
-                                                                        <td class="lastupdate">
+                                                                        <td class="lastupdate hide-for-small">
                                                                             <%#CkartrisDisplayFunctions.FormatDate(Eval("O_LastModified"), "d", Session("LANG"))%>
                                                                         </td>
                                                                         <td class="amount">
