@@ -40,7 +40,19 @@ Partial Class Admin_CustomersList
         ElseIf Request.QueryString("cg") <> "" Then
             If IsNumeric(Request.QueryString("cg")) Then
                 _UC_CustomersList.CustomerGroupID = CInt(Request.QueryString("cg"))
-                litCustomersListTitle.Text = GetLocalResourceObject("PageTitle_Customers") & ": <span class=""h1_light"">" & GetGlobalResourceObject("_Customers", "PageTitle_CustomerGroups") & "</span>"
+                Dim strCustomerGroupName As String = GetGlobalResourceObject("_Customers", "PageTitle_CustomerGroups")
+                Try
+                    Dim drwCustomerGroup As DataRow() =
+                                KartSettingsManager.GetCustomerGroupsFromCache.Select("CG_ID=" &
+                                _UC_CustomersList.CustomerGroupID &
+                                " AND LANG_ID=" & CkartrisBLL.GetLanguageIDfromSession("b"))
+                    If drwCustomerGroup.Length <> 0 Then
+                        strCustomerGroupName = drwCustomerGroup(0)("CG_Name").ToString()
+                    End If
+                Catch ex As Exception
+                    'Can't retrieve customer group name, do nothing
+                End Try
+                litCustomersListTitle.Text = GetLocalResourceObject("PageTitle_Customers") & ": <span class=""h1_light"">" & strCustomerGroupName & "</span>"
             End If
         End If
 
