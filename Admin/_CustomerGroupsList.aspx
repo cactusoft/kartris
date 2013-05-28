@@ -24,6 +24,13 @@
                                     AllowPaging="False" DataKeyNames="CG_ID">
                                     <Columns>
                                         <asp:BoundField DataField="CG_Name" SortExpression="CG_Name" ItemStyle-CssClass="itemname" />
+                                         <asp:TemplateField HeaderText="">
+                                            <ItemTemplate>
+                                                <a class="linkbutton icon_user normalweight"
+                                                        href="_CustomersList.aspx?cg=<%#Eval("CG_ID")%>">
+                                                    <asp:Literal ID="litListUsers" runat="server" Text='<%$Resources: _Kartris, BackMenu_ListFind %>'></asp:Literal></a>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
                                         <asp:BoundField DataField="CG_Discount" HeaderText="<%$ Resources: _Kartris, FormLabel_Discount %>"
                                             SortExpression="CG_Discount" ItemStyle-CssClass="alignright" HeaderStyle-CssClass="alignright" />
                                         <asp:TemplateField HeaderText="<%$ Resources: _Kartris, ContentText_Live %>" SortExpression="CG_Live"
