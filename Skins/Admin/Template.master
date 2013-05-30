@@ -16,7 +16,7 @@
 
     http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
     ========================================================================
-        -->
+    -->
     <title>Kartris Administration</title>
     <link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
     <link id="lnkFavIcon2" rel="shortcut icon" href="~/favicon.ico" type="image/x-icon"
@@ -26,7 +26,7 @@
     <link href="general.css" rel="stylesheet" type="text/css" />
     <link href="sections.css" rel="stylesheet" type="text/css" />
     <link href="template.css" rel="stylesheet" type="text/css" />
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
     <asp:ContentPlaceHolder ID="phdHead" runat="server" EnableViewState="False">
     </asp:ContentPlaceHolder>
 </head>
