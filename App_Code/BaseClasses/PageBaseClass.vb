@@ -397,16 +397,20 @@ Public MustInherit Class PageBaseClass
 
         '301 Redirect Code
         'This redirects to the official webshopURL domain, if another is used to access the site.
-        If InStr(Request.Url.ToString.ToLower, CkartrisBLL.WebShopURL.ToLower) = 0 Then
-            Dim strRedirectURL As String = CkartrisDisplayFunctions.CleanURL(Request.RawUrl.ToLower)
-            'remove the web shop folder if present - webshopurl already contains this
-            strRedirectURL = Replace(strRedirectURL, "/" & CkartrisBLL.WebShopFolder.ToLower, "")
-            If Left(strRedirectURL, 1) = "/" Then strRedirectURL = Mid(strRedirectURL, 2)
-            Response.Status = "301 Moved Permanently"
-            'append the webshop url
-            Response.AddHeader("Location", CkartrisBLL.WebShopURL & strRedirectURL)
+        If Not Current.Request.IsSecureConnection() Then
+            If InStr(Request.Url.ToString.ToLower, CkartrisBLL.WebShopURL.ToLower) = 0 Then
+                Dim strRedirectURL As String = CkartrisDisplayFunctions.CleanURL(Request.RawUrl.ToLower)
+                'remove the web shop folder if present - webshopurl already contains this
+                strRedirectURL = Replace(strRedirectURL, "/" & CkartrisBLL.WebShopFolder, "")
+                If Left(strRedirectURL, 1) = "/" Then strRedirectURL = Mid(strRedirectURL, 2)
+                Response.Status = "301 Moved Permanently"
+                'append the webshop url
+                Response.AddHeader("Location", CkartrisBLL.WebShopURL & strRedirectURL)
+            End If
         End If
 
+        'If the site requires users to login, redirect
+        'to the login page if user is not logged in
         Dim strUserAccess As String = LCase(GetKartConfig("frontend.users.access"))
         If strUserAccess = "yes" And Not Request.Path.ToString.Contains("/CustomerAccount.aspx") And Not User.Identity.IsAuthenticated Then
             Response.Redirect("CustomerAccount.aspx")

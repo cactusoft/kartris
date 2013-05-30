@@ -6,12 +6,15 @@
 <head id="Head1" runat="server" enableviewstate="true">
 	<base id="baseTag" runat="server" />
 	<!--
-		===============================================================================
-		KARTRIS by cactusoft
-		Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
-		All rights reserved.
-		===============================================================================
-		-->
+	========================================================================
+	KARTRIS by cactusoft
+	Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
+	This work is licensed under a
+	Creative Commons Attribution-ShareAlike 3.0 Unported License
+
+	http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
+	========================================================================
+	-->
 	<link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
 	<link id="lnkFavIcon2" rel="shortcut icon" href="~/favicon.ico" type="image/x-icon"
 		runat="server" />
@@ -21,7 +24,7 @@
 	<link href="menus.css" rel="stylesheet" type="text/css" />
 	<link href="sections.css" rel="stylesheet" type="text/css" />
 	<link href="template.css" rel="stylesheet" type="text/css" />
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
 	<title>Kartris v1</title>
 </head>
 <body class="main">

@@ -30,7 +30,7 @@ Imports System.Xml
 Public NotInheritable Class CkartrisEnumerations
 
     Public Const KARTRIS_VERSION As Decimal = 2.0003
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #5/7/2013# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #5/30/2013# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
@@ -1272,8 +1272,8 @@ Public NotInheritable Class CkartrisBLL
             'Make sure we lowercase the entered domain as
             'otherwise this check is case sensitive, which
             'we don't want.
-            'SSLHandler.IsSecuredForSEO() Or _
-            If (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("/admin/")) Or _
+            If SSLHandler.IsSecuredForSEO() Or _
+            (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("/admin/")) Or _
             (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("customeraccount.aspx")) Or _
             (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("checkout.aspx")) Or _
             (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("customertickets.aspx")) Then _

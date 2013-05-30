@@ -133,15 +133,16 @@ Public NotInheritable Class SSLHandler
     ''' </summary>
     Public Shared Sub CheckBackSSL()
         If IsSSLEnabled() Then
-            If Not Current.Request.IsSecureConnection() Then
-                If Not String.IsNullOrEmpty(Current.Session("Back_Auth")) Then
-                    Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
-                ElseIf Current.Request.Url.AbsoluteUri.Contains("https://") Then
-                    Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("https://", "http://"))
-                End If
-            ElseIf Current.Request.Url.AbsoluteUri.Contains("https://") AndAlso _
-                    String.IsNullOrEmpty(Current.Session("Back_Auth")) Then
-                Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("https://", "http://"))
+            'Start with assumption no SSL required
+            Dim blnNeedSSL As Boolean = False
+
+            'If admin logged in, then we set the requirement
+            'for SSL to 'true'
+            If IsBackEndLoggedIn() Then blnNeedSSL = True
+
+            'We need SSL, but current page doesn't have it
+            If blnNeedSSL = True And Not Current.Request.IsSecureConnection() Then
+                Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
             End If
         ElseIf Current.Request.Url.AbsoluteUri.Contains("https://") Then
             Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("https://", "http://"))
@@ -153,18 +154,23 @@ Public NotInheritable Class SSLHandler
     ''' </summary>
     Public Shared Sub CheckFrontSSL(ByVal blnAuthenticatedUser As Boolean)
         If IsSSLEnabled() Then
-            If Not Current.Request.IsSecureConnection() Then
-                If (IsBackEndLoggedIn() Or blnAuthenticatedUser) Then
-                    Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
-                ElseIf Current.Request.Url.AbsoluteUri.Contains("https://") Then
-                    Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("https://", "http://"))
-                End If
-            ElseIf Current.Request.Url.AbsoluteUri.Contains("https://") AndAlso _
-                    (Not IsBackEndLoggedIn()) AndAlso _
-                    (Not blnAuthenticatedUser) AndAlso _
-                    ((Not Current.Request.Url.AbsoluteUri.ToLower.Contains("customeraccount.aspx")) And _
-                     (Not Current.Request.Url.AbsoluteUri.ToLower.Contains("checkout.aspx")) And _
-                     (Not Current.Request.Url.AbsoluteUri.ToLower.Contains("customertickets.aspx"))) Then
+            'Start with assumption no SSL required
+            Dim blnNeedSSL As Boolean = False
+
+            'If admin logged in, front end user logged in,
+            'or we're on a login page, then we set the requirement
+            'for SSL to 'true'
+            If IsBackEndLoggedIn() Then blnNeedSSL = True
+            If blnAuthenticatedUser Then blnNeedSSL = True
+            If Current.Request.Url.AbsoluteUri.ToLower.Contains("customeraccount.aspx") Then blnNeedSSL = True
+            If Current.Request.Url.AbsoluteUri.ToLower.Contains("checkout.aspx") Then blnNeedSSL = True
+            If Current.Request.Url.AbsoluteUri.ToLower.Contains("customertickets.aspx") Then blnNeedSSL = True
+
+            'We need SSL, but current page doesn't have it
+            If blnNeedSSL = True And Not Current.Request.IsSecureConnection() Then
+                Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
+                'We have SSL but don't need it
+            ElseIf blnNeedSSL = False And Current.Request.IsSecureConnection() Then
                 Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("https://", "http://"))
             End If
         ElseIf Current.Request.Url.AbsoluteUri.Contains("https://") Then
