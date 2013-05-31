@@ -161,7 +161,7 @@ Partial Class ProductView
         'This way we can use a javascript to show/hide it, which is much
         'faster than triggering it with a server-side callback
         Dim numPopupWidth As Integer = KartSettingsManager.GetKartConfig("frontend.display.images.large.width") + 80
-        Dim numPopupHeight As Integer = KartSettingsManager.GetKartConfig("frontend.display.images.large.height") + 100
+        Dim numPopupHeight As Integer = KartSettingsManager.GetKartConfig("frontend.display.images.large.height") + 160
 
         UC_PopUpLargeView.SetTitle = GetGlobalResourceObject("Product", "ContentText_LargeView") & " - " & _ProductName
         UC_PopUpLargeView.SetImagePath = _ProductID
