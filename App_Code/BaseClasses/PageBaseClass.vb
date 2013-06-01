@@ -492,6 +492,18 @@ Public MustInherit Class PageBaseClass
                 End If
             End If
 
+            'Postbacks don't work on ipads and some other Apple devices
+            'because they're assumed to be generic primitive devices not
+            'capable of an 'uplevel' experience. This fixes it.
+            Dim strUserAgent As String = Request.UserAgent
+            If strUserAgent IsNot Nothing _
+                AndAlso (strUserAgent.IndexOf("iPhone", StringComparison.CurrentCultureIgnoreCase) >= 0 _
+                OrElse strUserAgent.IndexOf("iPad", StringComparison.CurrentCultureIgnoreCase) >= 0 _
+                OrElse strUserAgent.IndexOf("iPod", StringComparison.CurrentCultureIgnoreCase) >= 0) _
+                AndAlso strUserAgent.IndexOf("Safari", StringComparison.CurrentCultureIgnoreCase) < 0 Then
+                Me.ClientTarget = "uplevel"
+            End If
+
             'Add links to javascript such a KartrisInterface.js
             RegisterScripts()
         End If
