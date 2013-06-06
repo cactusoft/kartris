@@ -257,7 +257,7 @@ Public Class BasketItem
         End Get
         Set(ByVal value As Single)
             _Quantity = value
-            If _Quantity > 32767 Then _Quantity = 32767
+            If _Quantity > 2147483647 Then _Quantity = 2147483647
         End Set
     End Property
 
