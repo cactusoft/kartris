@@ -1203,3 +1203,35 @@ GO
 
 -- ****** New language strings
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_NavMenu', N'Navigation Menu', 'Title on the nav menu that shows in small responsive mode', 2.0003, N'Navigation Menu', NULL, N'Kartris', 1)
+GO
+UPDATE [dbo].[tblKartrisShippingRates] SET [S_Boundary] = 999999 WHERE [S_Boundary] = 999999999999999;
+GO
+/****** Object:  StoredProcedure [dbo].[_spKartrisShippingRates_GetByMethodAndZone]    Script Date: 6/5/2013 7:19:03 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- ==============================================================
+-- Author:		Medz
+-- Create date: <Create Date,,>
+-- Description:	Get Shipping Methods - by Destination and Boundary
+-- ===============================================================
+ALTER PROCEDURE [dbo].[_spKartrisShippingRates_GetByMethodAndZone]
+(
+	@SM_ID as tinyint,
+	@SZ_ID as tinyint
+)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT     tblKartrisShippingRates.S_ID, tblKartrisShippingRates.S_ShippingMethodID, tblKartrisShippingRates.S_ShippingZoneID, 
+					  CAST(tblKartrisShippingRates.S_Boundary AS Decimal(17, 2)) AS S_Boundary, CAST(tblKartrisShippingRates.S_ShippingRate AS Decimal(9, 2)) 
+					  AS S_ShippingRate, tblKartrisCurrencies.CUR_ISOCode, tblKartrisCurrencies.CUR_Symbol, tblKartrisShippingRates.S_ShippingGateways
+FROM         tblKartrisShippingRates CROSS JOIN
+					  tblKartrisCurrencies
+WHERE     (tblKartrisShippingRates.S_ShippingMethodID = @SM_ID) AND (tblKartrisShippingRates.S_ShippingZoneID = @SZ_ID) AND 
+					  (tblKartrisCurrencies.CUR_ExchangeRate = 1)
+ORDER BY tblKartrisShippingRates.S_ShippingZoneID, S_Boundary, S_ShippingRate
+
+END
+GO
