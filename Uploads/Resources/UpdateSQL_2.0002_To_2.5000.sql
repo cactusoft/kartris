@@ -1235,3 +1235,7 @@ ORDER BY tblKartrisShippingRates.S_ShippingZoneID, S_Boundary, S_ShippingRate
 
 END
 GO
+
+-- ****** Restore config setting which had been previously dropped
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'frontend.minibasket.compactversion', N'n', N's', N'b', N'y|n', N'Whether to display a compact mini-basket (single line link with total)', 2.5, N'n', 0)
+GO

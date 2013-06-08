@@ -450,17 +450,20 @@ Partial Class Templates_BasketView
         End If
 
         'Build up string for compact basket, if enabled
-        If KartSettingsManager.GetKartConfig("frontend.minibasket.compactversion") = "y" Then
-            litCompactShoppingBasket.Text = "<a href=""" & CkartrisBLL.WebShopURL & "Basket.aspx" & """><span id=""compactbasket_title"">" & GetGlobalResourceObject("Basket", "PageTitle_ShoppingBasket") & "</span>" & vbCrLf
-            litCompactShoppingBasket.Text &= "<span id=""compactbasket_noofitems"">(" & Basket.TotalItems.ToString & ")</span>" & vbCrLf
 
-            If Basket.PricesIncTax Then
-                litCompactShoppingBasket.Text &= "<span id=""compactbasket_totalprice"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceIncTax) & "</span>" & vbCrLf
-            Else
-                litCompactShoppingBasket.Text &= "<span id=""compactbasket_totalprice"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceExTax) & "</span>" & vbCrLf
-            End If
-            litCompactShoppingBasket.Text &= "</a>" & vbCrLf
+        litCompactShoppingBasket.Text = "<a href=""" & CkartrisBLL.WebShopURL & "Basket.aspx" & """><span id=""compactbasket_title"">" & GetGlobalResourceObject("Basket", "PageTitle_ShoppingBasket") & "</span>" & vbCrLf
+        litCompactShoppingBasket.Text &= "<span id=""compactbasket_noofitems"">(" & Basket.TotalItems.ToString & ")</span>" & vbCrLf
+
+        If Basket.PricesIncTax Then
+            litCompactShoppingBasket.Text &= "<span id=""compactbasket_totalprice"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceIncTax) & "</span>" & vbCrLf
+        Else
+            litCompactShoppingBasket.Text &= "<span id=""compactbasket_totalprice"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceExTax) & "</span>" & vbCrLf
         End If
+        litCompactShoppingBasket.Text &= "</a>" & vbCrLf
+
+        'We have a second compact display which is turned on client side
+        'by the foundation 'hide-for-large' rule
+        litCompactShoppingBasket2.Text = litCompactShoppingBasket.Text
 
         updPnlMiniBasket.Update()
 

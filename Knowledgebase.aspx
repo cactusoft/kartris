@@ -9,13 +9,16 @@
 				<asp:Panel ID="pnlSearch" runat="server">
 					<h1>
 						<asp:Literal EnableViewState="False" ID="litTitle" runat="server" Text="<%$ Resources: Knowledgebase, PageTitle_Knowledgebase %>" /></h1>
-					<div class="inputform">
+					<div class="inputform row">
 						<!-- BASIC SEARCH FORM -->
-						<input type="text" size="40" class="textbox" id="searchbox_kb_basic" onkeypress="javascript:presssearchkey_kb_basic(event);" />
-						<input id="searchbutton_kb_basic" type="button" value='<asp:Literal ID="litContentText_Search_Basic" runat="server" Text="<%$ Resources: Kartris, ContentText_Search%>" />'
-							class="button" onclick="javascript:submitsearchbox_kb_basic()" /><br />
-					<div class="spacer">
-					</div></div>
+						<div class="small-12 large-4 columns">
+							<input type="text" size="40" class="textbox" id="searchbox_kb_basic" onkeypress="javascript:presssearchkey_kb_basic(event);" />
+						</div>
+						<div class="small-12 large-8 columns">
+							<input id="searchbutton_kb_basic" type="button" value='<asp:Literal ID="litContentText_Search_Basic" runat="server" Text="<%$ Resources: Kartris, ContentText_Search%>" />'
+								class="button" onclick="javascript: submitsearchbox_kb_basic()" />
+						</div>
+					</div>
 					
 					<script type="text/javascript">
 						function submitsearchbox_kb_basic() {
@@ -27,17 +30,18 @@
 								document.getElementById('searchbutton_kb_basic').click();
 							}
 						}
-	                    function SetToBasic() {
-	                        setTimeout("DoFocus()", 100);
-	                    }
-	                    function DoFocus() {
-	                        document.getElementById("searchbox_kb_basic").focus();
-	                    }
-	                </script>
-	                <script type="text/javascript">
-	                    SetToBasic();
-	                </script>
+						function SetToBasic() {
+							setTimeout("DoFocus()", 100);
+						}
+						function DoFocus() {
+							document.getElementById("searchbox_kb_basic").focus();
+						}
+					</script>
+					<script type="text/javascript">
+						SetToBasic();
+					</script>
 				</asp:Panel>
+                <div class="spacer"></div>
 				<asp:UpdatePanel ID="updMain" runat="server" UpdateMode="Conditional">
 					<ContentTemplate>
 						<asp:MultiView ID="mvwKnowledgebase" runat="server" ActiveViewIndex="0">

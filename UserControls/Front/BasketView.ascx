@@ -905,14 +905,17 @@ MINI BASKET
                 '------------------------------------------
             %>
             <%  If KartSettingsManager.GetKartConfig("frontend.minibasket.compactversion") = "y" Then%>
-            <div id="compactminibasket">
+            <div class="compactminibasket">
                 <asp:Literal ID="litCompactShoppingBasket" runat="server" EnableViewState="false" />
             </div>
             <%  Else 'not compactversion %>
-            <div id="minibasket" class="infoblock">
+
+            <div class="compactminibasket show-for-touch" style="display: none;">
+                <asp:Literal ID="litCompactShoppingBasket2" runat="server" EnableViewState="false" />
+            </div>
+
+            <div id="minibasket" class="infoblock hide-for-touch">
                 <div id="minibasket_header">
-                    <div id="numberofitems">
-                    </div>
                     <h4>
                         <asp:HyperLink ID="lnkShoppingBasket" runat="server" NavigateUrl="~/Basket.aspx">
                             <asp:Literal ID="litShoppingBasketTitle" runat="server" Text="<%$ Resources:Basket, PageTitle_ShoppingBasket  %>"
@@ -921,7 +924,7 @@ MINI BASKET
                     </h4>
                 </div>
                 <div id="minibasket_main">
-                    <div id="contents" class="hide-for-small">
+                    <div id="contents" class="hide-for-touch">
                         <div class="box">
                             <asp:PlaceHolder ID="phdOrderInProgress" runat="server" Visible="false">
                                 <div id="orderinprogress">
@@ -987,7 +990,7 @@ MINI BASKET
                     </div>
                     <% If KartSettingsManager.GetKartConfig("frontend.minibasket.hidelinks") <> "y" Then%>
                     <asp:PlaceHolder ID="phdMiniBasketLinks" runat="server" Visible="true">
-                        <div id="links">
+                        <div id="links" class="hide-for-touch">
                             <ul id="basketlinks">
                                 <li><a class="button" href="<%=CkartrisBLL.WebShopURL%>Basket.aspx" id="basket_button">
                                     <asp:Literal ID="litViewBasket" runat="server" Text="<%$ Resources:Kartris, ContentText_MinibasketViewBasket  %>"

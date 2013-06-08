@@ -1,0 +1,136 @@
+/* 
+========================================================================
+MAIN LAYOUT
+========================================================================
+*/
+html                                    { height: 100%; }
+body									{ background-color: #fff; }
+body.main                               { background: #ddd; overflow: scroll; overflow: -moz-scrollbars-vertical; height: 100%; }
+div#topcontainer                        { margin: 0 10px; padding: 0 20px; background-color: #fff; }
+#centre_container                       { width: 1010px; background-color: #fff; margin: 0 auto 0 auto; min-height: 100%; }
+/* 
+========================================================================
+HEADER
+========================================================================
+*/
+#header                                 { height: 169px; padding: 0; display: block; }
+#header .logo                           { margin: 0 }
+#header_top                             { margin: 0; padding: 8px 0 8px 0; display: block; }
+#header_top_right                       { width: 220px; float: right; margin: 0 0 0 0; }
+#header_centre                          { }
+/* 
+========================================================================
+COLUMNS - LEFT, RIGHT AND CENTRAL
+========================================================================
+*/
+#pagecontent                            { width: 100%; float: left; min-height: 300px; margin: 0px; padding: 0px; }
+#pagecontent_homepage                   { width: 100%; float: left; min-height: 300px; margin: 0px; padding: 0px; }
+#pagecontent_pad                        { min-height: 300px; padding: 0 0 15px 0; margin: 0 0 0 0; }
+
+/* 
+========================================================================
+LOGIN STATUS
+========================================================================
+*/
+#loginstatus                            { float: left; font-size: 95%; display: block; width: 310px; margin: 0; color: #bbb; padding: 1px 15px 0 0; height: 20px; }
+#loginstatus .logout                    { display: inline-block; position: relative; height: 15px; }
+#loginstatus a.icon_logout:hover        { color: #000 }
+#loginstatus strong                     { color: #000; font-weight: normal; }
+#loginstatus #login_myaccountlink a     { text-transform: uppercase; font-size: 85%; font-weight: normal; color: #333; margin: 0 0 0 30px; }
+/* 
+========================================================================
+SEARCH BOX
+========================================================================
+*/
+#section_searchbox                      { margin: 2px 0 0 0; float: right; width: 400px; }
+#section_searchbox #searchprogress      { display: block; position: relative; float: left; width: 25px; padding: 2px 0 0 0; }
+#section_searchbox #searchboxes         { margin: 0 0 3px 0; padding: 2px; overflow: visible; float: right; }
+#section_searchbox #searchboxes input   { width: 205px; margin: 0; }
+#section_searchbox #searchboxes input:focus
+                                        { }
+#section_searchbox #searchboxes input.button
+                                        { height: auto; width: auto; }
+/* 
+========================================================================
+GENERAL SKIN SECTION BLOCKS
+========================================================================
+*/
+.infoblock                              { margin: 5px 0 5px 0; border-top: solid 2px #222; padding: 5px 0 5px 0; }
+.infoblock h4                           { font-size: 110%; color: #000; margin: 0 0 5px 0; width: auto; padding: 2px 5px 2px 0; }
+.infoblock h4 a                         { color: #000 }
+.infoblock h4 span                      { display: inline-block }
+.infoblock .box                         { padding: 0 0 5px 0 }
+.infoblock select                       { width: 80%; margin: 0 0 0 0; font-size: 90%; }
+.infoblock ul                           { margin: 0; padding: 0; border: 0; }
+.infoblock ul li                        { list-style: none; float: none; clear: both; padding: 0; }
+.infoblock ul li a                      { display: block; font-weight: normal; text-decoration: none; padding: 2px 5px 3px 10px; }
+.infoblock ul li a:hover                { background-color: #fff; font-weight: bold; }
+.infoblock .infoblock_pad               { padding: 0 0 0 10px }
+/* 
+========================================================================
+OTHER CONTROLS language, currency, etc.
+========================================================================
+*/
+#currencymenu                           { float: right; text-align: right; display: block; padding: 0 0 5px 0; margin: 0 0 5px 0; border: none; width: 70px; }
+#currencymenu select					{ border: none; background: none; }
+#languagemenu                           { float: right; text-align: right; display: block; width: 110px; padding: 5px 20px 0 0; margin: 0 0 5px 0; border: none; }
+#recentlyviewed                         { border-top: solid 1px #fc5; padding: 10px 0 0 0; }
+/* 
+========================================================================
+BASKET SUMMARY
+========================================================================
+*/
+#minibasket                             { float: right; border: none; width: 210px; margin: -3px 20px 0 0; padding: 3px 0 0 0; }
+#minibasket_header                      { height: 21px; display: inline-block; z-index: 1999; position: absolute; background-color: transparent; width: 226px; }
+#minibasket h4                          { float: right; background: none; text-transform: uppercase; font-size: 85%; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0 0 0 0; height: 13px; display: inline-block; color: #fff; text-align: right; border-left: solid 1px transparent; border-top: solid 1px transparent; border-right: solid 1px transparent; z-index: 9992; padding: 1px 4px 10px 2px; }
+#minibasket h4 strong                   { color: #999; font-weight: normal; }
+#minibasket h4 a                        { background-position: -2px -8px; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #333; padding: 2px 0 1px 29px; z-index: 9992; font-weight: normal; }
+#minibasket #minibasket_main            { visibility: hidden; z-index: 111; height: 0px; width: 200px; text-align: left; margin-top: -13px; position: absolute; letter-spacing: 0; }
+#minibasket:hover #minibasket_main      { visibility: visible; height: auto; position: absolute; background-color: #777; border: solid 1px #666; padding: 40px 8px 8px 8px;  margin-left: 12px; z-index: 500; }
+#minibasket:hover h4 strong             { color: #fff; }
+#minibasket:hover h4 a                  { color: #fff; }
+#minibasket #contents #numberofitems,
+#minibasket #contents #orderinprogress,
+#minibasket #contents #basketisempty    { padding: 1px 5px 2px 5px; font-weight: normal; font-size: 95%; color: #fff; }
+#minibasket #contents ul                { margin: 0; padding: 0; }
+#minibasket ul li                       { list-style: none; float: none; clear: both; margin: 0 0 0 0; padding: 2px 0 0 0; }
+#minibasket li                          { display: inline-block }
+html>body #minibasket li                { display: block; font-size: 100%; }
+#minibasket #contents ul #totals        { border-top: solid 1px #aaa; text-align: right; padding: 4px 5px 6px 10px; font-weight: normal; text-transform: uppercase; color: #ccc; font-size: 90%; }
+#minibasket #contents ul #totals span.price
+                                        { color: #6e4; font-weight: normal; font-size: 120%; }
+#minibasket #contents ul #totals span.total
+                                        { color: #6e4; font-weight: bold; font-size: 140%; }
+#minibasket #contents ul #totals #minibasket_whereapplicable
+                                        { margin: 10px 0 0 0; font-size: 85%; letter-spacing: 1px; }
+#minibasket #contents ul #totals strong { font-weight: bold }
+#minibasket #contents ul li a           { color: #fff; border-top: solid 1px #aaa; font-weight: normal; padding: 2px 5px 2px 5px; }
+#minibasket #contents ul li a:hover     { color: #fc5; background-color: #777; }
+#minibasket #links                      { margin-bottom: 10px }
+#minibasket #links li                   { display: inline; float: left; }
+#minibasket #links a                    { background-color: #ddd; border: solid 1px #333; color: #333; padding: 1px 5px 1px 5px; font-weight: normal; font-size: smaller; text-transform: uppercase; text-align: center; margin: 1px 0px 1px 2px; width: 82px; font-family: Tahoma,Verdana,Arial,Helvetica; display: inline-block; }
+#minibasket #links a:hover              { background-color: #eee; }
+#minibasket #links ul                   { margin: 0; padding: 0; }
+#minibasket #links ul li                { list-style: none; float: none; clear: both; margin: 1px 0 0 0; padding: 0; }
+#minibasket #links ul li input          { margin: 5px 0 2px 0 }
+/* 
+========================================================================
+FOOTER
+========================================================================
+*/
+#footer                                 { margin: 0 auto; padding: 0 1px; height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; bottom: 0px; }
+#footerspacer                           { height: 232px }
+#footer_inside                          { margin: 0 auto; width: 950px; color: #aaa; padding: 10px 0 0 0; border-top: solid 3px #fc5; }
+#footer a                               { color: #034; font-weight: normal; }
+#footer .copyright                      { font-size: 90%; margin: 45px 0 0 0; }
+#footer #footer_links                   { height: 120px; width: 100%; }
+#footer .footerblock                    { width: 217px; font-weight: normal; display: inline-block; vertical-align: top; font-size: 95%; float: left; }
+#footer .blockright                     { float: right }
+#footer #leftmostblock                  { padding: 0 26px 0 0 }
+#footer #rightmostblock                 { padding: 0 0 0 26px }
+#footer h2                              { color: #000 }
+#footer ul                              { text-transform: uppercase; font-size: 90%; padding: 0; list-style-type: none; }
+#footer ul li                           { }
+#footer ul li a                         { padding: 2px; display: block; }
+#footer ul li a:hover                   { background-color: #eee; color: #000; }
+

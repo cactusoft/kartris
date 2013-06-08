@@ -5,7 +5,7 @@
     <ContentTemplate>
         <asp:Repeater ID="rptCompareProducts" runat="server">
             <ItemTemplate>
-                <div class="item">
+                <div class="item small-12 large-6 columns">
                     <asp:Literal ID="litP_ID" runat="server" Text='<%# Eval("P_ID") %>' Visible="false" />
                     <div class="imageblock">
                         <user:ImageViewer ID="UC_ImageViewer" runat="server" />

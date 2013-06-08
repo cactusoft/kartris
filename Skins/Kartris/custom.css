@@ -31,12 +31,24 @@ a newer version), just just grab the bits we need to change here.
     .top-bar-js-breakpoint .... (tweak the 'width')
     @media only screen and .... (tweak the 'min-width')
     
-    Also, match the min-width in the style belo to the same value as 
+    Also, match the min-width in the style below to the same value as 
     the one you use in the foundation.css */
 
 @media only screen and (min-width: 930px) {
-  #categorymenu .title-area li.name { display: none;
-     }
+  #menubar .title-area li.name,
+  #categorymenu .title-area li.name { display: none; }
+  }
+
+/* 
+========================================================================
+ADDITIONAL MEDIA QUERIES
+Special CSS rules for small screens, large screens, touch, etc.
+========================================================================
+*/
+@media only screen and (max-width: 500px) {
+  .products_shortened .item,
+  .subcategories_shortened .item,
+  #homepage .products_tabular .item { display: block; float: none; width: 100%; margin: 0 0 5px 0; }
   }
 
 /* Mobile menu */
