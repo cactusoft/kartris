@@ -24,7 +24,7 @@
                                 <p>
                                     <asp:Literal ID="litContentTextSupportTicketExplanation" runat="server" Text="<%$ Resources:Tickets, ContentText_SupportTicketExplanation %>" /></p>
                                 <asp:LinkButton ID="btnOpenTicket" runat="server" CssClass="linkbutton link2"
-                                    Text="<%$ Resources: Kartris, ContentText_AddNew %>" />
+                                    Text="<%$ Resources: Kartris, ContentText_AddNew %>" /><br /><br />
                                 <asp:GridView CssClass="filled" ID="gvwTickets" runat="server" AllowPaging="True"
                                     AutoGenerateColumns="False" DataKeyNames="TIC_ID" AutoGenerateEditButton="False"
                                     GridLines="None" PagerSettings-PageButtonCount="10" PageSize="15">
@@ -62,6 +62,7 @@
                                 </asp:GridView>
                             </asp:View>
                             <asp:View ID="viwTicketDetails" runat="server">
+                                
                                 <asp:HyperLink ID="lnkBack" Visible="true" CssClass="link2 floatright" NavigateUrl="CustomerTickets.aspx"
                                     runat="server" Text="<%$ Resources:Kartris, ContentText_GoBack  %>" />
                                 <div class="spacer">

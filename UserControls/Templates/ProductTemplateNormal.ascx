@@ -2,12 +2,12 @@
 <!-- product normal template start -->
 <div class="item">
     <div class="box">
-        <div class="pad">
+        <div class="pad row">
             <asp:Literal ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>
-            <div class="imageblock">
+            <div class="imageblock small-12 large-3 columns">
                 <user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="False" />
             </div>
-            <div class="details">
+            <div class="details small-12 large-9 columns">
                 <h2>
                     <asp:HyperLink ID="lnkProductName" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>'
                         Text='<%# DisplayProductName() %>' EnableViewState="false"></asp:HyperLink></h2>

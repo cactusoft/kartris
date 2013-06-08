@@ -7,7 +7,7 @@
 #adminbarmenu ul li a.KartrisMenu-Link  { position: fixed; display: block; top: 4px; left: 4px; background-image: url(Skins/Admin/Images/button_frontback.png); background-position: center center; background-repeat: no-repeat; width: 32px; height: 32px; overflow: hidden; color: transparent; padding: 0; line-height: 0px; font-size: 0px; float: left; margin-right: 2px; cursor: pointer; background-color: #666; border: solid 1px #333; z-index: 1000; }
 #adminbarmenu ul li a.KartrisMenu-Link:hover
 										{ background-color: #888 }						
-#adminbarmenu ul ul                     { font-family: "Segoe UI", Verdana, Arial, Helvetica; font-size: 13px; font-weight: normal; left: 4px; top: 37px; width: 180px; color: #333; position: absolute; visibility: hidden; z-index: 1001; border: solid 2px #333; }
+#adminbarmenu ul ul                     { font-family: "Segoe UI", Verdana, Arial, Helvetica; font-size: 13px; font-weight: normal; left: 4px; top: 36px; width: 210px; color: #333; position: absolute; visibility: hidden; z-index: 1001; border: solid 2px #333; }
 #adminbarmenu ul ul li:hover            { border-top: none }
 #adminbarmenu ul li:hover ul,
 #adminbarmenu ul li li:hover ul,

@@ -16,7 +16,7 @@
                     </asp:Button>
                 </p>
                 <% If Session("ProductsToCompare") <> "" Then%>
-                <div class="items">
+                <div class="items row">
                     <user:ProductCompare ID="UC_ProductComparison" runat="server" />
                 </div>
                 <% End If%>

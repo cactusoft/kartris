@@ -25,7 +25,7 @@
             <ul class="title-area show-for-medium-down" style="display:none;">
                 <li class="name"><asp:Hyperlink ID="lnkCategories" runat="server" Text="<%$ Resources: Kartris, ContentText_Categories %>" EnableViewState="False" NavigateUrl="~/Category.aspx"></asp:Hyperlink></li>
                 <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
-                <li class="toggle-topbar menu-icon"><a href=""><span></span></a></li>
+                <li class="toggle-topbar menu-icon"><a href=""><span>MENU</span></a></li>
             </ul>
             <section class="cssfoldout top-bar-section">
                 <asp:Menu ID="menCategory" DataSourceID="srcSiteMap" Orientation="Horizontal" runat="server">

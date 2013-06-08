@@ -19,6 +19,7 @@
                     <div class="spacer">
                     </div>
                     <!-- Image gallery -->
+                    <div class="spacer"></div>
                     <div class="gallery">
                         <div class="scrollarea">
                             <asp:Literal ID="litGalleryThumbs" runat="server"></asp:Literal>
