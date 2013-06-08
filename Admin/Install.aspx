@@ -216,7 +216,7 @@
 							</div>
 						</asp:View>
 					</asp:MultiView>
-                    <div class="formrow">
+					<div class="formrow">
 						<span class="checkbox">
 							<asp:CheckBox ID="chkCreateSampleData" runat="server" meta:resourcekey="Step3_CreateSampleData" />
 						</span>

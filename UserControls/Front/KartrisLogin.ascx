@@ -14,7 +14,7 @@
                                 <asp:Literal ID="litContentTextCustomerAccount" runat="server" Text="<%$ Resources: ContentText_CustomerAccount %>" /></h2>
                         </Header>
                         <Content>
-                            <div class="Kartris-DetailsView inputform">
+                            <div class="Kartris-DetailsView inputform" style="overflow:hidden;">
                                 <div class="Kartris-DetailsView-Data">
                                     <ul>
                                         <li>
@@ -30,24 +30,25 @@
                                                 <asp:Label ID="lblEmail" runat="server" Text="<%$ Resources: Kartris, FormLabel_EmailAddress %> "
                                                     AssociatedControlID="C_Email" CssClass="requiredfield" EnableViewState="false" /></span><span
                                                         class="Kartris-DetailsView-Value">
-                                                        <asp:TextBox ID="C_Email" runat="server" AutoPostBack="false" />
+                                                        <asp:TextBox ID="C_Email" runat="server" AutoPostBack="false" /></span>
                                                         <asp:RequiredFieldValidator ID="valEmailAddress1" runat="server" ControlToValidate="C_Email"
                                                             ValidationGroup="Checkout" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"
                                                             CssClass="error" ForeColor="" />
                                                         <asp:RegularExpressionValidator ID="valEmailAddress2" runat="server" ControlToValidate="C_Email"
                                                             ValidationGroup="Checkout" Display="Dynamic" ErrorMessage="<%$ Resources: Kartris, ContentText_BadEmail %>"
                                                             ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" CssClass="error"
-                                                            ForeColor="" /></span></li>
+                                                            ForeColor="" /></li>
                                         </asp:PlaceHolder>
                                         <asp:PlaceHolder ID="phdPassword" runat="server" Visible="false">
                                             <li><span class="Kartris-DetailsView-Name">
                                                 <asp:Label ID="lblUserPassword" runat="server" Text="<%$ Resources: Kartris, FormLabel_Password %> "
                                                     AssociatedControlID="txtUserPassword" CssClass="requiredfield" EnableViewState="false" /></span><span
                                                         class="Kartris-DetailsView-Value">
-                                                        <asp:TextBox runat="server" ID="txtUserPassword" TextMode="Password" /><asp:RequiredFieldValidator
+                                                        <asp:TextBox runat="server" ID="txtUserPassword" TextMode="Password" /></span>
+                                                        <asp:RequiredFieldValidator
                                                             ID="valPassword" runat="server" ControlToValidate="txtUserPassword" ValidationGroup="Checkout"
                                                             Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"
-                                                            CssClass="error" ForeColor="" /></span></li>
+                                                            CssClass="error" ForeColor="" /></li>
                                         </asp:PlaceHolder>
                                         <asp:PlaceHolder ID="phdSubmitButtons" runat="server" Visible="false">
                                             <li><span class="Kartris-DetailsView-Value">

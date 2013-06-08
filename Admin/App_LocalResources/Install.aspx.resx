@@ -319,7 +319,7 @@
   <data name="Error_RequiredField" xml:space="preserve">
     <value>Required!</value>
   </data>
-  <data name="Step3_CreateSampleData" xml:space="preserve">
+  <data name="Step3_CreateSampleData.Text" xml:space="preserve">
     <value>Create Sample Data</value>
   </data>
 </root>
