@@ -20,28 +20,28 @@
                                                     CssClass="requiredfield"></asp:Label></span><span class="Kartris-DetailsView-Value">
                                                         <asp:DropDownList ID="ddlTicketType" runat="server" CssClass="midtext" AppendDataBoundItems="true">
                                                             <asp:ListItem Text='<%$ Resources: Kartris, ContentText_DropdownSelectDefault %>' Value="0" />
-                                                        </asp:DropDownList>
+                                                        </asp:DropDownList></span>
                                                         <asp:CompareValidator ID="valCompareTicketType" runat="server" CssClass="error" ForeColor=""
                                                             ErrorMessage="<%$ Resources: Kartris, ContentText_RequiredField %>" ControlToValidate="ddlTicketType"
                                                             Operator="NotEqual" ValueToCompare="0" Display="Dynamic" SetFocusOnError="true"
-                                                            ValidationGroup="TicketForm"  /></span></li>
+                                                            ValidationGroup="TicketForm" /></li>
                                             
                                             <!-- Subject -->
                                             <li><span class="Kartris-DetailsView-Name">
                                                 <asp:Label ID="lblSubject" runat="server" Text="<%$ Resources:Tickets, ContentText_TicketSubject %>" AssociatedControlID="txtSubject"
                                                     CssClass="requiredfield"></asp:Label></span><span class="Kartris-DetailsView-Value">
-                                                        <asp:TextBox ID="txtSubject" runat="server" MaxLength="100" />
+                                                        <asp:TextBox ID="txtSubject" runat="server" MaxLength="100" /></span>
                                                         <asp:RequiredFieldValidator EnableClientScript="True" ID="valTitle" runat="server"
                                                             ControlToValidate="txtSubject" ValidationGroup="TicketForm" CssClass="error"
-                                                            ForeColor="" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></span></li>
+                                                            ForeColor="" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></li>
                                             <!-- Text -->
                                             <li><span class="Kartris-DetailsView-Name">
                                                 <asp:Label ID="lblTicketMessage" runat="server" Text="<%$ Resources:ContactUs, ContentText_YourMessageComments %>" AssociatedControlID="txtTicketMessage"
                                                     CssClass="requiredfield"></asp:Label></span><span class="Kartris-DetailsView-Value">
-                                                        <asp:TextBox ID="txtTicketMessage" runat="server" TextMode="MultiLine" MaxLength="4000" />
+                                                        <asp:TextBox ID="txtTicketMessage" runat="server" TextMode="MultiLine" MaxLength="4000" /></span>
                                                         <asp:RequiredFieldValidator Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"
                                                             ID="valTicketMessage" runat="server" ControlToValidate="txtTicketMessage" ValidationGroup="TicketForm"
-                                                            CssClass="error" ForeColor=""></asp:RequiredFieldValidator></span></li>
+                                                            CssClass="error" ForeColor=""></asp:RequiredFieldValidator></li>
                                         </ul>
                                     </div>
                                     <div class="submitbuttons">

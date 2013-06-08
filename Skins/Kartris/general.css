@@ -86,7 +86,7 @@ DETAILS VIEW / SECTIONS
 .Kartris-DetailsView-Data ul            { list-style-type: none; padding: 0; margin-left: 0;  }
 .Kartris-DetailsView-Data ul li         { padding-top: 5px }
 .Kartris-DetailsView-Name               { display: inline-block; color: #666; margin-bottom: 3px; width: 150px; font-weight: normal; vertical-align: top; padding-right: 10px; }
-.Kartris-DetailsView-Value              { display: inline-block; width: 250px; max-width: 100%; vertical-align: top; color: #000; overflow: visible; }
+.Kartris-DetailsView-Value              { display: inline-block; width: 350px; max-width: 100%; vertical-align: top; color: #000; overflow: visible; }
 .Kartris-DetailsView-Value label        { white-space: nowrap; max-width: 100%; }
 /* 
 ========================================================================
@@ -126,7 +126,7 @@ ERRORS & VALIDATION
 span.error,
 div.errortext                           { display: inline-block; color: #fff; font-weight: bold; padding: 1px 5px 1px 3px; background-color: #f00; margin-left: 3px; border-radius: 3px; }
 .requiredfield                          { font-weight: bold }
-.valsummary                             { font-family: Arial, Helvetica, Sans-Serif; display: inline; color: #fff; font-weight: bold; padding: 1px 5px 1px 3px; text-decoration: blink; background-color: #f00; margin-left: 10px; border-radius: 3px; }
+.valsummary                             { display: inline; color: #fff; font-weight: bold; padding: 1px 5px 1px 3px; background-color: #f00; margin-left: 10px; border-radius: 3px; }
 .valsummary ul                          { display: none; visibility: hidden; }
 /* 
 ========================================================================
@@ -156,13 +156,13 @@ MEDIA (Video, audio, etc.)
 ========================================================================
 */
 /* media gallery for product */
-.imagecolumn .media_gallery             { padding: 5px 0 0 5px }
-.imagecolumn .media_gallery h2			{ font-size: 100%; margin: 0; padding: 3px 0 5px 0; color: #000; font-weight: bold; }
+.imagecolumn .media_gallery             { padding: 5px 0 0 0 }
+.imagecolumn .media_gallery h2			{ font-size: 100%; margin: 0; padding: 3px 0 5px 5px; color: #000; font-weight: bold; }
 .imagecolumn .media_gallery_inner       { margin: 1px 0 1px 0 }
 .media_links .mediaholder a             { text-align: center; padding: 0px; display: block; margin: auto auto auto auto; height: 52px; }
 .media_links .mediaholder:hover			{ border: solid 1px #000 }
 .media_links .mediaholder img           { vertical-align: middle; margin: 5px; height: 50px; width: 50px; }
-.media_links .mediaholder               { display: inline-block; float: left; margin: 5px 1px 0 1px; vertical-align: middle; border: solid 1px #fc5; width: 60px; height: 60px; overflow: visible; }
+.media_links .mediaholder               { display: inline-block; float: left; margin: 0 1px 1px 0; vertical-align: middle; border: solid 1px #fc5; width: 60px; height: 60px; overflow: visible; }
 .media_downloadlink                     { }
 /* media gallery for versions, hide title */
 .versions .media_gallery h2             { display: none }

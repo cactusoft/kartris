@@ -22,31 +22,31 @@
                                                     <li><span class="Kartris-DetailsView-Name">
                                                         <asp:Label ID="lblName" runat="server" Text="<%$ Resources:ContactUs, ContentText_YourName %>"
                                                             AssociatedControlID="txtName" CssClass="requiredfield"></asp:Label></span><span class="Kartris-DetailsView-Value">
-                                                                <asp:TextBox ID="txtName" runat="server" MaxLength="30" />
+                                                                <asp:TextBox ID="txtName" runat="server" MaxLength="30" /></span>
                                                                 <asp:RequiredFieldValidator EnableClientScript="True" ID="valName" runat="server"
                                                                     ControlToValidate="txtName" ValidationGroup="ContactForm" CssClass="error" ForeColor=""
-                                                                    Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></span></li>
+                                                                    Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></li>
                                                     <!-- Email -->
                                                     <li><span class="Kartris-DetailsView-Name">
                                                         <asp:Label ID="lblEmail" runat="server" Text="<%$ Resources:ContactUs, ContentText_YourEmail %>"
                                                             AssociatedControlID="txtEmail" CssClass="requiredfield"></asp:Label></span><span
                                                                 class="Kartris-DetailsView-Value">
-                                                                <asp:TextBox ID="txtEmail" runat="server" MaxLength="75" />
+                                                                <asp:TextBox ID="txtEmail" runat="server" MaxLength="75" /></span>
                                                                 <asp:RequiredFieldValidator ID="valEmail" runat="server" ControlToValidate="txtEmail"
                                                                     ValidationGroup="ContactForm" CssClass="error" ForeColor="" Display="Dynamic"
                                                                     Text="<%$ Resources: Kartris, ContentText_RequiredField %>" EnableClientScript="True"></asp:RequiredFieldValidator><asp:RegularExpressionValidator
                                                                         EnableClientScript="True" ID="valEmail2" runat="server" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"
                                                                         ControlToValidate="txtEmail" CssClass="error" ForeColor="" Display="Dynamic"
-                                                                        Text="<%$ Resources: Kartris, ContentText_BadEmail %>" ValidationGroup="ContactForm"></asp:RegularExpressionValidator></span></li>
+                                                                        Text="<%$ Resources: Kartris, ContentText_BadEmail %>" ValidationGroup="ContactForm"></asp:RegularExpressionValidator></li>
                                                     <!-- Message -->
                                                     <li><span class="Kartris-DetailsView-Name">
                                                         <asp:Label ID="lblMessage" runat="server" Text="<%$ Resources:ContactUs, ContentText_YourMessageComments %>"
                                                             AssociatedControlID="txtMessage" CssClass="requiredfield"></asp:Label></span><span
                                                                 class="Kartris-DetailsView-Value">
-                                                                <asp:TextBox ID="txtMessage" runat="server" TextMode="MultiLine" MaxLength="4000" />
+                                                                <asp:TextBox ID="txtMessage" runat="server" TextMode="MultiLine" MaxLength="4000" /></span>
                                                                 <asp:RequiredFieldValidator EnableClientScript="True" ID="valMessage" runat="server"
                                                                     ControlToValidate="txtMessage" ValidationGroup="ContactForm" CssClass="error"
-                                                                    ForeColor="" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></span></li>
+                                                                    ForeColor="" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></li>
                                                     <li><span class="Kartris-DetailsView-Name"></span><span class="Kartris-DetailsView-Value">
                                                         <asp:UpdatePanel ID="updIncludeItems" runat="server" UpdateMode="Conditional" RenderMode="Inline">
                                                             <ContentTemplate>

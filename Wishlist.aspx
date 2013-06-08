@@ -22,18 +22,18 @@
                                         <asp:Label ID="lblWishListEmail" runat="server" Text='<%$ Resources: Kartris, ContentText_WishListEmail %>'
                                             AssociatedControlID="txtWishListEmail" CssClass="requiredfield"></asp:Label></span>
                                         <span class="Kartris-DetailsView-Value">
-                                            <asp:TextBox ID="txtWishListEmail" runat="server"></asp:TextBox>
+                                            <asp:TextBox ID="txtWishListEmail" runat="server"></asp:TextBox></span>
                                             <asp:RequiredFieldValidator EnableClientScript="True" ID="valWishListEmail" runat="server"
                                                 ControlToValidate="txtWishListEmail" ValidationGroup="Wishlist" CssClass="error"
-                                                ForeColor="" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></span></li>
+                                                ForeColor="" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></li>
                                     <li><span class="Kartris-DetailsView-Name">
                                         <asp:Label ID="lblPassword" runat="server" Text='<%$ Resources: Kartris, ContentText_WishListPassword %>'
                                             AssociatedControlID="txtPassword" CssClass="requiredfield"></asp:Label></span>
                                         <span class="Kartris-DetailsView-Value">
-                                            <asp:TextBox MaxLength="200" ID="txtPassword" runat="server"></asp:TextBox>
+                                            <asp:TextBox MaxLength="200" ID="txtPassword" runat="server"></asp:TextBox></span>
                                             <asp:RequiredFieldValidator EnableClientScript="True" ID="valPassword" runat="server"
                                                 ControlToValidate="txtPassword" ValidationGroup="Wishlist" CssClass="error" ForeColor=""
-                                                Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></span></li>
+                                                Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></li>
                                 </ul> 
                             </div>
                         </div>
