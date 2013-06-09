@@ -57,34 +57,36 @@ Public MustInherit Class PageBaseClass
 
     'This creates the 'powered by kartris' tag in bottom right.
     Protected Sub RunGlobalReplacements(ByVal sbdPageSource As StringBuilder)
-        Dim blnReplacedTag As Boolean = False
-        Dim strReplacement As String = ""
-        Dim sbdLink As New StringBuilder
 
-        'Build up string of the 'powered by kartris' tag
-        sbdLink.Append("<a class=""hide-for-small"" onmouseover=""this.style.backgroundColor = '#AD004D';this.style.color = '#fff';"" onmouseout=""this.style.backgroundColor = '#fff';this.style.color = '#AD004D';"" style=""display:inline-block;padding:1px 2px 1px 3px;font-size:7pt;font-family:tahoma,arial,helvetica;position:fixed;bottom:0;right:30px;color:#AD004D;background-color:#fff;""" & vbCrLf)
-        sbdLink.Append(" href=""http://www.kartris.com/"" title=""Kartris - &copy;2013, Cactusoft International FZ LLC. Distributed free and without warranty under the terms of the GNU GPL."">Powered by <span style=""font-weight: bold"">kartris</span></a>")
+        'Any license.config file in the root will disable this,
+        'but the license must be valid or it's a violation of 
+        'the GPL v2 terms
+        If Not KartSettingsManager.HasCommercialLicense Then
 
-        'Try to replace closing body tag with this
-        Try
-            sbdPageSource.Replace("</body", sbdLink.ToString & vbCrLf & "</body")
-            blnReplacedTag = True
-        Catch ex As Exception
-            'Oh dear
-        End Try
+            Dim blnReplacedTag As Boolean = False
+            Dim strLinkText = KartSettingsManager.PoweredByLink
 
-        'If they have somehow managed to remove or
-        'obscure the closing body and form tags, we
-        'just tag our code to the end of the page.
-        'It is not XHTML compliant, but it should 
-        'ensure the tag shows in any case.
-        If blnReplacedTag = False Then
+            'Try to replace closing body tag with this
             Try
-                sbdPageSource.Append(vbCrLf & sbdLink.ToString)
+                sbdPageSource.Replace("</body", strLinkText & vbCrLf & "</body")
                 blnReplacedTag = True
             Catch ex As Exception
                 'Oh dear
             End Try
+
+            'If they have somehow managed to remove or
+            'obscure the closing body and form tags, we
+            'just tag our code to the end of the page.
+            'It is not XHTML compliant, but it should 
+            'ensure the tag shows in any case.
+            If blnReplacedTag = False Then
+                Try
+                    sbdPageSource.Append(vbCrLf & strLinkText)
+                    blnReplacedTag = True
+                Catch ex As Exception
+                    'Oh dear
+                End Try
+            End If
         End If
     End Sub
 
@@ -97,27 +99,7 @@ Public MustInherit Class PageBaseClass
         Dim strReplacement As String = ""
         Dim sbdLink As New StringBuilder
 
-        'Build up string of the Google Analytics code
-        'sbdLink.Append("<script type=""text/javascript"">" & vbCrLf)
-        'sbdLink.Append("var gaJsHost = ((""https:"" == document.location.protocol) ? ""https://ssl."" : ""http://www."");" & vbCrLf)
-        'sbdLink.Append("document.write(unescape(""%3Cscript src='"" + gaJsHost + ""google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E""));" & vbCrLf)
-        'sbdLink.Append("</script>" & vbCrLf)
-        'sbdLink.Append("<script type=""text/javascript"">" & vbCrLf)
-        'sbdLink.Append("try {" & vbCrLf)
-        'sbdLink.Append("var pageTracker = _gat._getTracker(""" & strGoogleWebPropertyID & """);" & vbCrLf)
-        'sbdLink.Append("pageTracker._trackPageview();" & vbCrLf)
-        'sbdLink.Append("} catch(err) {}</script>" & vbCrLf)
-
-        'Try to replace closing body tag with this
-        'Try
-        'sbdPageSource.Replace("</body", sbdLink.ToString & vbCrLf & "</body")
-        'blnReplacedTag = True
-        'Catch ex As Exception
-        'Oh dear
-        'End Try
-
         'Newer Google Analytics code
-        '(Paul added, v1.4000)
         sbdLink.Append("<script type=""text/javascript"">" & vbCrLf)
         sbdLink.Append("var _gaq = _gaq || [];" & vbCrLf)
         sbdLink.Append("_gaq.push(['_setAccount', '" & strGoogleWebPropertyID & "']);" & vbCrLf)
@@ -130,7 +112,6 @@ Public MustInherit Class PageBaseClass
         sbdLink.Append("</script>" & vbCrLf)
 
         'Newer Google Analytics works in head tag, not close body
-        '(Paul added, v1.4000)
         Try
             sbdPageSource.Replace("</head", sbdLink.ToString & vbCrLf & "</head")
             blnReplacedTag = True

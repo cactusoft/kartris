@@ -22,6 +22,32 @@ Imports System.Web.Caching
 Public Class KartSettingsManager
 
     ''' <summary>
+    ''' Checks if a commercial license file is present in the root. Note that this does
+    ''' not check the validity of such a license, only that a file is present.
+    ''' </summary>
+    Public Shared Function HasCommercialLicense() As Boolean
+        If File.Exists(HttpContext.Current.Server.MapPath("~/license.config")) Then
+            Return True
+        Else
+            Return False
+        End If
+    End Function
+
+    ''' <summary>
+    ''' Checks if a commercial license file is present in the root. Note that this does
+    ''' not check the validity of such a license, only that a file is present.
+    ''' </summary>
+    Public Shared Function PoweredByLink() As String
+        Dim sbdLink As New StringBuilder
+
+        'Build up string of the 'powered by kartris' tag
+        sbdLink.Append("<a onmouseover=""this.style.backgroundColor = '#AD004D';this.style.color = '#fff';"" onmouseout=""this.style.backgroundColor = '#fff';this.style.color = '#AD004D';"" style=""line-height: 13px;display:inline-block;padding:1px 2px 1px 3px;font-size:7pt;font-family:tahoma,arial,helvetica;position:fixed;bottom:0;right:30px;color:#AD004D;background-color:#fff;""" & vbCrLf)
+        sbdLink.Append(" href=""http://www.kartris.com/"" title=""Kartris - &copy;2013, Cactusoft International FZ LLC. Distributed free and without warranty under the terms of the GNU GPL."">Powered by <span style=""font-weight: bold"">kartris</span></a>")
+
+        Return sbdLink.ToString
+    End Function
+
+    ''' <summary>
     ''' Set/update a config setting value. The equivalent of CactuShop's GetAppVar function
     ''' </summary>
     ''' <param name="Config_Name">The name of the config setting you want to retrieve.</param>

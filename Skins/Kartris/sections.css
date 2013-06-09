@@ -370,7 +370,7 @@ PRODUCT PROMOTIONS
                                         { color: #000 }
 .section_promotions a                   { text-decoration: none; color: #777; border-bottom: dotted 1px #777; }
 .section_promotions .promotion .box .pad .imageblock
-                                        { border: solid 1px #fc5; float: left; margin: 0 20px 0 0px; width: 80px; text-align: center; }
+                                        { float: left; margin: 0 20px 0 0px; width: 70px; text-align: center; }
 .section_promotions .promotion .box .pad .imageblock img
                                         { float: none }
 /* 
