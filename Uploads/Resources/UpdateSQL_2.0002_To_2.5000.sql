@@ -1239,3 +1239,42 @@ GO
 -- ****** Restore config setting which had been previously dropped
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'frontend.minibasket.compactversion', N'n', N's', N'b', N'y|n', N'Whether to display a compact mini-basket (single line link with total)', 2.5, N'n', 0)
 GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisDB_GetTaskList]    Script Date: 06/09/2013 20:38:55 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Modified by:		Medz 02/11/09
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ ALTER PROCEDURE [dbo].[_spKartrisDB_GetTaskList]
+(	
+	@NoOrdersToInvoice as int OUTPUT,
+	@NoOrdersNeedPayment as int OUTPUT,
+	@NoOrdersToDispatch as int OUTPUT,
+	@NoStockWarnings as int OUTPUT,
+	@NoOutOfStock as int OUTPUT,
+	@NoReviewsWaiting as int OUTPUT,
+	@NoAffiliatesWaiting as int OUTPUT,
+	@NoCustomersWaitingRefunds as int OUTPUT,
+	@NoCustomersInArrears as int OUTPUT
+)
+AS
+BEGIN
+	SELECT @NoOrdersToInvoice = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Invoiced = 'False' AND O_Paid = 'False' AND O_Sent = 'True' AND O_Cancelled = 'False';
+	SELECT @NoOrdersNeedPayment = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Paid = 'False' AND O_Invoiced = 'True' AND O_Sent = 'True' AND O_Cancelled = 'False';
+	SELECT @NoOrdersToDispatch = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Sent = 'True' AND O_Paid = 'True' AND O_Shipped = 'False' AND O_Cancelled = 'False';
+	
+	SELECT @NoStockWarnings = Count(DISTINCT V_ID) FROM dbo.vKartrisProductsVersions WHERE V_QuantityWarnLevel >= V_Quantity AND V_QuantityWarnLevel <> 0;
+	SELECT @NoOutOfStock = Count(DISTINCT V_ID) FROM dbo.vKartrisProductsVersions WHERE V_Quantity = 0 AND V_QuantityWarnLevel <> 0;
+
+	SELECT @NoReviewsWaiting = Count(REV_ID) FROM dbo.tblKartrisReviews WHERE REV_Live = 'a';
+	SELECT @NoAffiliatesWaiting  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_IsAffiliate = 'True' AND U_AffiliateCommission = 0;
+	SELECT @NoCustomersWaitingRefunds  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance > 0;
+	SELECT @NoCustomersInArrears  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance < 0;
+END
+GO
