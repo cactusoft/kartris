@@ -1661,7 +1661,8 @@ Public NotInheritable Class CkartrisBLL
                             If node.ChildNodes(3).InnerText.ToLower = "true" Then
                                 With KartrisNotification
                                     .ClientWindowsStoreAppChannelURI = node.ChildNodes(2).InnerText
-                                    .NotificationDataType = DataType
+                                    'append device platform info to the notification type value
+                                    .NotificationDataType = DataType & ":" & node.ChildNodes(1).InnerText
                                     .NotificationDataCount = DataValue
                                     .NotificationDataCountSpecified = True
                                     .KartrisWebShopURL = WebShopURL()
