@@ -29,6 +29,7 @@ ECHO DONE!
 ECHO **
 ECHO REMOVING SAMPLE MEDIA FILES...
 del "c:\CleanKartris\Kartris\Uploads\Media\*.*" /Q
+copy "c:\CleanKartris\Kartris\Uploads\Logs\README.txt" "c:\CleanKartris\Kartris\Uploads\Media\README.txt"
 ECHO DONE!
 ECHO **
 del "c:\CleanKartris\Kartris\uploads\resources\*.bak"
