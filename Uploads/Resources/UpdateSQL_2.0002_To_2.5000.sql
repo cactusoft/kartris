@@ -1180,6 +1180,71 @@ BEGIN
 END
 GO
 
+
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date, ,>
+-- Description:	<Description, ,>
+-- =============================================
+CREATE FUNCTION fnKartrisProduct_IsReadyToLive 
+(
+	@P_ID as int
+)
+RETURNS bit
+AS
+BEGIN
+	-- Declare the return variable here
+	DECLARE @IsReadyToLive as bit;
+	SET @IsReadyToLive = 0;
+
+	DECLARE @ProductLive as bit ,@ProductType as nvarchar(1),
+	@NoOfLiveVersions as int, @NoOfLiveCategories as int;
+
+	SELECT @ProductLive = P_Live, @ProductType = P_Type
+	FROM   tblKartrisProducts
+	WHERE  (P_ID = @P_ID);
+
+	IF @ProductLive = 1 BEGIN
+
+		-- No Of Live Versions
+		IF @ProductType = 'o'
+		BEGIN
+			-- Get no. of live base/combinations
+			SELECT @NoOfLiveVersions = Count(1)
+			FROM dbo.tblKartrisVersions
+			WHERE V_ProductID = @P_ID AND V_Type = 'b' AND V_Live = 1;
+		END
+		ELSE
+		BEGIN
+			SELECT @NoOfLiveVersions = Count(1)
+			FROM dbo.tblKartrisVersions
+			WHERE V_ProductID = @P_ID AND V_Type = 'v' AND V_Live = 1;
+		END
+
+		IF @NoOfLiveVersions > 0 BEGIN
+			-- No of live categories
+			SELECT     @NoOfLiveCategories = Count(tblKartrisCategories.CAT_ID)
+			FROM         tblKartrisCategories INNER JOIN tblKartrisProductCategoryLink 
+				ON tblKartrisCategories.CAT_ID = tblKartrisProductCategoryLink.PCAT_CategoryID
+			WHERE PCAT_ProductID = @P_ID AND CAT_Live = 1
+
+			IF @NoOfLiveCategories > 0 BEGIN 
+				SET @IsReadyToLive = 1;
+			END
+		END
+	END
+	
+	-- Return the result of the function
+	RETURN @IsReadyToLive
+
+END
+GO
+
+
 ALTER PROCEDURE [dbo].[spKartrisProducts_GetRelatedProducts]
 (
 	@P_ID as int, 
