@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="CarryOnShopping.ascx.vb"
     Inherits="CarryOnShopping" %>
-<%@ OutputCache Duration="300" Shared="true" VaryByCustom="culture" VaryByParam="*" %>
+<%@ OutputCache Duration="300" Shared="true" VaryByCustom="culture;user" VaryByParam="*" %>
 <div class="section carryonshopping">
     <div class="pad">
         <h4>
