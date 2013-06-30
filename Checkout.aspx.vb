@@ -1658,7 +1658,7 @@ Partial Class _Checkout
                    Not IsNumeric(Right(strVatNumber, 1)) And _
                    strCountryCodeFromVatNumber = strISOCode
 
-            Case "IT", "LV" 'Italy, Latvia
+            Case "IT", "LV", "HR" 'Italy, Latvia, Croatia
                 blnPassed = numVatNumberLength = 11 And _
                    IsNumeric(Right(strVatNumber, 11)) And _
                    strCountryCodeFromVatNumber = strISOCode
