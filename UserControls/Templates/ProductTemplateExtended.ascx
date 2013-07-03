@@ -11,14 +11,14 @@
             <div class="details small-12 large-9 columns">
                 <h2>
                     <asp:HyperLink ID="lnkProductName" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>'
-                        Text='<%# Server.HtmlEncode(Eval("P_Name")) %>' EnableViewState="false"></asp:HyperLink></h2>
+                        Text='<%# Server.HtmlEncode(Eval("P_Name")) %>' ></asp:HyperLink></h2>
                 <em class="strapline">
-                    <asp:Literal ID="litStrapLine" runat="server" Text='<%#Eval("P_StrapLine")%>' EnableViewState="false"></asp:Literal></em>
+                    <asp:Literal ID="litStrapLine" runat="server" Text='<%#Eval("P_StrapLine")%>' ></asp:Literal></em>
                 <p class="description">
-                    <asp:Literal ID="litProductDesc" EnableViewState="false" runat="server" Text='<%# CkartrisDisplayFunctions.TruncateDescription(Eval("P_Desc"), KartSettingsManager.GetKartConfig("frontend.products.display.truncatedescription")) %>'></asp:Literal></p>
+                    <asp:Literal ID="litProductDesc"  runat="server" Text='<%# CkartrisDisplayFunctions.TruncateDescription(Eval("P_Desc"), KartSettingsManager.GetKartConfig("frontend.products.display.truncatedescription")) %>'></asp:Literal></p>
                 <asp:HyperLink ID="lnknMore" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>'
                     Text="<%$ Resources:Products,ContentText_ViewProductMoreDetail %>" CssClass="link2"
-                    EnableViewState="false"></asp:HyperLink>
+                    ></asp:HyperLink>
 
 
                             <asp:PlaceHolder ID="phdMinPrice" runat="server" Visible="false">
