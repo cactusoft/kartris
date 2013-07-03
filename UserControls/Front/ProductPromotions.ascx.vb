@@ -149,24 +149,27 @@ Partial Class ProductPromotions
 
             blnPromReadAlready = False
 
-            For i As Integer = 0 To UBound(arrPromotionIDs)
-                If arrPromotionIDs(i) = CStr(drwPromotions("PROM_ID")) Then
-                    blnPromReadAlready = True
-                    Exit For
+            Try
+                For i As Integer = 0 To UBound(arrPromotionIDs)
+                    If arrPromotionIDs(i) = CStr(drwPromotions("PROM_ID")) Then
+                        blnPromReadAlready = True
+                        Exit For
+                    End If
+                Next
+
+                If blnPromReadAlready = True Then Continue For
+
+                If numPROM_ID <> CInt(drwPromotions("PROM_ID")) Then
+                    numPROM_ID = CInt(drwPromotions("PROM_ID"))
+                    ReDim Preserve arrPromotionIDs(arrPromotionIDs.Length + 1)
+                    ReDim Preserve arrPromotionText(arrPromotionText.Length + 1)
+
+                    arrPromotionIDs(numNoOfPromotions) = CStr(numPROM_ID)
+                    arrPromotionText(numNoOfPromotions) = GetPromotionText(numPROM_ID)
+                    numNoOfPromotions += 1
                 End If
-            Next
-
-            If blnPromReadAlready = True Then Continue For
-
-            If numPROM_ID <> CInt(drwPromotions("PROM_ID")) Then
-                numPROM_ID = CInt(drwPromotions("PROM_ID"))
-                ReDim Preserve arrPromotionIDs(arrPromotionIDs.Length + 1)
-                ReDim Preserve arrPromotionText(arrPromotionText.Length + 1)
-
-                arrPromotionIDs(numNoOfPromotions) = CStr(numPROM_ID)
-                arrPromotionText(numNoOfPromotions) = GetPromotionText(numPROM_ID)
-                numNoOfPromotions += 1
-            End If
+            Catch ex As Exception
+            End Try
         Next
 
         Dim tblPromotionsSummary As New DataTable()
