@@ -10,7 +10,7 @@
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CurrenciesTblAdptr" GeneratorDataComponentClassName="CurrenciesTblAdptr" Name="Currencies" UserDataComponentName="CurrenciesTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisCurrencies_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetData" GetMethodModifier="Public" GetMethodName="_GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetData" UserSourceName="_GetData">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL_GPL.dbo.[_spKartrisCurrencies_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetData" GetMethodModifier="Public" GetMethodName="_GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetData" UserSourceName="_GetData">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCurrencies_Get]</CommandText>
@@ -33,6 +33,7 @@
               <Mapping SourceColumn="CUR_IsoFormat" DataSetColumn="CUR_IsoFormat" />
               <Mapping SourceColumn="CUR_DecimalPoint" DataSetColumn="CUR_DecimalPoint" />
               <Mapping SourceColumn="CUR_RoundNumbers" DataSetColumn="CUR_RoundNumbers" />
+              <Mapping SourceColumn="CUR_OrderNo" DataSetColumn="CUR_OrderNo" />
             </Mappings>
             <Sources />
           </TableAdapter>
@@ -44,7 +45,7 @@
   <xs:element name="kartrisCurrenciesData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msdata:EnforceConstraints="False" msprop:Generator_DataSetName="kartrisCurrenciesData" msprop:Generator_UserDSName="kartrisCurrenciesData">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Currencies" msprop:Generator_UserTableName="Currencies" msprop:Generator_RowEvArgName="CurrenciesRowChangeEvent" msprop:Generator_TableVarName="tableCurrencies" msprop:Generator_TablePropName="Currencies" msprop:Generator_RowDeletingName="CurrenciesRowDeleting" msprop:Generator_RowChangingName="CurrenciesRowChanging" msprop:Generator_RowDeletedName="CurrenciesRowDeleted" msprop:Generator_TableClassName="CurrenciesDataTable" msprop:Generator_RowChangedName="CurrenciesRowChanged" msprop:Generator_RowEvHandlerName="CurrenciesRowChangeEventHandler" msprop:Generator_RowClassName="CurrenciesRow">
+        <xs:element name="Currencies" msprop:Generator_UserTableName="Currencies" msprop:Generator_RowEvArgName="CurrenciesRowChangeEvent" msprop:Generator_TableVarName="tableCurrencies" msprop:Generator_TablePropName="Currencies" msprop:Generator_RowDeletingName="CurrenciesRowDeleting" msprop:Generator_RowChangingName="CurrenciesRowChanging" msprop:Generator_RowDeletedName="CurrenciesRowDeleted" msprop:Generator_RowEvHandlerName="CurrenciesRowChangeEventHandler" msprop:Generator_TableClassName="CurrenciesDataTable" msprop:Generator_RowChangedName="CurrenciesRowChanged" msprop:Generator_RowClassName="CurrenciesRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="CUR_ID" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnCUR_ID" msprop:Generator_ColumnPropNameInRow="CUR_ID" msprop:Generator_ColumnPropNameInTable="CUR_IDColumn" msprop:Generator_UserColumnName="CUR_ID" type="xs:unsignedByte" minOccurs="0" />
@@ -94,6 +95,7 @@
                 </xs:simpleType>
               </xs:element>
               <xs:element name="CUR_RoundNumbers" msprop:Generator_ColumnVarNameInTable="columnCUR_RoundNumbers" msprop:Generator_ColumnPropNameInRow="CUR_RoundNumbers" msprop:Generator_ColumnPropNameInTable="CUR_RoundNumbersColumn" msprop:Generator_UserColumnName="CUR_RoundNumbers" type="xs:unsignedByte" minOccurs="0" />
+              <xs:element name="CUR_OrderNo" msprop:Generator_ColumnVarNameInTable="columnCUR_OrderNo" msprop:Generator_ColumnPropNameInRow="CUR_OrderNo" msprop:Generator_ColumnPropNameInTable="CUR_OrderNoColumn" msprop:Generator_UserColumnName="CUR_OrderNo" type="xs:unsignedByte" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

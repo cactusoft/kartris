@@ -1343,3 +1343,200 @@ BEGIN
 	SELECT @NoCustomersInArrears  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance < 0;
 END
 GO
+
+-- ============================================================================================
+-- A new Language Element Field 'Title' added to the 'Pages' Language Element Table.
+-- ============================================================================================
+INSERT INTO [dbo].[tblKartrisLanguageElementFieldNames] VALUES(9, 'Title', 'Title', 'elementtitle', 0, 0, 0);
+GO
+INSERT INTO [dbo].[tblKartrisLanguageElementTypeFields] VALUES(8, 9, 1);
+GO
+DECLARE LanguagesCursor CURSOR FOR
+SELECT LANG_ID FROM tblKartrisLanguages;
+DECLARE @LangID as tinyint;
+		
+OPEN LanguagesCursor
+FETCH NEXT FROM LanguagesCursor
+INTO @LangID;
+		
+WHILE @@FETCH_STATUS = 0
+BEGIN
+	
+	INSERT INTO [dbo].[tblKartrisLanguageElements]
+	SELECT @LangID, 8, 9, [PAGE_ID], [PAGE_Name]
+	FROM [dbo].[tblKartrisPages];
+	EXECUTE [dbo].[_spKartrisLanguageElements_FixMissingElements] 1, @LangID;
+	FETCH NEXT FROM LanguagesCursor
+	INTO @LangID;
+END
+CLOSE LanguagesCursor
+DEALLOCATE LanguagesCursor
+GO
+/****** Object:  View [dbo].[vKartrisTypePages]    Script Date: 6/30/2013 11:13:34 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER VIEW [dbo].[vKartrisTypePages]
+AS
+SELECT        dbo.tblKartrisPages.PAGE_ID, dbo.tblKartrisPages.PAGE_Name, dbo.tblKartrisPages.PAGE_ParentID, dbo.tblKartrisLanguages.LANG_ID, 
+                         dbo.tblKartrisLanguageElements.LE_Value AS PAGE_SEOPageTitle, tblKartrisLanguageElements_1.LE_Value AS PAGE_MetaDescription, 
+                         tblKartrisLanguageElements_2.LE_Value AS PAGE_MetaKeywords, tblKartrisLanguageElements_3.LE_Value AS PAGE_Text, 
+                         tblKartrisLanguageElements_4.LE_Value AS Page_Title, dbo.tblKartrisPages.PAGE_DateCreated, dbo.tblKartrisPages.PAGE_LastUpdated, 
+                         dbo.tblKartrisPages.PAGE_Live, tblKartrisLanguageElements_4.LE_TypeID, tblKartrisLanguageElements_4.LE_FieldID
+FROM            dbo.tblKartrisLanguageElements INNER JOIN
+                         dbo.tblKartrisLanguages ON dbo.tblKartrisLanguageElements.LE_LanguageID = dbo.tblKartrisLanguages.LANG_ID INNER JOIN
+                         dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_1 ON 
+                         dbo.tblKartrisLanguages.LANG_ID = tblKartrisLanguageElements_1.LE_LanguageID INNER JOIN
+                         dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_3 ON 
+                         dbo.tblKartrisLanguages.LANG_ID = tblKartrisLanguageElements_3.LE_LanguageID INNER JOIN
+                         dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_2 ON 
+                         dbo.tblKartrisLanguages.LANG_ID = tblKartrisLanguageElements_2.LE_LanguageID INNER JOIN
+                         dbo.tblKartrisPages ON tblKartrisLanguageElements_3.LE_ParentID = dbo.tblKartrisPages.PAGE_ID AND 
+                         dbo.tblKartrisLanguageElements.LE_ParentID = dbo.tblKartrisPages.PAGE_ID AND 
+                         tblKartrisLanguageElements_2.LE_ParentID = dbo.tblKartrisPages.PAGE_ID AND 
+                         tblKartrisLanguageElements_1.LE_ParentID = dbo.tblKartrisPages.PAGE_ID INNER JOIN
+                         dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_4 ON dbo.tblKartrisPages.PAGE_ID = tblKartrisLanguageElements_4.LE_ParentID AND 
+                         dbo.tblKartrisLanguages.LANG_ID = tblKartrisLanguageElements_4.LE_LanguageID
+WHERE        (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND 
+                         (dbo.tblKartrisLanguageElements.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_1.LE_TypeID = 8) AND 
+                         (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND (tblKartrisLanguageElements_2.LE_FieldID = 5) 
+                         AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) AND 
+                         (tblKartrisLanguageElements_4.LE_TypeID = 8) AND (tblKartrisLanguageElements_4.LE_FieldID = 9) OR
+                         (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND (tblKartrisLanguageElements_1.LE_TypeID = 8)
+                          AND (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND 
+                         (tblKartrisLanguageElements_2.LE_FieldID = 5) AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) 
+                         AND (tblKartrisLanguageElements_1.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_4.LE_TypeID = 8) AND 
+                         (tblKartrisLanguageElements_4.LE_FieldID = 9) OR
+                         (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND (tblKartrisLanguageElements_1.LE_TypeID = 8)
+                          AND (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND 
+                         (tblKartrisLanguageElements_2.LE_FieldID = 5) AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) 
+                         AND (tblKartrisLanguageElements_2.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_4.LE_TypeID = 8) AND 
+                         (tblKartrisLanguageElements_4.LE_FieldID = 9) OR
+                         (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND (tblKartrisLanguageElements_1.LE_TypeID = 8)
+                          AND (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND 
+                         (tblKartrisLanguageElements_2.LE_FieldID = 5) AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) 
+                         AND (tblKartrisLanguageElements_3.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_4.LE_TypeID = 8) AND 
+                         (tblKartrisLanguageElements_4.LE_FieldID = 9) OR
+                         (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND (tblKartrisLanguageElements_1.LE_TypeID = 8)
+                          AND (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND 
+                         (tblKartrisLanguageElements_2.LE_FieldID = 5) AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) 
+                         AND (tblKartrisLanguageElements_4.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_4.LE_TypeID = 8) AND 
+                         (tblKartrisLanguageElements_4.LE_FieldID = 9)
+
+GO
+
+-- ============================================================================================
+-- A new column 'CUR_OrderNo' added to Table 'tblKartrisCurrencies'
+-- ============================================================================================
+
+/* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
+BEGIN TRANSACTION
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+COMMIT
+BEGIN TRANSACTION
+GO
+ALTER TABLE dbo.tblKartrisCurrencies ADD
+	CUR_OrderNo tinyint NULL
+GO
+ALTER TABLE dbo.tblKartrisCurrencies SET (LOCK_ESCALATION = TABLE)
+GO
+COMMIT
+GO
+UPDATE tblKartrisCurrencies SET CUR_OrderNo = CUR_ID;
+GO
+/****** Object:  StoredProcedure [dbo].[_spKartrisCurrencies_Add]    Script Date: 7/3/2013 9:59:22 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[_spKartrisCurrencies_Add]
+(
+	@CUR_Symbol nvarchar(5),
+	@CUR_ISOCode nvarchar(10),
+	@CUR_ISOCodeNumeric nvarchar(10),
+	@CUR_ExchangeRate real,
+	@CUR_HasDecimals bit,
+	@CUR_Live bit,
+	@CUR_Format nvarchar(20),
+	@CUR_IsoFormat nvarchar(20),
+	@CUR_DecimalPoint char(1),
+	@CUR_RoundNumbers tinyint,
+	@CUR_NewID as tinyint OUTPUT
+)
+AS
+BEGIN
+	SET NOCOUNT OFF;
+
+	DECLARE @MaxOrder as tinyint;
+	SELECT @MaxOrder = MAX(CUR_OrderNo) + 1
+	FROM [tblKartrisCurrencies];
+
+	INSERT INTO [tblKartrisCurrencies] 
+	([CUR_Symbol], [CUR_ISOCode], [CUR_ISOCodeNumeric], [CUR_ExchangeRate], [CUR_HasDecimals], [CUR_Live], 
+	[CUR_Format], [CUR_IsoFormat], [CUR_DecimalPoint], [CUR_RoundNumbers], [CUR_OrderNo]) 
+	VALUES (@CUR_Symbol, @CUR_ISOCode, @CUR_ISOCodeNumeric, @CUR_ExchangeRate, @CUR_HasDecimals, @CUR_Live, 
+	@CUR_Format, @CUR_IsoFormat, @CUR_DecimalPoint, @CUR_RoundNumbers, @MaxOrder);
+	
+	SELECT @CUR_NewID = SCOPE_IDENTITY();
+END
+GO
+/****** Object:  StoredProcedure [dbo].[_spKartrisCurrencies_Get]    Script Date: 01/23/2013 21:59:09 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisCurrencies_Get]
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT * 
+	FROM tblKartrisCurrencies 
+	ORDER BY CUR_Live DESC, CUR_OrderNo
+END
+GO
+CREATE PROCEDURE [dbo].[_spKartrisCurrencies_SetDefault]
+(
+	@CUR_ID tinyint
+)
+AS
+BEGIN
+	SET NOCOUNT OFF;
+
+	DECLARE @MinOrderNo as tinyint;
+	SELECT @MinOrderNo = MIN(CUR_OrderNo)
+	FROM [tblKartrisCurrencies]
+	WHERE CUR_Live = 1;
+
+	DECLARE @SwitchOrderNo as int;
+	SELECT @SwitchOrderNo = CUR_OrderNo
+	FROM [tblKartrisCurrencies]
+	WHERE CUR_ID = @CUR_ID;
+
+	UPDATE Top(1) [tblKartrisCurrencies] 
+	SET [CUR_OrderNo] = @SwitchOrderNo
+	Where CUR_OrderNo = @MinOrderNo AND CUR_Live = 1;
+
+	UPDATE [tblKartrisCurrencies] 
+	SET [CUR_OrderNo] = @MinOrderNo
+	Where CUR_ID = @CUR_ID;
+END
+GO
+/* Setting the default currency */
+DECLARE @DefaultCurrency as tinyint;
+SELECT @DefaultCurrency = CUR_ID FROM tblKartrisCurrencies WHERE CUR_ExchangeRate = 1;
+EXECUTE [_spKartrisCurrencies_SetDefault] @DefaultCurrency;
+GO

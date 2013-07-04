@@ -320,7 +320,7 @@ Public Class SiteMapHelper
                         Dim tblPage As DataTable = PagesBLL.GetPageByName(numLangID, strPage)
                         Dim node As SiteMapNode
                         If tblPage.Rows.Count > 0 Then
-                            Dim strPageName As String = tblPage.Rows(0).Item("Page_Name").ToString()
+                            Dim strPageName As String = tblPage.Rows(0).Item("Page_Title").ToString()
                             strPageName = Replace(strPageName, "-", " ")
                             node = New SiteMapNode(SiteMap.Providers.Item("BreadCrumbSiteMap"), "CustomPage", context.Request.Url.ToString(), strPageName)
 
