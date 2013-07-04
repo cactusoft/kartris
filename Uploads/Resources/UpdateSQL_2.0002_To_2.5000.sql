@@ -1385,7 +1385,7 @@ SELECT        dbo.tblKartrisPages.PAGE_ID, dbo.tblKartrisPages.PAGE_Name, dbo.tb
                          dbo.tblKartrisLanguageElements.LE_Value AS PAGE_SEOPageTitle, tblKartrisLanguageElements_1.LE_Value AS PAGE_MetaDescription, 
                          tblKartrisLanguageElements_2.LE_Value AS PAGE_MetaKeywords, tblKartrisLanguageElements_3.LE_Value AS PAGE_Text, 
                          tblKartrisLanguageElements_4.LE_Value AS Page_Title, dbo.tblKartrisPages.PAGE_DateCreated, dbo.tblKartrisPages.PAGE_LastUpdated, 
-                         dbo.tblKartrisPages.PAGE_Live, tblKartrisLanguageElements_4.LE_TypeID, tblKartrisLanguageElements_4.LE_FieldID
+                         dbo.tblKartrisPages.PAGE_Live
 FROM            dbo.tblKartrisLanguageElements INNER JOIN
                          dbo.tblKartrisLanguages ON dbo.tblKartrisLanguageElements.LE_LanguageID = dbo.tblKartrisLanguages.LANG_ID INNER JOIN
                          dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_1 ON 
