@@ -60,7 +60,7 @@ Partial Class UserControls_Front_Page
         drwPages = tblPage.Select("PAGE_ID > 0")
 
         If tblPage.Rows.Count > 0 Then
-            Dim strPageTitle As String = CkartrisDataManipulation.FixNullFromDB(tblPage.Rows(0)("PAGE_Title"))
+            Dim strPageTitle As String = CkartrisDataManipulation.FixNullFromDB(tblPage.Rows(0)("PAGE_SEOPageTitle"))
             Dim strPageMetaDesc As String = CkartrisDataManipulation.FixNullFromDB(tblPage.Rows(0)("PAGE_MetaDescription"))
             Dim strPageMetaKeywords As String = CkartrisDataManipulation.FixNullFromDB(tblPage.Rows(0)("PAGE_MetaKeywords"))
 

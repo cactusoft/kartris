@@ -112,6 +112,15 @@ Partial Class UserControls_Back_CurrencyRates
             PrepareNewCurrency()
             phdCurrencyDetails.Visible = True
             updCurrency.Update()
+        ElseIf e.CommandName = "setdefault" Then
+            Dim strMessage As String = String.Empty
+            If CurrenciesBLL._SetDefault(e.CommandArgument, strMessage) Then
+                RefreshCurrencyCache()
+                LoadCurrencies()
+                RaiseEvent ShowMasterUpdate()
+            Else
+                _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
+            End If
         End If
     End Sub
 
@@ -145,6 +154,10 @@ Partial Class UserControls_Back_CurrencyRates
         If e.Row.RowType = DataControlRowType.DataRow Then
             CType(e.Row.Cells(3).FindControl("litCUR_ExchangeRate"), Literal).Text = _
                 _HandleDecimalValues(CType(e.Row.Cells(3).FindControl("litCUR_ExchangeRate"), Literal).Text)
+            Dim lnkDefault As LinkButton = CType(e.Row.Cells(3).FindControl("lnkBtnSetDefault"), LinkButton)
+            If CurrenciesBLL.GetDefaultCurrency() = lnkDefault.CommandArgument Then
+                lnkDefault.Visible = False
+            End If
         End If
     End Sub
 

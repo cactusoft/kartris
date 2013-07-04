@@ -52,10 +52,7 @@ Public Class CurrenciesBLL
     End Function
 
     Public Shared Function ConvertCurrency(ByVal _ToCurrencyID As Short, ByVal _FromValue As Single, Optional ByVal _FromCurrencyID As Short = 0) As Single
-        If _FromCurrencyID = 0 Then
-            Dim rowCurrencies As DataRow() = GetCurrenciesFromCache().Select("CUR_ExchangeRate = 1")
-            _FromCurrencyID = CShort(FixNullFromDB(rowCurrencies(0)("CUR_ID")))
-        End If
+        If _FromCurrencyID = 0 Then _FromCurrencyID = GetDefaultCurrency()
         Dim sngFromRate As Single = 0, sngToRate As Single = 0
         Dim rowCurrenciesFrom As DataRow() = GetCurrenciesFromCache().Select("CUR_ID = " & _FromCurrencyID)
         sngFromRate = CSng(FixNullFromDB(rowCurrenciesFrom(0)("CUR_ExchangeRate")))
@@ -130,7 +127,11 @@ Public Class CurrenciesBLL
     End Function
 
     Public Shared Function GetDefaultCurrency() As Byte
-        Dim rowCurrencies As DataRow() = GetCurrenciesFromCache().Select("CUR_ExchangeRate = 1")
+        Dim LowestOrderNo = (From a In GetCurrenciesFromCache()
+                             Where a.Field(Of Boolean)("CUR_Live") = True
+                            Select a.Field(Of Byte)("CUR_OrderNo")).Min()
+
+        Dim rowCurrencies As DataRow() = GetCurrenciesFromCache().Select("CUR_OrderNo = " & LowestOrderNo)
         Dim numMinID As Byte = CByte(rowCurrencies(0)("CUR_ID"))
         For i As Integer = 1 To rowCurrencies.Length - 1
             numMinID = Math.Min(Math.Min(numMinID, CByte(rowCurrencies(i - 1)("CUR_ID"))), CByte(rowCurrencies(i)("CUR_ID")))
@@ -302,6 +303,39 @@ Public Class CurrenciesBLL
                 KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Currency, _
                      GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"), _
                      CreateQuery(cmdUpdateCurrencyRates), Nothing, sqlConn, savePoint)
+
+                savePoint.Commit()
+                Return True
+            Catch ex As Exception
+                ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
+                If Not savePoint Is Nothing Then savePoint.Rollback()
+            Finally
+                If sqlConn.State = ConnectionState.Open Then sqlConn.Close() : savePoint.Dispose()
+            End Try
+        End Using
+        Return False
+    End Function
+
+    Public Shared Function _SetDefault(ByVal CurrencyID As Byte, ByRef strMessage As String) As Boolean
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Using sqlConn As New SqlConnection(strConnString)
+
+            Dim cmd As SqlCommand = sqlConn.CreateCommand
+            cmd.CommandText = "_spKartrisCurrencies_SetDefault"
+
+            Dim savePoint As SqlTransaction = Nothing
+            cmd.CommandType = CommandType.StoredProcedure
+            Try
+                cmd.Parameters.AddWithValue("@CUR_ID", CurrencyID)
+
+                sqlConn.Open()
+                savePoint = sqlConn.BeginTransaction()
+                cmd.Transaction = savePoint
+
+                cmd.ExecuteNonQuery()
+                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Currency, _
+                     GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"), _
+                     CreateQuery(cmd), Nothing, sqlConn, savePoint)
 
                 savePoint.Commit()
                 Return True

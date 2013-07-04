@@ -77,6 +77,8 @@
                                         CommandName="CreateNewCurrency" CssClass="linkbutton icon_new floatright" />
                                 </HeaderTemplate>
                                 <ItemTemplate>
+                                    <asp:LinkButton ID="lnkBtnSetDefault" runat="server" CommandName="setdefault" CommandArgument='<%# Eval("CUR_ID") %>'
+                                        Text="<%$ Resources: _Kartris, ContentText_SetDefault %>" CssClass="linkbutton icon_edit" Visible='<%# Eval("CUR_Live")%>' />
                                     <asp:LinkButton ID="lnkBtnEditCurrency" runat="server" CommandName="select" CommandArgument='<%# Container.DataItemIndex %>'
                                         Text="<%$ Resources: _Kartris, FormButton_Edit %>" CssClass="linkbutton icon_edit" />
                                 </ItemTemplate>
@@ -227,4 +229,3 @@
     </ProgressTemplate>
 </asp:UpdateProgress>
 <_user:PopupMessage ID="_UC_PopupMsg" runat="server" />
-
