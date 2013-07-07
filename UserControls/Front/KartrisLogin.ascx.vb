@@ -137,6 +137,22 @@ Partial Class KartrisLogin
                     mvwLoginPopup.ActiveViewIndex = "0"
                     popLogin.OkControlID = ""
                     txtNewEmail.Text = C_Email.Text
+
+                    Dim strUserPasswordRule As String = GetKartConfig("frontend.users.password.required")
+                    Select Case strUserPasswordRule.ToLower
+                        Case "automatic"
+                            'automatic (password is randomly generated for the customer like in CactuShop prior to v6)
+                            phdNewPassword.Visible = False
+                        Case "optional"
+                            'optional (if not specified, randomly generated)
+                            psNewPassword.Enabled = False
+                            lblPasswordOptional.Visible = True
+                        Case "required"
+                            'required (customer must enter a password during checkout).
+                            psNewPassword.Enabled = True
+                            lblPasswordOptional.Visible = False
+                    End Select
+
                     txtConfirmEmail.Focus()
                 Else
 
@@ -182,21 +198,29 @@ Partial Class KartrisLogin
     End Sub
 
     Protected Sub btnContinue_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnContinue.Click
+        Dim strUserPasswordRule As String = GetKartConfig("frontend.users.password.required")
+        'check if either password or confirm password field has a value
+        Dim blnValueEntered As Boolean = False
+        Dim strNewPassword = Trim(txtNewPassword.Text)
+        If Not String.IsNullOrEmpty(strNewPassword) Then blnValueEntered = True
+        If Not String.IsNullOrEmpty(Trim(txtConfirmPassword.Text)) Then blnValueEntered = True
+
         If txtNewEmail.Text <> txtConfirmEmail.Text Then
             litFailureText.Text = "<div class=""errortext"">" & GetLocalResourceObject("ContentText_EmailsMustMatch") & "</div>"
-
             popLogin.Show()
-
-        ElseIf txtNewPassword.Text <> txtConfirmPassword.Text Then
+        ElseIf (txtNewPassword.Text <> txtConfirmPassword.Text) AndAlso (strUserPasswordRule = "required" Or blnValueEntered) Then
             litFailureText.Text = "<div class=""errortext"">" & GetLocalResourceObject("ContentText_PasswordsMustMatch") & "</div>"
             popLogin.Show()
-        ElseIf String.IsNullOrEmpty(txtNewPassword.Text.Trim) Or String.IsNullOrEmpty(txtConfirmPassword.Text.Trim) Then
+        ElseIf (String.IsNullOrEmpty(txtNewPassword.Text.Trim) Or String.IsNullOrEmpty(txtConfirmPassword.Text.Trim)) AndAlso (strUserPasswordRule = "required" Or blnValueEntered) Then
             litFailureText.Text = "<div class=""errortext"">" & GetGlobalResourceObject("Kartris", "ContentText_SomeFieldsBlank") & "</div>"
             popLogin.Show()
         Else
+
             strEmail = txtNewEmail.Text
             Session("C_Email") = txtNewEmail.Text
-            Dim strPassword As String = txtNewPassword.Text
+            Dim strPassword As String = ""
+            If strUserPasswordRule.ToLower = "automatic" Or
+                String.IsNullOrEmpty(strNewPassword) Then strPassword = Membership.GeneratePassword(10, 0)
             Session("_NewPassword") = strPassword
             Session("blnLoginCleared") = True
             litFailureText.Text = ""
