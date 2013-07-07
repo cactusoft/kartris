@@ -88,9 +88,13 @@
                                                                     EnableViewState="false" AssociatedControlID="txtConfirmEmail" CssClass="requiredfield"></asp:Label></span><span
                                                                         class="Kartris-DetailsView-Value">
                                                                         <asp:TextBox ID="txtConfirmEmail" runat="server" /></span></li>
-                                                            <li><span class="Kartris-DetailsView-Name">
+                                                            <asp:PlaceHolder ID="phdNewPassword" runat="server" >
+                                                                    <li><span class="Kartris-DetailsView-Name">
                                                                 <asp:Label ID="lblPassword" runat="server" Text="<%$ Resources: Kartris, FormLabel_Password %>"
-                                                                    EnableViewState="false" AssociatedControlID="txtNewPassword" CssClass="requiredfield"></asp:Label></span><span
+                                                                    EnableViewState="false" AssociatedControlID="txtNewPassword" CssClass="requiredfield"></asp:Label>
+                                                                        <asp:Label ID="lblPasswordOptional" runat="server" Text="<%$ Resources: Kartris, ContentText_PasswordOptional %>"
+                                                                     AssociatedControlID="txtNewPassword" CssClass="requiredfield"></asp:Label>
+                                                                        </span><span
                                                                         class="Kartris-DetailsView-Value">
                                                                         <asp:TextBox ID="txtNewPassword" runat="server" TextMode="Password" EnableViewState="true" />
                                                                         <ajaxToolkit:PasswordStrength runat="server" ID="psNewPassword" TargetControlID="txtNewPassword"
@@ -100,14 +104,17 @@
                                                                             PrefixText=" " BarBorderCssClass="barIndicatorBorder" Enabled="True">
                                                                         </ajaxToolkit:PasswordStrength>
                                                                     </span></li>
-                                                            <li><span class="Kartris-DetailsView-Name">
-                                                                <asp:Label ID="lblConfirmPassword" runat="server" Text="<%$ Resources: FormLabel_ConfirmPassword %>"
-                                                                    EnableViewState="false" AssociatedControlID="txtConfirmPassword" CssClass="requiredfield"></asp:Label></span><span
-                                                                        class="Kartris-DetailsView-Value">
-                                                                        <asp:TextBox ID="txtConfirmPassword" runat="server" TextMode="Password" /></span></li>
+                                                                <li><span class="Kartris-DetailsView-Name">
+                                                                    <asp:Label ID="lblConfirmPassword" runat="server" Text="<%$ Resources: FormLabel_ConfirmPassword %>"
+                                                                        EnableViewState="false" AssociatedControlID="txtConfirmPassword" CssClass="requiredfield"></asp:Label></span><span
+                                                                            class="Kartris-DetailsView-Value">
+                                                                            <asp:TextBox ID="txtConfirmPassword" runat="server" TextMode="Password" /></span></li>
+                                                            </asp:PlaceHolder>
                                                             <li><span class="Kartris-DetailsView-Name"></span><span class="Kartris-DetailsView-Value">
                                                                 <asp:Button ID="btnContinue" CssClass="button" runat="server" Text="<%$ Resources: Kartris, FormButton_Submit %>"
                                                                     CausesValidation="true" /></span></li>
+
+                                                            
                                                         </ul>
                                                     </div>
                                                 </div>
