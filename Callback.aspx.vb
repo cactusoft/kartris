@@ -29,7 +29,7 @@ Partial Class Callback
             Dim blnFullDisplay As Boolean = True
             If Request.QueryString("d") = "off" Then blnFullDisplay = False
             Dim strGatewayName As String = StrConv(Request.QueryString("g"), vbProperCase)
-            Dim clsPlugin As Kartris.Interfaces.PaymentGateway
+            Dim clsPlugin As Kartris.Interfaces.PaymentGateway = Nothing
 
             'Callback Step 0 - normal callback
             'Callback Step 1 - update order but don't display full HTML if d=off QS is passed, write gateway dll output to screen
@@ -163,8 +163,9 @@ Partial Class Callback
                                 Dim strCustomerEmailText As String = ""
                                 Dim strStoreEmailText As String = ""
                                 strBodyText = strBodyText.Replace("[orderid]", O_ID)
-                                'we're in the callback page so obviously po/offlinedetails method is not being used
+                                'we're in the callback page so obviously po_offlinedetails/bitcoin method is not being used
                                 strBodyText = strBodyText.Replace("[poofflinepaymentdetails]", "")
+                                strBodyText = strBodyText.Replace("[bitcoinpaymentdetails]", "")
 
                                 If KartSettingsManager.GetKartConfig("frontend.checkout.ordertracking") <> "n" Then
                                     If Not blnUseHTMLOrderEmail Then
@@ -213,8 +214,9 @@ Partial Class Callback
                                 PushKartrisNotification("o")
                             Else
                                 strBodyText = strBodyText.Replace("[orderid]", O_ID)
-                                'we're in the callback page so obviously po/offlinedetails method is not being used
+                                'we're in the callback page so obviously po_offline/bitcoin method is not being used
                                 strBodyText = strBodyText.Replace("[poofflinepaymentdetails]", "")
+                                strBodyText = strBodyText.Replace("[bitcoinpaymentdetails]", "")
                             End If
 
                             Try

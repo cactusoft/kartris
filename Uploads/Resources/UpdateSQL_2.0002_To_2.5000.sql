@@ -1540,3 +1540,27 @@ DECLARE @DefaultCurrency as tinyint;
 SELECT @DefaultCurrency = CUR_ID FROM tblKartrisCurrencies WHERE CUR_ExchangeRate = 1;
 EXECUTE [_spKartrisCurrencies_SetDefault] @DefaultCurrency;
 GO
+/* Update round number constraint to 8 in tblkartriscurrencies - bitcoin support */
+IF  EXISTS (SELECT * FROM sys.check_constraints WHERE object_id = OBJECT_ID(N'[dbo].[CK_Currencies_RoundNumbers]') AND parent_object_id = OBJECT_ID(N'[dbo].[tblKartrisCurrencies]'))
+ALTER TABLE [dbo].[tblKartrisCurrencies] DROP CONSTRAINT [CK_Currencies_RoundNumbers]
+GO
+
+ALTER TABLE [dbo].[tblKartrisCurrencies]  WITH CHECK ADD  CONSTRAINT [CK_Currencies_RoundNumbers] CHECK  (([CUR_RoundNumbers]>=(0) AND [CUR_RoundNumbers]<=(8)))
+GO
+
+ALTER TABLE [dbo].[tblKartrisCurrencies] CHECK CONSTRAINT [CK_Currencies_RoundNumbers]
+GO
+
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'CUR_RoundNumbers column validation range between 0 & 8' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'tblKartrisCurrencies', @level2type=N'CONSTRAINT',@level2name=N'CK_Currencies_RoundNumbers'
+GO
+/* anonymous checkout and bitcoin payment LS */
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_NotApplicable', N'[NOT APPLICABLE]', '', 2.5000, N'[NOT APPLICABLE]', NULL, N'Kartris', 1)
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_BitcoinPaymentDetails', N'<p>You can pay the specified bitcoin amount using the payment address below:<br/><br/><a href="http://bitcoin.org" target="_NEW">BitCoin</a>: <b><a href="bitcoin:[bitcoinpaymentaddress]">[bitcoinpaymentaddress]</a></b><p>', 'This language string replaces the [bitcoinpaymentdetails] tag in the HTML email template if bitcoin payment is used.', 2.5000, N'<p>You can pay the specified bitcoin amount using the payment address below:<br/><br/><a href="http://bitcoin.org" target="_NEW">BitCoin</a>: <b><a href="bitcoin:[bitcoinpaymentaddress]">[bitcoinpaymentaddress]</a></b><p>', NULL, N'Kartris', 1)
+GO
+/* Add bitcoin as a new currency */
+SET IDENTITY_INSERT [dbo].[tblKartrisCurrencies] ON
+INSERT [dbo].[tblKartrisCurrencies] ([CUR_ID], [CUR_Symbol], [CUR_ISOCode], [CUR_ISOCodeNumeric], [CUR_ExchangeRate], [CUR_HasDecimals], [CUR_Live], [CUR_Format], [CUR_IsoFormat], [CUR_DecimalPoint], [CUR_RoundNumbers], [CUR_OrderNo]) VALUES (5, N'฿', N'BTC', N'999', .02, 1, 1, N'[symbol][value]', N'[iso] [value]', N'.', 8, 5)
+SET IDENTITY_INSERT [dbo].[tblKartrisCurrencies] OFF
+GO
+INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 13, 1, 5, N'Bitcoin')
+GO

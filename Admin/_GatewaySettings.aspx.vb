@@ -78,10 +78,11 @@ Partial Class Admin_GatewaySettings
                         End If
                     Next
 
+                    Dim blnAnonymousCheckout As Boolean = False
 
                     For Each keySettingElement As SettingElement In objGatewaySettingsSection.Settings
                         If keySettingElement.Name.ToLower <> "isprotected" Then
-                            If Not InStr(UCase(keySettingElement.Name), "FRIENDLYNAME(") > 0 Then
+                            If Not InStr(UCase(keySettingElement.Name), "FRIENDLYNAME(") > 0 AndAlso (keySettingElement.Name.ToLower <> "anonymouscheckout") Then
                                 'Start of line
                                 Dim litLineStart As New Literal
                                 litLineStart.Text = "<li><span class=""Kartris-DetailsView-Name"">"
@@ -141,16 +142,59 @@ Partial Class Admin_GatewaySettings
                                 litLineEnd.Text = "</span></li>"
                                 phdSettings.Controls.Add(litLineEnd)
                             Else
-                                'Populate the friendly name textboxes
-                                Dim txtSetting As TextBox = DirectCast(FindControlRecursive(phdSettings, "txt" & _GatewayName & keySettingElement.Name), TextBox)
-                                If txtSetting IsNot Nothing And Not IsPostBack Then
-                                    txtSetting.Text = GetConfigValue(keySettingElement, blnIsProtected)
+                                If keySettingElement.Name.ToLower <> "anonymouscheckout" Then
+                                    'Populate the friendly name textboxes
+                                    Dim txtSetting As TextBox = DirectCast(FindControlRecursive(phdSettings, "txt" & _GatewayName & keySettingElement.Name), TextBox)
+                                    If txtSetting IsNot Nothing And Not IsPostBack Then
+                                        txtSetting.Text = GetConfigValue(keySettingElement, blnIsProtected)
+                                    End If
+                                Else
+                                    If UCase(keySettingElement.Value.ValueXml.InnerText) = "TRUE" Then
+                                        blnAnonymousCheckout = True
+                                    Else
+                                        blnAnonymousCheckout = False
+                                    End If
                                 End If
+
                             End If
                         End If
                     Next
+
+                    'Start of line
+                    Dim litAnoLineStart As New Literal
+                    litAnoLineStart.Text = "<li><span class=""Kartris-DetailsView-Name"">"
+                    phdSettings.Controls.Add(litAnoLineStart)
+
+                    'Add the label control
+                    Dim lblAnoSetting As Label = New Label()
+                    lblAnoSetting.Text = "AnonymousCheckout"
+                    lblAnoSetting.ID = "lbl" & _GatewayName & "AnonymousCheckout"
+                    phdSettings.Controls.Add(lblAnoSetting)
+
+                    'Middle of line
+                    Dim litAnoLineMiddle As New Literal
+                    litAnoLineMiddle.Text = "</span><span class=""Kartris-DetailsView-Value"">"
+                    phdSettings.Controls.Add(litAnoLineMiddle)
+
+                    Dim chkAnonymousCheckout As CheckBox = New CheckBox
+                    chkAnonymousCheckout.ID = "chkAnonymousCheckout"
+                    chkAnonymousCheckout.CssClass = "checkbox"
+                    If blnAnonymousCheckout Then
+                        chkAnonymousCheckout.Checked = True
+                    Else
+                        chkAnonymousCheckout.Checked = False
+                    End If
+                    phdSettings.Controls.Add(chkAnonymousCheckout)
+
+                    'End of line
+                    Dim litAnoLineEnd As New Literal
+                    litAnoLineEnd.Text = "</span></li>"
+                    phdSettings.Controls.Add(litAnoLineEnd)
+                    
+
                     btnUpdate.Visible = True
                     chkEncrypt.Visible = True
+
                     btnUpdate.CommandArgument = _GatewayName
                 End If
             End If
@@ -248,6 +292,28 @@ Partial Class Admin_GatewaySettings
                     End If
                 Next
 
+                'check if anonymous checkout is already present in config file
+                Dim chkAnonymousCheckout As CheckBox = DirectCast(FindControlRecursive(phdSettings, "chkAnonymousCheckout"), CheckBox)
+                Dim strAnonymousCheckoutValue As String = SetConfigValue(UCase(chkAnonymousCheckout.Checked.ToString), chkEncrypt.Checked)
+                Dim blnAnonymousCheckoutExists As Boolean = False
+                For Each keySettingElement As SettingElement In objGatewaySettingsSection.Settings
+                    If UCase(keySettingElement.Name) = UCase("ANONYMOUSCHECKOUT") Then
+                        keySettingElement.Value.ValueXml.InnerText = strAnonymousCheckoutValue
+                        blnAnonymousCheckoutExists = True
+                    End If
+                Next
+
+                If Not blnAnonymousCheckoutExists Then
+                    Dim docFriendlyName As New XmlDocument()
+                    Dim seFriendlyName As New SettingElement("AnonymousCheckout", SettingsSerializeAs.String)
+                    Dim veFriendlyName As New SettingValueElement()
+                    Dim nodeFriendlyName As XmlNode = docFriendlyName.CreateNode(XmlNodeType.Element, "value", "")
+                    nodeFriendlyName.InnerText = strAnonymousCheckoutValue
+                    veFriendlyName.ValueXml = nodeFriendlyName
+                    seFriendlyName.Value = veFriendlyName
+                    objGatewaySettingsSection.Settings.Add(seFriendlyName)
+                End If
+
                 objGatewaySettingsSection.SectionInformation.ForceSave = True
 
                 Try
@@ -316,9 +382,9 @@ Partial Class Admin_GatewaySettings
                             Dim GatewayPlugin As Kartris.Interfaces.PaymentGateway = Payment.PPLoader(strPaymentGatewayName)
                             If GatewayPlugin.Status.ToLower <> "off" Then
                                 If Not String.IsNullOrEmpty(strGatewayListConfig) Then strGatewayListConfig += ","
-                                strGatewayListConfig += strPaymentGatewayName & "::" & GatewayPlugin.Status.ToLower & "::" & GatewayPlugin.AuthorizedOnly.ToLower & "::p"
+                                strGatewayListConfig += strPaymentGatewayName & "::" & GatewayPlugin.Status.ToLower & "::" & GatewayPlugin.AuthorizedOnly.ToLower & "::" & Payment.isAnonymousCheckoutEnabled(strPaymentGatewayName) & "::p"
                             End If
-                            strGatewayListDisplay += strPaymentGatewayName & "::" & GatewayPlugin.Status.ToLower & "::" & GatewayPlugin.AuthorizedOnly.ToLower & "::p"
+                            strGatewayListDisplay += strPaymentGatewayName & "::" & GatewayPlugin.Status.ToLower & "::" & GatewayPlugin.AuthorizedOnly.ToLower & "::" & Payment.isAnonymousCheckoutEnabled(strPaymentGatewayName) & "::p"
                             GatewayPlugin = Nothing
                         ElseIf IsValidShippingGatewayPlugin(File.ToString) And Not InStr(File.ToString, "Kartris.Interfaces.dll") Then
                             If Not String.IsNullOrEmpty(strGatewayListDisplay) Then strGatewayListDisplay += ","
@@ -326,9 +392,9 @@ Partial Class Admin_GatewaySettings
                             Dim GatewayPlugin As Kartris.Interfaces.ShippingGateway = Payment.SPLoader(strShippingGatewayName)
                             If GatewayPlugin.Status.ToLower <> "off" Then
                                 If Not String.IsNullOrEmpty(strGatewayListConfig) Then strGatewayListConfig += ","
-                                strGatewayListConfig += strShippingGatewayName & "::" & GatewayPlugin.Status.ToLower & "::n::s"
+                                strGatewayListConfig += strShippingGatewayName & "::" & GatewayPlugin.Status.ToLower & "::n::false::s"
                             End If
-                            strGatewayListDisplay += strShippingGatewayName & "::" & GatewayPlugin.Status.ToLower & "::n::s"
+                            strGatewayListDisplay += strShippingGatewayName & "::" & GatewayPlugin.Status.ToLower & "::n::false::s"
                             GatewayPlugin = Nothing
                         End If
                     Next

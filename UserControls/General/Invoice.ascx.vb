@@ -120,7 +120,13 @@ Partial Class UserControls_General_Invoice
             numOrderCurrency = tblInvoice.Rows(i).Item("O_CurrencyID")
             numGatewayCurrency = tblInvoice.Rows(i).Item("O_CurrencyIDGateway")
 
-            numFinalTotalPriceInTaxGateway = Math.Round(tblInvoice.Rows(0).Item("O_TotalPriceGateway"), numCurrencyRoundNumber)
+            Dim blnBitcoinGateway As Boolean = (CurrenciesBLL.CurrencyCode(numGatewayCurrency).ToLower = "btc")
+            If blnBitcoinGateway Then
+                numFinalTotalPriceInTaxGateway = Math.Round(tblInvoice.Rows(0).Item("O_TotalPriceGateway"), 8)
+            Else
+                numFinalTotalPriceInTaxGateway = Math.Round(tblInvoice.Rows(0).Item("O_TotalPriceGateway"), numCurrencyRoundNumber)
+            End If
+
         Next
 
         'Clean up addresses, put in line breaks
