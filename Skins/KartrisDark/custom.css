@@ -5,14 +5,14 @@ HORIZONTAL DROPDOWN MENU SYSTEM
 */
 #menubar								{ }
 
-#menubar .top-bar                       { background-color: #ddd; margin: 0 0 6px 0; }
+#menubar .top-bar                       { background-color: #555; margin: 0 0 6px 0; }
 #menubar .top-bar.expanded .title-area  { background: #ccc; }
 #menubar .top-bar-section li a:not(.button)
-                                        { background-color: #ddd; color: #333; font-weight: normal; font-size: 70%; text-transform: uppercase; }
+                                        { background-color: #555; color: #ccc; font-weight: normal; font-size: 70%; text-transform: uppercase; }
 /* Style top level links */
-#menubar .top-bar-section li            { border-left: solid 1px #fff; }
+#menubar .top-bar-section li            { border-left: solid 1px #222; }
 #menubar .top-bar-section li a:hover
-                                        { background-color:#eee; }
+                                        { background-color: #aaa; color: #000; }
 #menubar .top-bar li.name span          { display: inline-block; padding: 0 0 0 10px; }
 /* 
 ========================================================================
@@ -22,7 +22,7 @@ styles there (which would be overwritten if we upgrade Foundation to
 a newer version), just just grab the bits we need to change here.
 ========================================================================
 */
-#categorymenu .top-bar                  { background-color: #333; }
+#categorymenu .top-bar                  { background-color: #666; }
 
 /* Mobile menu */
 #categorymenu .top-bar .title-area .name a
@@ -30,9 +30,9 @@ a newer version), just just grab the bits we need to change here.
 #categorymenu .top-bar .title-area .name a:hover
                                         { color: #000; background-color: #aaa; }
 
-/* Category link background */
+/* Controls link background */
 #categorymenu .top-bar-section li a:not(.button)
-                                        { background-color: #333; }
+                                        { background-color: #666; }
 
 /* Down arrow on each menu in main category nav bar - control position and colour */
 #categorymenu .top-bar-section .has-dropdown > a:after
@@ -42,7 +42,7 @@ a newer version), just just grab the bits we need to change here.
 #categorymenu .top-bar-section .dropdown li a
                                         { font-weight: normal; padding: 6px 15px; color: #ddd; border-right:solid 1px #999; }
 #categorymenu .top-bar-section .dropdown li a:hover
-                                        { color: #000; background-color: #aaa; }
+                                        { color: #000; background-color: #ccc; }
 
 /* Button to replace main nav menu in small devices */
 #categorymenu .mobile-link              { font-weight: bold; padding: 2px 15px; color: #ddd; display: block; }
@@ -51,7 +51,7 @@ a newer version), just just grab the bits we need to change here.
 /* Style top level links */
 #categorymenu .top-bar-section li       { border-right: solid 1px #999; }
 #categorymenu .top-bar-section li a:hover
-                                        { background-color: #777; }
+                                        { background-color: #ccc; color: #000; }
 
 /* depending on the width of your site, you will need to adjust the
     breakpoint where the nav menu collapses to the mobile version. You need to
@@ -87,7 +87,7 @@ Special CSS rules for small screens, large screens, touch, etc.
 ORBIT SLIDESHOW
 ========================================================================
 */
-#front-slideshow                        { background-color: #fd5; }
+#front-slideshow                        { background-color: #f40; }
 #front-slideshow li                     { padding: 10px 80px; min-height: 200px; }
 
 /* 
@@ -97,4 +97,4 @@ GENERAL
 */
 table tr td                             { font-size: 100%; }
 table thead,
-table tfoot                             { background: #fff; }
+table tfoot                             { background: #222; }

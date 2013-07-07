@@ -24,35 +24,6 @@ a newer version), just just grab the bits we need to change here.
 */
 #categorymenu .top-bar                  { background-color: #333; }
 
-/* Mobile menu */
-#categorymenu .top-bar .title-area .name a
-                                        { font-weight: bold; color: #fff; display: block; padding: 0 10px; height: 100%; }
-#categorymenu .top-bar .title-area .name a:hover
-                                        { color: #000; background-color: #aaa; }
-
-/* Category link background */
-#categorymenu .top-bar-section li a:not(.button)
-                                        { background-color: #333; }
-
-/* Down arrow on each menu in main category nav bar - control position and colour */
-#categorymenu .top-bar-section .has-dropdown > a:after
-                                        { border-color: rgba(255, 255, 255, 0.5) transparent transparent transparent; top: 13.5px; }
-
-/* Links within the dropdown menus */
-#categorymenu .top-bar-section .dropdown li a
-                                        { font-weight: normal; padding: 6px 15px; color: #ddd; border-right:solid 1px #999; }
-#categorymenu .top-bar-section .dropdown li a:hover
-                                        { color: #000; background-color: #aaa; }
-
-/* Button to replace main nav menu in small devices */
-#categorymenu .mobile-link              { font-weight: bold; padding: 2px 15px; color: #ddd; display: block; }
-#categorymenu .mobile-link:hover        { color: #000; background-color: #aaa; }
-
-/* Style top level links */
-#categorymenu .top-bar-section li       { border-right: solid 1px #999; }
-#categorymenu .top-bar-section li a:hover
-                                        { background-color: #777; }
-
 /* depending on the width of your site, you will need to adjust the
     breakpoint where the nav menu collapses to the mobile version. You need to
     find the following styles in foundation.css and tweak the width up or down.
@@ -81,6 +52,31 @@ Special CSS rules for small screens, large screens, touch, etc.
   .Kartris-DetailsView-Value { width: 270px; }
   ul { max-width: 100%; }
   }
+
+/* 
+========================================================================
+-- accordion style
+========================================================================
+*/
+#categorymenu .accordion                { display: block; margin: 2px 0 5px 0; }
+#categorymenu .accordion .AccordionHeader + div
+                                        { position: relative; z-index: 1; top: -1px; overflow: hidden; }
+#categorymenu .accordion .AccordionHeader
+                                        { position: relative; z-index: 10; margin-top: 1px; overflow: hidden; }
+#categorymenu .accordion .AccordionHeader a
+                                        { color: #333; background-color: #eee; font-weight: bold; cursor: pointer; display: block; padding: 2px 5px 3px 10px; }
+#categorymenu .accordion .AccordionHeader a:hover
+                                        { background-color: #666; color: #fff; cursor: pointer; }
+#categorymenu .accordion .AccordionContent
+                                        { margin: 0 auto; overflow: hidden; }
+#categorymenu .accordion .AccordionContent ul
+                                        { margin: 0; padding: 0; }
+#categorymenu .accordion .AccordionContent a
+                                        { display: block; border-top: solid 1px #ccc; margin: 1px 0 0 0; padding: 1px 4px 1px 10px; color: #333; overflow: hidden; text-decoration: none; }
+#categorymenu .accordion .AccordionContent a:hover
+                                        { color: #fff; background-color: #666; }
+#categorymenu .accordion .AccordionContent li
+                                        { overflow: hidden }
 
 /* 
 ========================================================================
