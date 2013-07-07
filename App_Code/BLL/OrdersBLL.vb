@@ -554,7 +554,7 @@ Public Class OrdersBLL
 
                 Dim O_ID As Integer = 0
                 Dim blnNewUser As Boolean
-                Dim strBillingAddressText As String, strShippingAddressText As String
+                Dim strBillingAddressText As String = "", strShippingAddressText As String = ""
 
                 Dim objBasket As BasketBLL = BasketObject
                 Dim arrBasketItems As ArrayList = BasketArray
@@ -574,42 +574,22 @@ Public Class OrdersBLL
                 End If
 
                 If C_ID > 0 Then
-
-                    Dim cmdUpdateUserNameandEUVAT As New SqlCommand("spKartrisUsers_UpdateNameAndEUVAT", sqlConn, savePoint)
-                    cmdUpdateUserNameandEUVAT.CommandType = CommandType.StoredProcedure
-                    cmdUpdateUserNameandEUVAT.Parameters.AddWithValue("@U_ID", C_ID)
-                    cmdUpdateUserNameandEUVAT.Parameters.AddWithValue("@U_AccountHolderName", BillingAddress.FullName)
-                    cmdUpdateUserNameandEUVAT.Parameters.AddWithValue("@U_CardholderEUVATNum", strEUVATNumber)
-                    cmdUpdateUserNameandEUVAT.ExecuteNonQuery()
+                    Dim strFullName As String = ""
+                    If BillingAddress IsNot Nothing Then strFullName = BillingAddress.FullName
+                    If Not (String.IsNullOrEmpty(strEUVATNumber) AndAlso String.IsNullOrEmpty(strFullName)) Then
+                        Dim cmdUpdateUserNameandEUVAT As New SqlCommand("spKartrisUsers_UpdateNameAndEUVAT", sqlConn, savePoint)
+                        cmdUpdateUserNameandEUVAT.CommandType = CommandType.StoredProcedure
+                        cmdUpdateUserNameandEUVAT.Parameters.AddWithValue("@U_ID", C_ID)
+                        cmdUpdateUserNameandEUVAT.Parameters.AddWithValue("@U_AccountHolderName", strFullName)
+                        cmdUpdateUserNameandEUVAT.Parameters.AddWithValue("@U_CardholderEUVATNum", strEUVATNumber)
+                        cmdUpdateUserNameandEUVAT.ExecuteNonQuery()
+                    End If
                 End If
 
                 'Add a new billing address - if a new one is entered
-                If BillingAddress.ID = 0 Then
-                    With BillingAddress
-                        Dim cmdAddUpdateOrderAddress As New SqlCommand("spKartrisUsers_AddUpdateAddress", sqlConn, savePoint)
-                        cmdAddUpdateOrderAddress.CommandType = CommandType.StoredProcedure
-                        cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_UserID", C_ID)
-                        cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Label", .Label)
-                        cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Name", .FullName)
-                        cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Company", .Company)
-                        cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_StreetAddress", .StreetAddress)
-                        cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_TownCity", .TownCity)
-                        cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_County", .County)
-                        cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_PostCode", .Postcode)
-                        cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Country", .CountryID)
-                        cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Telephone", .Phone)
-                        cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Type", IIf(blnSameShippingAsBilling, "u", "b"))
-                        cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_MakeDefault", IIf(blnNewUser, 1, 0))
-                        cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_ID", 0)
-
-                        cmdAddUpdateOrderAddress.ExecuteNonQuery()
-                    End With
-                End If
-
-                'Add a new shipping address - if a new one is entered
-                If Not blnSameShippingAsBilling Then
-                    If ShippingAddress.ID = 0 Then
-                        With ShippingAddress
+                If BillingAddress IsNot Nothing Then
+                    If BillingAddress.ID = 0 Then
+                        With BillingAddress
                             Dim cmdAddUpdateOrderAddress As New SqlCommand("spKartrisUsers_AddUpdateAddress", sqlConn, savePoint)
                             cmdAddUpdateOrderAddress.CommandType = CommandType.StoredProcedure
                             cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_UserID", C_ID)
@@ -622,7 +602,7 @@ Public Class OrdersBLL
                             cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_PostCode", .Postcode)
                             cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Country", .CountryID)
                             cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Telephone", .Phone)
-                            cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Type", "s")
+                            cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Type", IIf(blnSameShippingAsBilling, "u", "b"))
                             cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_MakeDefault", IIf(blnNewUser, 1, 0))
                             cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_ID", 0)
 
@@ -631,24 +611,55 @@ Public Class OrdersBLL
                     End If
                 End If
 
+                'Add a new shipping address - if a new one is entered
+                If Not blnSameShippingAsBilling Then
+                    If ShippingAddress IsNot Nothing Then
+                        If ShippingAddress.ID = 0 Then
+                            With ShippingAddress
+                                Dim cmdAddUpdateOrderAddress As New SqlCommand("spKartrisUsers_AddUpdateAddress", sqlConn, savePoint)
+                                cmdAddUpdateOrderAddress.CommandType = CommandType.StoredProcedure
+                                cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_UserID", C_ID)
+                                cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Label", .Label)
+                                cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Name", .FullName)
+                                cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Company", .Company)
+                                cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_StreetAddress", .StreetAddress)
+                                cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_TownCity", .TownCity)
+                                cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_County", .County)
+                                cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_PostCode", .Postcode)
+                                cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Country", .CountryID)
+                                cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Telephone", .Phone)
+                                cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_Type", "s")
+                                cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_MakeDefault", IIf(blnNewUser, 1, 0))
+                                cmdAddUpdateOrderAddress.Parameters.AddWithValue("@ADR_ID", 0)
+
+                                cmdAddUpdateOrderAddress.ExecuteNonQuery()
+                            End With
+                        End If
+                    End If
+                End If
+
                 'Build the billing address string to be used in the order record
-                With BillingAddress
-                    strBillingAddressText = .FullName & vbCrLf & .Company & vbCrLf & _
-                          .StreetAddress & vbCrLf & .TownCity & vbCrLf & _
-                          .County & vbCrLf & .Postcode & vbCrLf & _
-                          .Country.Name & vbCrLf & .Phone
-                End With
+                If BillingAddress IsNot Nothing Then
+                    With BillingAddress
+                        strBillingAddressText = .FullName & vbCrLf & .Company & vbCrLf & _
+                              .StreetAddress & vbCrLf & .TownCity & vbCrLf & _
+                              .County & vbCrLf & .Postcode & vbCrLf & _
+                              .Country.Name & vbCrLf & .Phone
+                    End With
+                End If
 
                 'Build the shipping address string to be used in the order record
                 If blnSameShippingAsBilling Then
                     strShippingAddressText = strBillingAddressText
                 Else
-                    With ShippingAddress
-                        strShippingAddressText = .FullName & vbCrLf & .Company & vbCrLf & _
-                              .StreetAddress & vbCrLf & .TownCity & vbCrLf & _
-                              .County & vbCrLf & .Postcode & vbCrLf & _
-                              .Country.Name & vbCrLf & .Phone
-                    End With
+                    If ShippingAddress IsNot Nothing Then
+                        With ShippingAddress
+                            strShippingAddressText = .FullName & vbCrLf & .Company & vbCrLf & _
+                                  .StreetAddress & vbCrLf & .TownCity & vbCrLf & _
+                                  .County & vbCrLf & .Postcode & vbCrLf & _
+                                  .Country.Name & vbCrLf & .Phone
+                        End With
+                    End If
                 End If
 
                 ''// get affiliate id from session variable and compare it to user current affiliate id

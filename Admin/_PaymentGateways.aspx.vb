@@ -116,9 +116,9 @@ Partial Class Admin_PaymentGateways
                 Dim GatewayPlugin As Kartris.Interfaces.PaymentGateway = Payment.PPLoader(strGatewayName)
                 If GatewayPlugin.Status.ToLower <> "off" Then
                     If Not String.IsNullOrEmpty(strGatewayListConfig) Then strGatewayListConfig += ","
-                    strGatewayListConfig += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::" & GatewayPlugin.AuthorizedOnly.ToLower & "::p"
+                    strGatewayListConfig += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::" & GatewayPlugin.AuthorizedOnly.ToLower & "::" & Payment.isAnonymousCheckoutEnabled(strGatewayName) & "::p"
                 End If
-                strGatewayListDisplay += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::" & GatewayPlugin.AuthorizedOnly.ToLower & "::p"
+                strGatewayListDisplay += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::" & GatewayPlugin.AuthorizedOnly.ToLower & "::" & Payment.isAnonymousCheckoutEnabled(strGatewayName) & "::p"
                 GatewayPlugin = Nothing
             ElseIf IsValidShippingGatewayPlugin(File.ToString) And Not InStr(File.ToString, "Kartris.Interfaces.dll") Then
                 If Not String.IsNullOrEmpty(strGatewayListDisplay) Then strGatewayListDisplay += ","
@@ -126,9 +126,9 @@ Partial Class Admin_PaymentGateways
                 Dim GatewayPlugin As Kartris.Interfaces.ShippingGateway = Payment.SPLoader(strGatewayName)
                 If GatewayPlugin.Status.ToLower <> "off" Then
                     If Not String.IsNullOrEmpty(strGatewayListConfig) Then strGatewayListConfig += ","
-                    strGatewayListConfig += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::n::s"
+                    strGatewayListConfig += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::n::false::s"
                 End If
-                strGatewayListDisplay += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::n::s"
+                strGatewayListDisplay += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::n::false::s"
                 GatewayPlugin = Nothing
             End If
         Next

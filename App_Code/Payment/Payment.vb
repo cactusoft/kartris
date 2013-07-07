@@ -181,5 +181,27 @@ Public Class Payment
             Return ""
         End Try
     End Function
+    Public Shared Function isAnonymousCheckoutEnabled(ByVal strGatewayName As String) As Boolean
+        Try
+            Dim strSettingName As String = "AnonymousCheckout"
+
+            Dim objConfigFileMap As New ExeConfigurationFileMap()
+            objConfigFileMap.ExeConfigFilename = Path.Combine(Current.Request.PhysicalApplicationPath, "Plugins\" & strGatewayName & "\" & strGatewayName & ".dll.config")
+            objConfigFileMap.MachineConfigFilename = Path.Combine(Current.Request.PhysicalApplicationPath, "Uploads\resources\Machine.Config")
+            Dim objConfiguration As System.Configuration.Configuration = ConfigurationManager.OpenMappedExeConfiguration(objConfigFileMap, ConfigurationUserLevel.None)
+
+            Dim objSectionGroup As ConfigurationSectionGroup = objConfiguration.GetSectionGroup("applicationSettings")
+            Dim appSettingsSection As ClientSettingsSection = DirectCast(objSectionGroup.Sections.Item("Kartris.My.MySettings"), ClientSettingsSection)
+            Dim blnAnonymousCheckoutValue As Boolean = False
+            Try
+                blnAnonymousCheckoutValue = CBool(appSettingsSection.Settings.Get(strSettingName).Value.ValueXml.InnerText)
+            Catch ex As Exception
+
+            End Try
+            Return blnAnonymousCheckoutValue
+        Catch ex As Exception
+            Return ""
+        End Try
+    End Function
 
 End Class

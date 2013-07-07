@@ -24,6 +24,35 @@
                 </div>
             </asp:View>
             <asp:View ID="viwCheckoutInput" runat="server">
+
+                 <!--
+                ===============================
+                PAYMENT METHODS
+                Dropdown if multiple choices
+                available, hidden if only one
+                choice.
+                ===============================
+                -->
+                <asp:UpdatePanel runat="server" ID="updPaymentMethods" UpdateMode="Conditional">
+                    <ContentTemplate>
+                        <asp:PlaceHolder ID="phdPaymentMethods" runat="server">
+                            <div class="section">
+                                <h2>
+                                    <asp:Literal ID="litCheckoutPaymentMethod" runat="server" Text="<%$ Resources: FormLabel_SelectPayment %>"
+                                        EnableViewState="false" /></h2>
+                                <div class="row">
+                                    <div class="small-12 large-4 columns">
+                                        <asp:DropDownList ID="ddlPaymentGateways" runat="server" AutoPostBack="true" />
+                                        <asp:RequiredFieldValidator EnableClientScript="True" ID="valPaymentGateways" runat="server"
+                                            ControlToValidate="ddlPaymentGateways" CssClass="error" InitialValue="::False" ForeColor="" ValidationGroup="Checkout"
+                                            Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator>
+                                    </div>
+                                </div>
+                            </div>
+                        </asp:PlaceHolder>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
+
                 <div>
                     <asp:LinkButton ID="lnkbtnDummy" runat="server" Text="" />
                     <!--
@@ -89,7 +118,7 @@
                                 <span class="checkbox">
                                     <asp:CheckBox ID="chkSameShippingAsBilling" runat="server" Checked="true" AutoPostBack="true" />
                                     <asp:Label ID="lblchkSameShipping" Text="<%$ Resources: Checkout, ContentText_SameShippingAsBilling %>"
-                                        runat="server" AssociatedControlID="chkSameShippingAsBilling" EnableViewState="false" /></span></p>
+                                        runat="server" AssociatedControlID="chkSameShippingAsBilling" EnableViewState="true" /></span></p>
                     <!--
                     ===============================
                     EU VAT NUMBER
@@ -120,29 +149,7 @@
                     <div class="spacer">
                     </div>
                 </div>
-                <!--
-                ===============================
-                PAYMENT METHODS
-                Dropdown if multiple choices
-                available, hidden if only one
-                choice.
-                ===============================
-                -->
-                <asp:PlaceHolder ID="phdPaymentMethods" runat="server">
-                    <div class="section">
-                        <h2>
-                            <asp:Literal ID="litCheckoutPaymentMethod" runat="server" Text="<%$ Resources: FormLabel_SelectPayment %>"
-                                EnableViewState="false" /></h2>
-                        <div class="row">
-                            <div class="small-12 large-4 columns">
-                                <asp:DropDownList ID="ddlPaymentGateways" runat="server" />
-                                <asp:RequiredFieldValidator EnableClientScript="True" ID="valPaymentGateways" runat="server"
-                                    ControlToValidate="ddlPaymentGateways" CssClass="error" ForeColor="" ValidationGroup="Checkout"
-                                    Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator>
-                            </div>
-                        </div>
-                    </div>
-                </asp:PlaceHolder>
+              
                 <!--
                 -------------------------------
                 PURCHASE ORDER NUMBER
@@ -351,7 +358,7 @@
                     -->
                     <div class="checkoutaddress small-12 large-6 columns">
                         <h2>
-                            <asp:Literal ID="litBillingDetails" runat="server" Text="<%$ Resources: Address, ContentText_BillingAddress %>" EnableViewState="false" /></h2>
+                            <asp:Literal ID="litBillingDetails" runat="server" Text="<%$ Resources: Address, ContentText_BillingAddress %>" EnableViewState="true" /></h2>
                         <user:AddressDetails ID="UC_Billing" runat="server" ShowLabel="false" ShowButtons="false" />
                     </div>
                     <!--
@@ -362,7 +369,7 @@
                     <div class="checkoutaddress small-12 large-6 columns">
                         <h2>
                             <asp:Literal ID="litShippingDetails" runat="server" Text="<%$ Resources: Address, ContentText_Shipping %>"
-                                EnableViewState="false" /></h2>
+                                EnableViewState="true" /></h2>
                         <user:AddressDetails ID="UC_Shipping" runat="server" ShowLabel="false" ShowButtons="false" />
                     </div>
                     <div class="spacer">

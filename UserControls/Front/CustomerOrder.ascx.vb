@@ -77,8 +77,16 @@ Partial Class UserControls_Front_CustomerOrder
             numShippingPriceIncTax = FixNullFromDB(tblBasket.Rows(0).Item("O_ShippingPrice")) + FixNullFromDB(tblBasket.Rows(0).Item("O_ShippingTax"))
             numOrderHandlingPriceExTax = FixNullFromDB(tblBasket.Rows(0).Item("O_OrderHandlingCharge"))
             numOrderHandlingPriceIncTax = numOrderHandlingPriceExTax + FixNullFromDB(tblBasket.Rows(0).Item("O_OrderHandlingChargeTax"))
-            numFinalTotalPriceInTaxGateway = Math.Round(tblBasket.Rows(0).Item("O_TotalPriceGateway"), 2)
+
+
             numCurrencyIDGateway = FixNullFromDB(tblBasket.Rows(0).Item("O_CurrencyIDGateway"))
+            Dim blnBitcoinGateway As Boolean = (CurrenciesBLL.CurrencyCode(numCurrencyIDGateway).ToLower = "btc")
+            If blnBitcoinGateway Then
+                numFinalTotalPriceInTaxGateway = Math.Round(tblBasket.Rows(0).Item("O_TotalPriceGateway"), 8)
+            Else
+                numFinalTotalPriceInTaxGateway = Math.Round(tblBasket.Rows(0).Item("O_TotalPriceGateway"), 2)
+            End If
+
             numCurrencyID = FixNullFromDB(tblBasket.Rows(0).Item("O_CurrencyID"))
 
             'the tax should actually be in the invoice always

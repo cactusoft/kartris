@@ -573,7 +573,7 @@ Public Class BasketBLL
 
     Public BasketItems As New ArrayList
 
-    Private _AllFreeShipping, _HasFreeShipping, _PricesIncTax As Boolean
+    Private _AllFreeShipping, _HasFreeShipping, _PricesIncTax, _AllDigital As Boolean
     Private _TotalWeight, _TotalExTax, _TotalTaxAmount, _TotalAmountSaved As Double
     Private _TotalItems As Single
     Private _ShippingTotalWeight, _ShippingTotalExTax, _ShippingTotalTaxAmount As Double
@@ -620,6 +620,12 @@ Public Class BasketBLL
     Public ReadOnly Property AllFreeShipping() As Boolean
         Get
             Return _AllFreeShipping
+        End Get
+    End Property
+
+    Public ReadOnly Property AllDigital() As Boolean
+        Get
+            Return _AllDigital
         End Get
     End Property
 
@@ -862,6 +868,7 @@ Public Class BasketBLL
     Public Sub CalculateTotals()
         'Set intial settings
         _AllFreeShipping = True
+        _AllDigital = True
         _HasFreeShipping = False
         _TotalItems = 0
         _TotalWeight = 0
@@ -880,6 +887,8 @@ Public Class BasketBLL
 
                 'Is at least one item got free shipping?
                 _HasFreeShipping = _HasFreeShipping OrElse .FreeShipping
+
+                _AllDigital = _AllDigital AndAlso (.DownloadType = "l" Or .DownloadType = "u")
 
                 'Totals
                 _TotalItems = _TotalItems + .Quantity
@@ -1635,11 +1644,11 @@ Public Class BasketBLL
                     Current.Response.Redirect("~/Checkout.aspx")
                 End Try
             Else
-                _ShippingName = ""
-                _ShippingDescription = ""
-                If numShippingID > 0 Then CkartrisFormatErrors.LogError("BasketBLL.CalculateShipping Error - " & _
-                                                          "DestinationID: " & numDestinationID & vbCrLf _
-                                                          & "ShippingID: " & numShippingID)
+                    _ShippingName = ""
+                    _ShippingDescription = ""
+                    If numShippingID > 0 Then CkartrisFormatErrors.LogError("BasketBLL.CalculateShipping Error - " & _
+                                                              "DestinationID: " & numDestinationID & vbCrLf _
+                                                              & "ShippingID: " & numShippingID)
             End If
         End If
 
