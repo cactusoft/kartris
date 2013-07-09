@@ -42,7 +42,7 @@ Partial Class Admin_ModifyCategory
         litCategoryName.Text = GetGlobalResourceObject("_Category", "PageTitle_NewCategory")
         For Each t As AjaxControlToolkit.TabPanel In tabContainerProduct.Tabs
             If t.ID <> "tabMainInfo" Then
-                t.Enabled = False
+                t.Enabled = False : t.Visible = False
             End If
         Next
         If _GetParentCategory() = 0 And _GetCategoryID() = 0 Then
@@ -57,7 +57,7 @@ Partial Class Admin_ModifyCategory
 
         litCategoryName.Text = CategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG"))
         For Each t As AjaxControlToolkit.TabPanel In tabContainerProduct.Tabs
-            t.Enabled = True
+            t.Enabled = True : t.Visible = True
         Next
         _UC_CategoryIndicator.CheckCategoryStatus()
         If _GetParentCategory() = 0 Then
