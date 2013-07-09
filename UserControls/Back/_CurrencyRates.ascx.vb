@@ -135,6 +135,7 @@ Partial Class UserControls_Back_CurrencyRates
         litCurrencyID.Text = "0"
         txtSymbol.Text = Nothing
         txtISOCode.Text = Nothing
+        txtIsoCodeNumeric.Text = Nothing
         txtExchangeRate.Text = Nothing
         chkUseDecimal.Checked = True
         chkLive.Checked = True

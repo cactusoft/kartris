@@ -405,11 +405,36 @@ Partial Class Admin_Install
         End If
     End Sub
 
+
     '---------------------------------------
-    '5. CHECK/CHANGE IMPORTANT CONFIG
-    'No code needed here, but there is some
-    'on the aspx page.
+    '5. CHECK/CHANGE IMPORTANT CONFIG / SET DEFAULT CURRENCY
     '---------------------------------------
+    Protected Sub ws5_ConfigSettings_Deactivate(sender As Object, e As EventArgs) Handles ws5_ConfigSettings.Deactivate
+        Dim strConnection As String
+        If Not String.IsNullOrEmpty(strConnectionString) Then
+            strConnection = strConnectionString
+        Else
+            strConnection = ConfigurationManager.ConnectionStrings("kartrisSQLConnection").ToString
+        End If
+        objSQLConnection = New SqlConnection(strConnection)
+
+        Try
+            If ddlDefaultCurrency.SelectedIndex > 0 Then
+
+                Dim objSQLCommand As New SqlCommand("UPDATE tblKartrisCurrencies " & _
+                                 "SET CUR_ExchangeRate = 1, CUR_OrderNo = 1, CUR_Live = 1 " & _
+                                 "Where CUR_ID = " & ddlDefaultCurrency.SelectedValue & ";", objSQLConnection)
+                objSQLConnection.Open()
+                objSQLCommand.ExecuteNonQuery()
+            End If
+        Catch ex As Exception
+            litError.Text = " Setting Default Currency Failed - " & ex.Message
+            phdError.Visible = True
+            wizInstallation.ActiveStepIndex = 4
+        Finally
+            If objSQLConnection.State = ConnectionState.Open Then objSQLConnection.Close()
+        End Try
+    End Sub
 
     '---------------------------------------
     '6. FOLDER PERMISSIONS
