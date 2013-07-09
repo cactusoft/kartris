@@ -84,16 +84,16 @@
         <xs:element name="Pages" msprop:Generator_UserTableName="Pages" msprop:Generator_RowEvArgName="PagesRowChangeEvent" msprop:Generator_TableVarName="tablePages" msprop:Generator_TablePropName="Pages" msprop:Generator_RowDeletingName="PagesRowDeleting" msprop:Generator_RowChangingName="PagesRowChanging" msprop:Generator_RowDeletedName="PagesRowDeleted" msprop:Generator_RowEvHandlerName="PagesRowChangeEventHandler" msprop:Generator_TableClassName="PagesDataTable" msprop:Generator_RowChangedName="PagesRowChanged" msprop:Generator_RowClassName="PagesRow">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="PAGE_ID" msprop:Generator_ColumnVarNameInTable="columnPAGE_ID" msprop:Generator_ColumnPropNameInRow="PAGE_ID" msprop:Generator_ColumnPropNameInTable="PAGE_IDColumn" msprop:Generator_UserColumnName="PAGE_ID" type="xs:short" />
-              <xs:element name="PAGE_Name" msprop:Generator_ColumnVarNameInTable="columnPAGE_Name" msprop:Generator_ColumnPropNameInRow="PAGE_Name" msprop:Generator_ColumnPropNameInTable="PAGE_NameColumn" msprop:Generator_UserColumnName="PAGE_Name">
+              <xs:element name="PAGE_ID" msprop:Generator_ColumnVarNameInTable="columnPAGE_ID" msprop:Generator_ColumnPropNameInRow="PAGE_ID" msprop:Generator_ColumnPropNameInTable="PAGE_IDColumn" msprop:Generator_UserColumnName="PAGE_ID" type="xs:short" minOccurs="0" />
+              <xs:element name="PAGE_Name" msprop:Generator_ColumnVarNameInTable="columnPAGE_Name" msprop:Generator_ColumnPropNameInRow="PAGE_Name" msprop:Generator_ColumnPropNameInTable="PAGE_NameColumn" msprop:Generator_UserColumnName="PAGE_Name" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="PAGE_ParentID" msprop:Generator_ColumnVarNameInTable="columnPAGE_ParentID" msprop:Generator_ColumnPropNameInRow="PAGE_ParentID" msprop:Generator_ColumnPropNameInTable="PAGE_ParentIDColumn" msprop:Generator_UserColumnName="PAGE_ParentID" type="xs:short" />
-              <xs:element name="LANG_ID" msprop:Generator_ColumnVarNameInTable="columnLANG_ID" msprop:Generator_ColumnPropNameInRow="LANG_ID" msprop:Generator_ColumnPropNameInTable="LANG_IDColumn" msprop:Generator_UserColumnName="LANG_ID" type="xs:unsignedByte" />
+              <xs:element name="PAGE_ParentID" msprop:Generator_ColumnVarNameInTable="columnPAGE_ParentID" msprop:Generator_ColumnPropNameInRow="PAGE_ParentID" msprop:Generator_ColumnPropNameInTable="PAGE_ParentIDColumn" msprop:Generator_UserColumnName="PAGE_ParentID" type="xs:short" minOccurs="0" />
+              <xs:element name="LANG_ID" msprop:Generator_ColumnVarNameInTable="columnLANG_ID" msprop:Generator_ColumnPropNameInRow="LANG_ID" msprop:Generator_ColumnPropNameInTable="LANG_IDColumn" msprop:Generator_UserColumnName="LANG_ID" type="xs:unsignedByte" minOccurs="0" />
               <xs:element name="PAGE_SEOPageTitle" msprop:Generator_ColumnVarNameInTable="columnPAGE_SEOPageTitle" msprop:Generator_ColumnPropNameInRow="PAGE_SEOPageTitle" msprop:Generator_ColumnPropNameInTable="PAGE_SEOPageTitleColumn" msprop:Generator_UserColumnName="PAGE_SEOPageTitle" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
