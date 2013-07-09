@@ -50,16 +50,24 @@ Partial Class Admin_LiveCurrencies
         tblCurrencies.Columns.Add(New DataColumn("ISOCode", Type.GetType("System.String")))
         tblCurrencies.Columns.Add(New DataColumn("CurrentRate", Type.GetType("System.String")))
         tblCurrencies.Columns.Add(New DataColumn("NewRate", Type.GetType("System.String")))
+        tblCurrencies.Columns.Add(New DataColumn("IsDefault", Type.GetType("System.Boolean")))
 
         Dim sbdIsoList As New StringBuilder(""), strBaseISO As String = ""
         For Each drwTempCurrency As DataRow In tblTempCurrencies.Rows
             Dim strCurrencyName As String = ""
             strCurrencyName = CStr(LanguageElementsBLL.GetElementValue(Session("_LANG"), _
                                     LANG_ELEM_TABLE_TYPE.Currencies, LANG_ELEM_FIELD_NAME.Name, CLng(drwTempCurrency("CUR_ID"))))
-            tblCurrencies.Rows.Add(CByte(drwTempCurrency("CUR_ID")), _
-                                   strCurrencyName, drwTempCurrency("CUR_ISOCode"), drwTempCurrency("CUR_ExchangeRate"), "")
+
+            If CByte(drwTempCurrency("CUR_ID")) = CurrenciesBLL.GetDefaultCurrency() Then
+                strBaseISO = drwTempCurrency("CUR_ISOCode")
+                tblCurrencies.Rows.Add(CByte(drwTempCurrency("CUR_ID")), _
+                                                   strCurrencyName, drwTempCurrency("CUR_ISOCode"), drwTempCurrency("CUR_ExchangeRate"), "", True)
+            Else
+                tblCurrencies.Rows.Add(CByte(drwTempCurrency("CUR_ID")), _
+                                                   strCurrencyName, drwTempCurrency("CUR_ISOCode"), drwTempCurrency("CUR_ExchangeRate"), "", False)
+            End If
+
             sbdIsoList.Append(drwTempCurrency("CUR_ISOCode")) : sbdIsoList.Append(",")
-            If CDbl(drwTempCurrency("CUR_ExchangeRate")) = 1 Then strBaseISO = drwTempCurrency("CUR_ISOCode")
         Next
 
         Dim strMessage As String = Nothing
@@ -77,14 +85,13 @@ Partial Class Admin_LiveCurrencies
 
     Protected Sub rptCurrencies_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptCurrencies.ItemDataBound
         If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem Then
-
             Dim strCurrentRate As String = ""
             Dim strNewRate As String = ""
 
             strCurrentRate = CType(e.Item.FindControl("litCurrentRate"), Literal).Text
             strNewRate = CType(e.Item.FindControl("txtNewRate"), TextBox).Text
 
-            If strCurrentRate = 1 Then
+            If CType(e.Item.FindControl("chkIsDefault"), CheckBox).Checked Then
                 CType(e.Item.FindControl("txtNewRate"), TextBox).Enabled = False
             Else
                 CType(e.Item.FindControl("txtNewRate"), TextBox).Enabled = True

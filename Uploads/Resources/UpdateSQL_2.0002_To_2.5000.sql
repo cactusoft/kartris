@@ -1431,7 +1431,10 @@ GO
 -- ============================================================================================
 -- A new column 'CUR_OrderNo' added to Table 'tblKartrisCurrencies'
 -- ============================================================================================
-
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_SetDefault', N'Set Default', '', 2.5000, N'Set Default', NULL, N'_Kartris', 1);
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'Step5_DefaultCurrency_Text', N'Default Currency', NULL, 2.5000, NULL, N'Install.aspx', NULL, 1)
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'Step5_litDefaultCurrencyDesc_Text', N'This will set the default currency in your store. You can change this later if necessary from the currencies page in Kartris administration.', NULL, 2.5000, NULL, N'Install.aspx', NULL, 1)
+GO
 /* To prevent any potential data loss issues, you should review this script in detail before running it outside the context of the database designer.*/
 BEGIN TRANSACTION
 SET QUOTED_IDENTIFIER ON
@@ -1444,12 +1447,16 @@ SET ANSI_WARNINGS ON
 COMMIT
 BEGIN TRANSACTION
 GO
+ALTER TABLE dbo.tblKartrisCurrencies
+	DROP CONSTRAINT CK_Currencies_ExchangeRateValidation
+GO
 ALTER TABLE dbo.tblKartrisCurrencies ADD
 	CUR_OrderNo tinyint NULL
 GO
-ALTER TABLE dbo.tblKartrisCurrencies SET (LOCK_ESCALATION = TABLE)
+ALTER TABLE dbo.tblKartrisCurrencies ADD CONSTRAINT
+	CK_Currencies_ExchangeRateValidation CHECK (([CUR_ExchangeRate]>(0) OR ([CUR_ExchangeRate]=(0) AND [CUR_Live]=(0))))
 GO
-COMMIT
+EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'CUR_ExchangeRate should be a positive number for live currencies' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'tblKartrisCurrencies', @level2type=N'CONSTRAINT',@level2name=N'CK_Currencies_ExchangeRateValidation'
 GO
 UPDATE tblKartrisCurrencies SET CUR_OrderNo = CUR_ID;
 GO
@@ -1539,6 +1546,19 @@ GO
 DECLARE @DefaultCurrency as tinyint;
 SELECT @DefaultCurrency = CUR_ID FROM tblKartrisCurrencies WHERE CUR_ExchangeRate = 1;
 EXECUTE [_spKartrisCurrencies_SetDefault] @DefaultCurrency;
+GO
+ALTER VIEW [dbo].[vKartrisTypeCurrencies]
+AS
+SELECT        dbo.tblKartrisCurrencies.CUR_ID, dbo.tblKartrisLanguageElements.LE_LanguageID AS LANG_ID, dbo.tblKartrisLanguageElements.LE_Value AS CUR_Name, 
+                         dbo.tblKartrisCurrencies.CUR_Symbol, dbo.tblKartrisCurrencies.CUR_ISOCode, dbo.tblKartrisCurrencies.CUR_ISOCodeNumeric, 
+                         dbo.tblKartrisCurrencies.CUR_ExchangeRate, dbo.tblKartrisCurrencies.CUR_HasDecimals, dbo.tblKartrisCurrencies.CUR_Live, 
+                         dbo.tblKartrisCurrencies.CUR_Format, dbo.tblKartrisCurrencies.CUR_IsoFormat, dbo.tblKartrisCurrencies.CUR_DecimalPoint, 
+                         dbo.tblKartrisCurrencies.CUR_RoundNumbers, dbo.tblKartrisCurrencies.CUR_OrderNo
+FROM            dbo.tblKartrisLanguageElements INNER JOIN
+                         dbo.tblKartrisCurrencies ON dbo.tblKartrisLanguageElements.LE_ParentID = dbo.tblKartrisCurrencies.CUR_ID
+WHERE        (dbo.tblKartrisLanguageElements.LE_TypeID = 13) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 1) AND 
+                         (dbo.tblKartrisLanguageElements.LE_Value IS NOT NULL)
+
 GO
 /* Update round number constraint to 8 in tblkartriscurrencies - bitcoin support */
 IF  EXISTS (SELECT * FROM sys.check_constraints WHERE object_id = OBJECT_ID(N'[dbo].[CK_Currencies_RoundNumbers]') AND parent_object_id = OBJECT_ID(N'[dbo].[tblKartrisCurrencies]'))

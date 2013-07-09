@@ -322,4 +322,10 @@
   <data name="Step3_CreateSampleData.Text" xml:space="preserve">
     <value>Create Sample Data</value>
   </data>
+  <data name="Step5_DefaultCurrency_Text" xml:space="preserve">
+    <value>Default Currency</value>
+  </data>
+  <data name="Step5_litDefaultCurrencyDesc_Text" xml:space="preserve">
+    <value>This will set the default currency in your store. You can change this later if necessary from the currencies page in Kartris administration.</value>
+  </data>
 </root>

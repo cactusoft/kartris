@@ -287,6 +287,30 @@
 									ErrorMessage="<%$ Resources: Error_RequiredField %>"></asp:RequiredFieldValidator>
 					<br/>
 					<asp:Literal ID="litTaxRegimeDesc" runat="server" Text="<%$ Resources: Step5_litTaxRegimeDesc_Text %>" /></p>
+
+                    <p>
+					<asp:Label runat="server" ID="lblDefaultCurrency" Text="<%$ Resources: Step5_DefaultCurrency_Text %>" Font-Bold="true" />
+					<asp:DropDownList runat="server" ID="ddlDefaultCurrency" Width="200">
+						<asp:ListItem Text="-" Value="" Selected="True"/>
+						<asp:ListItem Text="Australian Dollar ($)" Value="6" />
+                        <asp:ListItem Text="Bitcoin (฿)" Value="15" />
+                        <asp:ListItem Text="Brazilian Real (R$)" Value="13" />
+                        <asp:ListItem Text="British Pounds (£)" Value="1" />
+                        <asp:ListItem Text="Canadian Dollar ($)" Value="7" />
+                        <asp:ListItem Text="Euros (€)" Value="3" />
+                        <asp:ListItem Text="Hong Kong Dollar ($)" Value="10" />
+                        <asp:ListItem Text="Indian Rupee (Rs)" Value="11" />
+                        <asp:ListItem Text="Japanese Yen (¥)" Value="4" />
+                        <asp:ListItem Text="Russian Rouble (py6)" Value="12" />
+                        <asp:ListItem Text="Singapore Dollar ($)" Value="14" />
+                        <asp:ListItem Text="Swiss Franc (SFr)" Value="5" />
+                        <asp:ListItem Text="US Dollars ($)" Value="2" />
+					</asp:DropDownList>
+					<asp:RequiredFieldValidator ID="valDefaultCurrency" ForeColor="" CssClass="error" runat="server"
+							        ControlToValidate="ddlDefaultCurrency"
+							        ErrorMessage="<%$ Resources: Error_RequiredField %>"></asp:RequiredFieldValidator>
+					<br/>
+					<asp:Literal ID="litDefaultCurrencyDesc" runat="server" Text="<%$ Resources: Step5_litDefaultCurrencyDesc_Text %>" /></p>
 					
 					<!-- -------- // STEP 5 - IMPORTANT CONFIG SETTINGS -------- -->
 				</asp:WizardStep>

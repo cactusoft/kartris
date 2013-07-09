@@ -47,6 +47,7 @@
                                     <tr>
                                         <td class="bold">
                                             <asp:Literal ID="litCurrencyID" runat="server" Text='<%# Eval("CurrencyID") %>' Visible="false" />
+                                            <asp:CheckBox ID="chkIsDefault" runat="server" Checked='<%# Eval("IsDefault")%>' Visible="false" />
                                             <asp:Literal ID="litCurrencyName" runat="server" Text='<%# Eval("CurrencyName") %>' />
                                         </td>
                                         <td>
@@ -70,6 +71,7 @@
                                     <tr class="Kartris-GridView-Alternate">
                                         <td class="itemname">
                                             <asp:Literal ID="litCurrencyID" runat="server" Text='<%# Eval("CurrencyID") %>' Visible="false" />
+                                            <asp:CheckBox ID="chkIsDefault" runat="server" Checked='<%# Eval("IsDefault")%>' Visible="false" />
                                             <asp:Literal ID="litCurrencyName" runat="server" Text='<%# Eval("CurrencyName") %>' />
                                         </td>
                                         <td>

@@ -348,4 +348,5 @@ Public Class CurrenciesBLL
         End Using
         Return False
     End Function
+
 End Class
