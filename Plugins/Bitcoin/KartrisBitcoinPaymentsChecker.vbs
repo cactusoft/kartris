@@ -105,7 +105,7 @@ Dim strQuery
 
 'objLogFile.Write "Trying to open connection to Kartris database..."
 
-strQuery = "SELECT O_ID, O_ReferenceCode, O_TotalPriceGateway FROM tblKartrisOrders WHERE O_Sent = 1 AND O_Paid = 0 AND O_PaymentGateway = 'bitcoin';"
+strQuery = "SELECT tblKartrisOrders.O_ID, tblKartrisOrders.O_CustomerID, tblKartrisOrders.O_PaymentGateWay, tblKartrisOrders.O_ReferenceCode, tblKartrisOrders.O_CurrencyIDGateway,  tblKartrisCurrencies.CUR_ExchangeRate, tblKartrisOrders.O_TotalPriceGateway FROM tblKartrisOrders LEFT OUTER JOIN tblKartrisCurrencies ON tblKartrisOrders.O_CurrencyIDGateway = tblKartrisCurrencies.CUR_ID WHERE (tblKartrisOrders.O_Sent = 1) AND (tblKartrisOrders.O_Paid = 0) AND (tblKartrisOrders.O_PaymentGateWay = 'bitcoin')"
 
 Set objKartrisDataConn = CreateObject("ADODB.Connection")
 Set objKartrisRecordSet = CreateObject("ADODB.Recordset")
@@ -138,6 +138,9 @@ Do while not objKartrisRecordSet.EOF
       strBitcoinPaymentAddress = objKartrisRecordSet("O_ReferenceCode") & ""
       OrderID = objKartrisRecordSet("O_ID") & ""
       numTotalPriceGateway = objKartrisRecordSet("O_TotalPriceGateway") & ""
+      CustomerID = objKartrisRecordSet("O_CustomerID") & ""
+      O_GatewayCurrencyID = objKartrisRecordSet("O_CurrencyIDGateway") & ""
+      O_GatewayCurrencyRate = objKartrisRecordSet("CUR_ExchangeRate") & ""
       If strBitcoinPaymentAddress <> "" AND OrderID > 0 AND numTotalPriceGateway > 0 then
           
           If NOT blnLogConfirmedPaymentsOnly Then objLogFile.WriteLine "Checking order : " & OrderID 
@@ -174,6 +177,17 @@ Do while not objKartrisRecordSet.EOF
                    strQuery = "UPDATE tblKartrisOrders SET O_Paid = 1 WHERE O_ID = " & OrderID
                    
                    Call ExecuteSQL(strQuery, numCursorType, objKartrisRecordSet2, "")
+                   
+                   'Also add payment record
+                   strQuery = "SET NOCOUNT ON INSERT INTO [dbo].[tblKartrisPayments] ([Payment_CustomerID] ,[Payment_Date] ,[Payment_Amount] ,[Payment_CurrencyID] ,[Payment_ReferenceNo] ,[Payment_Gateway] ,[Payment_CurrencyRate]) VALUES (" & CustomerID & ",'" & ReverseFormatYear(Now()) & "'," & numPaymentAmount & "," & O_GatewayCurrencyID & ",'" &strBitcoinPaymentAddress & "','bitcoin'," & O_GatewayCurrencyRate & ") SELECT @@IDENTITY AS NewID SET NOCOUNT OFF"
+                   
+                    Set objRecordSet = objKartrisDataConn.Execute(strQuery)
+                    
+                    lngPaymentID = objRecordSet("NewID")
+                   
+                   strQuery = "INSERT INTO [dbo].[tblKartrisOrderPaymentLink] ([OP_PaymentID] ,[OP_OrderID] ,[OP_OrderCanceled]) VALUES (" & lngPaymentID & "," & OrderID & ", 0)"
+                   Call ExecuteSQL(strQuery, numCursorType, objKartrisRecordSet2, "")
+                   
                    objLogFile.WriteLine "Done."
                    intPaidOrder = intPaidOrder + 1
                    objLogFile.WriteLine ""
@@ -231,7 +245,7 @@ Sub ExecuteSQL(strQuery, numCursorType, objRecordSet, strLogInfo)
 	objCommand.CommandText = strQuery
 	objCommand.CommandType = 1
 	Set objCommand.ActiveConnection = objKartrisDataConn
-	Set objRecordSet = objCommand.Execute
+	SET objRecordSet = objCommand.Execute
 	if err.Description <> "" then
 		strErrorText = "An error occurred while executing query: " & strQuery & ": " & err.Description
 		objLogFile.WriteLine strErrorText
