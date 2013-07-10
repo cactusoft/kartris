@@ -265,8 +265,8 @@ Public Class KartSettingsManager
     End Function
 
     Public Shared Function CreateKartrisCookie() As Boolean
-        If HttpContext.Current.Request.Cookies(Trim(GetKartConfig("general.sessions.cookiename")) & "Culture") Is Nothing Then
-            Dim cokKartris As New HttpCookie(Trim(GetKartConfig("general.sessions.cookiename")) & "Culture")
+        If HttpContext.Current.Request.Cookies(Trim(GetKartConfig("general.sessions.cookiename"))) Is Nothing Then
+            Dim cokKartris As New HttpCookie(Trim(GetKartConfig("general.sessions.cookiename")))
 
             cokKartris.Expires = System.DateTime.Now.AddDays(21)
 
