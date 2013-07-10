@@ -102,8 +102,8 @@
             'Create a cookie if it doesn’t exist yet (user visits the website for the first time).
             KartSettingsManager.CreateKartrisCookie()
 		
-            If Request.Cookies(Trim(KartSettingsManager.GetKartConfig("general.sessions.cookiename")) & "Search") IsNot Nothing Then
-                Response.Cookies.Remove(Trim(KartSettingsManager.GetKartConfig("general.sessions.cookiename")) & "Search")
+            If Request.Cookies(HttpSecureCookie.GetCookieName("Search")) IsNot Nothing Then
+                Response.Cookies.Remove(HttpSecureCookie.GetCookieName("Search"))
             End If
 		
             Session("CUR_ID") = 1

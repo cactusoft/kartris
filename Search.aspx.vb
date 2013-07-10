@@ -62,7 +62,7 @@ Partial Class Search
         'If no searchtext value via querystring, we try to recover from cookie.
         'The cookie lets us store details so we can view products etc. and come
         'back to the search result we were looking at.
-        Dim strSearchCookieName As String = Trim(GetKartConfig("general.sessions.cookiename")) & "Search"
+        Dim strSearchCookieName As String = HttpSecureCookie.GetCookieName("Search")
         If Len(strSearchText) < 1 AndAlso Trim(Request.QueryString("strResults")) <> "" Then
             Try
                 strSearchText = Request.Cookies(strSearchCookieName).Values("exactPhrase")

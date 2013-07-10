@@ -165,7 +165,7 @@ Public Class SessionsBLL
 		If IsBrowser Then
 
 			'Set related config settings
-			COOKIE_NAME = Trim(GetKartConfig("general.sessions.cookiename")) & "Basket"
+            COOKIE_NAME = HttpSecureCookie.GetCookieName("Basket")
 			DEFAULT_SESSION_EXPIRY = CInt(GetKartConfig("general.sessions.expiry"))
 
 			strUsingCookies = LCase(Trim(GetKartConfig("general.sessions.usecookies")))

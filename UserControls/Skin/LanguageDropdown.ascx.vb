@@ -74,7 +74,7 @@ Partial Class UserControls_Skin_LanguageDropdown
         Dim numLangID As Byte = LanguagesBLL.GetLanguageIDByCulture_s(strCulture)
         Session("LANG") = numLangID
         CQSC.Set("L", numLangID)
-        Dim aCookie As New HttpCookie(Trim(KartSettingsManager.GetKartConfig("general.sessions.cookiename")))
+        Dim aCookie As New HttpCookie(HttpSecureCookie.GetCookieName())
         aCookie.Values("KartrisUserCulture") = Session("KartrisUserCulture")
         aCookie.Expires = System.DateTime.Now.AddDays(21)
         Response.Cookies.Add(aCookie)
