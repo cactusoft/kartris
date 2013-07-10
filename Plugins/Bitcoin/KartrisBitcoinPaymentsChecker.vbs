@@ -82,6 +82,7 @@ Set WshShell = WScript.CreateObject("WScript.Shell")
 
 Set objDataConn = CreateObject("ADODB.Connection")
 Set objRecordSet = CreateObject("ADODB.Recordset")
+Set objCommand = CreateObject("ADODB.Command")
 Set objFSO = CreateObject("Scripting.FileSystemObject")
 Set objKartrisRecordSet2 = CreateObject("ADODB.Recordset")
 
@@ -170,10 +171,10 @@ Do while not objKartrisRecordSet.EOF
                If numPaymentAmount => cdbl(numTotalPriceGateway) then
                    objLogFile.WriteLine "response: " & Replace(strResponseText,vblf,"")
                    objLogFile.WriteLine "Payment amount received. Marking order as 'paid' in the database..."
-                   strQuery = "UPDATE tblKartrisOrders SET O_Sent = 1 WHERE O_ID = " & OrderID
+                   strQuery = "UPDATE tblKartrisOrders SET O_Paid = 1 WHERE O_ID = " & OrderID
                    
                    Call ExecuteSQL(strQuery, numCursorType, objKartrisRecordSet2, "")
-                   objLogFile.Write "Done."
+                   objLogFile.WriteLine "Done."
                    intPaidOrder = intPaidOrder + 1
                    objLogFile.WriteLine ""
                 ElseIf numPaymentAmount = 0 Then
@@ -226,19 +227,16 @@ Set objRecordSet = nothing
 'EXECUTE A SQL QUERY STRING
 '-----------------------------------------------
 Sub ExecuteSQL(strQuery, numCursorType, objRecordSet, strLogInfo)
-	On Error Resume Next
-	
+	'On Error Resume Next
 	objCommand.CommandText = strQuery
 	objCommand.CommandType = 1
-	Set objCommand.ActiveConnection = objDataConn
-	objRecordSet.Open objCommand, , 1, numCursorType
+	Set objCommand.ActiveConnection = objKartrisDataConn
+	Set objRecordSet = objCommand.Execute
 	if err.Description <> "" then
-		'strErrorText = "An error occurred: " & strQuery & ":" & err.Description
-		'Call WshShell.Popup(strErrorText, 0, "Error", 0)
-		Set strLogFileName = objFileSystem.OpenTextFile(strLogFileName, 8, 1)
-		strLogFileName.writeline strQuery & " --- " & err.Description
+		strErrorText = "An error occurred while executing query: " & strQuery & ": " & err.Description
+		objLogFile.WriteLine strErrorText
 	end if
-	on error goto 0
+	'on error goto 0
 End Sub
 
 
