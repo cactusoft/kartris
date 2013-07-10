@@ -40,7 +40,7 @@ Partial Class Order_Invoice
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub Authenticate()
-        Dim cokKartris As HttpCookie = Request.Cookies(GetKartConfig("general.webshopurl"))
+        Dim cokKartris As HttpCookie = Request.Cookies(Trim(GetKartConfig("general.sessions.cookiename")) & "BackAuth")
         Dim arrAuth As String() = Nothing
         Session("Back_Auth") = ""
         If cokKartris IsNot Nothing Then
@@ -56,7 +56,7 @@ Partial Class Order_Invoice
                     Session("_USER") = arrAuth(0)
                 Else
                     Session("Back_Auth") = ""
-                    cokKartris = New HttpCookie(GetKartConfig("general.webshopurl"))
+                    cokKartris = New HttpCookie(Trim(GetKartConfig("general.sessions.cookiename")) & "BackAuth")
                     cokKartris.Expires = CkartrisDisplayFunctions.NowOffset.AddDays(-1D)
                     Response.Cookies.Add(cokKartris)
                 End If

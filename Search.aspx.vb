@@ -62,9 +62,10 @@ Partial Class Search
         'If no searchtext value via querystring, we try to recover from cookie.
         'The cookie lets us store details so we can view products etc. and come
         'back to the search result we were looking at.
+        Dim strSearchCookieName As String = Trim(GetKartConfig("general.sessions.cookiename")) & "Search"
         If Len(strSearchText) < 1 AndAlso Trim(Request.QueryString("strResults")) <> "" Then
             Try
-                strSearchText = Request.Cookies("KartrisSearch").Values("exactPhrase")
+                strSearchText = Request.Cookies(strSearchCookieName).Values("exactPhrase")
             Catch ex As Exception
                 'if no cookie exists
             End Try
@@ -75,29 +76,29 @@ Partial Class Search
             strSearchText = Replace(strSearchText, "+", " ")
 
             Try
-                strSearchMethod = Request.Cookies("KartrisSearch").Values("searchMethod")
+                strSearchMethod = Request.Cookies(strSearchCookieName).Values("searchMethod")
             Catch ex As Exception
                 strSearchMethod = "any"
             End Try
             Try
-                strType = Request.Cookies("KartrisSearch").Values("type")
+                strType = Request.Cookies(strSearchCookieName).Values("type")
             Catch ex As Exception
                 strType = "classic"
             End Try
             Try
-                numPriceFrom = Request.Cookies("KartrisSearch").Values("minPrice")
+                numPriceFrom = Request.Cookies(strSearchCookieName).Values("minPrice")
             Catch ex As Exception
                 numPriceFrom = 0
             End Try
             Try
-                numPriceTo = Request.Cookies("KartrisSearch").Values("maxPrice")
+                numPriceTo = Request.Cookies(strSearchCookieName).Values("maxPrice")
             Catch ex As Exception
                 numPriceTo = 0
             End Try
         Else
             'This page got querystrings, so we're going to write these
             'to the search cookie so we have latest search there.
-            If Request.Cookies("KartrisSearch") Is Nothing Then CKartrisSearchManager.CreateSearchCookie()
+            If Request.Cookies(strSearchCookieName) Is Nothing Then CKartrisSearchManager.CreateSearchCookie()
 
             'Save the search values to a cookie
             CKartrisSearchManager.UpdateSearchCookie(StripHTML(strSearchText), SEARCH_TYPE.advanced, strSearchMethod, numPriceFrom, numPriceTo)
