@@ -975,9 +975,9 @@ Public NotInheritable Class CKartrisSearchManager
     ''' Create a cookie to store search prefs
     ''' </summary>
     Public Shared Sub CreateSearchCookie()
-        If Current.Request.Cookies("KartrisSearch") Is Nothing Then
+        If Current.Request.Cookies(Trim(GetKartConfig("general.sessions.cookiename")) & "Search") Is Nothing Then
 
-            Dim cokSearch As New HttpCookie("KartrisSearch")
+            Dim cokSearch As New HttpCookie(Trim(GetKartConfig("general.sessions.cookiename")) & "Search")
             cokSearch.Values("exactPhrase") = ""
             cokSearch.Values("searchtype") = ""
             cokSearch.Values("keywords") = ""
@@ -998,8 +998,8 @@ Public NotInheritable Class CKartrisSearchManager
         Dim strKeywords As String = strSearchedText + ","
         strKeywords = ValidateSearchKeywords(strKeywords)
 
-        If Not Current.Request.Cookies("KartrisSearch") Is Nothing Then
-            Dim cokSearch As New HttpCookie("KartrisSearch")
+        If Not Current.Request.Cookies(Trim(GetKartConfig("general.sessions.cookiename")) & "Search") Is Nothing Then
+            Dim cokSearch As New HttpCookie(Trim(GetKartConfig("general.sessions.cookiename")) & "Search")
             cokSearch.Values("exactPhrase") = Current.Server.UrlEncode(strSearchedText)
             cokSearch.Values("type") = enumType.ToString
             cokSearch.Values("keywords") = strKeywords

@@ -50,7 +50,7 @@ Public NotInheritable Class HttpSecureCookie
         If Not String.IsNullOrEmpty(strCookieValue) Then
             strValue = strCookieValue
         Else
-            Dim cokKartris As HttpCookie = Current.Request.Cookies(GetKartConfig("general.webshopurl"))
+            Dim cokKartris As HttpCookie = Current.Request.Cookies(Trim(GetKartConfig("general.sessions.cookiename")) & "BackAuth")
             If cokKartris IsNot Nothing Then
                 strValue = cokKartris.Value
             Else
@@ -104,7 +104,7 @@ Public NotInheritable Class HttpSecureCookie
 
     Public Shared Sub ForceLogout(Optional ByVal blnRedirect As Boolean = True)
         Dim cokKartris As HttpCookie
-        cokKartris = New HttpCookie(KartSettingsManager.GetKartConfig("general.webshopurl"), "")
+        cokKartris = New HttpCookie(Trim(GetKartConfig("general.sessions.cookiename")) & "BackAuth", "")
         cokKartris.Expires = NowOffset()
         Current.Response.Cookies.Add(cokKartris)
         Current.Session("Back_Auth") = ""

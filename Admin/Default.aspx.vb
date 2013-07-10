@@ -32,7 +32,7 @@ Partial Class Admin_Default
 
         If Not Page.IsPostBack Then
 
-            Dim cokKartris As HttpCookie = Request.Cookies(GetKartConfig("general.webshopurl"))
+            Dim cokKartris As HttpCookie = Request.Cookies(Trim(GetKartConfig("general.sessions.cookiename")) & "BackAuth")
             Dim arrAuth As String() = Nothing
             Session("Back_Auth") = ""
             If cokKartris IsNot Nothing Then
@@ -92,7 +92,7 @@ Partial Class Admin_Default
                 strHash = HttpSecureCookie.CreateHash(.Rows(0), strUsername, strPassword, strClientIP)
             End With
 
-            Dim cokKartris As HttpCookie = New HttpCookie(GetKartConfig("general.webshopurl"), strHash)
+            Dim cokKartris As HttpCookie = New HttpCookie(Trim(GetKartConfig("general.sessions.cookiename")) & "BackAuth", strHash)
             cokKartris.Expires = NowOffset.AddDays(1)
             If SSLHandler.IsSSLEnabled Then cokKartris.Secure = True
             Response.Cookies.Add(cokKartris)

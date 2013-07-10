@@ -34,7 +34,7 @@ Partial Class UserControls_Back_LoginConsole
     'Handle logouts
     Protected Sub btnLogout_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnLogOut.Click
         Dim cokLogout As HttpCookie
-        cokLogout = New HttpCookie(KartSettingsManager.GetKartConfig("general.webshopurl"), "")
+        cokLogout = New HttpCookie(Trim(KartSettingsManager.GetKartConfig("general.sessions.cookiename")) & "BackAuth", "")
         cokLogout.Expires = CkartrisDisplayFunctions.NowOffset.AddDays(-1D)
         Response.Cookies.Add(cokLogout)
         Session("Back_Auth") = ""
