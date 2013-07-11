@@ -179,17 +179,17 @@ Public MustInherit Class PageBaseClass
             If Not String.IsNullOrEmpty(Request.QueryString("L")) Then
                 Session("KartrisUserCulture") = Server.HtmlEncode(LanguagesBLL.GetCultureByLanguageID_s(Request.QueryString("L")))
                 Session("LANG") = CShort(Request.QueryString("L"))
-                Response.Cookies("Kartris")("KartrisUserCulture") = Session("KartrisUserCulture")
+                Response.Cookies(HttpSecureCookie.GetCookieName())("KartrisUserCulture") = Session("KartrisUserCulture")
             Else
                 Try
                     'no language querystring passed so get the value from the cookie, set the session-object with the data from the cookie.
-                    Session("KartrisUserCulture") = Server.HtmlEncode(Request.Cookies("Kartris")("KartrisUserCulture"))
-                    Session("LANG") = CShort(LanguagesBLL.GetLanguageIDByCulture_s(Request.Cookies("Kartris")("KartrisUserCulture")))
+                    Session("KartrisUserCulture") = Server.HtmlEncode(Request.Cookies(HttpSecureCookie.GetCookieName())("KartrisUserCulture"))
+                    Session("LANG") = CShort(LanguagesBLL.GetLanguageIDByCulture_s(Request.Cookies(HttpSecureCookie.GetCookieName())("KartrisUserCulture")))
                 Catch ex As Exception
                     CreateKartrisCookie()
                     'no language querystring passed so get the value from the cookie, set the session-object with the data from the cookie.
-                    Session("KartrisUserCulture") = Server.HtmlEncode(Request.Cookies("Kartris")("KartrisUserCulture"))
-                    Session("LANG") = CShort(LanguagesBLL.GetLanguageIDByCulture_s(Request.Cookies("Kartris")("KartrisUserCulture")))
+                    Session("KartrisUserCulture") = Server.HtmlEncode(Request.Cookies(HttpSecureCookie.GetCookieName())("KartrisUserCulture"))
+                    Session("LANG") = CShort(LanguagesBLL.GetLanguageIDByCulture_s(Request.Cookies(HttpSecureCookie.GetCookieName())("KartrisUserCulture")))
                 End Try
             End If
 
