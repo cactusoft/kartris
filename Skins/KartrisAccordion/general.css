@@ -193,7 +193,7 @@ MEDIA (Video, audio, etc.)
 .media_links .mediaholder a             { text-align: center; padding: 0px; display: block; margin: auto auto auto auto; height: 52px; }
 .media_links .mediaholder:hover			{ border: solid 1px #000 }
 .media_links .mediaholder img           { vertical-align: middle; margin: 5px; height: 50px; width: 50px; }
-.media_links .mediaholder               { display: inline-block; float: left; margin: 0 1px 1px 0; vertical-align: middle; border: solid 1px #fc5; width: 60px; height: 60px; overflow: visible; }
+.media_links .mediaholder               { display: inline-block; float: left; margin: 0 1px 2px 1px; vertical-align: middle; border: solid 1px #fc5; width: 60px; height: 60px; overflow: visible; }
 .media_downloadlink                     { }
 /* media gallery for versions, hide title */
 .versions .media_gallery h2             { display: none }
