@@ -90,7 +90,7 @@ SUBCATEGORIES - TEXT FORMAT
 PRODUCT - Single page product
 ========================================================================
 */
-.product #strapline                     { display: block; margin: 10px 0px 12px 0px; padding: 0; color: #111; font-weight: bold; font-size: 110%; font-style: italic; }
+.product #strapline                     { display: block; margin: 10px 0px 12px 0px; padding: 0; color: #888; font-weight: bold; font-size: 110%; font-style: italic; }
 .product #description                   { margin: 0 0 15px 0px }
 .product div.imagecolumn                { margin: 0 0 40px 0; padding: 10px 20px 0 0; }
 .product div.imagecolumn div.pad        { padding: 10px 0 10px 0 }

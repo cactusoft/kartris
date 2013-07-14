@@ -37,6 +37,7 @@ a newer version), just just grab the bits we need to change here.
 @media only screen and (min-width: 930px) {
   #menubar .title-area li.name,
   #categorymenu .title-area li.name { display: none; }
+  .row { max-width: 880px; }
   }
 
 /* 
