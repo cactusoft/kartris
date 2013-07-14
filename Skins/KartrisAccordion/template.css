@@ -3,17 +3,18 @@
 MAIN LAYOUT
 ========================================================================
 */
-html                                    { height: 100%; }
+html                                    { height:100%; overflow:scroll; overflow:-moz-scrollbars-vertical; overflow-x:hidden; overflow-y:scroll; }
 body									{ background-color: #fff; min-height: 100%; }
-body.main                               { background: #ddd; overflow: scroll; overflow: -moz-scrollbars-vertical; min-height: 100%; }
-#centre_container                       { background-color: #fff; min-height: 100%; padding: 0 20px; max-width: 900px; }
+body.main                               { background: #ddd; min-height: 100%; }
+#container                              { background-color: #fff; max-width: 900px; margin: 0 auto; min-height: 100%; }
+#centre_container                       { display:block; margin:0 auto -232px; }
 /* 
 ========================================================================
 SECTIONS
 ========================================================================
 */
 #header .logo                           { margin: 20px 0 10px 0; }
-#pagecontent_pad                        { min-height: 300px; padding-bottom: 15px; }
+#pagecontent_pad                        { min-height: 200px; padding-bottom: 15px; }
 /* 
 ========================================================================
 LOGIN STATUS
@@ -87,8 +88,9 @@ BASKET SUMMARY
 FOOTER
 ========================================================================
 */
-#footer                                 { border-top: solid 3px #fc5; margin: 0 auto; padding: 0 1px; height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; bottom: 0px; }
-#footer_inside                          { margin: 0 auto; width: 950px; color: #aaa; padding: 10px 0 0 0; border-top: solid 3px #fc5; }
+#footerspacer                           { min-height:362px }
+#footer                                 { position: absolute; bottom: 0; left: 0; margin: 0 auto; padding: 0 1px; min-height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; bottom: 0px; }
+#footer_inside                          { height: 100%; padding: 0; background-color: #fff; border-top: solid 3px #fc5; margin: 0 auto; max-width: 900px; color: #aaa; padding: 10px 0 0 0; }
 #footer a                               { color: #034; font-weight: normal; }
 #footer #copyright                      { font-size: 90%; margin: 45px 0 20px 0; }
 #footer h2                              { color: #000 }

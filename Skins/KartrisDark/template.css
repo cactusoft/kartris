@@ -3,10 +3,11 @@
 MAIN LAYOUT
 ========================================================================
 */
-html                                    { height: 100%; }
+html                                    { height:100%; overflow:scroll; overflow:-moz-scrollbars-vertical; overflow-x:hidden; overflow-y:scroll; }
 body									{ background-color: #111; min-height: 100%; }
-body.main                               { background: #444; overflow: scroll; overflow: -moz-scrollbars-vertical; min-height: 100%; }
-#centre_container                       { background-color: #222; min-height: 100%; padding: 0 20px; max-width: 900px; }
+body.main                               { background: #444; min-height: 100%; }
+#container                              { background-color: #222; max-width: 900px; margin: 0 auto; min-height: 100%; }
+#centre_container                       { display:block; margin:0 auto -232px; }
 /* 
 ========================================================================
 SECTIONS
@@ -77,7 +78,7 @@ BASKET SUMMARY
 #minibasket .button                     { background-color: #999; color: #fff; width: 100%; }
 #minibasket .button:hover               { background-color: #ddd; color: #000; }
 
-.compactminibasket a                    { white-space: nowrap; background-position: 1px 1px; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #333; width: auto; padding: 9px 0 5px 30px; float: right; text-transform: uppercase; font-size: 85%; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; }
+.compactminibasket a                    { white-space: nowrap; background-position: 1px 1px; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #fff; width: auto; padding: 9px 0 5px 30px; float: right; text-transform: uppercase; font-size: 85%; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; }
 .compactminibasket #compactbasket_totalprice
                                         { color: #090; margin-left: 5px; }
 .compactminibasket a:hover              { text-decoration: underline; }
@@ -87,12 +88,13 @@ BASKET SUMMARY
 FOOTER
 ========================================================================
 */
-#footer                                 { border-top: solid 3px #555; margin: 0 auto; padding: 0 1px; height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; bottom: 0px; }
-#footer_inside                          { margin: 0 auto; width: 950px; color: #aaa; padding: 10px 0 0 0; border-top: solid 3px #fc5; }
-#footer a                               { color: #aaa; font-weight: normal; }
+#footerspacer                           { min-height:322px }
+#footer                                 { position: absolute; bottom: 0; left: 0; margin: 0 auto; padding: 0 1px; min-height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; bottom: 0px; }
+#footer_inside                          { height: 100%; padding: 0; background-color: #222; border-top: solid 3px #555; margin: 0 auto; max-width: 900px; color: #aaa; padding: 10px 0 0 0; }
+#footer a                               { color: #666; font-weight: normal; }
 #footer #copyright                      { font-size: 90%; margin: 45px 0 20px 0; }
 #footer h2                              { color: #777 }
 #footer ul                              { text-transform: uppercase; font-size: 90%; padding: 0; list-style-type: none; }
 #footer ul li a                         { padding: 2px; display: block; }
-#footer ul li a:hover                   { background-color: #444; color: #ccc; }
+#footer ul li a:hover                   { color: #eee; }
 
