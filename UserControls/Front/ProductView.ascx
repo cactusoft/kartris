@@ -59,64 +59,66 @@
                         <asp:Literal ID="litContentTextHome" runat="server" Text="<%$ Resources: Kartris, ContentText_Home %>" EnableViewState="false"></asp:Literal>
                     </HeaderTemplate>
                     <ContentTemplate>
-                        <div class="imagecolumn small-12 large-4 columns">
-                            <asp:UpdatePanel ID="updImages" runat="server" UpdateMode="Conditional">
-                                <ContentTemplate>
-                                    <user:PopupMessage ID="UC_PopUpLargeView" runat="server" EnableViewState="false" />
-                                    <user:ImageViewer ID="UC_ImageView2" runat="server" LargeViewClickable="false" EnableViewState="false" />
-                                    <asp:PlaceHolder ID="phdImageColumn" runat="server">
-                                        <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />
-                                    </asp:PlaceHolder>
-                                </ContentTemplate>
-                            </asp:UpdatePanel>
-                            <asp:UpdatePanel ID="updMedia" runat="server" UpdateMode="Conditional">
-                                <ContentTemplate>
-                                    <%--
-                MEDIA GALLERY
-                                    --%>
-                                    <user:PopupMessage ID="UC_PopUpMedia" runat="server" EnableViewState="false" />
-                                    <user:MediaGallery ID="UC_MediaGallery" ParentType="p" runat="server" EnableViewState="false" />
-                                </ContentTemplate>
-                            </asp:UpdatePanel>
-                        </div>
-                        <div class="textcolumn small-12 large-8 columns">
-                            <asp:FormView ID="fvwProduct" runat="server">
-                                <HeaderTemplate>
-                                    <asp:Literal ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>
-                                </HeaderTemplate>
-                                <ItemTemplate>
-                                    <%--
-                IMAGE COLUMN
-                                    --%>
+                        <div class="row">
+                            <div class="imagecolumn small-12 large-4 columns">
+                                <asp:UpdatePanel ID="updImages" runat="server" UpdateMode="Conditional">
+                                    <ContentTemplate>
+                                        <user:PopupMessage ID="UC_PopUpLargeView" runat="server" EnableViewState="false" />
+                                        <user:ImageViewer ID="UC_ImageView2" runat="server" LargeViewClickable="false" EnableViewState="false" />
+                                        <asp:PlaceHolder ID="phdImageColumn" runat="server">
+                                            <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />
+                                        </asp:PlaceHolder>
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                                <asp:UpdatePanel ID="updMedia" runat="server" UpdateMode="Conditional">
+                                    <ContentTemplate>
+                                        <%--
+                    MEDIA GALLERY
+                                        --%>
+                                        <user:PopupMessage ID="UC_PopUpMedia" runat="server" EnableViewState="false" />
+                                        <user:MediaGallery ID="UC_MediaGallery" ParentType="p" runat="server" EnableViewState="false" />
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
+                            </div>
+                            <div class="textcolumn small-12 large-8 columns">
+                                <asp:FormView ID="fvwProduct" runat="server">
+                                    <HeaderTemplate>
+                                        <asp:Literal ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>
+                                    </HeaderTemplate>
+                                    <ItemTemplate>
+                                        <%--
+                    IMAGE COLUMN
+                                        --%>
 
-                                    <%--
-                TEXT COLUMN
-                                    --%>
+                                        <%--
+                    TEXT COLUMN
+                                        --%>
 
-                                    <div id="strapline">
-                                        <asp:Literal ID="litProductStrapLine" runat="server" Text='<%# Eval("P_StrapLine") %>' EnableViewState="false"></asp:Literal>
-                                    </div>
-                                    <div id="description" itemscope itemtype="http://data-vocabulary.org/Product">
-                                        <span itemprop="name" style="display: none;"><%# Eval("P_Name") %></span>
-                                        <user:RichSnippets ID="UC_RichSnippets" runat="server" ProductID='<%# Eval("P_ID") %>' />
-                                        <span itemprop="description">
-                                            <asp:Literal EnableViewState="False" ID="litProductDescription" runat="server" Text='<%# ShowLineBreaks(Eval("P_Desc")) %>'></asp:Literal>
-                                        </span>
-                                    </div>
-                                    <%--
-                                    COMPARE LINK
-                                    --%>
-                                    <asp:PlaceHolder ID="phdCompareLink" runat="server">
-                                        <div id="comparelink">
-                                            <asp:HyperLink CssClass="link2" ID="lnkCompare" runat="server" Text="<%$ Resources:Products,ContentText_ViewCompareLink %>" EnableViewState="false" />
+                                        <div id="strapline">
+                                            <asp:Literal ID="litProductStrapLine" runat="server" Text='<%# Eval("P_StrapLine") %>' EnableViewState="false"></asp:Literal>
                                         </div>
-                                    </asp:PlaceHolder>
+                                        <div id="description" itemscope itemtype="http://data-vocabulary.org/Product">
+                                            <span itemprop="name" style="display: none;"><%# Eval("P_Name") %></span>
+                                            <user:RichSnippets ID="UC_RichSnippets" runat="server" ProductID='<%# Eval("P_ID") %>' />
+                                            <span itemprop="description">
+                                                <asp:Literal EnableViewState="False" ID="litProductDescription" runat="server" Text='<%# ShowLineBreaks(Eval("P_Desc")) %>'></asp:Literal>
+                                            </span>
+                                        </div>
+                                        <%--
+                                        COMPARE LINK
+                                        --%>
+                                        <asp:PlaceHolder ID="phdCompareLink" runat="server">
+                                            <div id="comparelink">
+                                                <asp:HyperLink CssClass="link2" ID="lnkCompare" runat="server" Text="<%$ Resources:Products,ContentText_ViewCompareLink %>" EnableViewState="false" />
+                                            </div>
+                                        </asp:PlaceHolder>
 
-                                </ItemTemplate>
-                            </asp:FormView>
-                            <user:ProductVersions ID="UC_ProductVersions"
-                                runat="server" EnableViewState="true" />
+                                    </ItemTemplate>
+                                </asp:FormView>
+                                <user:ProductVersions ID="UC_ProductVersions"
+                                    runat="server" EnableViewState="true" />
 
+                            </div>
                         </div>
                         <div class="spacer"></div>
                         <%--
