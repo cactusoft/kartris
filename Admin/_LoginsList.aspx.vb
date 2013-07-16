@@ -226,7 +226,6 @@ Partial Class Admin_LoginsList
     Protected Sub lnkNew_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkNewDevice.Click
         txtDeviceLabel.Text = ""
         txtDeviceURI.Text = ""
-        ddlDevicePlatform.SelectedIndex = 0
         hidOrigDeviceLabel.Value = ""
         chkDeviceLive.Checked = True
         litContentTextAddEditDevices.Text = GetGlobalResourceObject("_Kartris", "ContentText_AddNew")
@@ -264,7 +263,6 @@ Partial Class Admin_LoginsList
                 Else
                     hidOrigDeviceLabel.Value = Device_Name
                     txtDeviceLabel.Text = Device_Name
-                    ddlDevicePlatform.SelectedValue = node.ChildNodes(1).InnerText
                     txtDeviceURI.Text = node.ChildNodes(2).InnerText
                     chkDeviceLive.Checked = node.ChildNodes(3).InnerText
 
@@ -355,7 +353,7 @@ Partial Class Admin_LoginsList
 
                 ' Sub-element: Platform
                 Dim Platform As XmlElement = .OwnerDocument.CreateElement("Platform")
-                Platform.InnerText = ddlDevicePlatform.SelectedValue
+                Platform.InnerText = "devid"
                 .AppendChild(Platform)
 
                 ' Sub-element: URI (CDATA)
@@ -370,7 +368,7 @@ Partial Class Admin_LoginsList
                 .AppendChild(Live)
             Else
                 .ChildNodes(0).InnerText = txtDeviceLabel.Text
-                .ChildNodes(1).InnerText = ddlDevicePlatform.SelectedValue
+                .ChildNodes(1).InnerText = "devid"
                 .ChildNodes(2).InnerText = txtDeviceURI.Text
                 .ChildNodes(3).InnerText = chkDeviceLive.Checked
             End If

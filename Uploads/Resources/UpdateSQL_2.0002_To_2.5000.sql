@@ -1584,3 +1584,5 @@ SET IDENTITY_INSERT [dbo].[tblKartrisCurrencies] OFF
 GO
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 13, 1, 5, N'Bitcoin')
 GO
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_DeviceInstallID', N'Device Install ID', NULL, 2.5001, NULL, NULL, N'_Logins',1)
+GO
