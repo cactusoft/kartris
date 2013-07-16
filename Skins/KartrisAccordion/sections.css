@@ -474,6 +474,7 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
                                         { background: none }
 .basket .applycoupon .couponbox         { width: 120px; margin-right: 5px; }
 .basket table tr.totals td              { background-color: #fff; border-bottom: solid 1px #fc5; }
+.basket table tr.totals #totaltaxrow,
 .basket table tr.totals #totallabel     { text-align: right }
 .basket table tr.totals .total			{ font-size: 180% }
 .basket .controls                       { text-align: right; margin: 8px 0 20px 0; }

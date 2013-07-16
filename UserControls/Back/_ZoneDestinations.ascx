@@ -105,7 +105,7 @@
                         <asp:Literal ID="litRegion" runat="server" Text='<%# Eval("D_Region") %>' />&nbsp;</div>
                     <div class="column6">
                         <% If TaxRegime.DTax_Type = "rate" Then%>
-                        <asp:Literal ID="litTax" runat="server" Text='<%# Eval("D_Tax") %>' />
+                        <asp:Literal ID="litTax" runat="server" Text='<%# Math.Round(Eval("D_Tax"),5) %>' />
                         <% Else%>
                         <asp:CheckBox ID="chkTax" runat="server" Checked='<%# Eval("D_Tax") = 1 %>' CssClass="checkbox"
                             Enabled="false" />
@@ -196,15 +196,15 @@
                                     <asp:Literal ID="litContentTextTax" runat="server" Text="<%$ Resources: _Version, ContentText_Tax %>" /></span><span
                                         class="Kartris-DetailsView-Value">
                                         <% If TaxRegime.DTax_Type = "rate" Then%>
-                                        <asp:TextBox ID="txtTax" runat="server" Text='<%# Eval("D_Tax") %>' CssClass="shorttext"
+                                        <asp:TextBox ID="txtTax" runat="server" Text='<%# Math.Round(Eval("D_Tax"),5) %>' CssClass="shorttext"
                                             MaxLength="8" />
                                             <asp:Literal ID="litPercent" runat="server" Text="%" />
                                         <asp:RequiredFieldValidator ID="valRequiredTax" runat="server" CssClass="error" ForeColor=""
                                             ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>" ControlToValidate="txtTax"
                                             Display="Dynamic" SetFocusOnError="true" ValidationGroup="<%# LANG_ELEM_TABLE_TYPE.Destination %>" />
-                                        <asp:RegularExpressionValidator ID="valRegexTax" runat="server" ControlToValidate="txtTax"
+<%--                                        <asp:RegularExpressionValidator ID="valRegexTax" runat="server" ControlToValidate="txtTax"
                                             CssClass="error" Display="Dynamic" ErrorMessage="*" ForeColor="" SetFocusOnError="true"
-                                            ValidationGroup="<%# LANG_ELEM_TABLE_TYPE.Destination %>" ValidationExpression="<%$ AppSettings:PercentageRegex %>" />
+                                            ValidationGroup="<%# LANG_ELEM_TABLE_TYPE.Destination %>" ValidationExpression="<%$ AppSettings:PercentageRegex %>" />--%>
                                         <ajaxToolkit:FilteredTextBoxExtender ID="filCompareTax" runat="server" TargetControlID="txtTax"
                                             FilterMode="ValidChars" FilterType="Numbers,Custom" ValidChars=".," />
                                         <% Else%>

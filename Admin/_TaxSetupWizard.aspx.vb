@@ -320,7 +320,7 @@ Partial Class Admin_Destinations
                         'a US state so set to live and only charge tax if its the base state
                         Dim sngD_Tax As Single
                         If ddlUSStates.SelectedValue = intCountryID Then
-                            sngD_Tax = txtUSStateTaxRate.Text
+                            sngD_Tax = txtUSStateTaxRate.Text / 100
                         Else
                             sngD_Tax = 0
                         End If
@@ -343,6 +343,9 @@ Partial Class Admin_Destinations
 
                     End If
                 Next
+
+                'Set EU country to blank, so no EU VAT active
+                KartSettingsManager.SetKartConfig("general.tax.euvatcountry", "", False)
 
             Case "CANADA"
 
@@ -389,6 +392,9 @@ Partial Class Admin_Destinations
                     End If
                 Next
 
+                'Set EU country to blank, so no EU VAT active
+                KartSettingsManager.SetKartConfig("general.tax.euvatcountry", "", False)
+
             Case "SIMPLE"
                 For Each drwCountry As DataRow In dtbAllCountries.Rows
                     Dim intCountryID As Integer = drwCountry("D_ID")
@@ -404,6 +410,9 @@ Partial Class Admin_Destinations
                                                                FixNullFromDB(drwCountry("D_Region")), drwCountry("D_Live"), "", FixNullFromDB(drwCountry("D_TaxExtra")))
                     End If
                 Next
+
+                'Set EU country to blank, so no EU VAT active
+                KartSettingsManager.SetKartConfig("general.tax.euvatcountry", "", False)
 
                 'Set TaxRate Record 2 to entered tax rate value
                 TaxBLL._UpdateTaxRate(2, txtSimpleTaxRate.Text, "", "")

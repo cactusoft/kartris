@@ -129,8 +129,12 @@ MAIN BASKET
                                 <table class="baskettable">
                                     <thead>
                                         <tr class="headrow">
+                                            <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
                                             <th class="hide-for-small"></th>
                                             <th class="name">
+                                                <% Else%>
+                                            <th colspan="2" class="name">
+                                                <% End If%>
                                                 <asp:Literal ID="litContentTextNameDetails" runat="server" Text='<%$ Resources: Kartris, ContentText_NameDetails %>'
                                                     EnableViewState="false"></asp:Literal>
                                             </th>
@@ -697,23 +701,33 @@ MAIN BASKET
                         <!-- Show Total Tax Row if USmultistatetax is on -->
                         <%If APP_USMultiStateTax And ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then%>
                         <tr class="totals">
-                            <td class="hide-for-small"></td>
-                            <td colspan="2" id="totaltaxrow">
+
+                            <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
+                                <td class="hide-for-small"></td>
+                                <td id="totaltaxrow">
+                            <% else %>
+                                <td colspan="2" id="totaltaxrow">
+                            <% end if %>
+                            
                                 <asp:Literal ID="litTax" runat="server" Text='<%$ Resources: Kartris, ContentText_Tax %>'
                                     EnableViewState="false" />
                             </td>
                             <td class="tax" colspan="2">
                                 <%=vFinalPriceTaxRate%>%
                             </td>
-                            <td class="total">
+                            <td class="total" colspan="2">
                                 <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceTaxAmount)%>
                             </td>
                         </tr>
                         <%End If%>
                         <!-- Grand Totals Rows -->
                         <tr class="totals">
-                            <td class="hide-for-small"></td>
-                            <td id="totallabel">
+                            <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
+                                <td class="hide-for-small"></td>
+                                <td id="totallabel">
+                            <% else %>
+                                <td colspan="2" id="totallabel">
+                            <% end if %>
                                 <asp:Literal ID="litTotal2" runat="server" Text='<%$ Resources: Basket, ContentText_Total %>'
                                     EnableViewState="false"></asp:Literal>
                             </td>
@@ -749,9 +763,11 @@ MAIN BASKET
                             </td>
                             <% End If%>
                             <% End If%>
-                            <td class="total" colspan="2">
+                            <td class="total" colspan="3">
                             <% If Not (APP_ShowTaxDisplay = False And (ViewType = BasketBLL.VIEW_TYPE.MAIN_BASKET) And APP_PricesIncTax = False) Then%>
                                 <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceIncTax)%>
+                                <% else %>
+                                <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceExTax)%>
                             <% End If%>
                             </td>
                         </tr>
@@ -829,7 +845,6 @@ MAIN BASKET
                                     EnableViewState="false"></asp:Literal></h4>
                             <asp:Repeater ID="rptPromotions" runat="server">
                                 <ItemTemplate>
-                                    <%--<user:PromotionTemplate ID="UC_PromotionTemplate" runat="server" />--%>
                                     <div class="promotion">
                                         <div class="box">
                                             <div class="pad">
