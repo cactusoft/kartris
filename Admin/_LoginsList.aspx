@@ -172,8 +172,6 @@
                             <Columns>
                                 <asp:BoundField DataField="Name" HeaderText='<%$ Resources: _Kartris, FormLabel_Name %>'
                                     SortExpression="Name" ItemStyle-CssClass="itemname" />
-                                <asp:BoundField DataField="Platform" HeaderText='<%$Resources: _Logins, ContentText_Platform%>'
-                                    SortExpression="Platform" ItemStyle-CssClass="itemname" />
                                 <asp:BoundField DataField="URI" HeaderText="<%$Resources: _Logins, ContentText_URI%>" Visible="false" />
                                 <asp:TemplateField HeaderText="<%$Resources: _Kartris, ContentText_Live%>" SortExpression="Device_Live">
                                     <ItemTemplate>
@@ -219,20 +217,7 @@
                                                 ControlToValidate="txtDeviceLabel" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"
                                                 CssClass="error" ForeColor="" EnableClientScript="true"></asp:RequiredFieldValidator></span></li>
                                 <li><span class="Kartris-DetailsView-Name">
-                                    <asp:Label ID="lblPlatform" runat="server" Text="<%$Resources: _Logins, ContentText_Platform%>" EnableViewState="false"
-                                        AssociatedControlID="ddlDevicePlatform" CssClass="requiredfield" /></span><span class="Kartris-DetailsView-Value">
-                                            <asp:DropDownList  runat="server" ID="ddlDevicePlatform" EnableViewState="false">
-                                                <asp:ListItem Text="<%$ Resources: Kartris, ContentText_DropdownSelectDefault %>" Value="0" />
-                                                <asp:ListItem Text="Windows 8" Value="win8" />
-                                                <asp:ListItem Text="Windows Phone" Value="wp" />
-                                                <asp:ListItem Text="Android" Value="and" />
-                                                <asp:ListItem Text="iOS" Value="ios" />
-                                            </asp:DropDownList>
-                                            <asp:RequiredFieldValidator ID="valDevicePlatform" ValidationGroup="PushNotifications" runat="server"
-                                                InitialValue="0" ControlToValidate="ddlDevicePlatform" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"
-                                                CssClass="error" ForeColor="" EnableClientScript="true"></asp:RequiredFieldValidator></span></li>
-                                <li><span class="Kartris-DetailsView-Name">
-                                    <asp:Label ID="lblURI" runat="server" Text="<%$Resources: _Logins, ContentText_URI%>" EnableViewState="false"
+                                    <asp:Label ID="lblURI" runat="server" Text="<%$Resources: _Logins, ContentText_DeviceInstallID%>" EnableViewState="false"
                                         AssociatedControlID="txtDeviceURI" CssClass="requiredfield" /></span><span class="Kartris-DetailsView-Value">
                                             <asp:TextBox runat="server" ID="txtDeviceURI" CssClass="phone" TextMode="MultiLine"></asp:TextBox>
                                             <asp:RequiredFieldValidator ID="valDeviceURI" ValidationGroup="PushNotifications" runat="server"
