@@ -6,9 +6,9 @@
         <asp:Literal ID="litAddressTitle" runat="server" /></h2>
     <div>
         <asp:PlaceHolder ID="phdAddNewAddress" runat="server">
-            <div class="inputform">
-                <asp:DropDownList ID="ddlAddresses" runat="server" AutoPostBack="true" />
-                <asp:LinkButton CssClass="link2 icon_new" ID="lnkNew" runat="server" Text='<%$ Resources: Kartris, ContentText_AddNew %>' />
+            <div class="inputform row">
+                <div class="small-9 large-10 columns"><asp:DropDownList ID="ddlAddresses" runat="server" AutoPostBack="true" /></div>
+                <div class="small-3 large-2 columns"><asp:LinkButton CssClass="link2 icon_new" ID="lnkNew" runat="server" Text='<%$ Resources: Kartris, ContentText_AddNew %>' /></div>
             </div>
         </asp:PlaceHolder>
         <asp:PlaceHolder ID="phdAddressDetails" runat="server">

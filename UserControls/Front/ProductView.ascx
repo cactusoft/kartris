@@ -60,6 +60,9 @@
                     </HeaderTemplate>
                     <ContentTemplate>
                         <div class="row">
+                                        <%--
+                    IMAGE COLUMN
+                                        --%>
                             <div class="imagecolumn small-12 large-4 columns">
                                 <asp:UpdatePanel ID="updImages" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
@@ -80,20 +83,15 @@
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
                             </div>
+                                        <%--
+                    TEXT COLUMN
+                                        --%>
                             <div class="textcolumn small-12 large-8 columns">
                                 <asp:FormView ID="fvwProduct" runat="server">
                                     <HeaderTemplate>
                                         <asp:Literal ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>
                                     </HeaderTemplate>
                                     <ItemTemplate>
-                                        <%--
-                    IMAGE COLUMN
-                                        --%>
-
-                                        <%--
-                    TEXT COLUMN
-                                        --%>
-
                                         <div id="strapline">
                                             <asp:Literal ID="litProductStrapLine" runat="server" Text='<%# Eval("P_StrapLine") %>' EnableViewState="false"></asp:Literal>
                                         </div>

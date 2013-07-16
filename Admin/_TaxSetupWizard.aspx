@@ -92,9 +92,9 @@
 					<!-- Tax rate selection -->
 						<span class="Kartris-DetailsView-Name"><asp:Literal runat="server" ID="litUSStateTaxRate" Text="<%$ Resources: _RegionalWizard, ContentText_TaxWizUSStateTaxRateQuestion %>" /></span>
 						<span class="Kartris-DetailsView-Value"><asp:TextBox runat="server" ID="txtUSStateTaxRate" AutoPostBack="true" CssClass="shorttext" /> %
-							<asp:RegularExpressionValidator ID="valRegexUSStateTaxRate" runat="server" Display="Dynamic"
+<%--							<asp:RegularExpressionValidator ID="valRegexUSStateTaxRate" runat="server" Display="Dynamic"
 								SetFocusOnError="true" ErrorMessage="<%$ Resources: _Kartris, ContentText_InvalidValue %>"
-								CssClass="error" ForeColor="" ControlToValidate="txtUSStateTaxRate" ValidationExpression="<%$ AppSettings:PercentageRegex %>" />
+								CssClass="error" ForeColor="" ControlToValidate="txtUSStateTaxRate" ValidationExpression="<%$ AppSettings:PercentageRegex %>" />--%>
 							<ajaxToolkit:FilteredTextBoxExtender ID="filUSStateTaxRate" runat="server" TargetControlID="txtUSStateTaxRate"
 								FilterType="Numbers, Custom" ValidChars=".," /></span>
 					</li>

@@ -996,8 +996,8 @@ Partial Class _Checkout
                     'Order totals
                     If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
                         sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & vbCrLf)
-                        sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
-                             IIf(blnAppUSmultistatetax, " (" & (objBasket.D_Tax * 100) & "%)", "") & vbCrLf)
+                    sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
+                         IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & vbCrLf)
                     End If
                     sbdBodyText.Append(" " & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
                                        " (" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
@@ -1010,8 +1010,8 @@ Partial Class _Checkout
                         sbdHTMLOrderContents.Append("<tr class=""row_totals""><td colspan=""2"">")
                         If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
                             sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & "<br/>")
-                            sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
-                                 IIf(blnAppUSmultistatetax, " (" & (objBasket.D_Tax * 100) & "%)", "") & "<br/>")
+                        sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
+                             IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & "<br/>")
                         End If
                         sbdHTMLOrderContents.Append("(" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
                                                         LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
@@ -1039,7 +1039,7 @@ Partial Class _Checkout
                                                CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                                CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
                                              ")" & vbCrLf)
-                        sbdBodyText.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
+                    sbdBodyText.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
 
                         If blnUseHTMLOrderEmail Then
                             sbdHTMLOrderContents.Append("<tr class=""row_processcurrency""><td colspan=""2"">")
@@ -1050,8 +1050,6 @@ Partial Class _Checkout
                                                            CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                                            CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
                                                          ")" & "<br/>")
-                            sbdHTMLOrderContents.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & "<br/>")
-
                             sbdHTMLOrderContents.Append("</td></tr>")
                         End If
                     Else
