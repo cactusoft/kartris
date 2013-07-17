@@ -113,6 +113,11 @@ html>body #minibasket li                { display: block; font-size: 100%; }
 #minibasket #links ul                   { margin: 0; padding: 0; }
 #minibasket #links ul li                { list-style: none; float: none; clear: both; margin: 1px 0 0 0; padding: 0; }
 #minibasket #links ul li input          { margin: 5px 0 2px 0 }
+
+.compactminibasket a                    { white-space: nowrap; background-position: 1px 1px; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #333; width: auto; padding: 9px 0 5px 30px; float: right; text-transform: uppercase; font-size: 85%; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; }
+.compactminibasket #compactbasket_totalprice
+                                        { color: #090; margin-left: 5px; }
+.compactminibasket a:hover              { text-decoration: underline; }
 /* 
 ========================================================================
 FOOTER

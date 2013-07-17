@@ -10,16 +10,18 @@ PAGE - Home page and custom page (CMS)
 ========================================================================
 */
 #custompagetext                         { margin: 10px 0 10px 0 }
-#homepage div.chunk                     { display: block; float: left; width: 25%; min-height: 200px; }
-#homepage div.chunk h2.blockheader      { width: 93%; border: none; padding: 0 0 5px 0; }
 #homepage div.chunk ul                  { list-style: none; margin: 0; padding: 0; }
 #homepage div.chunk ul li               { padding: 0 0 5px 0 }
-#homepage .products_tabular             { }
-#homepage .products_tabular a           { }
 #homepage .news ul div.news_lastupdated,
-#homepage .news ul div.news_datecreated  { display: block; margin: 5px 0 5px 0; color: #999; }
-#homepage .news ul div.news_link         { font-weight: bold; margin: 5px 0 5px 0; }
-#homepage .news ul div.news_text         {  }
+#homepage .news ul div.news_datecreated { display: block; margin: 5px 0 5px 0; color: #999; }
+#homepage .news ul div.news_link        { font-weight: bold; margin: 5px 0 5px 0; }
+#homepage .news ul div.news_text        {  }
+#homepage .products_tabular .item               { width: 200px; display: inline-block; float: left; padding: 0; margin: 5px 6px 5px 4px; }
+#homepage .products_tabular .item .imageblock   { margin: 0; }
+#homepage .products_tabular .item .box          { text-align: center; height: 230px; border: solid 1px #fc5; background-color: #fff; }
+#homepage .products_tabular .item .box .pad     { overflow: hidden; padding: 10px; text-align: center; }
+#homepage .products_tabular .item h2            { margin: 0; padding: 0; line-height: 15px; font-weight: bold; }
+#homepage .products_tabular .item .imageholder  { display: block; margin: 0 auto; padding-bottom: 10px; }
 /* 
 ========================================================================
 CATEGORY - Single page category
@@ -366,7 +368,7 @@ PRODUCT PROMOTIONS
                                         { color: #000 }
 .section_promotions a                   { text-decoration: none; color: #777; border-bottom: dotted 1px #777; }
 .section_promotions .promotion .box .pad .imageblock
-                                        { border: solid 1px #fc5; float: left; padding: 5px; margin: 0 20px 0 0px; width: 50px; text-align: left; }
+                                        { float: left; padding: 0 5px; margin: 0 20px 0 0px; width: 50px; text-align: left; }
 .section_promotions .promotion .box .pad .imageblock img
                                         { float: none }
 /* 

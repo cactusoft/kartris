@@ -10,6 +10,7 @@
                 <div class="small-9 large-10 columns"><asp:DropDownList ID="ddlAddresses" runat="server" AutoPostBack="true" /></div>
                 <div class="small-3 large-2 columns"><asp:LinkButton CssClass="link2 icon_new" ID="lnkNew" runat="server" Text='<%$ Resources: Kartris, ContentText_AddNew %>' /></div>
             </div>
+            <div class="spacer"></div>
         </asp:PlaceHolder>
         <asp:PlaceHolder ID="phdAddressDetails" runat="server">
             <asp:HiddenField ID="hidAddressID" runat="server" />

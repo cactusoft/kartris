@@ -369,6 +369,37 @@ Public MustInherit Class PageBaseClass
             End If
         End If
 
+        '--------------------------------------------------
+        '4. Is visitor on version of IE lower than IE9?
+
+        'If so, the Foundation responsive interface won't
+        'work, so we can fall back to an alternative
+        'non-responsive skin, if present. This is sought
+        'by name - it should be named same as other skin
+        'but with 'NonResponsive' added to name.
+        '--------------------------------------------------
+        If Request.Browser.Browser = "IE" And Request.Browser.MajorVersion <= 9 Then
+            Try
+                If strSkinOverride <> "" Then
+                    'Look for template in the overridden skin
+                    If File.Exists(Server.MapPath("~/Skins/" & strSkinOverride & "NonResponsive/Template.master")) Then
+                        Me.MasterPageFile = "~/Skins/" & strSkinOverride & "NonResponsive/Template.master"
+                    End If
+
+                Else
+                    If File.Exists(Server.MapPath("~/Skins/" & CkartrisBLL.Skin(Session("LANG")) & "NonResponsive/Template.master")) Then
+                        Me.MasterPageFile = "~/Skins/" & CkartrisBLL.Skin(Session("LANG")) & "NonResponsive/Template.master"
+                    End If
+                End If
+                'If skin still not responsive, need to redirect to 
+                'page to badger user about their poor choice of
+                'browser
+                If Not Me.MasterPageFile.Contains("NonResponsive") Then Response.Redirect("~/OldIE.aspx")
+            Catch ex As Exception
+                'Do nothing
+            End Try
+        End If
+
         'Check if store is closed, and user is not
         'logged into back end - if so, redirect to
         'closed message
