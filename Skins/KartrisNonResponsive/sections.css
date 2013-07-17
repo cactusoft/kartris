@@ -16,12 +16,6 @@ PAGE - Home page and custom page (CMS)
 #homepage .news ul div.news_datecreated { display: block; margin: 5px 0 5px 0; color: #999; }
 #homepage .news ul div.news_link        { font-weight: bold; margin: 5px 0 5px 0; }
 #homepage .news ul div.news_text        {  }
-#homepage .products_tabular .item               { width: 200px; display: inline-block; float: left; padding: 0; margin: 5px 6px 5px 4px; }
-#homepage .products_tabular .item .imageblock   { margin: 0; }
-#homepage .products_tabular .item .box          { text-align: center; height: 230px; border: solid 1px #fc5; background-color: #fff; }
-#homepage .products_tabular .item .box .pad     { overflow: hidden; padding: 10px; text-align: center; }
-#homepage .products_tabular .item h2            { margin: 0; padding: 0; line-height: 15px; font-weight: bold; }
-#homepage .products_tabular .item .imageholder  { display: block; margin: 0 auto; padding-bottom: 10px; }
 /* 
 ========================================================================
 CATEGORY - Single page category
@@ -145,12 +139,12 @@ PRODUCTS - SHORTENED FORMAT
 PRODUCTS - TABULAR FORMAT
 ------------------------------------------------------------------------
 */
-.products_tabular                       { padding-top: 0px }
-.products_tabular .item                 { padding: 10px 20px 10px 0; width: 210px; float: left; }
-.products_tabular .item .imageblock     { padding: 5px; border: solid 1px #fc5; text-align: center; float: left; margin: 0 8px 0 0; overflow: visible; width: 50px; }
-.products_tabular .item h2              { margin: 0; font-size: 100%; font-weight: normal; }
-.products_tabular .item h2 a            { margin-top: 0; text-decoration: none; }
-.products_tabular .item .minprice       { font-weight: normal; padding: 5px 0 0 0; }
+.products_tabular .item               { width: 200px; display: inline-block; float: left; padding: 0; margin: 5px 6px 5px 4px; }
+.products_tabular .item .imageblock   { margin: 0; }
+.products_tabular .item .box          { text-align: center; height: 230px; border: solid 1px #fc5; background-color: #fff; }
+.products_tabular .item .box .pad     { overflow: hidden; padding: 10px; text-align: center; }
+.products_tabular .item h2            { margin: 0; padding: 0; line-height: 15px; font-weight: bold; font-size: 100%; }
+.products_tabular .item .imageholder  { display: block; margin: 0 auto; padding-bottom: 10px; }
 /* 
 ------------------------------------------------------------------------
 PRODUCTS - IMAGE ONLY FORMAT
