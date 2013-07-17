@@ -172,7 +172,7 @@
                             <Columns>
                                 <asp:BoundField DataField="Name" HeaderText='<%$ Resources: _Kartris, FormLabel_Name %>'
                                     SortExpression="Name" ItemStyle-CssClass="itemname" />
-                                <asp:BoundField DataField="URI" HeaderText="<%$Resources: _Logins, ContentText_URI%>" Visible="false" />
+                                <asp:BoundField DataField="URI" HeaderText="<%$Resources: _Logins, ContentText_DeviceInstallID %>" Visible="false" />
                                 <asp:TemplateField HeaderText="<%$Resources: _Kartris, ContentText_Live%>" SortExpression="Device_Live">
                                     <ItemTemplate>
                                         <span class="checkbox">
