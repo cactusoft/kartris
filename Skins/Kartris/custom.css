@@ -81,6 +81,7 @@ Special CSS rules for small screens, large screens, touch, etc.
   #homepage .products_tabular .item { display: block; float: none; width: 100%; margin: 0 0 5px 0; }
   .Kartris-DetailsView-Value { width: 270px; }
   ul { max-width: 100%; }
+  #pagecontent_pad { min-height: 200px; padding-bottom: 15px; }
   }
 
 /* 
