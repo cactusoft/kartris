@@ -229,40 +229,10 @@ Partial Class Admin_Destinations
 
         'CURRENCY
         Dim intSelectedCurrencyID As Integer = ddlCurrency.SelectedValue
-        If intSelectedCurrencyID <> 1 Then
-            Dim dtbCurrencies As DataTable = KartSettingsManager.GetCurrenciesFromCache()
 
-            'Get current default currency details
-            Dim drwDefaultCurrency As DataRow() = dtbCurrencies.Select("CUR_ID=1")
-            _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.Currencies, False, 1)
-            Dim dtbDefaultCurrencyLE As DataTable = _UC_LangContainer.ReadContent()
-
-            'Get new default currency details
-            Dim drwNewDefaultCurrency As DataRow() = dtbCurrencies.Select("CUR_ID=" & intSelectedCurrencyID)
-            _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.Currencies, False, intSelectedCurrencyID)
-            Dim dtNewDefaultCurrencyLE As DataTable = _UC_LangContainer.ReadContent()
-
-            If drwDefaultCurrency.Length > 0 And drwNewDefaultCurrency.Length > 0 Then
-                'Update 1st currency record to the newly selected currency, can't update the isocode and symbol yet because we have unique constraints on both fields
-                CurrenciesBLL._UpdateCurrency(dtNewDefaultCurrencyLE, 1, "temp", "tmp",
-                                              FixNullToDB(drwNewDefaultCurrency(0)("CUR_ISOCodeNumeric"), "i"), 1,
-                                              FixNullToDB(drwNewDefaultCurrency(0)("CUR_HasDecimals"), "b"), FixNullToDB(drwNewDefaultCurrency(0)("CUR_Live"), "b"),
-                                              FixNullToDB(drwNewDefaultCurrency(0)("CUR_Format")), FixNullToDB(drwNewDefaultCurrency(0)("CUR_ISOFormat")),
-                                              FixNullToDB(drwNewDefaultCurrency(0)("CUR_DecimalPoint")), FixNullToDB(drwNewDefaultCurrency(0)("CUR_RoundNumbers"), "i"), "")
-                'Put the old default currency details to the selected currency's db record - to switch them around
-                CurrenciesBLL._UpdateCurrency(dtbDefaultCurrencyLE, intSelectedCurrencyID, FixNullToDB(drwDefaultCurrency(0)("CUR_SYMBOL")), FixNullToDB(drwDefaultCurrency(0)("CUR_ISOCode")),
-                                              FixNullToDB(drwDefaultCurrency(0)("CUR_ISOCodeNumeric"), "i"), FixNullToDB(drwNewDefaultCurrency(0)("CUR_ExchangeRate"), "d"),
-                                              FixNullToDB(drwDefaultCurrency(0)("CUR_HasDecimals"), "b"), FixNullToDB(drwDefaultCurrency(0)("CUR_Live"), "b"),
-                                              FixNullToDB(drwDefaultCurrency(0)("CUR_Format")), FixNullToDB(drwDefaultCurrency(0)("CUR_ISOFormat")),
-                                              FixNullToDB(drwDefaultCurrency(0)("CUR_DecimalPoint")), FixNullToDB(drwDefaultCurrency(0)("CUR_RoundNumbers"), "i"), "")
-                'Now that the records are switched, put the correct symbol and isocode to the new default currency
-                CurrenciesBLL._UpdateCurrency(dtNewDefaultCurrencyLE, 1, FixNullToDB(drwNewDefaultCurrency(0)("CUR_SYMBOL")), FixNullToDB(drwNewDefaultCurrency(0)("CUR_ISOCode")),
-                                              FixNullToDB(drwNewDefaultCurrency(0)("CUR_ISOCodeNumeric"), "i"), 1,
-                                              FixNullToDB(drwNewDefaultCurrency(0)("CUR_HasDecimals"), "b"), FixNullToDB(drwNewDefaultCurrency(0)("CUR_Live"), "b"),
-                                              FixNullToDB(drwNewDefaultCurrency(0)("CUR_Format")), FixNullToDB(drwNewDefaultCurrency(0)("CUR_ISOFormat")),
-                                              FixNullToDB(drwNewDefaultCurrency(0)("CUR_DecimalPoint")), FixNullToDB(drwNewDefaultCurrency(0)("CUR_RoundNumbers"), "i"), "")
-            End If
-        End If
+        'Set default currency
+        Dim strMessage As String = String.Empty
+        CurrenciesBLL._SetDefault(intSelectedCurrencyID, strMessage)
         '/CURRENCY
 
         Dim dtbAllCountries As DataTable = ShippingBLL._GetDestinationsByLanguage(CkartrisBLL.GetLanguageIDfromSession)
