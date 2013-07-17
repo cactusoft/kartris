@@ -1534,10 +1534,10 @@ BEGIN
 
 	UPDATE Top(1) [tblKartrisCurrencies] 
 	SET [CUR_OrderNo] = @SwitchOrderNo
-	Where CUR_OrderNo = @MinOrderNo AND CUR_Live = 1;
+	Where CUR_OrderNo = @MinOrderNo;
 
 	UPDATE [tblKartrisCurrencies] 
-	SET [CUR_OrderNo] = @MinOrderNo
+	SET [CUR_OrderNo] = @MinOrderNo, [CUR_Live] = 1, [CUR_ExchangeRate] = 1
 	Where CUR_ID = @CUR_ID;
 END
 GO
