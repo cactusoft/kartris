@@ -99,7 +99,6 @@
 						<user:ViewedProducts ID="UC_RecentlyViewedProducts" runat="server" EnableViewState="False" />
 					</div>
 					<div class="spacer"></div>
-					<div id="footerspacer"></div>
 				</div>
 
 
