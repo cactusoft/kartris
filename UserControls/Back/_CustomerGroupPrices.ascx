@@ -13,7 +13,9 @@
 				<table class="kartristable">
 					<tr>
 						<th><asp:Literal ID="litFormLabelCustomerGroup" runat="server" Text='<%$ Resources:_Customers, FormLabel_CustomerGroup %>' /></th>
-						<th><asp:Literal ID="litFormLabelPrice" runat="server" Text='<%$ Resources:_Version, FormLabel_Price %>' /></th>
+						<th><asp:Literal ID="litFormLabelPrice" runat="server" Text='<%$ Resources:_Version, FormLabel_Price %>' />
+                            <asp:Literal ID="litCurrencySymbol" runat="server" />
+						</th>
 					</tr>
 					<asp:Repeater ID="rptCustomerGroupPrices" runat="server">
 					<ItemTemplate>
@@ -36,7 +38,7 @@
 									ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>" ControlToValidate="txtPrice" />
 								<asp:RegularExpressionValidator ID="valRegexTaxRate" runat="server" Display="Dynamic" SetFocusOnError="true"
 									ErrorMessage="<%$ Resources: _Kartris, ContentText_InvalidValue %>" CssClass="error" ForeColor="" ControlToValidate="txtPrice"
-									ValidationExpression="<%$ AppSettings:DecimalRegex %>" />
+									ValidationExpression="<%$ AppSettings:DecimalRegex %>" ValidationGroup="vgCustomerGroupPrice" />
 								<ajaxToolkit:FilteredTextBoxExtender ID="filPrice" runat="server" TargetControlID="txtPrice"
 										  FilterType="Numbers, Custom" ValidChars=".," />
 							</td>
@@ -62,7 +64,7 @@
 									ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>" ControlToValidate="txtPrice" />
 								<asp:RegularExpressionValidator ID="valRegexTaxRate" runat="server" Display="Dynamic" SetFocusOnError="true"
 									ErrorMessage="<%$ Resources: _Kartris, ContentText_InvalidValue %>" CssClass="error" ForeColor="" ControlToValidate="txtPrice"
-									ValidationExpression="<%$ AppSettings:DecimalRegex %>" />
+									ValidationExpression="<%$ AppSettings:DecimalRegex %>" ValidationGroup="vgCustomerGroupPrice" />
 								<ajaxToolkit:FilteredTextBoxExtender ID="filPrice" runat="server" TargetControlID="txtPrice"
 										  FilterType="Numbers, Custom" ValidChars=".," />
 							</td>
@@ -71,12 +73,14 @@
 					</asp:Repeater>
 				</table>
 				<div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
-					<asp:LinkButton ID="btnUpdateCustomerGroupPrices" runat="server" CssClass="button savebutton" Text="<%$ Resources:_Kartris, FormButton_Update %>" />
+					<asp:LinkButton ID="btnUpdateCustomerGroupPrices" runat="server" CssClass="button savebutton" 
+                        Text="<%$ Resources:_Kartris, FormButton_Update %>" ValidationGroup="vgCustomerGroupPrice" />
 					<asp:ValidationSummary ID="valSummary" runat="server" CssClass="valsummary" DisplayMode="BulletList"
-						ForeColor="" HeaderText="<%$ Resources: _Kartris, ContentText_Errors %>" />
+						ForeColor="" HeaderText="<%$ Resources: _Kartris, ContentText_Errors %>" ValidationGroup="vgCustomerGroupPrice" />
 				</div>
 			</ContentTemplate>
 		</asp:UpdatePanel>
+            </p>
    </div>
    </ContentTemplate>
 </asp:UpdatePanel>
