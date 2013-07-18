@@ -89,4 +89,9 @@ Partial Class UserControls_Back_CustomerGroupPrices
 	End Sub
 
 
+    Protected Sub UserControls_Back_CustomerGroupPrices_Load(sender As Object, e As EventArgs) Handles Me.Load
+        If Not Page.IsPostBack Then
+            litCurrencySymbol.Text = "(" & CurrenciesBLL.CurrencySymbol(CurrenciesBLL.GetDefaultCurrency()) & ")"
+        End If
+    End Sub
 End Class
