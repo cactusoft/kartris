@@ -108,7 +108,7 @@ Partial Class Admin_Promotions
             End If
 
             If strText.Contains("[£]") Then
-                strText = strText.Replace("[£]", "£")
+                strText = strText.Replace("[£]", CurrenciesBLL.CurrencySymbol(CurrenciesBLL.GetDefaultCurrency))
             End If
 
             intTextCounter += 1

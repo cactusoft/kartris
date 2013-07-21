@@ -133,7 +133,7 @@ Partial Class UserControls_Back_PromotionStringBuilder
             Case "£"
                 Dim litSymbol As New Literal
                 litSymbol.ID = "txtSymbol"
-                litSymbol.Text = charEntry
+                litSymbol.Text = CurrenciesBLL.CurrencySymbol(CurrenciesBLL.GetDefaultCurrency)
                 phdForm.Controls.Add(litSymbol)
         End Select
     End Sub
@@ -441,7 +441,7 @@ Partial Class UserControls_Back_PromotionStringBuilder
             End If
 
             If strText.Contains("[£]") Then
-                strText = strText.Replace("[£]", "£")
+                strText = strText.Replace("[£]", CurrenciesBLL.CurrencySymbol(CurrenciesBLL.GetDefaultCurrency))
             End If
 
             lbxStrings.Items.Add(strText)

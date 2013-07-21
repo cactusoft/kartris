@@ -2313,8 +2313,8 @@ Public Class BasketBLL
                 .Name = GetPromotionText(objPromotion.ID, True)
                 .ApplyTax = ApplyTax
                 .ComputedTaxRate = numTaxRate
-                .ExTax = numExTax
-                .IncTax = numIncTax
+                .ExTax = CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), numExTax)
+                .IncTax = CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), numIncTax)
                 .Quantity = numQty
                 .TotalIncTax = .TotalIncTax + (.IncTax * .Quantity)
                 .TotalExTax = .TotalExTax + (.ExTax * .Quantity)
