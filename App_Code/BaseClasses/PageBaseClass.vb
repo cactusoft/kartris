@@ -391,10 +391,6 @@ Public MustInherit Class PageBaseClass
                         Me.MasterPageFile = "~/Skins/" & CkartrisBLL.Skin(Session("LANG")) & "NonResponsive/Template.master"
                     End If
                 End If
-                'If skin still not responsive, need to redirect to 
-                'page to badger user about their poor choice of
-                'browser
-                If Not Me.MasterPageFile.Contains("NonResponsive") Then Response.Redirect("~/OldIE.aspx")
             Catch ex As Exception
                 'Do nothing
             End Try
