@@ -37,27 +37,27 @@ Partial Class UserControls_Back_EditPayment
                     ddlPaymentGateways.Items.Add(New ListItem(GetGlobalResourceObject("Kartris", "ContentText_DropdownSelectDefault"), ""))
                     For Each strGatewayEntry As String In arrPaymentsMethods
                         Dim arrGateway As String() = Split(strGatewayEntry, "::")
-                        If UBound(arrGateway) = 3 Then
-                            Dim blnOkToAdd As Boolean = True
-                            If arrGateway(3) = "p" Then
-                                If LCase(arrGateway(1)) = "test" Then
-                                    blnOkToAdd = HttpSecureCookie.IsBackendAuthenticated
-                                ElseIf LCase(arrGateway(1)) = "off" Then
-                                    blnOkToAdd = False
-                                End If
-                            Else
+                    If UBound(arrGateway) = 4 Then
+                        Dim blnOkToAdd As Boolean = True
+                        If arrGateway(4) = "p" Then
+                            If LCase(arrGateway(1)) = "test" Then
+                                blnOkToAdd = HttpSecureCookie.IsBackendAuthenticated
+                            ElseIf LCase(arrGateway(1)) = "off" Then
                                 blnOkToAdd = False
                             End If
-                            If blnOkToAdd Then
-                                Dim strGatewayName As String = arrGateway(0)
-                                If strGatewayName.ToLower = "po_offlinepayment" Then
-                                    strGatewayName = GetGlobalResourceObject("Checkout", "ContentText_Po")
-                                End If
-                                ddlPaymentGateways.Items.Add(New ListItem(strGatewayName, arrGateway(0).ToString))
-                            End If
                         Else
-                            Throw New Exception("Invalid gatewaylist config setting!")
+                            blnOkToAdd = False
                         End If
+                        If blnOkToAdd Then
+                            Dim strGatewayName As String = arrGateway(0)
+                            If strGatewayName.ToLower = "po_offlinepayment" Then
+                                strGatewayName = GetGlobalResourceObject("Checkout", "ContentText_Po")
+                            End If
+                            ddlPaymentGateways.Items.Add(New ListItem(strGatewayName, arrGateway(0).ToString))
+                        End If
+                    Else
+                        Throw New Exception("Invalid gatewaylist config setting!")
+                    End If
 
                     Next
 
