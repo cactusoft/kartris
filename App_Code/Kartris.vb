@@ -538,10 +538,11 @@ Public NotInheritable Class CkartrisDisplayFunctions
 
 End Class
 
-''' <summary>
-''' We can fix a number to be between certain ranges (e.g. zero and 100), if non-numeric, set as lower bound
-''' </summary>
+
 Public NotInheritable Class CkartrisDataManipulation
+    ''' <summary>
+    ''' We can fix a number to be between certain ranges (e.g. zero and 100), if non-numeric, set as lower bound
+    ''' </summary>
     Public Shared Function FixNumber(ByVal numInput As Object, ByVal numLowerBound As Double, ByVal numUpperBound As Double) As Double
         Dim numOutput As Double
         Try
@@ -551,6 +552,25 @@ Public NotInheritable Class CkartrisDataManipulation
         End Try
         If numOutput > numUpperBound Then numOutput = numUpperBound
         If numOutput < numLowerBound Then numOutput = numLowerBound
+        Return numOutput
+    End Function
+
+    ''' <summary>
+    ''' Check number is a number
+    ''' We use this to sanitize submissions in
+    ''' the front end of number values, especially
+    ''' those from querystrings, to avoid untrapped
+    ''' errors. 
+    ''' </summary>
+    Public Shared Function NumSafe(ByVal strInput As String, Optional ByVal numDefault As Long = 0) As Long
+        Dim numOutput As Long = numDefault
+        Try
+            'Attempt to convert input value to
+            'number
+            numOutput = CLng(strInput)
+        Catch
+            numOutput = numDefault
+        End Try
         Return numOutput
     End Function
 
@@ -650,15 +670,6 @@ Public NotInheritable Class CkartrisDataManipulation
     End Function
 
     ''' <summary>
-    ''' Escape single quotes with two single quotes for SQL strings
-    ''' DEPRECATED
-    ''' </summary>
-    Public Shared Function SQLSafe(ByVal strInput As String) As String
-        SQLSafe = Replace(strInput, "'", "''")
-        'SQLSafe = strInput 'DEPRECATED, set output to same as input
-    End Function
-
-    ''' <summary>
     ''' Get product ID from querystring
     ''' </summary>
     Public Shared Function _GetProductID() As Integer
@@ -668,9 +679,7 @@ Public NotInheritable Class CkartrisDataManipulation
         Catch ex As Exception
             numProductID = 0
         End Try
-
         Return numProductID
-
     End Function
 
     ''' <summary>
@@ -683,7 +692,6 @@ Public NotInheritable Class CkartrisDataManipulation
         Catch ex As Exception
             numCategoryID = 0
         End Try
-
         Return numCategoryID
     End Function
 
@@ -771,6 +779,7 @@ Public NotInheritable Class CkartrisDataManipulation
         Dim CatSiteMap As CategorySiteMapProvider = DirectCast(SiteMap.Provider, CategorySiteMapProvider)
         CatSiteMap.RefreshSiteMap()
     End Sub
+
     ''' <summary>
     ''' Fetch the specified HTML Email Template from the currently used Skin
     ''' </summary>
@@ -840,15 +849,16 @@ Public NotInheritable Class CkartrisDataManipulation
 
         Return strEmailTemplateText
     End Function
+
     ''' <summary>
     ''' Send email
     ''' </summary>
     Public Shared Function SendEmail(ByVal strFrom As String, ByVal strTo As String, ByVal strSubject As String, ByVal strBody As String, _
-               Optional ByVal strReplyTo As String = "", Optional ByVal strFromName As String = "", _
-                Optional ByVal sendEncoding As Encoding = Nothing, Optional ByVal strAttachment As String = "", _
-               Optional ByVal blnSendAsHTML As Boolean = False, _
-               Optional ByVal sendPriority As MailPriority = MailPriority.Normal, Optional ByVal objBCCAddress As MailAddressCollection = Nothing,
-               Optional ByVal objAdditionalToAddresses As MailAddressCollection = Nothing) As Boolean
+        Optional ByVal strReplyTo As String = "", Optional ByVal strFromName As String = "", _
+        Optional ByVal sendEncoding As Encoding = Nothing, Optional ByVal strAttachment As String = "", _
+        Optional ByVal blnSendAsHTML As Boolean = False, _
+        Optional ByVal sendPriority As MailPriority = MailPriority.Normal, Optional ByVal objBCCAddress As MailAddressCollection = Nothing,
+        Optional ByVal objAdditionalToAddresses As MailAddressCollection = Nothing) As Boolean
         Try
             If LCase(GetKartConfig("general.email.method")) = "write" Then
                 'Write method - use javascript alert box to display email
@@ -938,6 +948,9 @@ Public NotInheritable Class CkartrisDataManipulation
         Return True
     End Function
 
+    ''' <summary>
+    ''' Stream a file download
+    ''' </summary>
     Public Shared Sub DownloadFile(ByVal strFileName As String)
         Dim strFilePath As String = Current.Server.MapPath(GetKartConfig("general.uploadfolder") & strFileName)
         Dim filTarget As System.IO.FileInfo = New System.IO.FileInfo(strFilePath)
@@ -951,6 +964,9 @@ Public NotInheritable Class CkartrisDataManipulation
         End If
     End Sub
 
+    ''' <summary>
+    ''' Remove download files
+    ''' </summary>
     Public Shared Sub RemoveDownloadFiles(ByVal strFiles As String)
         If String.IsNullOrEmpty(strFiles) OrElse strFiles = "##" Then Return
         Dim arrFiles As String() = strFiles.Split("##")

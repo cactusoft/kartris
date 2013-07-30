@@ -29,12 +29,13 @@ Partial Class Category
                 Try
                     Dim strActiveTab As String = Request.QueryString("T")
                     Dim intCategoryID As Integer = Request.QueryString("CategoryID")
-                    Dim intLanguageID As Integer = Request.QueryString("L")
+                    Dim numLanguageID As Long = CkartrisDataManipulation.NumSafe(Request.QueryString("L"), 1)
+
                     UC_CategoryView.LoadCategory(intCategoryID, Session("LANG"))
                     If UC_CategoryView.IsCategoryExist OrElse intCategoryID = 0 Then
                         Me.CanonicalTag = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalCategory, intCategoryID)
-                        Me.MetaDescription = CategoriesBLL.GetMetaDescriptionByCategoryID(intCategoryID, intLanguageID)
-                        Me.MetaKeywords = CategoriesBLL.GetMetaKeywordsByCategoryID(intCategoryID, intLanguageID)
+                        Me.MetaDescription = CategoriesBLL.GetMetaDescriptionByCategoryID(intCategoryID, numLanguageID)
+                        Me.MetaKeywords = CategoriesBLL.GetMetaKeywordsByCategoryID(intCategoryID, numLanguageID)
 
                         UC_SubCategoryView.LoadSubCategories(intCategoryID, Session("LANG"), UC_CategoryView.SubCategoryDisplayType)
                         UC_CategoryProductsView.LoadCategoryProducts(intCategoryID, Session("LANG"), UC_CategoryView.ProductsDisplayType, UC_CategoryView.ProductsDisplayOrder, UC_CategoryView.ProductsSortDirection)
