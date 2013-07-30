@@ -176,10 +176,12 @@ Public MustInherit Class PageBaseClass
             Dim CatSiteMap As CategorySiteMapProvider = DirectCast(SiteMap.Provider, CategorySiteMapProvider)
             CatSiteMap.ResetSiteMap()
 
-            If Not String.IsNullOrEmpty(Request.QueryString("L")) Then
-                Session("KartrisUserCulture") = Server.HtmlEncode(LanguagesBLL.GetCultureByLanguageID_s(Request.QueryString("L")))
-                Session("LANG") = CShort(Request.QueryString("L"))
-                Response.Cookies(HttpSecureCookie.GetCookieName())("KartrisUserCulture") = Session("KartrisUserCulture")
+            Dim numLanguageID As Long = CkartrisDataManipulation.NumSafe(Request.QueryString("L"))
+
+            If Not numLanguageID = 0 Then
+                Session("KartrisUserCulture") = Server.HtmlEncode(LanguagesBLL.GetCultureByLanguageID_s(numLanguageID))
+                Session("LANG") = CShort(numLanguageID)
+                Response.Cookies("Kartris")("KartrisUserCulture") = Session("KartrisUserCulture")
             Else
                 Try
                     'no language querystring passed so get the value from the cookie, set the session-object with the data from the cookie.
@@ -226,7 +228,8 @@ Public MustInherit Class PageBaseClass
             Server.ClearError()
             Dim strURL As String = Request.Url.ToString
             Session("Error") = "invalidrequest"
-            Response.Redirect(strURL)
+            LogError()
+            Response.Redirect("~/Error.aspx")
         Else
             LogError()
         End If

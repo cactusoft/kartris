@@ -35,6 +35,9 @@ Public NotInheritable Class HttpSecureCookie
     Private Sub New()
     End Sub
 
+    ''' <summary>
+    ''' Creates a SHA256 hash
+    ''' </summary>
     Public Shared Function CreateHash(ByVal drwLogin As DataRow, ByVal strUserName As String, ByVal strPassword As String, ByVal strClientIP As String) As String
         Dim strUserData As String = strUserName & "##" & drwLogin("LOGIN_Config").ToString & "##" & _
                             drwLogin("LOGIN_Products").ToString & "##" & drwLogin("LOGIN_Orders").ToString & "##" & _
@@ -44,6 +47,9 @@ Public NotInheritable Class HttpSecureCookie
         Return FormsAuthentication.Encrypt(objTicket)
     End Function
 
+    ''' <summary>
+    ''' Decrypts cookie
+    ''' </summary>
     Public Shared Function Decrypt(Optional ByVal strCookieValue As String = "") As String()
         Dim arrAuth As String() = Nothing
         Dim strValue As String
@@ -57,7 +63,6 @@ Public NotInheritable Class HttpSecureCookie
                 Return Nothing
             End If
         End If
-
         If Not String.IsNullOrEmpty(strValue) Then
             Try
                 Dim returnValue As FormsAuthenticationTicket = FormsAuthentication.Decrypt(strValue)
@@ -69,10 +74,12 @@ Public NotInheritable Class HttpSecureCookie
                 'arrAuth.SetValue("", 0)
             End Try
         End If
-
         Return Nothing
     End Function
 
+    ''' <summary>
+    ''' Decrypts cookie value
+    ''' </summary>
     Public Shared Function DecryptValue(ByVal strValue As String, ByVal strScript As String) As String()
         Dim arrAuth As String() = Nothing
         If Not String.IsNullOrEmpty(strValue) Then
@@ -89,6 +96,9 @@ Public NotInheritable Class HttpSecureCookie
         Return arrAuth
     End Function
 
+    ''' <summary>
+    ''' Check if user is authenticated for back end (admin) access
+    ''' </summary>
     Public Shared Function IsBackendAuthenticated() As Boolean
         Dim arrAuth As String() = Nothing
         arrAuth = Decrypt()
@@ -102,6 +112,9 @@ Public NotInheritable Class HttpSecureCookie
         Return False
     End Function
 
+    ''' <summary>
+    ''' Log the user out
+    ''' </summary>
     Public Shared Sub ForceLogout(Optional ByVal blnRedirect As Boolean = True)
         Dim cokKartris As HttpCookie
         cokKartris = New HttpCookie(HttpSecureCookie.GetCookieName("BackAuth"), "")
@@ -112,6 +125,9 @@ Public NotInheritable Class HttpSecureCookie
         If blnRedirect Then Current.Response.Redirect("~/Admin/")
     End Sub
 
+    ''' <summary>
+    ''' Find out the name of the cookie used
+    ''' </summary>
     Public Shared Function GetCookieName(Optional strPostfix As String = "") As String
         Return Trim(GetKartConfig("general.sessions.cookiename")) & strPostfix & Left(ConfigurationManager.AppSettings("HashSalt"), 5)
     End Function
