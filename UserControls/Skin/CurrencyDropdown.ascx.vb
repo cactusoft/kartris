@@ -18,12 +18,12 @@ Partial Class UserControls_Skin_CurrencyDropdown
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         
         If Not Page.IsPostBack Then
-            Dim tblCurrenceis As DataTable = KartSettingsManager.GetCurrenciesFromCache() 'CurrenciesBLL.GetCurrencies()
-            Dim drLiveCurrencies As DataRow() = tblCurrenceis.Select("CUR_Live = 1")
-            If drLiveCurrencies.Length > 0 Then
+            Dim tblCurrencies As DataTable = KartSettingsManager.GetCurrenciesFromCache() 'CurrenciesBLL.GetCurrencies()
+            Dim drwLiveCurrencies As DataRow() = tblCurrencies.Select("CUR_Live = 1")
+            If drwLiveCurrencies.Length > 0 Then
                 ddlCurrency.Items.Clear()
-                For i As Byte = 0 To drLiveCurrencies.Length - 1
-                    ddlCurrency.Items.Add(New ListItem(drLiveCurrencies(i)("CUR_Symbol") & " " & drLiveCurrencies(i)("CUR_ISOCode"), drLiveCurrencies(i)("CUR_ID")))
+                For i As Byte = 0 To drwLiveCurrencies.Length - 1
+                    ddlCurrency.Items.Add(New ListItem(drwLiveCurrencies(i)("CUR_Symbol") & " " & drwLiveCurrencies(i)("CUR_ISOCode"), drwLiveCurrencies(i)("CUR_ID")))
                 Next
             End If
             ddlCurrency.SelectedIndex = ddlCurrency.Items.IndexOf(ddlCurrency.Items.FindByValue(Session("CUR_ID")))
