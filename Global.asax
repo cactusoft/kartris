@@ -77,7 +77,7 @@
         'postbacks working on the default document if only folder URL
         'given (e.g. site/ instead of site/default.aspx)
         Dim objApp = DirectCast(sender, HttpApplication)
-        If objApp.Context.Request.Url.LocalPath.EndsWith("/") Then
+        If objApp.Context.Request.Url.LocalPath.ToLower.EndsWith("/admin") Then
             objApp.Context.RewritePath(String.Concat(objApp.Context.Request.Url.LocalPath, "Default.aspx"))
         End If
 
@@ -106,7 +106,14 @@
                 Response.Cookies.Remove(HttpSecureCookie.GetCookieName("Search"))
             End If
 		
-            Session("CUR_ID") = 1
+            Dim tblCurrencies As DataTable = KartSettingsManager.GetCurrenciesFromCache() 'CurrenciesBLL.GetCurrencies()
+            Dim drwLiveCurrencies As DataRow() = tblCurrencies.Select("CUR_Live = 1")
+            If drwLiveCurrencies.Length > 0 Then
+                Session("CUR_ID") = CInt(drwLiveCurrencies(0)("CUR_ID"))
+            Else
+                Session("CUR_ID") = 1
+            End If
+
             Session("ProductsToCompare") = ""
             Session("SearchKeyWords") = String.Empty
             Session("HTMLEditorFieldID") = 0
