@@ -203,7 +203,7 @@ Partial Class Templates_BasketView
             phdBasket.Visible = True
         End If
 
-        If blnIsInCheckout Then
+        If blnIsInCheckout And Not ViewType = BasketBLL.VIEW_TYPE.MINI_BASKET Then
             SetShipping(UC_ShippingMethodsDropdown.SelectedShippingID, UC_ShippingMethodsDropdown.SelectedShippingAmount, ShippingDestinationID)
         Else
             Call Basket.Validate(False)
