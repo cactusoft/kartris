@@ -106,6 +106,8 @@
                 Response.Cookies.Remove(HttpSecureCookie.GetCookieName("Search"))
             End If
 		
+            'Set the default currency - can no longer
+            'assume is ID=1
             Dim tblCurrencies As DataTable = KartSettingsManager.GetCurrenciesFromCache() 'CurrenciesBLL.GetCurrencies()
             Dim drwLiveCurrencies As DataRow() = tblCurrencies.Select("CUR_Live = 1")
             If drwLiveCurrencies.Length > 0 Then
@@ -114,6 +116,8 @@
                 Session("CUR_ID") = 1
             End If
 
+            'clear other session values, just to make sure
+            'we start everything right
             Session("ProductsToCompare") = ""
             Session("SearchKeyWords") = String.Empty
             Session("HTMLEditorFieldID") = 0
