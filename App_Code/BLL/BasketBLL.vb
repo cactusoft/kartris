@@ -1643,14 +1643,15 @@ Public Class BasketBLL
 
                     _ShippingName = ""
                     _ShippingDescription = ""
-                    Current.Response.Redirect("~/Checkout.aspx")
+                    'Current.Response.Redirect("~/Checkout.aspx")
                 End Try
             Else
-                    _ShippingName = ""
-                    _ShippingDescription = ""
-                    If numShippingID > 0 Then CkartrisFormatErrors.LogError("BasketBLL.CalculateShipping Error - " & _
-                                                              "DestinationID: " & numDestinationID & vbCrLf _
-                                                              & "ShippingID: " & numShippingID)
+                _ShippingName = ""
+                _ShippingDescription = ""
+                If numShippingID > 0 Then CkartrisFormatErrors.LogError("BasketBLL.CalculateShipping Error - " & _
+                                                          "DestinationID: " & numDestinationID & vbCrLf _
+                                                          & "ShippingID: " & numShippingID)
+
             End If
         End If
 
