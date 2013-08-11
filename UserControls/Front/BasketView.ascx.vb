@@ -132,7 +132,7 @@ Partial Class Templates_BasketView
             If GetKartConfig("frontend.checkout.shipping.calcbyweight") = "y" Then
                 Return Basket.ShippingTotalWeight
             Else
-                If KartSettingsManager.GetKartConfig("general.tax.pricesinctax") <> "y" Then
+                If KartSettingsManager.GetKartConfig("general.tax.pricesinctax") <> "y" Or Not Basket.ApplyTax Then
                     Return Basket.ShippingTotalExTax
                 Else
                     Return Basket.ShippingTotalIncTax
@@ -1072,12 +1072,13 @@ Partial Class Templates_BasketView
     End Sub
 
     Public Sub RefreshShippingMethods()
+
+        SetShipping(UC_ShippingMethodsDropdown.SelectedShippingID, UC_ShippingMethodsDropdown.SelectedShippingAmount, ShippingDestinationID)
+
         UC_ShippingMethodsDropdown.DestinationID = ShippingDestinationID
         UC_ShippingMethodsDropdown.Boundary = ShippingBoundary
         UC_ShippingMethodsDropdown.ShippingDetails = ShippingDetails
         UC_ShippingMethodsDropdown.Refresh()
-
-        SetShipping(UC_ShippingMethodsDropdown.SelectedShippingID, UC_ShippingMethodsDropdown.SelectedShippingAmount, ShippingDestinationID)
 
         updPnlMainBasket.Update()
 
