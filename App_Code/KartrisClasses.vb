@@ -440,7 +440,8 @@ Public Class KartrisClasses
                 Dim T_ID1, T_ID2 As Byte '= CInt(GetKartConfig("frontend.checkout.shipping.taxband"))
                 T_ID1 = CType(CkartrisDataManipulation.FixNullFromDB(reader("SM_Tax")), Byte)
                 T_ID2 = CType(CkartrisDataManipulation.FixNullFromDB(reader("SM_Tax2")), Byte)
-                numShippingTaxRate = TaxRegime.CalculateTaxRate(TaxBLL.GetTaxRate(T_ID1), TaxBLL.GetTaxRate(T_ID2), ShippingCountry.TaxRate1, ShippingCountry.TaxRate2, ShippingCountry.TaxExtra)
+                numShippingTaxRate = TaxRegime.CalculateTaxRate(TaxBLL.GetTaxRate(T_ID1), TaxBLL.GetTaxRate(T_ID2), IIf(ShippingCountry.TaxRate1 > 0, ShippingCountry.TaxRate1, 1),
+                                                                IIf(ShippingCountry.TaxRate2 > 0, ShippingCountry.TaxRate2, 1), ShippingCountry.TaxExtra)
                 'If numShippingTaxRate > 0 Then numShippingTaxRate = numShippingTaxRate / 100
             End If
 

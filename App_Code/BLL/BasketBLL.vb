@@ -471,7 +471,7 @@ Public Class BasketItem
 
     Public ReadOnly Property IncTaxNoRound() As Double
         Get
-            Return _ExTax * (ComputedTaxRate + 1)
+            Return _ExTax * (IIf(Not (ApplyTax), 0, ComputedTaxRate) + 1)
         End Get
     End Property
 
@@ -901,7 +901,9 @@ Public Class BasketBLL
                 If Not .FreeShipping Then
                     _ShippingTotalWeight = _ShippingTotalWeight + .RowWeight
                     _ShippingTotalExTax = _ShippingTotalExTax + .RowExTax
-                    _ShippingTotalTaxAmount = _ShippingTotalTaxAmount + .RowTaxAmount
+                    If ApplyTax Then
+                        _ShippingTotalTaxAmount = _ShippingTotalTaxAmount + .RowTaxAmount
+                    End If
                 End If
             End With
         Next
@@ -1323,7 +1325,7 @@ Public Class BasketBLL
                 With objItem
                     numWeight = .Weight
 
-                    .ComputedTaxRate = TaxRegime.CalculateTaxRate(.TaxRate1, .TaxRate2, D_Tax, D_Tax2, D_TaxExtra)
+                    .ComputedTaxRate = TaxRegime.CalculateTaxRate(.TaxRate1, .TaxRate2, IIf(D_Tax > 0, D_Tax, 1), IIf(D_Tax2 > 0, D_Tax2, 1), D_TaxExtra)
 
                     If D_Tax > 0 Or D_Tax2 > 0 Then ApplyTax = True Else ApplyTax = False
 
@@ -1398,7 +1400,7 @@ Public Class BasketBLL
                         .ExTax = numPrice
                     End If
 
-                    If D_Tax = 0 Then .ComputedTaxRate = 0
+                    If Not ApplyTax Then .ComputedTaxRate = 0
 
                     'Set the weight
                     .Weight = numWeight
@@ -1632,7 +1634,7 @@ Public Class BasketBLL
 
                         ShippingPrice.ExTax = CurrenciesBLL.ConvertCurrency(numCurrencyID, .ExTax)
                         ShippingPrice.IncTax = CurrenciesBLL.ConvertCurrency(numCurrencyID, .IncTax)
-                        ShippingPrice.TaxRate = .ComputedTaxRate
+                        ShippingPrice.TaxRate = IIf(ApplyTax, .ComputedTaxRate, 0)
                     End With
                 Catch ex As Exception
                     CkartrisFormatErrors.LogError("BasketBLL.CalculateShipping: " & ex.Message & vbCrLf & _
