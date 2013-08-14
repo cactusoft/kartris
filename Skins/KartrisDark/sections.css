@@ -515,7 +515,7 @@ CHECKOUT
 #checkout span.inctax                   { padding-right: 10px }
 #checkout textarea                      { width: 100% }
 #checkout span.checkbox                 { display: block; padding: 10px 0 10px 0; }
-#checkout span.checkbox label           { width: 300px }
+#checkout span.checkbox label           { max-width: 300px }
 #checkout .checkoutaddress              { height: 240px; }
 #checkout #confirmation .checkoutaddress
                                         { height: 180px }
@@ -600,7 +600,7 @@ POPUPS - customization, add to basket, etc.
 */
 .popup_customization textarea           { width: 100% }
 .popup_customization .price             { font-weight: bold; color: #090; }
-.popup_addtobasket                      { width: 350px; height: 120px; }
+.popup_addtobasket                      { width: 350px; height: 120px; max-width: 100%; }
 .popup_addtobasket p                    { margin: 0 0 15px 0 }
 /* 
 ========================================================================
@@ -610,7 +610,7 @@ so that email text displayed as order confirmation can be styled to
 match the same format as the email
 ========================================================================
 */
-#mail_container                         { border: solid 1px #999; padding: 20px;  width: 600px; }
+#mail_container                         { border: solid 1px #999; padding: 20px; width: 600px; max-width: 100%; }
 #mail_container p                       { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 13px; font-weight: normal; color: #555; padding: 5px 0; margin: 0; }
 #mail_container h1                      { font-family: "Segoe UI Light", Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: lighter; font-size: 180%; letter-spacing: 0px; color: #000; margin: 3px 0 10px 0; }
 #mail_container h2                      { font-family: "Segoe UI Light", Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: lighter; font-size: 140%; letter-spacing: 0px; color: #000; margin: 8px 0 3px 0; }
