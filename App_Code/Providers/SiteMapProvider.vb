@@ -373,9 +373,7 @@ Public Class SiteMapHelper
 
                     End If
                 Catch ex As Exception
-                    'The line below would log 404s; generally we don't want to do this,
-                    'it can bulk up log files. But if you have some specific problem that
-                    'you need to address, this can be uncommented.
+                    'Give a 404 responsive by transferring
                     HttpContext.Current.Server.Transfer("~/404.aspx")
                 End Try
             End If
