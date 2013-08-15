@@ -8,6 +8,7 @@
             <asp:View ID="viwCategoryDetails" runat="server">
 
                 <user:CategoryView ID="UC_CategoryView" runat="server" />
+                <div class="spacer"></div>
 
                 <ajaxToolkit:TabContainer ID="tabContainer" runat="server" EnableTheming="False"
                     CssClass="tab">
