@@ -200,7 +200,7 @@ Partial Class ImageViewer
                                     '---------------------------------------
                                     'IN 'NEW PAGE' LARGE VIEW MODE
                                     '---------------------------------------
-                                    litSingleImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'NEW PAGE' LARGE VIEW MODE --><div class=""imageholder singleimage"" style=""cursor: pointer;height: " & numImageHeightMax & "px;"">"
+                                    litSingleImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'NEW PAGE' LARGE VIEW MODE --><div class=""imageholder singleimage hand"" style=""height: " & numImageHeightMax & "px;"">"
                                     litSingleImage.Text &= "<a target=""_blank"" href=""" & _
                                         "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>"
                                     litSingleImage.Text &= "<img alt=""" & strAltText & """ src=""" & _
@@ -213,8 +213,8 @@ Partial Class ImageViewer
                                     '---------------------------------------
                                     'IN 'AJAX' LARGE VIEW MODE
                                     '---------------------------------------
-                                    litSingleImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div title=""" & strAltText & """ class=""imageholder singleimage"" onclick=""javascript:ShowLargeViewPopup()"" " & _
-                                        "style=""cursor: pointer;height: " & numImageHeightMax & "px;"">"
+                                    litSingleImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div title=""" & strAltText & """ class=""imageholder singleimage hand"" onclick=""javascript:ShowLargeViewPopup()"" " & _
+                                        "style=""height: " & numImageHeightMax & "px;"">"
                                     litSingleImage.Text &= "<img alt=""" & strAltText & """ src=""" & _
                                         strImageMainViewStart & """ />"
                                     litSingleImage.Text &= "</div>" & vbCrLf
@@ -351,7 +351,7 @@ Partial Class ImageViewer
                         'IN 'NEW PAGE' LARGE VIEW MODE
                         'Direct link to the image itself
                         '---------------------------------------
-                        litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'NEW PAGE' LARGE VIEW MODE Direct link to the image itself --><div class=""imageholder"" style=""cursor: pointer;height: " & numImageHeightMax & "px;"">"
+                        litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'NEW PAGE' LARGE VIEW MODE Direct link to the image itself --><div class=""imageholder hand"" style=""height: " & numImageHeightMax & "px;"">"
                         litMainImage.Text &= "<a target=""_blank"" href=""" & _
                             "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>"
                         litMainImage.Text &= "<img alt=""" & strAltText & """ id=""placeholder" & strJSFunctionDifferentiate & """ src=""" & _
@@ -364,8 +364,8 @@ Partial Class ImageViewer
                         '---------------------------------------
                         'IN 'AJAX' LARGE VIEW MODE
                         '---------------------------------------
-                        litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div class=""imageholder"" onclick=""javascript:ShowLargeViewPopup()"" " & _
-                            "style=""cursor: pointer;height: " & numImageHeightMax & "px;"">"
+                        litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div class=""imageholder hand"" onclick=""javascript:ShowLargeViewPopup()"" " & _
+                            "style=""height: " & numImageHeightMax & "px;"">"
                         litMainImage.Text &= "<img alt=""" & strAltText & """ id=""placeholder" & strJSFunctionDifferentiate & """ src=""" & strImageMainViewStart & """ />" & vbCrLf
                         litMainImage.Text &= "</div>"
                         litLargeViewLink.Text = "<span onclick=""javascript:ShowLargeViewPopup()"">" & GetGlobalResourceObject("Product", "ContentText_LargeView") & "</span>"

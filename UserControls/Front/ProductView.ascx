@@ -11,9 +11,11 @@
 <script type="text/javascript" language="javascript">
     //<![CDATA[
 
-    //Show the large image popup
+    //Show the large image popup - but not on small screens
     function ShowLargeViewPopup() {
-        $find('cntMain_UC_ProductView_tbcProduct_tabMain_UC_PopUpLargeView_popMessage').show();
+        if ($(window).width() > 930) {
+            $find('cntMain_UC_ProductView_tbcProduct_tabMain_UC_PopUpLargeView_popMessage').show();
+        }
     }
 
     //Function to set URL for iframe of media popup, size it, and show it
