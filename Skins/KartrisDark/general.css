@@ -181,6 +181,7 @@ html>body .imageviewer .gallery .imageholder
 .product .promotions .singleimage       { float: left }
 .largeview                              { margin: 0 0 5px 0; float: left; }
 .largeview span                         { color: #ccc; cursor: pointer; font-weight: bold; padding: 0 0 0 5px; }
+.hand                                   { cursor: pointer; }
 /* 
 ========================================================================
 MEDIA (Video, audio, etc.)

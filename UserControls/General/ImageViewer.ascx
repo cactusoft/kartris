@@ -14,7 +14,7 @@
                     <div class="spacer">
                     </div>
                     <!-- Large view link -->
-                    <div class="largeview">
+                    <div class="largeview hide-for-small">
                         <asp:Literal ID="litLargeViewLink" runat="server"></asp:Literal></div>
                     <div class="spacer">
                     </div>
