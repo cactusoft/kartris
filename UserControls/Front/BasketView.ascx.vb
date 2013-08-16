@@ -637,27 +637,27 @@ Partial Class Templates_BasketView
 
     End Sub
 
-    Sub ProductName_Click(ByVal sender As Object, ByVal e As CommandEventArgs)
-        Dim strItemInfo As String
+    'Sub ProductName_Click(ByVal sender As Object, ByVal e As CommandEventArgs)
+    '    Dim strItemInfo As String
 
-        strItemInfo = E.CommandArgument
+    '    strItemInfo = E.CommandArgument
 
-        If strItemInfo <> "" Then
-            Try
-                Dim arrInfo As String() = Split(strItemInfo, ";")
-                If arrInfo(UBound(arrInfo)) <> "o" Then
-                    strItemInfo = ""
-                End If
-            Catch ex As Exception
-            End Try
-        End If
+    '    If strItemInfo <> "" Then
+    '        Try
+    '            Dim arrInfo As String() = Split(strItemInfo, ";")
+    '            If arrInfo(UBound(arrInfo)) <> "o" Then
+    '                strItemInfo = ""
+    '            End If
+    '        Catch ex As Exception
+    '        End Try
+    '    End If
 
-        Session("BasketItemInfo") = strItemInfo
+    '    Session("BasketItemInfo") = strItemInfo
 
-        Dim strURL As String = E.CommandName
-        Response.Redirect(strURL)
+    '    Dim strURL As String = E.CommandName
+    '    Response.Redirect(strURL)
 
-    End Sub
+    'End Sub
 
     Sub ApplyCoupon_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         Dim strCouponError As String = ""
@@ -788,22 +788,25 @@ Partial Class Templates_BasketView
     Protected Sub rptMiniBasket_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptMiniBasket.ItemDataBound
 
         For Each ctlMiniBasket As Control In e.Item.Controls
-            Select Case ctlMiniBasket.ID
-                Case "lnkProduct", "lnkBtnProduct"
-                    Dim objItem As New BasketItem
-                    objItem = e.Item.DataItem
 
-                    Dim strURL As String
-                    strURL = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, objItem.ProductID)
-                    If strURL.Contains("?") Then
-                        strURL = strURL & objItem.OptionLink
-                    Else
-                        strURL = strURL & Replace(objItem.OptionLink, "&", "?")
-                    End If
-                    CType(e.Item.FindControl("lnkBtnProduct"), LinkButton).CommandName = strURL
-                Case Else
+            Dim objItem As New BasketItem
+            objItem = e.Item.DataItem
 
-            End Select
+            Dim strURL, strOptions As String
+            strURL = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, objItem.ProductID)
+            strOptions = objItem.OptionLink
+
+            'Only add options to URL if there are some
+            If strOptions <> "&strOptions=0" Then
+                If strURL.Contains("?") Then
+                    strURL = strURL & objItem.OptionLink
+                Else
+                    strURL = strURL & Replace(objItem.OptionLink, "&", "?")
+                End If
+            End If
+
+            'Set navigate URL of link control
+            CType(e.Item.FindControl("lnkMiniBasketProduct"), HyperLink).NavigateUrl = strURL
         Next
 
     End Sub
@@ -825,13 +828,21 @@ Partial Class Templates_BasketView
                 End If
             End If
 
-            Dim strURL As String = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, objItem.ProductID)
-            If strURL.Contains("?") Then
-                strURL = strURL & objItem.OptionLink
-            Else
-                strURL = strURL & Replace(objItem.OptionLink, "&", "?")
+            Dim strURL, strOptions As String
+            strURL = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, objItem.ProductID)
+            strOptions = objItem.OptionLink
+
+            'Only add options to URL if there are some
+            If strOptions <> "&strOptions=0" Then
+                If strURL.Contains("?") Then
+                    strURL = strURL & objItem.OptionLink
+                Else
+                    strURL = strURL & Replace(objItem.OptionLink, "&", "?")
+                End If
             End If
-            CType(e.Item.FindControl("lnkBtnProductName"), LinkButton).CommandName = strURL
+
+            'Set navigate URL of link control
+            CType(e.Item.FindControl("lnkProduct"), HyperLink).NavigateUrl = strURL
 
             If LCase(objItem.CustomType) <> "n" Then
                 CType(e.Item.FindControl("lnkCustomize"), LinkButton).ToolTip = "(" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), objItem.CustomCost) & ")" & vbCrLf & objItem.CustomText
@@ -921,6 +932,7 @@ Partial Class Templates_BasketView
         popAddToBasket.Show()
         updPnlAddToBasket.Update()
     End Sub
+
     ''' <summary>
     ''' Handles adding custom product items to basket, we don't need to show popup here because productversions.ascx already does this
     ''' </summary>

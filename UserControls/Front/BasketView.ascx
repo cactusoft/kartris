@@ -198,9 +198,7 @@ MAIN BASKET
                                         <td colspan="2">
                                             <% End If%>
                                             <div class="name" style="cursor: pointer;">
-                                                <strong>
-                                                    <asp:LinkButton ID="lnkBtnProductName" runat="server" Text='<%# Server.HtmlEncode(Eval("ProductName")) %>'
-                                                        OnCommand="ProductName_Click" CommandArgument='<%#Eval("ID") & ";" & eval("VersionID") & ";" & eval("Quantity") & ";" & eval("ProductType") %> ' /></strong>
+                                                <strong><asp:HyperLink ID="lnkProduct" runat="server" Text='<%# Server.HTMLEncode(Eval("Quantity") & " X " &  Eval("ProductName")) %>'></asp:HyperLink></strong>
                                                 <asp:UpdatePanel ID="updCustomize" runat="server" UpdateMode="Conditional">
                                                     <ContentTemplate>
                                                         <asp:LinkButton ID="lnkCustomize" CssClass="link2 icon_new" runat="server" CommandName="Customize"
@@ -953,8 +951,7 @@ MINI BASKET
                                     <asp:Repeater ID="rptMiniBasket" runat="server">
                                         <ItemTemplate>
                                             <li class="minibasket_item">
-                                                <asp:LinkButton ID="lnkBtnProduct" runat="server" Text='<%# Server.HTMLEncode(Eval("Quantity") & " X " &  Eval("ProductName")) %>'
-                                                    OnCommand="ProductName_Click" CommandArgument='<%#Eval("ID") & ";" & eval("VersionID") & ";" & eval("Quantity") & ";" & eval("ProductType") %>' />
+                                                <asp:HyperLink ID="lnkMiniBasketProduct" runat="server" Text='<%# Server.HTMLEncode(Eval("Quantity") & " X " &  Eval("ProductName")) %>'></asp:HyperLink>
                                             </li>
                                         </ItemTemplate>
                                     </asp:Repeater>
