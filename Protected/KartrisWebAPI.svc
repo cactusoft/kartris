@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="VB" Debug="true" Service="KartrisWebAPI" CodeBehind="~/App_Code/KartrisWebAPI.vb" %>
