@@ -39,16 +39,35 @@ Partial Class UserControls_Back_FeedNews
         Dim strCacheKey As String = "NewsFeed"
         Dim xmlDoc As XDocument = Nothing
 
-        'Cache XML for 10 hrs to help save our server!
+        'We want to pull from cache if possible, it is
+        'faster and keeps traffic to kartris.com down
         If Cache.[Get](strCacheKey) Is Nothing Then
-            'Load XML from Kartris feed, use SSL if possible
+
+            'Put it in a try, in case a bad result is or some
+            'other problem like an error
             Try
-                xmlDoc = XDocument.Load("https://www.kartris.com/feed/news/?url=" & KartSettingsManager.GetKartConfig("general.webshopurl"))
+                'We've reworked this in v2.5004 to prevent timeouts
+                'if the kartris.com site where the feed is located
+                'is unreachable. We use the httpWebRequest so we can
+                'apply a timeout setting of 1 second.
+                Dim reqFeed As System.Net.HttpWebRequest = DirectCast(System.Net.WebRequest.Create("http://www.kartris.com/feed/news/?url=" & KartSettingsManager.GetKartConfig("general.webshopurl")), System.Net.HttpWebRequest)
+                reqFeed.Timeout = 1000 'milliseconds
+                Dim resFeed As System.Net.WebResponse = reqFeed.GetResponse()
+                Dim responseStream As Stream = resFeed.GetResponseStream()
+                Dim docXML As New XmlDocument()
+                docXML.Load(responseStream)
+                responseStream.Close()
+
+                'Set XDocument to the XML string we got back from feed
+                xmlDoc = XDocument.Parse(docXML.OuterXml)
+
+                'Add feed data to local cache for one hour
+                Cache.Insert(strCacheKey, XDocument.Parse(xmlDoc.ToString), Nothing, DateTime.Now.AddMinutes(60), TimeSpan.Zero)
             Catch ex As Exception
-                xmlDoc = XDocument.Load("http://www.kartris.com/feed/news/?url=" & KartSettingsManager.GetKartConfig("general.webshopurl"))
+                'Oh dear
             End Try
-            Cache.Insert(strCacheKey, XDocument.Parse(xmlDoc.ToString), Nothing, DateTime.Now.AddMinutes(600), TimeSpan.Zero)
         Else
+            'Pull feed data from cache
             xmlDoc = DirectCast(Cache.[Get](strCacheKey), XDocument)
         End If
 
