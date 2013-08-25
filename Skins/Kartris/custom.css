@@ -10,7 +10,7 @@ HORIZONTAL DROPDOWN MENU SYSTEM
 #menubar .top-bar-section li a:not(.button)
                                         { background-color: #ddd; color: #333; font-weight: normal; font-size: 70%; text-transform: uppercase; }
 /* Style top level links */
-#menubar .top-bar-section li            { border-left: solid 1px #fff; }
+#menubar .top-bar-section li            { border-right: solid 1px #fff; }
 #menubar .top-bar-section li a:hover
                                         { background-color:#eee; }
 #menubar .top-bar li.name span          { display: inline-block; padding: 0 0 0 10px; }

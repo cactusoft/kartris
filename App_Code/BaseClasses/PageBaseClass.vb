@@ -381,7 +381,7 @@ Public MustInherit Class PageBaseClass
         'by name - it should be named same as other skin
         'but with 'NonResponsive' added to name.
         '--------------------------------------------------
-        If Request.Browser.Browser = "IE" And Request.Browser.MajorVersion <= 9 Then
+        If Request.Browser.Browser = "IE" And Request.Browser.MajorVersion <= 8 Then
             Try
                 If strSkinOverride <> "" Then
                     'Look for template in the overridden skin

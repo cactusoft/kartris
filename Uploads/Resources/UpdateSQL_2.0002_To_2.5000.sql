@@ -1586,3 +1586,134 @@ INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_Fie
 GO
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_DeviceInstallID', N'Device Install ID', NULL, 2.5001, NULL, NULL, N'_Logins',1)
 GO
+/****** Object:  StoredProcedure [dbo].[_spKartrisLogins_Add]    Script Date: 01/23/2013 21:59:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Medz
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisLogins_Add]
+(
+	  @LOGIN_Username nvarchar(100),
+	  @LOGIN_Password nvarchar(100),
+	  @LOGIN_Live bit,
+	  @LOGIN_Orders bit,
+	  @LOGIN_Products bit,
+	  @LOGIN_Config bit,
+	  @LOGIN_Protected bit,
+	  @LOGIN_LanguageID smallint,
+	  @LOGIN_EmailAddress nvarchar(50),
+	  @LOGIN_Tickets bit,
+	  @LOGIN_SaltValue nvarchar(64),
+	  @LOGIN_PushNotifications nvarchar(max)
+)
+AS
+	SET NOCOUNT OFF;
+
+	INSERT INTO [tblKartrisLogins] (
+		  [LOGIN_Username]
+		  ,[LOGIN_Password]
+		  ,[LOGIN_Live]
+		  ,[LOGIN_Orders]
+		  ,[LOGIN_Products]
+		  ,[LOGIN_Config]
+		  ,[LOGIN_Protected]
+		  ,[LOGIN_LanguageID]
+		  ,[LOGIN_EmailAddress]
+		  ,[LOGIN_Tickets]
+		  ,[LOGIN_SaltValue]
+		  ,[LOGIN_PushNotifications])
+	VALUES (
+		  @LOGIN_Username ,
+		  @LOGIN_Password ,
+		  @LOGIN_Live ,
+		  @LOGIN_Orders,
+		  @LOGIN_Products ,
+		  @LOGIN_Config ,
+		  @LOGIN_Protected ,
+		  @LOGIN_LanguageID ,
+		  @LOGIN_EmailAddress ,
+		  @LOGIN_Tickets ,
+		  @LOGIN_SaltValue,
+		  @LOGIN_PushNotifications);
+	SELECT SCOPE_IDENTITY();
+GO
+/****** Object:  StoredProcedure [dbo].[_spKartrisLogins_UpdatePassword]    Script Date: 01/23/2013 21:59:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Medz
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisLogins_UpdatePassword]
+(
+	  @LOGIN_ID int,
+	  @LOGIN_Password nvarchar(100),
+	  @LOGIN_SaltValue nvarchar(64)
+)
+AS
+	SET NOCOUNT OFF;
+	UPDATE [tblKartrisLogins] SET 
+		   [LOGIN_Password] = @LOGIN_Password
+		  ,[LOGIN_SaltValue] = @LOGIN_SaltValue
+		WHERE LOGIN_ID = @LOGIN_ID;
+	SELECT @LOGIN_ID;
+GO
+/****** Object:  StoredProcedure [dbo].[_spKartrisLogins_Update]    Script Date: 01/23/2013 21:59:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Medz
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisLogins_Update]
+(
+	  @LOGIN_ID int,
+	  @LOGIN_Username nvarchar(100),
+	  @LOGIN_Password nvarchar(100),
+	  @LOGIN_Live bit,
+	  @LOGIN_Orders bit,
+	  @LOGIN_Products bit,
+	  @LOGIN_Config bit,
+	  @LOGIN_Protected bit,
+	  @LOGIN_LanguageID smallint,
+	  @LOGIN_EmailAddress nvarchar(50),
+	  @LOGIN_Tickets bit,
+	  @LOGIN_SaltValue nvarchar(64),
+	  @LOGIN_PushNotifications nvarchar(max)
+)
+AS
+IF @LOGIN_Password = ''
+		BEGIN
+			SET @LOGIN_Password = NULL;
+			SET @LOGIN_SaltValue = NULL;
+		END;
+	SET NOCOUNT OFF;
+
+
+	UPDATE [tblKartrisLogins] SET 
+		  [LOGIN_Username] = @LOGIN_Username
+		  ,[LOGIN_Password] = COALESCE (@LOGIN_Password, LOGIN_Password)
+		  ,[LOGIN_Live] = @LOGIN_Live
+		  ,[LOGIN_Orders] = @LOGIN_Orders
+		  ,[LOGIN_Products] = @LOGIN_Products
+		  ,[LOGIN_Config] = @LOGIN_Config
+		  ,[LOGIN_Protected] = @LOGIN_Protected
+		  ,[LOGIN_LanguageID] = @LOGIN_LanguageID
+		  ,[LOGIN_EmailAddress] = @LOGIN_EmailAddress
+		  ,[LOGIN_Tickets] = @LOGIN_Tickets
+		  ,[LOGIN_SaltValue] = COALESCE (@LOGIN_SaltValue, LOGIN_SaltValue)
+		  ,[LOGIN_PushNotifications] = @LOGIN_PushNotifications
+		WHERE LOGIN_ID = @LOGIN_ID;
+	SELECT @LOGIN_ID;
+GO

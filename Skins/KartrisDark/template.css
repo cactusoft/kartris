@@ -3,9 +3,9 @@
 MAIN LAYOUT
 ========================================================================
 */
-html                                    { background: #444; height:100%; overflow:scroll; overflow:-moz-scrollbars-vertical; overflow-x:hidden; overflow-y:scroll; }
-body									{ background-color: #111; min-height: 100%; }
-body.main                               { background: #444; height: 100%; }
+html                                    { background: #444; height:100%; overflow:scroll; overflow:-moz-scrollbars-vertical; overflow-x:hidden; overflow-y:hidden; }
+body									{ background-color: #111; min-height: 100%; overflow-y: hidden; }
+body.main                               { background: #444; height: 100%; overflow-y: scroll; }
 #container                              { background-color: #222; max-width: 900px; margin: 0 auto; min-height: 100%; }
 #centre_container                       { display:block; }
 /* 
