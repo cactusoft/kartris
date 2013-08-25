@@ -76,8 +76,7 @@ textarea {
   height: auto;
   min-height: 50px; }
 
-select {
-  width: 100%; }
+select { }
 
 /* Grid HTML Classes */
 .row {

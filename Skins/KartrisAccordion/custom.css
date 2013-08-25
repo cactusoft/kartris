@@ -75,7 +75,7 @@ Special CSS rules for small screens, large screens, touch, etc.
 #categorymenu .accordion .AccordionContent ul
                                         { margin: 0; padding: 0; }
 #categorymenu .accordion .AccordionContent a
-                                        { display: block; border-top: solid 1px #ccc; margin: 1px 0 0 0; padding: 1px 4px 1px 10px; color: #333; overflow: hidden; text-decoration: none; }
+                                        { float: left; width: 100%; display: inline-block; border-top: solid 1px #ccc; margin: 1px 0 0 0; padding: 1px 4px 1px 10px; color: #333; overflow: hidden; text-decoration: none; }
 #categorymenu .accordion .AccordionContent a:hover
                                         { color: #fff; background-color: #666; }
 #categorymenu .accordion .AccordionContent li
