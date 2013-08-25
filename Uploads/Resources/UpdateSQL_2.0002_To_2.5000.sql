@@ -1596,7 +1596,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-ALTER PROCEDURE [dbo].[_spKartrisLogins_Add]
+CREATE PROCEDURE [dbo].[_spKartrisLogins_Add]
 (
 	  @LOGIN_Username nvarchar(100),
 	  @LOGIN_Password nvarchar(100),
@@ -1676,7 +1676,7 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-ALTER PROCEDURE [dbo].[_spKartrisLogins_Update]
+CREATE PROCEDURE [dbo].[_spKartrisLogins_Update]
 (
 	  @LOGIN_ID int,
 	  @LOGIN_Username nvarchar(100),
