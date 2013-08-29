@@ -121,48 +121,46 @@ Partial Class UserControls_Back_ShippingRates
     End Sub
 
     Protected Sub rptRates_ItemCreated(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptRates.ItemCreated
-        If e.Item.ItemType = ListItemType.AlternatingItem OrElse e.Item.ItemType = ListItemType.Item Then
+        If e.Item.ItemType = ListItemType.AlternatingItem OrElse e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.Footer Then
             'dynamically create the shipping gateways checkboxes
             Dim strPaymentMethods As String = KartSettingsManager.GetKartConfig("frontend.payment.gatewayslist")
 
             Dim arrPaymentsMethods As String() = Split(strPaymentMethods, ",")
-            Try
-                For Each strGatewayEntry As String In arrPaymentsMethods
+
+            For Each strGatewayEntry As String In arrPaymentsMethods
+                Try
                     Dim arrGateway As String() = Split(strGatewayEntry, "::")
-                    If UBound(arrGateway) = 3 Then
-                        If arrGateway(3) = "s" And LCase(arrGateway(1)) <> "off" Then
+                    If UBound(arrGateway) = 4 Then
+                        If arrGateway(4) = "s" And LCase(arrGateway(1)) = "on" Then
                             Dim chkGateway As New CheckBox
                             chkGateway.ID = "chkHigherOrder" & arrGateway(0)
+                            chkGateway.Text = arrGateway(0)
                             CType(e.Item.FindControl("phdHigherOrderGateways"), PlaceHolder).Controls.Add(chkGateway)
+
                             Dim chkNew As New CheckBox
                             chkNew.ID = "chkNewOrder" & arrGateway(0)
-                            CType(e.Item.FindControl("phdAddNewGateways"), PlaceHolder).Controls.Add(chkNew)
+                            chkNew.Text = arrGateway(0)
+                            CType(rptRates.Controls(rptRates.Controls.Count - 1).Controls(0).FindControl("phdAddNewGateways"), PlaceHolder).Controls.Add(chkNew)
 
-                            Dim lblGateway As Label = New Label()
-                            lblGateway.Text = arrGateway(0)
-                            lblGateway.ID = "lbl" & arrGateway(0)
-                            CType(e.Item.FindControl("phdHigherOrderGateways"), PlaceHolder).Controls.Add(lblGateway)
-                            Dim lblNew As New Label
-                            lblNew.ID = "lblNew" & arrGateway(0)
-                            lblNew.Text = arrGateway(0)
-                            CType(e.Item.FindControl("phdAddNewGateways"), PlaceHolder).Controls.Add(lblNew)
+
                             blnShippingGatewaysEnabled = True
                         End If
                     Else
                         Throw New Exception("Invalid gatewaylist config setting!")
                     End If
-                Next
-            Catch
+                Catch
+                    'oh no!
+                End Try
+            Next
 
-            End Try
-            If Not blnShippingGatewaysEnabled Then CType(rptRates.Controls(0).Controls(0).FindControl("litShippingGateway"), Literal).Text = ""
+            'If Not blnShippingGatewaysEnabled Then CType(rptRates.Controls(0).Controls(0).FindControl("litShippingGateway"), Literal).Text = ""
 
         End If
     End Sub
 
     Protected Sub rptRates_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptRates.ItemDataBound
         If e.Item.ItemType = ListItemType.AlternatingItem OrElse e.Item.ItemType = ListItemType.Item Then
-            If CDbl(CType(e.Item.FindControl("litBoundary"), Literal).Text) >= 999999 Then
+            If CDbl(CType(e.Item.FindControl("litBoundary"), Literal).Text) >= 99999999 Then
                 CType(e.Item.FindControl("phdHighRates"), PlaceHolder).Visible = True
             Else
                 CType(e.Item.FindControl("phdNormalRates"), PlaceHolder).Visible = True
@@ -172,10 +170,11 @@ Partial Class UserControls_Back_ShippingRates
             CType(e.Item.FindControl("txtHigherOrdersRate"), TextBox).Text = _
                 _HandleDecimalValues(CType(e.Item.FindControl("txtHigherOrdersRate"), TextBox).Text)
 
-            If Not blnShippingGatewaysEnabled Then CType(e.Item.FindControl("litS_ShippingGateways"), Literal).Text = ""
+            'If Not blnShippingGatewaysEnabled Then CType(e.Item.FindControl("litS_ShippingGateways"), Literal).Text = ""
 
             'tick the shipping gateways checkboxes based on the S_ShippingGateways field
             Dim strShippingGateways As String = Trim(CType(e.Item.FindControl("litS_ShippingGateways"), Literal).Text)
+
             If Not String.IsNullOrEmpty(strShippingGateways) Then
                 CType(e.Item.FindControl("litS_ShippingRate"), Literal).Text = "-"
                 CType(e.Item.FindControl("litCUR_ISOCode3"), Literal).Text = "-"
@@ -189,6 +188,32 @@ Partial Class UserControls_Back_ShippingRates
                     Next
                 Next
             End If
+        ElseIf e.Item.ItemType = ListItemType.Footer Then
+            'do something else
+            'dynamically create the shipping gateways checkboxes
+            Dim strPaymentMethods As String = KartSettingsManager.GetKartConfig("frontend.payment.gatewayslist")
+
+            Dim arrPaymentsMethods As String() = Split(strPaymentMethods, ",")
+
+            For Each strGatewayEntry As String In arrPaymentsMethods
+                Try
+                    Dim arrGateway As String() = Split(strGatewayEntry, "::")
+                    If UBound(arrGateway) = 4 Then
+                        If arrGateway(4) = "s" And LCase(arrGateway(1)) = "on" Then
+                            Dim chkNew As New CheckBox
+                            chkNew.ID = "chkNewOrder" & arrGateway(0)
+                            chkNew.Text = arrGateway(0)
+                            CType(rptRates.Controls(rptRates.Controls.Count - 1).Controls(0).FindControl("phdAddNewGateways"), PlaceHolder).Controls.Add(chkNew)
+
+                            blnShippingGatewaysEnabled = True
+                        End If
+                    Else
+                        Throw New Exception("Invalid gatewaylist config setting!")
+                    End If
+                Catch
+                    'oh no!
+                End Try
+            Next
         End If
     End Sub
 
