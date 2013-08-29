@@ -29,9 +29,11 @@
                         <th>
                             <asp:Literal ID="litContentTextPrice" runat="server" Text="<%$ Resources: _Kartris, ContentText_Price %>" />
                         </th>
+                        <% If UseShippingGateways() Then %>
                         <th>
                             <asp:Literal ID="litShippingGateway" runat="server" Text="Shipping Gateway" />
                         </th>
+                        <% End If%>
                         <th>&nbsp;</th>
                     </tr>
                 </HeaderTemplate>
@@ -56,9 +58,11 @@
                                 <asp:Literal ID="litCUR_ISOCode3" runat="server" Text='<%# Eval("CUR_Symbol") %>' />
                                 <asp:Literal ID="litS_ShippingRate" runat="server" Text='<%# FormatAsCurrency(Eval("S_ShippingRate")) %>' />
                             </td>
+                            <% If UseShippingGateways() Then %>
                             <td>
                                 <asp:Literal ID="litS_ShippingGateways" runat="server" Text='<%# Eval("S_ShippingGateways") %>' />
                                 </td>
+                            <% End If%>
                             <td>
                                 <asp:UpdatePanel ID="updDelete" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
@@ -87,11 +91,12 @@
                                 <ajaxToolkit:FilteredTextBoxExtender ID="filHigherOrdersRate" runat="server" TargetControlID="txtHigherOrdersRate"
                                     FilterType="Numbers,Custom" FilterMode="ValidChars" ValidChars=".," />
                             </td>
+                            <% If UseShippingGateways() Then %>
                             <td>
-                                <span class="checkbox">
-                                    <asp:PlaceHolder ID="phdHigherOrderGateways" runat="server"></asp:PlaceHolder>
-                                </span>
+                                <asp:TextBox ID="txtGatewaysMain" runat="server" Text='<%# Eval("S_ShippingGateways") %>'
+                                    CssClass="midtext" MaxLength="8" />
                             </td>
+                            <% End If%>
                             <td>
                                 <asp:UpdatePanel ID="updUpdateButton" runat="server" UpdateMode="Conditional" RenderMode="Inline">
                                     <ContentTemplate>
@@ -132,11 +137,13 @@
                                     CssClass="error" Display="Dynamic" ErrorMessage="*" ForeColor="" SetFocusOnError="true"
                                     ValidationGroup='<%# "NewRate" & Eval("S_ID") %>' ValidationExpression="<%$ AppSettings:DecimalRegex %>" />
                             </td>
+                            <% If UseShippingGateways() Then %>
                             <td>
-                                <span class="checkbox">
-                                    <asp:PlaceHolder ID="phdAddNewGateways" runat="server" />
-                                </span>
+                                <asp:TextBox ID="txtGatewaysAdd" runat="server"
+                                    CssClass="midtext" MaxLength="8" />
                                 </td>
+                            <% End If%>
+
                             <td>
                                 <asp:UpdatePanel ID="updAddButton" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
