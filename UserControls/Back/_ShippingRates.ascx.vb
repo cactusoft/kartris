@@ -108,7 +108,7 @@ Partial Class UserControls_Back_ShippingRates
 
     Protected Sub rptRates_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptRates.ItemDataBound
         If e.Item.ItemType = ListItemType.AlternatingItem OrElse e.Item.ItemType = ListItemType.Item Then
-            If CDbl(CType(e.Item.FindControl("litBoundary"), Literal).Text) >= 99999999 Then
+            If CDbl(CType(e.Item.FindControl("litBoundary"), Literal).Text) >= 99999 Then
                 CType(e.Item.FindControl("phdHighRates"), PlaceHolder).Visible = True
             Else
                 CType(e.Item.FindControl("phdNormalRates"), PlaceHolder).Visible = True
