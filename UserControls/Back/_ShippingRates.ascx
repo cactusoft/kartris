@@ -32,6 +32,7 @@
                         <th>
                             <asp:Literal ID="litShippingGateway" runat="server" Text="Shipping Gateway" />
                         </th>
+                        <th>&nbsp;</th>
                     </tr>
                 </HeaderTemplate>
                 <ItemTemplate>
@@ -57,6 +58,8 @@
                             </td>
                             <td>
                                 <asp:Literal ID="litS_ShippingGateways" runat="server" Text='<%# Eval("S_ShippingGateways") %>' />
+                                </td>
+                            <td>
                                 <asp:UpdatePanel ID="updDelete" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
                                         <asp:LinkButton ID="lnkBtnDelete" runat="server" Text="<%$ Resources: _Kartris, FormButton_Delete %>"
@@ -83,18 +86,20 @@
                                     ValidationGroup='<%# "HighOrders" & Eval("S_ID") %>' ValidationExpression="<%$ AppSettings:DecimalRegex %>" />
                                 <ajaxToolkit:FilteredTextBoxExtender ID="filHigherOrdersRate" runat="server" TargetControlID="txtHigherOrdersRate"
                                     FilterType="Numbers,Custom" FilterMode="ValidChars" ValidChars=".," />
+                            </td>
+                            <td>
                                 <span class="checkbox">
                                     <asp:PlaceHolder ID="phdHigherOrderGateways" runat="server"></asp:PlaceHolder>
                                 </span>
+                            </td>
+                            <td>
                                 <asp:UpdatePanel ID="updUpdateButton" runat="server" UpdateMode="Conditional" RenderMode="Inline">
                                     <ContentTemplate>
                                         <asp:LinkButton ID="lnkBtnUpdate" runat="server" Text="<%$ Resources: _Kartris, FormButton_Update %>"
                                             CommandName="UpdateRate" CommandArgument='<%# Eval("S_ID") %>' ValidationGroup='<%# "HighOrders" & Eval("S_ID") %>'
-                                            CssClass="linkbutton icon_edit floatright" />
+                                            CssClass="linkbutton icon_edit" />
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
-                            </td>
-                            <td>
                                 <asp:UpdatePanel ID="updDeleteAllHigher" runat="server" UpdateMode="Conditional" RenderMode="Inline">
                                     <ContentTemplate>
                                         <asp:LinkButton ID="lnkBtnDeleteAllHigher" runat="server" Text="<%$ Resources: _Kartris, FormButton_Delete %>"
@@ -111,11 +116,8 @@
                                 <% '------------------------------------------------------- %>
                                 <% 'Need to display bands as either WEIGHT or ORDER VALUE %>
                                 <% '------------------------------------------------------- %>
-                                <asp:Literal ID="litContentTextUpTo2" runat="server" Text="<%$ Resources: _Shipping, ContentText_Upto %>" />&nbsp;<% If KartSettingsManager.GetKartConfig("frontend.checkout.shipping.calcbyweight") <> "y" Then%>
-                                <asp:Literal ID="litCUR_ISOCode5" runat="server" Text='<%# Eval("CUR_Symbol") %>' />
-                                <% End If%><asp:TextBox ID="txtNewBoundary" runat="server" CssClass="midtext" ValidationGroup='<%# "NewRate" & Eval("S_ID") %>'
-                                    MaxLength="8" /><% If KartSettingsManager.GetKartConfig("frontend.checkout.shipping.calcbyweight") = "y" Then%>&nbsp;<%= KartSettingsManager.GetKartConfig("general.weightunit") %>
-                                <% End If%>
+                                <asp:Literal ID="litContentTextUpTo2" runat="server" Text="<%$ Resources: _Shipping, ContentText_Upto %>" />&nbsp;<asp:TextBox ID="txtNewBoundary" runat="server" CssClass="midtext" ValidationGroup='<%# "NewRate" & Eval("S_ID") %>'
+                                    MaxLength="8" />
                                 <asp:RegularExpressionValidator ID="valRegexNewBoundary" runat="server" ControlToValidate="txtNewBoundary"
                                     CssClass="error" Display="Dynamic" ErrorMessage="*" ForeColor="" SetFocusOnError="true"
                                     ValidationGroup='<%# "NewRate" & Eval("S_ID") %>' ValidationExpression="<%$ AppSettings:DecimalRegex %>" />
@@ -134,6 +136,8 @@
                                 <span class="checkbox">
                                     <asp:PlaceHolder ID="phdAddNewGateways" runat="server" />
                                 </span>
+                                </td>
+                            <td>
                                 <asp:UpdatePanel ID="updAddButton" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
                                         <asp:LinkButton ID="lnkBtnAdd" runat="server" Text="<%$ Resources: _Kartris, FormButton_Add %>"
