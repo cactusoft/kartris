@@ -51,34 +51,14 @@ Partial Class UserControls_Back_ShippingRates
                 _UC_PopupMsg_Rate.ShowConfirmation(MESSAGE_TYPE.Confirmation, GetGlobalResourceObject("_Kartris", "ContentText_ConfirmDeleteItemUnspecified"))
 
             Case "UpdateRate"
-
-                Dim phdHigherOrdersGateways As PlaceHolder = CType(e.Item.FindControl("phdHigherOrderGateways"), PlaceHolder)
-                For Each chkGateway As Control In phdHigherOrdersGateways.Controls
-                    If InStr(chkGateway.ID, "chkHigherOrder") Then
-                        If CType(chkGateway, CheckBox).Checked = True Then
-                            If strGatewaysList <> "" Then strGatewaysList += ","
-                            strGatewaysList += Mid(chkGateway.ID, 15)
-                        End If
-                    End If
-                Next
-
                 UpdateShippingRate(CInt(e.CommandArgument), _
-                                   HandleDecimalValues(CType(e.Item.FindControl("txtHigherOrdersRate"), TextBox).Text), strGatewaysList)
+                                   HandleDecimalValues(CType(e.Item.FindControl("txtHigherOrdersRate"), TextBox).Text), _
+                                   CType(e.Item.FindControl("txtGatewaysMain"), TextBox).Text)
 
             Case "NewRate"
-
-                Dim phdAddNewGateways As PlaceHolder = CType(e.Item.FindControl("phdAddNewGateways"), PlaceHolder)
-                For Each chkGateway As Control In phdAddNewGateways.Controls
-                    If InStr(chkGateway.ID, "chkNewOrder") Then
-                        If CType(chkGateway, CheckBox).Checked = True Then
-                            If strGatewaysList <> "" Then strGatewaysList += ","
-                            strGatewaysList += Mid(chkGateway.ID, 12)
-                        End If
-                    End If
-                Next
-
-                AddNewShippingRate(HandleDecimalValues(CType(e.Item.FindControl("txtNewBoundary"), TextBox).Text), _
-                                   HandleDecimalValues(CType(e.Item.FindControl("txtNewRate"), TextBox).Text), strGatewaysList)
+                AddNewShippingRate(HandleDecimalValues(CType(rptRates.Controls(rptRates.Controls.Count - 1).Controls(0).FindControl("txtNewBoundary"), TextBox).Text), _
+                                   HandleDecimalValues(CType(rptRates.Controls(rptRates.Controls.Count - 1).Controls(0).FindControl("txtNewRate"), TextBox).Text), _
+                                   CType(rptRates.Controls(rptRates.Controls.Count - 1).Controls(0).FindControl("txtGatewaysAdd"), TextBox).Text)
 
         End Select
     End Sub
@@ -122,39 +102,7 @@ Partial Class UserControls_Back_ShippingRates
 
     Protected Sub rptRates_ItemCreated(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptRates.ItemCreated
         If e.Item.ItemType = ListItemType.AlternatingItem OrElse e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.Footer Then
-            'dynamically create the shipping gateways checkboxes
-            Dim strPaymentMethods As String = KartSettingsManager.GetKartConfig("frontend.payment.gatewayslist")
-
-            Dim arrPaymentsMethods As String() = Split(strPaymentMethods, ",")
-
-            For Each strGatewayEntry As String In arrPaymentsMethods
-                Try
-                    Dim arrGateway As String() = Split(strGatewayEntry, "::")
-                    If UBound(arrGateway) = 4 Then
-                        If arrGateway(4) = "s" And LCase(arrGateway(1)) = "on" Then
-                            Dim chkGateway As New CheckBox
-                            chkGateway.ID = "chkHigherOrder" & arrGateway(0)
-                            chkGateway.Text = arrGateway(0)
-                            CType(e.Item.FindControl("phdHigherOrderGateways"), PlaceHolder).Controls.Add(chkGateway)
-
-                            Dim chkNew As New CheckBox
-                            chkNew.ID = "chkNewOrder" & arrGateway(0)
-                            chkNew.Text = arrGateway(0)
-                            CType(rptRates.Controls(rptRates.Controls.Count - 1).Controls(0).FindControl("phdAddNewGateways"), PlaceHolder).Controls.Add(chkNew)
-
-
-                            blnShippingGatewaysEnabled = True
-                        End If
-                    Else
-                        Throw New Exception("Invalid gatewaylist config setting!")
-                    End If
-                Catch
-                    'oh no!
-                End Try
-            Next
-
-            'If Not blnShippingGatewaysEnabled Then CType(rptRates.Controls(0).Controls(0).FindControl("litShippingGateway"), Literal).Text = ""
-
+            'Nothing here at moment...
         End If
     End Sub
 
@@ -170,50 +118,16 @@ Partial Class UserControls_Back_ShippingRates
             CType(e.Item.FindControl("txtHigherOrdersRate"), TextBox).Text = _
                 _HandleDecimalValues(CType(e.Item.FindControl("txtHigherOrdersRate"), TextBox).Text)
 
-            'If Not blnShippingGatewaysEnabled Then CType(e.Item.FindControl("litS_ShippingGateways"), Literal).Text = ""
-
             'tick the shipping gateways checkboxes based on the S_ShippingGateways field
             Dim strShippingGateways As String = Trim(CType(e.Item.FindControl("litS_ShippingGateways"), Literal).Text)
 
             If Not String.IsNullOrEmpty(strShippingGateways) Then
                 CType(e.Item.FindControl("litS_ShippingRate"), Literal).Text = "-"
                 CType(e.Item.FindControl("litCUR_ISOCode3"), Literal).Text = "-"
-                Dim phdHigherOrdersGateways As PlaceHolder = CType(e.Item.FindControl("phdHigherOrderGateways"), PlaceHolder)
-                Dim arrGateways As String() = Split(strShippingGateways, ",")
-                For x As Integer = 0 To arrGateways.Count - 1
-                    For Each chkGateway As Control In phdHigherOrdersGateways.Controls
-                        If chkGateway.ID = "chkHigherOrder" & arrGateways(x) Then
-                            CType(chkGateway, CheckBox).Checked = True
-                        End If
-                    Next
-                Next
             End If
         ElseIf e.Item.ItemType = ListItemType.Footer Then
-            'do something else
-            'dynamically create the shipping gateways checkboxes
-            Dim strPaymentMethods As String = KartSettingsManager.GetKartConfig("frontend.payment.gatewayslist")
-
-            Dim arrPaymentsMethods As String() = Split(strPaymentMethods, ",")
-
-            For Each strGatewayEntry As String In arrPaymentsMethods
-                Try
-                    Dim arrGateway As String() = Split(strGatewayEntry, "::")
-                    If UBound(arrGateway) = 4 Then
-                        If arrGateway(4) = "s" And LCase(arrGateway(1)) = "on" Then
-                            Dim chkNew As New CheckBox
-                            chkNew.ID = "chkNewOrder" & arrGateway(0)
-                            chkNew.Text = arrGateway(0)
-                            CType(rptRates.Controls(rptRates.Controls.Count - 1).Controls(0).FindControl("phdAddNewGateways"), PlaceHolder).Controls.Add(chkNew)
-
-                            blnShippingGatewaysEnabled = True
-                        End If
-                    Else
-                        Throw New Exception("Invalid gatewaylist config setting!")
-                    End If
-                Catch
-                    'oh no!
-                End Try
-            Next
+            'If we ever needed to do something just to footer rows,
+            'it would go here
         End If
     End Sub
 
@@ -270,6 +184,24 @@ Partial Class UserControls_Back_ShippingRates
     'Convenient way to format currency (e.g. 0.00) 
     Function FormatAsCurrency(ByVal numValue As Double) As String
         Return CurrenciesBLL.FormatCurrencyPrice(HttpContext.Current.Session("CUR_ID"), numValue, False)
+    End Function
+
+    'Function to make it simple to check
+    'if site is using shipping gateways
+    Function UseShippingGateways() As Boolean
+        Dim strPaymentMethods As String = KartSettingsManager.GetKartConfig("frontend.payment.gatewayslist")
+        Dim arrPaymentsMethods As String() = Split(strPaymentMethods, ",")
+        Dim blnUseShippingGateways As Boolean = False
+
+        For Each strGatewayEntry As String In arrPaymentsMethods
+            Dim arrGateway As String() = Split(strGatewayEntry, "::")
+            If UBound(arrGateway) = 4 Then
+                If arrGateway(4) = "s" And LCase(arrGateway(1)) = "on" Then
+                    blnUseShippingGateways = True
+                End If
+            End If
+        Next
+        Return blnUseShippingGateways
     End Function
 
 End Class
