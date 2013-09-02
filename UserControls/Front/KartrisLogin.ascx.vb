@@ -219,8 +219,7 @@ Partial Class KartrisLogin
             strEmail = txtNewEmail.Text
             Session("C_Email") = txtNewEmail.Text
             Dim strPassword As String = ""
-            If strUserPasswordRule.ToLower = "automatic" Or
-                String.IsNullOrEmpty(strNewPassword) Then strPassword = Membership.GeneratePassword(10, 0)
+            If strUserPasswordRule.ToLower = "automatic" Or String.IsNullOrEmpty(strNewPassword) Then strPassword = Membership.GeneratePassword(10, 0) Else strPassword = strNewPassword
             Session("_NewPassword") = strPassword
             Session("blnLoginCleared") = True
             litFailureText.Text = ""
