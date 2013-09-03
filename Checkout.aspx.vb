@@ -1353,7 +1353,8 @@ Partial Class _Checkout
                                 objOrder.Billing.CountryName = .Country.Name
                                 objOrder.Billing.Postcode = .Postcode
                                 objOrder.Billing.Phone = .Phone
-                                objOrder.Billing.CountryIsoCode = .Country.IsoCode
+                            objOrder.Billing.CountryIsoCode = .Country.IsoCode
+                            objOrder.Billing.Company = .Company
                             End With
                         End If
 
@@ -1369,7 +1370,8 @@ Partial Class _Checkout
                                     objOrder.Shipping.CountryName = .Country.Name
                                     objOrder.Shipping.Postcode = .Postcode
                                     objOrder.Shipping.Phone = .Phone
-                                    objOrder.Shipping.CountryIsoCode = .Country.IsoCode
+                                objOrder.Shipping.CountryIsoCode = .Country.IsoCode
+                                objOrder.Shipping.Company = .Company
                                 End With
                             End If
                         End If
