@@ -21,6 +21,11 @@
 strKartrisWebShopURL = "http://localhost:52038/Kartris/"
 
 '========================================================================
+'Web API Key set in your Kartris' web.config
+strKartrisWebAPIKey = "dXNlcm5hbWU6cGFzc3dvcmQ="
+'========================================================================
+
+'========================================================================
 'Kartris method Name that you want to execute
 '========================================================================
 'Name of the method that you want to execute (fully qualified name, case-sensitive) e.g. TaxBLL.GetTaxRate (ClassName.MethodName)
@@ -39,7 +44,7 @@ strParametersXML = "<Parameter Name=""numTaxID"" Type=""Byte"" Value=""2""/>"
 
 'LET'S START!!
 
-Const SoapServer = strKartrisWebShopURL & "Protected/KartrisWebAPI.svc"
+SoapServer = strKartrisWebShopURL & "Protected/KartrisWebAPI.svc"
 
 Set requestDoc = WScript.CreateObject("MSXML2.DOMDocument.6.0")
 Set root = requestDoc.createNode(1, "Envelope", "http://schemas.xmlsoap.org/soap/envelope/")
@@ -75,6 +80,7 @@ WSCript.Echo  "Sending Request: " & vbcrlf & requestDoc.xml
 
 set xmlhttp = WScript.CreateObject("MSXML2.ServerXMLHTTP.6.0")
 xmlhttp.Open "POST", SoapServer, False
+xmlhttp.setRequestHeader "Authorization", strKartrisWebAPIKey
 xmlhttp.setRequestHeader "Content-Type", "text/xml"
 ' set SOAPAction as appropriate for the operation '
 xmlhttp.setRequestHeader "SOAPAction", "http://tempuri.org/IKartrisWebAPI/Execute"

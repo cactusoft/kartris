@@ -124,9 +124,20 @@ Imports System.ServiceModel.Activation
                                 Case "string"
                                     objParam = strValue
                                 Case "integer"
-                                    objParam = CInt(strValue)
+                                    If String.IsNullOrEmpty(strValue) Then
+                                        objParam = DirectCast(objParam, Integer)
+                                        objParam = Nothing
+                                    Else
+                                        objParam = CInt(strValue)
+                                    End If
+
                                 Case "boolean"
-                                    If strValue.ToLower = "true" Then objParam = True Else objParam = False
+                                    If String.IsNullOrEmpty(strValue) Then
+                                        objParam = DirectCast(objParam, Boolean)
+                                        objParam = Nothing
+                                    Else
+                                        If strValue.ToLower = "true" Then objParam = True Else objParam = False
+                                    End If
                                 Case "address"
                                     Dim objAddress As KartrisClasses.Address = Payment.Deserialize(strValue, GetType(KartrisClasses.Address))
                                     objParam = objAddress
@@ -143,12 +154,31 @@ Imports System.ServiceModel.Activation
                                 Case "datatable"
                                     Dim tblObject As DataTable = Payment.Deserialize(strValue, GetType(DataTable))
                                     objParam = tblObject
+                                Case "datarow"
+                                    Dim tblObject As DataRow = Payment.Deserialize(strValue, GetType(DataRow))
+                                    objParam = tblObject
                                 Case "double"
                                     objParam = CDbl(strValue)
                                 Case "byte"
                                     objParam = CByte(strValue)
                                 Case "single"
-                                    objParam = CSng(strValue)
+                                    If String.IsNullOrEmpty(strValue) Then
+                                        objParam = DirectCast(objParam, Single)
+                                        objParam = Nothing
+                                    Else
+                                        objParam = CSng(strValue)
+                                    End If
+                                Case "date"
+                                    If String.IsNullOrEmpty(strValue) Then
+                                        objParam = DirectCast(objParam, Date)
+                                        objParam = Nothing
+                                    Else
+                                        objParam = CDate(strValue)
+                                    End If
+                                Case "orders_list_callmode"
+                                    Dim callmode As OrdersBLL.ORDERS_LIST_CALLMODE
+                                    callmode = strValue
+                                    objParam = callmode
                             End Select
 
                             Params(intIndex) = objParam
