@@ -64,6 +64,7 @@
 			<siteMapNode title="$resources:_Kartris,BackMenu_DBAdmin" url="~/Admin/_DBAdmin.aspx" Value="config" />
 			<siteMapNode title="$resources:_Kartris,ContentText_PaymentShippingGateways" url="~/Admin/_PaymentGateways.aspx" Value="config" />
 			<siteMapNode title="$resources:_Kartris,BackMenu_QuickBooks" url="~/Admin/_QuickBooks.aspx" Value="config" />
+      <siteMapNode title="$resources:_Kartris,BackMenu_Linnworks" url="~/Admin/_Linnworks.aspx" Value="config" />
 			<siteMapNode title="$resources:_Kartris,BackMenu_Revisions" url="~/Admin/_Revisions.aspx" />
 		</siteMapNode>
 
