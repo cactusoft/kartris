@@ -66,6 +66,23 @@ Public Class OrdersBLL
 #End Region
 
 #Region "Backend Methods"
+    Public Shared Function _GetTileAppData(ByVal OrderSent As String, ByVal OrderInvoiced As String, ByVal OrderPaid As String,
+                                      ByVal OrderShipped As String, ByVal OrderCancelled As String, ByVal DateRangeStart As Date,
+                                      ByVal DateRangeEnd As Date, ByVal intRangeInMinutes As Integer) As DataTable
+        Try
+
+            ' Perform the update on the DataTable
+            Return Adptr._GetTileAppData(OrderSent, OrderInvoiced, OrderPaid, OrderShipped, OrderCancelled,
+                                  DateRangeStart, DateRangeEnd, intRangeInMinutes)
+            ' If we reach here, no errors, so commit the transaction
+
+        Catch ex As Exception
+            ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
+            ' If we reach here, there was an error, so rollback the transaction
+            Return Nothing
+        End Try
+    End Function
+
     Public Shared Sub _Delete(ByVal O_ID As Integer, ByVal blnReturnStock As Boolean)
         Try
 
@@ -390,7 +407,7 @@ Public Class OrdersBLL
                     .Parameters.AddWithValue("@Payment_CurrencyRate", Payment_ExchangeRate)
                     intNewPaymentID = .ExecuteScalar
                 End With
-                
+
 
                 If lcLinkedOrders.Count > 0 Then
                     For Each item As ListItem In lcLinkedOrders

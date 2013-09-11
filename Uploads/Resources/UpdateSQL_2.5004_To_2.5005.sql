@@ -275,3 +275,126 @@ BEGIN
 END
 
 GO
+/****** Object:  StoredProcedure [dbo].[_spKartrisOrders_GetByStatus]    Script Date: 09/04/2013 10:00:59 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		Medz
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisOrders_GetTileAppData]
+(
+	@Sent varchar(5),
+	@Invoiced varchar(5),
+	@Paid varchar(5),
+	@Shipped varchar(5),
+	@Cancelled varchar(5),
+	@DateRangeStart smalldatetime = NULL,
+	@DateRangeEnd smalldatetime = NULL,
+	@RangeInMinutes int = NULL
+)
+AS
+BEGIN
+	
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	DECLARE @O_Sent bit;
+	DECLARE @O_Invoiced bit;
+	DECLARE @O_Paid bit;
+	DECLARE @O_Shipped bit ;
+	DECLARE @O_Cancelled bit ;
+	DECLARE @O_DateRangeStart smalldatetime;
+	DECLARE @O_DateRangeEnd smalldatetime;
+	
+	IF @Sent = 'true'
+	BEGIN
+		SET @O_Sent = 1;
+	END
+	ELSE IF @Sent = 'false'
+	BEGIN
+		SET @O_Sent = 0;
+	END
+	ELSE
+	BEGIN
+		SET @O_Sent = NULL;
+	END
+	
+	IF @Invoiced = 'true'
+	BEGIN
+		SET @O_Invoiced = 1;
+	END
+	ELSE IF @Invoiced = 'false'
+	BEGIN
+		SET @O_Invoiced = 0;
+	END
+	ELSE
+	BEGIN
+		SET @O_Invoiced = NULL;
+	END
+	
+	IF @Paid = 'true'
+	BEGIN
+		SET @O_Paid = 1;
+	END
+	ELSE IF @Paid = 'false'
+	BEGIN
+		SET @O_Paid = 0;
+	END
+	ELSE
+	BEGIN
+		SET @O_Paid = NULL;
+	END
+	
+	IF @Shipped = 'true'
+	BEGIN
+		SET @O_Shipped = 1;
+	END
+	ELSE IF @Shipped = 'false'
+	BEGIN
+		SET @O_Shipped = 0;
+	END
+	ELSE
+	BEGIN
+		SET @O_Shipped = NULL;
+	END
+	
+	IF @Cancelled = 'true'
+	BEGIN
+		SET @O_Cancelled = 1;
+	END
+	ELSE IF @Cancelled = 'false'
+	BEGIN
+		SET @O_Cancelled = 0;
+	END
+	ELSE
+	BEGIN
+		SET @O_Cancelled = NULL;
+	END
+
+	IF @RangeInMinutes > 0
+		BEGIN
+			SET @DateRangeStart = GETDATE();
+			SET @DateRangeEnd = DATEADD(MI,@RangeInMinutes,@DateRangeStart);
+		END
+	
+	
+	BEGIN
+		SELECT     ROW_NUMBER() OVER (ORDER BY O_ID DESC) AS Row,O_ID, O_Date, O_TotalPrice, O_CustomerID, O_Sent, O_Invoiced, O_Shipped, O_Paid, O_Cancelled, O_CurrencyID,
+					substring(O_BillingAddress,0,charindex(char(13)+char(10),O_BillingAddress)) as O_BillingName,
+					O_BillingAddress,
+					O_LanguageID, tblKartrisClonedOrders.CO_OrderID
+		FROM         tblKartrisOrders LEFT OUTER JOIN
+				  tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
+		WHERE     (O_Sent = COALESCE (@O_Sent, O_Sent)) AND (O_Invoiced = COALESCE (@O_Invoiced, O_Invoiced)) AND (O_Paid = COALESCE (@O_Paid, O_Paid)) AND 
+							  (O_Shipped = COALESCE(@O_Shipped, O_Shipped)) AND (O_Cancelled = COALESCE (@O_Cancelled, O_Cancelled)) AND (O_Date >= COALESCE (@O_DateRangeStart, O_Date)) AND (O_Date <= COALESCE (@O_DateRangeEnd, O_Date))
+
+		
+	END
+		
+END
