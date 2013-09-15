@@ -26,7 +26,7 @@ All rights reserved.
 		<add key="PercentageRegex" value="(^100([.]0{1,2})?)$|(^\d{1,2}([.]\d{1,2})?)$"/>
 		<add key="ChartImageHandler" value="Storage=file;Timeout=20;Url=~/Uploads/Temp/;;deleteAfterServicing=true;"/>
 		<add key="TaxRegime" value="EU"/>
-    <add key="KartrisWebAPISecretKey" value="dXNlcm5hbWU6cGFzc3dvcmQ="/>
+    <add key="KartrisWebAPISecretKey" value=""/>
     <add key="KartrisWebAPIIPLock" value=""/>
 	</appSettings>
 	<connectionStrings>
