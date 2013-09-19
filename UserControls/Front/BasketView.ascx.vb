@@ -291,6 +291,11 @@ Partial Class Templates_BasketView
             Else
                 UC_ShippingMethodsEstimate.Visible = False
             End If
+
+            'Hide shipping estimates if all items in basket are digital
+            If Basket.AllDigital = True Then
+                UC_ShippingMethodsEstimate.Visible = False
+            End If
             
             phdMainBasket.Visible = True
             phdControls.Visible = True
@@ -552,10 +557,6 @@ Partial Class Templates_BasketView
             updPnlMainBasket.Update()
         End If
 
-
-
-        'RaiseEvent ItemQuantityChanged()
-
     End Sub
 
     Sub RemoveItem_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
@@ -636,28 +637,6 @@ Partial Class Templates_BasketView
         updPnlCustomText.Update()
 
     End Sub
-
-    'Sub ProductName_Click(ByVal sender As Object, ByVal e As CommandEventArgs)
-    '    Dim strItemInfo As String
-
-    '    strItemInfo = E.CommandArgument
-
-    '    If strItemInfo <> "" Then
-    '        Try
-    '            Dim arrInfo As String() = Split(strItemInfo, ";")
-    '            If arrInfo(UBound(arrInfo)) <> "o" Then
-    '                strItemInfo = ""
-    '            End If
-    '        Catch ex As Exception
-    '        End Try
-    '    End If
-
-    '    Session("BasketItemInfo") = strItemInfo
-
-    '    Dim strURL As String = E.CommandName
-    '    Response.Redirect(strURL)
-
-    'End Sub
 
     Sub ApplyCoupon_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         Dim strCouponError As String = ""
