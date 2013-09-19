@@ -4,7 +4,7 @@
         <asp:Panel ID="pnlSearchBox" runat="server">
             <span class="small-9 columns"><input type="text" size="40" class="textbox" id="searchbox" onkeypress="javascript:presssearchkey(event);" /></span>
             <span class="small-3 columns"><input id="searchbutton" type="button" value='<asp:Literal ID="litContentText_Search" runat="server" Text="<%$ Resources: Kartris, ContentText_Search%>" />'
-                class="button prefix" onclick="javascript:submitsearchbox()" /></span>
+                class="button prefix" onclick="javascript: submitsearchbox()" /><input type="submit" id="searchbutton2" onclick="javascript: submitsearchbox()" style="visibility: hidden;"/></span>
             <div class="spacer">
             </div>
             <script type="text/javascript">
@@ -14,7 +14,7 @@
                 function presssearchkey(e) {
                     if (typeof e == 'undefined' && window.event) { e = window.event; }
                     if (e.keyCode == 13) {
-                        document.getElementById('searchbutton').click();
+                        document.getElementById('searchbutton2').click();
                     }
                 }
             </script>
