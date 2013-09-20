@@ -2421,7 +2421,8 @@ Public Class BasketBLL
                                     objItem = GetBasketItemByVersionID(vItemID)
                                     If objItem.AppliedPromo = 1 Then Exit Select
                                     If objPromotion.ItemID = vItemID Then '' buy item is equal to get item
-                                        If vBuyQty > vValue Then
+                                        If (vBuyQty > vValue AndAlso strType = "q") OrElse _
+                                           (vBuyQty >= drwBuy("PP_Value") AndAlso strType = "p") Then
                                             blnGetFound = True
                                             Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, vValue, vValue, vIncTax, vExTax, vQuantity, vTaxRate)
                                         End If
