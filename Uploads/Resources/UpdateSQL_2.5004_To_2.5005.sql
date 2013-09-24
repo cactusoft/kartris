@@ -275,7 +275,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[_spKartrisOrders_GetByStatus]    Script Date: 09/04/2013 10:00:59 ******/
+/****** Object:  StoredProcedure [dbo].[_spKartrisOrders_GetTileAppData]    Script Date: 09/24/2013 20:40:57 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -309,8 +309,6 @@ BEGIN
 	DECLARE @O_Paid bit;
 	DECLARE @O_Shipped bit ;
 	DECLARE @O_Cancelled bit ;
-	DECLARE @O_DateRangeStart smalldatetime;
-	DECLARE @O_DateRangeEnd smalldatetime;
 	
 	IF @Sent = 'true'
 	BEGIN
@@ -379,21 +377,24 @@ BEGIN
 
 	IF @RangeInMinutes > 0
 		BEGIN
-			SET @DateRangeStart = GETDATE();
-			SET @DateRangeEnd = DATEADD(MI,@RangeInMinutes,@DateRangeStart);
+			SET @DateRangeEnd = GETDATE();
+			SET @DateRangeStart = DATEADD(MI,-@RangeInMinutes,@DateRangeEnd);
+			
 		END
 	
 	
 	BEGIN
-		SELECT     ROW_NUMBER() OVER (ORDER BY O_ID DESC) AS Row,O_ID, O_Date, O_TotalPrice, O_CustomerID, O_Sent, O_Invoiced, O_Shipped, O_Paid, O_Cancelled, O_CurrencyID,
-					substring(O_BillingAddress,0,charindex(char(13)+char(10),O_BillingAddress)) as O_BillingName,
-					O_BillingAddress,
-					O_LanguageID, tblKartrisClonedOrders.CO_OrderID
-		FROM         tblKartrisOrders LEFT OUTER JOIN
-				  tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
-		WHERE     (O_Sent = COALESCE (@O_Sent, O_Sent)) AND (O_Invoiced = COALESCE (@O_Invoiced, O_Invoiced)) AND (O_Paid = COALESCE (@O_Paid, O_Paid)) AND 
-							  (O_Shipped = COALESCE(@O_Shipped, O_Shipped)) AND (O_Cancelled = COALESCE (@O_Cancelled, O_Cancelled)) AND (O_Date >= COALESCE (@O_DateRangeStart, O_Date)) AND (O_Date <= COALESCE (@O_DateRangeEnd, O_Date))
-
+		SELECT      ROW_NUMBER() OVER (ORDER BY O_ID DESC) AS Row, tblKartrisOrders.O_ID, tblKartrisOrders.O_Date, tblKartrisOrders.O_TotalPrice, tblKartrisOrders.O_CustomerID, tblKartrisOrders.O_Sent, tblKartrisOrders.O_Invoiced, tblKartrisOrders.O_Shipped, 
+                      tblKartrisOrders.O_Paid, tblKartrisOrders.O_Cancelled, tblKartrisOrders.O_CurrencyID, SUBSTRING(tblKartrisOrders.O_BillingAddress, 0, CHARINDEX(CHAR(13) + CHAR(10), 
+                      tblKartrisOrders.O_BillingAddress)) AS O_BillingName, REPLACE(tblKartrisOrders.O_BillingAddress,CHAR(13) + CHAR(10),'-*-') as O_BillingAddress, tblKartrisOrders.O_LanguageID, tblKartrisClonedOrders.CO_OrderID, tblKartrisCurrencies.CUR_Symbol, 
+                      tblKartrisCurrencies.CUR_ISOCode
+FROM         tblKartrisOrders LEFT OUTER JOIN
+                      tblKartrisCurrencies ON tblKartrisOrders.O_CurrencyID = tblKartrisCurrencies.CUR_ID LEFT OUTER JOIN
+                      tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
+WHERE     (tblKartrisOrders.O_Sent = COALESCE (@O_Sent, tblKartrisOrders.O_Sent)) AND (tblKartrisOrders.O_Invoiced = COALESCE (@O_Invoiced, tblKartrisOrders.O_Invoiced)) AND 
+                      (tblKartrisOrders.O_Paid = COALESCE (@O_Paid, tblKartrisOrders.O_Paid)) AND (tblKartrisOrders.O_Shipped = COALESCE (@O_Shipped, tblKartrisOrders.O_Shipped)) AND 
+                      (tblKartrisOrders.O_Cancelled = COALESCE (@O_Cancelled, tblKartrisOrders.O_Cancelled)) AND (tblKartrisOrders.O_Date >= COALESCE (@DateRangeStart, tblKartrisOrders.O_Date)) AND 
+                      (tblKartrisOrders.O_Date <= COALESCE (@DateRangeEnd, tblKartrisOrders.O_Date))
 		
 	END
 		
