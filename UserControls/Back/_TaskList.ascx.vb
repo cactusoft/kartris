@@ -76,6 +76,7 @@ Partial Class UserControls_Back_TaskList
             phdOrders.Visible = False
         End If
 
+        'Awaiting refunds
         If numCustomersAwatingRefunds > 0 OrElse numCustomersInArrears > 0 Then
             phdCustomers.Visible = True
             litCustomersAwaitingRefundsCount.Text = numCustomersAwatingRefunds
@@ -111,17 +112,17 @@ Partial Class UserControls_Back_TaskList
         End If
 
         'Linnworks
-        If CInt(numLinnworksOrders) > 0 Then
+        If CInt(numLinnworksOrders) > 0 And KartSettingsManager.GetKartConfig("general.linnworks.token") <> "" Then
             litToLinnworks.Text = numLinnworksOrders
         Else
             phdToLinnworks.Visible = False
         End If
 
+        'Orders
         If phdOrders.Visible = False AndAlso phdStock.Visible = False AndAlso _
             phdAffiliates.Visible = False AndAlso phdReviews.Visible = False AndAlso phdToLinnworks.Visible = False Then
             phdNoItems.Visible = True
         End If
-
 
     End Sub
 
