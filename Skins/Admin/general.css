@@ -113,17 +113,17 @@ table.kartristable tr.Kartris-GridView-Alternate,
 table.kartristable td.Kartris-GridView-Alternate
                                         { background: #fff; border-bottom: solid 1px #f3f3f3; }
 table.kartristable tr:hover,
-table.kartristable tr.Kartris-GridView-Alternate:hover,
+table.kartristable td.Kartris-GridView-Alternate:hover,
 table.kartristable tr.Kartris-GridView-Green:hover,
-table.kartristable tr.Kartris-GridView-Alternate-Green:hover,
+table.kartristable td.Kartris-GridView-Alternate-Green:hover,
 table.kartristable tr.Kartris-GridView-Red:hover,
-table.kartristable tr.Kartris-GridView-Alternate-Red:hover,
+table.kartristable td.Kartris-GridView-Alternate-Red:hover,
 table.kartristable tr.Kartris-GridView-Blue:hover,
-table.kartristable tr.Kartris-GridView-Alternate-Blue:hover,
+table.kartristable td.Kartris-GridView-Alternate-Blue:hover,
 table.kartristable tr.Kartris-GridView-Yellow:hover,
-table.kartristable tr.Kartris-GridView-Alternate-Yellow:hover,
+table.kartristable td.Kartris-GridView-Alternate-Yellow:hover,
 table.kartristable tr.Kartris-GridView-Done:hover,
-table.kartristable tr.Kartris-GridView-Alternate-Done:hover
+table.kartristable td.Kartris-GridView-Alternate-Done:hover
                                         { background-image: url(Images/row_highlight_back.png); background-position: left -1px; background-repeat: repeat-x; }
 table.kartristable td,
 table.kartristable th                   { padding: 2px 5px 2px 5px }
