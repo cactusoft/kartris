@@ -284,8 +284,7 @@ Public Class BasketItem
             Return _AppliedPromo
         End Get
         Set(ByVal value As Double)
-            _AppliedPromo = value
-            If LCase((GetGlobalResourceObject("KATRIS", "fractionalbasketquantities") <> "y")) Then _AppliedPromo = CLng(_AppliedPromo)
+            _AppliedPromo = CLng(value)
             If _AppliedPromo > 32767 Then _AppliedPromo = 32767
         End Set
     End Property
