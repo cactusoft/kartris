@@ -568,13 +568,15 @@ Partial Class ProductVersions
 
                 End If
             Else
-                ''Show single price
-                fvwPrice.FindControl("pnlPrice").Visible = True
+                If ObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) <> 1 Then
+                    ''Show single price
+                    fvwPrice.FindControl("pnlPrice").Visible = True
 
-                ''Set the single price
-                Dim numPrice As Single = CDbl(CType(fvwPrice.FindControl("litPrice_Rows"), Literal).Text)
-                CType(fvwPrice.FindControl("litResultedPrice_Rows"), Literal).Text = _
-                 CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
+                    ''Set the single price
+                    Dim numPrice As Single = CDbl(CType(fvwPrice.FindControl("litPrice_Rows"), Literal).Text)
+                    CType(fvwPrice.FindControl("litResultedPrice_Rows"), Literal).Text = _
+                     CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
+                End If
 
             End If
         Catch ex As Exception
