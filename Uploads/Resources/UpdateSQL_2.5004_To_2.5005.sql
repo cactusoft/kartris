@@ -9,7 +9,7 @@ CREATE TABLE [dbo].[tblKartrisLinnworksOrders](
 	[LWO_OrderID] [int] NOT NULL,
 	[LWO_LinnworksGuid] [nvarchar](50) NULL,
 	[LWO_DataCreated] [smalldatetime] NULL,
- CONSTRAINT [PK_tblGroSeedsLinnworksOrders] PRIMARY KEY CLUSTERED 
+ CONSTRAINT [PK_tblKartrisLinnworksOrders] PRIMARY KEY CLUSTERED 
 (
 	[LWO_OrderID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
