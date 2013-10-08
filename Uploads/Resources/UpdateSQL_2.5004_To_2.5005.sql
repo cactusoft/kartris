@@ -275,7 +275,7 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[_spKartrisOrders_GetTileAppData]    Script Date: 09/24/2013 20:40:57 ******/
+/****** Object:  StoredProcedure [dbo].[_spKartrisOrders_GetTileAppData]    Script Date: 10/08/2013 09:02:50 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -387,7 +387,7 @@ BEGIN
 		SELECT      ROW_NUMBER() OVER (ORDER BY O_ID DESC) AS Row, tblKartrisOrders.O_ID, tblKartrisOrders.O_Date, tblKartrisOrders.O_TotalPrice, tblKartrisOrders.O_CustomerID, tblKartrisOrders.O_Sent, tblKartrisOrders.O_Invoiced, tblKartrisOrders.O_Shipped, 
                       tblKartrisOrders.O_Paid, tblKartrisOrders.O_Cancelled, tblKartrisOrders.O_CurrencyID, SUBSTRING(tblKartrisOrders.O_BillingAddress, 0, CHARINDEX(CHAR(13) + CHAR(10), 
                       tblKartrisOrders.O_BillingAddress)) AS O_BillingName, REPLACE(tblKartrisOrders.O_BillingAddress,CHAR(13) + CHAR(10),'-*-') as O_BillingAddress, tblKartrisOrders.O_LanguageID, tblKartrisClonedOrders.CO_OrderID, tblKartrisCurrencies.CUR_Symbol, 
-                      tblKartrisCurrencies.CUR_ISOCode
+                      tblKartrisCurrencies.CUR_ISOCode, tblKartrisOrders.O_PaymentGateway
 FROM         tblKartrisOrders LEFT OUTER JOIN
                       tblKartrisCurrencies ON tblKartrisOrders.O_CurrencyID = tblKartrisCurrencies.CUR_ID LEFT OUTER JOIN
                       tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
