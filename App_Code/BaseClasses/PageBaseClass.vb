@@ -101,9 +101,11 @@ Public MustInherit Class PageBaseClass
 
         'Newer Google Analytics code
         sbdLink.Append("<script type=""text/javascript"">" & vbCrLf)
-        sbdLink.Append("var _gaq = _gaq || [];" & vbCrLf)
-        sbdLink.Append("_gaq.push(['_setAccount', '" & strGoogleWebPropertyID & "']);" & vbCrLf)
-        sbdLink.Append("_gaq.push(['_trackPageview']);" & vbCrLf)
+        If InStr(Request.RawUrl.ToLower, "/callback.aspx") = 0 AndAlso InStr(Request.RawUrl.ToLower, "/checkout.aspx") = 0 Then
+            sbdLink.Append("var _gaq = _gaq || [];" & vbCrLf)
+            sbdLink.Append("_gaq.push(['_setAccount', '" & strGoogleWebPropertyID & "']);" & vbCrLf)
+            sbdLink.Append("_gaq.push(['_trackPageview']);" & vbCrLf)
+        End If
         sbdLink.Append("(function() {" & vbCrLf)
         sbdLink.Append("var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;" & vbCrLf)
         sbdLink.Append("ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';" & vbCrLf)
