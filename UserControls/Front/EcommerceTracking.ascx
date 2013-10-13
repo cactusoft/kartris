@@ -16,7 +16,8 @@ changes to the javascript
     '<asp:Literal ID="litWebShopName" runat="server" />',  // affiliation or store name
     '<asp:Literal ID="litTotal" runat="server" />',          // total - required
     '<asp:Literal ID="litTax" runat="server" />',           // tax
-    '<asp:Literal ID="litShipping" runat="server" />'              // shipping
+    '<asp:Literal ID="litShipping" runat="server" />',              // shipping
+    '','',''                                                // city, state, country
   ]);
 
    // add item might be called for every item in the shopping cart
