@@ -166,9 +166,9 @@ Partial Class UserControls_General_Invoice
     End Sub
 
     Protected Sub rptInvoice_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptInvoice.ItemDataBound
-        Dim strVersionCode As String
+        Dim strVersionCode, strItemPriceTax As String
         Dim strCustomizationOptionText As String
-        Dim numItemPriceIncTax, numItemPriceExTax, numRowPriceExTax, numRowPriceIncTax As Double
+        Dim numItemPriceIncTax, numItemPriceExTax, numItemPriceTax, numRowPriceExTax, numRowPriceIncTax As Double
 
         If e.Item.ItemType = ListItemType.Header Then
             numPromoDiscountTotal = 0
@@ -216,11 +216,15 @@ Partial Class UserControls_General_Invoice
                 'PRICES INCLUDING TAX
                 numItemPriceExTax = Math.Round(e.Item.DataItem("IR_PricePerItem") - e.Item.DataItem("IR_TaxPerItem"), numCurrencyRoundNumber)
                 numItemPriceIncTax = Math.Round(e.Item.DataItem("IR_PricePerItem"), numCurrencyRoundNumber)
+                numItemPriceTax = e.Item.DataItem("IR_TaxPerItem")
+                strItemPriceTax = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numItemPriceTax) ' & " (" & (e.Item.DataItem("IR_TaxPerItem") / (e.Item.DataItem("IR_PricePerItem") - e.Item.DataItem("IR_TaxPerItem"))) & ")"
                 numRowPriceExTax = e.Item.DataItem("IR_Quantity") * numItemPriceExTax
                 numRowPriceIncTax = Math.Round(e.Item.DataItem("IR_PricePerItem"), numCurrencyRoundNumber) * e.Item.DataItem("IR_Quantity")
             Else
                 'PRICES EXCLUDING TAX
                 numItemPriceExTax = e.Item.DataItem("IR_PricePerItem")
+                numItemPriceTax = e.Item.DataItem("IR_TaxPerItem")
+                strItemPriceTax = (Math.Round(numItemPriceTax * 100, 4)) & "%"
                 numRowPriceExTax = Math.Round(e.Item.DataItem("IR_PricePerItem") * e.Item.DataItem("IR_Quantity"), numCurrencyRoundNumber)
                 'In following line, the 0.000001 is there to ensure tax is rounded up rather than down, if is 0.5
                 numRowPriceIncTax = Math.Round(e.Item.DataItem("IR_PricePerItem") * e.Item.DataItem("IR_Quantity") * ((1 + e.Item.DataItem("IR_TaxPerItem")) + 0.000001), numCurrencyRoundNumber)
@@ -232,6 +236,7 @@ Partial Class UserControls_General_Invoice
             numTotalTaxAmount = numTotalTaxAmount + numRowTaxAmount
 
             CType(e.Item.FindControl("litItemPriceExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numItemPriceExTax)
+            CType(e.Item.FindControl("litTaxPerItem"), Literal).Text = strItemPriceTax
             CType(e.Item.FindControl("litQuantity"), Literal).Text = CSng(e.Item.DataItem("IR_Quantity"))
             CType(e.Item.FindControl("litRowPriceExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numRowPriceExTax)
             CType(e.Item.FindControl("litTaxAmount"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numRowTaxAmount)
@@ -258,6 +263,7 @@ Partial Class UserControls_General_Invoice
                 CType(e.Item.FindControl("phdPromotionDiscount"), PlaceHolder).Visible = True
                 CType(e.Item.FindControl("litPromoDesc"), Literal).Text = Replace(strPromoDesc, vbCrLf, "<br/>")
                 CType(e.Item.FindControl("litPromoDiscountExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numPromotionDiscountExTax)
+                CType(e.Item.FindControl("litPromoTaxPerItem"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numPromotionDiscountTaxAmount)
                 CType(e.Item.FindControl("litPromoDiscountTotal1"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numPromotionDiscountExTax)
                 CType(e.Item.FindControl("litPromoDiscountTaxAmount"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numPromotionDiscountTaxAmount)
                 CType(e.Item.FindControl("litPromoDiscountTotal2"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numPromoDiscountTotal)
@@ -288,6 +294,7 @@ Partial Class UserControls_General_Invoice
                 CType(e.Item.FindControl("phdCouponDiscount"), PlaceHolder).Visible = True
                 CType(e.Item.FindControl("litCouponCode"), Literal).Text = CP_CouponCode
                 CType(e.Item.FindControl("litCouponDiscountExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCouponDiscountExTax)
+                CType(e.Item.FindControl("litCouponDiscountTaxPerItem"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCouponDiscountTaxAmount)
                 CType(e.Item.FindControl("litCouponDiscountTotal1"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCouponDiscountExTax)
                 CType(e.Item.FindControl("litCouponDiscountTaxAmount"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCouponDiscountTaxAmount)
                 CType(e.Item.FindControl("litCouponDiscountTotal2"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCouponDiscountValue)
@@ -305,6 +312,7 @@ Partial Class UserControls_General_Invoice
                 CType(e.Item.FindControl("phdCustomerDiscount"), PlaceHolder).Visible = True
                 CType(e.Item.FindControl("litDiscountPercentage"), Literal).Text = GetGlobalResourceObject("Basket", "ContentText_Discount") & " = " & numDiscountPercentage & "%<br />"
                 CType(e.Item.FindControl("litCustomerDiscountExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCustomerDiscountExTax)
+                CType(e.Item.FindControl("litCustomerDiscountTaxPerItem"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCustomerDiscountTaxAmount)
                 CType(e.Item.FindControl("litCustomerDiscountTotal1"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCustomerDiscountExTax)
                 CType(e.Item.FindControl("litCustomerDiscountTaxAmount"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCustomerDiscountTaxAmount)
                 CType(e.Item.FindControl("litCustomerDiscountTotal2"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCustomerDiscountValue)
@@ -316,6 +324,7 @@ Partial Class UserControls_General_Invoice
                 CType(e.Item.FindControl("phdShippingCost"), PlaceHolder).Visible = True
                 CType(e.Item.FindControl("litShippingMethod"), Literal).Text = strShippingMethod
                 CType(e.Item.FindControl("litShippingPriceExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingPriceExTax)
+                CType(e.Item.FindControl("litShippingTaxPerItem"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingTaxTotal)
                 CType(e.Item.FindControl("litShippingPriceTotal1"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingPriceExTax)
                 CType(e.Item.FindControl("litShippingTaxAmount"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingTaxTotal)
                 CType(e.Item.FindControl("litShippingPriceTotal2"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingPrice)
@@ -326,6 +335,7 @@ Partial Class UserControls_General_Invoice
             If numOrderHandlingPrice <> 0 Then
                 CType(e.Item.FindControl("phdOrderHandlingCharge"), PlaceHolder).Visible = True
                 CType(e.Item.FindControl("litOrderHandlingPriceExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numOrderHandlingPriceExTax)
+                CType(e.Item.FindControl("litOrderHandlingTaxPerItem"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numOrderHandlingTaxTotal)
                 CType(e.Item.FindControl("litOrderHandlingPriceTotal1"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numOrderHandlingPriceExTax)
                 CType(e.Item.FindControl("litOrderHandlingPrice"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numOrderHandlingTaxTotal)
                 CType(e.Item.FindControl("litOrderHandlingPriceTotal2"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numOrderHandlingPrice)
@@ -337,10 +347,14 @@ Partial Class UserControls_General_Invoice
             numTotal = numTotalPriceIncTax + numPromotionDiscountIncTax + numCouponDiscountIncTax + numCustomerDiscountIncTax + numShippingPriceIncTax + numOrderHandlingPriceIncTax
             CType(e.Item.FindControl("litTotalExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numTotalExTax)
             CType(e.Item.FindControl("litTotalTaxAmount"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numTotalTaxAmount)
-            CType(e.Item.FindControl("litTotal"), Literal).Text = "(" & CurrenciesBLL.CurrencyCode(numOrderCurrency) & " - " &
+
+            'Add currency description row, separate from total so can keep final column
+            'width reasonable
+            CType(e.Item.FindControl("litCurrencyDescription"), Literal).Text = "(" & CurrenciesBLL.CurrencyCode(numOrderCurrency) & " - " &
                                             LanguageElementsBLL.GetElementValue(_OrderLanguageID,
                                               CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
-                                            CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, numOrderCurrency) & ") "
+                                            CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, numOrderCurrency) & ")"
+
             CType(e.Item.FindControl("litTotal"), Literal).Text += CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numTotal)
 
             If numGatewayCurrency <> numOrderCurrency Then

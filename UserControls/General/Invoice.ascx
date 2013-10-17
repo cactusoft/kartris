@@ -64,6 +64,9 @@
                             <asp:Literal ID="litContentTextExTax" runat="server" Text='<%$ Resources: Kartris, ContentText_ExTax %>' />&nbsp;
                         </th>
                         <th>
+                            <asp:Literal ID="litContentTextTaxPerItem" runat="server" Text='<%$ Resources: Kartris, ContentText_Tax %>' />&nbsp;
+                        </th>
+                        <th>
                             <asp:Literal ID="litContentTextQty" runat="server" Text='<%$ Resources: Basket, ContentText_Qty %>' />
                         </th>
                         <th>
@@ -81,7 +84,7 @@
             </HeaderTemplate>
             <ItemTemplate>
                 <tr>
-                    <td colspan="6" class="fullline">
+                    <td colspan="7" class="fullline">
                         <asp:Literal ID="litVersionName" runat="server" Text='' />
                     </td>
                 </tr>
@@ -93,6 +96,9 @@
                     </td>
                     <td>
                         <asp:Literal ID="litItemPriceExTax" runat="server" Text='' />
+                    </td>
+                    <td>
+                        <asp:Literal ID="litTaxPerItem" runat="server" Text='' />
                     </td>
                     <td>
                         <asp:Literal ID="litQuantity" runat="server" Text='' />
@@ -111,7 +117,7 @@
             <FooterTemplate>
                 <asp:PlaceHolder ID="phdPromotionDiscount" runat="server" Visible="false">
                     <tr>
-                        <td colspan="6" class="fullline section">
+                        <td colspan="7" class="fullline section">
                             <asp:Literal ID="litContentTextPromotionDiscount" runat="server" Text='<%$ Resources: Kartris, ContentText_PromotionDiscount %>' />
                         </td>
                     </tr>
@@ -123,7 +129,9 @@
                             <asp:Literal ID="litPromoDiscountExTax" runat="server" Text='' />
                         </td>
                         <td>
-                            1
+                            <asp:Literal ID="litPromoTaxPerItem" runat="server" Text='' />
+                        </td>
+                        <td>1
                         </td>
                         <td>
                             <asp:Literal ID="litPromoDiscountTotal1" runat="server" Text='' />
@@ -138,7 +146,7 @@
                 </asp:PlaceHolder>
                 <asp:PlaceHolder ID="phdCouponDiscount" runat="server" Visible="false">
                     <tr>
-                        <td colspan="6" class="fullline section">
+                        <td colspan="7" class="fullline section">
                             <asp:Literal ID="litContentTextCouponDiscount" runat="server" Text='<%$ Resources: Kartris, ContentText_CouponDiscount %>' />
                         </td>
                     </tr>
@@ -148,6 +156,9 @@
                         </td>
                         <td>
                             <asp:Literal ID="litCouponDiscountExTax" runat="server" Text='' />
+                        </td>
+                        <td>
+                            <asp:Literal ID="litCouponTaxPerItem" runat="server" Text='' />
                         </td>
                         <td>
                             1
@@ -165,7 +176,7 @@
                 </asp:PlaceHolder>
                 <asp:PlaceHolder ID="phdCustomerDiscount" runat="server" Visible="false">
                     <tr>
-                        <td colspan="6" class="fullline section">
+                        <td colspan="7" class="fullline section">
                             <asp:Literal ID="litContentTextDiscount" runat="server" Text='<%$ Resources: Basket, ContentText_Discount %>' />
                         </td>
                     </tr>
@@ -175,6 +186,9 @@
                         </td>
                         <td>
                             <asp:Literal ID="litCustomerDiscountExTax" runat="server" Text='' />
+                        </td>
+                        <td>
+                            <asp:Literal ID="litCustomerTaxPerItem" runat="server" Text='' />
                         </td>
                         <td>
                             1
@@ -192,7 +206,7 @@
                 </asp:PlaceHolder>
                 <asp:PlaceHolder ID="phdShippingCost" runat="server" Visible="false">
                     <tr>
-                        <td colspan="6" class="fullline section">
+                        <td colspan="7" class="fullline section">
                             <asp:Literal ID="litContentTextShipping" runat="server" Text='<%$ Resources: Address, ContentText_Shipping %>' />
                         </td>
                     </tr>
@@ -202,6 +216,9 @@
                         </td>
                         <td>
                             <asp:Literal ID="litShippingPriceExTax" runat="server" Text='' />
+                        </td>
+                        <td>
+                            <asp:Literal ID="litShippingTaxPerItem" runat="server" Text='' />
                         </td>
                         <td>
                             1
@@ -219,7 +236,7 @@
                 </asp:PlaceHolder>
                 <asp:PlaceHolder ID="phdOrderHandlingCharge" runat="server" Visible="false">
                     <tr>
-                        <td colspan="6" class="fullline section">
+                        <td colspan="7" class="fullline section">
                             <asp:Literal ID="litContentTextOrderHandlingCharge" runat="server" Text='<%$ Resources: Kartris, ContentText_OrderHandlingCharge %>' />
                         </td>
                     </tr>
@@ -228,6 +245,9 @@
                         </td>
                         <td>
                             <asp:Literal ID="litOrderHandlingPriceExTax" runat="server" Text='' />
+                        </td>
+                        <td>
+                            <asp:Literal ID="litOrderHandlingTaxPerItem" runat="server" Text='' />
                         </td>
                         <td>
                             1
@@ -252,6 +272,8 @@
                     <td>
                     </td>
                     <td>
+                    </td>
+                    <td>
                         <asp:Literal ID="litTotalExTax" runat="server" Text='' />
                     </td>
                     <td>
@@ -261,10 +283,15 @@
                         <asp:Literal ID="litTotal" runat="server" Text='' />
                     </td>
                 </tr>
+                <tr id="currency">
+                    <td colspan="7">
+                        <asp:Literal ID="litCurrencyDescription" runat="server"  />
+                    </td>
+                </tr>
                 <!-- total paid at gateway -->
                 <asp:PlaceHolder ID="phdTotalGateway" runat="server" Visible="false">
                     <tr class="footerrow">
-                        <td class="total" colspan="6">
+                        <td class="total" colspan="7">
                             <span class="totallabel">
                                 <asp:Literal ID="litEmailTextProcessCurrencyExp1" runat="server" Text='<%$ Resources: Email, EmailText_ProcessCurrencyExp1 %>' /></span>
                             <asp:Literal ID="litTotalGateway" runat="server" Text='' />
