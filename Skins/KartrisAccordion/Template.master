@@ -160,7 +160,7 @@
 			<user:AdminBar ID="UC_AdminBar" runat="server" />
 	</form>
 	<!-- Check for Zepto support, load jQuery if necessary -->
-	<asp:Literal runat="server" ID="litZeptoJquery" Visible="false"></asp:Literal>
+	<asp:Literal runat="server" ID="litZeptoJquery"></asp:Literal>
 	<script>
 		$(function () {
 			$(document).foundation();
