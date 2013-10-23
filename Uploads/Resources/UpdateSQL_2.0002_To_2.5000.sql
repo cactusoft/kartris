@@ -1190,7 +1190,7 @@ GO
 -- Create date: <Create Date, ,>
 -- Description:	<Description, ,>
 -- =============================================
-CREATE FUNCTION fnKartrisProduct_IsReadyToLive 
+CREATE FUNCTION [dbo].[fnKartrisProduct_IsReadyToLive] 
 (
 	@P_ID as int
 )
@@ -1382,49 +1382,49 @@ GO
 ALTER VIEW [dbo].[vKartrisTypePages]
 AS
 SELECT        dbo.tblKartrisPages.PAGE_ID, dbo.tblKartrisPages.PAGE_Name, dbo.tblKartrisPages.PAGE_ParentID, dbo.tblKartrisLanguages.LANG_ID, 
-                         dbo.tblKartrisLanguageElements.LE_Value AS PAGE_SEOPageTitle, tblKartrisLanguageElements_1.LE_Value AS PAGE_MetaDescription, 
-                         tblKartrisLanguageElements_2.LE_Value AS PAGE_MetaKeywords, tblKartrisLanguageElements_3.LE_Value AS PAGE_Text, 
-                         tblKartrisLanguageElements_4.LE_Value AS Page_Title, dbo.tblKartrisPages.PAGE_DateCreated, dbo.tblKartrisPages.PAGE_LastUpdated, 
-                         dbo.tblKartrisPages.PAGE_Live
+						 dbo.tblKartrisLanguageElements.LE_Value AS PAGE_SEOPageTitle, tblKartrisLanguageElements_1.LE_Value AS PAGE_MetaDescription, 
+						 tblKartrisLanguageElements_2.LE_Value AS PAGE_MetaKeywords, tblKartrisLanguageElements_3.LE_Value AS PAGE_Text, 
+						 tblKartrisLanguageElements_4.LE_Value AS Page_Title, dbo.tblKartrisPages.PAGE_DateCreated, dbo.tblKartrisPages.PAGE_LastUpdated, 
+						 dbo.tblKartrisPages.PAGE_Live
 FROM            dbo.tblKartrisLanguageElements INNER JOIN
-                         dbo.tblKartrisLanguages ON dbo.tblKartrisLanguageElements.LE_LanguageID = dbo.tblKartrisLanguages.LANG_ID INNER JOIN
-                         dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_1 ON 
-                         dbo.tblKartrisLanguages.LANG_ID = tblKartrisLanguageElements_1.LE_LanguageID INNER JOIN
-                         dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_3 ON 
-                         dbo.tblKartrisLanguages.LANG_ID = tblKartrisLanguageElements_3.LE_LanguageID INNER JOIN
-                         dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_2 ON 
-                         dbo.tblKartrisLanguages.LANG_ID = tblKartrisLanguageElements_2.LE_LanguageID INNER JOIN
-                         dbo.tblKartrisPages ON tblKartrisLanguageElements_3.LE_ParentID = dbo.tblKartrisPages.PAGE_ID AND 
-                         dbo.tblKartrisLanguageElements.LE_ParentID = dbo.tblKartrisPages.PAGE_ID AND 
-                         tblKartrisLanguageElements_2.LE_ParentID = dbo.tblKartrisPages.PAGE_ID AND 
-                         tblKartrisLanguageElements_1.LE_ParentID = dbo.tblKartrisPages.PAGE_ID INNER JOIN
-                         dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_4 ON dbo.tblKartrisPages.PAGE_ID = tblKartrisLanguageElements_4.LE_ParentID AND 
-                         dbo.tblKartrisLanguages.LANG_ID = tblKartrisLanguageElements_4.LE_LanguageID
+						 dbo.tblKartrisLanguages ON dbo.tblKartrisLanguageElements.LE_LanguageID = dbo.tblKartrisLanguages.LANG_ID INNER JOIN
+						 dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_1 ON 
+						 dbo.tblKartrisLanguages.LANG_ID = tblKartrisLanguageElements_1.LE_LanguageID INNER JOIN
+						 dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_3 ON 
+						 dbo.tblKartrisLanguages.LANG_ID = tblKartrisLanguageElements_3.LE_LanguageID INNER JOIN
+						 dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_2 ON 
+						 dbo.tblKartrisLanguages.LANG_ID = tblKartrisLanguageElements_2.LE_LanguageID INNER JOIN
+						 dbo.tblKartrisPages ON tblKartrisLanguageElements_3.LE_ParentID = dbo.tblKartrisPages.PAGE_ID AND 
+						 dbo.tblKartrisLanguageElements.LE_ParentID = dbo.tblKartrisPages.PAGE_ID AND 
+						 tblKartrisLanguageElements_2.LE_ParentID = dbo.tblKartrisPages.PAGE_ID AND 
+						 tblKartrisLanguageElements_1.LE_ParentID = dbo.tblKartrisPages.PAGE_ID INNER JOIN
+						 dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_4 ON dbo.tblKartrisPages.PAGE_ID = tblKartrisLanguageElements_4.LE_ParentID AND 
+						 dbo.tblKartrisLanguages.LANG_ID = tblKartrisLanguageElements_4.LE_LanguageID
 WHERE        (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND 
-                         (dbo.tblKartrisLanguageElements.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_1.LE_TypeID = 8) AND 
-                         (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND (tblKartrisLanguageElements_2.LE_FieldID = 5) 
-                         AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) AND 
-                         (tblKartrisLanguageElements_4.LE_TypeID = 8) AND (tblKartrisLanguageElements_4.LE_FieldID = 9) OR
-                         (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND (tblKartrisLanguageElements_1.LE_TypeID = 8)
-                          AND (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND 
-                         (tblKartrisLanguageElements_2.LE_FieldID = 5) AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) 
-                         AND (tblKartrisLanguageElements_1.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_4.LE_TypeID = 8) AND 
-                         (tblKartrisLanguageElements_4.LE_FieldID = 9) OR
-                         (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND (tblKartrisLanguageElements_1.LE_TypeID = 8)
-                          AND (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND 
-                         (tblKartrisLanguageElements_2.LE_FieldID = 5) AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) 
-                         AND (tblKartrisLanguageElements_2.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_4.LE_TypeID = 8) AND 
-                         (tblKartrisLanguageElements_4.LE_FieldID = 9) OR
-                         (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND (tblKartrisLanguageElements_1.LE_TypeID = 8)
-                          AND (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND 
-                         (tblKartrisLanguageElements_2.LE_FieldID = 5) AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) 
-                         AND (tblKartrisLanguageElements_3.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_4.LE_TypeID = 8) AND 
-                         (tblKartrisLanguageElements_4.LE_FieldID = 9) OR
-                         (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND (tblKartrisLanguageElements_1.LE_TypeID = 8)
-                          AND (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND 
-                         (tblKartrisLanguageElements_2.LE_FieldID = 5) AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) 
-                         AND (tblKartrisLanguageElements_4.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_4.LE_TypeID = 8) AND 
-                         (tblKartrisLanguageElements_4.LE_FieldID = 9)
+						 (dbo.tblKartrisLanguageElements.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_1.LE_TypeID = 8) AND 
+						 (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND (tblKartrisLanguageElements_2.LE_FieldID = 5) 
+						 AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) AND 
+						 (tblKartrisLanguageElements_4.LE_TypeID = 8) AND (tblKartrisLanguageElements_4.LE_FieldID = 9) OR
+						 (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND (tblKartrisLanguageElements_1.LE_TypeID = 8)
+						  AND (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND 
+						 (tblKartrisLanguageElements_2.LE_FieldID = 5) AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) 
+						 AND (tblKartrisLanguageElements_1.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_4.LE_TypeID = 8) AND 
+						 (tblKartrisLanguageElements_4.LE_FieldID = 9) OR
+						 (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND (tblKartrisLanguageElements_1.LE_TypeID = 8)
+						  AND (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND 
+						 (tblKartrisLanguageElements_2.LE_FieldID = 5) AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) 
+						 AND (tblKartrisLanguageElements_2.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_4.LE_TypeID = 8) AND 
+						 (tblKartrisLanguageElements_4.LE_FieldID = 9) OR
+						 (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND (tblKartrisLanguageElements_1.LE_TypeID = 8)
+						  AND (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND 
+						 (tblKartrisLanguageElements_2.LE_FieldID = 5) AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) 
+						 AND (tblKartrisLanguageElements_3.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_4.LE_TypeID = 8) AND 
+						 (tblKartrisLanguageElements_4.LE_FieldID = 9) OR
+						 (dbo.tblKartrisLanguageElements.LE_TypeID = 8) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 3) AND (tblKartrisLanguageElements_1.LE_TypeID = 8)
+						  AND (tblKartrisLanguageElements_1.LE_FieldID = 4) AND (tblKartrisLanguageElements_2.LE_TypeID = 8) AND 
+						 (tblKartrisLanguageElements_2.LE_FieldID = 5) AND (tblKartrisLanguageElements_3.LE_TypeID = 8) AND (tblKartrisLanguageElements_3.LE_FieldID = 6) 
+						 AND (tblKartrisLanguageElements_4.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_4.LE_TypeID = 8) AND 
+						 (tblKartrisLanguageElements_4.LE_FieldID = 9)
 
 GO
 
@@ -1549,14 +1549,14 @@ GO
 ALTER VIEW [dbo].[vKartrisTypeCurrencies]
 AS
 SELECT        dbo.tblKartrisCurrencies.CUR_ID, dbo.tblKartrisLanguageElements.LE_LanguageID AS LANG_ID, dbo.tblKartrisLanguageElements.LE_Value AS CUR_Name, 
-                         dbo.tblKartrisCurrencies.CUR_Symbol, dbo.tblKartrisCurrencies.CUR_ISOCode, dbo.tblKartrisCurrencies.CUR_ISOCodeNumeric, 
-                         dbo.tblKartrisCurrencies.CUR_ExchangeRate, dbo.tblKartrisCurrencies.CUR_HasDecimals, dbo.tblKartrisCurrencies.CUR_Live, 
-                         dbo.tblKartrisCurrencies.CUR_Format, dbo.tblKartrisCurrencies.CUR_IsoFormat, dbo.tblKartrisCurrencies.CUR_DecimalPoint, 
-                         dbo.tblKartrisCurrencies.CUR_RoundNumbers, dbo.tblKartrisCurrencies.CUR_OrderNo
+						 dbo.tblKartrisCurrencies.CUR_Symbol, dbo.tblKartrisCurrencies.CUR_ISOCode, dbo.tblKartrisCurrencies.CUR_ISOCodeNumeric, 
+						 dbo.tblKartrisCurrencies.CUR_ExchangeRate, dbo.tblKartrisCurrencies.CUR_HasDecimals, dbo.tblKartrisCurrencies.CUR_Live, 
+						 dbo.tblKartrisCurrencies.CUR_Format, dbo.tblKartrisCurrencies.CUR_IsoFormat, dbo.tblKartrisCurrencies.CUR_DecimalPoint, 
+						 dbo.tblKartrisCurrencies.CUR_RoundNumbers, dbo.tblKartrisCurrencies.CUR_OrderNo
 FROM            dbo.tblKartrisLanguageElements INNER JOIN
-                         dbo.tblKartrisCurrencies ON dbo.tblKartrisLanguageElements.LE_ParentID = dbo.tblKartrisCurrencies.CUR_ID
+						 dbo.tblKartrisCurrencies ON dbo.tblKartrisLanguageElements.LE_ParentID = dbo.tblKartrisCurrencies.CUR_ID
 WHERE        (dbo.tblKartrisLanguageElements.LE_TypeID = 13) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 1) AND 
-                         (dbo.tblKartrisLanguageElements.LE_Value IS NOT NULL)
+						 (dbo.tblKartrisLanguageElements.LE_Value IS NOT NULL)
 
 GO
 /* Update round number constraint to 8 in tblkartriscurrencies - bitcoin support */
