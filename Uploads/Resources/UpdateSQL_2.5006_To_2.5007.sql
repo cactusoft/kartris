@@ -1,0 +1,3 @@
+﻿/****** Object:  Table [dbo].[tblKartrisLanguageStrings]    Script Date: 9/9/2013 3:29:00 PM ******/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_NoValidShipping', N'No shipping is available for this order to your selected destination.', '', 2.5007, N'No shipping is available for this order to your selected destination.', NULL, N'Shipping', 1)
+GO

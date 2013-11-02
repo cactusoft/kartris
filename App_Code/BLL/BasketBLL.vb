@@ -1638,7 +1638,8 @@ Public Class BasketBLL
                 Catch ex As Exception
                     CkartrisFormatErrors.LogError("BasketBLL.CalculateShipping: " & ex.Message & vbCrLf & _
                                                           "DestinationID: " & numDestinationID & vbCrLf _
-                                                          & "ShippingID: " & numShippingID)
+                                                          & "ShippingID: " & numShippingID & vbCrLf _
+                                                          & "This can happen if there is no valid shipping method for the weight/cost of this order.")
 
                     _ShippingName = ""
                     _ShippingDescription = ""
