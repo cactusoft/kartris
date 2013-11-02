@@ -24,22 +24,26 @@ Partial Class UserControls_ShippingMethodsDropdown
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
-        If Not Me.IsPostBack Then
-            If DirectCast(Page, PageBaseClass).CurrentLoggedUser Is Nothing Then
-                'Try to get new page to clear memory of previous shipping selection
-                ViewState("PreviouslySelected") = Nothing
-                Session("_selectedShippingAmount") = 0
-                Session("_selectedShippingID") = 0
-            End If
-        End If
-
-        If Session("_selectedShippingAmount") = 0 And Session("_selectedShippingID") = 0 Then
-            If ddlShippingMethods.Items.Count = 0 Then
-                ddlShippingMethods.Visible = False
-                litContentTextShippingAvailableAfterAddress.Visible = True
+        Try
+            If Not Me.IsPostBack Then
+                If DirectCast(Page, PageBaseClass).CurrentLoggedUser Is Nothing Then
+                    'Try to get new page to clear memory of previous shipping selection
+                    ViewState("PreviouslySelected") = Nothing
+                    Session("_selectedShippingAmount") = 0
+                    Session("_selectedShippingID") = 0
+                End If
             End If
 
-        End If
+            If Session("_selectedShippingAmount") = 0 And Session("_selectedShippingID") = 0 Then
+                If ddlShippingMethods.Items.Count = 0 Then
+                    ddlShippingMethods.Visible = False
+                    litContentTextShippingAvailableAfterAddress.Visible = True
+                End If
+            End If
+        Catch ex As Exception
+            'error
+            Me.Visible = False
+        End Try
 
     End Sub
 
@@ -144,6 +148,7 @@ Partial Class UserControls_ShippingMethodsDropdown
                 If ddlShippingMethods.Items.Count = 0 Then
                     ddlShippingMethods.Visible = False
                     litContentTextShippingAvailableAfterAddress.Visible = True
+                    litContentTextShippingAvailableAfterAddress.Text = GetGlobalResourceObject("Shipping", "ContentText_NoValidShipping")
                 End If
 
             End If
@@ -165,7 +170,8 @@ Partial Class UserControls_ShippingMethodsDropdown
                 lstSelected.Text = GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
                 RaiseEvent ShippingSelected(Nothing, Nothing)
             Else
-                litContentTextShippingAvailableAfterAddress.Text = "Can't retrieve shipping rates!"
+                litContentTextShippingAvailableAfterAddress.Visible = True
+                litContentTextShippingAvailableAfterAddress.Text = GetGlobalResourceObject("Shipping", "ContentText_NoValidShipping")
             End If
         End If
     End Sub
