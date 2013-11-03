@@ -18,9 +18,9 @@ Public Class LinnworksServices
         End Try
         Return False
     End Function
-    Public Shared Function _GetLinnworksStockLevel(strToken As String, ByRef strMessage As String) As DataTable
+    Public Shared Function _GetLinnworksStockLevel(strToken As String, intPageNo As Integer, ByRef strMessage As String) As DataTable
         Try
-            Return Kartris.Linnworks.KartrisLinnServices._GetStockLevel(strToken, strMessage)
+            Return Kartris.Linnworks.KartrisLinnServices._GetStockLevel(strToken, intPageNo, strMessage)
         Catch ex As Exception
             CkartrisFormatErrors.ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod(), strMessage)
         End Try
