@@ -135,7 +135,8 @@ Partial Class ProductView
         If KartSettingsManager.GetKartConfig("frontend.display.images.large.linktype") = "n" Then
             
         Else
-            If tblProducts.Rows(0)("P_Desc").ToString.Contains("<overridelargeimagelinktype>") Then
+            'If tblProducts.Rows(0)("P_Desc").ToString.Contains("<overridelargeimagelinktype>") Then
+            If CBool(ObjectConfigBLL.GetValue("K:product.showlargeimageinline", pProductID)) Then
                 'Override triggered - for MTMC large images
                 phdImageColumn.Visible = False
 
