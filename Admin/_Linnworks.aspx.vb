@@ -87,7 +87,17 @@ Partial Class Admin_Linnworks
     Sub LoadlinnworksStock()
         If String.IsNullOrEmpty(litToken.Text) Then CheckToken()
         Dim strMessage As String = Nothing
-        Dim dt As DataTable = LinnworksServices._GetLinnworksStockLevel(litToken.Text, strMessage)
+        Dim dt As DataTable = LinnworksServices._GetLinnworksStockLevel(litToken.Text, 1, strMessage)
+        For i As Integer = 2 To 1000
+            Using dtTemp As DataTable = LinnworksServices._GetLinnworksStockLevel(litToken.Text, i, strMessage)
+                If dtTemp.Rows.Count <> 0 Then
+                    dt.Merge(dtTemp)
+                    If dtTemp.Rows.Count < 100 Then Exit For
+                Else
+                    Exit For
+                End If
+            End Using
+        Next
         If dt IsNot Nothing Then
             gvwStock.DataSource = dt
             gvwStock.DataBind()
@@ -244,4 +254,8 @@ Partial Class Admin_Linnworks
         End Using
     End Sub
     
+    'Protected Sub gvwStock_PageIndexChanging(sender As Object, e As GridViewPageEventArgs) Handles gvwStock.PageIndexChanging
+    '    gvwStock.PageIndex = e.NewPageIndex
+    '    LoadlinnworksStock()
+    'End Sub
 End Class
