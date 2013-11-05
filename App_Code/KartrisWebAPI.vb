@@ -117,8 +117,21 @@ Imports System.ServiceModel.Activation
                         For Each ndeParameter In lstNodes
 
                             Dim objParam As New Object
+
+                            'Dim blnisByRefType As Boolean = False
+
+                            'Try
+                            '    Dim strIsByRefTypeValue As String = ndeParameter.Attributes.GetNamedItem("isByRef").Value
+                            '    If Not String.IsNullOrEmpty(strIsByRefTypeValue) Then blnisByRefType = CBool(strIsByRefTypeValue)
+                            'Catch ex As Exception
+
+                            'End Try
+
                             Dim strType As String = ndeParameter.Attributes.GetNamedItem("Type").Value
                             Dim strValue As String = ndeParameter.FirstChild.InnerText
+
+                            'remove trailing spaces if parameter is not string
+                            If strType.ToLower <> "string" And Not String.IsNullOrEmpty(strValue) Then strValue = strValue.Trim
 
                             Select Case strType.ToLower
                                 Case "string"
@@ -179,7 +192,13 @@ Imports System.ServiceModel.Activation
                                     Dim callmode As OrdersBLL.ORDERS_LIST_CALLMODE
                                     callmode = strValue
                                     objParam = callmode
+                                Case "char"
+                                    objParam = CChar(strValue)
                             End Select
+
+                            'If blnisByRefType Then
+                            '    objParam = objParam.GetType.MakeByRefType
+                            'End If
 
                             Params(intIndex) = objParam
                             intIndex = intIndex + 1
@@ -191,7 +210,7 @@ Imports System.ServiceModel.Activation
                             pTypes(i) = Params(i).GetType()
                         Next
 
-                        m = t.GetMethod(strMethodName, pTypes)
+                        m = t.GetMethod(strMethodName)
                     End If
 
                     If m IsNot Nothing Then
