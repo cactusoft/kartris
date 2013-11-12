@@ -83,6 +83,7 @@ Special CSS rules for small screens, large screens, touch, etc.
   ul { max-width: 100%; }
   #pagecontent_pad { min-height: 200px; padding-bottom: 15px; }
   .hand { cursor: default; }
+  .versions td.info { max-width: 200px; overflow: hidden; }
   }
 
 /* 
