@@ -8,12 +8,12 @@
             'We will add the values dynamically in the codebehind
             'based on the config setting 'frontend.basket.addtobasketdropdown.max'
         %>
-        <asp:DropDownList ID="ddlItemsQuantity" runat="server" CssClass="dropdown">
+        <asp:DropDownList ID="ddlItemsQuantity" runat="server" CssClass="dropdown hide-for-small">
         </asp:DropDownList>
         <%
             'Default the text box value to 1 so can just hit button 
         %>
-        <asp:TextBox ID="txtItemsQuantity" runat="server" CssClass="textbox" text="1" MaxLength="6"></asp:TextBox>
+        <asp:TextBox ID="txtItemsQuantity" runat="server" CssClass="textbox hide-for-small" text="1" MaxLength="6"></asp:TextBox>
         
         <asp:UpdatePanel ID="updAddButton" runat="server" UpdateMode="Conditional" RenderMode="Inline">
             <ContentTemplate>
