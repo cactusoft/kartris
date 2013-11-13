@@ -125,7 +125,7 @@ Partial Class UserControls_Back_StockWarning
         tblExport.Columns.Add(New DataColumn("Warning Level", Type.GetType("System.Single")))
 
         For Each row As DataRow In dvwStock.ToTable.Rows
-            tblExport.Rows.Add(FixNullFromDB(row("V_CodeNumber")), FixNullFromDB(row("V_Name")), _
+            tblExport.Rows.Add("""" & Replace(FixNullFromDB(row("V_CodeNumber").ToString), """", """""") & """", """" & Replace(FixNullFromDB(row("V_Name").ToString), """", """""") & """", _
                                FixNullFromDB(row("V_Quantity")), FixNullFromDB(row("V_QuantityWarnLevel")))
         Next
 
