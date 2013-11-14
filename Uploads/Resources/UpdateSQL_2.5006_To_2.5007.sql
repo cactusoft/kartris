@@ -140,15 +140,3 @@ BEGIN
 
 END
 GO
-INSERT [dbo].[tblKartrisObjectConfig] ([OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) 
-VALUES (N'K:product.showlargeimageinline', N'Product', N'b', N'0', N'Change products images to large view mode instead of being displayed in the image gallery.', 0, 2.5006);
-GO
-DECLARE @OC_ID as int;
-SELECT @OC_ID = OC_ID FROM [dbo].[tblKartrisObjectConfig] WHERE [OC_Name] = N'K:product.showlargeimageinline';
-
-INSERT INTO dbo.tblKartrisObjectConfigValue
-SELECT @OC_ID, P_ID, 1
-FROM dbo.vKartrisTypeProducts
-WHERE P_Desc LIKE '%<overridelargeimagelinktype>';
-
-GO
