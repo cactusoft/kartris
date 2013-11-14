@@ -24,38 +24,38 @@
 Partial Class ItemPager
     Inherits System.Web.UI.UserControl
 
-    Private NoOfPages As Short
-    Private GroupPager As Short
-    Private TotalItems As Integer
-    Private ItemsPerPage As Short
-    Private QueryStringKey As String
+    Private intNoOfPages As Integer
+    Private intGroupPager As Integer
+    Private intTotalItems As Integer
+    Private numItemsPerPage As Short
+    Private strQueryStringKey As String
     Private intCurrentGroup As Integer = 0
 
     ''' <summary>
     ''' Loads/Creates the Pages of the Pager.
     ''' </summary>
-    ''' <param name="pTotalItems">Total Number of Items</param>
-    ''' <param name="pItemsPerPage">Number of Items in each page.</param>
-    ''' <param name="pQueryStringKey">The URL related Pager Key, to hold the page index </param>
+    ''' <param name="pintTotalItems">Total Number of Items</param>
+    ''' <param name="pnumItemsPerPage">Number of Items in each page.</param>
+    ''' <param name="pstrQueryStringKey">The URL related Pager Key, to hold the page index </param>
     ''' <remarks>By Mohammad</remarks>
-    Public Sub LoadPager(ByVal pTotalItems As Integer, ByVal pItemsPerPage As Short, ByVal pQueryStringKey As String)
+    Public Sub LoadPager(ByVal pintTotalItems As Integer, ByVal pnumItemsPerPage As Short, ByVal pstrQueryStringKey As String)
 
-        TotalItems = pTotalItems
-        ItemsPerPage = pItemsPerPage
-        GroupPager = CShort(KartSettingsManager.GetKartConfig("general.paging.group.size"))
+        intTotalItems = pintTotalItems
+        numItemsPerPage = pnumItemsPerPage
+        intGroupPager = CShort(KartSettingsManager.GetKartConfig("general.paging.group.size"))
 
         '' Gets the number of pages to be created in the Pager.
-        NoOfPages = Math.Ceiling(pTotalItems / pItemsPerPage)
+        intNoOfPages = Math.Ceiling(pintTotalItems / pnumItemsPerPage)
 
         'Hide pager if only one page of results
-        If NoOfPages = 1 Then phdWrapper.Visible = False Else phdWrapper.Visible = True
+        If intNoOfPages = 1 Then phdWrapper.Visible = False Else phdWrapper.Visible = True
 
 
-        QueryStringKey = pQueryStringKey
+        strQueryStringKey = pstrQueryStringKey
 
-        Dim intPageNumber As Integer = CInt(Request.QueryString(QueryStringKey))
-        If intPageNumber + 1 > GroupPager Then
-            intCurrentGroup = Math.Floor(intPageNumber / GroupPager)
+        Dim intPageNumber As Integer = CInt(Request.QueryString(strQueryStringKey))
+        If intPageNumber + 1 > intGroupPager Then
+            intCurrentGroup = Math.Floor(intPageNumber / intGroupPager)
         End If
 
 
@@ -63,29 +63,29 @@ Partial Class ItemPager
 
 
         ''****************************** STEP 1 ******************************
-        ''---------- Creating the '<< Pervious' link ----------------------------
+        ''---------- Creating the '<< Previous' link ----------------------------
         Dim lnkPrevious As New HyperLink
         With lnkPrevious
             .ID = "lnkPrevious"     '' The link ID, to be referenced easily.
             .Text = " « "  '' The link Text, that will be viewed.
-            .NavigateUrl = GetURL(CShort(Request.QueryString(QueryStringKey)) - 1)  '' The link Redirect URL.
+            .NavigateUrl = GetURL(CShort(Request.QueryString(strQueryStringKey)) - 1)  '' The link Redirect URL.
             .CssClass = "arrow previous"
         End With
         '' Adding the link to the pager.
         phdPages.Controls.Add(lnkPrevious)
         ''-----------------------------------------------------------------------
 
-        If NoOfPages > GroupPager Then
+        If intNoOfPages > intGroupPager Then
             ''****************************** STEP 1 ******************************
-            ''---------- Creating the '<< Pervious' link ----------------------------
+            ''---------- Creating the '<< Previous' link ----------------------------
             Dim lnkPreviousGroup As New HyperLink
             With lnkPreviousGroup
                 .ID = "lnkPreviousGroup"     '' The link ID, to be referenced easily.
-                .Text = " ... " '& GroupPager  '' The link Text, that will be viewed.
-                .NavigateUrl = GetURL(CShort((intCurrentGroup - 1) * GroupPager))  '' The link Redirect URL.
+                .Text = " ... " '& intGroupPager  '' The link Text, that will be viewed.
+                .NavigateUrl = GetURL(CShort((intCurrentGroup - 1) * intGroupPager))  '' The link Redirect URL.
                 .CssClass = "arrow previous"
             End With
-            If intPageNumber < GroupPager Then
+            If intPageNumber < intGroupPager Then
                 lnkPreviousGroup.NavigateUrl = ""
                 lnkPreviousGroup.CssClass = "arrow disabled"
             End If
@@ -94,12 +94,16 @@ Partial Class ItemPager
             ''-----------------------------------------------------------------------
         End If
 
-        If NoOfPages > GroupPager Then
+        If intNoOfPages > intGroupPager Then
 
-            Dim maxPageGroup As Integer = ((intCurrentGroup + 1) * (GroupPager))
-            If maxPageGroup = (NoOfPages + 1) Then maxPageGroup = NoOfPages
+            Dim intMaxPageGroup As Integer = ((intCurrentGroup + 1) * (intGroupPager))
+            If intMaxPageGroup = (intNoOfPages + 1) Then intMaxPageGroup = intNoOfPages
 
-            For i As Short = (intCurrentGroup * GroupPager) To maxPageGroup - 1
+            'On last set of links, we can end up with too many page links. To stop this
+            'if intMaxPageGroup is bigger than intNoOfPages, we set it to intNoOfPages.
+            If intMaxPageGroup > intNoOfPages Then intMaxPageGroup = intNoOfPages
+
+            For i As Short = (intCurrentGroup * intGroupPager) To intMaxPageGroup - 1
                 Dim lnkPage As New HyperLink
                 With lnkPage
                     .ID = "lnkPage" & i         '' The link ID, to be referenced easily.
@@ -108,11 +112,12 @@ Partial Class ItemPager
                 End With
                 '' Adding the link to the pager.
                 phdPages.Controls.Add(lnkPage)
+
             Next
         Else
             ''****************************** STEP 2 ******************************
             ''---------- Creating the pages' links (1 2 3 ...) ----------------------
-            For i As Short = 0 To NoOfPages - 1
+            For i As Short = 0 To intNoOfPages - 1
                 Dim lnkPage As New HyperLink
                 With lnkPage
                     .ID = "lnkPage" & i         '' The link ID, to be referenced easily.
@@ -125,17 +130,17 @@ Partial Class ItemPager
             ''-----------------------------------------------------------------------
         End If
 
-        If NoOfPages > GroupPager Then
+        If intNoOfPages > intGroupPager Then
             ''****************************** STEP 1 ******************************
             ''---------- Creating the '>> Next Group' link ----------------------------
             Dim lnkNextGroup As New HyperLink
             With lnkNextGroup
                 .ID = "lnkNextGroup"     '' The link ID, to be referenced easily.
-                .Text = " ... " '& GroupPager & " » " '' The link Text, that will be viewed.
-                .NavigateUrl = GetURL(CShort((intCurrentGroup + 1) * GroupPager))  '' The link Redirect URL.
+                .Text = " ... " '& intGroupPager & " » " '' The link Text, that will be viewed.
+                .NavigateUrl = GetURL(CShort((intCurrentGroup + 1) * intGroupPager))  '' The link Redirect URL.
                 .CssClass = "arrow next"
             End With
-            If intCurrentGroup = Math.Floor((NoOfPages - 1) / GroupPager) Then
+            If intCurrentGroup = Math.Floor((intNoOfPages - 1) / intGroupPager) Then
                 lnkNextGroup.NavigateUrl = ""
                 lnkNextGroup.CssClass = "arrow disabled"
             End If
@@ -150,7 +155,7 @@ Partial Class ItemPager
         With lnkNext
             .ID = "lnkNext"     '' The link ID, to be referenced easily.
             .Text = " » "  '' The link Text, that will be viewed. [hardcode]
-            .NavigateUrl = GetURL(CShort(Request.QueryString(QueryStringKey)) + 1) '' The link Redirect URL.
+            .NavigateUrl = GetURL(CShort(Request.QueryString(strQueryStringKey)) + 1) '' The link Redirect URL.
             .CssClass = "arrow next"
         End With
         '' Adding the link to the pager.
@@ -177,8 +182,8 @@ Partial Class ItemPager
         Dim strActiveTab As String = "p"
         Dim intCPGRID As Integer = CInt(Request.QueryString("CPGR"))
         Dim intPPGRID As Integer = CInt(Request.QueryString("PPGR"))
-        If QueryStringKey = "PPGR" Then intPPGRID = pPageIndx
-        If QueryStringKey = "CPGR" Then
+        If strQueryStringKey = "PPGR" Then intPPGRID = pPageIndx
+        If strQueryStringKey = "CPGR" Then
             intCPGRID = pPageIndx
             strActiveTab = "s"
         End If
@@ -231,7 +236,7 @@ Partial Class ItemPager
             Case 0              '' The 1st Page
                 CType(phdPages.FindControl("lnkPrevious"), HyperLink).NavigateUrl = ""
                 CType(phdPages.FindControl("lnkPrevious"), HyperLink).CssClass = "arrow disabled"
-            Case NoOfPages - 1  '' The Last Page
+            Case intNoOfPages - 1  '' The Last Page
                 CType(phdPages.FindControl("lnkNext"), HyperLink).NavigateUrl = ""
                 CType(phdPages.FindControl("lnkNext"), HyperLink).CssClass = "arrow disabled"
             Case Else
