@@ -1579,7 +1579,7 @@ INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value],
 GO
 /* Add bitcoin as a new currency */
 SET IDENTITY_INSERT [dbo].[tblKartrisCurrencies] ON
-INSERT [dbo].[tblKartrisCurrencies] ([CUR_ID], [CUR_Symbol], [CUR_ISOCode], [CUR_ISOCodeNumeric], [CUR_ExchangeRate], [CUR_HasDecimals], [CUR_Live], [CUR_Format], [CUR_IsoFormat], [CUR_DecimalPoint], [CUR_RoundNumbers], [CUR_OrderNo]) VALUES (5, N'฿', N'BTC', N'999', .02, 1, 1, N'[symbol][value]', N'[iso] [value]', N'.', 8, 5)
+INSERT [dbo].[tblKartrisCurrencies] ([CUR_ID], [CUR_Symbol], [CUR_ISOCode], [CUR_ISOCodeNumeric], [CUR_ExchangeRate], [CUR_HasDecimals], [CUR_Live], [CUR_Format], [CUR_IsoFormat], [CUR_DecimalPoint], [CUR_RoundNumbers], [CUR_OrderNo]) VALUES (5, N'฿', N'BTC', N'999', .02, 1, 0, N'[symbol][value]', N'[iso] [value]', N'.', 8, 5)
 SET IDENTITY_INSERT [dbo].[tblKartrisCurrencies] OFF
 GO
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 13, 1, 5, N'Bitcoin')
