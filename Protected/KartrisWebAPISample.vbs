@@ -22,7 +22,7 @@ strKartrisWebShopURL = "http://localhost:52038/Kartris/"
 
 '========================================================================
 'Web API Key set in your Kartris' web.config
-strKartrisWebAPIKey = "dXNlcm5hbWU6cGFzc3dvcmQ="
+strKartrisWebAPIKey = "PutYourKartrisWebAPISecretKeyHere"
 '========================================================================
 
 '========================================================================
@@ -34,10 +34,10 @@ strMethodName = "TaxBLL.GetTaxRate"
 '========================================================================
 'strParametersXML
 '========================================================================
-strParametersXML = "<Parameter Name=""numTaxID"" Type=""Byte"" Value=""2""/>"
+strParametersXML = "<Parameter Name=""numTaxID"" Type=""Byte""><Value>2</Value></Parameter>"
 
 'to pass multiple parameters ->
-'strParametersXML = "<Parameter Name=""Param1"" Type=""Integer"" Value=""1""/><Parameter Name=""Param2"" Type=""String"" Value=""Param2StringValue""/>..."
+'strParametersXML = "<Parameter Name=""Param1"" Type=""Integer""><Value>1</Value></Parameter><Parameter Name=""Param2"" Type=""String""><Value>Param2StringValue</Value></Parameter>..."
 'just pass an empty string for functions that don't have any parameters like CKartrisBLL.WebShopURL 
 
 '========================================================================================================
