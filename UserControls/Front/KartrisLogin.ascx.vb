@@ -251,7 +251,7 @@ Partial Class KartrisLogin
                         End If
 
                         'Send the email
-                        SendEmail(LanguagesBLL.GetEmailFrom(CInt(Session("LANG"))), strEmail, strSubject, sbEmailText.ToString)
+                        SendEmail(LanguagesBLL.GetEmailFrom(CInt(Session("LANG"))), strEmail, strSubject, sbEmailText.ToString, , , , , blnHTMLEmail)
                     End If
                     Session("_NewPassword") = Nothing
                     FormsAuthentication.SetAuthCookie(strEmail, True)
