@@ -47,6 +47,7 @@ Special CSS rules for small screens, large screens, touch, etc.
 ========================================================================
 */
 @media only screen and (max-width: 500px) {
+  .products_tabular .item,
   .products_shortened .item,
   .subcategories_shortened .item,
   #homepage .products_tabular .item { display: block; float: none; width: 100%; margin: 0 0 5px 0; }

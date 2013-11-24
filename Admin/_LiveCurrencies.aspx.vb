@@ -17,6 +17,7 @@ Imports CkartrisDataManipulation
 Imports CkartrisDisplayFunctions
 Imports CkartrisFormatErrors
 Imports KartSettingsManager
+Imports System.Xml.Linq
 Imports System.Xml
 
 Partial Class Admin_LiveCurrencies
@@ -135,6 +136,48 @@ Partial Class Admin_LiveCurrencies
         Return False
     End Function
 
+    Private Function GetBitCoinRate(ByVal strBaseIso As String) As Double
+        Dim url As String = "http://bcchanger.com/bitcoin_price_feed.php?feed_type=xml&currency=" & strBaseIso
+        Dim xmlDoc As XDocument = Nothing
+        Dim numValue As Double = 0
+
+        'Put it in a try, in case a bad result is or some
+        'other problem like an error
+        Try
+            'Grab Bitcoin feed with this code that prevents
+            'timeouts taking the whole feed down, as at present
+            'we expect Bitcoin feeds to be less reliable and
+            'also not the primary currency on a site
+            Dim reqFeed As System.Net.HttpWebRequest = DirectCast(System.Net.WebRequest.Create(url), System.Net.HttpWebRequest)
+            reqFeed.Timeout = 1000 'milliseconds
+            Dim resFeed As System.Net.WebResponse = reqFeed.GetResponse()
+            Dim responseStream As Stream = resFeed.GetResponseStream()
+            Dim docXML As New XmlDocument()
+            docXML.Load(responseStream)
+            responseStream.Close()
+
+            'Set XDocument to the XML string we got back from feed
+            xmlDoc = XDocument.Parse(docXML.OuterXml)
+
+            'Define LINQ query to pull 1 record from XML
+            'Note the 'skip' second line from bottom - so we can jump to a record
+            'Note the 'take' at end, similar to 'top' in SQL
+            Dim xmlChannel = From xmlItem In xmlDoc.Descendants("BTC") _
+            Select strValue = xmlItem.Element("value").Value, _
+            strCurrency = xmlItem.Element("currency").Value _
+            Take 1
+            For Each xmlItem In xmlChannel
+                numValue = 1 / CDbl(xmlItem.strValue)
+            Next
+            'Add feed data to local cache for one hour
+
+        Catch ex As Exception
+            'Oh dear
+        End Try
+        Return numValue
+
+    End Function
+
     Private Function ReadLiveCurrencyRates( _
             ByVal strBaseIso As String, ByVal strIsoList As String, ByRef tblCurrencies As DataTable, _
             ByRef strMessage As String) As Boolean
@@ -183,9 +226,14 @@ Partial Class Admin_LiveCurrencies
                         'EUR is not in the returned XML so just always consider its value as 1 - its the XML's base currency 
                         'To get its actual rate, just divide it against the base iso rate
                         row("NewRate") = Math.Round(1 / decBaseISORate, 5)
+                        Exit For
+                    ElseIf row("ISOCode") = "BTC" Then
+                        row("NewRate") = GetBitCoinRate(strBaseIso)
+                        Exit For
                     End If
                 Next
             Next
+            Return True
         Else
             Try
                 Throw New ApplicationException(GetGlobalResourceObject("_Currency", "ContentText_LiveCurrencyRequestError"))
@@ -196,7 +244,6 @@ Partial Class Admin_LiveCurrencies
             Return False
         End If
 
-        Return True
     End Function
 
     Protected Sub ShowMasterUpdateMessage()

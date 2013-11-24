@@ -131,16 +131,18 @@
                     ===============================
                     -->
                             <asp:PlaceHolder ID="phdEUVAT" runat="server" Visible="false">
-                                <div class="section">
+                                <div class="section" id="euvatsection">
                                     <h2>
                                         <asp:Literal ID="litEnterEUVAT" runat="server" Text="<%$ Resources: ContentText_EnterEUVat %>"
                                             EnableViewState="false" /></h2>
                                     <div class="row">
-                                        <div class="small-12 large-4 columns">
-                                            <strong>
-                                                <asp:Literal ID="litMSCode" runat="server" EnableViewState="true" /></strong>&nbsp;
-                                    <asp:TextBox ID="txtEUVAT" runat="server" EnableViewState="true" AutoPostBack="true"></asp:TextBox>
+                                        <div class="small-1 large-1 columns">
+                                            <strong><asp:Literal ID="litMSCode" runat="server" EnableViewState="true" /></strong>
                                         </div>
+                                        <div class="small-10 large-3 columns">
+                                            <asp:TextBox ID="txtEUVAT" runat="server" EnableViewState="true" AutoPostBack="true"></asp:TextBox>
+                                        </div>
+                                        <div class="small-1 large-8 columns">&nbsp;</div>
                                     </div>
                                 </div>
                             </asp:PlaceHolder>

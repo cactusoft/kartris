@@ -448,7 +448,7 @@ Public Class SiteMapHelper
 
         If LanguagesBLL.GetLanguagesCount > 1 Then
             If String.IsNullOrEmpty(HttpContext.Current.Session.Item("KartrisUserCulture")) Then
-                strUserCulture = LanguagesBLL.GetCultureByLanguageID_s(LanguagesBLL.GetDefaultLanguageID())
+                strUserCulture = LanguagesBLL.GetCultureByLanguageID_s(LanguagesBLL.GetDefaultLanguageID()) & "/"
             Else
                 strUserCulture = CStr(HttpContext.Current.Session.Item("KartrisUserCulture")) & "/"
             End If

@@ -43,9 +43,9 @@ Partial Class UserControls_Back_CustomPages
                 'we want link to go to home page rather than the
                 'page.aspx
                 If strPage.ToLower = "default" Then
-                    hidPageID.Value = KartSettingsManager.GetKartConfig("general.webshopurl") & "Default.aspx"
+                    hidPageID.Value = CkartrisBLL.WebShopURL & "Default.aspx"
                 Else
-                    hidPageID.Value = KartSettingsManager.GetKartConfig("general.webshopurl") & "Page.aspx?strPage=" & strPage
+                    hidPageID.Value = CkartrisBLL.WebShopURL & "Page.aspx?strPage=" & strPage
                 End If
 
                 LoadPageFromQueryString(GetPageIDFromName(strPage))
@@ -253,9 +253,9 @@ Partial Class UserControls_Back_CustomPages
         'we want link to go to home page rather than the
         'page.aspx
         If txtPageName.Text.ToLower = "default" Then
-            hidPageID.Value = KartSettingsManager.GetKartConfig("general.webshopurl") & "Default.aspx"
+            hidPageID.Value = CkartrisBLL.WebShopURL & "Default.aspx"
         Else
-            hidPageID.Value = KartSettingsManager.GetKartConfig("general.webshopurl") & "Page.aspx?strPage=" & CType(gvwPages.SelectedRow.Cells(1).FindControl("litPageName"), Literal).Text
+            hidPageID.Value = CkartrisBLL.WebShopURL & "Page.aspx?strPage=" & CType(gvwPages.SelectedRow.Cells(1).FindControl("litPageName"), Literal).Text
         End If
 
         LoadParents(txtPageName.Text)

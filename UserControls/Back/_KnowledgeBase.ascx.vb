@@ -45,7 +45,7 @@ Partial Class UserControls_Back_KnowledgeBase
             'dropdown menu
             If strKB_ID <> "" Then
                 litKBID.Text = strKB_ID
-                hidKBID.Value = KartSettingsManager.GetKartConfig("general.webshopurl") & "Knowledgebase.aspx?kb=" & strKB_ID
+                hidKBID.Value = CkartrisBLL.WebShopURL & "Knowledgebase.aspx?kb=" & strKB_ID
                 mvwKB.SetActiveView(viwKBInfo)
                 LoadKBInformationByID(strKB_ID)
                 updKBDetails.Update()
@@ -114,7 +114,7 @@ Partial Class UserControls_Back_KnowledgeBase
             Case "EditKB"
                 mvwKB.SetActiveView(viwKBInfo)
                 litKBID.Text = gvwKB.SelectedValue()
-                hidKBID.Value = KartSettingsManager.GetKartConfig("general.webshopurl") & "Knowledgebase.aspx?kb=" & gvwKB.SelectedValue()
+                hidKBID.Value = CkartrisBLL.WebShopURL & "Knowledgebase.aspx?kb=" & gvwKB.SelectedValue()
                 LoadKBInformation()
                 updKBDetails.Update()
             Case ""
