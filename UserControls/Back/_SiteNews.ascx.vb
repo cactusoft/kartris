@@ -36,7 +36,7 @@ Partial Class UserControls_Back_SiteNews
             'dropdown menu
             If strNewsID <> "" Then
                 litNewsID.Text = strNewsID
-                hidNewsID.Value = KartSettingsManager.GetKartConfig("general.webshopurl") & "News.aspx?NewsID=" & strNewsID
+                hidNewsID.Value = CkartrisBLL.WebShopURL & "News.aspx?NewsID=" & strNewsID
                 mvwNewsList.SetActiveView(viwNewsInfo)
                 LoadNewsInformationByID(strNewsID)
                 updNewsList.Update()
@@ -96,7 +96,7 @@ Partial Class UserControls_Back_SiteNews
             Case "EditNews"
                 mvwNewsList.SetActiveView(viwNewsInfo)
                 litNewsID.Text = gvwNews.SelectedValue()
-                hidNewsID.Value = KartSettingsManager.GetKartConfig("general.webshopurl") & "News.aspx?NewsID=" & gvwNews.SelectedValue()
+                hidNewsID.Value = CkartrisBLL.WebShopURL & "News.aspx?NewsID=" & gvwNews.SelectedValue()
                 LoadNewsInformation()
                 updNewsList.Update()
             Case ""

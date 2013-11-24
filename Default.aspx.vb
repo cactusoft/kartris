@@ -50,7 +50,7 @@ Partial Class Main
             UC_SiteNews.MaxItems = CShort(GetKartConfig("frontend.news.max"))
 
             'Set canonical tag to webshopURL
-            Me.CanonicalTag = LCase(GetKartConfig("general.webshopurl"))
+            Me.CanonicalTag = CkartrisBLL.WebShopURLhttp
         End If
 
         If CInt(GetKartConfig("frontend.featuredproducts.display.max")) = 0 Then UC_FeaturedProducts.Visible = False

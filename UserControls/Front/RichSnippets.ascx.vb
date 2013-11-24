@@ -29,7 +29,7 @@ Partial Class UserControls_Front_RichSnippets
             If dirFolder.GetFiles().Length > 0 Then
                 For Each objFile In dirFolder.GetFiles()
                     litImage.Text = litImage.Text.Replace( _
-                        "[image_source]", Replace(CkartrisImages.strProductImagesPath, "~/", KartSettingsManager.GetKartConfig("general.webshopurl")) & "/" & _ProductID & "/" & objFile.Name)
+                        "[image_source]", Replace(CkartrisImages.strProductImagesPath, "~/", CkartrisBLL.WebShopURL()) & "/" & _ProductID & "/" & objFile.Name)
                     Exit For
                 Next
             Else

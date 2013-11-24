@@ -138,7 +138,7 @@
                 numImageNewWidth >= 120 AndAlso numImageNewHeight >= 120 Then
                 '' Setting the watermark text
                 Dim wmText As String = KartSettingsManager.GetKartConfig("frontend.display.images.watermarktext")
-                If wmText.ToLower = "[webshopurl]" Then wmText = KartSettingsManager.GetKartConfig("general.webshopurl")
+                If wmText.ToLower = "[webshopurl]" Then wmText = CkartrisBLL.WebShopURLhttp
                             
                 '' Font and Text setting
                 Dim wmFont As Font = New Font("Arial", 5, FontStyle.Bold)

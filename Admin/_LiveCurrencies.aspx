@@ -101,7 +101,11 @@
                     </div>
                     <div class="infomessage">
                         <p><asp:Literal ID="litContentTextLiveCurrencyRateNote2" runat="server" 
-                            Text="*Exchange rate information obtained from the European Central Bank - http://www.ecb.int"></asp:Literal></p>
+                            Text="International exchange rate information obtained from the <strong>European Central Bank</strong> - <a href='http://www.ecb.int'>www.ecb.int</a>"></asp:Literal></p>
+
+                        <p><asp:Literal ID="litContentTextLiveCurrencyRateNote3" runat="server" 
+                            Text="Bitcoin price from <strong>BCChanger</strong> - <a href='http://www.bcchanger.com'>www.bcchanger.com</a>"></asp:Literal></p>
+
                         <p>
                         <asp:Literal ID="litContentTextCurrencyHash" runat="server" Text="<%$ Resources: _Currency, ContentText_CurrencyHash %>" /></p>
                     </div>

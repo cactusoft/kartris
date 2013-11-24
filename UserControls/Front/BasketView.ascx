@@ -853,7 +853,7 @@ MAIN BASKET
                                     </div>
                                 </ItemTemplate>
                                 <FooterTemplate>
-                                    <a href='<%= KartSettingsManager.GetKartConfig("general.webshopurl")%>Promotions.aspx'>
+                                    <a href='<%= CkartrisBLL.WebShopURL %>Promotions.aspx'>
                                         <asp:Literal ID="litSubHeaderPromotions" runat="server" Text="<%$ Resources:Basket, ContentText_MorePromotionsLink %>"
                                             EnableViewState="false"></asp:Literal></a>
                                 </FooterTemplate>

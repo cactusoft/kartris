@@ -29,8 +29,8 @@ Imports System.Xml
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 2.5008
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #11/17/2013# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION As Decimal = 2.5009
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #11/24/2013# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
@@ -99,19 +99,19 @@ Public NotInheritable Class CkartrisFormatErrors
     ''' </summary>
     Public Shared Sub LogError(Optional ByVal strDescription As String = "")
 
-        Dim blnCulturChanged As Boolean = False
+        Dim blnCultureChanged As Boolean = False
         Dim strCurrentCulture As String = ""
 
         Try
             If HttpContext.Current.Session("KartrisUserCulture") IsNot Nothing Then strCurrentCulture = HttpContext.Current.Session("KartrisUserCulture").ToString
             Thread.CurrentThread.CurrentUICulture = New CultureInfo(LanguagesBLL.GetCultureByLanguageID_s(LanguagesBLL.GetDefaultLanguageID()))
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(LanguagesBLL.GetCultureByLanguageID_s(LanguagesBLL.GetDefaultLanguageID()))
-            blnCulturChanged = True
+            blnCultureChanged = True
         Catch ex As Exception
             If strCurrentCulture <> "" Then
                 Thread.CurrentThread.CurrentUICulture = New CultureInfo(strCurrentCulture)
                 Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(strCurrentCulture)
-                blnCulturChanged = False
+                blnCultureChanged = False
             End If
         End Try
 
@@ -164,7 +164,7 @@ Public NotInheritable Class CkartrisFormatErrors
             swtErrors.Close()
         End If
 
-        If blnCulturChanged And Not String.IsNullOrEmpty(strCurrentCulture) Then
+        If blnCultureChanged And Not String.IsNullOrEmpty(strCurrentCulture) Then
             Thread.CurrentThread.CurrentUICulture = New CultureInfo(strCurrentCulture)
             Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(strCurrentCulture)
         End If
@@ -189,17 +189,17 @@ Public NotInheritable Class CkartrisFormatErrors
         End Try
 
         If blnLogsEnabled Then
-            Dim blnCulturChanged As Boolean = False, strCurrentCulture As String = ""
+            Dim blnCultureChanged As Boolean = False, strCurrentCulture As String = ""
             Try
                 strCurrentCulture = HttpContext.Current.Session("KartrisUserCulture").ToString
                 Thread.CurrentThread.CurrentUICulture = New CultureInfo(LanguagesBLL.GetCultureByLanguageID_s(LanguagesBLL.GetDefaultLanguageID()))
                 Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(LanguagesBLL.GetCultureByLanguageID_s(LanguagesBLL.GetDefaultLanguageID()))
-                blnCulturChanged = True
+                blnCultureChanged = True
             Catch ex As Exception
                 If strCurrentCulture <> "" Then
                     Thread.CurrentThread.CurrentUICulture = New CultureInfo(strCurrentCulture)
                     Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(strCurrentCulture)
-                    blnCulturChanged = False
+                    blnCultureChanged = False
                 End If
             End Try
             Dim strDirPath As String = HttpContext.Current.Server.MapPath("~/" & ConfigurationManager.AppSettings("ErrorLogPath") & "/Errors/" & Format(Now, "yyyy.MM") & "/")
@@ -236,7 +236,7 @@ Public NotInheritable Class CkartrisFormatErrors
             swtErrors.Flush()
             swtErrors.Close()
 
-            If blnCulturChanged Then
+            If blnCultureChanged Then
                 Thread.CurrentThread.CurrentUICulture = New CultureInfo(strCurrentCulture)
                 Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(strCurrentCulture)
             End If
@@ -1293,10 +1293,26 @@ Public NotInheritable Class CkartrisBLL
             (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("customeraccount.aspx")) Or _
             (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("checkout.aspx")) Or _
             (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("customertickets.aspx")) Then _
-            Return Replace(GetKartConfig("general.webshopurl"), "http://", "https://")
+            Return Replace(GetKartConfig("general.webshopurl").ToLower, "http://", "https://")
         Catch ex As Exception
         End Try
         Return GetKartConfig("general.webshopurl")
+    End Function
+
+    ''' <summary>
+    ''' Return the webshop URL but with http
+    ''' regardless of what page you're on
+    ''' </summary>
+    Public Shared Function WebShopURLhttp() As String
+        Return GetKartConfig("general.webshopurl").ToLower
+    End Function
+
+    ''' <summary>
+    ''' Return the webshop URL but with http
+    ''' regardless of what page you're on
+    ''' </summary>
+    Public Shared Function WebShopURLhttps() As String
+        Return Replace(GetKartConfig("general.webshopurl").ToLower, "http://", "https://")
     End Function
 
     ''' <summary>

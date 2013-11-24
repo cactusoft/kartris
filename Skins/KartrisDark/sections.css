@@ -209,7 +209,7 @@ VERSIONS
 .versions .line                         { text-align: right; padding: 5px; }
 .versions .addtobasket                  { clear: both }
 .versions .addtobasket .dropdown        { width: 45px }
-.versions .addtobasket .textbox         { width: 30px }
+.versions .addtobasket .textbox         { width: 45px }
 .versions .addtobasket div.selector     { white-space: nowrap; text-align: right; float: right; }
 .versions .addtobasket div.outofstock   { color: #f00; font-weight: bold; }
 .versions .addtobasket span.outofstock  { color: #f00; font-weight: bold; }
@@ -451,7 +451,7 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
                                         {  }
 .basket td.quantity                     { vertical-align: top; width: 10%; text-align: right; }
 .basket td.quantity div                 { float: right }
-.basket td.quantity input               { width: 25px; text-align: right; }
+.basket td.quantity input               { width: 45px; text-align: right; }
 .basket td.quantity div.smallupdateprogress
                                         { position: relative; float: left; }
 .basket td.extax,
@@ -523,6 +523,8 @@ CHECKOUT
 #checkout #checkoutbasket               { margin: 20px 0 20px 0 }
 #checkout .basket th.total,
 #checkout .basket td.total              { width: 10%; }
+#checkout .basket td.total              { width: 10%; }
+#checkout #euvatsection strong          { float: right; font-size: 130%; color: #999; }
 /* 
 ========================================================================
 WISHLIST

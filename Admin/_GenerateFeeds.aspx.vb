@@ -116,7 +116,7 @@ Partial Class Admin_GenerateFeeds
                 .WriteWhitespace(vbCrLf)
                 .WriteStartElement("url")
                 .WriteWhitespace(vbCrLf)
-                .WriteElementString("loc", GetKartConfig("general.webshopurl") & "sitemap.xml")
+                .WriteElementString("loc", CkartrisBLL.WebShopURLhttp & "sitemap.xml")
                 .WriteWhitespace(vbCrLf)
                 .WriteEndElement()
 
@@ -124,7 +124,7 @@ Partial Class Admin_GenerateFeeds
                     .WriteWhitespace(vbCrLf)
                     .WriteStartElement("url")
                     .WriteWhitespace(vbCrLf)
-                    .WriteElementString("loc", GetKartConfig("general.webshopurl") & "sitemap" & i & ".xml")
+                    .WriteElementString("loc", CkartrisBLL.WebShopURLhttp & "sitemap" & i & ".xml")
                     .WriteWhitespace(vbCrLf)
                     .WriteEndElement()
                 Next
@@ -133,10 +133,10 @@ Partial Class Admin_GenerateFeeds
 
         'Show link to file
         lnkGenerated.Visible = True
-        lnkGenerated.NavigateUrl = GetKartConfig("general.webshopurl") & "sitemap.xml"
+        lnkGenerated.NavigateUrl = CkartrisBLL.WebShopURLhttp & "sitemap.xml"
 
         'Show full URL that needs to be given to Google
-        litFilePath.Text = GetKartConfig("general.webshopurl") & "sitemap.xml"
+        litFilePath.Text = CkartrisBLL.WebShopURLhttp & "sitemap.xml"
         litFilePath.Visible = True
 
         'Show update animation
@@ -252,7 +252,7 @@ Partial Class Admin_GenerateFeeds
                 .WriteWhitespace(vbCrLf)
                 .WriteElementString("title", Server.HtmlEncode(GetGlobalResourceObject("Kartris", "Config_Webshopname")))
                 .WriteWhitespace(vbCrLf)
-                .WriteElementString("link", GetKartConfig("general.webshopurl"))
+                .WriteElementString("link", CkartrisBLL.WebShopURLhttp)
                 .WriteWhitespace(vbCrLf)
                 .WriteElementString("description", GetGlobalResourceObject("Kartris", "ContentText_DefaultMetaDescription"))
             End With
@@ -350,14 +350,14 @@ Partial Class Admin_GenerateFeeds
             lnkGenerated.NavigateUrl = strAppUploadsFolder & "temp/GoogleBase.txt"
 
             'Show full URL that needs to be given to Google
-            litFilePath.Text = Replace(strAppUploadsFolder, "~/", GetKartConfig("general.webshopurl")) & "temp/GoogleBase.txt"
+            litFilePath.Text = Replace(strAppUploadsFolder, "~/", cKartrisBLL.WebShopURLhttp) & "temp/GoogleBase.txt"
             litFilePath.Visible = True
         Else
             CloseXMLSitemap(xmlGoogleBase)
             lnkGenerated.NavigateUrl = strAppUploadsFolder & "temp/GoogleBase.xml"
 
             'Show full URL that needs to be given to Google
-            litFilePath.Text = Replace(strAppUploadsFolder, "~/", GetKartConfig("general.webshopurl")) & "temp/GoogleBase.xml"
+            litFilePath.Text = Replace(strAppUploadsFolder, "~/", cKartrisBLL.WebShopURLhttp) & "temp/GoogleBase.xml"
             litFilePath.Visible = True
         End If
         lnkGenerated.Visible = True
@@ -388,16 +388,16 @@ Partial Class Admin_GenerateFeeds
         'End If
 
         If InStr(strLink, "~/") > 0 Then
-            strLink = Replace(strLink, "~/", GetKartConfig("general.webshopurl"))
+            strLink = Replace(strLink, "~/", cKartrisBLL.WebShopURLhttp)
         Else
-            If Not InStr(strLink, GetKartConfig("general.webshopurl")) > 0 Then
+            If Not InStr(strLink, cKartrisBLL.WebShopURLhttp) > 0 Then
                 'Link begins with just /
-                strLink = Left(GetKartConfig("general.webshopurl"), Len(GetKartConfig("general.webshopurl")) - 1) & strLink
+                strLink = Left(CkartrisBLL.WebShopURLhttp, Len(CkartrisBLL.WebShopURLhttp) - 1) & strLink
             End If
         End If
 
-        If InStr(strLink, GetKartConfig("general.webshopurl") & GetKartConfig("general.webshopfolder")) Then
-            strLink = Replace(strLink, GetKartConfig("general.webshopurl") & GetKartConfig("general.webshopfolder"), GetKartConfig("general.webshopurl"))
+        If InStr(strLink, CkartrisBLL.WebShopURLhttp & CkartrisBLL.WebShopFolder) Then
+            strLink = Replace(strLink, CkartrisBLL.WebShopURLhttp & CkartrisBLL.WebShopFolder, CkartrisBLL.WebShopURLhttp)
         End If
         Return strLink
     End Function
@@ -429,13 +429,13 @@ Partial Class Admin_GenerateFeeds
             If dirFolderVersions.Exists Then
                 'Try to find a version image
                 For Each objFile In dirFolderVersions.GetFiles()
-                    strImageLink = GetKartConfig("general.webshopurl") & "Images/Products/" & P_ID & "/" & V_ID & "/" & objFile.Name
+                    strImageLink = cKartrisBLL.WebShopURLhttp & "Images/Products/" & P_ID & "/" & V_ID & "/" & objFile.Name
                     Exit For
                 Next
             Else
                 'No versions folder, let's pull product image instead
                 For Each objFile In dirFolderProducts.GetFiles()
-                    strImageLink = GetKartConfig("general.webshopurl") & "Images/Products/" & P_ID & "/" & objFile.Name
+                    strImageLink = cKartrisBLL.WebShopURLhttp & "Images/Products/" & P_ID & "/" & objFile.Name
                     Exit For
                 Next
             End If
