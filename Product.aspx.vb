@@ -51,14 +51,18 @@ Partial Class Product
                     'the ID doesn't appear to pull out an item, so it's
                     'likely the item is no longer available.
                     strErrorThrown = "404"
-                    HttpContext.Current.Server.Transfer("~/404.aspx")
+                    Try
+                        HttpContext.Current.Server.Execute("~/404.aspx")
+                    Catch exError As Exception
+
+                    End Try
                 End If
             Catch ex As Exception
                 'Some other error occurred - it seems the ID of the item
                 'exists, but loading or displaying the item caused some
                 'other error.
                 CkartrisFormatErrors.ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
-                If strErrorThrown = "" Then HttpContext.Current.Server.Transfer("~/Error.aspx")
+                If strErrorThrown = "" Then HttpContext.Current.Server.Execute("~/Error.aspx")
             End Try
         End If
     End Sub
