@@ -228,9 +228,7 @@ Public MustInherit Class PageBaseClass
     Private Sub Page_Error(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Error
         If UCase(Server.GetLastError.ToString).Contains("SYSTEM.WEB.HTTPREQUESTVALIDATIONEXCEPTION") Then
             Server.ClearError()
-            Dim strURL As String = Request.Url.ToString
             Session("Error") = "invalidrequest"
-            LogError()
             Response.Redirect("~/Error.aspx")
         Else
             LogError()
