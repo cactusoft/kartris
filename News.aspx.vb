@@ -47,7 +47,11 @@ Partial Class News
 
             If numID <> 0 And rptSiteNews.Items.Count = 0 Then
                 strErrorThrown = "404"
-                HttpContext.Current.Server.Transfer("~/404.aspx")
+                Try
+                    HttpContext.Current.Server.Execute("~/404.aspx")
+                Catch exError As Exception
+
+                End Try
             Else
                 'Set pagetitle for specific news story
                 For Each itmRow In rptSiteNews.Items
@@ -59,7 +63,7 @@ Partial Class News
             'exists, but loading or displaying the item caused some
             'other error.
             CkartrisFormatErrors.ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
-            If strErrorThrown = "" Then HttpContext.Current.Server.Transfer("~/Error.aspx")
+            If strErrorThrown = "" Then HttpContext.Current.Server.Execute("~/Error.aspx")
         End Try
 
     End Sub
