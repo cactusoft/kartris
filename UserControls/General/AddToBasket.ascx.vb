@@ -1,4 +1,6 @@
-﻿'========================================================================
+﻿Imports CkartrisDataManipulation
+
+'========================================================================
 'Kartris - www.kartris.com
 'Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC
 
@@ -82,7 +84,8 @@ Partial Class UserControls_General_AddToBasket
                 c_strSelectorType = value
             Else
                 'Try to set to the K:product.addtorbasketqty set at product level
-                c_strSelectorType = LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID)))
+                c_strSelectorType = LCase(FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID))))
+                If c_strSelectorType Is Nothing Then c_strSelectorType = ""
 
                 'No per-product value set, default to global config setting frontend.basket.addtobasketdisplay
                 If c_strSelectorType = "" Then c_strSelectorType = KartSettingsManager.GetKartConfig("frontend.basket.addtobasketdisplay")
@@ -145,7 +148,8 @@ Partial Class UserControls_General_AddToBasket
                 If String.IsNullOrEmpty(litVersionID.Text) OrElse Not IsNumeric(litVersionID.Text) Then Return "1"
 
                 '' Unit size should be checked if the quantity control is "textbox" => qty entered by user
-                c_UnitSize = ObjectConfigBLL.GetValue("K:product.unitsize", CLng(VersionsBLL.GetProductID_s(CLng(litVersionID.Text))))
+                c_UnitSize = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.unitsize", CLng(VersionsBLL.GetProductID_s(CLng(litVersionID.Text)))))
+                If c_UnitSize Is Nothing Then c_UnitSize = ""
                 c_UnitSize = Replace(c_UnitSize, ",", ".") '' Will use the "." instead of "," (just in case wrongly typed)
                 If Not IsNumeric(c_UnitSize) Then c_UnitSize = "1" '' Unit size default value is 1
             End If
@@ -181,7 +185,9 @@ Partial Class UserControls_General_AddToBasket
 
             Dim objMiniBasket As Object = Page.Master.FindControl("UC_MiniBasket")
             Dim numVersionID As Long, numBasketItemID As Long = 0, numEditVersionID As Long = 0
-            If Session("BasketItemInfo") & "" <> "" AndAlso LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID))) = "dropdown" Then
+            Dim strAddToBasketQtyCFG As String = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID)))
+            If strAddToBasketQtyCFG Is Nothing Then strAddToBasketQtyCFG = ""
+            If Session("BasketItemInfo") & "" <> "" AndAlso LCase(strAddToBasketQtyCFG) = "dropdown" Then
                 Dim arrBasketItemInfo() As String = Split(Session("BasketItemInfo") & "", ";")
                 numBasketItemID = arrBasketItemInfo(0)
                 numEditVersionID = arrBasketItemInfo(1)
@@ -203,8 +209,11 @@ Partial Class UserControls_General_AddToBasket
         'If nothing specified, set selector type based
         'on config setting.
         If c_strSelectorType = "" Then
-            If LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID))) <> "" Then
-                c_strSelectorType = LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID)))
+            Dim strAddToBasketQtyCFG As String = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID)))
+            If strAddToBasketQtyCFG Is Nothing Then strAddToBasketQtyCFG = ""
+            If LCase(strAddToBasketQtyCFG) <> "" Then
+                c_strSelectorType = LCase(FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID))))
+                If c_strSelectorType Is Nothing Then c_strSelectorType = ""
             Else
                 c_strSelectorType = KartSettingsManager.GetKartConfig("frontend.basket.addtobasketdisplay")
             End If
