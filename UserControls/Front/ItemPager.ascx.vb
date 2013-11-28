@@ -58,12 +58,7 @@ Partial Class ItemPager
             intCurrentGroup = Math.Floor(intPageNumber / intGroupPager)
         End If
 
-
-
-
-
-        ''****************************** STEP 1 ******************************
-        ''---------- Creating the '<< Previous' link ----------------------------
+        'Creating the '<< Previous' link ----------------------------
         Dim lnkPrevious As New HyperLink
         With lnkPrevious
             .ID = "lnkPrevious"     '' The link ID, to be referenced easily.
@@ -73,12 +68,12 @@ Partial Class ItemPager
         End With
         '' Adding the link to the pager.
         phdPages.Controls.Add(lnkPrevious)
-        ''-----------------------------------------------------------------------
 
         If intNoOfPages > intGroupPager Then
-            ''****************************** STEP 1 ******************************
-            ''---------- Creating the '<< Previous' link ----------------------------
+            'Creating the '<< Previous' link ----------------------------
             Dim lnkPreviousGroup As New HyperLink
+            Dim intMaxPageGroup As Integer = ((intCurrentGroup + 1) * (intGroupPager))
+
             With lnkPreviousGroup
                 .ID = "lnkPreviousGroup"     '' The link ID, to be referenced easily.
                 .Text = " ... " '& intGroupPager  '' The link Text, that will be viewed.
@@ -89,15 +84,9 @@ Partial Class ItemPager
                 lnkPreviousGroup.NavigateUrl = ""
                 lnkPreviousGroup.CssClass = "arrow disabled"
             End If
-            '' Adding the link to the pager.
+
+            'Adding the link to the pager.
             phdPages.Controls.Add(lnkPreviousGroup)
-            ''-----------------------------------------------------------------------
-        End If
-
-        If intNoOfPages > intGroupPager Then
-
-            Dim intMaxPageGroup As Integer = ((intCurrentGroup + 1) * (intGroupPager))
-            If intMaxPageGroup = (intNoOfPages + 1) Then intMaxPageGroup = intNoOfPages
 
             'On last set of links, we can end up with too many page links. To stop this
             'if intMaxPageGroup is bigger than intNoOfPages, we set it to intNoOfPages.
@@ -115,8 +104,7 @@ Partial Class ItemPager
 
             Next
         Else
-            ''****************************** STEP 2 ******************************
-            ''---------- Creating the pages' links (1 2 3 ...) ----------------------
+            'Creating the pages' links (1 2 3 ...) ----------------------
             For i As Short = 0 To intNoOfPages - 1
                 Dim lnkPage As New HyperLink
                 With lnkPage
@@ -131,8 +119,7 @@ Partial Class ItemPager
         End If
 
         If intNoOfPages > intGroupPager Then
-            ''****************************** STEP 1 ******************************
-            ''---------- Creating the '>> Next Group' link ----------------------------
+            'Creating the '>> Next Group' link ----------------------------
             Dim lnkNextGroup As New HyperLink
             With lnkNextGroup
                 .ID = "lnkNextGroup"     '' The link ID, to be referenced easily.
@@ -146,11 +133,9 @@ Partial Class ItemPager
             End If
             '' Adding the link to the pager.
             phdPages.Controls.Add(lnkNextGroup)
-            ''-----------------------------------------------------------------------
         End If
 
-        ''****************************** STEP 3 ******************************
-        ''---------- Creating the ' Next >> ' link ----------------------------
+        'Creating the ' Next >> ' link ----------------------------
         Dim lnkNext As New HyperLink
         With lnkNext
             .ID = "lnkNext"     '' The link ID, to be referenced easily.
@@ -160,9 +145,6 @@ Partial Class ItemPager
         End With
         '' Adding the link to the pager.
         phdPages.Controls.Add(lnkNext)
-        ''-----------------------------------------------------------------------
-
-
 
     End Sub
 
