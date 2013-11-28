@@ -30,7 +30,7 @@ Imports System.Xml
 Public NotInheritable Class CkartrisEnumerations
 
     Public Const KARTRIS_VERSION As Decimal = 2.5009
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #11/24/2013# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #11/28/2013# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
@@ -1616,15 +1616,23 @@ Public NotInheritable Class CkartrisBLL
     ''' Extract the text inside <body></body> tags
     ''' </summary>
     Public Shared Function ExtractHTMLBodyContents(ByVal strHTML As String) As String
-        'remove the opening body tag and anything before it
-        strHTML = Mid(strHTML, strHTML.ToLower.IndexOf("<body>") + 7)
-        'remove the closing body tag and anything after it
-        strHTML = Left(strHTML, strHTML.ToLower.IndexOf("</body>"))
+        Try
+            'remove the opening body tag and anything before it
+            strHTML = Mid(strHTML, strHTML.ToLower.IndexOf("<body>") + 7)
+            'remove the closing body tag and anything after it
+            strHTML = Left(strHTML, strHTML.ToLower.IndexOf("</body>"))
 
-        'remove these template tags if present
-        strHTML = strHTML.Replace("[poofflinepaymentdetails]", String.Empty)
-        strHTML = strHTML.Replace("[storeowneremailheader]", String.Empty)
-        Return strHTML
+            'remove these template tags if present
+            strHTML = strHTML.Replace("[poofflinepaymentdetails]", String.Empty)
+            strHTML = strHTML.Replace("[storeowneremailheader]", String.Empty)
+            Return strHTML
+        Catch ex As Exception
+            'Error occurred, most likely missing template
+            CkartrisFormatErrors.LogError("An error occurred processsing the email template. This can happen if you do not have the required " & _
+                                          "mail templates in your Skin's template folder. Each template should have the appropriate language " & _
+                                          "culture. See http://www.kartris.com/Knowledgebase/HTML-email-templates__k-52.aspx for more information.")
+        End Try
+
     End Function
     ''' <summary>
     ''' Get Google Checkout configuration
