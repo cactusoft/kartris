@@ -64,8 +64,14 @@
                                     class="Kartris-DetailsView-Value">
                                     <asp:DropDownList ID="ddlXMLorTXT" runat="server">
                                         <asp:ListItem Text="RSS 2.0 (.XML)" Value="xml" />
-                                        <asp:ListItem Text="Tab Delimited Text File (.txt)" Value="txt" />
                                     </asp:DropDownList>
+                                    <%
+                                    'txt option removed for time being as we would
+                                    'need to dynamically create the headers and number
+                                    'of columns rather than use a standard function to
+                                    'write a fixed number of fields 
+                                    '<asp:ListItem Text="Tab Delimited Text File (.txt)" Value="txt" />
+                                    %>
                                 </span></li>
                             <li><span class="Kartris-DetailsView-Name"></span><span class="Kartris-DetailsView-Value">
                                 <asp:Button CssClass="button" ID="btnFroogle" runat="server" Text="<%$ Resources: _Kartris, ContentText_Generate %>" /></span></li>
