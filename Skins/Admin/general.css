@@ -113,6 +113,7 @@ table.kartristable tr.Kartris-GridView-Alternate,
 table.kartristable td.Kartris-GridView-Alternate
                                         { background: #fff; border-bottom: solid 1px #f3f3f3; }
 table.kartristable tr:hover,
+table.kartristable td:hover,
 table.kartristable td.Kartris-GridView-Alternate:hover,
 table.kartristable tr.Kartris-GridView-Green:hover,
 table.kartristable td.Kartris-GridView-Alternate-Green:hover,
