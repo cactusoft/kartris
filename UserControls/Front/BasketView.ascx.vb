@@ -191,7 +191,13 @@ Partial Class Templates_BasketView
         If ViewType = BasketBLL.VIEW_TYPE.MINI_BASKET And (Not blnIsInCheckout) Then
             Session("numShippingCountryID") = 0
             Session("_ShippingDestinationID") = 0
-            Basket.D_Tax = 1
+
+            If APP_USMultiStateTax Then
+                Basket.D_Tax = 0
+            Else
+                Basket.D_Tax = 1
+            End If
+
         End If
 
         Call Basket.LoadBasketItems()
