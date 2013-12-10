@@ -601,8 +601,8 @@ Public Class SiteMapHelper
                 Else
                     Dim strPageName As String = WebShopURL() & "Category.aspx"
                     strURL = String.Format("{0}?CategoryID={1}", strPageName, ID)
+                    If numLangID > 1 Then strURL += "&L=" & numLangID
                 End If
-                If numLangID > 1 Then strURL += "&L=" & numLangID
             Case Page.News
                 If blnSEOLinks Then
                     strURL = String.Format("/{2}{3}{0}__n-{1}", FixURLText(Replace(GetNewsTitle(ID, numLangID), " ", "-")), ID, strWebShopFolder, strUserCulture)
