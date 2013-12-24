@@ -5,7 +5,7 @@ MAIN LAYOUT
 */
 html                                    { background: #ddd; height:100%; overflow:scroll; overflow:-moz-scrollbars-vertical; overflow-x:hidden; overflow-y:hidden; }
 body									{ background-color: #fff; min-height: 100%; overflow-y: hidden; }
-body.main                               { background: #ddd; min-height: 100%; overflow-y: scroll; }
+body.main                               { background: #ddd; height: 100%; overflow-y: scroll; }
 #container                              { background-color: #fff; max-width: 900px; margin: 0 auto; min-height: 100%; }
 #centre_container                       { display:block; }
 /* 
