@@ -48,9 +48,9 @@ Partial Class UserControls_Back_EditOrder
                     ddlPaymentGateways.Items.Add(New ListItem(GetGlobalResourceObject("Kartris", "ContentText_DropdownSelectDefault"), ""))
                     For Each strGatewayEntry As String In arrPaymentsMethods
                         Dim arrGateway As String() = Split(strGatewayEntry, "::")
-                        If UBound(arrGateway) = 3 Then
+                        If UBound(arrGateway) = 4 Then
                             Dim blnOkToAdd As Boolean = True
-                            If arrGateway(3) = "p" Then
+                            If arrGateway(4) = "p" Then
                                 If LCase(arrGateway(1)) = "test" Then
                                     blnOkToAdd = HttpSecureCookie.IsBackendAuthenticated
                                 ElseIf LCase(arrGateway(1)) = "off" Then
