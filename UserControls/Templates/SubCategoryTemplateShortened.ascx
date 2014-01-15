@@ -3,11 +3,11 @@
 <div class="item">
     <div class="box">
         <div class="pad">
-            <asp:Literal EnableViewState="true" ID="litCategoryID" runat="server" Visible="false" Text='<%# Eval("CAT_ID") %>'></asp:Literal>
+            <asp:Literal ID="litCategoryID" runat="server" Visible="false" Text='<%# Eval("CAT_ID") %>'></asp:Literal>
             <user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="False" />      
-            <h2><asp:HyperLink EnableViewState="false" ID="lnkCategoryName" runat="server" Text='<%# Server.HtmlEncode(Eval("CAT_Name")) %>'></asp:HyperLink></h2>
+            <h2><asp:HyperLink ID="lnkCategoryName" runat="server" Text='<%# Server.HtmlEncode(Eval("CAT_Name")) %>'></asp:HyperLink></h2>
 
-            <asp:Literal EnableViewState="false" ID="litCategoryDescHidden" runat="server" Text='<%# Eval("CAT_Desc") %>' Visible="false"></asp:Literal>
+            <asp:Literal ID="litCategoryDescHidden" runat="server" Text='<%# Eval("CAT_Desc") %>' Visible="false"></asp:Literal>
 <%--            <% If Len(litCategoryDesc.Text) > 0 Then%>
                 <div class="description">
                 <asp:Literal ID="litCategoryDesc" runat="server"></asp:Literal>

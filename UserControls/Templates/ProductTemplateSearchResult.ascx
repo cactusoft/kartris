@@ -9,20 +9,20 @@
                     <div class="item">
                         <div class="box">
                             <div class="pad row">
-                                <asp:Literal EnableViewState="false" ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>
+                                <asp:Literal ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>
                                 <div class="imageblock small-4 large-2 columns">
                                     <user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="False" />
                                 </div>
                                 <div class="details small-8 large-8 columns">
                                     <h2>
-                                        <asp:HyperLink EnableViewState="false" ID="lnkProductName" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>'
+                                        <asp:HyperLink ID="lnkProductName" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>'
                                             Text='<%# DisplayProductName() %>' />
                                     </h2>
-                                    <asp:Literal EnableViewState="false" ID="litProductDesc" runat="server" Text='<%# Eval("P_Desc") %>'></asp:Literal>
+                                    <asp:Literal ID="litProductDesc" runat="server" Text='<%# Eval("P_Desc") %>'></asp:Literal>
                                     <div class="minprice">
-                                        <asp:Literal EnableViewState="false" ID="litPriceFrom" runat="server" Text="<%$ Resources:Products,ContentText_ProductPriceFrom %>"></asp:Literal>
-                                        <asp:Literal EnableViewState="false" ID="litPriceHidden" runat="server" Text='<%# Eval("MinPrice") %>' Visible="false" />
-                                        <asp:Literal EnableViewState="false" ID="litPriceView" runat="server" />
+                                        <asp:Literal ID="litPriceFrom" runat="server" Text="<%$ Resources:Products,ContentText_ProductPriceFrom %>"></asp:Literal>
+                                        <asp:Literal ID="litPriceHidden" runat="server" Text='<%# Eval("MinPrice") %>' Visible="false" />
+                                        <asp:Literal ID="litPriceView" runat="server" />
                                     </div>
                                 </div>
                                 <div class="spacer"></div>
