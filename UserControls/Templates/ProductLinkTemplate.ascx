@@ -3,11 +3,11 @@
 <div class="item">
     <div class="box">
         <div class="pad">
-            <asp:Literal EnableViewState="false" ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>
+            <asp:Literal ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>
             <user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="False" />
             <div class="details">
                 <h2>
-                    <asp:HyperLink EnableViewState="false" ID="lnkProductName" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>'
+                    <asp:HyperLink ID="lnkProductName" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>'
                         Text='<%# DisplayProductName() %>'></asp:HyperLink></h2>
             </div>
         </div>

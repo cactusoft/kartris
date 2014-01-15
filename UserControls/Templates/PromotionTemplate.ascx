@@ -8,9 +8,9 @@
 			<div class="imageblock">
 				<user:ImageViewer ID="UC_ImageView" runat="server" />
 			</div>
-				<strong><asp:Literal EnableViewState="false" ID="litPromotionName" runat="server" Mode="Encode" ></asp:Literal></strong>
+				<strong><asp:Literal ID="litPromotionName" runat="server" Mode="Encode" ></asp:Literal></strong>
 			<p>
-			<asp:Literal EnableViewState="false" ID="litPromotionText" runat="server" ></asp:Literal></p>
+			<asp:Literal ID="litPromotionText" runat="server" ></asp:Literal></p>
 
 		</div>
 	</div>
