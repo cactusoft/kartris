@@ -25,9 +25,9 @@
                                     <asp:Literal ID="litContentTextSupportTicketExplanation" runat="server" Text="<%$ Resources:Tickets, ContentText_SupportTicketExplanation %>" /></p>
                                 <asp:LinkButton ID="btnOpenTicket" runat="server" CssClass="linkbutton link2"
                                     Text="<%$ Resources: Kartris, ContentText_AddNew %>" /><br /><br />
-                                <asp:GridView CssClass="filled" ID="gvwTickets" runat="server" AllowPaging="True"
+                                <asp:GridView CssClass="filled" ID="gvwTickets" runat="server" AllowPaging="False"
                                     AutoGenerateColumns="False" DataKeyNames="TIC_ID" AutoGenerateEditButton="False"
-                                    GridLines="None" PagerSettings-PageButtonCount="10" PageSize="15">
+                                    GridLines="None" PagerSettings-PageButtonCount="10" PageSize="200">
                                     <Columns>
                                         <asp:BoundField DataField="TIC_ID" HeaderText="<%$ Resources: Kartris, ContentText_SmallNumber %>"
                                             ItemStyle-CssClass="idfield">
