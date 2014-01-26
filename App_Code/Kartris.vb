@@ -1631,6 +1631,7 @@ Public NotInheritable Class CkartrisBLL
             CkartrisFormatErrors.LogError("An error occurred processsing the email template. This can happen if you do not have the required " & _
                                           "mail templates in your Skin's template folder. Each template should have the appropriate language " & _
                                           "culture. See http://www.kartris.com/Knowledgebase/HTML-email-templates__k-52.aspx for more information.")
+            Return "And error occured - most likely the required template is missing. See http://www.kartris.com/Knowledgebase/HTML-email-templates__k-52.aspx for more information."
         End Try
 
     End Function

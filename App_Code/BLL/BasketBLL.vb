@@ -949,8 +949,8 @@ Public Class BasketBLL
                     End If
 
                     If blnPricesExtax Then
-                        CouponDiscount.IncTax = -Math.Round(numCouponValue * (1 + CouponDiscount.TaxRate), CurrencyRoundNumber)
-                        CouponDiscount.ExTax = -Math.Round(numCouponValue, CurrencyRoundNumber)
+                        CouponDiscount.IncTax = -Math.Round(numCouponValue, CurrencyRoundNumber)
+                        CouponDiscount.ExTax = -Math.Round(numCouponValue / (1 + CouponDiscount.TaxRate), CurrencyRoundNumber)
                     End If
                 End If
 

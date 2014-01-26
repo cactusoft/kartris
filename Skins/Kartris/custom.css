@@ -85,6 +85,7 @@ Special CSS rules for small screens, large screens, touch, etc.
   #pagecontent_pad { min-height: 200px; padding-bottom: 15px; }
   .hand { cursor: default; }
   .versions td.info { max-width: 200px; overflow: hidden; }
+  .basket td.quantity input { width: 32px; text-align: right; }
   }
 
 /* 

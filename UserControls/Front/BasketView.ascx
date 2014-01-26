@@ -175,14 +175,11 @@ MAIN BASKET
                                                 <asp:Literal ID="litContentTextQty" runat="server" Text='<%$ Resources: Basket, ContentText_Qty %>'
                                                     EnableViewState="false"></asp:Literal>
                                             </th>
-                                            <% If ViewType = BasketBLL.VIEW_TYPE.MAIN_BASKET Then%>
-                                            <th class="remove">
-                                            </th>
-                                            <% Else%>
-                                            <th class="total">
+                                            <th class="total hide-for-small">
                                                 <asp:Literal ID="litContentTextTotal1" runat="server" Text='<%$ Resources: Basket, ContentText_Total %>'></asp:Literal>
                                             </th>
-                                            <% End If%>
+                                            <th class="remove">
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -285,21 +282,18 @@ MAIN BASKET
                                             </asp:UpdateProgress>
                                             <%	End If%>
                                         </td>
-                                        <% If ViewType = BasketBLL.VIEW_TYPE.MAIN_BASKET Then%>
-                                        <td class="remove">
-                                            <asp:LinkButton CssClass="basket_delete_button" ID="lnkBtnRemoveItem" OnCommand="RemoveItem_Click"
-                                                CommandName="RemoveItem" CommandArgument='<%#Eval("ID") & ";" & Eval("VersionID")%>'
-                                                runat="server" ToolTip='<%$Resources:Basket,FormButton_Remove%>' Text=""></asp:LinkButton>
-                                        </td>
-                                        <% Else%>
-                                        <td class="total">
+                                        <td class="total hide-for-small">
                                             <% If APP_USMultiStateTax Then%>
                                             <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Eval("RowExTax"))%>
                                             <% Else%>
                                             <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Eval("RowIncTax"))%>
                                             <% End If%>
                                         </td>
-                                        <% End If%>
+                                        <td class="remove">
+                                            <asp:LinkButton CssClass="basket_delete_button" ID="lnkBtnRemoveItem" OnCommand="RemoveItem_Click"
+                                                CommandName="RemoveItem" CommandArgument='<%#Eval("ID") & ";" & Eval("VersionID")%>'
+                                                runat="server" ToolTip='<%$Resources:Basket,FormButton_Remove%>' Text=""></asp:LinkButton>
+                                        </td>
                                 </tr>
                             </ItemTemplate>
                         </asp:Repeater>
@@ -353,19 +347,16 @@ MAIN BASKET
                                             <td class="quantity">
                                                 <%#Eval("Quantity")%>
                                             </td>
-                                            <%	If ViewType <> BasketBLL.VIEW_TYPE.MAIN_BASKET Then%>
-                                            <td class="total">
+                                            <td class="total hide-for-small">
                                                 <% If APP_USMultiStateTax Then%>
                                                 <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, CDbl(Eval("TotalExTax")))%>
                                                 <% Else%>
                                                 <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, CDbl(Eval("TotalIncTax")))%>
                                                 <% End If%>
                                             </td>
-                                            <% Else%>
                                             <td>
                                                 &nbsp;
                                             </td>
-                                            <% End If%>
                                     </tr>
                                 </ItemTemplate>
                             </asp:Repeater>
@@ -429,23 +420,21 @@ MAIN BASKET
                                     1
                                 </td>
                                 <% End If%>
-                                <% If ViewType = BasketBLL.VIEW_TYPE.MAIN_BASKET Then%>
-                                <td class="remove">
-                                    <asp:LinkButton ID="lnkBtnRemoveCoupon" OnCommand="RemoveCoupon_Click" CommandName="RemoveCoupon"
-                                        CommandArgument="" CssClass="basket_delete_button" runat="server" ToolTip='<%$ Resources: Basket, FormButton_Remove %>'
-                                        Text=""></asp:LinkButton>
-                                </td>
-                                <% Else%>
-                                <td class="total">
-                                <% If Basket.CouponDiscount.IncTax > 0 Then%>
+                                <td class="total hide-for-small">
+                                    <% If Basket.CouponDiscount.IncTax > 0 Then%>
                                     <% If APP_USMultiStateTax Then%>
                                     <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CouponDiscount.ExTax)%>
                                     <% Else%>
                                     <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CouponDiscount.IncTax)%>
                                     <% End If%>
-                                <% End If%>
+                                    <% Else%><%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CouponDiscount.IncTax)%>
+                                    <% End If%>
                                 </td>
-                                <% End If%>
+                                <td class="remove">
+                                    <asp:LinkButton ID="lnkBtnRemoveCoupon" OnCommand="RemoveCoupon_Click" CommandName="RemoveCoupon"
+                                        CommandArgument="" CssClass="basket_delete_button" runat="server" ToolTip='<%$ Resources: Basket, FormButton_Remove %>'
+                                        Text=""></asp:LinkButton>
+                                </td>
                         </tr>
                         <% End If%>
                         <!-- Customer Discount Row -->
@@ -500,19 +489,16 @@ MAIN BASKET
                                 <td class="quantity">
                                     1
                                 </td>
-                                <% If ViewType <> BasketBLL.VIEW_TYPE.MAIN_BASKET Then%>
-                                <td class="total">
+                                <td class="total hide-for-small">
                                     <% If APP_USMultiStateTax Then%>
                                     <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CustomerDiscount.ExTax)%>
                                     <% Else%>
                                     <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CustomerDiscount.IncTax)%>
                                     <% End If%>
                                 </td>
-                                <% Else%>
                                 <td>
                                     &nbsp;
                                 </td>
-                                <% End If%>
                         </tr>
                         <% End If%>
                         <!-- Shipping Method Row -->
@@ -578,12 +564,15 @@ MAIN BASKET
                                         <td class="quantity">
                                             1
                                         </td>
-                                        <td class="total">
+                                        <td class="total hide-for-small">
                                             <% If APP_USMultiStateTax Then%>
                                             <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.ShippingPrice.ExTax)%>
                                             <% Else%>
                                             <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.ShippingPrice.IncTax)%>
                                             <% End If%>
+                                        </td>
+                                        <td>
+                                            &nbsp;
                                         </td>
                                     </asp:PlaceHolder>
                             </tr>
@@ -635,12 +624,15 @@ MAIN BASKET
                                     <td class="quantity">
                                         1
                                     </td>
-                                    <td class="total">
+                                    <td class="total hide-for-small">
                                         <% If APP_USMultiStateTax Then%>
                                         <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.OrderHandlingPrice.ExTax)%>
                                         <% Else%>
                                         <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.OrderHandlingPrice.IncTax)%>
                                         <% End If%>
+                                    </td>
+                                    <td>
+                                         &nbsp;
                                     </td>
                             </tr>
                         </asp:PlaceHolder>
@@ -651,9 +643,9 @@ MAIN BASKET
                             <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
                             <td class="image_cell hide-for-small">
                             </td>
-                            <td colspan="5">
+                            <td colspan="4">
                                 <% Else%>
-                                <td colspan="6">
+                                <td colspan="5">
                                     <% End If%>
                                     <asp:UpdatePanel ID="updCoupons" runat="server" UpdateMode="Conditional">
                                         <ContentTemplate>
@@ -677,6 +669,7 @@ MAIN BASKET
                                         </ContentTemplate>
                                     </asp:UpdatePanel>
                                 </td>
+                            <td class="hide-for-small">&nbsp;</td>
                         </tr>
                         <%	End If%>
                         <%	End If%>
@@ -716,6 +709,7 @@ MAIN BASKET
                             <td class="total" colspan="2">
                                 <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceTaxAmount)%>
                             </td>
+                            <td class="hide-for-small">&nbsp;</td>
                         </tr>
                         <%End If%>
                         <!-- Grand Totals Rows -->
@@ -761,12 +755,14 @@ MAIN BASKET
                             </td>
                             <% End If%>
                             <% End If%>
-                            <td class="total" colspan="3">
+                            <td class="total" colspan="2">
                             <% If Not (APP_ShowTaxDisplay = False And (ViewType = BasketBLL.VIEW_TYPE.MAIN_BASKET) And APP_PricesIncTax = False) Then%>
                                 <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceIncTax)%>
                                 <% else %>
                                 <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceExTax)%>
                             <% End If%>
+                            </td>
+                            <td class="hide-for-small">&nbsp;
                             </td>
                         </tr>
                         </tbody></table>
