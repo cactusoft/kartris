@@ -414,7 +414,7 @@ ADDRESSES
 */
 .address                                { padding: 0 0 10px 0 }
 .address .inputform div.Kartris-DetailsView-Value
-                                        { width: 260px; }
+                                        { width: 260px; max-width: 100%; }
 .address .inputform .bold               { font-weight: bold }
 .address div.phone                      { font-weight: bold; padding: 5px 0 5px 0; }
 /* 
@@ -458,8 +458,9 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket td.inctax,
 .basket td.tax,
 .basket td.price                        { font-weight: bold; color: #090; width: 10%; font-size: 100%; vertical-align: top; white-space: nowrap;}
-.basket td.total                        { font-weight: bold; color: #f00; width: 20%; font-size: 110%; white-space: nowrap; }
-.basket td.remove                       { }
+.basket td.total                        { font-weight: bold; color: #f00; width: 20%; font-size: 100%; white-space: nowrap; }
+.basket th.remove,
+.basket td.remove                       { width: 30px; }
 .basket td.remove a.basket_delete_button
                                         { margin-top: 2px; display: block; height: 16px; width: 16px; background-image: url(Images/trashcan.png); background-position: top left; background-repeat: no-repeat; }
 .basket .applycoupon td label           { color: #000; font-size: 110%; font-weight: bold; }
@@ -469,7 +470,7 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket table tr.totals td              { background-color: #fff; border-bottom: solid 1px #fc5; }
 .basket table tr.totals #totaltaxrow,
 .basket table tr.totals #totallabel     { text-align: right }
-.basket table tr.totals .total			{ font-size: 180% }
+.basket table tr.totals .total			{ font-size: 120% }
 .basket .controls                       { text-align: right; margin: 8px 0 20px 0; }
 .basket .promotions                     { margin: 10px 0 10px 0 }
 .basket .links                          { display: none; margin: 10px 0 20px 0; }
@@ -515,7 +516,7 @@ CHECKOUT
 #checkout span.inctax                   { padding-right: 10px }
 #checkout textarea                      { width: 100% }
 #checkout span.checkbox                 { display: block; padding: 10px 0 10px 0; }
-#checkout span.checkbox label           { max-width: 300px; }
+#checkout span.checkbox label           { max-width: 300px }
 #checkout .checkoutaddress              { height: 240px; }
 #checkout #confirmation .checkoutaddress
                                         { height: 180px }
