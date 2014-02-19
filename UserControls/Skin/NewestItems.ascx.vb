@@ -38,5 +38,7 @@ Partial Class UserControls_Skin_NewestItems
         rptNewestItems.DataSource = tblNewestProducts
         rptNewestItems.DataBind()
 
+        'Hide whole control if no products to show
+        If numItemCount = 0 Then Me.Visible = False
     End Sub
 End Class

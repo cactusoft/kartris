@@ -80,6 +80,9 @@ Partial Class UserControls_Skin_FeaturedProducts
         Next
         If tblFeaturedProducts.Rows.Count > 0 Then
             tblFeaturedProducts.DefaultView.Sort = "P_Featured DESC"
+        Else
+            'No products, hide whole control
+            Me.Visible = False
         End If
 
         'Choose template for products based on
