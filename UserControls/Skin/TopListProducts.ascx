@@ -1,6 +1,5 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="TopListProducts.ascx.vb"
     Inherits="UserControls_Skin_TopListProducts" %>
-<%  If KartSettingsManager.GetKartConfig("frontend.display.topsellers.quantity") <> 0 Then%>
 <div class="box" id="toplistproducts">
     <h2 class="blockheader">
         <span><span>
@@ -15,4 +14,3 @@
         </asp:Repeater>
     </div>
 </div>
-<%  End If%>

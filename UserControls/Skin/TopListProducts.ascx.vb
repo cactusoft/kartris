@@ -40,6 +40,9 @@ Partial Class UserControls_Skin_TopListProducts
 
         rptTopListProducts.DataSource = tblTopListProducts
         rptTopListProducts.DataBind()
+
+        'Turn off if no products
+        If numItemCount = 0 Then Me.Visible = False
         
     End Sub
 
