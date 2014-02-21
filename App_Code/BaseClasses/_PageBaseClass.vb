@@ -198,8 +198,11 @@ Public MustInherit Class _PageBaseClass
                         If Not CBool(arrAuth(2)) Then
                             Page.Master.FindControl("_UC_CategoryMenu").Visible = False
                             Page.Master.FindControl("litHiddenCatMenu").Visible = True
-                            Page.Master.FindControl("lnkNewCat").Visible = False
-                            Page.Master.FindControl("lnkNewProd").Visible = False
+
+                            'These no longer in back end, will fail if user logs in
+                            'and doesn't have products permissions
+                            'Page.Master.FindControl("lnkNewCat").Visible = False
+                            'Page.Master.FindControl("lnkNewProd").Visible = False
                             DirectCast(Page.Master.FindControl("splMainPage"), VwdCms.SplitterBar).Width = 40
 
                         End If
