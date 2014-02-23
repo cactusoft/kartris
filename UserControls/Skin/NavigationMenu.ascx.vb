@@ -98,6 +98,19 @@ Partial Class UserControls_Front_NavigationMenu
                         'item not found
                     End Try
                 End If
+            Case "wishlist"
+                If KartSettingsManager.GetKartConfig("frontend.users.wishlists.enabled") <> "y" Then
+                    Try
+                        menFrontEnd.Items.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
+                    Try
+                        e.Item.Parent.ChildItems.Remove(e.Item)
+                    Catch ex As Exception
+                        'item not found
+                    End Try
+                End If
         End Select
     End Sub
 
