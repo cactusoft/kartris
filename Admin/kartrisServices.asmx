@@ -1,1 +1,1 @@
-﻿<%@ WebService Language="VB" CodeBehind="~/App_Code/kartrisServices.vb" Class="kartrisServices" %>
+﻿<%@ WebService Language="VB" CodeBehind="~/App_Code/Services.vb" Class="kartrisServices" %>
