@@ -19,7 +19,7 @@ Partial Class UserControls_Front_SiteNews
 
     Private _TitleTagType As String
 
-    Private _MaxItems As Integer
+    Private _MaxItems As Integer = CShort(KartSettingsManager.GetKartConfig("frontend.news.max"))
 
     Public Property TitleTagType() As String
         Set(ByVal value As String)
