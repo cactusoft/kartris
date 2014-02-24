@@ -159,6 +159,7 @@
                             </ul>
                         </div>
                     </div>
+                    <% If KartSettingsManager.GetKartConfig("general.pushnotifications.enabled ") = "y" Then%>
                     <div id="pushnotifications">
                         <div class="floatright">
                             <asp:LinkButton ID="lnkNewDevice" Text="<%$ Resources: _Kartris, FormButton_New %>" CssClass="linkbutton icon_new" runat="server" />
@@ -187,6 +188,7 @@
                             </Columns>
                         </asp:GridView>
                     </div>
+                    <% End If%>
                     <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
                         <asp:LinkButton ID="btnUpdate" ValidationGroup="UserDetails" runat="server" ToolTip='<%$ Resources: _Kartris, FormButton_Save %>'
                             CssClass="button savebutton" Text='<%$ Resources: _Kartris, FormButton_Save %>' />
