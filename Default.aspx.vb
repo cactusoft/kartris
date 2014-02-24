@@ -46,14 +46,9 @@ Partial Class Main
         End If
 
         If Not Page.IsPostBack Then
-            'Set number of news stories
-            UC_SiteNews.MaxItems = CShort(GetKartConfig("frontend.news.max"))
-
             'Set canonical tag to webshopURL
             Me.CanonicalTag = CkartrisBLL.WebShopURLhttp
         End If
-
-        If CInt(GetKartConfig("frontend.featuredproducts.display.max")) = 0 Then UC_FeaturedProducts.Visible = False
 
     End Sub
 

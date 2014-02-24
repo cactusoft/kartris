@@ -21,7 +21,7 @@ Partial Class UserControls_Skin_FeaturedProducts
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
-            If CInt(GetKartConfig("frontend.featuredproducts.display.max")) = 0 Then Return
+            If CInt(GetKartConfig("frontend.featuredproducts.display.max")) = 0 Then Me.Visible = False
             LoadFeaturedProducts()
         End If
 
