@@ -84,8 +84,19 @@
     End Sub
 
     Sub Application_Error(ByVal sender As Object, ByVal e As EventArgs)
-        ' Code that runs when an unhandled error occurs
-        ' Log the un-handled error
+        'Trap validation request errors and return 404 so that BING
+        'stops coming back calling them. This should work but doesn't
+        'Any ideas?
+        Dim ex As Exception = Server.GetLastError()
+        If TypeOf ex Is System.Web.HttpRequestValidationException Then
+            Server.ClearError()
+            Response.Clear()
+            Response.StatusCode = 404 'This is to stop BING and other SEs keep coming back and trying again
+            Response.Write("This looks like a bad or invalid URL.")
+            Response.End()
+        End If
+		
+        'Log the un-handled error
         CkartrisFormatErrors.ReportUnHandledError()
     End Sub
 
