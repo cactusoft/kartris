@@ -18,7 +18,7 @@
                 <li><span class="Kartris-DetailsView-Name">
                     <asp:Label CssClass="requiredfield" ID="lblCardNumber" runat="server" Text="<%$ Resources: ContentText_CardNumber %>"
                         AssociatedControlID="txtCardNumber" EnableViewState="false" /></span> <span class="Kartris-DetailsView-Value">
-                            <asp:TextBox ID="txtCardNumber" runat="server" Text="4929000000006" />
+                            <asp:TextBox ID="txtCardNumber" runat="server" />
                             <asp:RegularExpressionValidator ID="valRegExCardNumber" runat="server" ControlToValidate="txtCardNumber"
                                 ErrorMessage="<%$ Resources: Error, ContentText_IsNotNumeric %>" EnableClientScript="true"
                                 Display="Dynamic" ValidationGroup="CreditCard" ValidationExpression="[0-9]*"
@@ -41,7 +41,7 @@
                     <asp:Label CssClass="requiredfield" ID="lblCardSecurityNumber" runat="server" Text="<%$ Resources: ContentText_SecurityNumber %>"
                         AssociatedControlID="txtCardSecurityNumber" EnableViewState="false" /></span>
                     <span class="Kartris-DetailsView-Value">
-                        <asp:TextBox ID="txtCardSecurityNumber" runat="server" MaxLength="4" Text="123" />
+                        <asp:TextBox ID="txtCardSecurityNumber" runat="server" MaxLength="4" Text="" CssClass="shorttext" />
                         <asp:RequiredFieldValidator ID="valRequiredCardSecurityNumber" runat="server" ControlToValidate="txtCardSecurityNumber"
                             ErrorMessage="<%$ Resources: Kartris, ContentText_RequiredField %>" EnableClientScript="true"
                             ValidationGroup="CreditCard" Display="Dynamic" CssClass="error" ForeColor="" />
@@ -53,7 +53,7 @@
                 <li><span class="Kartris-DetailsView-Name">
                     <asp:Label ID="lblCardStartDate" runat="server" Text="<%$ Resources: ContentText_StartDate %>"
                         AssociatedControlID="ddlCardStartMonth" EnableViewState="false" /></span> <span class="Kartris-DetailsView-Value">
-                            <asp:DropDownList runat="server" ID="ddlCardStartMonth">
+                            <asp:DropDownList runat="server" ID="ddlCardStartMonth" CssClass="shorttext">
                                 <asp:ListItem Text="01" />
                                 <asp:ListItem Text="02" />
                                 <asp:ListItem Text="03" />
@@ -69,13 +69,13 @@
                             </asp:DropDownList>
                             <asp:Literal ID="litSlash" runat="server" Text="/" EnableViewState="false" />
                             <!-- populated programmatically -->
-                            <asp:DropDownList runat="server" ID="ddlCardStartYear" />
+                            <asp:DropDownList runat="server" ID="ddlCardStartYear" CssClass="shorttext" />
                         </span></li>
                 <li><span class="Kartris-DetailsView-Name">
                     <asp:Label CssClass="requiredfield" ID="lblCardExpiry" runat="server" Text="<%$ Resources: ContentText_CardExpiry %>"
                         AssociatedControlID="ddlCardExpiryMonth" EnableViewState="false" /></span> <span
                             class="Kartris-DetailsView-Value">
-                            <asp:DropDownList runat="server" ID="ddlCardExpiryMonth">
+                            <asp:DropDownList runat="server" ID="ddlCardExpiryMonth" CssClass="shorttext">
                                 <asp:ListItem Text="01" />
                                 <asp:ListItem Text="02" />
                                 <asp:ListItem Text="03" />
@@ -91,7 +91,7 @@
                             </asp:DropDownList>
                             <asp:Literal ID="litSlash2" runat="server" Text="/" EnableViewState="false" />
                             <!-- populated programmatically -->
-                            <asp:DropDownList runat="server" ID="ddlCardExpiryYear" />
+                            <asp:DropDownList runat="server" ID="ddlCardExpiryYear" CssClass="shorttext" />
                         </span></li>
             </ul>
         </div>
