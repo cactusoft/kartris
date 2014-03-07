@@ -98,6 +98,8 @@ select                                  { font-weight: normal; color: #111; bord
 textarea                                { min-height: 80px; max-width: 100%; }
 input                                   { width: 250px; max-width: 100%; }
 input.longtext                          { width: 400px }
+select.shorttext,
+input.shorttext                         { width: 60px }
 select:focus,
 input:focus,
 textarea:focus                          { color: #000; background-color: #fff; border: solid 1px #c00; }
