@@ -163,13 +163,34 @@ Partial Class UserControls_Back_StockWarning
         Dim fi As New FileInfo(Server.MapPath(strFilePath))
         Dim strFileName As String = fi.Name
 
-        If LCase(strFileName).EndsWith(".xls") Then
-            connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & Server.MapPath(strFilePath) & _
-                        ";Extended Properties='Excel 8.0;HDR=Yes;MAXSCANROWS=1;IMEX=1'"
+        'To read .xls files, we need to use the Microsoft 'Jet' driver, which is part of MS Office
+        'The problem is, that the Jet 4.0 driver, which is widely used, is not 64-bit compatible, 
+        'but lots of servers (probably most in fact) these days are 64-bit. Now you could change
+        'the app pool to run 32-bit, and this fixes it. But with Office 2010, there was an updated
+        'driver package called 'ACE' released that supports 64-bit. So below, we detect whether the
+        'site is running on 64 or 32 bit, and then use the appropriate driver. If you do receive
+        'error messages still that the driver is not registered on the local machine, make sure you
+        'do have the appropriate driver installed.
+        If IntPtr.Size = 8 Then
+            '64 bit
+            If LCase(strFileName).EndsWith(".xls") Then
+                connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & Server.MapPath(strFilePath) & _
+                            ";Extended Properties='Excel 12.0;HDR=Yes;MAXSCANROWS=1;IMEX=1'"
+            Else
+                connString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" & Server.MapPath(strFilePath.Replace(strFileName, "")) & _
+                            ";Extended Properties='text;HDR=Yes;FMT=Delimited;MAXSCANROWS=1;IMEX=1'"
+            End If
         Else
-            connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & Server.MapPath(strFilePath.Replace(strFileName, "")) & _
-                        ";Extended Properties='text;HDR=Yes;FMT=Delimited;MAXSCANROWS=1;IMEX=1'"
+            '32 bit
+            If LCase(strFileName).EndsWith(".xls") Then
+                connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & Server.MapPath(strFilePath) & _
+                            ";Extended Properties='Excel 8.0;HDR=Yes;MAXSCANROWS=1;IMEX=1'"
+            Else
+                connString = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & Server.MapPath(strFilePath.Replace(strFileName, "")) & _
+                            ";Extended Properties='text;HDR=Yes;FMT=Delimited;MAXSCANROWS=1;IMEX=1'"
+            End If
         End If
+
 
         connFile = New OleDbConnection(connString)
         Try
