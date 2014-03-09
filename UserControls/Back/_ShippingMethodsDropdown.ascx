@@ -13,7 +13,7 @@
             </ProgressTemplate>
         </asp:UpdateProgress>
         <asp:Literal ID="litContentTextShippingAvailableAfterAddress" runat="server"
-         Text="LS_ShippingAvailableAfterAddress" Visible="False"></asp:Literal>
+         Text="-" Visible="False"></asp:Literal>
         
     </ContentTemplate>
 </asp:UpdatePanel>

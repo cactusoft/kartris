@@ -53,7 +53,7 @@
                                 </li>
                                 <li><span class="Kartris-DetailsView-Name">
                                     <asp:Label ID="lblOrderStatus" runat="server" Text="<%$ Resources: _Orders, ContentText_OrderStatus %>" /></span>
-                                    <span class="Kartris-DetailsView-Value"><span class="checkbox">
+                                    <span class="Kartris-DetailsView-Value orderstatus"><span class="checkbox">
                                         <asp:CheckBox runat="server" ID="chkOrderSent" /></span>
                                         <asp:Label CssClass="checkbox_label" ID="lblOrderSent" runat="server" Text="<%$ Resources: _Orders, ContentText_OrderStatusSent %>"
                                             AssociatedControlID="chkOrderSent" /><asp:HiddenField runat="server" ID="hidOrigOrderSent" />
@@ -74,7 +74,8 @@
                                             AssociatedControlID="chkOrderShipped" />
                                     </span></li>
                                 <asp:PlaceHolder runat="server" ID="phdSendEmailToCustomer" Visible="true">
-                                    <li><span class="Kartris-DetailsView-Name"></span><span class="Kartris-DetailsView-Value">
+                                    <li><span class="Kartris-DetailsView-Name"></span>
+                                        <span class="Kartris-DetailsView-Value">
                                         <input type="hidden" name="C_EmailAddress" value="C_EmailAddress" />
                                         <span class="checkbox">
                                             <asp:CheckBox runat="server" ID="chkSendOrderUpdateEmail" /></span>
@@ -99,52 +100,56 @@
                     <asp:Literal ID="litPageTitleOrderDetails" runat="server" Text="<%$ Resources: _Orders, PageTitle_OrderDetails %>" />
                 </HeaderTemplate>
                 <ContentTemplate>
-                    <!-- Addresses -->
-                    <div id="section_addresses">
-                        <asp:UpdatePanel runat="server" ID="updAddresses" UpdateMode="Conditional">
-                            <ContentTemplate>
-                                <div class="checkoutaddress">
-                                    <user:CheckoutAddress runat="server" ID="UC_BillingAddress" Title="<%$ Resources: _Address, FormLabel_BillingAddress %>"
-                                        ErrorMessagePrefix="Billing " ValidationGroup="Billing" EnableValidation="true" />
-                                </div>
-                                <!-- Shipping Address Selection/Input Control-->
-                                <asp:Panel ID="pnlShippingAddress" runat="server" Visible="false">
+                    <div class="leftcolumn">
+                        <!-- Addresses -->
+                        <div id="section_addresses">
+                            <asp:UpdatePanel runat="server" ID="updAddresses" UpdateMode="Conditional">
+                                <ContentTemplate>
                                     <div class="checkoutaddress">
-                                        <user:CheckoutAddress ID="UC_ShippingAddress" runat="server" ErrorMessagePrefix="Shipping "
-                                            ValidationGroup="Shipping" Title="<%$ Resources: _Address, FormLabel_ShippingAddress %>" />
+                                        <user:CheckoutAddress runat="server" ID="UC_BillingAddress" Title="<%$ Resources: _Address, FormLabel_BillingAddress %>"
+                                            ErrorMessagePrefix="Billing " ValidationGroup="Billing" EnableValidation="true" />
                                     </div>
-                                </asp:Panel>
-                                <div class="spacer">
-                                </div>
-                                <p>
-                                    <span class="checkbox">
-                                        <asp:CheckBox ID="chkSameShippingAsBilling" runat="server" Checked="true" AutoPostBack="true" />
-                                        <asp:Label ID="lblchkSameShipping" Text="<%$ Resources: Checkout, ContentText_SameShippingAsBilling %>"
-                                            runat="server" AssociatedControlID="chkSameShippingAsBilling" EnableViewState="false" /></span></p>
-                                <!-- EU VAT Number -->
-                                <asp:PlaceHolder ID="phdEUVAT" runat="server" Visible="false">
-                                    <div class="section">
-                                        <h2>
-                                            <asp:Literal ID="litEnterEUVAT" runat="server" Text="EUVAT" EnableViewState="false" /></h2>
-                                        <strong>
-                                            <asp:Literal ID="litMSCode" runat="server" EnableViewState="true" /></strong>&nbsp;
+                                    <!-- Shipping Address Selection/Input Control-->
+                                    <asp:Panel ID="pnlShippingAddress" runat="server" Visible="true">
+                                        <div class="checkoutaddress">
+                                            <user:CheckoutAddress ID="UC_ShippingAddress" runat="server" ErrorMessagePrefix="Shipping "
+                                                ValidationGroup="Shipping" Title="<%$ Resources: _Address, FormLabel_ShippingAddress %>" />
+                                        </div>
+                                    </asp:Panel>
+                                    <div class="spacer">
+                                    </div>
+                                    <p>
+                                        <span class="checkbox">
+                                            <asp:CheckBox ID="chkSameShippingAsBilling" runat="server" Checked="false" AutoPostBack="true" />
+                                            <asp:Label ID="lblchkSameShipping" Text="<%$ Resources: Checkout, ContentText_SameShippingAsBilling %>"
+                                                runat="server" AssociatedControlID="chkSameShippingAsBilling" EnableViewState="false" /></span>
+                                    </p>
+                                    <!-- EU VAT Number -->
+                                    <asp:PlaceHolder ID="phdEUVAT" runat="server" Visible="false">
+                                        <div class="section">
+                                            <h2>
+                                                <asp:Literal ID="litEnterEUVAT" runat="server" Text="EUVAT" EnableViewState="false" /></h2>
+                                            <strong>
+                                                <asp:Literal ID="litMSCode" runat="server" EnableViewState="true" /></strong>&nbsp;
                                         <asp:TextBox ID="txtEUVAT" runat="server" EnableViewState="true" AutoPostBack="true"></asp:TextBox>
-                                    </div>
-                                </asp:PlaceHolder>
-                            </ContentTemplate>
-                        </asp:UpdatePanel>
+                                        </div>
+                                    </asp:PlaceHolder>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
+                        </div>
                     </div>
-                    <div class="spacer">
+                    <div class="rightcolumn">
+                        <span class="floatright">
+                            <asp:Button CssClass="button" runat="server" ID="lnkBtnResetAndCopy" Text="<%$ Resources:FormButton_CopyItemsToBasket%>"
+                                ToolTip="" OnClick="lnkBtnResetAndCopy_Click" /></span><h2>
+                                    <asp:Literal ID="litTabOrderSummary" runat="server" Text="<%$ Resources: _Kartris, ContentText_ItemSummary %>" /></h2>
+
+
+                        <_user:AutoComplete runat="server" ID="_UC_AutoComplete_Item" MethodName="GetVersions" />
+                        <asp:LinkButton CssClass="link2 icon_new" runat="server" ID="lnkBtnAddToBasket" OnClick="lnkBtnAddToBasket_Click"
+                            Text="<%$ Resources:_Kartris, FormButton_Add%>" ToolTip="" />
+                        <_user:BasketView ID="UC_BasketMain" runat="server" ViewType="CHECKOUT_BASKET" />
                     </div>
-                    <span class="floatright"><asp:Button CssClass="button" runat="server" ID="lnkBtnResetAndCopy" Text="<%$ Resources:FormButton_CopyItemsToBasket%>"
-                        ToolTip="" OnClick="lnkBtnResetAndCopy_Click" /></span><h2>
-                        <asp:Literal ID="litTabOrderSummary" runat="server" Text="<%$ Resources: _Kartris, ContentText_ItemSummary %>" /></h2>
-                        
-                    
-                    <_user:AutoComplete runat="server" ID="_UC_AutoComplete_Item" MethodName="GetVersions" />
-                    <asp:LinkButton CssClass="link2 icon_new" runat="server" ID="lnkBtnAddToBasket" OnClick="lnkBtnAddToBasket_Click"
-                        Text="<%$ Resources:_Kartris, FormButton_Add%>" ToolTip="" />
-                    <_user:BasketView ID="UC_BasketMain" runat="server" ViewType="CHECKOUT_BASKET" />
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
         </ajaxToolkit:TabContainer>
@@ -166,10 +171,10 @@
     </ContentTemplate>
 </asp:UpdatePanel>
 <asp:UpdateProgress ID="prgEditOrder" runat="server" AssociatedUpdatePanelID="updEditOrder">
-        <ProgressTemplate>
-            <div class="loadingimage">
-            </div>
-            <div class="updateprogress">
-            </div>
-        </ProgressTemplate>
-    </asp:UpdateProgress>
+    <ProgressTemplate>
+        <div class="loadingimage">
+        </div>
+        <div class="updateprogress">
+        </div>
+    </ProgressTemplate>
+</asp:UpdateProgress>

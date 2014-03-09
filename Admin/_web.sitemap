@@ -14,6 +14,7 @@
 			<siteMapNode title="$resources:_Kartris,BackMenu_Unfinished" url="~/Admin/_OrdersList.aspx?callmode=unfinished" value="orders"/>
 			<siteMapNode title="$resources:_Kartris,BackMenu_BatchProcess" url="~/Admin/_OrdersList.aspx?callmode=bybatch" value="orders"/>
 			<siteMapNode title="$resources:_Kartris,ContentText_Payments" url="~/Admin/_PaymentsList.aspx" value="orders"/>
+			<siteMapNode title="$resources:_Orders,PageTitle_CreateNewOrder" url="~/Admin/_CreateOrder.aspx" value="orders"/>
 		</siteMapNode>
 
 		<siteMapNode title="$resources:_Kartris,BackMenu_Customers" url="~/Admin/_CustomersList.aspx?" value="orders">
@@ -64,7 +65,7 @@
 			<siteMapNode title="$resources:_Kartris,BackMenu_DBAdmin" url="~/Admin/_DBAdmin.aspx" Value="config" />
 			<siteMapNode title="$resources:_Kartris,ContentText_PaymentShippingGateways" url="~/Admin/_PaymentGateways.aspx" Value="config" />
 			<siteMapNode title="$resources:_Kartris,BackMenu_QuickBooks" url="~/Admin/_QuickBooks.aspx" Value="config" />
-      <siteMapNode title="$resources:_Kartris,BackMenu_Linnworks" url="~/Admin/_Linnworks.aspx" Value="config" />
+			<siteMapNode title="$resources:_Kartris,BackMenu_Linnworks" url="~/Admin/_Linnworks.aspx" Value="config" />
 			<siteMapNode title="$resources:_Kartris,BackMenu_Revisions" url="~/Admin/_Revisions.aspx" />
 		</siteMapNode>
 
@@ -79,7 +80,7 @@
 			<siteMapNode title="$resources:_Kartris,BackMenu_CustomPages" url="~/Admin/_CustomPages.aspx" Value="config" />
 			<siteMapNode title="$resources:_Kartris,BackMenu_Coupons" url="~/Admin/_Coupons.aspx" Value="config" />
 			<siteMapNode title="$resources:_Kartris,BackMenu_GenerateFeeds" url="~/Admin/_GenerateFeeds.aspx" value="products" />
-      <siteMapNode title="$resources:_Kartris,BackMenu_GeneralFiles" url="~/Admin/_GeneralFiles.aspx" value="config" />
+			<siteMapNode title="$resources:_Kartris,BackMenu_GeneralFiles" url="~/Admin/_GeneralFiles.aspx" value="config" />
 		</siteMapNode>
 		
 		<siteMapNode title="login" url="~/Admin/Default.aspx" visible="false" resourceKey="Default.aspx"/>

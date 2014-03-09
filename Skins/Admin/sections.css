@@ -166,6 +166,8 @@ PAGE: ORDER (Single Order)
 ========================================================================
 */
 #page_order .warnmessage                { position: fixed; top: 0; }
+#page_order .Kartris-DetailsView-Value textarea
+                                        { height: 90px }
 /* 
 ========================================================================
 PAGE: ORDERS (Orders List)
@@ -179,12 +181,46 @@ PAGE: ORDERS (Orders List)
 #page_orders .valuefield                { width: 60px }
 /* 
 ========================================================================
-PAGE: MODIFY ORDER (Editing)
+PAGES: MODIFY & CREATE ORDER (Editing and Creating)
 ========================================================================
 */
-#page_modifyorder .checkoutaddress      { width: 45%; height: 220px; margin: 0 20px 0 0; overflow: hidden; float: left; }
-#page_modifyorder .checkbox label       { width: auto; font-weight: normal; }
-#page_modifyorder #section_addresses    { padding-bottom: 10px; margin-bottom: 20px; border-bottom: solid 2px #eee; }
+#page_createorder div.leftcolumn,
+#page_modifyorder div.leftcolumn        { min-width: 450px; width: 48%; display: inline-block; float: left; border-right: solid 2px #eee; }
+#page_createorder div.rightcolumn,
+#page_modifyorder div.rightcolumn       { min-width: 400px; width: 48%; display: inline-block; padding: 0 0 0 20px; }
+#page_createorder .checkoutaddress,
+#page_modifyorder .checkoutaddress      { width: 45%; height: 240px; margin: 0 20px 0 0; overflow: hidden; float: left; }
+#page_createorder .checkbox_label,
+#page_modifyorder .checkbox_label,
+#page_createorder .checkbox label,
+#page_modifyorder .checkbox label       { width: 210px; font-weight: normal; line-height: 13px; margin-bottom: 10px; }
+#page_createorder #section_addresses,
+#page_modifyorder #section_addresses    { padding-bottom: 10px; margin-bottom: 20px; }
+
+#page_createorder span.Kartris-DetailsView-Name,
+#page_modifyorder span.Kartris-DetailsView-Name
+                                        { width: 150px; }
+#page_createorder span.Kartris-DetailsView-Value,
+#page_modifyorder span.Kartris-DetailsView-Value
+                                        { width: 255px; }
+#page_createorder span.Kartris-DetailsView-Value select,
+#page_createorder span.Kartris-DetailsView-Value textarea,
+#page_createorder span.Kartris-DetailsView-Value input,
+#page_modifyorder span.Kartris-DetailsView-Value select,
+#page_modifyorder span.Kartris-DetailsView-Value textarea,
+#page_modifyorder span.Kartris-DetailsView-Value input
+                                        { width: 250px; }
+#page_createorder .checkbox input,
+#page_modifyorder .checkbox input,
+#page_createorder span.Kartris-DetailsView-Value .checkbox input,
+#page_modifyorder span.Kartris-DetailsView-Value .checkbox input
+                                        { width: 20px; }
+#page_createorder .details select,
+#page_createorder .address select,
+#page_modifyorder .details select,
+#page_modifyorder .address select       { width: 210px; }
+#page_createorder a,
+#page_modifyorder a                     { font-size: 100%; }
 #page_modifyorder .popup .price         { font-weight: bold; color: #090; }
 #page_modifyorder .popup .Kartris-DetailsView-Name,
 #page_modifyorder .popup label          { width: 140px }
@@ -200,14 +236,6 @@ PAGE: CUSTOMER GROUPS
                                         { text-decoration: none; color: #45d; font-weight: bold; padding: 2px 5px 0px 18px; min-height: 17px; border: solid 1px transparent; display: inline-block; background-image: url(Images/icon_edit.png); background-position: left top; background-repeat: no-repeat; }
 #page_customergroupslist td.editlink a:hover
                                         { color: #000; background-image: url(Images/icon_click.png); background-position: left top; background-repeat: no-repeat; }
-/* 
-========================================================================
-PAGE: ORDER
-========================================================================
-*/
-#page_order                             { }
-#page_order .Kartris-DetailsView-Value textarea
-                                        { height: 90px }
 /* 
 ========================================================================
 PAGE: CUSTOM PAGES
