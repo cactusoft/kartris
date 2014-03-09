@@ -167,13 +167,13 @@ Partial Class UserControls_Back_EditOrder
                 End If
 
 
-
             Catch ex As Exception
                 CkartrisFormatErrors.LogError(ex.Message)
                 Response.Redirect("_OrdersList.aspx")
             End Try
         End If
     End Sub
+
     Protected Sub LoadBasket(Optional ByVal blnCopyOrderItems As Boolean = False)
         Dim objBasket As BasketBLL = UC_BasketMain.GetBasket
         Dim sessionID As Long = Session("SessionID")
@@ -198,7 +198,6 @@ Partial Class UserControls_Back_EditOrder
         'get the shipping destination id from the viewstate and assign it to the basket controls destination id property
         UC_BasketMain.ShippingDestinationID = ViewState("intShippingDestinationID")
 
-
         'reload the basketitems from the database - this confirms if the items were correctly added from the invoicerows data
         objBasket.LoadBasketItems()
 
@@ -211,6 +210,7 @@ Partial Class UserControls_Back_EditOrder
         'If UC_BasketMain.GetBasketItems.Count > 0 Then btnCreateNewOrder.Visible = True Else btnCreateNewOrder.Visible = False
 
     End Sub
+
     'Format back link
     Public Function FormatBackLink(ByVal strDate As String, ByVal strFromDate As String, ByVal strPage As String) As String
         Dim strURL As String = ""
