@@ -21,7 +21,15 @@ Partial Class UserControls_Back_UserDetails
 
     Public Event _UCEvent_DataUpdated()
 
-    Private Shared C_ID As Integer
+    'Private C_ID As Integer
+
+    Protected Function GetCustomerID() As Integer
+        Try
+            Return CInt(Request.QueryString("CustomerID"))
+        Catch ex As Exception
+        End Try
+        Return 0
+    End Function
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
@@ -38,29 +46,29 @@ Partial Class UserControls_Back_UserDetails
             ViewState("Referer") = Request.ServerVariables("HTTP_REFERER")
             If Trim(Request.QueryString("CustomerID")) <> "" Then
                 Try
-                    C_ID = CInt(Request.QueryString("CustomerID"))
-                    Dim dtUserDetails As DataTable = UsersBLL._GetCustomerDetails(C_ID)
+                    'C_ID = CInt(Request.QueryString("CustomerID"))
+                    Dim dtUserDetails As DataTable = UsersBLL._GetCustomerDetails(GetCustomerID())
                     fvwUser.DataSource = dtUserDetails
                     fvwUser.DataBind()
                     If ViewState("isNewUser") Then
                         RaiseEvent _UCEvent_DataUpdated()
                         ViewState("isNewUser") = Nothing
                     Else
-                        Dim dblOrdersTotal As Double = OrdersBLL._GetOrderTotalByCustomerID(C_ID)
-                        Dim dblPaymentsTotal As Double = OrdersBLL._GetPaymentTotalByCustomerID(C_ID)
+                        Dim dblOrdersTotal As Double = OrdersBLL._GetOrderTotalByCustomerID(GetCustomerID())
+                        Dim dblPaymentsTotal As Double = OrdersBLL._GetPaymentTotalByCustomerID(GetCustomerID())
                         If Not (dblOrdersTotal = 0 And dblPaymentsTotal = 0) Then
                             Dim dblCustomerBalance As Double = CkartrisDataManipulation.FixNullFromDB(dtUserDetails(0)("U_CustomerBalance"))
                             Dim dblUpdatedBalance As Double = dblPaymentsTotal - dblOrdersTotal
-                            Dim dtbUserOrders As DataTable = OrdersBLL._GetByStatus(OrdersBLL.ORDERS_LIST_CALLMODE.CUSTOMER, 0, , , , , C_ID)
+                            Dim dtbUserOrders As DataTable = OrdersBLL._GetByStatus(OrdersBLL.ORDERS_LIST_CALLMODE.CUSTOMER, 0, , , , , GetCustomerID())
                             'Filter to show only finished orders and those that were not cancelled
                             Dim drwFiltered As DataRow() = dtbUserOrders.Select("CO_OrderID IS NULL AND O_SENT = 1")
                             gvwCustomerOrders.DataSource = drwFiltered
                             gvwCustomerOrders.DataBind()
-                            gvwCustomerPayments.DataSource = OrdersBLL._GetPaymentByCustomerID(C_ID)
+                            gvwCustomerPayments.DataSource = OrdersBLL._GetPaymentByCustomerID(GetCustomerID())
                             gvwCustomerPayments.DataBind()
                             litOrdersTotalValue.Text = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, dblOrdersTotal)
                             litPaymentsTotalValue.Text = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, dblPaymentsTotal)
-                            If dblCustomerBalance <> dblUpdatedBalance Then UsersBLL.UpdateCustomerBalance(C_ID, dblUpdatedBalance)
+                            If dblCustomerBalance <> dblUpdatedBalance Then UsersBLL.UpdateCustomerBalance(GetCustomerID(), dblUpdatedBalance)
                         Else
                             'Hide Payment / Order History Tab
                             Dim tabContainer As AjaxControlToolkit.TabContainer = fvwUser.FindControl("tabContainerUser")
@@ -82,7 +90,7 @@ Partial Class UserControls_Back_UserDetails
                     CkartrisFormatErrors.LogError(ex.ToString)
                 End Try
             Else
-                C_ID = 0
+                'C_ID = 0
                 fvwUser.DefaultMode = FormViewMode.Insert
             End If
         End If
@@ -97,7 +105,7 @@ Partial Class UserControls_Back_UserDetails
             ddlUserGroups2.Items.Add(New ListItem("-", 0))
         End If
 
-        If C_ID > 0 Then
+        If GetCustomerID() > 0 Then
             Dim hidUserLanguage As HiddenField = DirectCast(Kartris.Interfaces.Utils.FindControlRecursive(fvwUser, "hidUserLanguage"), HiddenField)
 
             If hidUserGroup.Value = 0 Then
@@ -115,13 +123,13 @@ Partial Class UserControls_Back_UserDetails
     End Sub
 
     Protected Sub btnCustomerUpdate_Click(ByVal sender As Object, ByVal e As System.EventArgs)
-        If C_ID > 0 Then
+        If GetCustomerID() > 0 Then
             Page.Validate()
             If Page.IsValid Then
                 Dim strPassword As String
                 If txtPassword.Visible Then strPassword = txtPassword.Text Else strPassword = ""
                 Dim blnEmailValid As Boolean = True
-                Dim strOriginalEmail As String = LCase(UsersBLL.GetEmailByID(C_ID))
+                Dim strOriginalEmail As String = LCase(UsersBLL.GetEmailByID(GetCustomerID()))
                 If strOriginalEmail <> LCase(txtUserEmail.Text) Then
                     If CheckEmailExist(txtUserEmail.Text) Then
                         blnEmailValid = False
@@ -134,7 +142,7 @@ Partial Class UserControls_Back_UserDetails
                 If blnEmailValid Then
                     Dim datSupportEnd As Date = Nothing
                     If IsDate(txtUserSupportEndDate.Text) Then datSupportEnd = CDate(txtUserSupportEndDate.Text)
-                    If UsersBLL._Update(C_ID, txtAccountHolderName.Text, txtUserEmail.Text, strPassword, ddlLanguages.SelectedValue, ddlUserGroups.SelectedValue, HandleDecimalValues(txtUserDiscount.Text), _
+                    If UsersBLL._Update(GetCustomerID(), txtAccountHolderName.Text, txtUserEmail.Text, strPassword, ddlLanguages.SelectedValue, ddlUserGroups.SelectedValue, HandleDecimalValues(txtUserDiscount.Text), _
                                  chkUserApproved.Checked, chkUserisAffialite.Checked, HandleDecimalValues(txtAffiliateCommission.Text), datSupportEnd, txtUserNotes.Text) > 0 Then
                         txtPassword.Visible = False
                         valRequiredUserPassword.Enabled = False
@@ -149,9 +157,9 @@ Partial Class UserControls_Back_UserDetails
     End Sub
 
     Protected Sub btnCustomerAdd_Click(ByVal sender As Object, ByVal e As System.EventArgs)
-        If C_ID = 0 Then
+        If GetCustomerID() = 0 Then
             Dim blnEmailValid As Boolean = True
-            Dim strOriginalEmail As String = LCase(UsersBLL.GetEmailByID(C_ID))
+            Dim strOriginalEmail As String = LCase(UsersBLL.GetEmailByID(GetCustomerID()))
             If strOriginalEmail <> LCase(txtUserEmail2.Text) Then
                 If CheckEmailExist(txtUserEmail2.Text) Then
                     blnEmailValid = False
@@ -179,10 +187,10 @@ Partial Class UserControls_Back_UserDetails
     End Sub
 
     Protected Sub _UC_PopupMsg_Confirmed() Handles _UC_PopupMsg.Confirmed
-        If C_ID > 0 Then
+        If GetCustomerID() > 0 Then
             Dim blnReturnStock As Boolean
             If KartSettingsManager.GetKartConfig("backend.orders.returnstockondelete") <> "n" Then blnReturnStock = True Else blnReturnStock = False
-            UsersBLL._Delete(C_ID, blnReturnStock)
+            UsersBLL._Delete(GetCustomerID(), blnReturnStock)
             Response.Redirect("~/Admin/_CustomersList.aspx")
         End If
     End Sub
