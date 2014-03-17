@@ -185,13 +185,21 @@ Public NotInheritable Class SSLHandler
             If Current.Request.Url.AbsoluteUri.ToLower.Contains("checkout.aspx") Then blnNeedSSL = True
             If Current.Request.Url.AbsoluteUri.ToLower.Contains("customertickets.aspx") Then blnNeedSSL = True
 
-            'We need SSL, but current page doesn't have it
-            If blnNeedSSL = True And Not Current.Request.IsSecureConnection() Then
-                Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
-                'We have SSL but don't need it
-            ElseIf blnNeedSSL = False And Current.Request.IsSecureConnection() Then
-                Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("https://", "http://"))
+            'Added v2.6000 - don't redirect on callback.aspx
+            'We get problems in some payment systems, because we cannot necessarily
+            'control consistently for all whether SSL is used or not. Therefore, we
+            'should accept calls to the callback with either http or https, and avoid
+            'redirection.
+            If Not Current.Request.Url.AbsoluteUri.ToLower.Contains("callback") Then
+                'We need SSL, but current page doesn't have it
+                If blnNeedSSL = True And Not Current.Request.IsSecureConnection() Then
+                    Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
+                    'We have SSL but don't need it
+                ElseIf blnNeedSSL = False And Current.Request.IsSecureConnection() Then
+                    Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("https://", "http://"))
+                End If
             End If
+
         ElseIf Current.Request.Url.AbsoluteUri.Contains("https://") Then
             Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("https://", "http://"))
         End If
