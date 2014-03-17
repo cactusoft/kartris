@@ -508,7 +508,7 @@ Public Class SiteMapHelper
                             strURL = String.Format("{0}?CategoryID={1}&strParent={2}", strPageName, ID, ParentID)
                         End If
                     End If
-                    If numLangID > 1 Then strURL += "&L=" & numLangID
+                    'If numLangID > 1 Then strURL += "&L=" & numLangID
                     If CPagerID <> 0 Then strURL += "&CPGR=" & CPagerID
                     If PPagerID <> 0 Then strURL += "&PPGR=" & PPagerID
                     If strActiveTab = "s" Then strURL += "&T=S"
