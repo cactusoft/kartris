@@ -1,6 +1,9 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="_CustomPages.ascx.vb"
     Inherits="UserControls_Back_CustomPages" %>
 <%@ Register TagPrefix="_user" TagName="LanguageContainer" Src="~/UserControls/Back/_LanguageContainer.ascx" %>
+<div style="display:none">
+    <_user:LanguageContainer ID="ghost_UC_LangContainer" runat="server" />
+</div>
 <asp:UpdatePanel ID="updPagesList" runat="server" UpdateMode="Conditional">
     <ContentTemplate>
         <%  'The javascript routine is to dynamically change the link URL of

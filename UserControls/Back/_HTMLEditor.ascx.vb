@@ -51,9 +51,15 @@ Partial Class UserControls_Back_HTMLEditor
         Return Server.HtmlDecode(txtHTMLEditor.Text)
     End Function
 
+    'Protected Sub ajaxFileUpload_OnUploadComplete(sender As Object, e As AjaxControlToolkit.AjaxFileUploadEventArgs)
+    '    htmlEditorExtender1.AjaxFileUpload.SaveAs(strFilesFolder + e.FileName)
+    '    e.PostedUrl = Page.ResolveUrl(strFilesFolder + e.FileName)
+    'End Sub
+
     Protected Sub ajaxFileUpload_OnUploadComplete(sender As Object, e As AjaxControlToolkit.AjaxFileUploadEventArgs)
-        htmlEditorExtender1.AjaxFileUpload.SaveAs(strFilesFolder + e.FileName)
-        e.PostedUrl = Page.ResolveUrl(strFilesFolder + e.FileName)
+        Dim strFullPath As String = strFilesFolder & e.FileName
+        htmlEditorExtender1.AjaxFileUpload.SaveAs(Server.MapPath(strFullPath))
+        e.PostedUrl = KartSettingsManager.GetKartConfig("general.webshopurl") + strFullPath.Replace("~/", "")
     End Sub
 
     Protected Sub SaveFile(sender As Object, e As AjaxControlToolkit.AjaxFileUploadEventArgs)

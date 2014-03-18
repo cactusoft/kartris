@@ -45,6 +45,6 @@
             </asp:UpdatePanel>
         </asp:PlaceHolder>
         
-        <_user:HTMLEditor ID="_UC_Editor" runat="server" Visible="false" />
+        <_user:HTMLEditor ID="_UC_Editor" runat="server" Visible="true" />
     </ContentTemplate>
 </asp:UpdatePanel>
