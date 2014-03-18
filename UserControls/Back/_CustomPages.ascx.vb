@@ -55,9 +55,17 @@ Partial Class UserControls_Back_CustomPages
             End If
         End If
 
+        'If GetPageID() = 0 Then
+        '    _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.Pages, True)
+        'Else
+        '    _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.Pages, False, GetPageID())
+        'End If
+
         If GetPageID() = 0 Then
+            ghost_UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.PromotionStrings, True)
             _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.Pages, True)
         Else
+            ghost_UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.PromotionStrings, False, GetPageID())
             _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.Pages, False, GetPageID())
         End If
     End Sub
