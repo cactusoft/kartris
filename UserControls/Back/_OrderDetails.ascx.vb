@@ -224,27 +224,31 @@ Partial Class UserControls_Back_OrderDetails
                     strEmailText += vbCrLf & GetGlobalResourceObject("_Kartris", "ContentText_Notes") & ":" & vbCrLf & txtOrderNotes.Text
                 End If
 
+                'Check if mail should be HTML, and if so, try to 
+                'read the HTML template
                 Dim blnHTMLEmail As Boolean = GetKartConfig("general.email.enableHTML") = "y"
-                If blnHTMLEmail Then
-                    Dim strHTMLEmailText As String = RetrieveHTMLEmailTemplate("OrderUpdate")
-                    'build up the HTML email if template is found
-                    If Not String.IsNullOrEmpty(strHTMLEmailText) Then
-                        strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
-                        strHTMLEmailText = strHTMLEmailText.Replace("[orderid]", ViewState("numOrderID"))
-                        strHTMLEmailText = strHTMLEmailText.Replace("[orderstatus]", strOrderStatus.Replace(vbCrLf, "<br />"))
-                        strHTMLEmailText = strHTMLEmailText.Replace("[orderdetails]", strOrderText)
-                        If ViewState("O_Notes") <> txtOrderNotes.Text And Trim(txtOrderNotes.Text) <> "" Then
-                            strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "<p>" & GetGlobalResourceObject("_Kartris", "ContentText_Notes") &
-                                                                    ": <br />" & txtOrderNotes.Text & "</p>")
-                        Else
-                            strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "")
-                        End If
-                        strEmailText = strHTMLEmailText
+                Dim strHTMLEmailText As String = ""
+                If blnHTMLEmail Then strHTMLEmailText = RetrieveHTMLEmailTemplate("OrderUpdate")
+
+                'build up the HTML email if template is found
+                If Not String.IsNullOrEmpty(strHTMLEmailText) Then
+                    strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
+                    strHTMLEmailText = strHTMLEmailText.Replace("[orderid]", ViewState("numOrderID"))
+                    strHTMLEmailText = strHTMLEmailText.Replace("[orderstatus]", strOrderStatus.Replace(vbCrLf, "<br />"))
+                    strHTMLEmailText = strHTMLEmailText.Replace("[orderdetails]", strOrderText)
+                    If ViewState("O_Notes") <> txtOrderNotes.Text And Trim(txtOrderNotes.Text) <> "" Then
+                        strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "<p>" & GetGlobalResourceObject("_Kartris", "ContentText_Notes") &
+                                                                ": <br />" & txtOrderNotes.Text & "</p>")
                     Else
-                        blnHTMLEmail = False
+                        strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "")
                     End If
-                    SendEmail(strEmailFrom, strEmailTo, strSubjectLine, strEmailText, , , , , blnHTMLEmail)
+                    strEmailText = strHTMLEmailText
+                Else
+                    blnHTMLEmail = False
                 End If
+
+                'Send mail update to customer
+                SendEmail(strEmailFrom, strEmailTo, strSubjectLine, strEmailText, , , , , blnHTMLEmail)
             End If
         End If
 
