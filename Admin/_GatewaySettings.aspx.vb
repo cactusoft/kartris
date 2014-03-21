@@ -114,7 +114,7 @@ Partial Class Admin_GatewaySettings
                                         Dim chkAuthorizedOnly As CheckBox = New CheckBox
                                         chkAuthorizedOnly.ID = "chkAuthorizedOnly"
                                         chkAuthorizedOnly.CssClass = "checkbox"
-                                        If UCase(keySettingElement.Value.ValueXml.InnerText) = "TRUE" Then
+                                        If UCase(GetConfigValue(keySettingElement, blnIsProtected)) = "TRUE" Then
                                             chkAuthorizedOnly.Checked = True
                                         Else
                                             chkAuthorizedOnly.Checked = False
@@ -125,16 +125,6 @@ Partial Class Admin_GatewaySettings
                                         If Not IsPostBack Then txtSetting.Text = GetConfigValue(keySettingElement, blnIsProtected)
                                         txtSetting.ID = "txt" & _GatewayName & keySettingElement.Name
                                         phdSettings.Controls.Add(txtSetting)
-
-
-                                        'Disabled validator as we don't know all fields will be required
-                                        'If UCase(keySettingElement.Name) <> "PROCESSCURRENCY" Then
-                                        'Dim valSetting As RequiredFieldValidator = New RequiredFieldValidator
-                                        'valSetting.EnableClientScript = True
-                                        'valSetting.ControlToValidate = "txt" & _GatewayName & keySettingElement.Name
-                                        'valSetting.ErrorMessage = GetGlobalResourceObject("_Kartris", "ContentText_RequiredField")
-                                        'phdSettings.Controls.Add(valSetting)
-                                        'End If
                                 End Select
 
                                 'End of line
@@ -146,10 +136,10 @@ Partial Class Admin_GatewaySettings
                                     'Populate the friendly name textboxes
                                     Dim txtSetting As TextBox = DirectCast(FindControlRecursive(phdSettings, "txt" & _GatewayName & keySettingElement.Name), TextBox)
                                     If txtSetting IsNot Nothing And Not IsPostBack Then
-                                        txtSetting.Text = GetConfigValue(keySettingElement, blnIsProtected)
+                                        txtSetting.Text = GetConfigValue(keySettingElement, False)
                                     End If
                                 Else
-                                    If UCase(keySettingElement.Value.ValueXml.InnerText) = "TRUE" Then
+                                    If UCase(GetConfigValue(keySettingElement, blnIsProtected)) = "TRUE" Then
                                         blnAnonymousCheckout = True
                                     Else
                                         blnAnonymousCheckout = False
