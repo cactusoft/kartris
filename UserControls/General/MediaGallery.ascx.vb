@@ -197,6 +197,7 @@ Partial Class UserControls_Front_MediaGallery
                             lnkDownload.Visible = True
                             lnkDownload.Text = strMediaImageLink
                             lnkDownload.NavigateUrl = strML_EmbedSource
+                            lnkDownload.Target = "_blank"
                         Else
                             lnkDownload.Visible = False
                         End If
