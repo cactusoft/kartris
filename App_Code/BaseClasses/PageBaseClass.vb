@@ -423,7 +423,10 @@ Public MustInherit Class PageBaseClass
         'If the site requires users to login, redirect
         'to the login page if user is not logged in
         Dim strUserAccess As String = LCase(GetKartConfig("frontend.users.access"))
-        If strUserAccess = "yes" And Not Request.Path.ToString.Contains("/CustomerAccount.aspx") And Not User.Identity.IsAuthenticated Then
+        If strUserAccess = "yes" And Not _
+            Request.Path.ToString.Contains("/CustomerAccount.aspx") And Not _
+            Request.Path.ToString.ToLower.Contains("callback") And Not _
+            User.Identity.IsAuthenticated Then
             Response.Redirect("CustomerAccount.aspx")
         End If
         MyBase.OnPreInit(e)
