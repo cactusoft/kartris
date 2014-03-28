@@ -46,12 +46,12 @@ Partial Class Admin_PaymentGateways
         End With
 
         'Add Google Checkout settings row
-        Dim rowGoogle As DataRow = tblGateways.NewRow
-        rowGoogle("ID") = 1
-        rowGoogle("Name") = "GoogleCheckout"
-        rowGoogle("Type") = GetGlobalResourceObject("_Orders", "ContentText_PaymentGateWay")
-        rowGoogle("Status") = GetGCheckoutConfig("Status")
-        tblGateways.Rows.Add(rowGoogle)
+        'Dim rowGoogle As DataRow = tblGateways.NewRow
+        'rowGoogle("ID") = 1
+        'rowGoogle("Name") = "GoogleCheckout"
+        'rowGoogle("Type") = GetGlobalResourceObject("_Orders", "ContentText_PaymentGateWay")
+        'rowGoogle("Status") = GetGCheckoutConfig("Status")
+        'tblGateways.Rows.Add(rowGoogle)
 
         Dim aryGateways() As String = Split(LoadGateways, ",")
 
