@@ -32,6 +32,8 @@ Partial Class Admin_ModifyCategory
             PrepareExistingCategory()
         End If
 
+        tabXmlFilters.Visible = PowerpackBLL._IsFiltersEnabled()
+
         _UC_Uploader.OneItemOnly = True
         _UC_Uploader.ImageType = IMAGE_TYPE.enum_CategoryImage
         _UC_Uploader.ItemID = _GetCategoryID()
@@ -73,7 +75,8 @@ Partial Class Admin_ModifyCategory
     End Sub
 
     Protected Sub ShowMasterUpdateMessage() Handles _UC_EditCategory.ShowMasterUpdate, _
-                                                    _UC_CategoryView.ShowMasterUpdate
+                                                    _UC_CategoryView.ShowMasterUpdate, _
+                                                    _UC_CategoryFilter.ShowMasterUpdate
         CType(Me.Master, Skins_Admin_Template).DataUpdated()
     End Sub
 
