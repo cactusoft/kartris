@@ -1,6 +1,6 @@
 ﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="_ModifyCategory.aspx.vb"
     Inherits="Admin_ModifyCategory" MasterPageFile="~/Skins/Admin/Template.master" %>
-
+<%@ Register TagPrefix="_user" TagName="CategoryFilter" Src="~/UserControls/Back/_CategoryFilters.ascx" %>
 <asp:Content ID="cntHead" ContentPlaceHolderID="phdHead" runat="Server">
 </asp:Content>
 <asp:Content ID="cntMain" ContentPlaceHolderID="phdMain" runat="Server">
@@ -56,6 +56,19 @@
                         <asp:UpdatePanel ID="updRelatedData" runat="server" UpdateMode="Conditional">
                             <ContentTemplate>
                                 <_user:CategoryView ID="_UC_CategoryView" runat="server" ShowHeader="False" />
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                    </ContentTemplate>
+                </ajaxToolkit:TabPanel>
+                <%-- Category's Related Data Tab --%>
+                <ajaxToolkit:TabPanel ID="tabXmlFilters" runat="server">
+                    <HeaderTemplate>
+                        <asp:Literal ID="litContentTextCategoryFilters" runat="server" Text="Category Filters" />
+                    </HeaderTemplate>
+                    <ContentTemplate>
+                        <asp:UpdatePanel ID="updCategoryFilters" runat="server" UpdateMode="Conditional">
+                            <ContentTemplate>
+                                <_user:CategoryFilter ID="_UC_CategoryFilter" runat="server" />
                             </ContentTemplate>
                         </asp:UpdatePanel>
                     </ContentTemplate>

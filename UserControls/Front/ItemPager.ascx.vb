@@ -179,8 +179,10 @@ Partial Class ItemPager
 
         If strActiveTab = "s" And KartSettingsManager.GetKartConfig("general.seofriendlyurls.enabled") <> "y" Then
             If Not strCurrentUrl.Contains("&T=S") Then strActualUrl += "&T=S"
+            If InStr(strScriptName, "&f=1&") > 0 Then strActualUrl += Mid(strScriptName, InStr(strScriptName, "&f=1&"))
         Else
             If InStr(strScriptName, "search.aspx") = -1 Then strActualUrl = strActualUrl.Replace("&T=S", "")
+            If InStr(strScriptName, "&f=1&") > 0 Then strActualUrl += "?" & Mid(strScriptName, InStr(strScriptName, "&f=1&") + 1)
         End If
 
         Return strActualUrl

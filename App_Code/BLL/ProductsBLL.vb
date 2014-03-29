@@ -167,6 +167,17 @@ Public Class ProductsBLL
         _TotalNoOfProducts = GetTotalProductsInCategory_s(_CategoryID, _LanguageID, _CGroupID)
         Return Adptr.GetProductsPageByCategoryID(_LanguageID, _CategoryID, _PageIndx, _RowsPerPage, _CGroupID)
     End Function
+    Public Shared Function GetProductsPageByCategory(Request As HttpRequest, ByVal _CategoryID As Integer, ByVal _LanguageID As Short, _
+                                            ByVal _PageIndx As Short, ByVal _RowsPerPage As Short, _
+                                            ByVal _CGroupID As Short, ByRef _TotalNoOfProducts As Integer) As DataTable
+        If Request.QueryString("f") = 1 Then
+            Dim dtFilteredProducts As DataTable = PowerpackBLL.GetFilteredProductsByCategory(Request, _CategoryID, _LanguageID, _PageIndx, _
+                                                                _RowsPerPage, _CGroupID, _TotalNoOfProducts)
+            If dtFilteredProducts IsNot Nothing Then Return dtFilteredProducts
+        End If
+
+        Return GetProductsPageByCategory(_CategoryID, _LanguageID, _PageIndx, _RowsPerPage, _CGroupID, _TotalNoOfProducts)
+    End Function
 
     Public Shared Function _GetProductsPageByCategory(ByVal _CategoryID As Integer, ByVal _LanguageID As Short, _
                                             ByVal _PageIndx As Short, ByVal _RowsPerPage As Short, ByRef _TotalNoOfProducts As Integer) As DataTable
