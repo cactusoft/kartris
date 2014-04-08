@@ -63,13 +63,13 @@
                         <div class="level_2">
                             <asp:PlaceHolder ID="phdCustomersAwaitingRefunds" runat="server">
                                 <div>
-                                    <a href="_CustomersList.aspx">
+                                    <a href="_CustomersList.aspx?callmode=refunds">
                                         <asp:Literal ID="litCustomersAwaitingRefunds" runat="server" Text="<%$ Resources: _TaskList, ContentText_CustomersAwaitingRefunds %>" />&nbsp;<asp:Literal
                                             ID="litCustomersAwaitingRefundsCount" runat="server" /></a></div>
                             </asp:PlaceHolder>
                             <asp:PlaceHolder ID="phdCustomersInArrears" runat="server">
                                 <div>
-                                    <a href="_CustomersList.aspx">
+                                    <a href="_CustomersList.aspx?callmode=arrears">
                                         <asp:Literal ID="litCustomersInArrears" runat="server" Text="<%$ Resources: _TaskList, ContentText_CustomersInArrears %>" />&nbsp;<asp:Literal
                                             ID="litCustomersInArrearsCount" runat="server" /></a></div>
                             </asp:PlaceHolder>

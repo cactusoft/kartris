@@ -104,9 +104,35 @@ Partial Class UserControls_Back_CustomersList
         End Try
 
         Dim tblCustomersList As DataTable = UsersBLL._GetDataBySearchTerm(ViewState("_strSearch"), intCurrentPage, intRowsPerPage, _isAffiliates, _isMailingList, _CustomerGroupID, _isApproved)
-        gvwCustomers.DataSource = tblCustomersList
-        gvwCustomers.DataBind()
 
+        'Here we filter customers by account balance if required,
+        'to find those in arrears or due refunds
+        Dim strFilterQuery As String = ""
+        If Request.QueryString("callmode") = "refunds" Then
+            strFilterQuery = "(U_CustomerBalance > 0)"
+        ElseIf Request.QueryString("callmode") = "arrears" Then
+            strFilterQuery = "(U_CustomerBalance < 0)"
+        End If
+
+        'If there is a filter statement, we clone the data set
+        'and read the filtered rows into that. Otherwise, we
+        'just bind grid to the original datatable.
+        If strFilterQuery <> "" Then
+            'We have a filter
+            Dim tblCustomersList2 As DataTable = tblCustomersList.Clone
+            Dim drwCustomers As DataRow() = tblCustomersList.[Select]("(U_CustomerBalance<>0)")
+            For Each drwCustomer As DataRow In drwCustomers
+                tblCustomersList2.ImportRow(drwCustomer)
+            Next
+            gvwCustomers.DataSource = tblCustomersList2
+            gvwCustomers.DataBind()
+        Else
+            'No filter
+            gvwCustomers.DataSource = tblCustomersList
+            gvwCustomers.DataBind()
+        End If
+
+        'Set up paging and record totals
         If tblCustomersList.Rows.Count = 0 Then
             litNoCustomersFound.Text = "<div class=""noresults"">" & GetGlobalResourceObject("_Kartris", "ContentText_BackSearchNoResults") & "</div>"
         Else
