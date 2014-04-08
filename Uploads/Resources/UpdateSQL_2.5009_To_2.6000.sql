@@ -84,3 +84,11 @@ BEGIN
 	WHERE V_ProductID = @ProductID AND V_ID = @SwitchVersionID;
 		
 END
+
+/****** Make Payment References Unique ******/
+-- On occasion we have seen payments logged
+-- twice. Adding this constraint should stop
+-- that happening.
+ALTER TABLE tblKartrisPayments
+ADD CONSTRAINT Payment_ReferenceNo UNIQUE (Payment_ReferenceNo); 
+GO
