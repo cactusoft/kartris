@@ -43,9 +43,8 @@
                                         <span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="litContentTextCategoryParent" runat="server" Text="<%$ Resources: _Orders, ContentText_OrderID %>"></asp:Label>
                                             (<asp:Label ID="lblOptional" runat="server" Text="<%$ Resources: _Options, FormLabel_IsOptional %>"></asp:Label>)
-                                        </span>
-                                        <span class="Kartris-DetailsView-Value">
-                                            <asp:UpdatePanel ID="updPaymentOrders" runat="server" UpdateMode="Conditional">
+                                        </span><span class="Kartris-DetailsView-Value">
+<asp:UpdatePanel ID="updPaymentOrders" runat="server" UpdateMode="Conditional">
                                                 <ContentTemplate>
                                                     <asp:TextBox ID="txtOrderID" runat="server" />
                                                     <asp:LinkButton ID="lnkBtnAddOrder" class="linkbutton icon_new" runat="server"
@@ -102,8 +101,8 @@
 
                                     <!-- Payment Gateway -->
                                    <li><span class="Kartris-DetailsView-Name">
-                                        <asp:Label ID="lblPaymentGateway" runat="server" Text="<%$ Resources: _Orders, ContentText_PaymentGateWay %>" /></span>
-                                        <span class="Kartris-DetailsView-Value">
+                                        <asp:Label ID="lblPaymentGateway" runat="server"
+                                            Text="<%$ Resources: _Orders, ContentText_PaymentGateWay %>" /></span><span class="Kartris-DetailsView-Value">
                                             <asp:Literal ID="litInactivePaymentGateway" runat="server" />
                                             <asp:DropDownList ID="ddlPaymentGateways" runat="server" />
                                             <asp:RequiredFieldValidator ID="valPaymentGateways" runat="server"
