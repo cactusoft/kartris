@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC
+'Copyright 2014 CACTUSOFT INTERNATIONAL FZ LLC
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -40,7 +40,7 @@ Partial Class UserControls_Back_CategoryFilters
         End If
     End Sub
 
-    Protected Sub lnkBtnGenerate_Click(sender As Object, e As EventArgs) Handles lnkBtnGenerate.Click
+    Protected Sub btnGenerate_Click(sender As Object, e As EventArgs) Handles btnGenerate.Click
         txtXML.Text = PowerpackBLL._GenerateFilterXML(_GetCategoryID(), Session("_LANG"))
     End Sub
 End Class

@@ -4,7 +4,7 @@
 <script runat="server">
     '========================================================================
     'Kartris - www.kartris.com
-    'Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC
+    'Copyright 2014 CACTUSOFT INTERNATIONAL FZ LLC
 
     'GNU GENERAL PUBLIC LICENSE v2
     'This program is free software distributed under the GPL without any

@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC
+'Copyright 2014 CACTUSOFT INTERNATIONAL FZ LLC
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -13,8 +13,6 @@
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
 Imports System.Collections.Generic
-Imports GCheckout.Checkout
-Imports GCheckout.Util
 Imports System.Threading
 Imports System.Globalization
 Imports CkartrisBLL
@@ -277,7 +275,6 @@ Partial Class Templates_BasketView
         litError.Text = ""
 
         If Not (IsPostBack) Then
-            UC_GCheckoutButton.UseHttps = True
             Call LoadBasket()
         Else
             If Basket.OrderHandlingPrice.IncTax = 0 Or ViewType <> BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then phdOrderHandling.Visible = False Else phdOrderHandling.Visible = True
@@ -305,30 +302,17 @@ Partial Class Templates_BasketView
             
             phdMainBasket.Visible = True
             phdControls.Visible = True
-            If LCase(GetGCheckoutConfig("Status")) = "on" Or _
-              ((Not String.IsNullOrEmpty(Session("Back_Auth"))) And LCase(GetGCheckoutConfig("Status")) = "test") Then
-                phdGoogle.Visible = True
-            Else
-                phdGoogle.Visible = False
-            End If
             blnShowPromotion = True
             phdPromotions.Visible = True
             phdBasketButtons.Visible = True
         ElseIf ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then
             UC_ShippingMethodsEstimate.Visible = False
             phdControls.Visible = False
-            phdGoogle.Visible = False
             blnShowPromotion = False
             phdPromotions.Visible = False
             If Not _ViewOnly Then phdShippingSelection.Visible = True
         ElseIf ViewType = BasketBLL.VIEW_TYPE.MINI_BASKET Then
             UC_ShippingMethodsEstimate.Visible = False
-            If LCase(GetGCheckoutConfig("Status")) = "on" Or _
-              ((Not String.IsNullOrEmpty(Session("Back_Auth"))) And LCase(GetGCheckoutConfig("Status")) = "test") Then
-                UC_MiniGCheckoutButton.Visible = True
-            Else
-                UC_MiniGCheckoutButton.Visible = False
-            End If
             phdMiniBasket.Visible = True
         End If
 
@@ -347,7 +331,6 @@ Partial Class Templates_BasketView
 
         If BasketItems Is Nothing OrElse BasketItems.Count = 0 Then
             phdBasket.Visible = False
-            phdGoogle.Visible = False
         End If
 
         phdMainBasket.Visible = (ViewType <> BasketBLL.VIEW_TYPE.MINI_BASKET)
@@ -404,17 +387,19 @@ Partial Class Templates_BasketView
         rptMiniBasket.DataSource = BasketItems
         rptMiniBasket.DataBind()
 
+        Dim strNumberOfItems As Int16 = 0
+
         If BasketItems Is Nothing OrElse BasketItems.Count = 0 Then
             phdMiniBasketContent.Visible = False
             phdMiniBasketEmpty.Visible = True
-            litNumberOfItems.Text = "0"
+            strNumberOfItems = 0
         Else
             If GetKartConfig("frontend.minibasket.countversions") = "y" Then
                 'Absolute total of items in basket (rows x qty)
-                litNumberOfItems.Text = Basket.TotalItems
+                strNumberOfItems = Basket.TotalItems
             Else
                 'No. of rows in basket (i.e. different items)
-                litNumberOfItems.Text = BasketItems.Count
+                strNumberOfItems = BasketItems.Count
             End If
 
             phdMiniBasketEmpty.Visible = False
@@ -463,7 +448,7 @@ Partial Class Templates_BasketView
         'Build up string for compact basket, if enabled
 
         litCompactShoppingBasket.Text = "<a href=""" & CkartrisBLL.WebShopURL & "Basket.aspx" & """><span id=""compactbasket_title"">" & GetGlobalResourceObject("Basket", "PageTitle_ShoppingBasket") & "</span>" & vbCrLf
-        litCompactShoppingBasket.Text &= "<span id=""compactbasket_noofitems"">(" & Basket.TotalItems.ToString & ")</span>" & vbCrLf
+        litCompactShoppingBasket.Text &= "<span id=""compactbasket_noofitems"">(" & strNumberOfItems.ToString & ")</span>" & vbCrLf
 
         If Basket.PricesIncTax Then
             litCompactShoppingBasket.Text &= "<span id=""compactbasket_totalprice"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceIncTax) & "</span>" & vbCrLf
@@ -476,6 +461,8 @@ Partial Class Templates_BasketView
         'by the foundation 'hide-for-large' rule
         litCompactShoppingBasket2.Text = litCompactShoppingBasket.Text
 
+        'Set basket link for normal size screens
+        litShoppingBasketTitle.Text = litCompactShoppingBasket.Text
         updPnlMiniBasket.Update()
 
     End Sub
@@ -1102,244 +1089,6 @@ Partial Class Templates_BasketView
 
         End If
 
-    End Sub
-
-
-    ''' <summary>
-    ''' Post an order to Google Checkout
-    ''' </summary>
-    Protected Sub GoogleCheckoutPost(ByVal sender As Object, ByVal e As System.Web.UI.ImageClickEventArgs)
-        If LCase(GetKartConfig("frontend.users.access")) = "yes" And Not Page.User.Identity.IsAuthenticated Then
-            Response.Redirect("CustomerAccount.aspx")
-        End If
-
-        Dim arrGCPromotions, arrGCPromotionsDiscount As New ArrayList
-        Dim GCheckoutEnvironment As String = GetGCheckoutConfig("Status")
-        If UCase(GCheckoutEnvironment) = "ON" Then
-            GCheckoutEnvironment = GCheckout.EnvironmentType.Production
-        Else
-            GCheckoutEnvironment = GCheckout.EnvironmentType.Sandbox
-        End If
-
-        Dim strGCCurrencyCode As String = GetGCheckoutConfig("ProcessCurrency")
-        Dim Req As CheckoutShoppingCartRequest = New CheckoutShoppingCartRequest(GetGCheckoutConfig("GoogleMerchantID"), _
-         GetGCheckoutConfig("GoogleMerchantKey"), _
-         GCheckoutEnvironment, _
-         strGCCurrencyCode, 30)
-
-        Dim GCBasketBLL As New BasketBLL
-        Dim arrBasketItems As New ArrayList
-
-        Dim GCCurrencyID As Integer = CurrenciesBLL.CurrencyID(strGCCurrencyCode)
-        If Session("CUR_ID") <> GCCurrencyID Then
-            'Session currency is different from Google Checkout process currency so we need to convert the basket values and shipping rates
-            GCBasketBLL.CurrencyID = GCCurrencyID
-            GCBasketBLL.LoadBasketItems()
-
-            arrBasketItems = GCBasketBLL.GetItems
-
-            GCBasketBLL.Validate(False)
-
-            GCBasketBLL.CalculateTotals()
-
-            GCBasketBLL.CalculatePromotions(arrGCPromotions, arrGCPromotionsDiscount, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
-
-            Dim strCouponError As String = ""
-            GCBasketBLL.CalculateCoupon(Session("CouponCode") & "", strCouponError, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
-
-            BSKT_CustomerDiscount = GCBasketBLL.GetCustomerDiscount(numCustomerID)
-            GCBasketBLL.CalculateCustomerDiscount(BSKT_CustomerDiscount)
-
-        Else
-            GCBasketBLL = Basket
-            arrBasketItems = BasketItems
-        End If
-        'Create a 0 value tax table (for non taxable items)
-        Dim NoTaxTable As AlternateTaxTable = New AlternateTaxTable
-        NoTaxTable.Name = "NoTax"
-        NoTaxTable.StandAlone = True
-        NoTaxTable.AddWorldAreaTaxRule(0)
-        Req.AlternateTaxTables.Add(NoTaxTable)
-
-
-
-        'Cycle through the basket and each item to the request
-        For Each objBasketItem As BasketItem In arrBasketItems
-            With objBasketItem
-                Dim ItemTaxTable As AlternateTaxTable
-                Dim strTaxRate As String
-                Dim dicTaxRates As Hashtable = New Hashtable
-
-                If .IR_TaxPerItem = 0 Then
-                    ItemTaxTable = NoTaxTable
-                Else
-                    If APP_PricesIncTax Then strTaxRate = .ComputedTaxRate Else strTaxRate = (.IncTax - .ExTax) / .ExTax
-                    'strTaxRate = (.TaxRate * 100)
-                    If Req.AlternateTaxTables.Exists(strTaxRate) Then
-                        ItemTaxTable = Req.AlternateTaxTables.Item(strTaxRate)
-                    Else
-                        Dim newTaxTable As AlternateTaxTable = New AlternateTaxTable(strTaxRate, True)
-                        newTaxTable.AddWorldAreaTaxRule(strTaxRate)
-                        Req.AlternateTaxTables.Add(newTaxTable)
-                        ItemTaxTable = newTaxTable
-                    End If
-                End If
-
-                Dim xmlItemDoc As System.Xml.XmlDocument = New System.Xml.XmlDocument
-
-                Dim nodVersionCodeXMLNode As System.Xml.XmlNode = xmlItemDoc.CreateElement("version-code")
-                nodVersionCodeXMLNode.InnerText = .VersionCode
-
-                Dim nodVersionNameXMLNode As System.Xml.XmlNode = xmlItemDoc.CreateElement("version-name")
-                nodVersionNameXMLNode.InnerText = .VersionName
-
-                Dim nodVersionPricePerItemXMLNode As System.Xml.XmlNode = xmlItemDoc.CreateElement("version-priceperitem")
-                nodVersionPricePerItemXMLNode.InnerText = .IR_PricePerItem
-
-                Dim nodVersionTaxPerItemXMLNode As System.Xml.XmlNode = xmlItemDoc.CreateElement("version-taxperitem")
-                nodVersionTaxPerItemXMLNode.InnerText = .IR_TaxPerItem
-
-                Dim nodVersionOptionTextXMLNode As System.Xml.XmlNode = xmlItemDoc.CreateElement("version-optiontext")
-                nodVersionOptionTextXMLNode.InnerText = .OptionText
-
-
-                Req.AddItem(.Name, "", .VersionID, .ExTax, .Quantity, ItemTaxTable, nodVersionCodeXMLNode, _
-                  nodVersionNameXMLNode, nodVersionPricePerItemXMLNode, nodVersionTaxPerItemXMLNode, nodVersionOptionTextXMLNode)
-            End With
-        Next
-
-        'Get the default country from config settings. We will use this to calculate the default values for the shipping methods
-        Dim numDefaultCountry As Integer = CInt(GetKartConfig("frontend.checkout.defaultcountry"))
-
-        'Add the both the Order Handling Item entry and Tax Table
-        GCBasketBLL.CalculateOrderHandlingCharge(numDefaultCountry)
-        If GCBasketBLL.OrderHandlingPrice.ExTax > 0 Then
-            Dim OrderHandlingTaxTable As AlternateTaxTable = New AlternateTaxTable
-            OrderHandlingTaxTable.Name = "Handling"
-            NoTaxTable.StandAlone = True
-            OrderHandlingTaxTable.AddWorldAreaTaxRule(GCBasketBLL.OrderHandlingPrice.TaxRate)
-            Req.AlternateTaxTables.Add(OrderHandlingTaxTable)
-            Req.AddItem(GetGlobalResourceObject("Kartris", "ContentText_OrderHandlingCharge"), "", GCBasketBLL.OrderHandlingPrice.ExTax, 1, OrderHandlingTaxTable)
-        End If
-
-        'Customer Discount (if there's any)
-        If GCBasketBLL.CustomerDiscount.ExTax < 0 Then
-            Dim CustomerDiscountTaxTable As AlternateTaxTable = New AlternateTaxTable
-            CustomerDiscountTaxTable.Name = "CustomerDiscount"
-            CustomerDiscountTaxTable.StandAlone = True
-            CustomerDiscountTaxTable.AddWorldAreaTaxRule(GCBasketBLL.CustomerDiscount.TaxRate)
-            Req.AlternateTaxTables.Add(CustomerDiscountTaxTable)
-            Req.AddItem(GetGlobalResourceObject("Basket", "ContentText_Discount"), "", GCBasketBLL.CustomerDiscount.ExTax, 1, CustomerDiscountTaxTable)
-        End If
-
-        'Promotions (if there's any)
-        If GCBasketBLL.PromotionDiscount.ExTax < 0 Then
-            Dim PromotionDiscountTaxTable As AlternateTaxTable = New AlternateTaxTable
-            PromotionDiscountTaxTable.Name = "PromotionDiscount"
-            PromotionDiscountTaxTable.StandAlone = True
-            PromotionDiscountTaxTable.AddWorldAreaTaxRule(GCBasketBLL.PromotionDiscount.TaxRate)
-            Req.AlternateTaxTables.Add(PromotionDiscountTaxTable)
-            Req.AddItem(GetGlobalResourceObject("Basket", "ContentText_Promotion"), "", GCBasketBLL.PromotionDiscount.ExTax, 1, PromotionDiscountTaxTable)
-        End If
-
-
-        If Not String.IsNullOrEmpty(GCBasketBLL.CouponCode) Then
-            Dim CouponDiscountTaxTable As AlternateTaxTable = New AlternateTaxTable
-            CouponDiscountTaxTable.Name = "CouponDiscount"
-            CouponDiscountTaxTable.StandAlone = True
-            CouponDiscountTaxTable.AddWorldAreaTaxRule(GCBasketBLL.CouponDiscount.TaxRate)
-            Req.AlternateTaxTables.Add(CouponDiscountTaxTable)
-            Req.AddItem(GetGlobalResourceObject("Kartris", "ContentText_CouponDiscount"), "", GCBasketBLL.CouponDiscount.ExTax, 1, CouponDiscountTaxTable)
-        End If
-
-        If Not GCBasketBLL.AllFreeShipping Then
-            Dim lstShippingMethods As List(Of ShippingMethod) = ShippingMethod.GetAll(ShippingDetails, numDefaultCountry, GCBasketBLL.ShippingTotalIncTax)
-            For Each ShippingMethod In lstShippingMethods
-                Req.AddMerchantCalculatedShippingMethod(ShippingMethod.Name, ShippingMethod.ExTax)
-            Next
-        End If
-        'Get the available shipping methods for the default country and add them to the request
-
-        ' Add the needed privated data nodes for merchant calculation callback
-        Dim xmlTempDoc As System.Xml.XmlDocument = New System.Xml.XmlDocument
-        Dim nodTempXMLNode As System.Xml.XmlNode = xmlTempDoc.CreateElement("shipping-weight")
-        nodTempXMLNode.InnerText = GCBasketBLL.ShippingTotalWeight
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        nodTempXMLNode = xmlTempDoc.CreateElement("shipping-totalextax")
-        nodTempXMLNode.InnerText = GCBasketBLL.ShippingTotalExTax
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        nodTempXMLNode = xmlTempDoc.CreateElement("shipping-totaltaxamount")
-        nodTempXMLNode.InnerText = GCBasketBLL.ShippingTotalTaxAmount
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        nodTempXMLNode = xmlTempDoc.CreateElement("basket-totaltaxamount")
-        nodTempXMLNode.InnerText = GCBasketBLL.TotalTaxAmount
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        nodTempXMLNode = xmlTempDoc.CreateElement("coupon-code")
-        nodTempXMLNode.InnerText = GCBasketBLL.CouponCode
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        nodTempXMLNode = xmlTempDoc.CreateElement("order-currencyid")
-        nodTempXMLNode.InnerText = CInt(Session("CUR_ID"))
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        nodTempXMLNode = xmlTempDoc.CreateElement("order-languageid")
-        nodTempXMLNode.InnerText = GetLanguageIDfromSession()
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        nodTempXMLNode = xmlTempDoc.CreateElement("buyer-ipaddress")
-        nodTempXMLNode.InnerText = Request.ServerVariables("remote_addr")
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        nodTempXMLNode = xmlTempDoc.CreateElement("session-id")
-        nodTempXMLNode.InnerText = CInt(Session("SessionID"))
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        nodTempXMLNode = xmlTempDoc.CreateElement("customer-id")
-        nodTempXMLNode.InnerText = numCustomerID
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        nodTempXMLNode = xmlTempDoc.CreateElement("orderhandlingcharge-totaltaxamount")
-        nodTempXMLNode.InnerText = GCBasketBLL.OrderHandlingPrice.TaxAmount
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        nodTempXMLNode = xmlTempDoc.CreateElement("customer-discount")
-        nodTempXMLNode.InnerText = GCBasketBLL.CustomerDiscount.TaxAmount
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        nodTempXMLNode = xmlTempDoc.CreateElement("promotion-discount")
-        nodTempXMLNode.InnerText = GCBasketBLL.PromotionDiscount.TaxAmount
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        nodTempXMLNode = xmlTempDoc.CreateElement("coupon-discount")
-        nodTempXMLNode.InnerText = GCBasketBLL.CouponDiscount.TaxAmount
-        Req.AddMerchantPrivateDataNode(nodTempXMLNode)
-
-        'Additional properties that needs to be set
-        Req.SetRoundingPolicy(RoundingMode.DOWN, GCheckout.Checkout.RoundingRule.PER_LINE)
-        Req.MerchantCalculatedTax = True
-        Req.ContinueShoppingUrl = WebShopURL()
-        Req.AcceptMerchantCoupons = False
-        Req.AcceptMerchantGiftCertificates = False
-        Req.EditCartUrl = WebShopURL() & "Basket.aspx"
-        Req.AddWorldAreaTaxRule(GCBasketBLL.TotalTaxRate, APP_PricesIncTax)
-
-        GCBasketBLL = Nothing
-        arrBasketItems = Nothing
-        'Google Service for Kartris
-        Req.MerchantCalculationsUrl = WebShopURL() & "Protected/GoogleCheckout/GoogleService.aspx"
-        Log.Debug(EncodeHelper.Utf8BytesToString(Req.GetXml))
-        'Post the request to Google Checkout
-        Dim Resp As GCheckoutResponse = Req.Send
-        If Resp.IsGood Then
-            Response.Redirect(Resp.RedirectUrl, True)
-        Else
-            Throw New Exception("Resp.ResponseXml = " & Resp.ResponseXml & "<br />Resp.RedirectUrl = " & Resp.RedirectUrl & "<br />" & _
-              "Resp.IsGood = " & Resp.IsGood & "<br />Resp.ErrorMessage = " & Resp.ErrorMessage & "<br />")
-        End If
     End Sub
 
 End Class

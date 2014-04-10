@@ -1,6 +1,6 @@
 '========================================================================
 'Kartris - www.kartris.com
-'Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC
+'Copyright 2014 CACTUSOFT INTERNATIONAL FZ LLC
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -29,8 +29,8 @@ Imports System.Xml
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 2.5009
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #3/7/2013# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION As Decimal = 2.6
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #4/8/2014# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
@@ -1624,6 +1624,7 @@ Public NotInheritable Class CkartrisBLL
 
             'remove these template tags if present
             strHTML = strHTML.Replace("[poofflinepaymentdetails]", String.Empty)
+            strHTML = strHTML.Replace("[bitcoinpaymentdetails]", String.Empty)
             strHTML = strHTML.Replace("[storeowneremailheader]", String.Empty)
             Return strHTML
         Catch ex As Exception

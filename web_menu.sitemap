@@ -2,20 +2,13 @@
 <siteMap xmlns="http://schemas.microsoft.com/AspNet/SiteMap-File-1.0" enableLocalization="true" >
 	<siteMapNode url="~/Default.aspx" title="$resources:Kartris,ContentText_Home"  description="$resources:Kartris,ContentText_Home"  >
 
-		<siteMapNode url="~/Search.aspx" title="$resources:Search,PageTitle_ProductSearch"  description="$resources:Search,PageTitle_ProductSearch" value="search" />
-		
-		<siteMapNode url="~/Customer.aspx" title="$resources:Kartris,PageTitle_MyAccount"  description="$resources:Kartris,PageTitle_MyAccount" value="myaccount" />
+		<siteMapNode url="~/Customer.aspx" title="$resources:Kartris,PageTitle_MyAccount"  description="$resources:Kartris,PageTitle_MyAccount" value="myaccount">
+			<siteMapNode url="~/Wishlist.aspx" title="$resources:Kartris,PageTitle_WishListLogin"  description="$resources:Kartris,PageTitle_WishListLogin" value="wishlist" />
+			<siteMapNode url="~/CustomerTickets.aspx?" title="$resources:Tickets,PageTitle_SupportTickets"  description="$resources:Tickets,PageTitle_SupportTickets" value="supporttickets" />
+		</siteMapNode>
 		
 		<siteMapNode url="~/News.aspx" title="$resources:News,PageTitle_SiteNews"  description="$resources:News,PageTitle_SiteNews" value="news" />
 				
-		<siteMapNode url="~/Wishlist.aspx" title="$resources:Kartris,PageTitle_WishListLogin"  description="$resources:Kartris,PageTitle_WishListLogin" value="wishlist" />
-
-		<siteMapNode url="~/Promotions.aspx" title="$resources:Kartris,PageTitle_Promotions"  description="$resources:Kartris,PageTitle_Promotions" value="promotions"/>
-
-		<siteMapNode url="~/Knowledgebase.aspx" title="$resources:Knowledgebase,PageTitle_Knowledgebase"  description="$resources:Knowledgebase,PageTitle_Knowledgebase" value="knowledgebase" />
-
-		<siteMapNode url="~/CustomerTickets.aspx?" title="$resources:Tickets,PageTitle_SupportTickets"  description="$resources:Tickets,PageTitle_SupportTickets" value="supporttickets" />
-
 		<siteMapNode url="~/Contact.aspx" title="$resources:Kartris,PageTitle_ContactUs"  description="$resources:Kartris,PageTitle_ContactUs" />
 
 		</siteMapNode>

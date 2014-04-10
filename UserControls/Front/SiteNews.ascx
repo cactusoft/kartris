@@ -30,6 +30,7 @@
                 </ItemTemplate>
             </asp:Repeater>
         </ul>
+        <div class="spacer"></div>
         <asp:PlaceHolder ID="phdNoResults" runat="server">
             <asp:Literal ID="litNoItems" Text="<%$ Resources: Kartris, ContentText_NoItems %>"
                 runat="server"></asp:Literal>

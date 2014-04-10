@@ -347,7 +347,7 @@
                 </asp:View>
                 <asp:View ID="viwVersionDropDown" runat="server">
                  <!-- multi-version dropdown -->
-                    <div class="boxinset line">
+                    <div class="boxinset line multipleversiondropdown">
                         <div class="addtobasket row" runat="server">
                             <asp:UpdatePanel ID="updVersionDropdown" runat="server" UpdateMode="Conditional">
                                 <ContentTemplate>

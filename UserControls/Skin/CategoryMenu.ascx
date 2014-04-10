@@ -14,13 +14,13 @@
     'cached version. This is necessary
     'because some categories may be
     'available only to some customer
-    'groups, so we cannot service same
+    'groups, so we cannot serve same
     'menu to each user.
     '-----------------------------------
 %>
 <!-- CategoryMenu - dropdown -->
-<div id="categorymenu">
-    <nav class="top-bar">
+<div id="categorymenu" class="sticky">
+    <nav class="top-bar" data-options="sticky_on:small" data-topbar>
         <div class="box">
             <ul class="title-area show-for-medium-down" style="display:none;">
                 <li class="name"><asp:Hyperlink ID="lnkCategories" runat="server" Text="<%$ Resources: Kartris, ContentText_Categories %>" EnableViewState="False" NavigateUrl="~/Category.aspx"></asp:Hyperlink></li>
@@ -38,7 +38,5 @@
         </div>
     </nav>
 </div>
-
-<%  'DataSource %>
 <asp:SiteMapDataSource ID="srcSiteMap" SiteMapProvider="CategorySiteMapProvider"
     ShowStartingNode="false" runat="server" />
