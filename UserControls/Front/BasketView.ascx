@@ -1,5 +1,4 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="BasketView.ascx.vb" Inherits="Templates_BasketView" %>
-<%@ Register TagPrefix="user" Namespace="GCheckout.Checkout" Assembly="GCheckout" %>
 <%@ Register TagPrefix="user" TagName="ShippingMethodsEstimate" Src="~/UserControls/General/ShippingMethodsEstimate.ascx" %>
 <!--
 ===============================
@@ -363,7 +362,7 @@ MAIN BASKET
                         </asp:PlaceHolder>
                         <%=""%>
                         <!-- Coupon Row -->
-                        <% If Not String.IsNullOrEmpty(Basket.CouponCode) Then 'If Basket.CouponDiscount.IncTax < 0 Then
+                        <% If Not String.IsNullOrEmpty(Basket.CouponCode) Then 'We have a coupon
                         %>
                         <tr>
                             <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
@@ -383,10 +382,6 @@ MAIN BASKET
                                             <%=Basket.CouponName%></div>
                                     </div>
                                 </td>
-                                 <% If Basket.CouponDiscount.IncTax = 0 Then%>
-                                 <td colspan="3">
-                                 </td>
-                                 <% Else%>
                                 <% '' inc tax %>
                                 <% If APP_PricesIncTax Then%>
                                 <% If APP_ShowTaxDisplay = True Then%>
@@ -419,7 +414,6 @@ MAIN BASKET
                                 <td class="quantity">
                                     1
                                 </td>
-                                <% End If%>
                                 <td class="total hide-for-small">
                                     <% If Basket.CouponDiscount.IncTax > 0 Then%>
                                     <% If APP_USMultiStateTax Then%>
@@ -427,7 +421,8 @@ MAIN BASKET
                                     <% Else%>
                                     <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CouponDiscount.IncTax)%>
                                     <% End If%>
-                                    <% Else%><%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CouponDiscount.IncTax)%>
+                                    <% Else%>
+                                    <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CouponDiscount.IncTax)%>
                                     <% End If%>
                                 </td>
                                 <td class="remove">
@@ -643,32 +638,21 @@ MAIN BASKET
                             <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
                             <td class="image_cell hide-for-small">
                             </td>
-                            <td colspan="4">
+                            <td colspan="5">
                                 <% Else%>
-                                <td colspan="5">
-                                    <% End If%>
-                                    <asp:UpdatePanel ID="updCoupons" runat="server" UpdateMode="Conditional">
-                                        <ContentTemplate>
-                                            <asp:Panel ID="pnlCoupons" runat="server" DefaultButton="btnApplyCoupon">
-                                                <div class="Kartris-DetailsView">
-                                                    <div class="Kartris-DetailsView-Data">
-                                                        <ul>
-                                                            <li><span class="Kartris-DetailsView-Name">
-                                                                <asp:Label ID="lblCouponCode" runat="server" Text='<%$ Resources: Basket, ContentText_ApplyCouponCode %>'
-                                                                    EnableViewState="false" AssociatedControlID="txtCouponCode"></asp:Label></span><span
-                                                                        class="Kartris-DetailsView-Value">
-                                                                        <asp:TextBox MaxLength="25" ID="txtCouponCode" runat="server" Text="" AutoPostBack="false"
-                                                                            CssClass="couponbox"></asp:TextBox>
-                                                                        <asp:LinkButton ID="btnApplyCoupon" CssClass="link2 icon_new" OnCommand="ApplyCoupon_Click"
-                                                                            CommandName="ApplyCoupon" CommandArgument="" runat="server" Text='<%$ Resources: Basket, ContentText_EnterCouponLink %>' /></span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </asp:Panel>
-                                        </ContentTemplate>
-                                    </asp:UpdatePanel>
-                                </td>
+                            <td colspan="6">
+                                <% End If%>
+                                <asp:Panel ID="pnlCoupons" runat="server" DefaultButton="btnApplyCoupon">
+
+                                    <asp:Label ID="lblCouponCode" runat="server" Text='<%$ Resources: Basket, ContentText_ApplyCouponCode %>'
+                                        EnableViewState="false" AssociatedControlID="txtCouponCode"></asp:Label><asp:TextBox MaxLength="25" ID="txtCouponCode" runat="server" Text="" AutoPostBack="false"
+                                            CssClass="couponbox"></asp:TextBox>
+                                    <asp:LinkButton ID="btnApplyCoupon" CssClass="link2 icon_new" OnCommand="ApplyCoupon_Click"
+                                        CommandName="ApplyCoupon" CommandArgument="" runat="server" Text='<%$ Resources: Basket, ContentText_EnterCouponLink %>' /></div>
+
+                                </asp:Panel>
+
+                            </td>
                             <td class="hide-for-small">&nbsp;</td>
                         </tr>
                         <%	End If%>
@@ -788,12 +772,6 @@ MAIN BASKET
                         </div>
                     </asp:PlaceHolder>
                     <!-- end of form -->
-                </asp:PlaceHolder>
-                <asp:PlaceHolder ID="phdGoogle" runat="server" Visible="false">
-                    <div id='googlecheckoutbasketdiv'>
-                        <user:GCheckoutButton ID="UC_GCheckoutButton" OnClick="GoogleCheckoutPost" UseHttps="true"
-                            runat="server" />
-                    </div>
                 </asp:PlaceHolder>
                 <% If ViewType = BasketBLL.VIEW_TYPE.MAIN_BASKET Then%>
                 <!-- shipping estimate -->
@@ -926,10 +904,8 @@ MINI BASKET
             <div id="minibasket" class="infoblock hide-for-touch">
                 <div id="minibasket_header">
                     <h4>
-                        <asp:HyperLink ID="lnkShoppingBasket" runat="server" NavigateUrl="~/Basket.aspx">
-                            <asp:Literal ID="litShoppingBasketTitle" runat="server" Text="<%$ Resources:Basket, PageTitle_ShoppingBasket  %>"
-                                EnableViewState="false" /></asp:HyperLink>&nbsp; <strong runat="server" title="<%$ Resources:Kartris, ContentText_MinibasketNumberOfItems  %>"
-                                    enableviewstate="false">(<asp:Literal ID="litNumberOfItems" runat="server" />)</strong>
+                        <asp:Literal ID="litShoppingBasketTitle" runat="server"
+                                EnableViewState="false" />
                     </h4>
                 </div>
                 <div id="minibasket_main">
@@ -1009,9 +985,6 @@ MINI BASKET
                                     <asp:Literal ID="litCheckout" runat="server" Text="<%$ Resources:Kartris, ContentText_MinibasketCheckout  %>"
                                         EnableViewState="false"></asp:Literal>
                                 </a></li>
-                                <li>
-                                    <user:GCheckoutButton ID="UC_MiniGCheckoutButton" Size="Small" BackColor="Transparent"
-                                        Background="Transparent" OnClick="GoogleCheckoutPost" UseHttps="true" runat="server" /></li>
                                 <%End If%>
                                 <li><a class="button" href="<%=CkartrisBLL.WebShopURL%>Contact.aspx" id="enquiry_button">
                                     <asp:Literal ID="litEnquiry" runat="server" Text="<%$ Resources:Kartris, ContentText_MinibasketMakeEnquiry  %>"

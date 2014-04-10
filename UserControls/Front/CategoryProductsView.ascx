@@ -10,42 +10,44 @@
                     <div id="filterbar_pad">
                         <asp:UpdatePanel ID="updCategoryFilters" runat="server" UpdateMode="Conditional">
                             <ContentTemplate>
-                                <h2>Refine products by</h2>
-                                <asp:TextBox ID="txtSearch" runat="server" placeholder="Search..." Width="150" Style="display: inline-block;"></asp:TextBox>
+                                <h2><asp:Literal ID="litRefineHeading" runat="server" Text="<%$ Resources: Filters, ContentText_RefineSelection %>"></asp:Literal></h2>
+                                <asp:Label runat="server" ID="lblKeywords" Text="<%$ Resources: Search, ContentText_Keywords %>" AssociatedControlID="txtSearch"></asp:Label>
+                                <asp:TextBox ID="txtSearch" runat="server"></asp:TextBox>
+                                <asp:Label runat="server" ID="lblSortBy" Text="<%$ Resources: Filters, ContentText_SortBy %>" AssociatedControlID="ddlOrderBy"></asp:Label>     
+                                <asp:DropDownList ID="ddlOrderBy" runat="server">
+                                </asp:DropDownList>                                
+                                
+                                <asp:Label runat="server" ID="lblPriceRange" Text="<%$ Resources: Filters, ContentText_PriceRange %>" AssociatedControlID="ddlPriceRange"></asp:Label>     
                                 <asp:PlaceHolder ID="phdPriceRange" runat="server">
-                                    <asp:DropDownList ID="ddlPriceRange" runat="server" Width="150" AutoPostBack="true">
+                                    <asp:DropDownList ID="ddlPriceRange" runat="server" AutoPostBack="true">
                                     </asp:DropDownList>
                                     <asp:PlaceHolder ID="phdCustomPrice" runat="server">
-                                        <asp:Literal ID="litFromSymbol" runat="server"></asp:Literal>
-                                        <asp:TextBox ID="txtFromPrice" runat="server" Text="0" Width="40" Style="display: inline-block;"></asp:TextBox>
-                                        <asp:Literal ID="litTo" runat="server" Text=" To "></asp:Literal>
-                                        <asp:Literal ID="litToSymbol" runat="server"></asp:Literal>
-                                        <asp:TextBox ID="txtToPrice" runat="server" Width="40" Style="display: inline-block;"></asp:TextBox>
+                                        <div id="customprice">
+                                            <asp:Literal ID="litFromSymbol" runat="server"></asp:Literal>
+                                            <asp:TextBox ID="txtFromPrice" runat="server" Text="0" CssClass="shorttext"></asp:TextBox>
+                                            --&gt;
+                                            <asp:Literal ID="litToSymbol" runat="server"></asp:Literal>
+                                            <asp:TextBox ID="txtToPrice" runat="server" CssClass="shorttext"></asp:TextBox>
+                                        </div>
                                     </asp:PlaceHolder>
                                 </asp:PlaceHolder>
-                                <asp:DropDownList ID="ddlOrderBy" runat="server" Width="100">
-                                    <asp:ListItem Text="Name ↑" Value=".sort=name.dir=a"></asp:ListItem>
-                                    <asp:ListItem Text="Name ↓" Value=".sort=name.dir=d"></asp:ListItem>
-                                    <asp:ListItem Text="Price ↑" Value=".sort=price.dir=a"></asp:ListItem>
-                                    <asp:ListItem Text="Price ↓" Value=".sort=price.dir=d"></asp:ListItem>
-                                </asp:DropDownList>
+
                                 <asp:Panel ID="pnlValues" runat="server">
 
                                         <asp:PlaceHolder ID="phdAttributes" runat="server">
-                                            <div style="clear: both; margin-bottom: 30px; display: inline-block;">
+                                        <div class="filterattributes">
+                                          
                                                 <asp:Repeater ID="rptAttributes" runat="server">
                                                     <ItemTemplate>
-                                                        <div style="width: 200px; border: 1px solid #eee; float: left;">
-                                                            <asp:Label ID="lblAttributeName" runat="server" Text='<%# Eval("AttributeName")%>' Font-Bold="true"></asp:Label>
-                                                            <asp:CheckBoxList ID="chkList" runat="server" CssClass="checkbox" BackColor="White"></asp:CheckBoxList>
-                                                        </div>
+                                                        <asp:Label ID="lblAttributeName" runat="server" Text='<%# Eval("AttributeName")%>' CssClass="attribute_title"></asp:Label>
+                                                            <asp:CheckBoxList ID="chkList" runat="server" CssClass="checkbox"></asp:CheckBoxList>
                                                     </ItemTemplate>
                                                 </asp:Repeater>
-                                            </div>
+                                        </div>
                                         </asp:PlaceHolder>
 
                                     </asp:Panel>
-                                <asp:LinkButton ID="lnkBtnSearch" runat="server" CssClass="button" Text="GO"></asp:LinkButton>
+                                <asp:Button ID="lnkBtnSearch" runat="server" CssClass="button" Text="<%$ Resources: Filters, ContentText_Apply %>"></asp:Button>
                             </ContentTemplate>
                         </asp:UpdatePanel>
                     </div>

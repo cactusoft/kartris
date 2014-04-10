@@ -9,13 +9,12 @@ th,
 select,
 body                                    { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; line-height: 17px; font-size: 13px; font-weight: normal; color: #555; padding: 0; margin: 0; }
 p                                       { margin: 5px 0 10px 0 }
-h1                                      { font-family: 'Open Sans',"Segoe UI Light",Arial,Sans-Serif; font-size: 210%; letter-spacing: -0.5px; color: #000; margin: 0; padding: 15px 0 5px 0; display: inline-block; font-weight: 100; line-height: 33px; }
+h1                                      { font-family: 'Open Sans',"Segoe UI Light",Arial,Sans-Serif; font-size: 210%; letter-spacing: -0.5px; color: #000; margin: 0; padding: 15px 0 10px 0; display: inline-block; font-weight: 100; line-height: 33px; }
 h2                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 130%; color: #000; margin: 5px 0 5px 0; padding: 0; }
-
 .h2_light_extra                         { color: #aaa; font-weight: bold; }
 h3                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 95%; font-weight: normal; margin: 0 0 5px 0; padding: 0; }
 h4,
-h2.blockheader                          { font-family: 'Open Sans',"Segoe UI Light",Arial,Sans-Serif; font-weight: 100; font-size: 140%; color: #000; margin: 0; padding: 10px 0 15px 0; }
+h2.blockheader                          { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 100; font-size: 140%; color: #000; margin: 0; padding: 0 0 15px 0; }
 h5                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0px 0px 5px 0px; color: #000; text-transform: uppercase; padding: 2px 2px 2px 0px; text-align: left; }
 pre                                     { color: #008800 }
 iframe                                  { border: none; }
@@ -27,21 +26,21 @@ iframe body                             { padding: 5px 0 0 0 }
 BREADCRUMBS
 ========================================================================
 */
-.breadcrumbtrail                        { padding: 5px 17px 5px 0; display: block; font-weight: normal; text-decoration: none; margin: 2px 0 9px 0px; font-size: 85%; text-transform: uppercase; }
-.breadcrumbtrail span span              { font-weight: bold; color: #555; display: inline-block; padding: 0 0 0 6px; }
-.breadcrumbtrail span span a            { padding: 0 17px 0 0; display: inline-block; font-weight: normal; margin: 0; color: #555; background-image: url(Images/breadcrumb_back.png); background-position: right center; background-repeat: no-repeat; }
+.breadcrumbtrail                        { padding: 5px 17px 5px 0; display: block; font-weight: normal; text-decoration: none; margin: 15px 0 9px 0px; font-size: 100%; }
+.breadcrumbtrail span span              { font-weight: bold; color: #000; display: inline-block; padding: 0 0 0 6px; }
+.breadcrumbtrail span span a            { color: #666; padding: 0 17px 0 0; display: inline-block; font-weight: normal; margin: 0; background-image: url(Images/breadcrumb_back.png); background-position: right center; background-repeat: no-repeat; }
 /* 
 ========================================================================
 HYPERLINKS
 ========================================================================
 */
 a:link,
-a:visited                               { text-decoration: none; color: #777; outline: 0; }
+a:visited                               { text-decoration: none; color: #04d; outline: 0; }
 a:hover                                 { text-decoration: none; color: #000; }
 a.link2,
-span.link2 a                            { text-decoration: none; color: #777; border-bottom: dotted 1px #777; margin-right: 10px; }
+span.link2 a                            { padding: 2px 8px; text-transform: uppercase; font-size: 11px; font-weight: bold; text-decoration: none; color: #fff; background-color: #888; margin-right: 10px; border-radius: 3px; }
 a.link2:hover,
-span.link2:hover a                      { text-decoration: none; color: #000; border-bottom: solid 1px #000; }
+span.link2:hover a                      { background-color: #f90; }
 /* 
 ========================================================================
 GENERAL
@@ -58,13 +57,13 @@ img                                     { border: none }
 TABLES
 ========================================================================
 */
-table                                   { background-color: transparent; border-collapse: collapse; width: 100%; max-width: 100%; border:none; }
-table tr td                             { background-color: #FFEEDD; border-bottom: solid 2px #fff; vertical-align: top; padding: 5px 10px 5px 5px; }
+table                                   { border: none; background-color: transparent; border-collapse: separate; width: 100%; max-width: 100%; }
+table tr td                             { background-color: #f5f5f5; border-bottom: solid 1px #ddd; vertical-align: top; padding: 5px 10px 5px 5px; }
 table tr.alt                            { }
 table tr.headrow,
 table thead tr                          { }
 table tr.headrow th,
-table thead tr th                       { border-bottom: solid 2px #fc5; font-weight: normal; color: #888; text-align: left; text-transform: uppercase; font-size: 85%;}
+table thead tr th                       { background-color: #fff; border-bottom: solid 1px #f90; line-height: 12px; padding: 5px 10px 4px 5px; font-weight: normal; color: #888; text-align: left; text-transform: uppercase; font-size: 85%;}
 table td,
 table th                                { padding: 3px }
 table td strong                         { color: #000 }
@@ -85,8 +84,8 @@ DETAILS VIEW / SECTIONS
 .Kartris-DetailsView-Data               { margin-bottom: 10px }
 .Kartris-DetailsView-Data ul            { list-style-type: none; padding: 0; margin-left: 0;  }
 .Kartris-DetailsView-Data ul li         { padding-top: 5px }
-.Kartris-DetailsView-Name               { display: inline-block; color: #666; margin-bottom: 3px; width: 150px; font-weight: normal; vertical-align: top; padding-right: 10px; }
-.Kartris-DetailsView-Value              { display: inline-block; width: 350px; max-width: 100%; vertical-align: top; color: #000; overflow: visible; }
+.Kartris-DetailsView-Name               { font-size: 90%; display: inline-block; color: #666; margin-bottom: 3px; width: 150px; font-weight: normal; vertical-align: top; padding-right: 10px; }
+.Kartris-DetailsView-Value              { font-size: 90%; display: inline-block; width: 350px; max-width: 100%; vertical-align: top; color: #000; overflow: visible; }
 .Kartris-DetailsView-Value label        { white-space: nowrap; max-width: 100%; }
 /* 
 ========================================================================
@@ -94,7 +93,6 @@ FORM ELEMENTS
 ========================================================================
 */
 form                                    { margin: 0; display: inline; padding: 0; }
-select                                  { font-weight: normal; color: #111; border: solid 1px #bbb; margin: 0 0 3px 0; padding: 0px; }
 textarea                                { min-height: 80px; max-width: 100%; }
 input                                   { width: 250px; max-width: 100%; }
 input.longtext                          { width: 400px }
@@ -103,18 +101,18 @@ input.shorttext                         { width: 60px }
 select:focus,
 input:focus,
 textarea:focus                          { color: #000; background-color: #fff; border: solid 1px #c00; }
-.button                                 { font-family: Tahoma,Verdana,Arial,Helvetica; text-transform: uppercase; font-size: 85%; font-weight: normal; background-color: #eee; color: #000; border: solid 1px #aaa; padding: 4px 9px 4px 9px; margin: 1px 0px 1px 2px; width: auto; display: inline-block; }
+.button                                 { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 14px; border: solid 1px #333; background-color: #ddd; color: #111; font-weight: bold; padding: 3px 13px; margin: 1px 0px 1px 2px; width: auto; display: inline-block; }
 .button:focus,
-.button:hover                           { background-color: #999; color: #fff; }
+.button:hover                           { background-color: #666; color: #fff; border: solid 1px #666;  }
 input.cancelbutton                      { background-color: #ddd; border-color: #bbb; color: #666; }
 input.highpriority                      { }
 .inputform p                            { margin: 5px 0 15px 0 }
-.inputform div                          { float: left; margin-bottom: 5px; }
+.inputform div                          { margin-bottom: 5px; }
 .inputform .submitbuttons div           { float: none }
 .inputform br                           { display: block; clear: both; }
 .checkbox input,
-.radio input                            { border-style: none; background-color: transparent; display: inline-block; width: 20px; float: left; width: 20px; margin-right: 1px; }
-label                                   { font-size: 99%; display: inline-block; letter-spacing: 0px; color: #777; margin-bottom: 3px; font-weight: normal; vertical-align: top; }
+.radio input                            { border-style: none; background-color: transparent; display: inline-block; width: 20px; float: left; margin-right: 1px; }
+label                                   { font-size: 11px; text-transform: uppercase; display: inline-block; letter-spacing: 0px; color: #777; margin-bottom: 3px; font-weight: normal; vertical-align: top; }
 .inputform .column2                     { padding: 0px; margin-left: 130px; }
 .inputform .column2 label               { width: auto }
 div.formdivider                         { display: block; border-top: dotted 1px #bbb; width: 100%; }
@@ -135,7 +133,7 @@ input[type="search"],
 input[type="tel"],
 input[type="time"],
 input[type="url"],
-textarea                                { background-color: #f9f9f9; border: 1px solid #aaa; color: #777; }
+textarea                                { border: solid 1px #bbb; background-color: #f5f5f5; box-shadow: inset 3px 3px 3px #ccc; height: auto; padding: 1px; color: #333; }
 select:focus,
 input[type="text"]:focus,
 input[type="password"]:focus,
@@ -150,14 +148,14 @@ input[type="search"]:focus,
 input[type="tel"]:focus,
 input[type="time"]:focus,
 input[type="url"]:focus,
-textarea:focus                          { background-color: #fff; border: 1px solid #f50; color: #000; box-shadow: 0 0 5px #f50;}
+textarea:focus                          { background-color: #fff4cc; color: #000; border: solid 1px #f90; box-shadow: none;}
 /* 
 ========================================================================
 ERRORS & VALIDATION
 ========================================================================
 */
 span.error,
-div.errortext                           { display: inline-block; color: #fff; font-weight: bold; padding: 1px 5px 1px 3px; background-color: #f00; margin-left: 3px; border-radius: 3px; }
+div.errortext                           { font-style: normal; font-size: 13px; display: inline-block; color: #fff; font-weight: bold; padding: 1px 5px 1px 3px; background-color: #f00; margin-left: 3px; border-radius: 3px; }
 .requiredfield                          { font-weight: bold }
 .valsummary                             { display: inline; color: #fff; font-weight: bold; padding: 1px 5px 1px 3px; background-color: #f00; margin-left: 10px; border-radius: 3px; }
 .valsummary ul                          { display: none; visibility: hidden; }
@@ -173,16 +171,16 @@ IMAGES
 .imageviewer .gallery .scrollarea       { display: inline-block }
 #frmLargeImage div                      { }
 #frmLargeImage .imageviewer .gallery    { padding: 5px 0 0 0; text-align: center; overflow-x: auto; overflow-y: hidden; white-space: nowrap; position: fixed; bottom: 0; width: 99%; }
-.imageviewer .gallery .imageholder      { background-color: #fff; display: inline-block; float: left; border: solid 1px #fc5; margin: 0 1px 2px 1px; vertical-align: middle; height: 80px; width: 80px; overflow: visible; }
+.imageviewer .gallery .imageholder      { background-color: #fff; display: inline-block; float: left; border: solid 1px #aaa; margin: 0 1px 2px 1px; vertical-align: middle; height: 80px; width: 80px; overflow: visible; }
 html>body .imageviewer .gallery .imageholder
 										{ float: none; float: *right; /*IE7 hack */ }
 .imageviewer .gallery .imageholder:hover
-										{ border: solid 1px #000 }
+										{ border: solid 1px #fc5 }
 .imageviewer .gallery .imageholder img  { vertical-align: middle; margin: 5px; }
 .singleimage                            { margin: auto }
 .product .promotions .singleimage       { float: left }
 .largeview                              { margin: 0 0 5px 0; float: left; }
-.largeview span                         { color: #000; cursor: pointer; font-weight: bold; padding: 0 0 0 5px; }
+.largeview span                         { color: #000; cursor: pointer; font-weight: bold; padding: 0 0 0 0; }
 .hand                                   { cursor: pointer; }
 /* 
 ========================================================================
@@ -191,12 +189,12 @@ MEDIA (Video, audio, etc.)
 */
 /* media gallery for product */
 .imagecolumn .media_gallery             { padding: 5px 0 0 0 }
-.imagecolumn .media_gallery h2			{ font-size: 100%; margin: 0; padding: 3px 0 5px 5px; color: #000; font-weight: bold; }
+.imagecolumn .media_gallery h2			{ font-size: 100%; margin: 0; padding: 3px 0 5px 0; color: #000; font-weight: bold; }
 .imagecolumn .media_gallery_inner       { margin: 1px 0 1px 0 }
 .media_links .mediaholder a             { text-align: center; padding: 0px; display: block; margin: auto auto auto auto; height: 52px; }
-.media_links .mediaholder:hover			{ border: solid 1px #000 }
+.media_links .mediaholder:hover			{ border: solid 1px #fc5 }
 .media_links .mediaholder img           { vertical-align: middle; margin: 5px; height: 50px; width: 50px; }
-.media_links .mediaholder               { display: inline-block; float: left; margin: 0 1px 2px 1px; vertical-align: middle; border: solid 1px #fc5; width: 60px; height: 60px; overflow: visible; }
+.media_links .mediaholder               { display: inline-block; float: left; margin: 0 1px 2px 1px; vertical-align: middle; border: solid 1px #aaa; width: 60px; height: 60px; overflow: visible; }
 .media_downloadlink                     { }
 /* media gallery for versions, hide title */
 .versions .media_gallery h2             { display: none }
@@ -205,7 +203,7 @@ MEDIA (Video, audio, etc.)
 TABS AJAX CONTROL
 ========================================================================
 */
-.ajax__tab_default .ajax__tab_header    { border-bottom: solid 3px #fc5; margin: 8px 0 10px 0; font-weight: normal; }
+.ajax__tab_default .ajax__tab_header    { border-bottom: solid 3px #ccc; margin: 8px 0 10px 0; font-weight: normal; }
 .ajax__tab_default .ajax__tab_header .total
 										{ font-weight: normal }
 .ajax__tab_default .ajax__tab_active .ajax__tab_outer,
@@ -220,7 +218,7 @@ TABS AJAX CONTROL
 .ajax__tab_default .ajax__tab_header .ajax__tab_inner a
 										{ color: #000 }
 .ajax__tab_default .ajax__tab_hover .ajax__tab_inner a
-										{ color: #000 }
+										{ color: #fff }
 .ajax__tab_default .ajax__tab_active .ajax__tab_inner a
 										{ color: #000 }
 .ajax__tab_default .ajax__tab_hover .ajax__tab_tab strong,
@@ -228,16 +226,16 @@ TABS AJAX CONTROL
 										{ font-weight: bold }
 .ajax__tab_default .ajax__tab_body      { background-color: transparent }
 .ajax__tab_header                       { }
-.ajax__tab_outer                        { background-color: #eb3; border-bottom: solid 1px #fff; }
-.ajax__tab_hover .ajax__tab_outer       { background-color: #fb4; }
-.ajax__tab_active .ajax__tab_outer      { background-color: #fc5; border-bottom: solid 1px #fc5; color: #000; font-weight: bold; }
+.ajax__tab_outer                        { background-color: #ddd; border-bottom: solid 1px #fff; }
+.ajax__tab_hover .ajax__tab_outer       { background-color: #999; }
+.ajax__tab_active .ajax__tab_outer      { background-color: #ccc; border-bottom: solid 1px #ccc; color: #000; font-weight: bold; }
 /* 
 ========================================================================
 ACCORDION AJAX CONTROL
 ========================================================================
 */
 .accordionHeader,
-.accordionHeaderSelected                { border-top: solid 1px #fc5; cursor: pointer; }
+.accordionHeaderSelected                { border-top: solid 1px #ddd; cursor: pointer; }
 .accordionHeader h2,
 .accordionHeaderSelected h2             { cursor: pointer; margin-bottom: 10px; padding: 3px 0 0 0; }
 .accordionHeader h2:before              { content: "[+]"; color: #666; font-size: 70%; width: 25px; display: inline-block; }
@@ -269,7 +267,7 @@ POPUP MESSAGE
 */
 #largeimagepopup                        { overflow-y: hidden; overflow: hidden; background-image: none; }
 .popup_background                       { background-color: #000; filter: alpha(opacity=30); opacity: 0.3; }
-.popup                                  { background-color: #fff; border: solid 2px #222; padding: 45px 10px 13px 10px; width: 650px; max-width: 100%; max-height: 100%; text-align: left; top: 0px; left: 0px; overflow-y: auto; }
+.popup                                  { background-color: #fff; border: solid 2px #222; padding: 45px 10px 13px 10px; width: 650px; max-width: 100%; max-height: 100%; min-height: 150px; text-align: left; top: 0px; left: 0px; overflow-y: auto; }
 .popup h2                               { position: absolute; left: 10px; top: 0; padding: 10px 0 10px 0; margin: 0px; font-size: 125%; }
 .popup p                                { padding: 10px 0 0 0; margin: 0; }
 .popup strong                           { color: #000 }

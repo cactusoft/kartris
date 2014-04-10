@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC
+'Copyright 2014 CACTUSOFT INTERNATIONAL FZ LLC
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -1561,36 +1561,36 @@ Partial Class _Checkout
                                     If tblOrder.Rows.Count > 0 Then
                                         If tblOrder.Rows(0)("O_Sent") = 0 Then
 
-                                            'Store order details
-                                            O_CouponCode = CStr(FixNullFromDB(tblOrder.Rows(0)("O_CouponCode")))
-                                            O_TotalPriceGateway = CDbl(tblOrder.Rows(0)("O_TotalPriceGateway"))
-                                            O_PurchaseOrderNo = CStr(tblOrder.Rows(0)("O_PurchaseOrderNo"))
-                                            O_WishListID = CInt(tblOrder.Rows(0)("O_WishListID"))
-                                            strBasketBLL = CStr(tblOrder.Rows(0)("O_Status"))
+                                        'Store order details
+                                        O_CouponCode = CStr(FixNullFromDB(tblOrder.Rows(0)("O_CouponCode")))
+                                        O_TotalPriceGateway = CDbl(tblOrder.Rows(0)("O_TotalPriceGateway"))
+                                        O_PurchaseOrderNo = CStr(tblOrder.Rows(0)("O_PurchaseOrderNo"))
+                                        O_WishListID = CInt(tblOrder.Rows(0)("O_WishListID"))
+                                        strBasketBLL = CStr(tblOrder.Rows(0)("O_Status"))
 
-                                            '---------------------------------------
-                                            'FORMAT EMAIL TEXT
-                                            'Mark offline orders clearly so they
-                                            'are not mistaken for finished orders
-                                            'where payment is already received and
-                                            'goods need to be dispatched
-                                            '---------------------------------------
-                                            If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
-                                                Dim strPOline As String = ""
+                                        '---------------------------------------
+                                        'FORMAT EMAIL TEXT
+                                        'Mark offline orders clearly so they
+                                        'are not mistaken for finished orders
+                                        'where payment is already received and
+                                        'goods need to be dispatched
+                                        '---------------------------------------
+                                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
+                                            Dim strPOline As String = ""
 
-                                                strPOline += GetGlobalResourceObject("Invoice", "ContentText_PONumber") & ": " & O_PurchaseOrderNo & vbCrLf
-                                                strPOline += vbCrLf
+                                            strPOline += GetGlobalResourceObject("Invoice", "ContentText_PONumber") & ": " & O_PurchaseOrderNo & vbCrLf
+                                            strPOline += vbCrLf
 
-                                                If blnUseHTMLOrderEmail Then
-                                                    strCallBodyText = CStr(tblOrder.Rows(0)("O_Details"))
-                                                    strCallBodyText = strCallBodyText.Replace("[poofflinepaymentdetails]", strPOline.Replace(vbCrLf, "<br />"))
-                                                Else
-                                                    strCallBodyText = strPOline & CStr(tblOrder.Rows(0)("O_Details"))
-                                                End If
-                                            Else
+                                            If blnUseHTMLOrderEmail Then
                                                 strCallBodyText = CStr(tblOrder.Rows(0)("O_Details"))
-                                                strCallBodyText = strCallBodyText.Replace("[poofflinepaymentdetails]", "")
+                                                strCallBodyText = strCallBodyText.Replace("[poofflinepaymentdetails]", strPOline.Replace(vbCrLf, "<br />"))
+                                            Else
+                                                strCallBodyText = strPOline & CStr(tblOrder.Rows(0)("O_Details"))
                                             End If
+                                        Else
+                                            strCallBodyText = CStr(tblOrder.Rows(0)("O_Details"))
+                                            strCallBodyText = strCallBodyText.Replace("[poofflinepaymentdetails]", "")
+                                        End If
 
                                         If clsPlugin.GatewayName.ToLower = "bitcoin" Then
                                             Dim strBitcoinline As String = ""
@@ -1603,7 +1603,7 @@ Partial Class _Checkout
                                             Else
                                                 strCallBodyText += strBitcoinline.Replace("<br/>", vbCrLf) & strCallBodyText
                                             End If
-                                            
+
                                         Else
                                             strCallBodyText = strCallBodyText.Replace("[bitcoinpaymentdetails]", "")
                                         End If

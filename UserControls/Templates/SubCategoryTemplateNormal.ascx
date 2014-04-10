@@ -4,10 +4,10 @@
 <div class="item">
     <div class="box">
         <div class="pad row">
-            <div class="imageblock small-12 large-4 columns">
+            <div class="imageblock small-12 large-3 columns">
                 <user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="False" />
             </div>
-            <div class="details small-12 large-8 columns">
+            <div class="details small-12 large-9 columns">
                 <asp:Literal ID="litCategoryID" runat="server" Visible="false"
                     Text='<%# Eval("CAT_ID") %>'></asp:Literal>
                 <h2>

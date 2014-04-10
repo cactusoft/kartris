@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2013 CACTUSOFT INTERNATIONAL FZ LLC
+'Copyright 2014 CACTUSOFT INTERNATIONAL FZ LLC
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -79,7 +79,6 @@ Partial Class CategoryProductsView
 
         '' Gets the View Type value from the CONFIG Settings if the viewType parameter is set to Default.
         If _ViewType = "d" Then _ViewType = GetKartConfig("frontend.products.display.default")
-
 
         '' Loads the Products in the tblProducts DataTable depending
         ''  on the View Type of the products. "ByRef"
@@ -178,62 +177,16 @@ Partial Class CategoryProductsView
 
     End Sub
 
-
-    'Dim strXml As String = _
-    '    "<?xml version=""1.0"" encoding=""utf-8""?>" & _
-    '    "<KartrisCategoryFilters>" & _
-    '        "<PriceRange>" & _
-    '            "<Range BottomValue=""0"" TopValue=""234""></Range>" & _
-    '        "</PriceRange>" & _
-    '        "<Attributes>" & _
-    '            "<Attribute Name=""Attribute 1"">" & _
-    '                "<AttributeValue>Att1_Value1</AttributeValue>" & _
-    '                "<AttributeValue>Att1_Value2</AttributeValue>" & _
-    '                "<AttributeValue>Att1_Value3</AttributeValue>" & _
-    '                "<AttributeValue>Att1_Value4</AttributeValue>" & _
-    '                "<AttributeValue>Att1_Value5</AttributeValue>" & _
-    '            "</Attribute>" & _
-    '            "<Attribute Name=""Attribute 2"">" & _
-    '                "<AttributeValue>Att2_Value1</AttributeValue>" & _
-    '                "<AttributeValue>Att2_Value2</AttributeValue>" & _
-    '                "<AttributeValue>Att2_Value3</AttributeValue>" & _
-    '                "<AttributeValue>Att2_Value4</AttributeValue>" & _
-    '                "<AttributeValue>Att2_Value5</AttributeValue>" & _
-    '            "</Attribute>" & _
-    '            "<Attribute Name=""Attribute 3"">" & _
-    '                "<AttributeValue>Att3_Value1</AttributeValue>" & _
-    '                "<AttributeValue>Att3_Value2</AttributeValue>" & _
-    '                "<AttributeValue>Att3_Value3</AttributeValue>" & _
-    '                "<AttributeValue>Att3_Value4</AttributeValue>" & _
-    '            "</Attribute>" & _
-    '            "<Attribute Name=""Attribute 4"">" & _
-    '                "<AttributeValue>Att4_Value1</AttributeValue>" & _
-    '                "<AttributeValue>Att4_Value2</AttributeValue>" & _
-    '                "<AttributeValue>Att4_Value3</AttributeValue>" & _
-    '                "<AttributeValue>Att4_Value4</AttributeValue>" & _
-    '                "<AttributeValue>Att4_Value5</AttributeValue>" & _
-    '            "</Attribute>" & _
-    '        "</Attributes>" & _
-    '    "</KartrisCategoryFilters>"
-
-    ''Dim dataSet As DataSet = New DataSet
     Dim arrSelectedValues() As String = Nothing
     Dim xmlDoc As New XmlDocument
 
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             LoadCategoryFilters()
-            'Dim strXml As String = ObjectConfigBLL._GetValue("K:category.productfilterxml", CategoryID())
-            'If String.IsNullOrEmpty(strXml) Then
-            'phdCategoryFilters.Visible = False
-            'Else
-            '    LoadCategoryFilters(strXml)
-            'End If
         End If
     End Sub
 
     Sub LoadCategoryFilters()
-        'phdCategoryFilters.Visible = False
         PowerpackBLL.LoadCategoryFilters(CategoryID(), Request, _
                                         xmlDoc, arrSelectedValues, _
                                         Session("CUR_ID"), phdCategoryFilters, _
@@ -244,121 +197,11 @@ Partial Class CategoryProductsView
                                         ddlOrderBy, phdAttributes, _
                                         rptAttributes)
     End Sub
-    'Sub LoadCategoryFilters(strXml As String)
-
-    '    xmlDoc.LoadXml(strXml)
-    '    '' Load Price
-    '    phdPriceRange.Visible = False
-    '    Dim _xmlNode As XmlNode = xmlDoc.DocumentElement
-    '    Dim _xmlPriceNodeList As XmlNodeList = _xmlNode.SelectNodes("/KartrisCategoryFilters/PriceRange")
-    '    If _xmlPriceNodeList.Count = 1 Then
-    '        Dim chrCurrencySymbol As Char = CurrenciesBLL.CurrencySymbol(Session("CUR_ID"))
-    '        Dim numMaxPrice As Integer = 0
-    '        For Each chld As XmlNode In _xmlPriceNodeList.Item(0).ChildNodes
-    '            If IsNumeric(chld.Attributes("TopValue").Value) AndAlso IsNumeric(chld.Attributes("BottomValue").Value) Then
-    '                If numMaxPrice < chld.Attributes("TopValue").Value Then numMaxPrice = chld.Attributes("TopValue").Value
-    '                Dim sPriceRange As String = "Price: " & chrCurrencySymbol & chld.Attributes("BottomValue").Value & " - " & _
-    '                                            chrCurrencySymbol & chld.Attributes("TopValue").Value
-    '                ddlPriceRange.Items.Add( _
-    '                    New ListItem(sPriceRange, chld.Attributes("BottomValue").Value & "," & chld.Attributes("TopValue").Value))
-    '            End If
-    '        Next
-    '        ddlPriceRange.Items.Add(New ListItem("Custom Price", "0,0"))
-    '        ddlPriceRange.Items.Insert(0, New ListItem("Any Price (" & chrCurrencySymbol & "0 - " & _
-    '                                            chrCurrencySymbol & numMaxPrice & ")", "0," & numMaxPrice))
-    '        If IsNumeric(_xmlPriceNodeList.Item(0).ChildNodes(0).Attributes("TopValue").Value) Then
-    '            txtFromPrice.Text = "0" '_xmlPriceNodeList.Item(0).ChildNodes(0).Attributes("TopValue").Value
-    '            txtToPrice.Text = numMaxPrice
-    '            litFromSymbol.Text = chrCurrencySymbol & " "
-    '            litToSymbol.Text = chrCurrencySymbol & " "
-    '        End If
-    '        phdCustomPrice.Visible = False
-    '        If ddlPriceRange.Items.Count > 2 Then phdPriceRange.Visible = True
-    '    End If
-    '    '' Set Filters in Controls
-    '    If Request.QueryString("f") = 1 Then
-    '        Dim strKeys As String = Request.QueryString("key")
-    '        Dim sngMinPrice As Single = IIf(Not String.IsNullOrEmpty(Request.QueryString("from")) _
-    '                                        AndAlso IsNumeric(Request.QueryString("from")), _
-    '                                        CSng(Request.QueryString("from")), -1.0F)
-    '        Dim sngMaxPrice As Single = IIf(Not String.IsNullOrEmpty(Request.QueryString("to")) _
-    '                                        AndAlso IsNumeric(Request.QueryString("to")), _
-    '                                        CSng(Request.QueryString("to")), -1.0F)
-    '        Dim strAttributeValues As String = Request.QueryString("filters")
-    '        Dim strOrderBy As String = IIf(String.IsNullOrEmpty(Request.QueryString("sort")), "P_Name", "P_" & Request.QueryString("sort"))
-    '        Dim strOrderDirection As String = IIf(String.IsNullOrEmpty(Request.QueryString("dir")), "A", Request.QueryString("dir"))
-
-    '        txtSearch.Text = strKeys
-
-    '        If ddlPriceRange.Items.Count > 0 Then
-    '            ddlPriceRange.SelectedIndex = ddlPriceRange.Items.Count - 1
-    '            If sngMinPrice > -1 AndAlso sngMaxPrice > -1 Then
-    '                Dim blnFound As Boolean = False
-    '                For i As Integer = 0 To ddlPriceRange.Items.Count - 2
-    '                    If ddlPriceRange.Items(i).Value = sngMinPrice & "," & sngMaxPrice Then
-    '                        ddlPriceRange.SelectedIndex = i
-    '                        blnFound = True
-    '                        Exit For
-    '                    End If
-    '                Next
-    '                If Not blnFound Then
-    '                    txtFromPrice.Text = sngMinPrice
-    '                    txtToPrice.Text = sngMaxPrice
-    '                    phdCustomPrice.Visible = True
-    '                End If
-    '            Else
-    '                If sngMinPrice > -1 Then txtFromPrice.Text = sngMinPrice Else txtFromPrice.Text = "0"
-    '                If sngMaxPrice > -1 Then txtToPrice.Text = sngMaxPrice Else txtToPrice.Text = ddlPriceRange.Items(0).Value.Split(",")(1)
-    '                phdCustomPrice.Visible = True
-    '            End If
-    '        End If
-
-    '        ddlOrderBy.SelectedValue = ".sort=" & strOrderBy.ToLower.Replace("p_", "") & ".dir=" & strOrderDirection.ToLower()
-
-    '        If Not String.IsNullOrEmpty(strAttributeValues) Then
-    '            If strAttributeValues.EndsWith(",") Then strAttributeValues = strAttributeValues.TrimEnd(",")
-    '            arrSelectedValues = strAttributeValues.ToLower.Split(",")
-    '        End If
-    '    End If
-    '    '' Load Attributes
-    '    phdAttributes.Visible = False
-    '    Dim dtAttributes As New DataTable
-    '    dtAttributes.Columns.Add(New DataColumn("AttributeName", Type.GetType("System.String")))
-    '    Dim _xmlAttributesNodeList As XmlNodeList = _xmlNode.SelectNodes("/KartrisCategoryFilters/Attributes")
-    '    For x As Integer = 0 To _xmlAttributesNodeList.Count - 1
-    '        For Each nodeAttributes As XmlNode In _xmlAttributesNodeList.Item(x).ChildNodes
-    '            dtAttributes.Rows.Add(nodeAttributes.Attributes("Name").Value)
-    '        Next
-    '    Next
-    '    If dtAttributes.Rows.Count > 0 Then
-    '        phdAttributes.Visible = True
-    '        rptAttributes.DataSource = dtAttributes
-    '        rptAttributes.DataBind()
-    '    End If
-    'End Sub
+   
 
     Protected Sub rptAttributes_ItemDataBound(sender As Object, e As RepeaterItemEventArgs) Handles rptAttributes.ItemDataBound
         If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem Then
             PowerpackBLL.BoundRepeaterAttributeItem(xmlDoc, arrSelectedValues, e.Item)
-            'Dim strAttributeName As String = CType(e.Item.FindControl("lblAttributeName"), Label).Text
-            'Dim chkList As CheckBoxList = CType(e.Item.FindControl("chkList"), CheckBoxList)
-            'Dim _xmlNode As XmlNode = xmlDoc.DocumentElement
-            'Dim _xmlNodeList As XmlNodeList = _xmlNode.SelectNodes("/KartrisCategoryFilters/Attributes")
-            'For x As Integer = 0 To _xmlNodeList.Count - 1
-            '    For Each nodeAttributes As XmlNode In _xmlNodeList.Item(x).ChildNodes
-            '        If nodeAttributes.Attributes("Name").Value.ToLower() = strAttributeName.ToLower() Then
-            '            For Each nodeValues As XmlNode In nodeAttributes.ChildNodes
-            '                If arrSelectedValues IsNot Nothing AndAlso arrSelectedValues.Length > 0 AndAlso arrSelectedValues.ToList.IndexOf(nodeValues.InnerText.ToLower()) > -1 Then
-            '                    Dim lstItm As New ListItem(nodeValues.InnerText)
-            '                    lstItm.Selected = True
-            '                    chkList.Items.Add(lstItm)
-            '                Else
-            '                    chkList.Items.Add(New ListItem(nodeValues.InnerText))
-            '                End If
-            '            Next
-            '        End If
-            '    Next
-            'Next
         End If
     End Sub
 
@@ -375,14 +218,6 @@ Partial Class CategoryProductsView
         Next
         If strAttributeValues.EndsWith(",") Then strAttributeValues.TrimEnd(",")
         PowerpackBLL.GoToFilterURL(Request, txtFromPrice.Text, txtToPrice.Text, StripHTML(txtSearch.Text), strAttributeValues, ddlOrderBy.SelectedValue)
-        'Dim strURL As String = SiteMapHelper.CreateURL(SiteMapHelper.Page.Category, Request.QueryString("CategoryID"), Request.QueryString("strParent"))
-        'strURL += "?f=1"
-        'strURL += ddlOrderBy.SelectedValue.Replace(".", "&")
-        'If Not String.IsNullOrEmpty(txtFromPrice.Text) Then strURL += "&from=" & txtFromPrice.Text
-        'If Not String.IsNullOrEmpty(txtToPrice.Text) Then strURL += "&to=" & txtToPrice.Text
-        'If Not String.IsNullOrEmpty(txtSearch.Text) Then strURL += "&key=" & txtSearch.Text
-        'If Not String.IsNullOrEmpty(strAttributeValues) Then strURL += "&filters=" & strAttributeValues
-        'Response.Redirect(strURL)
     End Sub
 
     Protected Sub ddlPriceRange_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ddlPriceRange.SelectedIndexChanged
