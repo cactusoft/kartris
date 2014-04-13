@@ -85,7 +85,16 @@ Partial Class CategoryProductsView
         GenerateProductsList(tblProducts)
 
         '' If there is no products under the category, then exit.
-        If tblProducts.Rows.Count = 0 Then Me.Visible = False : Exit Sub
+        If tblProducts.Rows.Count = 0 Then
+            If Request.QueryString("f") <> 1 Then
+                Me.Visible = False
+            Else
+                'phdCategoryFilters.Visible = True
+                'Me.Visible = True
+                mvwCategoryProducts.SetActiveView(viwNoItems)
+                Exit Sub
+            End If
+        End If
 
         '' Binding the tblProducts to the proper repeater, depending on the View Type.
         '' And then activate the corresponding View Control.
@@ -197,7 +206,7 @@ Partial Class CategoryProductsView
                                         ddlOrderBy, phdAttributes, _
                                         rptAttributes)
     End Sub
-   
+
 
     Protected Sub rptAttributes_ItemDataBound(sender As Object, e As RepeaterItemEventArgs) Handles rptAttributes.ItemDataBound
         If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem Then
@@ -230,5 +239,21 @@ Partial Class CategoryProductsView
         Else
             phdCustomPrice.Visible = False
         End If
+    End Sub
+
+    Protected Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
+        txtSearch.Text = Nothing
+        ddlOrderBy.SelectedIndex = 0
+        ddlPriceRange.SelectedIndex = 0
+        ddlPriceRange_SelectedIndexChanged(Me, New EventArgs())
+        For Each itm As RepeaterItem In rptAttributes.Items
+            If itm.ItemType = ListItemType.Item OrElse itm.ItemType = ListItemType.AlternatingItem Then
+                Dim chkList As CheckBoxList = CType(itm.FindControl("chkList"), CheckBoxList)
+                For Each ls As ListItem In chkList.Items
+                    ls.Selected = False
+                Next
+            End If
+        Next
+        lnkBtnSearch_Click(Me, New EventArgs())
     End Sub
 End Class

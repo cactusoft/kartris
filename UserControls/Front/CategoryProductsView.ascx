@@ -48,6 +48,7 @@
 
                                     </asp:Panel>
                                 <asp:Button ID="lnkBtnSearch" runat="server" CssClass="button" Text="<%$ Resources: Filters, ContentText_Apply %>"></asp:Button>
+                                <asp:Button ID="btnClear" runat="server" CssClass="button" Text="Clear"></asp:Button>
                             </ContentTemplate>
                         </asp:UpdatePanel>
                     </div>
@@ -109,6 +110,11 @@
                                     <SeparatorTemplate>
                                     </SeparatorTemplate>
                                 </asp:Repeater>
+                            </div>
+                        </asp:View>
+                        <asp:View ID="viwNoItems" runat="server">
+                            <div class="products products_normal">
+                                <asp:Literal ID="litNotItemsFound" runat="server" Text="<%$ Resources: Kartris, ContentText_NoItems %>"></asp:Literal>
                             </div>
                         </asp:View>
                     </asp:MultiView>
