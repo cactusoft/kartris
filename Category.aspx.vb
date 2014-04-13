@@ -50,7 +50,7 @@ Partial Class Category
                         If UC_CategoryProductsView.TotalItems > 0 Then
                             litProductsHeader.Text &= " <span class=""total"">(" & UC_CategoryProductsView.TotalItems & ")</span>"
                             If strActiveTab <> "S" Then tabContainer.ActiveTabIndex = 1
-                        Else
+                        ElseIf Request.QueryString("f") <> "1" Then
                             tabProducts.Enabled = False
                             tabProducts.Visible = False
                         End If
