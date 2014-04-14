@@ -74,7 +74,7 @@
                                                 If KartSettingsManager.GetKartConfig("frontend.cataloguemode") <> "y" And Not CheckHideAddButton() Then%>
                                                 <% 'the div below is hidden if it is a 'call for prices' version %>
                                             <div class="selector" runat="server">
-                                                <asp:PlaceHolder ID="phdNotOutOfStock1" runat="server" Visible='<%# Iif(Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0, False, True) %>'>
+                                                <asp:PlaceHolder ID="phdNotOutOfStock1" runat="server" Visible='<%# Iif((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) AND (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y"), False, True) %>'>
                                                     <asp:PlaceHolder EnableViewState="false" ID="phdCustomizable" runat="server" Visible='<%# Eval("V_CustomizationType") <> "n" %>'>
                                                         <div class="cancustomizetag" title="<asp:Literal ID='litContentTextCanCustomize1' Text='<%$ Resources: Products, ContentText_CanCustomize %>' runat='server'></asp:Literal>">
                                                         </div> 
@@ -82,11 +82,11 @@
                                                     <user:AddPane ID="UC_AddToBasketQty1" runat="server" HasAddButton="True" CanCustomize='<%# Eval("V_CustomizationType") <> "n" %>' OnWrongQuantity="AddWrongQuantity"
                                                         VersionID='<%# Eval("V_ID") %>' visible='<%# Iif( ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) = 1, False, True) %>' />
                                                 </asp:PlaceHolder>
-                                                <asp:PlaceHolder EnableViewState="false" ID="phdOutOfStock1" runat="server" Visible='<%# Iif(Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0, True, False) %>'>
+                                                <asp:PlaceHolder EnableViewState="false" ID="phdOutOfStock1" runat="server" Visible='<%# Iif((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) AND (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y"), True, False) %>'>
                                                     <div class="outofstock">
                                                         <asp:Literal ID="litOutOfStockMessage1" runat="server" Text="<%$ Resources: Versions, ContentText_AltOutOfStock %>" /></div>
                                                 </asp:PlaceHolder>
-                                                <asp:PlaceHolder EnableViewState="false" ID="phdCallForPrice1" runat="server" Visible='<%# Iif( NOT(Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) AND ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) = 1, True, False) %>'>
+                                                <asp:PlaceHolder EnableViewState="false" ID="phdCallForPrice1" runat="server" Visible='<%# Iif( NOT((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) AND (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y")) AND ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) = 1, True, False) %>'>
                                                     <asp:Literal ID="litContentTextCallForPrice" runat="server" Text="<%$ Resources: Versions, ContentText_CallForPrice %>" />
                                                 </asp:PlaceHolder>
                                             </div>
@@ -322,7 +322,7 @@
                                                             <div class="cancustomizetag" title="<asp:Literal ID='litContentTextCanCustomize2' Text='<%$ Resources: Products, ContentText_CanCustomize %>' runat='server'></asp:Literal>">
                                                             </div>
                                                         </asp:PlaceHolder>
-                                                        <asp:PlaceHolder ID="phdNotOutOfStock2" runat="server" Visible='<%# Iif(Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0, False, True) %>'>
+                                                        <asp:PlaceHolder ID="phdNotOutOfStock2" runat="server" Visible='<%# Iif((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) AND (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y"), False, True) %>'>
                                                             <asp:UpdatePanel ID="updVersionQty2" runat="server" UpdateMode="Conditional" RenderMode="Inline">
                                                                 <ContentTemplate>
                                                                     <user:AddPane ID="UC_AddToBasketQty2" runat="server" HasAddButton="True" CanCustomize='<%# Eval("V_CustomizationType") <> "n" %>'
@@ -331,7 +331,7 @@
                                                                 </ContentTemplate>
                                                             </asp:UpdatePanel>
                                                         </asp:PlaceHolder>
-                                                        <asp:PlaceHolder ID="phdOutOfStock2" runat="server" Visible='<%# Iif(Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0, True, False) %>'>
+                                                        <asp:PlaceHolder ID="phdOutOfStock2" runat="server" Visible='<%# Iif((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) AND (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y"), True, False) %>'>
                                                             <div class="outofstock">
                                                                 <asp:Literal ID="litOutOfStockMessage2" runat="server" Text="<%$ Resources: Versions, ContentText_AltOutOfStock %>" /></div>
                                                         </asp:PlaceHolder>
