@@ -155,9 +155,9 @@
 		<user:AdminBar ID="UC_AdminBar" runat="server" />
 	</form>
 	<!-- Load up javascript -->
-	<script src="JavaScript/jquery.js"></script>
-	<script src="JavaScript/foundation.min.js"></script>
-	<script src="JavaScript/fastclick.js"></script>
+	<script src="JavaScript/k26000/jquery.js"></script>
+	<script src="JavaScript/k26000/foundation.min.js"></script>
+	<script src="JavaScript/k26000/fastclick.js"></script>
 	<script>
 		$(document).foundation();
 	</script>
