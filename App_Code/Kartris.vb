@@ -156,6 +156,12 @@ Public NotInheritable Class CkartrisFormatErrors
             End Try
             swtErrors.WriteLine(">>" & Space(5) & "DESCRIPTION:")
             swtErrors.WriteLine(strErrorDescription)
+
+            If strErrorDescription.Contains("Format of the initialization string does not conform to specification starting at index 0") Then
+                'This error can generally be cleared by a recycle
+                swtErrors.WriteLine("Code 999")
+            End If
+
             swtErrors.WriteLine("")
             swtErrors.WriteLine("==================================================")
             swtErrors.WriteLine("")
@@ -2310,5 +2316,43 @@ Public NotInheritable Class CKartrisCSVExporter
         End If
         stbData.Append(FieldDelimiter)
     End Sub
+End Class
+
+''' <summary>
+''' This class tries to give a chance to recover from certain
+''' types of crash by restarting the app pool. This code is
+''' experimental
+''' </summary>
+Public NotInheritable Class CkartrisRecovery
+    'Public Shared Sub RecyclePool(ByVal strAppPoolName As String)
+    '    Using manager = New ServerManager()
+    '        Dim pool = manager.ApplicationPools(strAppPoolName)
+    '        Dim process__1 As Process = Nothing
+    '        If pool.WorkerProcesses.Count > 0 Then
+    '            process__1 = Process.GetProcessById(pool.WorkerProcesses(0).ProcessId)
+    '        End If
+    '        pool.Recycle()
+    '        If process__1 IsNot Nothing Then
+    '            While Not process__1.HasExited
+    '                Thread.Sleep(0)
+    '            End While
+    '            process__1.Dispose()
+    '        End If
+    '    End Using
+    'End Sub
+
+
+    'Public Function GetAppPoolName() As String
+
+    '    Dim AppPath As String = Context.Request.ServerVariables("APPL_MD_PATH")
+
+    '    AppPath = AppPath.Replace("/LM/", "IIS://localhost/")
+    '    Dim root As New DirectoryEntry(AppPath)
+    '    If (root Is Nothing) Then
+    '        Return " no object got"
+    '    End If
+    '    Dim AppPoolId As String = DirectCast(root.Properties("AppPoolId").Value, String)
+    '    Return AppPoolId
+    'End Function
 End Class
 
