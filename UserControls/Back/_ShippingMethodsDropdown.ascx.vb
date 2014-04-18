@@ -42,123 +42,129 @@ Partial Class _ShippingMethodsDropdown
     End Sub
 
     Public Sub Refresh()
-        Dim CUR_ID As Integer = CInt(Session("CUR_ID"))
-        Dim lstShippingMethods As List(Of ShippingMethod) = ShippingMethod.GetAll(_shippingdetails, _destinationid, CurrenciesBLL.ConvertCurrency(CurrenciesBLL.GetDefaultCurrency, _boundary, CUR_ID))
-        ddlShippingMethods.Items.Clear()
-        With ddlShippingMethods
-            .DataSource = lstShippingMethods
-            .DataTextField = "DropDownText"
-            .DataValueField = "DropDownValue"
-            .DataBind()
-        End With
+        Try
 
-        Dim liShippingMethod As ListItem
-        Dim objCurrency As New CurrenciesBLL
 
-        For Each liShippingMethod In ddlShippingMethods.Items
-            Dim arrText As String() = Split(liShippingMethod.Text, ":")
+            Dim CUR_ID As Integer = CInt(Session("CUR_ID"))
+            Dim lstShippingMethods As List(Of ShippingMethod) = ShippingMethod.GetAll(_shippingdetails, _destinationid, CurrenciesBLL.ConvertCurrency(CurrenciesBLL.GetDefaultCurrency, _boundary, CUR_ID))
+            ddlShippingMethods.Items.Clear()
+            With ddlShippingMethods
+                .DataSource = lstShippingMethods
+                .DataTextField = "DropDownText"
+                .DataValueField = "DropDownValue"
+                .DataBind()
+            End With
 
-            Dim strIncTax As String = CurrenciesBLL.FormatCurrencyPrice(CUR_ID, CurrenciesBLL.ConvertCurrency(CUR_ID, CDbl(arrText(2))))
-            Dim strExTax As String = CurrenciesBLL.FormatCurrencyPrice(CUR_ID, CurrenciesBLL.ConvertCurrency(CUR_ID, CDbl(arrText(1))))
+            Dim liShippingMethod As ListItem
+            Dim objCurrency As New CurrenciesBLL
 
-            If ConfigurationManager.AppSettings("TaxRegime").tolower <> "us" Then
-                liShippingMethod.Text = arrText(0) & vbTab.ToString & GetGlobalResourceObject("Kartris", "ContentText_ExTax").ToString & ":" & strExTax & _
-                vbTab.ToString & GetGlobalResourceObject("Kartris", "ContentText_IncTax").ToString & ":" & strIncTax
+            For Each liShippingMethod In ddlShippingMethods.Items
+                Dim arrText As String() = Split(liShippingMethod.Text, ":")
+
+                Dim strIncTax As String = CurrenciesBLL.FormatCurrencyPrice(CUR_ID, CurrenciesBLL.ConvertCurrency(CUR_ID, CDbl(arrText(2))))
+                Dim strExTax As String = CurrenciesBLL.FormatCurrencyPrice(CUR_ID, CurrenciesBLL.ConvertCurrency(CUR_ID, CDbl(arrText(1))))
+
+                If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" Then
+                    liShippingMethod.Text = arrText(0) & vbTab.ToString & GetGlobalResourceObject("Kartris", "ContentText_ExTax").ToString & ":" & strExTax & _
+                    vbTab.ToString & GetGlobalResourceObject("Kartris", "ContentText_IncTax").ToString & ":" & strIncTax
+                Else
+                    liShippingMethod.Text = arrText(0) & vbTab.ToString & GetGlobalResourceObject("Kartris", "ContentText_Price").ToString & ":" & strExTax & _
+                    vbTab.ToString
+                End If
+
+            Next
+
+            ViewState("PreviouslySelected") = Nothing
+
+            'customer pickup is effectively another option
+            'so we must add it to find total number of shipping
+            'methods - basically set to 1 or zero then add to
+            'shipping methods count below
+            Dim numPickUp As Integer = 0
+            If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then numPickUp = 1
+
+            If lstShippingMethods IsNot Nothing Then
+                'Determine menu based on number of shipping options
+                '(from shipping system) plus the pickup option which
+                'is set in config setting
+                If lstShippingMethods.Count < 1 And numPickUp = 1 Then
+                    'Customer pickup is only shipping option
+                    ddlShippingMethods.Visible = True
+                    litContentTextShippingAvailableAfterAddress.Visible = False
+                    If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then
+                        ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
+                    End If
+                    ddlShippingMethods.SelectedIndex = 0
+
+                    Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, ":")
+                    Session("_selectedShippingID") = CInt(999)
+                    Session("_selectedShippingAmount") = CDbl(0)
+                    ViewState("PreviouslySelected") = 999 & "::" & GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
+                    Dim lstSelected As ListItem = ddlShippingMethods.SelectedItem
+                    lstSelected.Text = GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
+                    RaiseEvent ShippingSelected(Nothing, Nothing)
+
+                ElseIf lstShippingMethods.Count + numPickUp > 1 Then
+
+                    'More than one option including ship options and customer pickup
+                    ddlShippingMethods.Visible = True
+                    litContentTextShippingAvailableAfterAddress.Visible = False
+                    If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then
+                        ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
+                    End If
+                    ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Kartris", "ContentText_DropdownSelectDefault"), ""))
+                    Session("_selectedShippingID") = 0
+                    Session("_selectedShippingAmount") = 0
+
+                ElseIf lstShippingMethods.Count = 1 Then
+                    'One shipping option other than customer pickup
+                    ddlShippingMethods.Visible = True
+                    litContentTextShippingAvailableAfterAddress.Visible = False
+                    If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then
+                        ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
+                    End If
+                    ddlShippingMethods.SelectedIndex = 0
+
+                    Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, ":")
+                    Session("_selectedShippingID") = CInt(arrSM(0))
+                    Session("_selectedShippingAmount") = CDbl(arrSM(1))
+                    ViewState("PreviouslySelected") = ddlShippingMethods.SelectedItem.Value & "::" & ddlShippingMethods.SelectedItem.Text
+                    Dim lstSelected As ListItem = ddlShippingMethods.SelectedItem
+                    lstSelected.Text = CStr(arrSM(2))
+                    RaiseEvent ShippingSelected(Nothing, Nothing)
+
+
+                Else
+                    If ddlShippingMethods.Items.Count = 0 Then
+                        ddlShippingMethods.Visible = False
+                        litContentTextShippingAvailableAfterAddress.Visible = True
+                    End If
+
+                End If
             Else
-                liShippingMethod.Text = arrText(0) & vbTab.ToString & GetGlobalResourceObject("Kartris", "ContentText_Price").ToString & ":" & strExTax & _
-                vbTab.ToString
+                If numPickUp = 1 Then
+                    'Customer pickup is only shipping option
+                    ddlShippingMethods.Visible = True
+                    litContentTextShippingAvailableAfterAddress.Visible = False
+                    If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then
+                        ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
+                    End If
+                    ddlShippingMethods.SelectedIndex = 0
+
+                    Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, ":")
+                    Session("_selectedShippingID") = CInt(999)
+                    Session("_selectedShippingAmount") = CDbl(0)
+                    ViewState("PreviouslySelected") = 999 & "::" & GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
+                    Dim lstSelected As ListItem = ddlShippingMethods.SelectedItem
+                    lstSelected.Text = GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
+                    RaiseEvent ShippingSelected(Nothing, Nothing)
+                Else
+                    litContentTextShippingAvailableAfterAddress.Text = "Can't retrieve shipping rates!"
+                End If
             End If
-
-        Next
-
-        ViewState("PreviouslySelected") = Nothing
-
-        'customer pickup is effectively another option
-        'so we must add it to find total number of shipping
-        'methods - basically set to 1 or zero then add to
-        'shipping methods count below
-        Dim numPickUp As Integer = 0
-        If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then numPickUp = 1
-
-        If lstShippingMethods IsNot Nothing Then
-            'Determine menu based on number of shipping options
-            '(from shipping system) plus the pickup option which
-            'is set in config setting
-            If lstShippingMethods.Count < 1 And numPickUp = 1 Then
-                'Customer pickup is only shipping option
-                ddlShippingMethods.Visible = True
-                litContentTextShippingAvailableAfterAddress.Visible = False
-                If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then
-                    ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
-                End If
-                ddlShippingMethods.SelectedIndex = 0
-
-                Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, ":")
-                Session("_selectedShippingID") = CInt(999)
-                Session("_selectedShippingAmount") = CDbl(0)
-                ViewState("PreviouslySelected") = 999 & "::" & GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
-                Dim lstSelected As ListItem = ddlShippingMethods.SelectedItem
-                lstSelected.Text = GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
-                RaiseEvent ShippingSelected(Nothing, Nothing)
-
-            ElseIf lstShippingMethods.Count + numPickUp > 1 Then
-
-                'More than one option including ship options and customer pickup
-                ddlShippingMethods.Visible = True
-                litContentTextShippingAvailableAfterAddress.Visible = False
-                If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then
-                    ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
-                End If
-                ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Kartris", "ContentText_DropdownSelectDefault"), ""))
-                Session("_selectedShippingID") = 0
-                Session("_selectedShippingAmount") = 0
-
-            ElseIf lstShippingMethods.Count = 1 Then
-                'One shipping option other than customer pickup
-                ddlShippingMethods.Visible = True
-                litContentTextShippingAvailableAfterAddress.Visible = False
-                If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then
-                    ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
-                End If
-                ddlShippingMethods.SelectedIndex = 0
-
-                Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, ":")
-                Session("_selectedShippingID") = CInt(arrSM(0))
-                Session("_selectedShippingAmount") = CDbl(arrSM(1))
-                ViewState("PreviouslySelected") = ddlShippingMethods.SelectedItem.Value & "::" & ddlShippingMethods.SelectedItem.Text
-                Dim lstSelected As ListItem = ddlShippingMethods.SelectedItem
-                lstSelected.Text = CStr(arrSM(2))
-                RaiseEvent ShippingSelected(Nothing, Nothing)
-
-
-            Else
-                If ddlShippingMethods.Items.Count = 0 Then
-                    ddlShippingMethods.Visible = False
-                    litContentTextShippingAvailableAfterAddress.Visible = True
-                End If
-
-            End If
-        Else
-            If numPickUp = 1 Then
-                'Customer pickup is only shipping option
-                ddlShippingMethods.Visible = True
-                litContentTextShippingAvailableAfterAddress.Visible = False
-                If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then
-                    ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
-                End If
-                ddlShippingMethods.SelectedIndex = 0
-
-                Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, ":")
-                Session("_selectedShippingID") = CInt(999)
-                Session("_selectedShippingAmount") = CDbl(0)
-                ViewState("PreviouslySelected") = 999 & "::" & GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
-                Dim lstSelected As ListItem = ddlShippingMethods.SelectedItem
-                lstSelected.Text = GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
-                RaiseEvent ShippingSelected(Nothing, Nothing)
-            Else
-                litContentTextShippingAvailableAfterAddress.Text = "Can't retrieve shipping rates!"
-            End If
-        End If
+        Catch ex As Exception
+            'something went wrong
+        End Try
     End Sub
 
     Public Property DestinationID() As Integer

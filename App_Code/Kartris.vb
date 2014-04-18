@@ -1642,36 +1642,6 @@ Public NotInheritable Class CkartrisBLL
         End Try
 
     End Function
-    ''' <summary>
-    ''' Get Google Checkout configuration
-    ''' </summary>
-    ''' <remarks>Google Checkout is a 'special case' gateway because of the way it handles whole checkout remotely</remarks>
-    Public Shared Function GetGCheckoutConfig(ByVal strSettingName As String, Optional ByVal IsPO As Boolean = False) As String
-        Dim objConfigFileMap As New ExeConfigurationFileMap()
-        Dim blnIsProtected As Boolean = False
-        If Not IsPO Then
-            objConfigFileMap.ExeConfigFilename = Path.Combine(Current.Request.PhysicalApplicationPath, "Plugins\GoogleCheckout\GoogleCheckout.dll.config")
-        Else
-            objConfigFileMap.ExeConfigFilename = Path.Combine(Current.Request.PhysicalApplicationPath, "Plugins\PO_OfflinePayment\PO_OfflinePayment.dll.config")
-        End If
-        objConfigFileMap.MachineConfigFilename = Path.Combine(Current.Request.PhysicalApplicationPath, "Uploads\resources\Machine.Config")
-        Dim objConfiguration As System.Configuration.Configuration = ConfigurationManager.OpenMappedExeConfiguration(objConfigFileMap, ConfigurationUserLevel.None)
-
-        Dim objSectionGroup As ConfigurationSectionGroup = objConfiguration.GetSectionGroup("applicationSettings")
-        Dim appSettingsSection As ClientSettingsSection = DirectCast(objSectionGroup.Sections.Item("Kartris.My.MySettings"), ClientSettingsSection)
-
-        If appSettingsSection.Settings.Get("IsProtected").Value.ValueXml.InnerText.ToLower = "yes" Then blnIsProtected = True Else blnIsProtected = False
-
-        If blnIsProtected Then
-            Return Interfaces.Utils.Crypt(appSettingsSection.Settings.Get(strSettingName).Value.ValueXml.InnerText, _
-                                          ConfigurationManager.AppSettings("HashSalt").ToString, _
-                                        Interfaces.Utils.CryptType.Decrypt)
-        Else
-            Return appSettingsSection.Settings.Get(strSettingName).Value.ValueXml.InnerText
-        End If
-
-        Return Nothing
-    End Function
 
     ''' <summary>
     ''' Push Kartris Notification to User Devices
@@ -2324,35 +2294,6 @@ End Class
 ''' experimental
 ''' </summary>
 Public NotInheritable Class CkartrisRecovery
-    'Public Shared Sub RecyclePool(ByVal strAppPoolName As String)
-    '    Using manager = New ServerManager()
-    '        Dim pool = manager.ApplicationPools(strAppPoolName)
-    '        Dim process__1 As Process = Nothing
-    '        If pool.WorkerProcesses.Count > 0 Then
-    '            process__1 = Process.GetProcessById(pool.WorkerProcesses(0).ProcessId)
-    '        End If
-    '        pool.Recycle()
-    '        If process__1 IsNot Nothing Then
-    '            While Not process__1.HasExited
-    '                Thread.Sleep(0)
-    '            End While
-    '            process__1.Dispose()
-    '        End If
-    '    End Using
-    'End Sub
-
-
-    'Public Function GetAppPoolName() As String
-
-    '    Dim AppPath As String = Context.Request.ServerVariables("APPL_MD_PATH")
-
-    '    AppPath = AppPath.Replace("/LM/", "IIS://localhost/")
-    '    Dim root As New DirectoryEntry(AppPath)
-    '    If (root Is Nothing) Then
-    '        Return " no object got"
-    '    End If
-    '    Dim AppPoolId As String = DirectCast(root.Properties("AppPoolId").Value, String)
-    '    Return AppPoolId
-    'End Function
+    'Experimental code to try to recycle app pool
 End Class
 

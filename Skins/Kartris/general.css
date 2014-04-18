@@ -94,6 +94,7 @@ FORM ELEMENTS
 */
 form                                    { margin: 0; display: inline; padding: 0; }
 textarea                                { min-height: 80px; max-width: 100%; }
+select,
 input                                   { width: 250px; max-width: 100%; }
 input.longtext                          { width: 400px }
 select.shorttext,

@@ -100,7 +100,7 @@
                                 <asp:HiddenField ID="hidSendOrderUpdateEmail" Value="true" runat="server" />
                             </li>
                         </asp:PlaceHolder>
-                        
+
                     </ul>
                 </div>
             </div>
@@ -146,19 +146,14 @@
             <h2>
                 <asp:Literal ID="litTabOrderSummary" runat="server" Text="<%$ Resources: _Kartris, ContentText_ItemSummary %>" /></h2>
 
-
             <_user:AutoComplete runat="server" ID="_UC_AutoComplete_Item" MethodName="GetVersions" />
             <asp:LinkButton CssClass="link2 icon_new" runat="server" ID="lnkBtnAddToBasket" OnClick="lnkBtnAddToBasket_Click"
                 Text="<%$ Resources:_Kartris, FormButton_Add%>" ToolTip="" />
             <_user:BasketView ID="_UC_BasketMain" runat="server" ViewType="CHECKOUT_BASKET" />
         </div>
 
-
         <div class="spacer">
         </div>
-
-
-
         <div class="Kartris-DetailsView">
             <div class="Kartris-DetailsView-Data">
                 <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
@@ -177,10 +172,10 @@
     </ContentTemplate>
 </asp:UpdatePanel>
 <asp:UpdateProgress ID="prgEditOrder" runat="server" AssociatedUpdatePanelID="updEditOrder">
-        <ProgressTemplate>
-            <div class="loadingimage">
-            </div>
-            <div class="updateprogress">
-            </div>
-        </ProgressTemplate>
-    </asp:UpdateProgress>
+    <ProgressTemplate>
+        <div class="loadingimage">
+        </div>
+        <div class="updateprogress">
+        </div>
+    </ProgressTemplate>
+</asp:UpdateProgress>
