@@ -13,8 +13,6 @@
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
 Imports System.Collections.Generic
-Imports GCheckout.Checkout
-Imports GCheckout.Util
 Imports System.Threading
 Imports System.Globalization
 Imports CkartrisBLL

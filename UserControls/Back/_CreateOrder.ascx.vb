@@ -233,7 +233,7 @@ Partial Class UserControls_Back_CreateOrder
             If (Not Session("DefaultBillingAddressID") = Session("DefaultShippingAddressID")) Then
                 chkSameShippingAsBilling.Checked = False
             Else
-                chkSameShippingAsBilling.Checked = False
+                chkSameShippingAsBilling.Checked = True
             End If
 
             If Not chkSameShippingAsBilling.Checked Then

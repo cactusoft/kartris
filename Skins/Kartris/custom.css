@@ -46,7 +46,7 @@ a newer version), just just grab the bits we need to change here.
 #categorymenu .top-bar-section .dropdown li a
                                         { background-color: #666; color: #fff; width: auto; height: auto; font-weight: normal; padding: 2px 15px 4px 15px; font-size: 90%; text-transform: none; }
 #categorymenu .top-bar-section .dropdown li a:hover
-                                        { color: #000; background-color: #f92; }
+                                        { color: #000; background-color: #aaa; }
 #categorymenu .top-bar-section .has-dropdown .dropdown li.has-dropdown > a:after
                                         { top: 1px; }
 
@@ -87,6 +87,9 @@ SMALL SCREENS
   .versions td.info { max-width: 200px; overflow: hidden; }
   .basket td.quantity input { width: 32px; text-align: right; }
   #container { padding: 0; }
+  select,
+  input { width: 100%; }
+  #footer_inside { margin: 0; }
 
   /* Menus */
   #menubar { margin: 5px 0 0 0; }

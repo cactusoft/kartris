@@ -42,7 +42,7 @@
 			CombineScripts="true" EnableViewState="True">
 			<Scripts>
 				<asp:ScriptReference Path="~/JavaScript/webkit.js" />
-				<asp:ScriptReference Path="~/JavaScript/modernizr.js" />
+				<asp:ScriptReference Path="~/JavaScript/k26000/modernizr.js" />
 			</Scripts>
 		</ajaxToolkit:ToolkitScriptManager>
 		<div id="container">

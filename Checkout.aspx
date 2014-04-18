@@ -40,14 +40,12 @@
                                 <h2>
                                     <asp:Literal ID="litCheckoutPaymentMethod" runat="server" Text="<%$ Resources: FormLabel_SelectPayment %>"
                                         EnableViewState="false" /></h2>
-                                <div class="row">
-                                    <div class="small-12 large-4 columns">
-                                        <asp:DropDownList ID="ddlPaymentGateways" runat="server" AutoPostBack="true" />
-                                        <asp:RequiredFieldValidator EnableClientScript="True" ID="valPaymentGateways" runat="server"
-                                            ControlToValidate="ddlPaymentGateways" CssClass="error" InitialValue="::False" ForeColor="" ValidationGroup="Checkout"
-                                            Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator>
-                                    </div>
-                                </div>
+
+                                <asp:DropDownList CssClass="" ID="ddlPaymentGateways" runat="server" AutoPostBack="true" />
+                                <asp:RequiredFieldValidator EnableClientScript="True" ID="valPaymentGateways" runat="server"
+                                    ControlToValidate="ddlPaymentGateways" CssClass="error" InitialValue="::False" ForeColor="" ValidationGroup="Checkout"
+                                    Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator>
+
                             </div>
                         </asp:PlaceHolder>
                     </ContentTemplate>
