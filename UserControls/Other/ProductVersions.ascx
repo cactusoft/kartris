@@ -29,7 +29,7 @@
                                             <asp:Literal ID="litCalculatedTax_Rows" runat="server" Text='<%# Eval("CalculatedTax") %>'
                                                 Visible="false" EnableViewState="false" />
                                             <asp:Literal ID="litResultedCalculatedTax_Rows" runat="server" EnableViewState="false" /></span></span>
-                                    <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" Then%>
+                                    <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" and ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then%>
                                     <span class="inctax">
                                         <asp:Literal ID="litLS_IncTax" runat="server" Text="<%$ Resources: Kartris, ContentText_IncTax %>" EnableViewState="false" />
                                         <span class="figure">
@@ -166,7 +166,7 @@
                                             <th class="price extax">
                                                 <asp:Literal ID="litLS_ExTax" runat="server" Text="<%$ Resources: Kartris, ContentText_ExTax %>" EnableViewState="false" />
                                             </th>
-                                            <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" Then%>
+                                            <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" AND ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then%>
                                             <% If KartSettingsManager.GetKartConfig("general.tax.pricesinctax") = "y" Then%>
                                             <th class="price inctax">
                                                 <asp:Literal ID="litLS_IncTax" runat="server" Text="<%$ Resources: Kartris, ContentText_IncTax %>" EnableViewState="false" />
@@ -283,7 +283,7 @@
                                                             Visible="false" EnableViewState="false" />
                                                         <asp:Literal ID="litResultedCalculatedTax_Rows" runat="server" EnableViewState="false" />
                                                     </td>
-                                                                    <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" Then%>
+                                                                    <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then%>
                                                     <td class="price inctax">
                                                         <asp:Literal ID="litIncTax_Rows" runat="server" Text='<%# Eval("V_Price") %>' Visible="false" EnableViewState="false" />
                                                         <asp:Literal ID="litResultedIncTax_Rows" runat="server" EnableViewState="false" />
@@ -294,7 +294,7 @@
                                                         <asp:Literal ID="litExTax_Rows" runat="server" Text='<%# Eval("V_Price") %>' Visible="false" EnableViewState="false" />
                                                         <asp:Literal ID="litResultedExTax_Rows" runat="server" EnableViewState="false" />
                                                     </td>
-                                                                    <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" Then%>
+                                                                    <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" and ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then%>
                                                     <td class="price tax">
                                                         <asp:Literal ID="litTaxRate_Rows" runat="server" Text='<%# Eval("T_TaxRate") %>'
                                                             Visible="false" EnableViewState="false" />
@@ -422,7 +422,7 @@
                                                 <asp:Literal ID="litExTax" runat="server" /></span></span> </asp:PlaceHolder>
                                         <%
                                             'inc tax
-                                            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" Then%>
+                                            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" and ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then%>
                                         <asp:PlaceHolder ID="phdIncTax" runat="server" Visible="false"><span class="inctax">
                                             <asp:Literal ID="litIncTaxLabel" runat="server" Text="<%$ Resources: Kartris, ContentText_IncTax %>" />
                                             <span class="figure">

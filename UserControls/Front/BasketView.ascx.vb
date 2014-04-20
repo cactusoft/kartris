@@ -251,7 +251,7 @@ Partial Class Templates_BasketView
 
         SESS_CurrencyID = Session("CUR_ID")
 
-        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Then
+        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
             APP_PricesIncTax = False
             APP_ShowTaxDisplay = False
             APP_USMultiStateTax = True
@@ -413,7 +413,7 @@ Partial Class Templates_BasketView
         lnkMiniBasketCouponDiscount.NavigateUrl = "/" & WebShopFolder() & "Basket.aspx"
         lnkMiniBasketCustomerDiscount.NavigateUrl = "/" & WebShopFolder() & "Basket.aspx"
 
-        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Then
+        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
             APP_ShowTaxDisplay = False
             APP_USMultiStateTax = True
         Else
@@ -699,7 +699,7 @@ Partial Class Templates_BasketView
 
     Public Sub SetShipping(ByVal numShippingID As Integer, ByVal numShippingAmount As Double, ByVal numDestinationID As Integer)
 
-        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Then
+        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
             APP_PricesIncTax = False
             APP_ShowTaxDisplay = False
             APP_USMultiStateTax = True

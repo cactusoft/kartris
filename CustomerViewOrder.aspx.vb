@@ -37,7 +37,7 @@ Partial Class Customer_ViewOrder
             numCustomerID = CurrentLoggedUser.ID
         End If
 
-        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Then
+        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
             APP_PricesIncTax = False
             APP_ShowTaxDisplay = False
         Else

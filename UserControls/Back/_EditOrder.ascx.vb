@@ -355,7 +355,7 @@ Partial Class UserControls_Back_EditOrder
         Dim blnAppPricesIncTax As Boolean
         Dim blnAppShowTaxDisplay As Boolean
         Dim blnAppUSmultistatetax As Boolean
-        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Then
+        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
             blnAppPricesIncTax = False
             blnAppShowTaxDisplay = False
             blnAppUSmultistatetax = True

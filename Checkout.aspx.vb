@@ -895,15 +895,15 @@ Partial Class _Checkout
                     Dim blnAppPricesIncTax As Boolean
                     Dim blnAppShowTaxDisplay As Boolean
                     Dim blnAppUSmultistatetax As Boolean
-                    If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Then
-                        blnAppPricesIncTax = False
-                        blnAppShowTaxDisplay = False
-                        blnAppUSmultistatetax = True
-                    Else
-                        blnAppPricesIncTax = GetKartConfig("general.tax.pricesinctax") = "y"
-                        blnAppShowTaxDisplay = GetKartConfig("frontend.display.showtax") = "y"
-                        blnAppUSmultistatetax = False
-                    End If
+                If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
+                    blnAppPricesIncTax = False
+                    blnAppShowTaxDisplay = False
+                    blnAppUSmultistatetax = True
+                Else
+                    blnAppPricesIncTax = GetKartConfig("general.tax.pricesinctax") = "y"
+                    blnAppShowTaxDisplay = GetKartConfig("frontend.display.showtax") = "y"
+                    blnAppUSmultistatetax = False
+                End If
 
                     'Get the order confirmation template if HTML email is enabled
                     If blnUseHTMLOrderEmail Then

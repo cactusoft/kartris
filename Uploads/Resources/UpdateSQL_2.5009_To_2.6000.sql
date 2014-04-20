@@ -105,3 +105,73 @@ END
 ALTER TABLE tblKartrisPayments
 ADD CONSTRAINT Payment_ReferenceNo UNIQUE (Payment_ReferenceNo); 
 GO
+
+/****** Object:  StoredProcedure [dbo].[spKartrisVersions_GetByProductID]    Script Date: 04/19/2014 16:04:59 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Fixes issue with NULL values, 'simple'
+-- tax mode settings
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisVersions_GetByProductID]
+(
+	@P_ID as int, 
+	@LANG_ID as tinyint,
+	@CGroupID as smallint
+)
+AS
+BEGIN
+SET NOCOUNT ON;
+	
+	DECLARE @OrderBy as nvarchar(50), @OrderDirection as char(1);
+	SELECT @OrderBy = P_OrderVersionsBy, @OrderDirection = P_VersionsSortDirection
+	FROM tblKartrisProducts WHERE P_ID = @P_ID;
+
+	IF @OrderBy IS NULL OR @OrderBy = '' OR @OrderBy = 'd'
+	BEGIN
+		 SELECT @OrderBy = CFG_Value FROM tblKartrisConfig WHERE CFG_Name = 'frontend.versions.display.sortdefault';
+	END
+
+	IF @OrderDirection IS NULL OR @OrderDirection = ''
+	BEGIN
+		 SELECT @OrderDirection = CFG_Value FROM tblKartrisConfig WHERE CFG_Name = 'frontend.versions.display.sortdirection';
+	END
+
+	BEGIN
+		SELECT     vKartrisTypeVersions.V_ID, tblKartrisTaxRates.T_Taxrate, vKartrisTypeVersions.V_Price, vKartrisTypeVersions.V_Weight, vKartrisTypeVersions.V_RRP, 
+					  vKartrisTypeVersions.V_Tax, tblKartrisTaxRates.T_Taxrate AS Expr1, '0' AS CalculatedTax, vKartrisTypeVersions.V_ProductID, vKartrisTypeVersions.V_CodeNumber, 
+					  vKartrisTypeVersions.V_ExtraCodeNumber, vKartrisTypeVersions.V_Quantity, vKartrisTypeVersions.V_QuantityWarnLevel, vKartrisTypeVersions.V_Price AS OrderByBit, 
+					  vKartrisTypeVersions.V_Name, vKartrisTypeVersions.V_Desc, MIN(tblKartrisQuantityDiscounts.QD_Price) AS QuantityDiscount, vKartrisTypeVersions.V_OrderByValue, 
+					  vKartrisTypeVersions.V_CustomizationType, vKartrisTypeVersions.V_CustomizationDesc, vKartrisTypeVersions.V_CustomizationCost
+		FROM         vKartrisTypeVersions LEFT OUTER JOIN
+							  tblKartrisTaxRates ON vKartrisTypeVersions.V_Tax = tblKartrisTaxRates.T_ID LEFT OUTER JOIN
+							  tblKartrisQuantityDiscounts ON vKartrisTypeVersions.V_ID = tblKartrisQuantityDiscounts.QD_VersionID
+		WHERE     (vKartrisTypeVersions.LANG_ID = @LANG_ID) AND (vKartrisTypeVersions.V_ProductID = @P_ID) AND (vKartrisTypeVersions.V_Live = 1)
+				AND (vKartrisTypeVersions.V_CustomerGroupID IS NULL OR vKartrisTypeVersions.V_CustomerGroupID = @CGroupID)
+		GROUP BY vKartrisTypeVersions.V_ID, tblKartrisTaxRates.T_Taxrate, vKartrisTypeVersions.V_Price, vKartrisTypeVersions.V_Weight, vKartrisTypeVersions.V_RRP, 
+							  vKartrisTypeVersions.V_Tax, vKartrisTypeVersions.V_ProductID, vKartrisTypeVersions.V_CodeNumber, vKartrisTypeVersions.V_ExtraCodeNumber,
+							  vKartrisTypeVersions.V_Quantity, vKartrisTypeVersions.V_QuantityWarnLevel, vKartrisTypeVersions.V_Name, vKartrisTypeVersions.V_Desc, 
+							  vKartrisTypeVersions.V_OrderByValue, vKartrisTypeVersions.V_CustomizationType, vKartrisTypeVersions.V_CustomizationDesc, 
+							  vKartrisTypeVersions.V_CustomizationCost
+		HAVING      (vKartrisTypeVersions.V_Name IS NOT NULL)
+		ORDER BY	CASE
+					WHEN (@OrderBy = 'V_Name' AND @OrderDirection = 'A') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_Name ASC))
+					WHEN (@OrderBy = 'V_Name' AND @OrderDirection = 'D') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_Name DESC))
+					WHEN (@OrderBy = 'V_ID' AND @OrderDirection = 'A') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_ID ASC))
+					WHEN (@OrderBy = 'V_ID' AND @OrderDirection = 'D') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_ID DESC))
+					WHEN (@OrderBy = 'V_OrderByValue' AND @OrderDirection = 'A') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_OrderByValue ASC))
+					WHEN (@OrderBy = 'V_OrderByValue' AND @OrderDirection = 'D') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_OrderByValue DESC))
+					WHEN (@OrderDirection = 'A') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_Price ASC))
+					ELSE (RANK() OVER(ORDER BY vKartrisTypeVersions.V_Price DESC))
+					END
+	END			
+END
+
+-- Remove deprecated us state tax config setting
+-- This is now handled by the taxregime setting in the 
+-- web.config
+DELETE from tblKartrisConfig WHERE CFG_Name = 'general.tax.usmultistatetax'
+

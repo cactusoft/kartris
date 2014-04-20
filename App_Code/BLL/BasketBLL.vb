@@ -1675,7 +1675,7 @@ Public Class BasketBLL
 
         Dim DestinationCountry As Country = Country.Get(numShippingCountryID)
 
-        If ConfigurationManager.AppSettings("TaxRegime").tolower = "us" Then
+        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
             OrderHandlingPrice.TaxRate = DestinationCountry.ComputedTaxRate
             D_Tax = DestinationCountry.ComputedTaxRate
 

@@ -24,7 +24,7 @@ Partial Class Admin_Taxrate
 
         Page.Title = GetGlobalResourceObject("_Kartris", "PageTitle_TaxRates") & " | " & GetGlobalResourceObject("_Kartris", "ContentText_KartrisName")
 
-        If ConfigurationManager.AppSettings("TaxRegime").tolower <> "us" Then
+        If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
             If Not Page.IsPostBack Then LoadTaxRates()
             mvwTax.SetActiveView(viwTaxRates)
         Else

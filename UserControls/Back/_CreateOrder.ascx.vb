@@ -489,7 +489,7 @@ Partial Class UserControls_Back_CreateOrder
                 Dim sbdNewCustomerEmailText As StringBuilder = New StringBuilder
 
                 Dim blnNewUser As Boolean = True
-                If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Then
+                If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
                     blnAppPricesIncTax = False
                     blnAppShowTaxDisplay = False
                     blnAppUSmultistatetax = True
