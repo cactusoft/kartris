@@ -368,9 +368,15 @@ Partial Class Admin_Destinations
             Case "SIMPLE"
                 For Each drwCountry As DataRow In dtbAllCountries.Rows
                     Dim intCountryID As Integer = drwCountry("D_ID")
+                    Dim sngD_Tax As Single
+
                     If ddlSimpleBaseCountry.SelectedValue = intCountryID Then
+
+                        'Set tax rate
+                        sngD_Tax = txtSimpleTaxRate.Text / 100
+
                         'charge tax and set to live
-                        ShippingBLL._UpdateDestinationForTaxWizard(intCountryID, drwCountry("D_ShippingZoneID"), 1, FixNullFromDB(drwCountry("D_Tax2")),
+                        ShippingBLL._UpdateDestinationForTaxWizard(intCountryID, drwCountry("D_ShippingZoneID"), sngD_Tax, FixNullFromDB(drwCountry("D_Tax2")),
                                                                drwCountry("D_ISOCode"), drwCountry("D_ISOCode3Letter"), drwCountry("D_ISOCodeNumeric"),
                                                                FixNullFromDB(drwCountry("D_Region")), True, "", FixNullFromDB(drwCountry("D_TaxExtra")))
                     Else
@@ -383,9 +389,6 @@ Partial Class Admin_Destinations
 
                 'Set EU country to blank, so no EU VAT active
                 KartSettingsManager.SetKartConfig("general.tax.euvatcountry", "", False)
-
-                'Set TaxRate Record 2 to entered tax rate value
-                TaxBLL._UpdateTaxRate(2, txtSimpleTaxRate.Text, "", "")
         End Select
 
         'CONFIG SETTINGS - set "general.tax.pricesinctax" and "frontend.display.showtax" values

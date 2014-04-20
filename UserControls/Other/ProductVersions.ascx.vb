@@ -351,7 +351,7 @@ Partial Class ProductVersions
         Dim pPrice As Single = CDbl(CStr(FixNullFromDB(ptblVersions.Rows(0)("V_Price"))))
         'store base price and tax
         litPriceHidden.Text = CStr(FixNullFromDB(ptblVersions.Rows(0)("V_Price")))
-        If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" Then litTaxRateHidden.Text = CStr(ptblVersions.Rows(0)("T_TaxRate"))
+        If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then litTaxRateHidden.Text = CStr(ptblVersions.Rows(0)("T_TaxRate"))
 
         'calculate display price
         PricePreview(pPrice)
@@ -784,7 +784,7 @@ Partial Class ProductVersions
 
         If ObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) <> 1 Then
 
-            If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Then
+            If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
                 phdPrice.Visible = True
                 litPriceView.Text = "-"
                 Return
@@ -828,7 +828,7 @@ Partial Class ProductVersions
             Return
         End If
 
-        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Then
+        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
             phdPrice.Visible = True
             litPriceView.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), pPrice)
             Return

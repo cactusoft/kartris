@@ -1542,7 +1542,7 @@ Public NotInheritable Class CkartrisBLL
             sbdItemEmailText.Append(" ")
             sbdItemEmailText.Append(CurrenciesBLL.FormatCurrencyPrice(CUR_ID, numExTax, , False))
 
-            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" Then
+            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
                 sbdItemEmailText.Append(" + ")
                 sbdItemEmailText.Append(CurrenciesBLL.FormatCurrencyPrice(CUR_ID, numTaxAmount, , False))
                 sbdItemEmailText.Append(" ")
@@ -1592,7 +1592,7 @@ Public NotInheritable Class CkartrisBLL
         If GetKartConfig("general.tax.pricesinctax") = "n" Or GetKartConfig("frontend.display.showtax") = "y" Then
             sbdHTMLRowText.Append(CurrenciesBLL.FormatCurrencyPrice(CUR_ID, numExTax, , False))
 
-            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" Then
+            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
                 sbdHTMLRowText.Append(" + ")
                 sbdHTMLRowText.Append(CurrenciesBLL.FormatCurrencyPrice(CUR_ID, numTaxAmount, , False))
                 sbdHTMLRowText.Append(" ")
@@ -2146,7 +2146,7 @@ Public NotInheritable Class CkartrisTaxes
         Dim blnIncTax As Boolean '= IIf(GetKartConfig("general.tax.pricesinctax") = "y", True, False)
         Dim blnShowTax As Boolean '= IIf(GetKartConfig("frontend.display.showtax") = "y", True, False)
 
-        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Then
+        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
             blnIncTax = False
             blnShowTax = False
         Else

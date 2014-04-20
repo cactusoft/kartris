@@ -143,7 +143,7 @@ Partial Class _VersionView
 
         If tblVersions.Rows.Count = 0 Then ShowNoVersions() : Exit Sub
 
-        If ConfigurationManager.AppSettings("TaxRegime").tolower = "us" Then gvwViewVersions.Columns(4).Visible = False
+        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then gvwViewVersions.Columns(4).Visible = False
 
         Dim chrProductType As Char = ProductsBLL._GetProductType_s(_GetProductID)
         If chrProductType <> "m" Then

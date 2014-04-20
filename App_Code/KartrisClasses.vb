@@ -350,9 +350,10 @@ Public Class KartrisClasses
         End Property
         Public Sub New(ByVal ShippingCountry As Country, ByVal objShippingOption As Interfaces.objShippingOption, ByVal intTempID As Integer)
             Dim blnUStaxEnabled As Boolean = ConfigurationManager.AppSettings("TaxRegime").ToLower = "us"
+            Dim blnSimpletaxEnabled As Boolean = ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple"
             Dim blnNormalShippingTax As Boolean = False
             If numShippingTaxRate = -1 Then
-                If blnUStaxEnabled Then
+                If blnUStaxEnabled Or blnSimpletaxEnabled Then
                     numShippingTaxRate = ShippingCountry.ComputedTaxRate
                 Else
                     blnNormalShippingTax = True
@@ -396,7 +397,7 @@ Public Class KartrisClasses
                 'Calculate shipping costs
                 Dim blnPricesIncTax As Boolean '= KartSettingsManager.GetKartConfig("general.tax.pricesinctax") = "y"
 
-                If blnUStaxEnabled Then blnPricesIncTax = False Else blnPricesIncTax = GetKartConfig("general.tax.pricesinctax") = "y"
+                If blnUStaxEnabled Or blnSimpletaxEnabled Then blnPricesIncTax = False Else blnPricesIncTax = GetKartConfig("general.tax.pricesinctax") = "y"
 
                 'Set shipping inc and ex tax values
 
@@ -427,9 +428,10 @@ Public Class KartrisClasses
         End Sub
         Public Sub New(ByVal reader As DataRow, ByVal ShippingCountry As Country)
             Dim blnUStaxEnabled As Boolean = ConfigurationManager.AppSettings("TaxRegime").ToLower = "us"
+            Dim blnSimpletaxEnabled As Boolean = ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple"
             Dim blnNormalShippingTax As Boolean = False
             If numShippingTaxRate = -1 Then
-                If blnUStaxEnabled Then
+                If blnUStaxEnabled Or blnSimpletaxEnabled Then
                     numShippingTaxRate = ShippingCountry.ComputedTaxRate
                 Else
                     blnNormalShippingTax = True
@@ -471,7 +473,7 @@ Public Class KartrisClasses
                 'Calculate shipping costs
                 Dim blnPricesIncTax As Boolean '= KartSettingsManager.GetKartConfig("general.tax.pricesinctax") = "y"
 
-                If blnUStaxEnabled Then blnPricesIncTax = False Else blnPricesIncTax = GetKartConfig("general.tax.pricesinctax") = "y"
+                If blnUStaxEnabled Or blnSimpletaxEnabled Then blnPricesIncTax = False Else blnPricesIncTax = GetKartConfig("general.tax.pricesinctax") = "y"
 
                 'Set shipping inc and ex tax values
 
