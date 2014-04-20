@@ -92,7 +92,7 @@
             </asp:UpdatePanel>
         </asp:View>
         <asp:View ID="viwMultistateTax" runat="server">
-            <asp:Literal ID="Literal2" runat="server" Text="<%$ Resources: _Kartris, ContentText_USmultistateTaxIsUsed %>" />
+            <p><asp:Literal ID="litUSSimpleTax" runat="server" Text="<%$ Resources: _Kartris, ContentText_USmultistateTaxIsUsed %>" /></p>
         </asp:View>
     </asp:MultiView>
     <_user:PopupMessage runat="server" ID="_UC_PopupMsg" />

@@ -90,7 +90,7 @@
                         <li><span class="Kartris-DetailsView-Name">
                             <asp:Literal ID="litCheckBoxLabelTaxBand" runat="server" Text="<%$ Resources: _Kartris, ContentText_ChargeTax %>"></asp:Literal>
                         </span><span class="Kartris-DetailsView-Value">
-                           <asp:CheckBox ID="chkTaxBand" runat="server" CssClass="checkbox" />
+                           <asp:CheckBox ID="chkTaxBand" runat="server" CssClass="checkbox" Checked="True" />
                         </span></li>
                     <% End If%>
                     <%-- Tax Band 2--%>
