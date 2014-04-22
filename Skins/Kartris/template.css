@@ -3,10 +3,10 @@
 MAIN LAYOUT
 ========================================================================
 */
-html                                    { height:100%; overflow:scroll; overflow:-moz-scrollbars-vertical; }
+html                                    { height:100%; overflow-y:scroll; overflow-x: hidden; overflow:-moz-scrollbars-vertical; }
 body									{ background-color: #fff; }
-body.main                               { background: #ccc; }
-#container                              { background-color: #fff; max-width: 980px; margin: 0 auto; min-height: 100%; }
+body.main                               { background: #ccc; padding: 0 0 232px 0; }
+#container                              { background-color: #fff; max-width: 980px; margin: 0 auto; min-height: 100%;}
 #centre_container                       { display: block; }
 /* 
 ========================================================================
@@ -14,7 +14,7 @@ SECTIONS
 ========================================================================
 */
 #header .logo                           { margin: 20px 0 0 0; }
-#pagecontent_pad                        { min-height: 400px; padding-bottom: 15px; }
+#pagecontent_pad                        { min-height: 100px; padding-bottom: 15px; }
 /* 
 ========================================================================
 LOGIN STATUS
@@ -90,8 +90,8 @@ BASKET SUMMARY
 FOOTER
 ========================================================================
 */
-#footer                                 { background-color: #999; margin: 0; padding: 0; min-height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; bottom: 0px; }
-#footer_inside                          { height: 100%; margin: 0 20px; color: #555; padding: 10px 0 0 0; }
+#footer                                 { margin: 0; padding: 0; min-height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; bottom: 0px; }
+#footer_inside                          { background-color: #999; height: 100%; min-height: 232px; max-width: 980px; margin: 0 auto; color: #555; padding: 10px 20px 0 20px; }
 #footer a                               { color: #ddd; font-weight: normal; }
 #footer #copyright                      { font-size: 90%; margin: 45px 0 20px 0; }
 #footer h2                              { color: #fff }
