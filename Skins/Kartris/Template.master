@@ -98,6 +98,7 @@
 				</div>
 				<div class="spacer"></div>
 			</div>
+		</div>
 			<div id="footer">
 				<div id="footer_inside">
 					<div class="row">
@@ -151,7 +152,6 @@
 					</div>
 				</div>
 			</div>
-		</div>
 		<user:AdminBar ID="UC_AdminBar" runat="server" />
 	</form>
 	<!-- Load up javascript -->

@@ -19,8 +19,8 @@
     '-----------------------------------
 %>
 <!-- CategoryMenu - dropdown -->
-<div id="categorymenu" class="sticky">
-    <nav class="top-bar" data-options="sticky_on:small" data-topbar>
+<div id="categorymenu">
+    <nav class="top-bar" data-topbar>
         <div class="box">
             <ul class="title-area show-for-medium-down" style="display:none;">
                 <li class="name"><asp:Hyperlink ID="lnkCategories" runat="server" Text="<%$ Resources: Kartris, ContentText_Categories %>" EnableViewState="False" NavigateUrl="~/Category.aspx"></asp:Hyperlink></li>
