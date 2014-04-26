@@ -26,6 +26,10 @@ Partial Class _LanguageStrings
         phdMessageError.Visible = False
 
         If Not Page.IsPostBack Then
+
+            'Set the text of the 'details' link
+            lnkDetails.Text = "[+] <span class=""bold"">" & GetGlobalResourceObject("_Kartris", "ContentText_Details") & "</span>"
+
             'Set number of records per page
             Dim intRowsPerPage As Integer = 25
             Try
@@ -236,11 +240,11 @@ Partial Class _LanguageStrings
     End Function
 
     Private Sub ViewFromEdit()
-        txtSearchStarting.Text = txtLSName.Text
-        chkBack.Checked = (ddlLSFrontBack.SelectedValue = "b")
-        chkFront.Checked = (ddlLSFrontBack.SelectedValue = "f")
-        ddlLanguages.SelectedValue = ddlLSLanguage.SelectedValue
-        ddlSearchBy.SelectedValue = "Name"
+        'txtSearchStarting.Text = txtLSName.Text
+        'chkBack.Checked = (ddlLSFrontBack.SelectedValue = "b")
+        'chkFront.Checked = (ddlLSFrontBack.SelectedValue = "f")
+        'ddlLanguages.SelectedValue = ddlLSLanguage.SelectedValue
+        'ddlSearchBy.SelectedValue = "Name"
         SearchLanguageStrings()
     End Sub
 
@@ -309,6 +313,10 @@ Partial Class _LanguageStrings
 
     Protected Sub btnClear_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnClear.Click
         txtSearchStarting.Text = String.Empty
+        chkBack.Checked = False
+        chkFront.Checked = False
+        ddlLanguages.SelectedIndex = 0
+        ddlSearchBy.SelectedValue = ""
         SearchLanguageStrings()
     End Sub
 
@@ -347,4 +355,15 @@ Partial Class _LanguageStrings
         mvwLS.SetActiveView(viwResult)
     End Sub
 
+    Protected Sub lnkDetails_Click(sender As Object, e As EventArgs) Handles lnkDetails.Click
+        If phdDetails.Visible Then
+            phdDetails.Visible = False
+            'Set the text of the 'details' link
+            lnkDetails.Text = "[+] <span class=""bold"">" & GetGlobalResourceObject("_Kartris", "ContentText_Details") & "</span>"
+        Else
+            phdDetails.Visible = True
+            'Set the text of the 'details' link
+            lnkDetails.Text = "[-] <span class=""bold"">" & GetGlobalResourceObject("_Kartris", "ContentText_Details") & "</span>"
+        End If
+    End Sub
 End Class

@@ -55,6 +55,10 @@ PAGE: CONFIG SETTINGS
 #page_config .valuefield                { overflow: hidden }
 #page_config select                     { width: 130px }
 #page_config .Kartris-DetailsView-Data  { border-top: solid 1px #000; margin-top: 10px; }
+#page_config li.detailsfield            { background-color: #eee; padding-left: 10px; }
+#page_config li.detailsfield  .Kartris-DetailsView-Name
+                                        { width: 170px; color: #666; }
+#page_config textarea                   { width: 500px; height: 120px; }
 /* 
 ========================================================================
 SECTION: CONFIG SETTING DROPDOWNMENU
@@ -160,6 +164,9 @@ PAGE: LANGUAGE STRINGS
 #page_languagestrings div.column3       { display: inline-block; width: 180px; float: left; margin-right: 5px; overflow: hidden; }
 #page_languagestrings div.column4       { display: inline-block; width: 180px; float: left; margin-right: 5px; overflow: hidden; }
 #page_languagestrings div.column5       { display: inline-block; width: 70px; float: right; text-align: right; }
+#page_languagestrings li.detailsfield   { background-color: #eee; padding-left: 10px; }
+#page_languagestrings li.detailsfield  .Kartris-DetailsView-Name
+                                        { width: 170px; color: #666; }
 /* 
 ========================================================================
 PAGE: ORDER (Single Order)
