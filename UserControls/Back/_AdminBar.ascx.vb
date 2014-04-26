@@ -29,6 +29,9 @@ Partial Class UserControls_Back_AdminBar
     End Sub
 
     Public Sub SetFrontEndLink()
+        'Get current URL
+        Dim strResolvedURL As String = Context.Request.RawUrl.ToLower
+
         'Category
         Dim numCategoryID As Long = 0
         Try
@@ -40,6 +43,7 @@ Partial Class UserControls_Back_AdminBar
             lnkFront.NavigateUrl = "~/Category.aspx?CategoryID=" & numCategoryID.ToString
         End If
 
+        'Product
         Dim numProductID As Long = 0
         Try
             numProductID = Request.QueryString("ProductID")
@@ -48,6 +52,12 @@ Partial Class UserControls_Back_AdminBar
         End Try
         If numProductID > 0 Then
             lnkFront.NavigateUrl = "~/Product.aspx?ProductID=" & numProductID.ToString
+        End If
+
+        'Basket page
+        If strResolvedURL.ToLower.Contains("_createorder.aspx") Or _
+            strResolvedURL.ToLower.Contains("_modifyorder.aspx") Then
+            lnkFront.NavigateUrl = "~/Basket.aspx"
         End If
     End Sub
 End Class
