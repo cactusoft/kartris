@@ -29,8 +29,8 @@ Imports System.Xml
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 2.6
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #4/20/2014# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION As Decimal = 2.6001
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #4/26/2014# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
@@ -159,7 +159,7 @@ Public NotInheritable Class CkartrisFormatErrors
 
             If strErrorDescription.Contains("Format of the initialization string does not conform to specification starting at index 0") Then
                 'This error can generally be cleared by a recycle
-                swtErrors.WriteLine("Code 999")
+                swtErrors.WriteLine("We believe this happens due to app pool issues. Please see http://www.kartris.com/Knowledgebase/Error__k-55.aspx for help.")
             End If
 
             swtErrors.WriteLine("")
