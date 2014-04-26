@@ -138,10 +138,10 @@
                                     <asp:TextBox ID="txtLSValue" runat="server" TextMode="MultiLine" Wrap="true" MaxLength="4000" />
                                 </span></li>
                                 
-                                
+                                <asp:PlaceHolder runat="server" ID="phdDetails" Visible="False">
                                 <%--LS_DefaultValue--%>
                                 <% If KartSettingsManager.GetKartConfig("backend.expertmode") <> "n" Then%>
-                                <li><span class="Kartris-DetailsView-Name">
+                                <li class="detailsfield"><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litContentTextDefaultValue" runat="server" Text='<%$ Resources: _Kartris, ContentText_DefaultValue %>'></asp:Literal>
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:TextBox ID="txtLSDefaultValue" runat="server" TextMode="MultiLine" Wrap="true"
@@ -150,7 +150,7 @@
                                 <% end if %>
                                 
                                 <%--LS_Description--%>
-                                <li><span class="Kartris-DetailsView-Name">
+                                <li class="detailsfield"><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litContentTextDesc" runat="server" Text='<%$ Resources:_Kartris, FormLabel_Description %>'></asp:Literal>
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:TextBox ID="txtLSDesc" runat="server" TextMode="MultiLine" Wrap="true" MaxLength="255" />
@@ -158,19 +158,21 @@
                                 
                                 <% If KartSettingsManager.GetKartConfig("backend.expertmode") <> "n" Then%>
                                 <%--LS_VirtualPath--%>
-                                <li><span class="Kartris-DetailsView-Name">
+                                <li class="detailsfield"><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litContentTextVirtualPath" runat="server" Text='<%$ Resources:_Kartris, ContentText_VirtualPath %>'></asp:Literal>
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:TextBox ID="txtLSVirtualPath" runat="server" MaxLength="50" />
                                 </span></li>
                                 <%--LS_ClassName--%>
-                                <li><span class="Kartris-DetailsView-Name">
+                                <li class="detailsfield"><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litContentTextClassName" runat="server" Text='<%$ Resources:_Kartris, ContentText_ClassName %>'></asp:Literal>
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:TextBox ID="txtLSClassName" runat="server" MaxLength="50" />
                                 </span></li>
                                 <% end if %>
-                                
+                                </asp:PlaceHolder>
+                                <br />
+                                <asp:LinkButton runat="server" ID="lnkDetails" CssClass="normalweight"></asp:LinkButton>
                             </ul>
                         </div>
                     </div>

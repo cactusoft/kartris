@@ -27,6 +27,10 @@ Partial Class _ConfigSetting
         lstRadioButtons.Visible = False
 
         If Not Page.IsPostBack Then
+
+            'Set the text of the 'details' link
+            lnkDetails.Text = "[+] <span class=""bold"">" & GetGlobalResourceObject("_Kartris", "ContentText_Details") & "</span>"
+
             CreateMenu()
 
             'Set number of records per page
@@ -218,6 +222,9 @@ Partial Class _ConfigSetting
 
         ClearTextControls()
 
+        'Prepare value dropdown if required
+        Dim blnShowValuesInDropDownList = BuildDisplayInfoDropDownList(txtCFG_DisplayInfo.Text, txtCFG_Value.Text)
+
         litPleaseEnterValue.Visible = False
         phdNameAlreadyExist.Visible = False
         phdCheckChange.Visible = True
@@ -231,6 +238,7 @@ Partial Class _ConfigSetting
 
         txtCFG_Name.Focus()
     End Sub
+
     Private Sub PrepareEditEntry()
 
         ddlCFG_DataType.Items.Clear()
@@ -257,6 +265,8 @@ Partial Class _ConfigSetting
         txtCFG_VersionAdded.Text = FixNullFromDB(drConfig("CFG_VersionAdded"))
         chkCFG_Important.Checked = FixNullFromDB(drConfig("CFG_Important"))
 
+        'Prepare value dropdown if required
+        Dim blnShowValuesInDropDownList = BuildDisplayInfoDropDownList(txtCFG_DisplayInfo.Text, txtCFG_Value.Text)
 
         phdNameAlreadyExist.Visible = False
         litPleaseEnterValue.Visible = False
@@ -275,6 +285,37 @@ Partial Class _ConfigSetting
 
     End Sub
 
+    Function BuildDisplayInfoDropDownList(ByVal strDisplayInfo As String, ByVal strCFG_Value As String) As Boolean
+        ddlCFG_Value.Items.Clear()
+        If strDisplayInfo.Contains("|") Then
+            'We have a list of options
+            'First step is to build array from the list
+            Dim aryOptions = Split(strDisplayInfo, "|", -1)
+            For numCounter = 0 To UBound(aryOptions)
+                ddlCFG_Value.Items.Add(New ListItem(aryOptions(numCounter), aryOptions(numCounter)))
+
+            Next
+            'Try to set the dropdown to a value if
+            'config value matches one item in the menu
+            Try
+                ddlCFG_Value.SelectedValue = strCFG_Value
+            Catch ex As Exception
+                'Just fail softly
+            End Try
+
+            'Hide text field, show dropdown
+            txtCFG_Value.Visible = False
+            ddlCFG_Value.Visible = True
+
+            Return True
+        Else
+            'Hide dropdown, show text field
+            txtCFG_Value.Visible = True
+            ddlCFG_Value.Visible = False
+            Return False
+        End If
+    End Function
+
     Private Sub ClearTextControls()
         txtCFG_Name.Text = String.Empty
         txtCFG_Value.Text = String.Empty
@@ -287,13 +328,23 @@ Partial Class _ConfigSetting
 
     Private Sub SaveChanges(ByVal enumOperation As DML_OPERATION)
         Dim chrDataType As Char = "", chrDisplayType As Char = ""
-        Dim strConfigName As String = "", strValue As String = "", strDesc As String = "", strDefaultValue As String = "", strDisplayInfo As String = ""
+        Dim strConfigName As String = "", strValue As String = "", strValueDropdown As String = "", strDesc As String = "", strDefaultValue As String = "", strDisplayInfo As String = ""
         Dim sngVersionAdded As Single = 0.0F
         Dim blnImportant As Boolean
         Dim strMessage As String = ""
 
         strConfigName = txtCFG_Name.Text
+
+        'We collect values from both the value text field
+        'and the dropdown
         strValue = txtCFG_Value.Text
+        strValueDropdown = ddlCFG_Value.Text
+
+        'If a value is selected from the dropdown, we use
+        'this as the value, otherwise we stick to the text
+        'field value
+        If strValueDropdown <> "" Then strValue = strValueDropdown
+
         chrDataType = ddlCFG_DataType.SelectedValue
         chrDisplayType = ddlCFG_DisplayType.SelectedValue
         strDefaultValue = txtCFG_DefaultValue.Text
@@ -416,6 +467,7 @@ Partial Class _ConfigSetting
         txtCFG_VersionAdded.Enabled = False
         chkCFG_Important.Enabled = False
     End Sub
+
     Sub UnlockControls()
         txtCFG_Name.Enabled = False
         txtCFG_Value.Enabled = True
@@ -435,4 +487,15 @@ Partial Class _ConfigSetting
         txtCFG_Name.Focus()
     End Sub
 
+    Protected Sub lnkDetails_Click(sender As Object, e As EventArgs) Handles lnkDetails.Click
+        If phdDetails.Visible Then
+            phdDetails.Visible = False
+            'Set the text of the 'details' link
+            lnkDetails.Text = "[+] <span class=""bold"">" & GetGlobalResourceObject("_Kartris", "ContentText_Details") & "</span>"
+        Else
+            phdDetails.Visible = True
+            'Set the text of the 'details' link
+            lnkDetails.Text = "[-] <span class=""bold"">" & GetGlobalResourceObject("_Kartris", "ContentText_Details") & "</span>"
+        End If
+    End Sub
 End Class

@@ -115,13 +115,24 @@
                                     <asp:Literal ID="litHValue" runat="server" Text='<%$ Resources:_Kartris, ContentText_Value %>'></asp:Literal>
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:TextBox ID="txtCFG_Value" runat="server" Text='<%# Eval("CFG_Value") %>' MaxLength="255" />
+                                    <asp:DropDownList ID="ddlCFG_Value" runat="server">
+                                        <asp:ListItem>-</asp:ListItem>
+                                    </asp:DropDownList>
                                     <%-- <asp:RequiredFieldValidator ID="valRequiredValue" runat="server" CssClass="error"
                                         ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                         ControlToValidate="txtCFG_Value" SetFocusOnError="True" ValidationGroup="CFG">
                                     </asp:RequiredFieldValidator>--%>
                                 </span></li>
-                                <%--CFG_DataType--%>
+                                <%--CFG_Description--%>
                                 <li><span class="Kartris-DetailsView-Name">
+                                    <asp:Literal ID="litHDesc" runat="server" Text='<%$ Resources: _Kartris, ContentText_Description %>'></asp:Literal>
+                                </span><span class="Kartris-DetailsView-Value">
+                                    <asp:TextBox ID="txtCFG_Desc" runat="server" TextMode="MultiLine" Wrap="true" MaxLength="255" />
+                                </span></li>
+
+                                <asp:PlaceHolder runat="server" ID="phdDetails" Visible="false">
+                                <%--CFG_DataType--%>
+                                <li class="detailsfield"><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litFormLabelDataType" runat="server" Text='<%$ Resources: _Config, FormLabel_DataType %>'></asp:Literal>
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:DropDownList ID="ddlCFG_DataType" runat="server">
@@ -131,7 +142,7 @@
                                         SetFocusOnError="True" ValueToCompare="-" Operator="NotEqual" ValidationGroup="CFG" ></asp:CompareValidator>
                                 </span></li>
                                 <%--CFG_DisplayType--%>
-                                <li><span class="Kartris-DetailsView-Name">
+                                <li class="detailsfield"><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litFormLabelDisplayType" runat="server" Text='<%$ Resources: _Config, FormLabel_DisplayType %>'></asp:Literal>
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:DropDownList ID="ddlCFG_DisplayType" runat="server">
@@ -142,25 +153,20 @@
                                         Operator="NotEqual" ValidationGroup="CFG" ></asp:CompareValidator>
                                 </span></li>
                                 <%--CFG_DisplayInfo--%>
-                                <li><span class="Kartris-DetailsView-Name">
+                                <li class="detailsfield"><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litFormLabelDisplayInfo" runat="server" Text='<%$ Resources: _Config, FormLabel_DisplayInfo %>'></asp:Literal>
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:TextBox ID="txtCFG_DisplayInfo" runat="server" MaxLength="255" />
                                 </span></li>
                                 <%--CFG_DefaultValue--%>
-                                <li><span class="Kartris-DetailsView-Name">
+                                <li class="detailsfield"><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litHDefaultValue" runat="server" Text='<%$ Resources: _Kartris, ContentText_DefaultValue %>'></asp:Literal>
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:TextBox ID="txtCFG_DefaultValue" runat="server" MaxLength="255" />
                                 </span></li>
-                                <%--CFG_Description--%>
-                                <li><span class="Kartris-DetailsView-Name">
-                                    <asp:Literal ID="litHDesc" runat="server" Text='<%$ Resources: _Kartris, ContentText_Description %>'></asp:Literal>
-                                </span><span class="Kartris-DetailsView-Value">
-                                    <asp:TextBox ID="txtCFG_Desc" runat="server" TextMode="MultiLine" Wrap="true" MaxLength="255" />
-                                </span></li>
+
                                 <%--CFG_VersionAdded--%>
-                                <li><span class="Kartris-DetailsView-Name">
+                                <li class="detailsfield"><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litHVersionAdded" runat="server" Text='<%$ Resources: _Kartris, ContentText_VersionAdded %>'></asp:Literal>
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:TextBox ID="txtCFG_VersionAdded" runat="server" MaxLength="8" />
@@ -172,11 +178,14 @@
                                         FilterType="Numbers,Custom" ValidChars="." />
                                 </span></li>
                                 <%--CFG_Important--%>
-                                <li><span class="Kartris-DetailsView-Name">
+                                <li class="detailsfield"><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litContentTextConfigImportant" runat="server" Text="<%$ Resources: _Config, ContentText_ConfigImportant %>" />
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:CheckBox ID="chkCFG_Important" runat="server" CssClass="checkbox" />
                                 </span></li>
+                                </asp:PlaceHolder>
+                                <br />
+                                <asp:LinkButton runat="server" ID="lnkDetails" CssClass="normalweight"></asp:LinkButton>
                             </ul>
                         </div>
                     </div>
