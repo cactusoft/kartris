@@ -821,8 +821,8 @@ Public Class VersionsBLL
                 cmdUpdateVersionStock.Transaction = savePoint
                 For Each row As DataRow In tblVersionsToUpdate.Rows
                     cmdUpdateVersionStock.Parameters.AddWithValue("@V_ID", row("VersionID"))
-                    cmdUpdateVersionStock.Parameters.AddWithValue("@V_Quantity", FixNullToDB(row("StockQty"), "g"))
-                    cmdUpdateVersionStock.Parameters.AddWithValue("@V_QuantityWarnLevel", FixNullToDB(row("WarnLevel"), "g"))
+                    cmdUpdateVersionStock.Parameters.AddWithValue("@V_Quantity", row("StockQty"))
+                    cmdUpdateVersionStock.Parameters.AddWithValue("@V_QuantityWarnLevel", row("WarnLevel"))
                     cmdUpdateVersionStock.ExecuteNonQuery()
                     cmdUpdateVersionStock.Parameters.Clear()
                 Next
