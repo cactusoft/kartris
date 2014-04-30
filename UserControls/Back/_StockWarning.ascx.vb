@@ -75,6 +75,23 @@ Partial Class UserControls_Back_StockWarning
         LoadStockLevel()
     End Sub
 
+    'Here we do some natty styling of rows with colour,
+    'so we can show items that are out of stock differently
+    'to those that are just below their warning level, but
+    'still in stock
+    Private Sub gvwStockLevel_RowDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewRowEventArgs) Handles gvwStockLevel.RowDataBound
+        If e.Row.RowType <> Web.UI.WebControls.DataControlRowType.Header And e.Row.RowType <> Web.UI.WebControls.DataControlRowType.Footer Then
+            If e.Row.RowType = DataControlRowType.DataRow Then
+                Dim txtStockQty As TextBox = DirectCast(e.Row.FindControl("txtStockQty"), TextBox)
+                Dim txtWarnLevel As TextBox = DirectCast(e.Row.FindControl("txtWarnLevel"), TextBox)
+                Dim numStockQty As Integer = CInt(txtStockQty.Text)
+                Dim numWarnLevel As Integer = CInt(txtWarnLevel.Text)
+                If numStockQty <= 0 Then e.Row.CssClass = "Kartris-GridView-Red"
+            End If
+        End If
+    End Sub
+
+
     Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSave.Click
         UpdateStockLevel()
     End Sub
@@ -92,6 +109,7 @@ Partial Class UserControls_Back_StockWarning
                 If strStockQty <> "" AndAlso strWarnLevel <> "" Then
                     Dim strVersionID As String = CType(rowStock.Cells(0).FindControl("litVersionID"), Literal).Text
                     tblVersionsToUpdate.Rows.Add(CLng(strVersionID), CSng(strStockQty), CSng(strWarnLevel))
+
                 End If
             End If
         Next
@@ -156,6 +174,7 @@ Partial Class UserControls_Back_StockWarning
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgFileUpload"))
         End If
     End Sub
+
     Sub ImportStockLevel(strFilePath As String)
         Dim connString As String
         Dim connFile As OleDbConnection
@@ -267,6 +286,7 @@ Partial Class UserControls_Back_StockWarning
         End If
 
     End Sub
+
     Function IsValidString(ByVal strText As String) As Boolean
         If strText IsNot Nothing Then
             If Not String.IsNullOrEmpty(strText) Then
@@ -275,6 +295,7 @@ Partial Class UserControls_Back_StockWarning
         End If
         Return False
     End Function
+
     Protected Sub btnSaveImport_Click(sender As Object, e As System.EventArgs) Handles btnSaveImport.Click
         If gvwImportStockLevel.Rows.Count = 0 Then Exit Sub
         Dim tblVersionsToUpdate As New DataTable

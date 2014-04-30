@@ -189,7 +189,7 @@
                                     ControlToValidate="txtWarningLevel" Display="Dynamic" SetFocusOnError="true"
                                     ValidationGroup="<%# LANG_ELEM_TABLE_TYPE.Versions %>" />
                                 <ajaxToolkit:FilteredTextBoxExtender ID="filStockQuantity" runat="server" TargetControlID="txtStockQuantity"
-                                    FilterType="Numbers,Custom" ValidChars=".," />
+                                    FilterType="Numbers,Custom" ValidChars=".,-" />
                                 <ajaxToolkit:FilteredTextBoxExtender ID="filWarningLevel" runat="server" TargetControlID="txtWarningLevel"
                                     FilterType="Numbers,Custom" ValidChars=".," />
                             </asp:PlaceHolder>
