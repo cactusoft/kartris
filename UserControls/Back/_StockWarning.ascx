@@ -73,7 +73,7 @@
                                             Display="Dynamic" ErrorMessage="*" Operator="DataTypeCheck" ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoShort %>"
                                             Type="Double" SetFocusOnError="true" ValidationGroup="StockLevel" />
                                         <ajaxToolkit:FilteredTextBoxExtender ID="filStockQuantity" runat="server" TargetControlID="txtStockQty"
-                                            FilterType="Numbers,Custom" ValidChars=".," />
+                                            FilterType="Numbers,Custom" ValidChars=".,-" />
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField>
