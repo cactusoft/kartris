@@ -91,8 +91,8 @@ Partial Class UserControls_Back_TaskList
         If numStockWarning > 0 OrElse numOutOfStock > 0 Then
             litStockWarning.Text = numStockWarning
             litOutOfStock.Text = numOutOfStock
-            If numStockWarning = 0 Then phdStockWarning.Visible = False
-            If numOutOfStock = 0 Then phdOutOfStock.Visible = False
+            If numStockWarning <= 0 Then phdStockWarning.Visible = False
+            If numOutOfStock <= 0 Then phdOutOfStock.Visible = False
         Else
             phdStock.Visible = False
         End If
