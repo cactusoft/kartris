@@ -42,7 +42,6 @@ Public Class BasketModifier
     Public Property IncTax() As Double
         Get
             Return Math.Round(_IncTax, 2)
-            ''Return (_IncTax)
         End Get
         Set(ByVal value As Double)
             _IncTax = value
@@ -51,7 +50,13 @@ Public Class BasketModifier
 
     Public Property TaxRate() As Double
         Get
-            Return Math.Round(_TaxRate, 4)
+            Dim numRounding As Integer = 0
+            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
+                numRounding = 4
+            Else
+                numRounding = 6
+            End If
+            Return Math.Round(_TaxRate, numRounding)
         End Get
         Set(ByVal value As Double)
             _TaxRate = value
@@ -60,8 +65,13 @@ Public Class BasketModifier
 
     Public ReadOnly Property TaxAmount() As Double
         Get
-            Return Math.Round(IncTax - ExTax, 2)
-            ''Return (IncTax - ExTax)
+            Dim numRounding As Integer = 0
+            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
+                numRounding = 2
+            Else
+                numRounding = 4
+            End If
+            Return Math.Round(IncTax - ExTax, numRounding)
         End Get
     End Property
 
@@ -422,14 +432,20 @@ Public Class BasketItem
 
     Public ReadOnly Property TaxAmount() As Double
         Get
-            Return Math.Round(IIf(Not (ApplyTax), 0, _ExTax * ComputedTaxRate), 4)
+            Dim numRounding As Integer = 0
+            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
+                numRounding = 4
+            Else
+                numRounding = 6
+            End If
+            Return Math.Round(IIf(Not (ApplyTax), 0, _ExTax * ComputedTaxRate), numRounding)
         End Get
     End Property
 
 
     Public Property ComputedTaxRate() As Double
         Get
-            Return Math.Round(_ComputedTaxRate, 4)
+            Return Math.Round(_ComputedTaxRate, 6)
         End Get
         Set(ByVal value As Double)
             _ComputedTaxRate = value
@@ -437,7 +453,7 @@ Public Class BasketItem
     End Property
     Public Property TaxRate1() As Double
         Get
-            Return Math.Round(_TaxRate1, 4)
+            Return Math.Round(_TaxRate1, 6)
         End Get
         Set(ByVal value As Double)
             _TaxRate1 = value
@@ -446,7 +462,7 @@ Public Class BasketItem
 
     Public Property TaxRate2() As Double
         Get
-            Return Math.Round(_TaxRate2, 4)
+            Return Math.Round(_TaxRate2, 6)
         End Get
         Set(ByVal value As Double)
             _TaxRate2 = value
@@ -455,7 +471,7 @@ Public Class BasketItem
 
     Public Property TaxRateItem() As Double
         Get
-            Return Math.Round(_TaxRateItem, 4)
+            Return Math.Round(_TaxRateItem, 6)
         End Get
         Set(ByVal value As Double)
             _TaxRateItem = value
@@ -476,7 +492,13 @@ Public Class BasketItem
 
     Public ReadOnly Property RowExTax() As Double
         Get
-            Return Math.Round(IIf(PricesIncTax, ExTax * Quantity, ExTaxNoRound * Quantity), BasketBLL.CurrencyRoundNumber)
+            Dim numRounding As Integer = 0
+            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
+                numRounding = BasketBLL.CurrencyRoundNumber
+            Else
+                numRounding = 4
+            End If
+            Return Math.Round(IIf(PricesIncTax, ExTax * Quantity, ExTaxNoRound * Quantity), numRounding)
         End Get
     End Property
 
@@ -718,13 +740,16 @@ Public Class BasketBLL
 
     Public ReadOnly Property TotalTaxRate() As Double
         Get
+            Dim numRounding As Integer = 0
+            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
+                numRounding = 4
+            Else
+                numRounding = 6
+            End If
             If TotalExTax = 0 Then
                 Return 0
             Else
-                'If GetKartConfig("general.tax.usmultistatetax") = "y" Then Return _TotalTaxRate
-                'If TaxRegime.Name.ToLower = "us" Then Return _TotalTaxRate
-
-                Return Math.Round(TotalTaxAmount / TotalExTax, 4)
+                Return Math.Round(TotalTaxAmount / TotalExTax, numRounding)
             End If
         End Get
     End Property
@@ -755,7 +780,13 @@ Public Class BasketBLL
 
     Public ReadOnly Property TotalDiscountPriceTaxRate() As Double
         Get
-            Return Math.Round(IIf(TotalDiscountPriceExTax = 0, 0, TotalDiscountPriceTaxAmount / TotalDiscountPriceExTax), 4)
+            Dim numRounding As Integer = 0
+            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
+                numRounding = 4
+            Else
+                numRounding = 6
+            End If
+            Return Math.Round(IIf(TotalDiscountPriceExTax = 0, 0, TotalDiscountPriceTaxAmount / TotalDiscountPriceExTax), numRounding)
         End Get
     End Property
 

@@ -32,7 +32,7 @@
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:BoundField DataField="CG_Discount" HeaderText="<%$ Resources: _Kartris, FormLabel_Discount %>"
-                                            SortExpression="CG_Discount" ItemStyle-CssClass="alignright" HeaderStyle-CssClass="alignright" />
+                                            SortExpression="CG_Discount" ItemStyle-CssClass="alignright" HeaderStyle-CssClass="alignright" Visible="False" />
                                         <asp:TemplateField HeaderText="<%$ Resources: _Kartris, ContentText_Live %>" SortExpression="CG_Live"
                                             HeaderStyle-CssClass="alignright">
                                             <ItemTemplate>
@@ -81,7 +81,8 @@
                                         <asp:Label ID="lblCGLive" runat="server" Text="<%$ Resources: _Kartris, ContentText_Live %>" /></span><span
                                             class="Kartris-DetailsView-Value">
                                             <asp:CheckBox runat="server" ID="chkCGLive" CssClass="checkbox" /></span></li>
-                                    <li><span class="Kartris-DetailsView-Name">
+                                    <!-- this section is deprecated; set % discount at customer level -->
+                                    <li style="display:none;"><span class="Kartris-DetailsView-Name">
                                         <asp:Label ID="lblCGDiscount" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Discount %>" /></span><span
                                             class="Kartris-DetailsView-Value">
                                             <asp:TextBox ID="txtDiscount" runat="server" CssClass="shorttext" MaxLength="8" />
@@ -94,6 +95,8 @@
                                             <ajaxToolkit:FilteredTextBoxExtender ID="filPriceIncTax" runat="server" TargetControlID="txtDiscount"
                                                 FilterType="Numbers,Custom" ValidChars=".," />
                                         </span></li>
+                                    <!-- end of deprecated customer group discount -->
+
                                 </ul>
                             </div>
                         </div>

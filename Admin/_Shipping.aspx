@@ -19,40 +19,6 @@
                             <div class="subtabsection">
                                 <asp:UpdatePanel ID="updCollapsiblePanel" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
-                                       <%-- <ajaxToolkit:CollapsiblePanelExtender ID="CollapsiblePanelShippingSystem" runat="server"
-                                            CollapseControlID="pnlShippingSystem" ExpandControlID="pnlShippingSystem" TargetControlID="pnlModifyShippingSystem"
-                                            TextLabelID="lblExpandCollapseShippingSystem" ExpandedText="" CollapsedText=""
-                                            SuppressPostBack="false" Collapsed="true" />
-                                        <asp:Panel ID="pnlShippingSystem" runat="server">
-                                            <p>
-                                                <asp:Label ID="lblExpandCollapseShippingSystem" runat="server" Text="" />
-                                                <asp:Literal ID="litContentTextShippingSystem" runat="server" Text="<%$ Resources: _Shipping, ContentText_ShippingSystem %>" />:
-                                                <strong>
-                                                    <asp:Literal ID="litShippingSystem" runat="server" /></strong>
-                                                <asp:LinkButton ID="lnkBtnChangeShippingSystem" CssClass="linkbutton icon_edit" runat="server"
-                                                    Text="<%$ Resources: _Kartris, ContentText_ConfigChange2 %>" />
-                                                <asp:LinkButton ID="lnkBtnCancelShippingSystem" CssClass="linkbutton icon_delete"
-                                                    runat="server" Text="<%$ Resources: _Kartris, FormButton_Cancel %>" Visible="false" /></p>
-                                        </asp:Panel>
-                                        <asp:Panel ID="pnlModifyShippingSystem" runat="server">
-                                            <div class="configsettingbox">
-                                                <strong>
-                                                    <asp:Literal ID="litTextConfigSettingSystem" runat="server" Text="frontend.checkout.shipping.system" /></strong>
-                                                <div class="floatright">
-                                                    <asp:DropDownList ID="ddlShippingSystem" runat="server">
-                                                        <asp:ListItem Text="<%$ Resources: _Shipping, ContentText_IntegratedShipping %>"
-                                                            Value="c" />
-                                                        <asp:ListItem Text="<%$ Resources: _Shipping, ContentText_UPS %>" Value="u" />
-                                                        <asp:ListItem Text="<%$ Resources: _Kartris, ContentText_None %>" Value="n" />
-                                                    </asp:DropDownList>
-                                                    <asp:Button ID="lnkBtnSaveShippingSystem" runat="server" Text='<%$ Resources: _Kartris, FormButton_Save %>'
-                                                        CssClass="button" /></div>
-                                                <p>
-                                                    <asp:Literal ID="litShippingSystemDescription" runat="server" /></p>
-                                            </div>
-                                            <br />
-                                            <br />
-                                        </asp:Panel>--%>
                                         <asp:PlaceHolder ID="phdCalculation" runat="server">
                                             <ajaxToolkit:CollapsiblePanelExtender ID="CollapsiblePanelShippingCalculation" runat="server"
                                                 CollapseControlID="pnlShippingCalculation" ExpandControlID="pnlShippingCalculation"

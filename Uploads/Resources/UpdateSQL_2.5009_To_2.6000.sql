@@ -213,3 +213,11 @@ END
 -- web.config
 DELETE from tblKartrisConfig WHERE CFG_Name = 'general.tax.usmultistatetax'
 
+-- Remove shipping system; we now have a combined system based
+-- on bands, where you can specify real-time system at band level
+DELETE from tblKartrisConfig WHERE CFG_Name = 'frontend.checkout.shipping.system'
+
+-- Shipping tax band is set from the shipping section, for
+-- each shipping method
+DELETE from tblKartrisConfig WHERE CFG_Name = 'frontend.checkout.shipping.taxband'
+

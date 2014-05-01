@@ -158,7 +158,7 @@
                             <asp:Literal ID="litCouponDiscountExTax" runat="server" Text='' />
                         </td>
                         <td>
-                            <asp:Literal ID="litCouponTaxPerItem" runat="server" Text='' />
+                            <asp:Literal ID="litCouponDiscountTaxPerItem" runat="server" Text='' />
                         </td>
                         <td>
                             1
@@ -188,7 +188,7 @@
                             <asp:Literal ID="litCustomerDiscountExTax" runat="server" Text='' />
                         </td>
                         <td>
-                            <asp:Literal ID="litCustomerTaxPerItem" runat="server" Text='' />
+                            <asp:Literal ID="litCustomerDiscountTaxPerItem" runat="server" Text='' />
                         </td>
                         <td>
                             1
