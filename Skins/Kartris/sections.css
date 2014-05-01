@@ -556,6 +556,7 @@ CHECKOUT
 #checkout .basket th.total,
 #checkout .basket td.total              { width: 10%; }
 #checkout #euvatsection strong          { float: right; font-size: 130%; color: #999; }
+#checkout tr.totals span                { display: inline-block; margin-left: 10px; }
 /* 
 ========================================================================
 WISHLIST

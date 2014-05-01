@@ -71,8 +71,14 @@ Partial Class UserControls_Back_ShippingMethods
 
         PopulateTaxBandDropdowns()
         Try
-            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" Then ddlTaxBand.SelectedValue = _
-                CInt(CType(gvwShippingMethods.SelectedRow.Cells(0).FindControl("hidTaxBand"), HiddenField).Value)
+            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
+                ddlTaxBand.SelectedValue = _
+                    CInt(CType(gvwShippingMethods.SelectedRow.Cells(0).FindControl("hidTaxBand"), HiddenField).Value)
+            Else
+                'For US, we just have a checkbox as to whether shipping method is taxable
+                'chkTax1.Checked = CInt(CType(gvwShippingMethods.SelectedRow.Cells(0).FindControl("hidTaxBand"), HiddenField).Value) = 2
+            End If
+
             If TaxRegime.VTax_Type2 = "rate" Then ddlTaxBand2.SelectedValue =
                 CInt(CType(gvwShippingMethods.SelectedRow.Cells(0).FindControl("hidTaxBand2"), HiddenField).Value)
         Catch ex As Exception
@@ -224,7 +230,16 @@ Partial Class UserControls_Back_ShippingMethods
 
         Dim bytTaxBand As Byte = 0
         Dim bytTaxBand2 As Byte = 0
-        If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" Then bytTaxBand = CByte(ddlTaxBand.SelectedValue)
+        If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
+            bytTaxBand = CByte(ddlTaxBand.SelectedValue)
+        Else
+            'If CByte(chkTax1.Checked) Then
+            '    bytTaxBand = 2
+            'Else
+            '    bytTaxBand = 1
+            'End If
+        End If
+
         If TaxRegime.VTax_Type2 = "rate" Then bytTaxBand2 = CByte(ddlTaxBand2.SelectedValue)
 
         Dim strMessage As String = ""

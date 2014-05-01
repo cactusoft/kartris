@@ -360,12 +360,13 @@ Public Class KartrisClasses
                 End If
             End If
 
-            If blnNormalShippingTax Then
-                Dim T_ID1 As Byte = CInt(GetKartConfig("frontend.checkout.shipping.taxband"))
-                numShippingTaxRate = TaxBLL.GetTaxRate(T_ID1)
 
-                If numShippingTaxRate > 0 Then numShippingTaxRate = numShippingTaxRate / 100
-            End If
+            'If blnNormalShippingTax Then
+            '    Dim T_ID1 As Byte = CInt(GetKartConfig("frontend.checkout.shipping.taxband"))
+            '    numShippingTaxRate = TaxBLL.GetTaxRate(T_ID1)
+
+            '    If numShippingTaxRate > 0 Then numShippingTaxRate = numShippingTaxRate / 100
+            'End If
 
             Try
                 If Current.Session("blnEUVATValidated") IsNot Nothing Then

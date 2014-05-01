@@ -180,11 +180,11 @@ Partial Class UserControls_General_Invoice
 
             blnTaxDue = e.Item.DataItem("O_TaxDue")
 
-            ''get data for promotion discount
+            'get data for promotion discount
             numPromoDiscountTotal = e.Item.DataItem("O_PromotionDiscountTotal")
             strPromoDesc = e.Item.DataItem("O_PromotionDescription")
 
-            ''get data for coupon discount
+            'get data for coupon discount
             strCouponCode = e.Item.DataItem("O_CouponCode") & ""
             CP_DiscountValue = -IIf(IsDBNull(e.Item.DataItem("CP_DiscountValue")), 0, e.Item.DataItem("CP_DiscountValue"))
             CP_DiscountType = e.Item.DataItem("CP_DiscountType") & ""
@@ -192,21 +192,21 @@ Partial Class UserControls_General_Invoice
             CP_CouponCode = e.Item.DataItem("CP_CouponCode") & ""
             numCouponDiscountTotal = e.Item.DataItem("O_CouponDiscountTotal")
 
-            ''get data for customer discount
+            'get data for customer discount
             numDiscountPercentage = e.Item.DataItem("O_DiscountPercentage")
 
-            ''get data for shipping cost
+            'get data for shipping cost
             strShippingMethod = e.Item.DataItem("O_ShippingMethod") & ""
             numShippingPriceExTax = e.Item.DataItem("O_ShippingPrice")
             numShippingPriceIncTax = e.Item.DataItem("O_ShippingPrice") + e.Item.DataItem("O_ShippingTax")
             numShippingTaxTotal = e.Item.DataItem("O_ShippingTax")
 
-            ''get data for order handling
+            'get data for order handling
             numOrderHandlingPriceExTax = e.Item.DataItem("O_OrderHandlingCharge")
             numOrderHandlingPriceIncTax = e.Item.DataItem("O_OrderHandlingCharge") + e.Item.DataItem("O_OrderHandlingChargeTax")
             numOrderHandlingTaxTotal = e.Item.DataItem("O_OrderHandlingChargeTax")
 
-            '' set product/version name and customization text
+            'set product/version name and customization text
             CType(e.Item.FindControl("litVersionName"), Literal).Text = e.Item.DataItem("IR_VersionName")
             CType(e.Item.FindControl("litVersionCode"), Literal).Text = strVersionCode
             If strCustomizationOptionText <> "" Then
@@ -253,7 +253,7 @@ Partial Class UserControls_General_Invoice
             numTotalPriceIncTax = Math.Round(numTotalPriceIncTax, numCurrencyRoundNumber)
             numTotalPriceExTax = Math.Round(numTotalPriceExTax, numCurrencyRoundNumber)
 
-            '' promotion 
+            'promotion 
             If numPromoDiscountTotal <> 0 Then
                 numTotalTaxFraction = IIf(numTotalPriceExTax = 0, 0, numTotalTaxAmount / numTotalPriceExTax)
                 numPromotionDiscountIncTax = (numPromoDiscountTotal)
@@ -269,7 +269,7 @@ Partial Class UserControls_General_Invoice
                 CType(e.Item.FindControl("litPromoDiscountTotal2"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numPromoDiscountTotal)
             End If
 
-            '' coupon discount
+            'coupon discount
             If strCouponCode <> "" Then
                 numTotalTaxFraction = Math.Round(IIf(numTotalPriceExTax = 0, 0, numTotalTaxAmount / numTotalPriceExTax), 4)
                 If CP_DiscountType = "p" Then        'PERCENTAGE
@@ -300,7 +300,7 @@ Partial Class UserControls_General_Invoice
                 CType(e.Item.FindControl("litCouponDiscountTotal2"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCouponDiscountValue)
             End If
 
-            '' customer discount
+            'customer discount
             If numDiscountPercentage <> 0 Then
                 numCustomerDiscountExTax = -Math.Round((((numTotalPriceExTax + numPromotionDiscountExTax + numCouponDiscountExTax) * (numDiscountPercentage / 100))), numCurrencyRoundNumber)
                 numCustomerDiscountIncTax = -Math.Round(((numTotalPriceIncTax + numPromotionDiscountIncTax + numCouponDiscountIncTax) * (numDiscountPercentage / 100)), numCurrencyRoundNumber)
@@ -318,7 +318,7 @@ Partial Class UserControls_General_Invoice
                 CType(e.Item.FindControl("litCustomerDiscountTotal2"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCustomerDiscountValue)
             End If
 
-            '' shipping cost
+            'shipping cost
             numShippingPrice = IIf(blnTaxDue, numShippingPriceIncTax, numShippingPriceExTax)
             If numShippingPrice <> 0 Then
                 CType(e.Item.FindControl("phdShippingCost"), PlaceHolder).Visible = True
@@ -330,7 +330,7 @@ Partial Class UserControls_General_Invoice
                 CType(e.Item.FindControl("litShippingPriceTotal2"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingPrice)
             End If
 
-            '' order handling charge
+            'order handling charge
             numOrderHandlingPrice = IIf(blnTaxDue, numOrderHandlingPriceIncTax, numOrderHandlingPriceExTax)
             If numOrderHandlingPrice <> 0 Then
                 CType(e.Item.FindControl("phdOrderHandlingCharge"), PlaceHolder).Visible = True
@@ -341,7 +341,7 @@ Partial Class UserControls_General_Invoice
                 CType(e.Item.FindControl("litOrderHandlingPriceTotal2"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numOrderHandlingPrice)
             End If
 
-            '' total
+            'total
             numTotalExTax = numTotalPriceExTax + numPromotionDiscountExTax + numCouponDiscountExTax + numCustomerDiscountExTax + numShippingPriceExTax + numOrderHandlingPriceExTax
             numTotalTaxAmount = numTotalTaxAmount + numPromotionDiscountTaxAmount + numCouponDiscountTaxAmount + numCustomerDiscountTaxAmount + numShippingTaxTotal + numOrderHandlingTaxTotal
             numTotal = numTotalPriceIncTax + numPromotionDiscountIncTax + numCouponDiscountIncTax + numCustomerDiscountIncTax + numShippingPriceIncTax + numOrderHandlingPriceIncTax

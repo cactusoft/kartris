@@ -591,7 +591,7 @@ SECTION: FEED: CHANGE LOG / REVISIONS / SOFTWARE UPDATE
 ========================================================================
 */
 .section_softwareupdate h2              { font-family: "Segoe UI Light","Segoe UI",Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 210%; color: #fff; }
-.section_softwareupdate                 { padding: 10px 10px 10px 10px; margin: 0 10px 10px 0; font-weight: normal; height: 120px; width: 300px; height: 200px; float: left; }
+.section_softwareupdate                 { padding: 10px 10px 10px 10px; margin: 0 10px 10px 0; font-weight: normal; width: 300px; height: 200px; float: left; }
 .softwareupdate_OK                      { background-color: #9e9; color: #060; }
 .softwareupdate_OK h2                   { color: #060 }
 .softwareupdate_Available               { background-color: #fd5; color: #000; }

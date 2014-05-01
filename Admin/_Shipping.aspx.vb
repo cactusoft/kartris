@@ -39,32 +39,26 @@ Partial Class Admin_Shipping
         litContentTextShippingMethods.Visible = False
         litContentTextShippingZones.Visible = False
 
-        Select Case CStr(KartSettingsManager.GetKartConfig("frontend.checkout.shipping.system")).ToLower()
-            Case "c"
-                litShippingCalculated.Visible = True
-                litShippingCalculationDescription.Text = ConfigBLL._GetConfigDesc("frontend.checkout.shipping.calcbyweight")
-                phdCalculation.Visible = True
-                If KartSettingsManager.GetKartConfig("frontend.checkout.shipping.calcbyweight") = "y" Then
-                    litShippingCalculated.Text = GetGlobalResourceObject("_Shipping", "ContentText_CalculateWeight")
-                    chkCalcByWeight.Checked = True
-                Else
-                    litShippingCalculated.Text = GetGlobalResourceObject("_Shipping", "ContentText_CalculateOrderValue")
-                    chkCalcByWeight.Checked = False
-                End If
-                tabPnlShippingMethods.Visible = True
-                tabPnlShippingZones.Visible = True
 
-                'Have to do these too, but in ASP.net where
-                'header text still shows on tab set to be
-                'not visible
-                litContentTextShippingMethods.Visible = True
-                litContentTextShippingZones.Visible = True
+        litShippingCalculated.Visible = True
+        litShippingCalculationDescription.Text = ConfigBLL._GetConfigDesc("frontend.checkout.shipping.calcbyweight")
+        phdCalculation.Visible = True
+        If KartSettingsManager.GetKartConfig("frontend.checkout.shipping.calcbyweight") = "y" Then
+            litShippingCalculated.Text = GetGlobalResourceObject("_Shipping", "ContentText_CalculateWeight")
+            chkCalcByWeight.Checked = True
+        Else
+            litShippingCalculated.Text = GetGlobalResourceObject("_Shipping", "ContentText_CalculateOrderValue")
+            chkCalcByWeight.Checked = False
+        End If
+        tabPnlShippingMethods.Visible = True
+        tabPnlShippingZones.Visible = True
 
-            Case "u"
-                litShippingCalculated.Visible = False
-            Case "n"
-                litShippingCalculated.Visible = False
-        End Select
+        'Have to do these too, but in ASP.net where
+        'header text still shows on tab set to be
+        'not visible
+        litContentTextShippingMethods.Visible = True
+        litContentTextShippingZones.Visible = True
+
         updCollapsiblePanel.Update()
 
     End Sub
