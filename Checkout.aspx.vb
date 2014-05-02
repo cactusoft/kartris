@@ -275,7 +275,17 @@ Partial Class _Checkout
             '---------------------------------------
             'VAT NUMBER WAS SUBMITTED
             '---------------------------------------
+            Dim strEUVatNumber As String = txtEUVAT.Text
+            Dim strThisUsersCountryCode = litMSCode.Text
             If Not String.IsNullOrEmpty(txtEUVAT.Text) Then
+
+                'Even though we show the country code part outside
+                'the text field, some users enter it into the text
+                'field too. Rather than cause an error, we want to
+                'just check if they do this and then remove it.
+                If Left(strEUVatNumber, 2).ToUpper = strThisUsersCountryCode.ToUpper Then
+                    txtEUVAT.Text = Replace(strEUVatNumber, strThisUsersCountryCode, "")
+                End If
 
                 '---------------------------------------
                 'We use the official EU web service
