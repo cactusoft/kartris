@@ -9,7 +9,7 @@ th,
 select,
 body                                    { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; line-height: 17px; font-size: 13px; font-weight: normal; color: #555; padding: 0; margin: 0; }
 p                                       { margin: 5px 0 10px 0 }
-h1                                      { font-family: 'Open Sans',"Segoe UI Light",Arial,Sans-Serif; font-size: 210%; letter-spacing: -0.5px; color: #000; margin: 0; padding: 15px 0 10px 0; display: inline-block; font-weight: 100; line-height: 33px; }
+h1                                      { font-family: 'Open Sans',"Segoe UI Light",Arial,Sans-Serif; font-size: 210%; letter-spacing: -0.5px; color: #000; margin: 0; padding: 15px 0 10px 0; display: block; font-weight: 100; line-height: 33px; }
 h2                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 130%; color: #000; margin: 5px 0 5px 0; padding: 0; }
 .h2_light_extra                         { color: #aaa; font-weight: bold; }
 h3                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 95%; font-weight: normal; margin: 0 0 5px 0; padding: 0; }
