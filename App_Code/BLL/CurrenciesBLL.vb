@@ -167,7 +167,7 @@ Public Class CurrenciesBLL
                 cmdAddCurrency.Parameters.AddWithValue("@CUR_Format", strFormat)
                 cmdAddCurrency.Parameters.AddWithValue("@CUR_IsoFormat", strIsoFormat)
                 cmdAddCurrency.Parameters.AddWithValue("@CUR_DecimalPoint", FixNullToDB(chrDecimalPoint, "c"))
-                cmdAddCurrency.Parameters.AddWithValue("@CUR_RoundNumbers", FixNullToDB(numRoundNumbers, "i"))
+                cmdAddCurrency.Parameters.AddWithValue("@CUR_RoundNumbers", numRoundNumbers)
                 cmdAddCurrency.Parameters.AddWithValue("@CUR_NewID", 0).Direction = ParameterDirection.Output
 
                 sqlConn.Open()
@@ -221,7 +221,7 @@ Public Class CurrenciesBLL
                 cmdUpdateCurrency.Parameters.AddWithValue("@CUR_Format", strFormat)
                 cmdUpdateCurrency.Parameters.AddWithValue("@CUR_IsoFormat", strIsoFormat)
                 cmdUpdateCurrency.Parameters.AddWithValue("@CUR_DecimalPoint", FixNullToDB(chrDecimalPoint, "c"))
-                cmdUpdateCurrency.Parameters.AddWithValue("@CUR_RoundNumbers", FixNullToDB(numRoundNumbers, "i"))
+                cmdUpdateCurrency.Parameters.AddWithValue("@CUR_RoundNumbers", numRoundNumbers)
                 cmdUpdateCurrency.Parameters.AddWithValue("@Original_CUR_ID", numCurrencyID)
 
                 sqlConn.Open()
