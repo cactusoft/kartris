@@ -21,6 +21,7 @@ iframe                                  { border: none; }
 iframe body                             { padding: 5px 0 0 0 }
 .strong                                 { font-weight: bold }
 .floatright                             { float: right }
+ul, ol, dl                              { font-size: inherit; }
 /* 
 ========================================================================
 BREADCRUMBS
