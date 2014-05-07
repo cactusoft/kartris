@@ -61,7 +61,7 @@
 					<value>https://live.sagepay.com/gateway/service/vspform-register.vsp</value>
 			</setting>
 			<setting name="PostURL_TEST" serializeAs="String">
-					<value>https://test.sagepay.com/Simulator/VSPFormGateway.asp</value>
+					<value>https://test.sagepay.com/gateway/service/vspdirect-register.vsp</value>
 			</setting>
 			<setting name="IsProtected" serializeAs="String">
 					<value>No</value>
