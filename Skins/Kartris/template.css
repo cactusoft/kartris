@@ -74,9 +74,9 @@ BASKET SUMMARY
 #minibasket #contents ul #totals #minibasket_whereapplicable
                                         { margin: 10px 0 0 0; font-size: 85%; letter-spacing: 1px; }
 #minibasket #contents ul #totals strong { font-weight: bold }
-#minibasket #contents ul li a           { font-size: 80%; border-top: solid 1px #fff; color: #444; padding: 1px 5px 1px 5px; margin: 0 0 1px 0; display: block; }
+#minibasket #contents ul li a           { font-size: 100%; border-top: solid 1px #fff; color: #444; padding: 1px 5px 1px 5px; margin: 0 0 1px 0; display: block; }
 #minibasket #contents ul li a:hover     { color: #000; text-decoration: underline; }
-#minibasket .button                     { background-color: #999; color: #fff; font-size: 80%; width: 100%; }
+#minibasket .button                     { background-color: #999; color: #fff; font-size: 100%; width: 100%; }
 #minibasket .button:hover               { background-color: #ddd; color: #000; }
 .compactminibasket a                    { white-space: nowrap; background-position: 1px 1px; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #333; width: auto; padding: 9px 0 5px 30px; float: right; text-transform: uppercase; font-size: 85%; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; }
 #compactbasket_noofitems                { color: #bbb; }
