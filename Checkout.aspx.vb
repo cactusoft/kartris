@@ -70,170 +70,189 @@ Partial Class _Checkout
             'Paypal, SagePay, etc.
             '=======================================
             Dim arrPaymentsMethods As String() = Split(strPaymentMethods, ",")
-            Try
-                'Add the default 'Please select' line at top of menu
-                ddlPaymentGateways.Items.Add(New ListItem(GetGlobalResourceObject("Kartris", "ContentText_DropdownSelectDefault"), "::False"))
 
-                '---------------------------------------
-                'LOOP THROUGH PAYMENT METHODS
-                '---------------------------------------
-                For Each strGatewayEntry As String In arrPaymentsMethods
-
-                    'The config setting stores info for each gateway,
-                    'separated by double colons (::)
-                    Dim arrGateway As String() = Split(strGatewayEntry, "::")
+            'If the order value inclusive of everything is zero, we don't want
+            'to bill the customer. Instead we activate the PO method, even if
+            'this user is not authorized to use it. We hide the other payment
+            'methods.
+            Dim objBasket As BasketBLL = Session("Basket")
+            Dim blnOrderIsFree = (objBasket.FinalPriceIncTax = 0)
+            If blnOrderIsFree Then
+                'Add the PO option with name 'FREE' and hide payment selection
+                'The 'False' flag indicates this is not for authorized users
+                'only. PO normally is, but here we are using this for all users
+                'if total price is zero.
+                ddlPaymentGateways.Items.Add(New ListItem("FREE", "po_offlinepayment" & "::False"))
+                updPaymentMethods.Visible = False
+                valPaymentGateways.Enabled = False
+            Else
+                'Order isn't free. Load up the payment gateways.
+                Try
+                    'Add the default 'Please select' line at top of menu
+                    ddlPaymentGateways.Items.Add(New ListItem(GetGlobalResourceObject("Kartris", "ContentText_DropdownSelectDefault"), "::False"))
 
                     '---------------------------------------
-                    'CHECK PAYMENT GATEWAY DATA VALID
-                    'We shoud have 5 bits of data (in a zero
-                    'based array).
+                    'LOOP THROUGH PAYMENT METHODS
                     '---------------------------------------
-                    If UBound(arrGateway) = 4 Then
-                        Dim blnOkToAdd As Boolean = True
+                    For Each strGatewayEntry As String In arrPaymentsMethods
 
-                        'Is this a payment gateway? (value='p')
-                        If arrGateway(4) = "p" Then
+                        'The config setting stores info for each gateway,
+                        'separated by double colons (::)
+                        Dim arrGateway As String() = Split(strGatewayEntry, "::")
 
-                            'Is this only available for 'authorized'
-                            'customers? For offline (PO) orders in
-                            'particular, you probably only want 
-                            'trusted customers to be able to use it.
-                            'To do this, set the gateway's settings
-                            'to 'Authorized Only' and then edit any
-                            'customer you want to be able to use this
-                            'payment system to 'Authorize' them.
-                            If LCase(arrGateway(2)) = "true" Then
-                                blnOkToAdd = blnAuthorized
-                            End If
+                        '---------------------------------------
+                        'CHECK PAYMENT GATEWAY DATA VALID
+                        'We shoud have 5 bits of data (in a zero
+                        'based array).
+                        '---------------------------------------
+                        If UBound(arrGateway) = 4 Then
+                            Dim blnOkToAdd As Boolean = True
 
-                            '---------------------------------------
-                            'CHECK STATUS OF GATEWAY
-                            'There are four possibilities
-                            'On, Off, Test, Fake
-                            'The last two are for use when testing
-                            'a payment system. 'Test' will pass an
-                            'order through using the gateways test
-                            'mode, if available. 'Fake' bypasses 
-                            'the payment gateway completely, and
-                            'just simulates the callback the gateway
-                            'should make to your callback page.
-                            'For more info, see the PDF User Guide.
+                            'Is this a payment gateway? (value='p')
+                            If arrGateway(4) = "p" Then
 
-                            'Test/Fake are only available if you are
-                            'logged in as a back end admin. This
-                            'means you can setup and test a new
-                            'payment system on a live site without
-                            'it being visible to customers.
-                            '---------------------------------------
-                            If LCase(arrGateway(1)) = "test" Or LCase(arrGateway(1)) = "fake" Then
-                                blnOkToAdd = HttpSecureCookie.IsBackendAuthenticated
+                                'Is this only available for 'authorized'
+                                'customers? For offline (PO) orders in
+                                'particular, you probably only want 
+                                'trusted customers to be able to use it.
+                                'To do this, set the gateway's settings
+                                'to 'Authorized Only' and then edit any
+                                'customer you want to be able to use this
+                                'payment system to 'Authorize' them.
+                                If LCase(arrGateway(2)) = "true" Then
+                                    blnOkToAdd = blnAuthorized
+                                End If
 
-                                'Gateway is turned off, don't add it
-                                'to the list.
-                            ElseIf LCase(arrGateway(1)) = "off" Then
+                                '---------------------------------------
+                                'CHECK STATUS OF GATEWAY
+                                'There are four possibilities
+                                'On, Off, Test, Fake
+                                'The last two are for use when testing
+                                'a payment system. 'Test' will pass an
+                                'order through using the gateways test
+                                'mode, if available. 'Fake' bypasses 
+                                'the payment gateway completely, and
+                                'just simulates the callback the gateway
+                                'should make to your callback page.
+                                'For more info, see the PDF User Guide.
+
+                                'Test/Fake are only available if you are
+                                'logged in as a back end admin. This
+                                'means you can setup and test a new
+                                'payment system on a live site without
+                                'it being visible to customers.
+                                '---------------------------------------
+                                If LCase(arrGateway(1)) = "test" Or LCase(arrGateway(1)) = "fake" Then
+                                    blnOkToAdd = HttpSecureCookie.IsBackendAuthenticated
+
+                                    'Gateway is turned off, don't add it
+                                    'to the list.
+                                ElseIf LCase(arrGateway(1)) = "off" Then
+                                    blnOkToAdd = False
+                                End If
+                            Else
+
+                                'Not a payment system... shipping plugins for 
+                                'USPS, UPS, etc. are stored in the same
+                                'plugins folder, but we don't want them
+                                'available as a choice of payment system!
                                 blnOkToAdd = False
                             End If
+
+                            'This is a payment system and is available to 
+                            'this customer
+                            If blnOkToAdd Then
+                                Dim strGatewayName As String = arrGateway(0)
+
+                                'Get the 'friendly' name of the payment system from 
+                                'the gateway's config. Note you can have friendly
+                                'names for multiple languages in the config file:
+
+                                '<setting name="FriendlyName(en-GB)" serializeAs="String">
+                                '<value>Offline payment</value>
+                                '</setting>
+                                Dim strFriendlyName As String = Payment.GetPluginFriendlyName(strGatewayName)
+
+                                'If no friendly name, use the Gateway's default name
+                                '(Paypal, SagePay, etc.)
+                                'Friendly name is better, because 'SagePay' probably means
+                                'less to a customer than 'Pay with Credit Card'
+                                If Interfaces.Utils.TrimWhiteSpace(strFriendlyName) <> "" Then
+                                    ddlPaymentGateways.Items.Add(New ListItem(strFriendlyName, arrGateway(0).ToString & "::" & arrGateway(3).ToString))
+                                Else
+                                    ddlPaymentGateways.Items.Add(New ListItem(strGatewayName, arrGateway(0).ToString & "::" & arrGateway(3).ToString))
+                                End If
+
+                                If strGatewayName.ToLower = "po_offlinepayment" Then
+
+                                    'Default name for PO (offline payment)
+                                    strGatewayName = GetGlobalResourceObject("Checkout", "ContentText_Po")
+
+                                    txtPurchaseOrderNo.Style.Item("display") = ""
+                                    phdPONumber.Style.Item("display") = ""
+
+                                    'script to show PO Number input when PO is selected as the payment option
+                                    Dim strScript As String = String.Empty
+                                    strScript += "var textBox = document.getElementById('" & txtPurchaseOrderNo.ClientID & "');"
+                                    strScript += "var placeholder = document.getElementById('" & phdPONumber.ClientID & "');"
+                                    strScript += "if(document.getElementById('" & ddlPaymentGateways.ClientID & "').value=='" & arrGateway(0).ToString & "')"
+                                    strScript += "{placeholder.style.display='';textBox.style.display='';} else {placeholder.style.display='none';textBox.value=''}"
+                                    ddlPaymentGateways.Attributes.Add("onChange", strScript)
+                                End If
+
+                            End If
                         Else
-
-                            'Not a payment system... shipping plugins for 
-                            'USPS, UPS, etc. are stored in the same
-                            'plugins folder, but we don't want them
-                            'available as a choice of payment system!
-                            blnOkToAdd = False
+                            'Didn't have the four values needed for payment
+                            'gateway config
+                            Throw New Exception("Invalid gatewaylist config setting!")
                         End If
 
-                        'This is a payment system and is available to 
-                        'this customer
-                        If blnOkToAdd Then
-                            Dim strGatewayName As String = arrGateway(0)
+                    Next
 
-                            'Get the 'friendly' name of the payment system from 
-                            'the gateway's config. Note you can have friendly
-                            'names for multiple languages in the config file:
+                    '---------------------------------------
+                    'SHOW PAYMENT METHODS DROPDOWN
+                    'Note that the count of gateways we get
+                    'from the dropdown menu, but that has
+                    'an extra line 'Please select', so the
+                    'count will be 1 higher than the actual
+                    'number of gateways. Hence '1' means no
+                    'payment systems, '2' means there is one
+                    'and so on.
+                    '---------------------------------------
 
-                            '<setting name="FriendlyName(en-GB)" serializeAs="String">
-                            '<value>Offline payment</value>
-                            '</setting>
-                            Dim strFriendlyName As String = Payment.GetPluginFriendlyName(strGatewayName)
+                    'If there are no valid payment systems (Count = 1),
+                    'we log an exception.
+                    If ddlPaymentGateways.Items.Count = 1 Then
+                        Throw New Exception("No valid payment gateways")
 
-                            'If no friendly name, use the Gateway's default name
-                            '(Paypal, SagePay, etc.)
-                            'Friendly name is better, because 'SagePay' probably means
-                            'less to a customer than 'Pay with Credit Card'
-                            If Interfaces.Utils.TrimWhiteSpace(strFriendlyName) <> "" Then
-                                ddlPaymentGateways.Items.Add(New ListItem(strFriendlyName, arrGateway(0).ToString & "::" & arrGateway(3).ToString))
-                            Else
-                                ddlPaymentGateways.Items.Add(New ListItem(strGatewayName, arrGateway(0).ToString & "::" & arrGateway(3).ToString))
-                            End If
-
-                            If strGatewayName.ToLower = "po_offlinepayment" Then
-
-                                'Default name for PO (offline payment)
-                                strGatewayName = GetGlobalResourceObject("Checkout", "ContentText_Po")
-
-                                txtPurchaseOrderNo.Style.Item("display") = ""
-                                phdPONumber.Style.Item("display") = ""
-
-                                'script to show PO Number input when PO is selected as the payment option
-                                Dim strScript As String = String.Empty
-                                strScript += "var textBox = document.getElementById('" & txtPurchaseOrderNo.ClientID & "');"
-                                strScript += "var placeholder = document.getElementById('" & phdPONumber.ClientID & "');"
-                                strScript += "if(document.getElementById('" & ddlPaymentGateways.ClientID & "').value=='" & arrGateway(0).ToString & "')"
-                                strScript += "{placeholder.style.display='';textBox.style.display='';} else {placeholder.style.display='none';textBox.value=''}"
-                                ddlPaymentGateways.Attributes.Add("onChange", strScript)
-                            End If
-
-                        End If
+                        'If there is one (Count = 2) then we don't need to
+                        'show the user a choice, since there is
+                        'only one to choose from. So we default to
+                        'that and hide the validators and dropdown.
+                    ElseIf ddlPaymentGateways.Items.Count = 2 Then
+                        Dim arrSelectedGateway() As String = Split(ddlPaymentGateways.Items(1).Value, "::")
+                        _SelectedPaymentMethod = arrSelectedGateway(0)
+                        _blnAnonymousCheckout = CBool(arrSelectedGateway(1))
+                        ddlPaymentGateways.SelectedValue = ddlPaymentGateways.Items(1).Value
+                        phdPaymentMethods.Visible = False
+                        valPaymentGateways.Enabled = False 'disable validation just to be sure
                     Else
-                        'Didn't have the four values needed for payment
-                        'gateway config
-                        Throw New Exception("Invalid gatewaylist config setting!")
+                        'More than one payment method available,
+                        'show dropdown and give user the choice.
+                        'Hide the PO number field.
+                        phdPaymentMethods.Visible = True
+                        txtPurchaseOrderNo.Style.Item("display") = "none"
+                        phdPONumber.Style.Item("display") = "none"
                     End If
 
-                Next
-
-                '---------------------------------------
-                'SHOW PAYMENT METHODS DROPDOWN
-                'Note that the count of gateways we get
-                'from the dropdown menu, but that has
-                'an extra line 'Please select', so the
-                'count will be 1 higher than the actual
-                'number of gateways. Hence '1' means no
-                'payment systems, '2' means there is one
-                'and so on.
-                '---------------------------------------
-
-                'If there are no valid payment systems (Count = 1),
-                'we log an exception.
-                If ddlPaymentGateways.Items.Count = 1 Then
-                    Throw New Exception("No valid payment gateways")
-
-                    'If there is one (Count = 2) then we don't need to
-                    'show the user a choice, since there is
-                    'only one to choose from. So we default to
-                    'that and hide the validators and dropdown.
-                ElseIf ddlPaymentGateways.Items.Count = 2 Then
-                    Dim arrSelectedGateway() As String = Split(ddlPaymentGateways.Items(1).Value, "::")
-                    _SelectedPaymentMethod = arrSelectedGateway(0)
-                    _blnAnonymousCheckout = CBool(arrSelectedGateway(1))
-                    ddlPaymentGateways.SelectedValue = ddlPaymentGateways.Items(1).Value
-                    phdPaymentMethods.Visible = False
-                    valPaymentGateways.Enabled = False 'disable validation just to be sure
-                Else
-                    'More than one payment method available,
-                    'show dropdown and give user the choice.
-                    'Hide the PO number field.
-                    phdPaymentMethods.Visible = True
-                    txtPurchaseOrderNo.Style.Item("display") = "none"
-                    phdPONumber.Style.Item("display") = "none"
-                End If
-
-                '---------------------------------------
-                'ERROR LOADING PAYMENT GATEWAYS LIST
-                '---------------------------------------
-            Catch ex As Exception
-                Throw New Exception("Error loading payment gateway list")
-            End Try
+                    '---------------------------------------
+                    'ERROR LOADING PAYMENT GATEWAYS LIST
+                    '---------------------------------------
+                Catch ex As Exception
+                    Throw New Exception("Error loading payment gateway list")
+                End Try
+            End If
+            
 
             '---------------------------------------
             'CLEAR ADDRESS CONTROLS
@@ -413,8 +432,8 @@ Partial Class _Checkout
                     End If
                 End If
 
-                
-                
+
+
 
 
                 '---------------------------------------
@@ -461,6 +480,7 @@ Partial Class _Checkout
             End If
         End If
     End Sub
+
     ''' <summary>
     ''' Payment Method Changed, refresh
     ''' </summary>
@@ -470,6 +490,7 @@ Partial Class _Checkout
         _blnAnonymousCheckout = CBool(arrSelectedGateway(1))
         ConfigureAddressFields(True)
     End Sub
+
     ''' <summary>
     ''' Show or Hide Address Fields depending on the selected payment gateway and basket contents
     ''' </summary>
@@ -507,7 +528,7 @@ Partial Class _Checkout
                 pnlShippingAddress.Visible = True
                 UC_ShippingAddress.Visible = True
             End If
-            
+
         End If
         If blnUpdateAddressPanel Then updAddresses.Update()
     End Sub
@@ -544,7 +565,6 @@ Partial Class _Checkout
             RefreshShippingMethods("shipping")
         End If
         updAddresses.Update()
-
     End Sub
 
     ''' <summary>
@@ -736,8 +756,6 @@ Partial Class _Checkout
             '=======================================
             If Page.IsValid And (UC_BasketView.SelectedShippingID <> 0 Or UC_BasketView.GetBasket.AllFreeShipping) And blnValidEUVAT Then
 
-
-
                 'Set billing address to one selected by user
                 'Set shipping address to this, or to selected shipping one, depending on same-shipping checkbox
                 If Not blnBasketAllDigital Then
@@ -750,6 +768,15 @@ Partial Class _Checkout
                     Else
                         UC_Shipping.Address = UC_ShippingAddress.SelectedAddress
                     End If
+                Else
+                    If Not _blnAnonymousCheckout Then
+                        'For downloable orders, we don't really need shipping, but
+                        'payment systems require it. Therefore, we set it to same
+                        'as billing and also check the box (which is hidden) to say
+                        'we're using same shipping address as for billing
+                        UC_Shipping.Address = UC_BillingAddress.SelectedAddress
+                        chkSameShippingAsBilling.Checked = True
+                    End If
                 End If
 
                 If _blnAnonymousCheckout Then
@@ -761,6 +788,8 @@ Partial Class _Checkout
                     litBillingDetails.Visible = True
                 End If
 
+                'Hide shipping address from being visible if all items in order
+                'are downloadable
                 If blnBasketAllDigital Then
                     UC_Shipping.Visible = False
                     litShippingDetails.Visible = False
@@ -845,66 +874,66 @@ Partial Class _Checkout
             End If
 
 
-            ElseIf mvwCheckout.ActiveViewIndex = "2" Then
-                '=======================================
-                'PROCEED CLICKED ON ORDER REVIEW PAGE
-                '=======================================
-                Dim blnValid As Boolean = False
+        ElseIf mvwCheckout.ActiveViewIndex = "2" Then
+            '=======================================
+            'PROCEED CLICKED ON ORDER REVIEW PAGE
+            '=======================================
+            Dim blnValid As Boolean = False
 
-                'Load the basket again to verify contents. Check if quantities are still valid
-                UC_BasketSummary.LoadBasket()
-                Dim objValidateBasket As BasketBLL = UC_BasketSummary.GetBasket
-                If objValidateBasket.AdjustedQuantities Then
-                    UC_BasketView.LoadBasket()
-                    mvwCheckout.ActiveViewIndex = "1"
-                    Exit Sub
-                End If
-                objValidateBasket = Nothing
+            'Load the basket again to verify contents. Check if quantities are still valid
+            UC_BasketSummary.LoadBasket()
+            Dim objValidateBasket As BasketBLL = UC_BasketSummary.GetBasket
+            If objValidateBasket.AdjustedQuantities Then
+                UC_BasketView.LoadBasket()
+                mvwCheckout.ActiveViewIndex = "1"
+                Exit Sub
+            End If
+            objValidateBasket = Nothing
 
-                'For local payment gateway types, credit
-                'card details were entered. Validate these.
-                If phdCreditCardInput.Visible Then
-                    'Validate Credit Card Input here
-                    Page.Validate("CreditCard")
-                    If IsValid Then blnValid = True
-                End If
+            'For local payment gateway types, credit
+            'card details were entered. Validate these.
+            If phdCreditCardInput.Visible Then
+                'Validate Credit Card Input here
+                Page.Validate("CreditCard")
+                If IsValid Then blnValid = True
+            End If
 
-                'Handle local payment scenarios
-                'This could be a local type payment gateway
-                'where card data is entered directly into
-                'Kartris. Or it could be the PO (purchase
-                'order) / offline payment method, where a
-                'user can checkout without giving card
-                'details and will pay offline.
-                If LCase(clsPlugin.GatewayType) <> "local" Or blnValid Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
-                    clsPlugin.GatewayName.ToLower = "bitcoin" Then
+            'Handle local payment scenarios
+            'This could be a local type payment gateway
+            'where card data is entered directly into
+            'Kartris. Or it could be the PO (purchase
+            'order) / offline payment method, where a
+            'user can checkout without giving card
+            'details and will pay offline.
+            If LCase(clsPlugin.GatewayType) <> "local" Or blnValid Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
+                clsPlugin.GatewayName.ToLower = "bitcoin" Then
 
-                    'Setup variables to use later
-                    Dim C_ID As Integer = 0
-                    Dim O_ID As Integer
-                    Dim CUR_ID As Integer = CInt(Session("CUR_ID"))
+                'Setup variables to use later
+                Dim C_ID As Integer = 0
+                Dim O_ID As Integer
+                Dim CUR_ID As Integer = CInt(Session("CUR_ID"))
 
-                    Dim blnUseHTMLOrderEmail As Boolean = (GetKartConfig("general.email.enableHTML") = "y")
-                    Dim sbdHTMLOrderEmail As StringBuilder = New StringBuilder
-                    Dim sbdHTMLOrderContents As StringBuilder = New StringBuilder
-                    Dim sbdHTMLOrderBasket As StringBuilder = New StringBuilder
+                Dim blnUseHTMLOrderEmail As Boolean = (GetKartConfig("general.email.enableHTML") = "y")
+                Dim sbdHTMLOrderEmail As StringBuilder = New StringBuilder
+                Dim sbdHTMLOrderContents As StringBuilder = New StringBuilder
+                Dim sbdHTMLOrderBasket As StringBuilder = New StringBuilder
 
-                    'Dim strBillingAddressText As String, strShippingAddressText As String
-                    Dim strSubject As String = ""
-                    Dim strTempEmailTextHolder As String = ""
+                'Dim strBillingAddressText As String, strShippingAddressText As String
+                Dim strSubject As String = ""
+                Dim strTempEmailTextHolder As String = ""
 
-                    Dim sbdNewCustomerEmailText As StringBuilder = New StringBuilder
-                    Dim sbdBodyText As StringBuilder = New StringBuilder
-                    Dim sbdBasketItems As StringBuilder = New StringBuilder
+                Dim sbdNewCustomerEmailText As StringBuilder = New StringBuilder
+                Dim sbdBodyText As StringBuilder = New StringBuilder
+                Dim sbdBasketItems As StringBuilder = New StringBuilder
 
-                    Dim arrBasketItems As ArrayList
-                    Dim objBasket As BasketBLL = Session("Basket")
-                    Dim objOrder As Kartris.Interfaces.objOrder = Nothing
+                Dim arrBasketItems As ArrayList
+                Dim objBasket As BasketBLL = Session("Basket")
+                Dim objOrder As Kartris.Interfaces.objOrder = Nothing
 
-                    Dim blnNewUser As Boolean = True
-                    Dim blnAppPricesIncTax As Boolean
-                    Dim blnAppShowTaxDisplay As Boolean
-                    Dim blnAppUSmultistatetax As Boolean
+                Dim blnNewUser As Boolean = True
+                Dim blnAppPricesIncTax As Boolean
+                Dim blnAppShowTaxDisplay As Boolean
+                Dim blnAppUSmultistatetax As Boolean
                 If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
                     blnAppPricesIncTax = False
                     blnAppShowTaxDisplay = False
@@ -915,414 +944,417 @@ Partial Class _Checkout
                     blnAppUSmultistatetax = False
                 End If
 
-                    'Get the order confirmation template if HTML email is enabled
+                'Get the order confirmation template if HTML email is enabled
+                If blnUseHTMLOrderEmail Then
+                    sbdHTMLOrderEmail.Append(RetrieveHTMLEmailTemplate("OrderConfirmation"))
+                    'switch back to normal text email if the template can't be retrieved
+                    If sbdHTMLOrderEmail.Length < 1 Then blnUseHTMLOrderEmail = False
+                End If
+
+                'Determine whether order will use the currency
+                'specified in the payment gateway settings, or
+                'the one the user has chosen on the store.
+                Dim intGatewayCurrency As Int16
+                If Interfaces.Utils.TrimWhiteSpace(clsPlugin.Currency) <> "" Then
+                    intGatewayCurrency = CurrenciesBLL.CurrencyID(clsPlugin.Currency)
+                Else
+                    intGatewayCurrency = CUR_ID
+                End If
+
+                'Set a boolean value if currency of order
+                'set in payment system is different to 
+                'that the user was using. This way we know
+                'if we need to convert the total to a
+                'different currency for payment.
+                Dim blnDifferentGatewayCurrency As Boolean = CUR_ID <> intGatewayCurrency
+
+                'Determine if is existing user, if
+                'so set Customer ID to the logged in
+                'user
+                If User.Identity.IsAuthenticated Then
+                    C_ID = CurrentLoggedUser.ID
+                    blnNewUser = False
+                End If
+
+                'Handle Promotion Coupons
+                If Not String.IsNullOrEmpty(objBasket.CouponName) And objBasket.CouponDiscount.IncTax = 0 Then
+                    strTempEmailTextHolder = GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf & " " & GetGlobalResourceObject("Basket", "ContentText_ApplyCouponCode") & vbCrLf & " " & objBasket.CouponName & vbCrLf
+                    sbdBodyText.AppendLine(strTempEmailTextHolder)
                     If blnUseHTMLOrderEmail Then
-                        sbdHTMLOrderEmail.Append(RetrieveHTMLEmailTemplate("OrderConfirmation"))
-                        'switch back to normal text email if the template can't be retrieved
-                        If sbdHTMLOrderEmail.Length < 1 Then blnUseHTMLOrderEmail = False
+                        sbdHTMLOrderContents.Append("<tr class=""row_promotioncoupons""><td colspan=""2"">" & strTempEmailTextHolder.Replace(vbCrLf, "<br/>") &
+                                                    "</td></tr>")
                     End If
+                End If
 
-                    'Determine whether order will use the currency
-                    'specified in the payment gateway settings, or
-                    'the one the user has chosen on the store.
-                    Dim intGatewayCurrency As Int16
-                    If Interfaces.Utils.TrimWhiteSpace(clsPlugin.Currency) <> "" Then
-                        intGatewayCurrency = CurrenciesBLL.CurrencyID(clsPlugin.Currency)
-                    Else
-                        intGatewayCurrency = CUR_ID
-                    End If
+                'Promotion discount
+                Dim strPromotionDescription As String = ""
+                If objBasket.PromotionDiscount.IncTax < 0 Then
+                    For Each objPromotion As PromotionBasketModifier In UC_BasketSummary.GetPromotionsDiscount
+                        With objPromotion
+                            sbdBodyText.AppendLine(GetItemEmailText(GetGlobalResourceObject("Kartris", "ContentText_PromotionDiscount"), .Name, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
+                            If blnUseHTMLOrderEmail Then
+                                sbdHTMLOrderContents.Append(GetHTMLEmailRowText(GetGlobalResourceObject("Kartris", "ContentText_PromotionDiscount"), .Name, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
+                            End If
+                            If strPromotionDescription <> "" Then strPromotionDescription += vbCrLf & .Name Else strPromotionDescription += .Name
+                        End With
+                    Next
+                End If
 
-                    'Set a boolean value if currency of order
-                    'set in payment system is different to 
-                    'that the user was using. This way we know
-                    'if we need to convert the total to a
-                    'different currency for payment.
-                    Dim blnDifferentGatewayCurrency As Boolean = CUR_ID <> intGatewayCurrency
-
-                    'Determine if is existing user, if
-                    'so set Customer ID to the logged in
-                    'user
-                    If User.Identity.IsAuthenticated Then
-                        C_ID = CurrentLoggedUser.ID
-                        blnNewUser = False
-                    End If
-
-                    'Handle Promotion Coupons
-                    If Not String.IsNullOrEmpty(objBasket.CouponName) And objBasket.CouponDiscount.IncTax = 0 Then
-                        strTempEmailTextHolder = GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf & " " & GetGlobalResourceObject("Basket", "ContentText_ApplyCouponCode") & vbCrLf & " " & objBasket.CouponName & vbCrLf
-                        sbdBodyText.AppendLine(strTempEmailTextHolder)
-                        If blnUseHTMLOrderEmail Then
-                            sbdHTMLOrderContents.Append("<tr class=""row_promotioncoupons""><td colspan=""2"">" & strTempEmailTextHolder.Replace(vbCrLf, "<br/>") &
-                                                        "</td></tr>")
-                        End If
-                    End If
-
-                    'Promotion discount
-                    Dim strPromotionDescription As String = ""
-                    If objBasket.PromotionDiscount.IncTax < 0 Then
-                        For Each objPromotion As PromotionBasketModifier In UC_BasketSummary.GetPromotionsDiscount
-                            With objPromotion
-                                sbdBodyText.AppendLine(GetItemEmailText(GetGlobalResourceObject("Kartris", "ContentText_PromotionDiscount"), .Name, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
-                                If blnUseHTMLOrderEmail Then
-                                    sbdHTMLOrderContents.Append(GetHTMLEmailRowText(GetGlobalResourceObject("Kartris", "ContentText_PromotionDiscount"), .Name, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
-                                End If
-                                If strPromotionDescription <> "" Then strPromotionDescription += vbCrLf & .Name Else strPromotionDescription += .Name
-                            End With
-                        Next
-                    End If
-
-                    'Coupon discount
-                    If objBasket.CouponDiscount.IncTax < 0 Then
-                        sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.CouponDiscount, GetGlobalResourceObject("Kartris", "ContentText_CouponDiscount"), objBasket.CouponName))
-                        If blnUseHTMLOrderEmail Then
-                            sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.CouponDiscount, GetGlobalResourceObject("Kartris", "ContentText_CouponDiscount"), objBasket.CouponName))
-                        End If
-                    End If
-
-                    'Customer discount
-                    If objBasket.CustomerDiscount.IncTax < 0 Then
-                        sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount"), ""))
-                        If blnUseHTMLOrderEmail Then
-                            sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount"), ""))
-                        End If
-                    End If
-
-                    'Shipping
-                    sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.ShippingPrice, GetGlobalResourceObject("Address", "ContentText_Shipping"), IIf(String.IsNullOrEmpty(objBasket.ShippingDescription), objBasket.ShippingName, objBasket.ShippingDescription)))
+                'Coupon discount
+                If objBasket.CouponDiscount.IncTax < 0 Then
+                    sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.CouponDiscount, GetGlobalResourceObject("Kartris", "ContentText_CouponDiscount"), objBasket.CouponName))
                     If blnUseHTMLOrderEmail Then
-                        sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.ShippingPrice, GetGlobalResourceObject("Address", "ContentText_Shipping"), IIf(String.IsNullOrEmpty(objBasket.ShippingDescription), objBasket.ShippingName, objBasket.ShippingDescription)))
+                        sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.CouponDiscount, GetGlobalResourceObject("Kartris", "ContentText_CouponDiscount"), objBasket.CouponName))
                     End If
+                End If
 
-                    'Order handling charge
-                    If objBasket.OrderHandlingPrice.ExTax > 0 Then
-                        sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.OrderHandlingPrice, GetGlobalResourceObject("Kartris", "ContentText_OrderHandlingCharge"), ""))
-                        If blnUseHTMLOrderEmail Then
-                            sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.OrderHandlingPrice, GetGlobalResourceObject("Kartris", "ContentText_OrderHandlingCharge"), ""))
-                        End If
+                'Customer discount
+                If objBasket.CustomerDiscount.IncTax < 0 Then
+                    sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount"), ""))
+                    If blnUseHTMLOrderEmail Then
+                        sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount"), ""))
                     End If
+                End If
 
-                    sbdBodyText.AppendLine(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
+                'Shipping
+                sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.ShippingPrice, GetGlobalResourceObject("Address", "ContentText_Shipping"), IIf(String.IsNullOrEmpty(objBasket.ShippingDescription), objBasket.ShippingName, objBasket.ShippingDescription)))
+                If blnUseHTMLOrderEmail Then
+                    sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.ShippingPrice, GetGlobalResourceObject("Address", "ContentText_Shipping"), IIf(String.IsNullOrEmpty(objBasket.ShippingDescription), objBasket.ShippingName, objBasket.ShippingDescription)))
+                End If
 
-                    'Order totals
-                    If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
-                        sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & vbCrLf)
+                'Order handling charge
+                If objBasket.OrderHandlingPrice.ExTax > 0 Then
+                    sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.OrderHandlingPrice, GetGlobalResourceObject("Kartris", "ContentText_OrderHandlingCharge"), ""))
+                    If blnUseHTMLOrderEmail Then
+                        sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.OrderHandlingPrice, GetGlobalResourceObject("Kartris", "ContentText_OrderHandlingCharge"), ""))
+                    End If
+                End If
+
+                sbdBodyText.AppendLine(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
+
+                'Order totals
+                If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
+                    sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & vbCrLf)
                     sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
                          IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & vbCrLf)
-                    End If
-                    sbdBodyText.Append(" " & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
-                                       " (" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
-                                            LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
-                                            CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
-                                            CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, CUR_ID) &
-                                        ")" & vbCrLf)
-                    sbdBodyText.AppendLine(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
-                    If blnUseHTMLOrderEmail Then
-                        sbdHTMLOrderContents.Append("<tr class=""row_totals""><td colspan=""2"">")
-                        If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
-                            sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & "<br/>")
+                End If
+                sbdBodyText.Append(" " & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
+                                   " (" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
+                                        LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                        CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
+                                        CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, CUR_ID) &
+                                    ")" & vbCrLf)
+                sbdBodyText.AppendLine(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
+                If blnUseHTMLOrderEmail Then
+                    sbdHTMLOrderContents.Append("<tr class=""row_totals""><td colspan=""2"">")
+                    If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
+                        sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & "<br/>")
                         sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
                              IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & "<br/>")
-                        End If
-                        sbdHTMLOrderContents.Append("(" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
-                                                        LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
-                                                        CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
-                                                        CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, CUR_ID) &
-                                                    ") <strong>" & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
-                                                    "</strong></td></tr>")
                     End If
+                    sbdHTMLOrderContents.Append("(" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
+                                                    LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                                    CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
+                                                    CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, CUR_ID) &
+                                                ") <strong>" & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
+                                                "</strong></td></tr>")
+                End If
 
-                    'Handle order total conversion to different currency.
-                    'Some payment systems only accept one currency, e.g.
-                    'USD. In this case, if you have multiple currencies
-                    'on your site, the amount needs to be converted to
-                    'this one currency in order to process the payment on
-                    'the payment gateway.
-                    Dim numGatewayTotalPrice As Double
-                    If blnDifferentGatewayCurrency Then
+                'Handle order total conversion to different currency.
+                'Some payment systems only accept one currency, e.g.
+                'USD. In this case, if you have multiple currencies
+                'on your site, the amount needs to be converted to
+                'this one currency in order to process the payment on
+                'the payment gateway.
+                Dim numGatewayTotalPrice As Double
+                If blnDifferentGatewayCurrency Then
                     numGatewayTotalPrice = CurrenciesBLL.ConvertCurrency(intGatewayCurrency, objBasket.FinalPriceIncTax, CUR_ID)
                     If clsPlugin.GatewayName.ToLower = "bitcoin" Then numGatewayTotalPrice = Math.Round(numGatewayTotalPrice, 8)
 
-                        sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & vbCrLf)
-                        sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) &
-                                           " (" & CurrenciesBLL.CurrencyCode(intGatewayCurrency) & " - " &
-                                               LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
-                                               CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
-                                               CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
-                                             ")" & vbCrLf)
+                    sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & vbCrLf)
+                    sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) &
+                                       " (" & CurrenciesBLL.CurrencyCode(intGatewayCurrency) & " - " &
+                                           LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                           CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
+                                           CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
+                                         ")" & vbCrLf)
                     sbdBodyText.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
 
-                        If blnUseHTMLOrderEmail Then
-                            sbdHTMLOrderContents.Append("<tr class=""row_processcurrency""><td colspan=""2"">")
-                            sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & "<br/>")
-                            sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) &
-                                                        " (" & CurrenciesBLL.CurrencyCode(intGatewayCurrency) & " - " &
-                                                           LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
-                                                           CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
-                                                           CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
-                                                         ")" & "<br/>")
-                            sbdHTMLOrderContents.Append("</td></tr>")
-                        End If
-                    Else
-                        'User was using same currency as the gateway requires, or
-                        'the gateway supports multiple currencies... no conversion
-                        'needed.
-                        numGatewayTotalPrice = objBasket.FinalPriceIncTax
+                    If blnUseHTMLOrderEmail Then
+                        sbdHTMLOrderContents.Append("<tr class=""row_processcurrency""><td colspan=""2"">")
+                        sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & "<br/>")
+                        sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) &
+                                                    " (" & CurrenciesBLL.CurrencyCode(intGatewayCurrency) & " - " &
+                                                       LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                                       CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
+                                                       CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
+                                                     ")" & "<br/>")
+                        sbdHTMLOrderContents.Append("</td></tr>")
+                    End If
+                Else
+                    'User was using same currency as the gateway requires, or
+                    'the gateway supports multiple currencies... no conversion
+                    'needed.
+                    numGatewayTotalPrice = objBasket.FinalPriceIncTax
+                End If
+
+                'Total Saved
+                If objBasket.TotalAmountSaved > 0 And KartSettingsManager.GetKartConfig("frontend.checkout.confirmation.showtotalsaved") = "y" Then
+                    strTempEmailTextHolder = " " & GetGlobalResourceObject("Email", "EmailText_TotalSaved1") & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.TotalAmountSaved, , False) & GetGlobalResourceObject("Email", "EmailText_TotalSaved2") & vbCrLf
+                    sbdBodyText.AppendLine(strTempEmailTextHolder)
+                    sbdBodyText.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
+                    If blnUseHTMLOrderEmail Then
+                        sbdHTMLOrderEmail.Replace("[totalsavedline]", strTempEmailTextHolder.Replace(vbCrLf, "<br/>"))
+                    End If
+                Else
+                    sbdHTMLOrderEmail.Replace("[totalsavedline]", "")
+                End If
+
+                'Customer billing information
+                sbdBodyText.Append(vbCrLf)
+                With UC_BillingAddress.SelectedAddress
+                    sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_PurchaseContactDetails") & vbCrLf)
+
+                    If Not _blnAnonymousCheckout Then
+                        sbdBodyText.Append(" " & GetGlobalResourceObject("Address", "FormLabel_CardHolderName") & ": " & .FullName & vbCrLf & _
+                                             " " & GetGlobalResourceObject("Email", "EmailText_Company") & ": " & .Company & vbCrLf & _
+                                             IIf(Not String.IsNullOrEmpty(txtEUVAT.Text), " " & GetGlobalResourceObject("Invoice", "FormLabel_CardholderEUVatNum") & ": " & txtEUVAT.Text & vbCrLf, ""))
                     End If
 
-                    'Total Saved
-                    If objBasket.TotalAmountSaved > 0 And KartSettingsManager.GetKartConfig("frontend.checkout.confirmation.showtotalsaved") = "y" Then
-                        strTempEmailTextHolder = " " & GetGlobalResourceObject("Email", "EmailText_TotalSaved1") & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.TotalAmountSaved, , False) & GetGlobalResourceObject("Email", "EmailText_TotalSaved2") & vbCrLf
-                        sbdBodyText.AppendLine(strTempEmailTextHolder)
-                        sbdBodyText.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
-                        If blnUseHTMLOrderEmail Then
-                            sbdHTMLOrderEmail.Replace("[totalsavedline]", strTempEmailTextHolder.Replace(vbCrLf, "<br/>"))
-                        End If
-                    Else
-                        sbdHTMLOrderEmail.Replace("[totalsavedline]", "")
+                    sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "FormLabel_EmailAddress") & ": " & UC_KartrisLogin.UserEmailAddress & vbCrLf)
+
+                    If Not _blnAnonymousCheckout Then
+                        sbdBodyText.Append(" " & GetGlobalResourceObject("Address", "FormLabel_Telephone") & ": " & .Phone & vbCrLf & vbCrLf)
                     End If
 
-                    'Customer billing information
-                    sbdBodyText.Append(vbCrLf)
-                    With UC_BillingAddress.SelectedAddress
-                        sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_PurchaseContactDetails") & vbCrLf)
+                    sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_Address") & ":" & vbCrLf)
 
-                        If Not _blnAnonymousCheckout Then
-                            sbdBodyText.Append(" " & GetGlobalResourceObject("Address", "FormLabel_CardHolderName") & ": " & .FullName & vbCrLf & _
-                                                 " " & GetGlobalResourceObject("Email", "EmailText_Company") & ": " & .Company & vbCrLf & _
-                                                 IIf(Not String.IsNullOrEmpty(txtEUVAT.Text), " " & GetGlobalResourceObject("Invoice", "FormLabel_CardholderEUVatNum") & ": " & txtEUVAT.Text & vbCrLf, ""))
-                        End If
-
-                        sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "FormLabel_EmailAddress") & ": " & UC_KartrisLogin.UserEmailAddress & vbCrLf)
-
-                        If Not _blnAnonymousCheckout Then
-                            sbdBodyText.Append(" " & GetGlobalResourceObject("Address", "FormLabel_Telephone") & ": " & .Phone & vbCrLf & vbCrLf)
-                        End If
-
-                        sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_Address") & ":" & vbCrLf)
-
-                        If Not _blnAnonymousCheckout Then
-                            sbdBodyText.Append(" " & .StreetAddress & vbCrLf & _
-                                " " & .TownCity & vbCrLf & _
-                                " " & .County & vbCrLf & _
-                                " " & .Postcode & vbCrLf & _
-                                " " & .Country.Name)
-                        Else
+                    If Not _blnAnonymousCheckout Then
+                        sbdBodyText.Append(" " & .StreetAddress & vbCrLf & _
+                            " " & .TownCity & vbCrLf & _
+                            " " & .County & vbCrLf & _
+                            " " & .Postcode & vbCrLf & _
+                            " " & .Country.Name)
+                    Else
                         sbdBodyText.Append(GetGlobalResourceObject("Kartris", "ContentText_NotApplicable"))
-                        End If
+                    End If
 
-                        sbdBodyText.Append(vbCrLf & vbCrLf & GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
+                    sbdBodyText.Append(vbCrLf & vbCrLf & GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
 
-                        If blnUseHTMLOrderEmail Then
-                            If Not _blnAnonymousCheckout Then
-                                sbdHTMLOrderEmail.Replace("[billingname]", Server.HtmlEncode(.FullName))
-                                'retrieve the company label text and value if present, otherwise hide both placeholders from the template
-                                If Not String.IsNullOrEmpty(.Company) Then
-                                    sbdHTMLOrderEmail.Replace("[companylabel]", GetGlobalResourceObject("Email", "EmailText_Company") & ": ")
-                                    sbdHTMLOrderEmail.Replace("[billingcompany]", Server.HtmlEncode(.Company))
-                                Else
-                                    sbdHTMLOrderEmail.Replace("[companylabel]", "")
-                                    sbdHTMLOrderEmail.Replace("[billingcompany]<br />", "")
-                                    sbdHTMLOrderEmail.Replace("[billingcompany]", "")
-                                End If
-                                'do the same for EUVAT number
-                                If Not String.IsNullOrEmpty(txtEUVAT.Text) Then
-                                    sbdHTMLOrderEmail.Replace("[euvatnumberlabel]", GetGlobalResourceObject("Invoice", "FormLabel_CardholderEUVatNum") & ": ")
-                                    sbdHTMLOrderEmail.Replace("[euvatnumbervalue]", Server.HtmlEncode(txtEUVAT.Text))
-                                Else
-                                    sbdHTMLOrderEmail.Replace("[euvatnumberlabel]", "")
-                                    sbdHTMLOrderEmail.Replace("[euvatnumbervalue]<br />", "")
-                                    sbdHTMLOrderEmail.Replace("[euvatnumbervalue]", "")
-                                End If
-                                sbdHTMLOrderEmail.Replace("[billingemail]", Server.HtmlEncode(UC_KartrisLogin.UserEmailAddress))
-                                sbdHTMLOrderEmail.Replace("[billingphone]", Server.HtmlEncode(.Phone))
-                                sbdHTMLOrderEmail.Replace("[billingstreetaddress]", Server.HtmlEncode(.StreetAddress))
-                                sbdHTMLOrderEmail.Replace("[billingtowncity]", Server.HtmlEncode(.TownCity))
-                                sbdHTMLOrderEmail.Replace("[billingcounty]", Server.HtmlEncode(.County))
-                                sbdHTMLOrderEmail.Replace("[billingpostcode]", Server.HtmlEncode(.Postcode))
-                                sbdHTMLOrderEmail.Replace("[billingcountry]", Server.HtmlEncode(.Country.Name))
+                    If blnUseHTMLOrderEmail Then
+                        If Not _blnAnonymousCheckout Then
+                            sbdHTMLOrderEmail.Replace("[billingname]", Server.HtmlEncode(.FullName))
+                            'retrieve the company label text and value if present, otherwise hide both placeholders from the template
+                            If Not String.IsNullOrEmpty(.Company) Then
+                                sbdHTMLOrderEmail.Replace("[companylabel]", GetGlobalResourceObject("Email", "EmailText_Company") & ": ")
+                                sbdHTMLOrderEmail.Replace("[billingcompany]", Server.HtmlEncode(.Company))
                             Else
-                            sbdHTMLOrderEmail.Replace("[billingname]", GetGlobalResourceObject("Kartris", "ContentText_NotApplicable"))
-
                                 sbdHTMLOrderEmail.Replace("[companylabel]", "")
                                 sbdHTMLOrderEmail.Replace("[billingcompany]<br />", "")
                                 sbdHTMLOrderEmail.Replace("[billingcompany]", "")
-
+                            End If
+                            'do the same for EUVAT number
+                            If Not String.IsNullOrEmpty(txtEUVAT.Text) Then
+                                sbdHTMLOrderEmail.Replace("[euvatnumberlabel]", GetGlobalResourceObject("Invoice", "FormLabel_CardholderEUVatNum") & ": ")
+                                sbdHTMLOrderEmail.Replace("[euvatnumbervalue]", Server.HtmlEncode(txtEUVAT.Text))
+                            Else
                                 sbdHTMLOrderEmail.Replace("[euvatnumberlabel]", "")
                                 sbdHTMLOrderEmail.Replace("[euvatnumbervalue]<br />", "")
                                 sbdHTMLOrderEmail.Replace("[euvatnumbervalue]", "")
+                            End If
+                            sbdHTMLOrderEmail.Replace("[billingemail]", Server.HtmlEncode(UC_KartrisLogin.UserEmailAddress))
+                            sbdHTMLOrderEmail.Replace("[billingphone]", Server.HtmlEncode(.Phone))
+                            sbdHTMLOrderEmail.Replace("[billingstreetaddress]", Server.HtmlEncode(.StreetAddress))
+                            sbdHTMLOrderEmail.Replace("[billingtowncity]", Server.HtmlEncode(.TownCity))
+                            sbdHTMLOrderEmail.Replace("[billingcounty]", Server.HtmlEncode(.County))
+                            sbdHTMLOrderEmail.Replace("[billingpostcode]", Server.HtmlEncode(.Postcode))
+                            sbdHTMLOrderEmail.Replace("[billingcountry]", Server.HtmlEncode(.Country.Name))
+                        Else
+                            sbdHTMLOrderEmail.Replace("[billingname]", GetGlobalResourceObject("Kartris", "ContentText_NotApplicable"))
 
-                                sbdHTMLOrderEmail.Replace("[billingemail]", Server.HtmlEncode(UC_KartrisLogin.UserEmailAddress))
+                            sbdHTMLOrderEmail.Replace("[companylabel]", "")
+                            sbdHTMLOrderEmail.Replace("[billingcompany]<br />", "")
+                            sbdHTMLOrderEmail.Replace("[billingcompany]", "")
+
+                            sbdHTMLOrderEmail.Replace("[euvatnumberlabel]", "")
+                            sbdHTMLOrderEmail.Replace("[euvatnumbervalue]<br />", "")
+                            sbdHTMLOrderEmail.Replace("[euvatnumbervalue]", "")
+
+                            sbdHTMLOrderEmail.Replace("[billingemail]", Server.HtmlEncode(UC_KartrisLogin.UserEmailAddress))
 
                             sbdHTMLOrderEmail.Replace("[billingphone]", GetGlobalResourceObject("Kartris", "ContentText_NotApplicable"))
-                                sbdHTMLOrderEmail.Replace("[billingstreetaddress]", "")
-                                sbdHTMLOrderEmail.Replace("[billingtowncity]", "")
-                                sbdHTMLOrderEmail.Replace("[billingcounty]", "")
-                                sbdHTMLOrderEmail.Replace("[billingpostcode]", "")
-                                sbdHTMLOrderEmail.Replace("[billingcountry]", "")
+                            sbdHTMLOrderEmail.Replace("[billingstreetaddress]", "")
+                            sbdHTMLOrderEmail.Replace("[billingtowncity]", "")
+                            sbdHTMLOrderEmail.Replace("[billingcounty]", "")
+                            sbdHTMLOrderEmail.Replace("[billingpostcode]", "")
+                            sbdHTMLOrderEmail.Replace("[billingcountry]", "")
+                        End If
+
+                    End If
+                End With
+
+                'Shipping info
+                sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_ShippingDetails") & vbCrLf)
+                Dim strShippingAddressEmailText As String = ""
+
+                If Not blnBasketAllDigital Then
+                    If chkSameShippingAsBilling.Checked Then
+                        With UC_BillingAddress.SelectedAddress
+                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf & _
+                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf & _
+                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf & _
+                                          " " & .Country.Name & vbCrLf & vbCrLf
+                            sbdHTMLOrderEmail.Replace("[shippingname]", Server.HtmlEncode(.FullName))
+                            sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", Server.HtmlEncode(.StreetAddress))
+                            sbdHTMLOrderEmail.Replace("[shippingtowncity]", Server.HtmlEncode(.TownCity))
+                            sbdHTMLOrderEmail.Replace("[shippingcounty]", Server.HtmlEncode(.County))
+                            sbdHTMLOrderEmail.Replace("[shippingpostcode]", Server.HtmlEncode(.Postcode))
+                            sbdHTMLOrderEmail.Replace("[shippingcountry]", Server.HtmlEncode(.Country.Name))
+                            sbdHTMLOrderEmail.Replace("[shippingphone]", Server.HtmlEncode(.Phone))
+                            If Not String.IsNullOrEmpty(.Company) Then
+                                sbdHTMLOrderEmail.Replace("[shippingcompany]", Server.HtmlEncode(.Company))
+                            Else
+                                sbdHTMLOrderEmail.Replace("[shippingcompany]<br />", "")
+                                sbdHTMLOrderEmail.Replace("[shippingcompany]", "")
                             End If
-
-                        End If
-                    End With
-
-                    'Shipping info
-                    sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_ShippingDetails") & vbCrLf)
-                    Dim strShippingAddressEmailText As String = ""
-
-                    If Not blnBasketAllDigital Then
-                        If chkSameShippingAsBilling.Checked Then
-                            With UC_BillingAddress.SelectedAddress
-                                strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf & _
-                                              " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf & _
-                                              " " & .County & vbCrLf & " " & .Postcode & vbCrLf & _
-                                              " " & .Country.Name & vbCrLf & vbCrLf
-                                sbdHTMLOrderEmail.Replace("[shippingname]", Server.HtmlEncode(.FullName))
-                                sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", Server.HtmlEncode(.StreetAddress))
-                                sbdHTMLOrderEmail.Replace("[shippingtowncity]", Server.HtmlEncode(.TownCity))
-                                sbdHTMLOrderEmail.Replace("[shippingcounty]", Server.HtmlEncode(.County))
-                                sbdHTMLOrderEmail.Replace("[shippingpostcode]", Server.HtmlEncode(.Postcode))
-                                sbdHTMLOrderEmail.Replace("[shippingcountry]", Server.HtmlEncode(.Country.Name))
-                                sbdHTMLOrderEmail.Replace("[shippingphone]", Server.HtmlEncode(.Phone))
-                                If Not String.IsNullOrEmpty(.Company) Then
-                                    sbdHTMLOrderEmail.Replace("[shippingcompany]", Server.HtmlEncode(.Company))
-                                Else
-                                    sbdHTMLOrderEmail.Replace("[shippingcompany]<br />", "")
-                                    sbdHTMLOrderEmail.Replace("[shippingcompany]", "")
-                                End If
-                            End With
-                        Else
-                            With UC_ShippingAddress.SelectedAddress
-                                strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf & _
-                                              " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf & _
-                                              " " & .County & vbCrLf & " " & .Postcode & vbCrLf & _
-                                              " " & .Country.Name & vbCrLf & vbCrLf
-                                sbdHTMLOrderEmail.Replace("[shippingname]", Server.HtmlEncode(.FullName))
-                                sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", Server.HtmlEncode(.StreetAddress))
-                                sbdHTMLOrderEmail.Replace("[shippingtowncity]", Server.HtmlEncode(.TownCity))
-                                sbdHTMLOrderEmail.Replace("[shippingcounty]", Server.HtmlEncode(.County))
-                                sbdHTMLOrderEmail.Replace("[shippingpostcode]", Server.HtmlEncode(.Postcode))
-                                sbdHTMLOrderEmail.Replace("[shippingcountry]", Server.HtmlEncode(.Country.Name))
-                                sbdHTMLOrderEmail.Replace("[shippingphone]", Server.HtmlEncode(.Phone))
-                                If Not String.IsNullOrEmpty(.Company) Then
-                                    sbdHTMLOrderEmail.Replace("[shippingcompany]", Server.HtmlEncode(.Company))
-                                Else
-                                    sbdHTMLOrderEmail.Replace("[shippingcompany]", "")
-                                End If
-                            End With
-                        End If
+                        End With
                     Else
-                        'Basket is all digital so blank out shipping address fields
+                        With UC_ShippingAddress.SelectedAddress
+                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf & _
+                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf & _
+                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf & _
+                                          " " & .Country.Name & vbCrLf & vbCrLf
+                            sbdHTMLOrderEmail.Replace("[shippingname]", Server.HtmlEncode(.FullName))
+                            sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", Server.HtmlEncode(.StreetAddress))
+                            sbdHTMLOrderEmail.Replace("[shippingtowncity]", Server.HtmlEncode(.TownCity))
+                            sbdHTMLOrderEmail.Replace("[shippingcounty]", Server.HtmlEncode(.County))
+                            sbdHTMLOrderEmail.Replace("[shippingpostcode]", Server.HtmlEncode(.Postcode))
+                            sbdHTMLOrderEmail.Replace("[shippingcountry]", Server.HtmlEncode(.Country.Name))
+                            sbdHTMLOrderEmail.Replace("[shippingphone]", Server.HtmlEncode(.Phone))
+                            If Not String.IsNullOrEmpty(.Company) Then
+                                sbdHTMLOrderEmail.Replace("[shippingcompany]", Server.HtmlEncode(.Company))
+                            Else
+                                sbdHTMLOrderEmail.Replace("[shippingcompany]", "")
+                            End If
+                        End With
+                    End If
+                Else
+                    'Now we could blank out the shipping address details, not
+                    'really relevant for alldownloadable orders, although payment
+                    'systems still require them
+
                     strShippingAddressEmailText = GetGlobalResourceObject("Kartris", "ContentText_NotApplicable") & vbCrLf & vbCrLf
                     sbdHTMLOrderEmail.Replace("[shippingname]", GetGlobalResourceObject("Kartris", "ContentText_NotApplicable"))
-                        sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", "")
-                        sbdHTMLOrderEmail.Replace("[shippingtowncity]", "")
-                        sbdHTMLOrderEmail.Replace("[shippingcounty]", "")
-                        sbdHTMLOrderEmail.Replace("[shippingpostcode]", "")
-                        sbdHTMLOrderEmail.Replace("[shippingcountry]", "")
-                        sbdHTMLOrderEmail.Replace("[shippingphone]", "")
+                    sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", "")
+                    sbdHTMLOrderEmail.Replace("[shippingtowncity]", "")
+                    sbdHTMLOrderEmail.Replace("[shippingcounty]", "")
+                    sbdHTMLOrderEmail.Replace("[shippingpostcode]", "")
+                    sbdHTMLOrderEmail.Replace("[shippingcountry]", "")
+                    sbdHTMLOrderEmail.Replace("[shippingphone]", "")
 
-                        sbdHTMLOrderEmail.Replace("[shippingcompany]<br />", "")
-                        sbdHTMLOrderEmail.Replace("[shippingcompany]", "")
-                    End If
+                    sbdHTMLOrderEmail.Replace("[shippingcompany]<br />", "")
+                    sbdHTMLOrderEmail.Replace("[shippingcompany]", "")
+                End If
 
 
-                    sbdBodyText.Append(strShippingAddressEmailText & GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
+                sbdBodyText.Append(strShippingAddressEmailText & GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
 
-                    'Comments and additional info
-                    If Trim(txtComments.Text) <> "" Then
-                        strTempEmailTextHolder = " " & GetGlobalResourceObject("Email", "EmailText_Comments") & ": " & vbCrLf & vbCrLf &
-                                                 " " & txtComments.Text & vbCrLf & vbCrLf
-                        sbdBodyText.Append(strTempEmailTextHolder)
-                        If blnUseHTMLOrderEmail Then
-                            sbdHTMLOrderEmail.Replace("[ordercomments]", Server.HtmlEncode(strTempEmailTextHolder).Replace(vbCrLf, "<br/>"))
-                        End If
-                    Else
-                        sbdHTMLOrderEmail.Replace("[ordercomments]", "")
-                    End If
-
-                    sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_OrderTime2") & ": " & CkartrisDisplayFunctions.NowOffset & vbCrLf)
-                    sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_IPAddress") & ": " & Request.ServerVariables("REMOTE_ADDR") & vbCrLf)
-                    sbdBodyText.Append(" " & Request.ServerVariables("HTTP_USER_AGENT") & vbCrLf)
+                'Comments and additional info
+                If Trim(txtComments.Text) <> "" Then
+                    strTempEmailTextHolder = " " & GetGlobalResourceObject("Email", "EmailText_Comments") & ": " & vbCrLf & vbCrLf &
+                                             " " & txtComments.Text & vbCrLf & vbCrLf
+                    sbdBodyText.Append(strTempEmailTextHolder)
                     If blnUseHTMLOrderEmail Then
-                        sbdHTMLOrderEmail.Replace("[nowoffset]", CkartrisDisplayFunctions.NowOffset)
-                        sbdHTMLOrderEmail.Replace("[customerip]", Request.ServerVariables("REMOTE_ADDR"))
-                        sbdHTMLOrderEmail.Replace("[customeruseragent]", Request.ServerVariables("HTTP_USER_AGENT"))
-                        sbdHTMLOrderEmail.Replace("[webshopurl]", CkartrisBLL.WebShopURL)
-                        sbdHTMLOrderEmail.Replace("[websitename]", Server.HtmlEncode(GetGlobalResourceObject("Kartris", "Config_Webshopname")))
+                        sbdHTMLOrderEmail.Replace("[ordercomments]", Server.HtmlEncode(strTempEmailTextHolder).Replace(vbCrLf, "<br/>"))
                     End If
+                Else
+                    sbdHTMLOrderEmail.Replace("[ordercomments]", "")
+                End If
 
-                    '======================================
-                    'SEND NEW ACCOUNT DETAILS
-                    'This is probably not required and
-                    'it also sends the user password that
-                    'they chose too. For this reason, we
-                    'now turn off at default in the config
-                    'setting. But it can be turned on if
-                    'required.
-                    '======================================
-                    If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" And blnNewUser Then
-                        'Build up email text
-                        strSubject = GetGlobalResourceObject("Email", "Config_Subjectline5")
+                sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_OrderTime2") & ": " & CkartrisDisplayFunctions.NowOffset & vbCrLf)
+                sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_IPAddress") & ": " & Request.ServerVariables("REMOTE_ADDR") & vbCrLf)
+                sbdBodyText.Append(" " & Request.ServerVariables("HTTP_USER_AGENT") & vbCrLf)
+                If blnUseHTMLOrderEmail Then
+                    sbdHTMLOrderEmail.Replace("[nowoffset]", CkartrisDisplayFunctions.NowOffset)
+                    sbdHTMLOrderEmail.Replace("[customerip]", Request.ServerVariables("REMOTE_ADDR"))
+                    sbdHTMLOrderEmail.Replace("[customeruseragent]", Request.ServerVariables("HTTP_USER_AGENT"))
+                    sbdHTMLOrderEmail.Replace("[webshopurl]", CkartrisBLL.WebShopURL)
+                    sbdHTMLOrderEmail.Replace("[websitename]", Server.HtmlEncode(GetGlobalResourceObject("Kartris", "Config_Webshopname")))
+                End If
 
-                        sbdNewCustomerEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpHeader") & vbCrLf & vbCrLf)
-                        sbdNewCustomerEmailText.Append(GetGlobalResourceObject("Email", "EmailText_EmailAddress") & UC_KartrisLogin.UserEmailAddress & vbCrLf)
-                        sbdNewCustomerEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerCode") & UC_KartrisLogin.UserPassword & vbCrLf & vbCrLf)
-                        sbdNewCustomerEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpFooter1") & CkartrisBLL.WebShopURL & "Customer.aspx" & GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpFooter2"))
-                        sbdNewCustomerEmailText.Replace("<br>", vbCrLf).Replace("<br />", vbCrLf)
+                '======================================
+                'SEND NEW ACCOUNT DETAILS
+                'This is probably not required and
+                'it also sends the user password that
+                'they chose too. For this reason, we
+                'now turn off at default in the config
+                'setting. But it can be turned on if
+                'required.
+                '======================================
+                If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" And blnNewUser Then
+                    'Build up email text
+                    strSubject = GetGlobalResourceObject("Email", "Config_Subjectline5")
+
+                    sbdNewCustomerEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpHeader") & vbCrLf & vbCrLf)
+                    sbdNewCustomerEmailText.Append(GetGlobalResourceObject("Email", "EmailText_EmailAddress") & UC_KartrisLogin.UserEmailAddress & vbCrLf)
+                    sbdNewCustomerEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerCode") & UC_KartrisLogin.UserPassword & vbCrLf & vbCrLf)
+                    sbdNewCustomerEmailText.Append(GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpFooter1") & CkartrisBLL.WebShopURL & "Customer.aspx" & GetGlobalResourceObject("Email", "EmailText_CustomerSignedUpFooter2"))
+                    sbdNewCustomerEmailText.Replace("<br>", vbCrLf).Replace("<br />", vbCrLf)
+                End If
+
+                sbdBodyText.Insert(0, sbdBasketItems.ToString)
+
+                arrBasketItems = UC_BasketView.GetBasketItems
+                If Not (arrBasketItems Is Nothing) Then
+                    Dim BasketItem As New BasketItem
+                    'final check if basket items are still there
+                    If arrBasketItems.Count = 0 Then
+                        CkartrisFormatErrors.LogError("Basket items were lost in the middle of Checkout! Customer redirected to main Basket page." & vbCrLf & _
+                                                      "Details: " & vbCrLf & "C_ID:" & IIf(User.Identity.IsAuthenticated, CurrentLoggedUser.ID, " New User") & vbCrLf & _
+                                                        "Payment Gateway: " & clsPlugin.GatewayName & vbCrLf & _
+                                                        "Generated Body Text: " & sbdBodyText.ToString)
+                        Response.Redirect("~/Basket.aspx")
                     End If
+                    For i As Integer = 0 To arrBasketItems.Count - 1
+                        BasketItem = arrBasketItems(i)
+                        With BasketItem
+                            Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", BasketItem.ProductID)
+                            Dim strCustomText As String = ""
 
-                    sbdBodyText.Insert(0, sbdBasketItems.ToString)
+                            Dim sbdOptionText As New StringBuilder("")
+                            If Not String.IsNullOrEmpty(.OptionText) Then sbdOptionText.Append(vbCrLf & " " & .OptionText().Replace("<br>", vbCrLf & " ").Replace("<br />", vbCrLf & " "))
 
-                    arrBasketItems = UC_BasketView.GetBasketItems
-                    If Not (arrBasketItems Is Nothing) Then
-                        Dim BasketItem As New BasketItem
-                        'final check if basket items are still there
-                        If arrBasketItems.Count = 0 Then
-                            CkartrisFormatErrors.LogError("Basket items were lost in the middle of Checkout! Customer redirected to main Basket page." & vbCrLf & _
-                                                          "Details: " & vbCrLf & "C_ID:" & IIf(User.Identity.IsAuthenticated, CurrentLoggedUser.ID, " New User") & vbCrLf & _
-                                                            "Payment Gateway: " & clsPlugin.GatewayName & vbCrLf & _
-                                                            "Generated Body Text: " & sbdBodyText.ToString)
-                            Response.Redirect("~/Basket.aspx")
-                        End If
-                        For i As Integer = 0 To arrBasketItems.Count - 1
-                            BasketItem = arrBasketItems(i)
-                            With BasketItem
-                                Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", BasketItem.ProductID)
-                                Dim strCustomText As String = ""
-
-                                Dim sbdOptionText As New StringBuilder("")
-                                If Not String.IsNullOrEmpty(.OptionText) Then sbdOptionText.Append(vbCrLf & " " & .OptionText().Replace("<br>", vbCrLf & " ").Replace("<br />", vbCrLf & " "))
-
-                                sbdBasketItems.AppendLine( _
-                                            GetItemEmailText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ")" & _
-                                                             sbdOptionText.ToString, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
+                            sbdBasketItems.AppendLine( _
+                                        GetItemEmailText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ")" & _
+                                                         sbdOptionText.ToString, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
 
 
-                                If .CustomText <> "" AndAlso String.IsNullOrEmpty(strCustomControlName) Then
-                                    'Add custom text to mail
-                                    strCustomText = " [ " & .CustomText & " ]" & vbCrLf
-                                    sbdBasketItems.Append(strCustomText)
-                                End If
-                                If blnUseHTMLOrderEmail Then
-                                    'this line builds up the individual rows of the order contents table in the HTML email
-                                    sbdHTMLOrderBasket.AppendLine(GetHTMLEmailRowText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ") " & _
-                                                             sbdOptionText.ToString & strCustomText, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
-                                End If
-                            End With
-                        Next
-                    End If
+                            If .CustomText <> "" AndAlso String.IsNullOrEmpty(strCustomControlName) Then
+                                'Add custom text to mail
+                                strCustomText = " [ " & .CustomText & " ]" & vbCrLf
+                                sbdBasketItems.Append(strCustomText)
+                            End If
+                            If blnUseHTMLOrderEmail Then
+                                'this line builds up the individual rows of the order contents table in the HTML email
+                                sbdHTMLOrderBasket.AppendLine(GetHTMLEmailRowText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ") " & _
+                                                         sbdOptionText.ToString & strCustomText, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
+                            End If
+                        End With
+                    Next
+                End If
 
-                    sbdBodyText.Insert(0, sbdBasketItems.ToString)
-                    If blnUseHTMLOrderEmail Then
-                        'build up the table and the header tags, insert basket contents
-                        sbdHTMLOrderContents.Insert(0, "<table id=""orderitems""><thead><tr>" & vbCrLf & _
-                                                    "<th class=""col1"">" & GetGlobalResourceObject("Kartris", "ContentText_Item") & "</th>" & vbCrLf & _
-                                                    "<th class=""col2"">" & GetGlobalResourceObject("Kartris", "ContentText_Price") & "</th></thead><tbody>" & vbCrLf &
-                                                    sbdHTMLOrderBasket.ToString)
-                        'finally close the order contents HTML table
-                        sbdHTMLOrderContents.Append("</tbody></table>")
-                        'and append the order contents to the main HTML email
-                        sbdHTMLOrderEmail.Replace("[ordercontents]", sbdHTMLOrderContents.ToString)
-                    End If
+                sbdBodyText.Insert(0, sbdBasketItems.ToString)
+                If blnUseHTMLOrderEmail Then
+                    'build up the table and the header tags, insert basket contents
+                    sbdHTMLOrderContents.Insert(0, "<table id=""orderitems""><thead><tr>" & vbCrLf & _
+                                                "<th class=""col1"">" & GetGlobalResourceObject("Kartris", "ContentText_Item") & "</th>" & vbCrLf & _
+                                                "<th class=""col2"">" & GetGlobalResourceObject("Kartris", "ContentText_Price") & "</th></thead><tbody>" & vbCrLf &
+                                                sbdHTMLOrderBasket.ToString)
+                    'finally close the order contents HTML table
+                    sbdHTMLOrderContents.Append("</tbody></table>")
+                    'and append the order contents to the main HTML email
+                    sbdHTMLOrderEmail.Replace("[ordercontents]", sbdHTMLOrderContents.ToString)
+                End If
 
                 'check if shippingdestinationid is initialized, if not then reload checkout page
                 If Not blnBasketAllDigital Then
@@ -1333,243 +1365,251 @@ Partial Class _Checkout
                         Response.Redirect("~/Checkout.aspx")
                     End If
                 End If
-                    
 
-                    'Create the order record
-                    O_ID = OrdersBLL.Add(C_ID, UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword, UC_BillingAddress.SelectedAddress, _
-                                         UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket, _
-                                          arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID, _
-                                         intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice, _
-                                         IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtPurchaseOrderNo.Text, Trim(txtComments.Text))
 
-                    'Order Creation successful
-                    If O_ID > 0 Then
-                        objOrder = New Kartris.Interfaces.objOrder
-                        'Create the Order object and fill in the property values.
-                        objOrder.ID = O_ID
-                        objOrder.Description = GetGlobalResourceObject("Kartris", "Config_OrderDescription")
-                        objOrder.Amount = numGatewayTotalPrice
-                        objOrder.ShippingPrice = objBasket.ShippingPrice.IncTax
-                        objOrder.OrderHandlingPrice = objBasket.OrderHandlingPrice.IncTax
-                        objOrder.ShippingExTaxPrice = objBasket.ShippingPrice.ExTax
-                        objOrder.Currency = CurrenciesBLL.CurrencyCode(CUR_ID)
+                'Create the order record
+                O_ID = OrdersBLL.Add(C_ID, UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword, UC_BillingAddress.SelectedAddress, _
+                                     UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket, _
+                                      arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID, _
+                                     intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice, _
+                                     IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtPurchaseOrderNo.Text, Trim(txtComments.Text))
 
-                        If Not _blnAnonymousCheckout Then
-                            With UC_BillingAddress.SelectedAddress
-                                objOrder.Billing.Name = .FullName
-                                objOrder.Billing.StreetAddress = .StreetAddress
-                                objOrder.Billing.TownCity = .TownCity
-                                objOrder.Billing.CountyState = .County
-                                objOrder.Billing.CountryName = .Country.Name
-                                objOrder.Billing.Postcode = .Postcode
-                                objOrder.Billing.Phone = .Phone
+                'Order Creation successful
+                If O_ID > 0 Then
+                    objOrder = New Kartris.Interfaces.objOrder
+                    'Create the Order object and fill in the property values.
+                    objOrder.ID = O_ID
+                    objOrder.Description = GetGlobalResourceObject("Kartris", "Config_OrderDescription")
+                    objOrder.Amount = numGatewayTotalPrice
+                    objOrder.ShippingPrice = objBasket.ShippingPrice.IncTax
+                    objOrder.OrderHandlingPrice = objBasket.OrderHandlingPrice.IncTax
+                    objOrder.ShippingExTaxPrice = objBasket.ShippingPrice.ExTax
+                    objOrder.Currency = CurrenciesBLL.CurrencyCode(CUR_ID)
+
+                    'Set billing address for order
+                    If Not _blnAnonymousCheckout Then
+                        With UC_BillingAddress.SelectedAddress
+                            objOrder.Billing.Name = .FullName
+                            objOrder.Billing.StreetAddress = .StreetAddress
+                            objOrder.Billing.TownCity = .TownCity
+                            objOrder.Billing.CountyState = .County
+                            objOrder.Billing.CountryName = .Country.Name
+                            objOrder.Billing.Postcode = .Postcode
+                            objOrder.Billing.Phone = .Phone
                             objOrder.Billing.CountryIsoCode = .Country.IsoCode
                             objOrder.Billing.Company = .Company
-                            End With
-                        End If
+                        End With
+                    End If
 
-                        If Not blnBasketAllDigital Then
-                            If chkSameShippingAsBilling.Checked Then
-                                objOrder.SameShippingAsBilling = True
-                            Else
-                                With UC_ShippingAddress.SelectedAddress
-                                    objOrder.Shipping.Name = .FullName
-                                    objOrder.Shipping.StreetAddress = .StreetAddress
-                                    objOrder.Shipping.TownCity = .TownCity
-                                    objOrder.Shipping.CountyState = .County
-                                    objOrder.Shipping.CountryName = .Country.Name
-                                    objOrder.Shipping.Postcode = .Postcode
-                                    objOrder.Shipping.Phone = .Phone
+                    'Set shipping address for order
+                    If Not blnBasketAllDigital Then
+                        If chkSameShippingAsBilling.Checked Then
+                            objOrder.SameShippingAsBilling = True
+                        Else
+                            With UC_ShippingAddress.SelectedAddress
+                                objOrder.Shipping.Name = .FullName
+                                objOrder.Shipping.StreetAddress = .StreetAddress
+                                objOrder.Shipping.TownCity = .TownCity
+                                objOrder.Shipping.CountyState = .County
+                                objOrder.Shipping.CountryName = .Country.Name
+                                objOrder.Shipping.Postcode = .Postcode
+                                objOrder.Shipping.Phone = .Phone
                                 objOrder.Shipping.CountryIsoCode = .Country.IsoCode
                                 objOrder.Shipping.Company = .Company
-                                End With
+                            End With
+                        End If
+                    Else
+                        'For digital orders, we always set shipping same as 
+                        'billing on the order. We generally hide it from view
+                        'but most payment systems require shipping address
+                        'so this keeps them happy
+                        objOrder.SameShippingAsBilling = True
+                    End If
+
+                    objOrder.CustomerIPAddress = Request.ServerVariables("REMOTE_HOST")
+                    objOrder.CustomerEmail = UC_KartrisLogin.UserEmailAddress
+
+                    If Not User.Identity.IsAuthenticated Then
+                        If Membership.ValidateUser(UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword) Then
+                            FormsAuthentication.SetAuthCookie(UC_KartrisLogin.UserEmailAddress, True)
+                        End If
+                    End If
+                    Try
+                        Dim KartrisUser As KartrisMemberShipUser = Membership.GetUser(UC_KartrisLogin.UserEmailAddress)
+                        If KartrisUser IsNot Nothing Then
+                            objOrder.CustomerID = KartrisUser.ID
+                        End If
+                    Catch ex As Exception
+                        objOrder.CustomerID = 0
+                    End Try
+
+                    objOrder.CustomerLanguage = LanguagesBLL.GetUICultureByLanguageID_s(CInt(Session("LANG")))
+
+
+                    Dim strFromEmail As String = LanguagesBLL.GetEmailFrom(CInt(Session("LANG")))
+
+                    'Send new account email to new customer
+                    If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" And blnNewUser Then
+
+                        Dim blnHTMLEmail As Boolean = KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y"
+                        If blnHTMLEmail Then
+                            Dim strHTMLEmailText As String = RetrieveHTMLEmailTemplate("NewCustomerSignUp")
+                            'build up the HTML email if template is found
+                            If Not String.IsNullOrEmpty(strHTMLEmailText) Then
+                                strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
+                                strHTMLEmailText = strHTMLEmailText.Replace("[websitename]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
+                                strHTMLEmailText = strHTMLEmailText.Replace("[customeremail]", UC_KartrisLogin.UserEmailAddress)
+                                strHTMLEmailText = strHTMLEmailText.Replace("[customerpassword]", UC_KartrisLogin.UserPassword)
+                                sbdNewCustomerEmailText.Clear()
+                                sbdNewCustomerEmailText.Append(strHTMLEmailText)
+                            Else
+                                blnHTMLEmail = False
                             End If
                         End If
+                        SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, strSubject, sbdNewCustomerEmailText.ToString, , , , , blnHTMLEmail)
+                    End If
 
-                        objOrder.CustomerIPAddress = Request.ServerVariables("REMOTE_HOST")
-                        objOrder.CustomerEmail = UC_KartrisLogin.UserEmailAddress
-
-                        If Not User.Identity.IsAuthenticated Then
-                            If Membership.ValidateUser(UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword) Then
-                                FormsAuthentication.SetAuthCookie(UC_KartrisLogin.UserEmailAddress, True)
+                    'Mailing List
+                    If chkMailingList.Checked Then
+                        Dim ML_SignupDateTime, ML_ConfirmationDateTime As DateTime
+                        Dim blnSignupCustomer As Boolean = False
+                        If objOrder.CustomerID > 0 Then
+                            Dim tblCustomerData As DataTable = objBasket.GetCustomerData(objOrder.CustomerID)
+                            If tblCustomerData.Rows.Count > 0 Then
+                                ''// mailing list
+                                ML_ConfirmationDateTime = FixNullFromDB(tblCustomerData.Rows(0).Item("U_ML_ConfirmationDateTime"))
+                                ML_SignupDateTime = FixNullFromDB(tblCustomerData.Rows(0).Item("U_ML_SignupDateTime"))
+                                If Not (ML_SignupDateTime > New Date(1900, 1, 1) Or ML_ConfirmationDateTime > New Date(1900, 1, 1)) Then blnSignupCustomer = True
                             End If
+                        Else
+                            blnSignupCustomer = False
                         End If
-                        Try
-                            Dim KartrisUser As KartrisMemberShipUser = Membership.GetUser(UC_KartrisLogin.UserEmailAddress)
-                            If KartrisUser IsNot Nothing Then
-                                objOrder.CustomerID = KartrisUser.ID
-                            End If
-                        Catch ex As Exception
-                            objOrder.CustomerID = 0
-                        End Try
-
-                        objOrder.CustomerLanguage = LanguagesBLL.GetUICultureByLanguageID_s(CInt(Session("LANG")))
 
 
-                        Dim strFromEmail As String = LanguagesBLL.GetEmailFrom(CInt(Session("LANG")))
+                        If blnSignupCustomer Then
+                            Dim strRandomString As String = ""
 
-                        'Send new account email to new customer
-                        If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" And blnNewUser Then
+                            objBasket.UpdateCustomerMailingList(UC_KartrisLogin.UserEmailAddress, strRandomString, ddlMailingList.SelectedValue, objOrder.CustomerIPAddress)
+
+                            Dim sbdMLBodyText As StringBuilder = New StringBuilder()
+                            Dim strBodyText As String
+                            Dim strMailingListSignUpLink As String = WebShopURL() & "Default.aspx?id=" & objOrder.CustomerID & "&r=" & strRandomString
+
+                            sbdMLBodyText.Append(GetGlobalResourceObject("Kartris", "EmailText_NewsletterSignup") & vbCrLf & vbCrLf)
+                            sbdMLBodyText.Append(strMailingListSignUpLink & vbCrLf & vbCrLf)
+                            sbdMLBodyText.Append(GetGlobalResourceObject("Kartris", "EmailText_NewsletterAuthorizeFooter"))
+
+                            strBodyText = sbdMLBodyText.ToString
+                            strBodyText = Replace(strBodyText, "[IPADDRESS]", objOrder.CustomerIPAddress)
+                            strBodyText = Replace(strBodyText, "[WEBSHOPNAME]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
+                            strBodyText = Replace(strBodyText, "[WEBSHOPURL]", WebShopURL)
+                            strBodyText = strBodyText & GetGlobalResourceObject("Kartris", "ContentText_NewsletterSignup")
 
                             Dim blnHTMLEmail As Boolean = KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y"
                             If blnHTMLEmail Then
-                                Dim strHTMLEmailText As String = RetrieveHTMLEmailTemplate("NewCustomerSignUp")
+                                Dim strHTMLEmailText As String = RetrieveHTMLEmailTemplate("MailingListSignUp")
                                 'build up the HTML email if template is found
                                 If Not String.IsNullOrEmpty(strHTMLEmailText) Then
-                                    strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
+                                    strHTMLEmailText = strHTMLEmailText.Replace("[mailinglistconfirmationlink]", strMailingListSignUpLink)
                                     strHTMLEmailText = strHTMLEmailText.Replace("[websitename]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
-                                    strHTMLEmailText = strHTMLEmailText.Replace("[customeremail]", UC_KartrisLogin.UserEmailAddress)
-                                    strHTMLEmailText = strHTMLEmailText.Replace("[customerpassword]", UC_KartrisLogin.UserPassword)
-                                    sbdNewCustomerEmailText.Clear()
-                                    sbdNewCustomerEmailText.Append(strHTMLEmailText)
+                                    strHTMLEmailText = strHTMLEmailText.Replace("[customerip]", objOrder.CustomerIPAddress)
+                                    strBodyText = strHTMLEmailText
                                 Else
                                     blnHTMLEmail = False
                                 End If
                             End If
-                            SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, strSubject, sbdNewCustomerEmailText.ToString, , , , , blnHTMLEmail)
-                        End If
 
-                        'Mailing List
-                        If chkMailingList.Checked Then
-                            Dim ML_SignupDateTime, ML_ConfirmationDateTime As DateTime
-                            Dim blnSignupCustomer As Boolean = False
-                            If objOrder.CustomerID > 0 Then
-                                Dim tblCustomerData As DataTable = objBasket.GetCustomerData(objOrder.CustomerID)
-                                If tblCustomerData.Rows.Count > 0 Then
-                                    ''// mailing list
-                                    ML_ConfirmationDateTime = FixNullFromDB(tblCustomerData.Rows(0).Item("U_ML_ConfirmationDateTime"))
-                                    ML_SignupDateTime = FixNullFromDB(tblCustomerData.Rows(0).Item("U_ML_SignupDateTime"))
-                                    If Not (ML_SignupDateTime > New Date(1900, 1, 1) Or ML_ConfirmationDateTime > New Date(1900, 1, 1)) Then blnSignupCustomer = True
-                                End If
-                            Else
-                                blnSignupCustomer = False
+                            SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, GetGlobalResourceObject("Kartris", "PageTitle_MailingList"), strBodyText, , , , , blnHTMLEmail)
+                        End If
+                    End If
+
+                    'Save Basket
+                    If chkSaveBasket.Checked Then
+                        Call objBasket.SaveBasket(objOrder.CustomerID, "Order #" & O_ID & ", " & CkartrisDisplayFunctions.NowOffset, Session("SessionID"))
+                    End If
+
+                    objOrder.WebShopURL = Page.Request.Url.ToString.Replace("?new=y", "")
+
+                    'serialize order object and store it as a session value
+                    Session("objOrder") = Payment.Serialize(objOrder)
+
+                    'update data field with serialized order and basket objects and selected shipping method id - this allows us to edit this order later if needed
+                    OrdersBLL.DataUpdate(O_ID, Session("objOrder") & "|||" & Payment.Serialize(objBasket) & "|||" & UC_BasketView.SelectedShippingID)
+
+                    If LCase(clsPlugin.GatewayType) = "local" Then
+                        '---------------------------------------
+                        'LOCAL PROCESS
+                        'This includes gateways where card
+                        'details are taken through the checkout
+                        'page and relayed to the gateway, and
+                        'also the 'PO offline' method where
+                        'orders are made without payment, to be
+                        'paid later offline.
+                        '---------------------------------------
+                        Dim blnResult As Boolean
+                        Dim strBitcoinPaymentAddress As String = ""
+
+
+                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" OrElse clsPlugin.GatewayName.ToLower = "bitcoin" Then
+                            'PO orders don't need authorizing, they are
+                            'effectively successful if placed as payment
+                            'will come later
+                            If clsPlugin.GatewayName.ToLower = "bitcoin" Then
+                                strBitcoinPaymentAddress = clsPlugin.ProcessOrder(Payment.Serialize(objOrder))
                             End If
 
+                            blnResult = True
+                        Else
+                            '---------------------------------------
+                            'COLLECT CARD DETAILS
+                            '---------------------------------------
+                            objOrder.CreditCardInfo.CardNumber = UC_CreditCardInput.CardNumber
+                            objOrder.CreditCardInfo.CardType = UC_CreditCardInput.CardType
+                            objOrder.CreditCardInfo.BeginMonth = Left(UC_CreditCardInput.StartDate, 2)
+                            objOrder.CreditCardInfo.BeginYear = Right(UC_CreditCardInput.StartDate, 2)
+                            objOrder.CreditCardInfo.IssueNumber = UC_CreditCardInput.CardIssueNumber
+                            objOrder.CreditCardInfo.CV2 = UC_CreditCardInput.CardSecurityNumber
+                            objOrder.CreditCardInfo.ExpiryMonth = Left(UC_CreditCardInput.ExpiryDate, 2)
+                            objOrder.CreditCardInfo.ExpiryYear = Right(UC_CreditCardInput.ExpiryDate, 2)
 
-                            If blnSignupCustomer Then
-                                Dim strRandomString As String = ""
-
-                                objBasket.UpdateCustomerMailingList(UC_KartrisLogin.UserEmailAddress, strRandomString, ddlMailingList.SelectedValue, objOrder.CustomerIPAddress)
-
-                                Dim sbdMLBodyText As StringBuilder = New StringBuilder()
-                                Dim strBodyText As String
-                                Dim strMailingListSignUpLink As String = WebShopURL() & "Default.aspx?id=" & objOrder.CustomerID & "&r=" & strRandomString
-
-                                sbdMLBodyText.Append(GetGlobalResourceObject("Kartris", "EmailText_NewsletterSignup") & vbCrLf & vbCrLf)
-                                sbdMLBodyText.Append(strMailingListSignUpLink & vbCrLf & vbCrLf)
-                                sbdMLBodyText.Append(GetGlobalResourceObject("Kartris", "EmailText_NewsletterAuthorizeFooter"))
-
-                                strBodyText = sbdMLBodyText.ToString
-                                strBodyText = Replace(strBodyText, "[IPADDRESS]", objOrder.CustomerIPAddress)
-                                strBodyText = Replace(strBodyText, "[WEBSHOPNAME]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
-                                strBodyText = Replace(strBodyText, "[WEBSHOPURL]", WebShopURL)
-                                strBodyText = strBodyText & GetGlobalResourceObject("Kartris", "ContentText_NewsletterSignup")
-
-                                Dim blnHTMLEmail As Boolean = KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y"
-                                If blnHTMLEmail Then
-                                    Dim strHTMLEmailText As String = RetrieveHTMLEmailTemplate("MailingListSignUp")
-                                    'build up the HTML email if template is found
-                                    If Not String.IsNullOrEmpty(strHTMLEmailText) Then
-                                        strHTMLEmailText = strHTMLEmailText.Replace("[mailinglistconfirmationlink]", strMailingListSignUpLink)
-                                        strHTMLEmailText = strHTMLEmailText.Replace("[websitename]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
-                                        strHTMLEmailText = strHTMLEmailText.Replace("[customerip]", objOrder.CustomerIPAddress)
-                                        strBodyText = strHTMLEmailText
-                                    Else
-                                        blnHTMLEmail = False
-                                    End If
-                                End If
-
-                                SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, GetGlobalResourceObject("Kartris", "PageTitle_MailingList"), strBodyText, , , , , blnHTMLEmail)
-                            End If
+                            '---------------------------------------
+                            'VALIDATE CREDIT CARD DETAILS
+                            'Did the gateway return a 'sucess' result on validation?
+                            '---------------------------------------
+                            blnResult = clsPlugin.ValidateCardOrder(Payment.Serialize(objOrder), Payment.Serialize(objBasket))
                         End If
 
-                        'Save Basket
-                        If chkSaveBasket.Checked Then
-                            Call objBasket.SaveBasket(objOrder.CustomerID, "Order #" & O_ID & ", " & CkartrisDisplayFunctions.NowOffset, Session("SessionID"))
-                        End If
-
-                        objOrder.WebShopURL = Page.Request.Url.ToString.Replace("?new=y", "")
-
-                        'serialize order object and store it as a session value
-                        Session("objOrder") = Payment.Serialize(objOrder)
-
-                        'update data field with serialized order and basket objects and selected shipping method id - this allows us to edit this order later if needed
-                        OrdersBLL.DataUpdate(O_ID, Session("objOrder") & "|||" & Payment.Serialize(objBasket) & "|||" & UC_BasketView.SelectedShippingID)
-
-                        If LCase(clsPlugin.GatewayType) = "local" Then
-                            '---------------------------------------
-                            'LOCAL PROCESS
-                            'This includes gateways where card
-                            'details are taken through the checkout
-                            'page and relayed to the gateway, and
-                            'also the 'PO offline' method where
-                            'orders are made without payment, to be
-                            'paid later offline.
-                            '---------------------------------------
-                            Dim blnResult As Boolean
-                            Dim strBitcoinPaymentAddress As String = ""
-
-
-                            If clsPlugin.GatewayName.ToLower = "po_offlinepayment" OrElse clsPlugin.GatewayName.ToLower = "bitcoin" Then
-                                'PO orders don't need authorizing, they are
-                                'effectively successful if placed as payment
-                                'will come later
-                                If clsPlugin.GatewayName.ToLower = "bitcoin" Then
-                                    strBitcoinPaymentAddress = clsPlugin.ProcessOrder(Payment.Serialize(objOrder))
+                        '---------------------------------------
+                        'SUCCESSFULLY PLACED ORDER
+                        '---------------------------------------
+                        If blnResult Then
+                            'The transaction was authorized so update the order
+                            If clsPlugin.CallbackSuccessful Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
+                                If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
+                                    O_ID = objOrder.ID
+                                Else
+                                    'Get order ID that was passed back
+                                    'with callback
+                                    O_ID = clsPlugin.CallbackOrderID
                                 End If
 
-                                blnResult = True
-                            Else
                                 '---------------------------------------
-                                'COLLECT CARD DETAILS
+                                'CREATE DATATABLE OF ORDER
                                 '---------------------------------------
-                                objOrder.CreditCardInfo.CardNumber = UC_CreditCardInput.CardNumber
-                                objOrder.CreditCardInfo.CardType = UC_CreditCardInput.CardType
-                                objOrder.CreditCardInfo.BeginMonth = Left(UC_CreditCardInput.StartDate, 2)
-                                objOrder.CreditCardInfo.BeginYear = Right(UC_CreditCardInput.StartDate, 2)
-                                objOrder.CreditCardInfo.IssueNumber = UC_CreditCardInput.CardIssueNumber
-                                objOrder.CreditCardInfo.CV2 = UC_CreditCardInput.CardSecurityNumber
-                                objOrder.CreditCardInfo.ExpiryMonth = Left(UC_CreditCardInput.ExpiryDate, 2)
-                                objOrder.CreditCardInfo.ExpiryYear = Right(UC_CreditCardInput.ExpiryDate, 2)
+                                Dim tblOrder As DataTable = OrdersBLL.GetOrderByID(O_ID)
+
+                                Dim O_CouponCode As String = ""
+                                Dim O_TotalPriceGateway As Double = 0
+                                Dim O_PurchaseOrderNo As String = ""
+                                Dim O_WishListID As Integer = 0
+                                Dim strCallBodyText As String = ""
+                                Dim strBasketBLL As String = ""
 
                                 '---------------------------------------
-                                'VALIDATE CREDIT CARD DETAILS
-                                'Did the gateway return a 'sucess' result on validation?
+                                'DATA EXISTS FOR THIS ORDER ID
                                 '---------------------------------------
-                                blnResult = clsPlugin.ValidateCardOrder(Payment.Serialize(objOrder), Payment.Serialize(objBasket))
-                            End If
-
-                            '---------------------------------------
-                            'SUCCESSFULLY PLACED ORDER
-                            '---------------------------------------
-                            If blnResult Then
-                                'The transaction was authorized so update the order
-                                If clsPlugin.CallbackSuccessful Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
-                                    If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
-                                        O_ID = objOrder.ID
-                                    Else
-                                        'Get order ID that was passed back
-                                        'with callback
-                                        O_ID = clsPlugin.CallbackOrderID
-                                    End If
-
-                                    '---------------------------------------
-                                    'CREATE DATATABLE OF ORDER
-                                    '---------------------------------------
-                                    Dim tblOrder As DataTable = OrdersBLL.GetOrderByID(O_ID)
-
-                                    Dim O_CouponCode As String = ""
-                                    Dim O_TotalPriceGateway As Double = 0
-                                    Dim O_PurchaseOrderNo As String = ""
-                                    Dim O_WishListID As Integer = 0
-                                    Dim strCallBodyText As String = ""
-                                    Dim strBasketBLL As String = ""
-
-                                    '---------------------------------------
-                                    'DATA EXISTS FOR THIS ORDER ID
-                                    '---------------------------------------
-                                    If tblOrder.Rows.Count > 0 Then
-                                        If tblOrder.Rows(0)("O_Sent") = 0 Then
+                                If tblOrder.Rows.Count > 0 Then
+                                    If tblOrder.Rows(0)("O_Sent") = 0 Then
 
                                         'Store order details
                                         O_CouponCode = CStr(FixNullFromDB(tblOrder.Rows(0)("O_CouponCode")))
@@ -1762,7 +1802,7 @@ Partial Class _Checkout
             End If
 
 
-            End If
+        End If
 
     End Sub
 
