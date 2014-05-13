@@ -297,7 +297,7 @@ Partial Class OptionsContainer
         Return numTotalPrice
     End Function
 
-    Public Function GetSelecetedOptions() As String
+    Public Function GetSelectedOptions() As String
 
         Dim strSelectedOptionValues As String = Nothing
         Dim numCounter As Integer = 0
@@ -311,7 +311,7 @@ Partial Class OptionsContainer
                 End If
             Catch ex As Exception
                 '' Means Non Option Control
-                Trace.Warn("-------------- EXECPTION IN OptionsContainer.GetSelectedOptions -------------------")
+                Trace.Warn("-------------- EXCEPTION IN OptionsContainer.GetSelectedOptions -------------------")
             End Try
         Next
         If Not [String].IsNullOrEmpty(strSelectedOptionValues) Then

@@ -44,7 +44,7 @@ Partial Class UserControls_Back_OptionsPopup
         
         '' Reading the values of Options from the OptionsContainer in a muli-dimentional array
         ''  i.e. arrOptions(OPTION_GROUP_ID, COMMA_SEPARETED_SELECTED_VALUES)
-        Dim strOptionString As String = UC_OptionsContainer.GetSelecetedOptions()
+        Dim strOptionString As String = UC_OptionsContainer.GetSelectedOptions()
 
         If strOptionString Is Nothing Then strOptionString = ""
 

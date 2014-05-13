@@ -661,7 +661,7 @@ Partial Class ProductVersions
                         Replace(GetGlobalResourceObject("ObjectConfig", "ContentText_OrderMultiplesOfUnitsize"), "[unitsize]", strUnitSize))
             Else
                 '' Reading the values of Options from the OptionsContainer in a muli-dimentional array
-                Dim strOptionString As String = UC_OptionsContainer.GetSelecetedOptions()
+                Dim strOptionString As String = UC_OptionsContainer.GetSelectedOptions()
 
                 If [String].IsNullOrEmpty(strOptionString) Then strOptionString = ""
 
@@ -744,7 +744,7 @@ Partial Class ProductVersions
         numNewPrice = numOldPrice + CDbl(pOptionPrice)
 
         'Reading the values of Options from the OptionsContainer in a muli-dimentional array
-        Dim strOptionString As String = UC_OptionsContainer.GetSelecetedOptions()
+        Dim strOptionString As String = UC_OptionsContainer.GetSelectedOptions()
 
         CheckOptionStock(strOptionString)
         PricePreview(numNewPrice)
@@ -753,10 +753,17 @@ Partial Class ProductVersions
 
     Sub GetCombinationPrice()
         'Reading the values of Options from the OptionsContainer in a muli-dimentional array
-        Dim strOptionsList As String = UC_OptionsContainer.GetSelecetedOptions()
+        Dim strOptionsList As String = UC_OptionsContainer.GetSelectedOptions()
         CleanOptionString(strOptionsList)
         If Not [String].IsNullOrEmpty(strOptionsList) Then
+
             Dim numPrice As Single = VersionsBLL.GetCombinationPrice(ProductID, strOptionsList)
+            Dim numVersionID As Integer = GetCombinationVersionID_s(ProductID, strOptionsList)
+
+            numPrice = GetPriceWithGroupDiscount(numVersionID, numPrice)
+
+            numPrice = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), numPrice)
+
             If numPrice <> Nothing Then
                 phdNotOutOfStock4.Visible = True
                 UC_AddToBasketQty4.Visible = True

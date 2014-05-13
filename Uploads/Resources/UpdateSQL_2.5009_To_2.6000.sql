@@ -16,7 +16,6 @@ INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value],
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_Apply', N'Apply', NULL, 2.6100, N'', NULL, N'Filters', 1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_SortBy', N'Sort By', NULL, 2.6100, N'', NULL, N'Filters', 1)
 
-
 /****** Object:  StoredProcedure [dbo].[_spKartrisVersions_ChangeSortValue]    Script Date: 04/02/2014 18:15:50 ******/
 -- This fixes an issue where versions imported via the Data Tool
 -- all have same sort order value, so cannot be manually sorted.

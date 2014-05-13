@@ -1388,7 +1388,23 @@ Public Class BasketBLL
 
                     'Get basic price, modify for customer group pricing (if lower)
                     Dim numCustomerGroupPrice As Double
-                    numCustomerGroupPrice = GetCustomerGroupPriceForVersion(DB_C_CustomerID, objItem.VersionBaseID)
+                    Dim numBaseVersionID As Integer = objItem.VersionBaseID
+                    Dim numActualVersionID As Integer = objItem.VersionID
+                    Dim numVersionID As Integer = 0
+
+                    'For options products, look up customer group discounts
+                    'related to the base version. For combinations products
+                    'use the actual version
+                    If objItem.HasCombinations Then
+                        'Set version ID to use for price to the actual version in basket
+                        numVersionID = numActualVersionID
+                    Else
+                        'Set version ID to use for price to the base version
+                        numVersionID = numBaseVersionID
+                    End If
+
+                    numCustomerGroupPrice = GetCustomerGroupPriceForVersion(DB_C_CustomerID, numVersionID)
+
                     If numCustomerGroupPrice > 0 Then
                         'convert customer group price to current user currency
                         numCustomerGroupPrice = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, numCustomerGroupPrice)), CurrencyRoundNumber)
