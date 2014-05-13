@@ -1,6 +1,4 @@
-﻿Imports CkartrisDataManipulation
-
-'========================================================================
+﻿'========================================================================
 'Kartris - www.kartris.com
 'Copyright 2014 CACTUSOFT INTERNATIONAL FZ LLC
 
@@ -14,6 +12,7 @@
 'overrides the GPL v2.
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
+Imports CkartrisDataManipulation
 
 ''' <summary>
 ''' This control contains the dropdown, textbox or hidden field for quantity
@@ -156,12 +155,12 @@ Partial Class UserControls_General_AddToBasket
             Return c_UnitSize
         End Get
     End Property
+
     'Handles the 'add' button being clicked.
     'Remember this does not happen for options
     'or version dropdowns, as these have their
     'own add buttons and click handling in
     'ProductVersions.aspx
-
     Public Event WrongQuantity(strTitle As String, strMessage As String)
 
     Protected Sub btnAdd_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAdd.Click

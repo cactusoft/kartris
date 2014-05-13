@@ -216,7 +216,7 @@ Partial Class _OptionsContainer
         Return True
     End Function
 
-    Public Function GetSelecetedOptions() As String
+    Public Function GetSelectedOptions() As String
         'Dim arrSelectedOptions() As Options = Nothing
         Dim strSelectedOptionValues As String = Nothing
         Dim counter As Integer = 0
