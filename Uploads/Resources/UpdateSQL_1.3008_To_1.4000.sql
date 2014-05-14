@@ -26692,7 +26692,7 @@ GO
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_Inline', N'Inline?', NULL, 1.4, N'Inline?', NULL, N'_Media', 1);
 
 -- LS: Product combination related
-INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_NoValidCombinations', N'Please make a selection for all options above', NULL, 1.4, N'Please make a selection for all options above', NULL, N'Options', 1);
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_NoValidCombinations', N'Please make a valid selection for all options', NULL, 1.4, N'Please make a valid selection for all options', NULL, N'Options', 1);
 
 -- LS: Object Config related
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ObjectConfig', N'Object Config', NULL, 1.4, N'Object Config', NULL, N'_Kartris', 1);

@@ -588,6 +588,7 @@ Partial Class ProductVersions
     Protected Sub mvwVersion_ActiveViewChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles mvwVersion.ActiveViewChanged
         'ddlVersionImages.Items.Clear()
     End Sub
+
     ''' <summary>
     ''' Handles add to basket button clicks for custom product versions
     ''' </summary>
@@ -746,8 +747,8 @@ Partial Class ProductVersions
         'Reading the values of Options from the OptionsContainer in a muli-dimentional array
         Dim strOptionString As String = UC_OptionsContainer.GetSelectedOptions()
 
-        CheckOptionStock(strOptionString)
         PricePreview(numNewPrice)
+        CheckOptionStock(strOptionString)
         updPricePanel.Update()
     End Sub
 
@@ -811,6 +812,7 @@ Partial Class ProductVersions
             Else
                 phdPrice.Visible = False
             End If
+            phdOutOfStock4.Visible = False
         End If
 
     End Sub
@@ -826,7 +828,8 @@ Partial Class ProductVersions
         If ObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) = 1 Then
             'PricePreview(0)
             phdIncTax.Visible = False
-            phdExTax.ViewStateMode = False
+            phdExTax.Visible = False
+            phdTax.Visible = False
             phdPrice.Visible = True
             litPriceView.Text = GetGlobalResourceObject("Versions", "ContentText_CallForPrice")
             'Hide add to basket button
@@ -898,35 +901,43 @@ Partial Class ProductVersions
     End Sub
 
     ''' <summary>
-    ''' Handles out of stock for options
+    ''' Handles out-of-stock for options
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub CheckOptionStock(ByVal strOptionString As String)
 
-        If Not [String].IsNullOrEmpty(strOptionString) Then CleanOptionString(strOptionString)
-
-        If [String].IsNullOrEmpty(strOptionString) OrElse strOptionString = "0" Then Return
-
         phdOutOfStock4.Visible = False
         phdNotOutOfStock4.Visible = True
-        updOptions.Update()
+        phdNoValidCombinations.Visible = False
+
+        'Just clean up the options a bit
+        If Not [String].IsNullOrEmpty(strOptionString) Then CleanOptionString(strOptionString)
+
+        If [String].IsNullOrEmpty(strOptionString) OrElse strOptionString = "0" Then
+            Return
+        End If
 
         Dim numQty As Single = VersionsBLL.GetOptionStockQty(_ProductID, strOptionString)
-        If numQty = -1.0F Then '' The version is not live
-            phdOutOfStock4.Visible = True
+
+        'The version is not live or does not exist,
+        'probably because invalid options selections
+        If numQty = -1.0F Then
+            phdOutOfStock4.Visible = False
             phdNotOutOfStock4.Visible = False
-            updOptions.Update()
+            UC_AddToBasketQty4.Visible = False
+            HidePriceForInvalidCombination()
+            Return 'Stop right here
         End If
 
         'This handles showing 'out of stock' and hiding the 'add' button
-        If VersionsBLL.IsStockTrackingInBase(_ProductID) Then
-            If numQty <= 0.0F Then
-                phdOutOfStock4.Visible = True
-                phdNotOutOfStock4.Visible = False
-                updOptions.Update()
-            End If
+        If VersionsBLL.IsStockTrackingInBase(_ProductID) And numQty <= 0.0F Then
+            phdOutOfStock4.Visible = True
+            UC_AddToBasketQty4.Visible = False
+            phdNotOutOfStock4.Visible = False
         End If
 
+        'Update display
+        updOptions.Update()
     End Sub
 
     Sub CleanOptionString(ByRef strOptionString As String)
@@ -946,6 +957,7 @@ Partial Class ProductVersions
             If strOptionString.StartsWith(",") Then strOptionString = strOptionString.TrimStart((","))
         End If
     End Sub
+
     ''' <summary>
     ''' Finds prices for customer group discount
     ''' </summary>
