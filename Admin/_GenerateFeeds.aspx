@@ -64,6 +64,8 @@
                                     class="Kartris-DetailsView-Value">
                                     <asp:DropDownList ID="ddlXMLorTXT" runat="server">
                                         <asp:ListItem Text="RSS 2.0 (.XML)" Value="xml" />
+                                        <asp:ListItem Text="tab delimited text (not recommended)" Value="txt" />
+                                        <asp:ListItem Text="CSV (not recommended)" Value="csv" />
                                     </asp:DropDownList>
                                     <%
                                     'txt option removed for time being as we would

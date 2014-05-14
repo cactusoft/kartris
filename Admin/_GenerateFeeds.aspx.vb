@@ -237,6 +237,13 @@ Partial Class Admin_GenerateFeeds
             's.BaseStream.Seek(0, SeekOrigin.End)
             'write out the headers
             objStreamWriter.WriteLine("id" & vbTab & "title" & vbTab & "description" & vbTab & "price" & vbTab & "link" & vbTab & "image_link" & vbTab & "condition")
+        ElseIf ddlXMLorTXT.SelectedValue = "csv" Then
+            objFileStream = New FileStream(Server.MapPath(strAppUploadsFolder) & "\temp\GoogleBase.csv", FileMode.Create, FileAccess.Write)
+            objStreamWriter = New StreamWriter(objFileStream)
+            'the seek method is used to move the cursor to next position to avoid text to be overwritten
+            's.BaseStream.Seek(0, SeekOrigin.End)
+            'write out the headers
+            objStreamWriter.WriteLine("'id','title','description','price','link','image_link','condition'")
         Else
             'XML feed format
             xmlGoogleBase = New XmlTextWriter(Server.MapPath(strAppUploadsFolder) & "\temp\GoogleBase.xml", System.Text.Encoding.UTF8)
@@ -301,6 +308,8 @@ Partial Class Admin_GenerateFeeds
 
                             If ddlXMLorTXT.SelectedValue = "txt" Then
                                 AddFroogleTextLine(objStreamWriter, FixNullFromDB(drwVersion("V_CodeNumber")), strProductName, strDesc, dblPrice, strLink, strImageLink)
+                            ElseIf ddlXMLorTXT.SelectedValue = "csv" Then
+                                AddFroogleCSVLine(objStreamWriter, FixNullFromDB(drwVersion("V_CodeNumber")), strProductName, strDesc, dblPrice, strLink, strImageLink)
                             Else
                                 With xmlGoogleBase
                                     .WriteWhitespace(vbCrLf)
@@ -352,12 +361,19 @@ Partial Class Admin_GenerateFeeds
             'Show full URL that needs to be given to Google
             litFilePath.Text = Replace(strAppUploadsFolder, "~/", cKartrisBLL.WebShopURLhttp) & "temp/GoogleBase.txt"
             litFilePath.Visible = True
+        ElseIf ddlXMLorTXT.SelectedValue = "csv" Then
+            objStreamWriter.Close()
+            lnkGenerated.NavigateUrl = strAppUploadsFolder & "temp/GoogleBase.csv"
+
+            'Show full URL that needs to be given to Google
+            litFilePath.Text = Replace(strAppUploadsFolder, "~/", CkartrisBLL.WebShopURLhttp) & "temp/GoogleBase.csv"
+            litFilePath.Visible = True
         Else
             CloseXMLSitemap(xmlGoogleBase)
             lnkGenerated.NavigateUrl = strAppUploadsFolder & "temp/GoogleBase.xml"
 
             'Show full URL that needs to be given to Google
-            litFilePath.Text = Replace(strAppUploadsFolder, "~/", cKartrisBLL.WebShopURLhttp) & "temp/GoogleBase.xml"
+            litFilePath.Text = Replace(strAppUploadsFolder, "~/", CkartrisBLL.WebShopURLhttp) & "temp/GoogleBase.xml"
             litFilePath.Visible = True
         End If
         lnkGenerated.Visible = True
@@ -368,9 +384,17 @@ Partial Class Admin_GenerateFeeds
     ''' <summary>
     ''' Add a text line to Froogle/Google feed
     ''' </summary>
-    Private Sub AddFroogleTextLine(ByRef objStreamWriter As StreamWriter, ByVal V_ID As Integer, ByVal V_Name As String, ByVal V_Desc As String, _
+    Private Sub AddFroogleTextLine(ByRef objStreamWriter As StreamWriter, ByVal V_Codenumber As String, ByVal V_Name As String, ByVal V_Desc As String, _
                                    ByVal V_Price As Double, ByVal strProductLink As String, ByVal strImageLink As String)
-        objStreamWriter.WriteLine(V_ID & vbTab & V_Name & vbTab & V_Desc & vbTab & V_Price & vbTab & strProductLink & vbTab & strImageLink & vbTab & UCase(ddlCondition.SelectedValue))
+        objStreamWriter.WriteLine(V_Codenumber & vbTab & V_Name & vbTab & V_Desc & vbTab & V_Price & vbTab & strProductLink & vbTab & strImageLink & vbTab & UCase(ddlCondition.SelectedValue))
+    End Sub
+
+    ''' <summary>
+    ''' Add a text line to Froogle/Google feed
+    ''' </summary>
+    Private Sub AddFroogleCSVLine(ByRef objStreamWriter As StreamWriter, ByVal V_Codenumber As String, ByVal V_Name As String, ByVal V_Desc As String, _
+                                   ByVal V_Price As Double, ByVal strProductLink As String, ByVal strImageLink As String)
+        objStreamWriter.WriteLine("""" & V_Codenumber & """,""" & Replace(V_Name, """", """""") & """,""" & Replace(V_Desc, """", """""") & """,""" & V_Price & """,""" & strProductLink & """,""" & strImageLink & """,""" & UCase(ddlCondition.SelectedValue) & """")
     End Sub
 
     ''' <summary>
