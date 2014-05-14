@@ -99,21 +99,33 @@ Public MustInherit Class PageBaseClass
         Dim strReplacement As String = ""
         Dim sbdLink As New StringBuilder
 
-        'Newer Google Analytics code
-        sbdLink.Append("<script type=""text/javascript"">" & vbCrLf)
-        If InStr(Request.RawUrl.ToLower, "/callback.aspx") = 0 AndAlso InStr(Request.RawUrl.ToLower, "/checkout.aspx") = 0 Then
-            sbdLink.Append("var _gaq = _gaq || [];" & vbCrLf)
-            sbdLink.Append("_gaq.push(['_setAccount', '" & strGoogleWebPropertyID & "']);" & vbCrLf)
-            sbdLink.Append("_gaq.push(['_trackPageview']);" & vbCrLf)
-        End If
-        sbdLink.Append("(function() {" & vbCrLf)
-        sbdLink.Append("var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;" & vbCrLf)
-        sbdLink.Append("ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';" & vbCrLf)
-        sbdLink.Append("var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);" & vbCrLf)
-        sbdLink.Append("})();" & vbCrLf)
-        sbdLink.Append("</script>" & vbCrLf)
+        'Old Google Analytics code
+        'If you have any problems with what is below, use this instead
+        'sbdLink.Append("<script type=""text/javascript"">" & vbCrLf)
+        'If InStr(Request.RawUrl.ToLower, "/callback.aspx") = 0 AndAlso InStr(Request.RawUrl.ToLower, "/checkout.aspx") = 0 Then
+        '    sbdLink.Append("var _gaq = _gaq || [];" & vbCrLf)
+        '    sbdLink.Append("_gaq.push(['_setAccount', '" & strGoogleWebPropertyID & "']);" & vbCrLf)
+        '    sbdLink.Append("_gaq.push(['_trackPageview']);" & vbCrLf)
+        'End If
+        'sbdLink.Append("(function() {" & vbCrLf)
+        'sbdLink.Append("var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;" & vbCrLf)
+        'sbdLink.Append("ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';" & vbCrLf)
+        'sbdLink.Append("var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);" & vbCrLf)
+        'sbdLink.Append("})();" & vbCrLf)
+        'sbdLink.Append("</script>" & vbCrLf)
 
-        'Newer Google Analytics works in head tag, not close body
+        'Newest code as of 2014-05-14
+        If InStr(Request.RawUrl.ToLower, "/callback.aspx") = 0 AndAlso InStr(Request.RawUrl.ToLower, "/checkout.aspx") = 0 Then
+            sbdLink.Append("<script>" & vbCrLf)
+            sbdLink.Append("(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){" & vbCrLf)
+            sbdLink.Append("(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o)," & vbCrLf)
+            sbdLink.Append("m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)" & vbCrLf)
+            sbdLink.Append("})(window,document,'script','//www.google-analytics.com/analytics.js','ga');" & vbCrLf)
+            sbdLink.Append("ga('create', '" & strGoogleWebPropertyID & "', 'auto'); ga('send', 'pageview');" & vbCrLf)
+            sbdLink.Append("</script>" & vbCrLf)
+        End If
+
+        'Google Analytics works in head tag, not close body
         Try
             sbdPageSource.Replace("</head", sbdLink.ToString & vbCrLf & "</head")
             blnReplacedTag = True

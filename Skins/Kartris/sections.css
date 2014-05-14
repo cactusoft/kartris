@@ -261,7 +261,7 @@ OPTIONS
 .options .option table.radiobuttonlist input
                                         { display: block; float: left; margin-right: 5px; border-style: none; background-color: transparent; width: 16px; }
 .options .option ul.radiobuttonlist li label
-                                        { text-transform: uppercase; color: #444; font-size: 75%; }
+                                        { text-transform: uppercase; color: #444; font-size: 85%; }
 .options .highlight_error               { padding: 0 5px 0 3px; display: inline-block; color: #fff; font-weight: bold; text-decoration: blink; background-color: #f00; border-radius: 3px; }
 .boxinset .addtobasket .prices			{ display: block; text-align: right; }
 .options div.addtobasket img            { float: none; text-align: right; }
