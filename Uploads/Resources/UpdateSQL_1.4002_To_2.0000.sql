@@ -25662,3 +25662,31 @@ INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value],
 SET IDENTITY_INSERT [dbo].[tblKartrisLanguageStrings] OFF
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.pushnotifications.enabled', N'n', N's', N'b', N'y|n', N'Whether to enable sending push notifications to user devices.', 2, N'n', 0)
 GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisLogins_GetList]    Script Date: 01/23/2013 21:59:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Medz
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisLogins_GetList]
+AS
+SET NOCOUNT OFF;
+SELECT        [LOGIN_ID]
+	  ,[LOGIN_Username]
+	  ,[LOGIN_Password]
+	  ,[LOGIN_Live]
+	  ,[LOGIN_Orders]
+	  ,[LOGIN_Products]
+	  ,[LOGIN_Config]
+	  ,[LOGIN_Protected]
+	  ,[LOGIN_LanguageID]
+	  ,[LOGIN_EmailAddress]
+	  ,[LOGIN_Tickets]
+	  ,[LOGIN_PushNotifications]
+FROM            tblKartrisLogins
+GO
