@@ -20,3 +20,35 @@ GO
 -- ****** Drop FK between Products and Customer Groups
 ALTER TABLE [dbo].[tblKartrisProducts] DROP CONSTRAINT [FK_tblKartrisProducts_tblKartrisCustomerGroups]
 GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisLogins_GetList]    Script Date: 2/27/2013 5:38:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[_spKartrisLogins_GetList]') AND type in (N'P', N'PC'))
+BEGIN
+EXEC dbo.sp_executesql @statement = N'-- =============================================
+-- Author:		Medz
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisLogins_GetList]
+AS
+SET NOCOUNT OFF;
+SELECT        [LOGIN_ID]
+	  ,[LOGIN_Username]
+	  ,[LOGIN_Password]
+	  ,[LOGIN_Live]
+	  ,[LOGIN_Orders]
+	  ,[LOGIN_Products]
+	  ,[LOGIN_Config]
+	  ,[LOGIN_Protected]
+	  ,[LOGIN_LanguageID]
+	  ,[LOGIN_EmailAddress]
+	  ,[LOGIN_Tickets]
+	  ,[LOGIN_PushNotifications]
+FROM            tblKartrisLogins
+' 
+END
+GO
