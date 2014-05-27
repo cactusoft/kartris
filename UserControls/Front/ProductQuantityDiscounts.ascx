@@ -10,6 +10,7 @@
                             <tr>
                                 <th class="name">
                                     <asp:Literal ID="litVersionName" runat="server" Text='<%# Eval("VersionName") %>' />
+                                    <asp:HiddenField ID="hidVersionID" runat="server" Value='<%# Eval("VersionID") %>' />
                                 </th>
                                 <th class="quantity">
                                     <asp:Literal ID="litContentTextQuantity" runat="server" Text="<%$ Resources: Kartris, ContentText_Quantity %>" />

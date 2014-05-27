@@ -30,3 +30,19 @@ table(_ID varchar(500)) AS BEGIN
 	RETURN
 END
 GO
+/****** Object:  StoredProcedure [dbo].[spKartrisQuantityDiscounts_GetByProduct]    Script Date: 2014-05-27 13:24:56 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[spKartrisQuantityDiscounts_GetByProduct]
+(
+	@ProductID as int,
+	@LangID as tinyint
+)
+AS
+	SET NOCOUNT ON;
+SELECT     tblKartrisQuantityDiscounts.QD_Quantity, tblKartrisQuantityDiscounts.QD_Price, vKartrisTypeVersions.V_Name, vKartrisTypeVersions.V_CodeNumber, vKartrisTypeVersions.V_ID
+FROM         tblKartrisQuantityDiscounts INNER JOIN
+					  vKartrisTypeVersions ON tblKartrisQuantityDiscounts.QD_VersionID = vKartrisTypeVersions.V_ID
+WHERE     (vKartrisTypeVersions.V_ProductID = @ProductID) AND (vKartrisTypeVersions.LANG_ID = @LangID) AND (vKartrisTypeVersions.V_Live = 1)
