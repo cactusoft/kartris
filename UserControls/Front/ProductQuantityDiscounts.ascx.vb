@@ -115,8 +115,8 @@ Partial Class ProductQuantityDiscounts
 
                         'If the numPrice from quantity discounts is higher than the 
                         'customer group price, we use the lower customer group price
-                        'instead
-                        If numPrice > numCustomerGroupPrice Then numPrice = numCustomerGroupPrice
+                        'instead. Ignore lower if zero though.
+                        If numPrice > numCustomerGroupPrice And numCustomerGroupPrice > 0 Then numPrice = numCustomerGroupPrice
 
                         'Format and add the price
                         tblDiscounts.Rows.Add(CStr(drwDiscount(i)("QD_Quantity")) & "+", _
