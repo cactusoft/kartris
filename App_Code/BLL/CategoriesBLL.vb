@@ -299,11 +299,11 @@ Public Class CategoriesBLL
                 '' 3. Add the Hierarchy
                 'Need to remove the empty check, because we want to allow categories
                 'to be saved without parents (to make them top level cats)
-                'If Not String.IsNullOrEmpty(pParentsList) Then
-                If Not _UpdateCategoryHierarchy(pCategoryID, pParentsList, sqlConn, savePoint) Then
-                    Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
+                If Not String.IsNullOrEmpty(pParentsList) Then
+                    If Not _UpdateCategoryHierarchy(pCategoryID, pParentsList, sqlConn, savePoint) Then
+                        Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
+                    End If
                 End If
-                'End If
 
                 savePoint.Commit()
                 sqlConn.Close()
