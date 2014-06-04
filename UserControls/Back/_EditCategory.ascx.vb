@@ -199,7 +199,7 @@ Partial Class UserControls_Back_EditCategory
         Next
         If sbdParentsList.ToString = "" Then
             sbdParentsList.Length = 0 : sbdParentsList.Capacity = 0
-            'sbdParentsList.Append("0")
+            sbdParentsList.Append("0") 'we need this zero otherwise edits that don't change category hierarchy cannot save
         Else
             Dim strNewParents As String = sbdParentsList.ToString
             If strNewParents.EndsWith(",") Then strNewParents = strNewParents.TrimEnd(",")
