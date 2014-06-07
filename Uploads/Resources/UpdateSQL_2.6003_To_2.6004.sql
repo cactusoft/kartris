@@ -1,30 +1,67 @@
-﻿/****** Object:  View [dbo].[vKartrisTypeVersions]    Script Date: 2014-06-07 17:05:20 ******/
--- Modified: By Paul - 2014/6/7 - Added filter <>'s' so we don't pull out suspended combinations
+﻿/****** Object:  StoredProcedure [dbo].[spKartrisVersions_GetByProductID]    Script Date: 2014-06-07 20:55:23 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
-
-ALTER VIEW [dbo].[vKartrisTypeVersions]
+-- =============================================
+-- Author:		Paul
+-- Fixes issue with NULL values, 'simple'
+-- tax mode settings
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisVersions_GetByProductID]
+(
+	@P_ID as int, 
+	@LANG_ID as tinyint,
+	@CGroupID as smallint
+)
 AS
-SELECT        TOP (100) PERCENT dbo.tblKartrisVersions.V_ID, dbo.tblKartrisLanguages.LANG_ID, dbo.tblKartrisLanguageElements.LE_Value AS V_Name, tblKartrisLanguageElements_1.LE_Value AS V_Desc, 
-						 dbo.tblKartrisVersions.V_CodeNumber, dbo.fnKartrisObjectConfig_GetValueByParent(N'K:version.extrasku', dbo.tblKartrisVersions.V_ID) AS V_ExtraCodeNumber, dbo.tblKartrisVersions.V_ProductID, 
-						 dbo.tblKartrisVersions.V_Price, dbo.tblKartrisVersions.V_Tax, dbo.tblKartrisVersions.V_Weight, dbo.tblKartrisVersions.V_DeliveryTime, dbo.tblKartrisVersions.V_Quantity, 
-						 dbo.tblKartrisVersions.V_QuantityWarnLevel, dbo.tblKartrisVersions.V_Live, dbo.tblKartrisVersions.V_DownLoadInfo, dbo.tblKartrisVersions.V_DownloadType, dbo.tblKartrisVersions.V_OrderByValue, 
-						 dbo.tblKartrisVersions.V_RRP, dbo.tblKartrisVersions.V_Type, dbo.tblKartrisVersions.V_CustomerGroupID, dbo.tblKartrisVersions.V_CustomizationType, dbo.tblKartrisVersions.V_CustomizationDesc, 
-						 dbo.tblKartrisVersions.V_CustomizationCost, dbo.tblKartrisVersions.V_Tax2, dbo.tblKartrisVersions.V_TaxExtra
-FROM            dbo.tblKartrisLanguageElements INNER JOIN
-						 dbo.tblKartrisVersions ON dbo.tblKartrisLanguageElements.LE_ParentID = dbo.tblKartrisVersions.V_ID INNER JOIN
-						 dbo.tblKartrisLanguageElements AS tblKartrisLanguageElements_1 ON dbo.tblKartrisVersions.V_ID = tblKartrisLanguageElements_1.LE_ParentID INNER JOIN
-						 dbo.tblKartrisLanguages ON dbo.tblKartrisLanguageElements.LE_LanguageID = dbo.tblKartrisLanguages.LANG_ID AND 
-						 tblKartrisLanguageElements_1.LE_LanguageID = dbo.tblKartrisLanguages.LANG_ID
-WHERE        (dbo.tblKartrisLanguageElements.LE_FieldID = 1) AND (tblKartrisLanguageElements_1.LE_FieldID = 2) AND (dbo.tblKartrisLanguageElements.LE_Value IS NOT NULL) AND 
-						 (dbo.tblKartrisLanguageElements.LE_TypeID = 1) AND (tblKartrisLanguageElements_1.LE_TypeID = 1) AND (dbo.tblKartrisVersions.V_Type <> 's') OR
-						 (dbo.tblKartrisLanguageElements.LE_FieldID = 1) AND (tblKartrisLanguageElements_1.LE_FieldID = 2) AND (dbo.tblKartrisLanguageElements.LE_TypeID = 1) AND (tblKartrisLanguageElements_1.LE_TypeID = 1) 
-						 AND (tblKartrisLanguageElements_1.LE_Value IS NOT NULL)
+BEGIN
+SET NOCOUNT ON;
+	
+	DECLARE @OrderBy as nvarchar(50), @OrderDirection as char(1);
+	SELECT @OrderBy = P_OrderVersionsBy, @OrderDirection = P_VersionsSortDirection
+	FROM tblKartrisProducts WHERE P_ID = @P_ID;
 
-GO
+	IF @OrderBy IS NULL OR @OrderBy = '' OR @OrderBy = 'd'
+	BEGIN
+		 SELECT @OrderBy = CFG_Value FROM tblKartrisConfig WHERE CFG_Name = 'frontend.versions.display.sortdefault';
+	END
+
+	IF @OrderDirection IS NULL OR @OrderDirection = ''
+	BEGIN
+		 SELECT @OrderDirection = CFG_Value FROM tblKartrisConfig WHERE CFG_Name = 'frontend.versions.display.sortdirection';
+	END
+
+	BEGIN
+		SELECT     vKartrisTypeVersions.V_ID, tblKartrisTaxRates.T_Taxrate, vKartrisTypeVersions.V_Price, vKartrisTypeVersions.V_Weight, vKartrisTypeVersions.V_RRP, 
+					  vKartrisTypeVersions.V_Tax, tblKartrisTaxRates.T_Taxrate AS Expr1, '0' AS CalculatedTax, vKartrisTypeVersions.V_ProductID, vKartrisTypeVersions.V_CodeNumber, 
+					  vKartrisTypeVersions.V_ExtraCodeNumber, vKartrisTypeVersions.V_Quantity, vKartrisTypeVersions.V_QuantityWarnLevel, vKartrisTypeVersions.V_Price AS OrderByBit, 
+					  vKartrisTypeVersions.V_Name, vKartrisTypeVersions.V_Desc, MIN(tblKartrisQuantityDiscounts.QD_Price) AS QuantityDiscount, vKartrisTypeVersions.V_OrderByValue, 
+					  vKartrisTypeVersions.V_CustomizationType, vKartrisTypeVersions.V_CustomizationDesc, vKartrisTypeVersions.V_CustomizationCost
+		FROM         vKartrisTypeVersions LEFT OUTER JOIN
+							  tblKartrisTaxRates ON vKartrisTypeVersions.V_Tax = tblKartrisTaxRates.T_ID LEFT OUTER JOIN
+							  tblKartrisQuantityDiscounts ON vKartrisTypeVersions.V_ID = tblKartrisQuantityDiscounts.QD_VersionID
+		WHERE     (vKartrisTypeVersions.LANG_ID = @LANG_ID) AND (vKartrisTypeVersions.V_ProductID = @P_ID) AND (vKartrisTypeVersions.V_Live = 1)
+				AND (vKartrisTypeVersions.V_CustomerGroupID IS NULL OR vKartrisTypeVersions.V_CustomerGroupID = @CGroupID)
+				AND vKartrisTypeVersions.V_Type <> 's'
+		GROUP BY vKartrisTypeVersions.V_ID, tblKartrisTaxRates.T_Taxrate, vKartrisTypeVersions.V_Price, vKartrisTypeVersions.V_Weight, vKartrisTypeVersions.V_RRP, 
+							  vKartrisTypeVersions.V_Tax, vKartrisTypeVersions.V_ProductID, vKartrisTypeVersions.V_CodeNumber, vKartrisTypeVersions.V_ExtraCodeNumber,
+							  vKartrisTypeVersions.V_Quantity, vKartrisTypeVersions.V_QuantityWarnLevel, vKartrisTypeVersions.V_Name, vKartrisTypeVersions.V_Desc, 
+							  vKartrisTypeVersions.V_OrderByValue, vKartrisTypeVersions.V_CustomizationType, vKartrisTypeVersions.V_CustomizationDesc, 
+							  vKartrisTypeVersions.V_CustomizationCost
+		HAVING      (vKartrisTypeVersions.V_Name IS NOT NULL)
+		ORDER BY	CASE
+					WHEN (@OrderBy = 'V_Name' AND @OrderDirection = 'A') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_Name ASC))
+					WHEN (@OrderBy = 'V_Name' AND @OrderDirection = 'D') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_Name DESC))
+					WHEN (@OrderBy = 'V_ID' AND @OrderDirection = 'A') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_ID ASC))
+					WHEN (@OrderBy = 'V_ID' AND @OrderDirection = 'D') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_ID DESC))
+					WHEN (@OrderBy = 'V_OrderByValue' AND @OrderDirection = 'A') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_OrderByValue ASC))
+					WHEN (@OrderBy = 'V_OrderByValue' AND @OrderDirection = 'D') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_OrderByValue DESC))
+					WHEN (@OrderDirection = 'A') THEN (RANK() OVER(ORDER BY vKartrisTypeVersions.V_Price ASC))
+					ELSE (RANK() OVER(ORDER BY vKartrisTypeVersions.V_Price DESC))
+					END
+	END			
+END
 /****** Object:  UserDefinedFunction [dbo].[fnKartrisVersions_GetBaseVersionDownloadType]    Script Date: 2014-06-07 17:28:48 ******/
 SET ANSI_NULLS ON
 GO

@@ -1289,7 +1289,6 @@ Public Class BasketBLL
                         objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
                     End If
                 ElseIf objItem.ProductType = "o" Then
-
                     objItem.OptionLink = "&strOptions=0"
 
                     'Turn stock tracking off for options products
