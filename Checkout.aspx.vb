@@ -991,9 +991,9 @@ Partial Class _Checkout
                 If objBasket.PromotionDiscount.IncTax < 0 Then
                     For Each objPromotion As PromotionBasketModifier In UC_BasketSummary.GetPromotionsDiscount
                         With objPromotion
-                            sbdBodyText.AppendLine(GetItemEmailText(GetGlobalResourceObject("Kartris", "ContentText_PromotionDiscount"), .Name, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
+                            sbdBodyText.AppendLine(GetItemEmailText(.Quantity & " x " & GetGlobalResourceObject("Kartris", "ContentText_PromotionDiscount"), .Name, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
                             If blnUseHTMLOrderEmail Then
-                                sbdHTMLOrderContents.Append(GetHTMLEmailRowText(GetGlobalResourceObject("Kartris", "ContentText_PromotionDiscount"), .Name, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
+                                sbdHTMLOrderContents.Append(GetHTMLEmailRowText(.Quantity & " x " & GetGlobalResourceObject("Kartris", "ContentText_PromotionDiscount"), .Name, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
                             End If
                             If strPromotionDescription <> "" Then strPromotionDescription += vbCrLf & .Name Else strPromotionDescription += .Name
                         End With
