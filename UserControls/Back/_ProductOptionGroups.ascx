@@ -30,11 +30,11 @@
                                             ValidationGroup="BasicVersion" />
                                     </li>
                                     <%-- Stock Tracking --%>
-                                    <li>
-                                        <asp:CheckBox ID="chkBasicStockTracking" runat="server" AutoPostBack="true" Checked="true"
-                                            CssClass="checkbox" Text="<%$ Resources:_Version,ContentText_StockTrackingText %>" />
-                                    </li>
-                                    <asp:PlaceHolder ID="PlaceHolder2" runat="server" Visible="false">
+                                    <asp:PlaceHolder ID="phdStockInfo" runat="server" Visible="false">
+                                        <li>
+                                            <asp:CheckBox ID="chkBasicStockTracking" runat="server" AutoPostBack="true" Checked="true"
+                                                CssClass="checkbox" Text="<%$ Resources:_Version,ContentText_StockTrackingText %>" />
+                                        </li>
                                         <li>
                                             <asp:Label ID="lblFormLabelStockQuantity" runat="server" Text="<%$ Resources:_Version,FormLabel_StockQuantity %>"
                                                 AssociatedControlID="txtBasicStockQuantity"></asp:Label>

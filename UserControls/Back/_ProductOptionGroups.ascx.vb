@@ -93,12 +93,6 @@ Partial Class _ProductOptionGroups
                     chkBasicStockTracking.Checked = False
                 End If
 
-                'If this is not a combinations product, we need to hide the
-                'stock tracking checkbox
-                If Not CkartrisCombinations.IsCombinationsProduct(FixNullFromDB(drBasic("V_ProductID"))) Then
-                    chkBasicStockTracking.Visible = False
-                End If
-
                 chkBasicStockTracking_CheckedChanged(Me, New EventArgs)
                 txtBasicStockQuantity.Text = FixNullFromDB(drBasic("V_Quantity"))
                 txtBasicWarningLevel.Text = FixNullFromDB(drBasic("V_QuantityWarnLevel"))
