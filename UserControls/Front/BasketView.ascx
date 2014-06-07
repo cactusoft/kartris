@@ -220,7 +220,8 @@ MAIN BASKET
                                                             <%#Eval("OptionText")%>
                                                         </asp:PlaceHolder>
                                                         <asp:PlaceHolder ID="phdItemHasNoCombinations" runat="server" Visible="false">
-                                                            <asp:Literal ID="litVersionName" runat="server" Text='<%# Server.HtmlEncode(Eval("VersionName")) %>' />
+                                                            <asp:Literal ID="litVersionName" runat="server" Text='<%# Server.HtmlEncode(Eval("VersionName")) %>' Visible="false" />
+                                                            <%#Eval("OptionText")%>
                                                         </asp:PlaceHolder>
                                                         (<asp:Literal ID="litCodeNumber2" runat="server" Text='<%# Server.HtmlEncode(Eval("CodeNumber")) %>' />)
                                                     </asp:PlaceHolder>
