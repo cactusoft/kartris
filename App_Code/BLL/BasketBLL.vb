@@ -111,6 +111,7 @@ Public Class BasketItem
     Private _VersionName As String
     Private _ProductName As String
     Private _ProductType As String
+    Private _VersionType As String
     Private _ID As Long
     Private _ProductID As Long
     Private _CategoryIDs As String
@@ -180,6 +181,15 @@ Public Class BasketItem
         End Get
         Set(ByVal value As String)
             _ProductType = value
+        End Set
+    End Property
+
+    Public Property VersionType() As String
+        Get
+            Return _VersionType
+        End Get
+        Set(ByVal value As String)
+            _VersionType = value
         End Set
     End Property
 
@@ -1254,15 +1264,8 @@ Public Class BasketBLL
                 objItem.OptionPrice = Math.Round(CDbl(FixNullFromDB(drwBasketValues("OptionsPrice"))), CurrencyRoundNumber)
                 objItem.CategoryIDs = GetCategoryIDs(objItem.ProductID)
                 objItem.PromoQty = objItem.Quantity
-
+                objItem.VersionType = FixNullFromDB(drwBasketValues("VersionType"))
                 objItem.OptionText = GetOptionText(numLanguageID, objItem.ID, objItem.OptionLink)
-                If objItem.OptionText <> "" Then
-                    objItem.HasCombinations = True
-                    objItem.OptionLink = "&strOptions=" & objItem.OptionLink
-                Else
-                    objItem.OptionLink = "&strOptions=0"
-                End If
-
                 objItem.CustomText = drwBasketValues("CustomText") & ""
                 objItem.CustomType = drwBasketValues("V_CustomizationType") & ""
                 objItem.CustomDesc = drwBasketValues("V_CustomizationDesc") & ""
@@ -1270,11 +1273,33 @@ Public Class BasketBLL
                 objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
                 objItem.TableText = ""
 
-                If ObjectConfigBLL.GetValue("K:product.usecombinationprice", objItem.ProductID) = "1" Then
-                    objItem.Price = FixNullFromDB(drwBasketValues("CombinationPrice"))
-                    objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
-                    objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
+                'We can tell if this is an combinations product
+                If objItem.VersionType = "c" Then
+                    objItem.HasCombinations = True
+                    objItem.OptionLink = "&strOptions=" & objItem.OptionLink
+                    objItem.DownloadType = FixNullFromDB(drwBasketValues("BaseVersion_DownloadType"))
+
+                    'Normally, combinations products will use the price derived from the base version
+                    'and any options that are selected, just like a regular options product. However,
+                    'by setting the usecombination object config setting for the product to 'on', you
+                    'can specify pricing individually for each combination.
+                    If ObjectConfigBLL.GetValue("K:product.usecombinationprice", objItem.ProductID) = "1" Then
+                        objItem.Price = FixNullFromDB(drwBasketValues("CombinationPrice"))
+                        objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
+                        objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
+                    End If
+                ElseIf objItem.ProductType = "o" Then
+
+                    objItem.OptionLink = "&strOptions=0"
+
+                    'Turn stock tracking off for options products
+                    'which are not combinations
+                    objItem.QtyWarnLevel = 0
                 End If
+
+
+
+
 
                 'Handle the price differently if basket item is from a custom product
                 Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", objItem.ProductID)

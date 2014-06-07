@@ -742,8 +742,8 @@ Partial Class Templates_BasketView
 
         For Each objItem As PromotionBasketModifier In arrPromotionsDiscount
             objItem.ApplyTax = Basket.ApplyTax
-            objItem.ExTax = objItem.ExTax
-            objItem.IncTax = objItem.IncTax
+            'objItem.ExTax = objItem.ExTax
+            'objItem.IncTax = objItem.IncTax
         Next
 
         rptPromotionDiscount.DataSource = arrPromotionsDiscount

@@ -198,7 +198,7 @@ MAIN BASKET
                                         <% End If%>
                                         <div class="name" style="cursor: pointer;">
                                             <strong>
-                                                <asp:HyperLink ID="lnkProduct" runat="server" Text='<%# Server.HTMLEncode(Eval("Quantity") & " X " &  Eval("ProductName")) %>'></asp:HyperLink></strong>
+                                                <asp:HyperLink ID="lnkProduct" runat="server" Text='<%# Server.HTMLEncode(Eval("Quantity") & " x " &  Eval("ProductName")) %>'></asp:HyperLink></strong>
                                             <asp:UpdatePanel ID="updCustomize" runat="server" UpdateMode="Conditional">
                                                 <ContentTemplate>
                                                     <asp:LinkButton ID="lnkCustomize" CssClass="link2 icon_new" runat="server" CommandName="Customize"
@@ -313,6 +313,7 @@ MAIN BASKET
                                             <% End If%>
                                             <div class="name">
                                                 <strong>
+                                                    <%#Eval("Quantity")%> x
                                                     <asp:Literal ID="litPromotionDiscount" runat="server" Text='<%$ Resources: Basket, ContentText_Promotion %>'
                                                         EnableViewState="false"></asp:Literal></strong>
                                             </div>
@@ -900,7 +901,7 @@ MINI BASKET
                                     <asp:Repeater ID="rptMiniBasket" runat="server">
                                         <ItemTemplate>
                                             <li class="minibasket_item">
-                                                <asp:HyperLink ID="lnkMiniBasketProduct" runat="server" Text='<%# Server.HTMLEncode(Eval("Quantity") & " X " &  Eval("ProductName")) %>'></asp:HyperLink>
+                                                <asp:HyperLink ID="lnkMiniBasketProduct" runat="server" Text='<%# Server.HTMLEncode(Eval("Quantity") & " x " &  Eval("ProductName")) %>'></asp:HyperLink>
                                             </li>
                                         </ItemTemplate>
                                     </asp:Repeater>
