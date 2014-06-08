@@ -769,11 +769,11 @@ Partial Class Templates_BasketView
             strOptions = objItem.OptionLink
 
             'Only add options to URL if there are some
-            If strOptions <> "&strOptions=0" Then
+            If strOptions <> "0" And strOptions <> "" Then
                 If strURL.Contains("?") Then
-                    strURL = strURL & objItem.OptionLink
+                    strURL = strURL & "&strOptions=" & strOptions
                 Else
-                    strURL = strURL & Replace(objItem.OptionLink, "&", "?")
+                    strURL = strURL & "?strOptions=" & strOptions
                 End If
             End If
 
@@ -805,11 +805,11 @@ Partial Class Templates_BasketView
             strOptions = objItem.OptionLink
 
             'Only add options to URL if there are some
-            If strOptions <> "&strOptions=0" Then
+            If strOptions <> "0" And strOptions <> "" Then
                 If strURL.Contains("?") Then
-                    strURL = strURL & objItem.OptionLink
+                    strURL = strURL & "&strOptions=" & strOptions
                 Else
-                    strURL = strURL & Replace(objItem.OptionLink, "&", "?")
+                    strURL = strURL & "?strOptions=" & strOptions
                 End If
             End If
 

@@ -1265,18 +1265,10 @@ Public Class BasketBLL
                 objItem.CategoryIDs = GetCategoryIDs(objItem.ProductID)
                 objItem.PromoQty = objItem.Quantity
                 objItem.VersionType = FixNullFromDB(drwBasketValues("VersionType"))
-                objItem.OptionText = GetOptionText(numLanguageID, objItem.ID, objItem.OptionLink)
-                objItem.CustomText = drwBasketValues("CustomText") & ""
-                objItem.CustomType = drwBasketValues("V_CustomizationType") & ""
-                objItem.CustomDesc = drwBasketValues("V_CustomizationDesc") & ""
-                objItem.CustomCost = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, FixNullFromDB(drwBasketValues("V_CustomizationCost")))), CurrencyRoundNumber)
-                objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
-                objItem.TableText = ""
 
                 'We can tell if this is an combinations product
                 If objItem.VersionType = "c" Then
                     objItem.HasCombinations = True
-                    objItem.OptionLink = "&strOptions=" & objItem.OptionLink
                     objItem.DownloadType = FixNullFromDB(drwBasketValues("BaseVersion_DownloadType"))
 
                     'Normally, combinations products will use the price derived from the base version
@@ -1288,17 +1280,33 @@ Public Class BasketBLL
                         objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
                         objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
                     End If
-                ElseIf objItem.ProductType = "o" Then
-                    objItem.OptionLink = "&strOptions=0"
 
-                    'Turn stock tracking off for options products
-                    'which are not combinations
+                    'We determine whether stock tracking is on or not from the
+                    'base version rather than the actual combination in the
+                    'basket
+                    If VersionsBLL.IsStockTrackingInBase(objItem.ProductID) Then
+                        'Nowt
+                    Else
+                        objItem.QtyWarnLevel = 0
+                    End If
+
+                ElseIf objItem.ProductType = "o" Then
+                    objItem.OptionLink = ""
+
+                    'We don't stock track plain old versions; it doesn't really make sense
+                    'since they're configurable items, and if stock tracking is needed you
+                    'really need to track individual combinations rather than the base
+                    'version
                     objItem.QtyWarnLevel = 0
                 End If
 
-
-
-
+                objItem.OptionText = GetOptionText(numLanguageID, objItem.ID, objItem.OptionLink)
+                objItem.CustomText = drwBasketValues("CustomText") & ""
+                objItem.CustomType = drwBasketValues("V_CustomizationType") & ""
+                objItem.CustomDesc = drwBasketValues("V_CustomizationDesc") & ""
+                objItem.CustomCost = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, FixNullFromDB(drwBasketValues("V_CustomizationCost")))), CurrencyRoundNumber)
+                objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
+                objItem.TableText = ""
 
                 'Handle the price differently if basket item is from a custom product
                 Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", objItem.ProductID)

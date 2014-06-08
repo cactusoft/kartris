@@ -508,7 +508,7 @@ SECTION: OPTIONS
 SECTION: COMBINATIONS
 ========================================================================
 */
-#section_combinations .codenumber       { width: 100px }
+#section_combinations .codenumber       { width: 150px }
 #section_combinations input.itemname    { width: 200px }
 #section_combinations table td          { padding-top: 9px }
 /* 

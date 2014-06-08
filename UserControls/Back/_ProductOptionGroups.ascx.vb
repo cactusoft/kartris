@@ -45,6 +45,7 @@ Partial Class _ProductOptionGroups
                 End If
             End If
         End If
+        chkBasicStockTracking.Text = GetGlobalResourceObject("_Version", "ContentText_StockTrackingText") & "*"
 
     End Sub
 
@@ -465,17 +466,17 @@ Partial Class _ProductOptionGroups
             Dim numRowCount As Integer = 0
             For Each drwNewCombination As DataRow In tblNewCombinations.Rows
                 numRowCount += 1
-                drwNewCombination("CodeNumber") = ""
+                drwNewCombination("CodeNumber") = txtBasicCodeNumber.Text & "-" & numRowCount
                 drwNewCombination("Price") = CSng(txtBasicIncTax.Text)
                 drwNewCombination("Quantity") = CInt(txtBasicStockQuantity.Text)
                 drwNewCombination("QuantityWarnLevel") = CInt(txtBasicWarningLevel.Text)
                 drwNewCombination("IsExist") = False
 
 
-                If tblExistingCombinations.Rows.Count = 0 Then
-                    drwNewCombination("CodeNumber") = txtBasicCodeNumber.Text & "-" & numRowCount
-                    Continue For
-                End If
+                'If tblExistingCombinations.Rows.Count = 0 Then
+                '    drwNewCombination("CodeNumber") = txtBasicCodeNumber.Text & "-" & numRowCount
+                '    Continue For
+                'End If
 
                 strNewIDs = Split(CStr(drwNewCombination("ID_List")), ",")
 

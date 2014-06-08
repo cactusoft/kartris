@@ -138,3 +138,6 @@ WITH tblBasketValues as
 	WHERE LANG_ID = @intLanguageID
 	ORDER BY BV_ID
 END
+
+/****** Object: Create new language string.  Script Date: 2014-06-07 15:16:20 ******/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_StockTrackingOptionsClarification', N'*Only applies if combinations created; normal options products cannot be stock-tracked', NULL, 1, N'*Only applies if combinations created; normal options products cannot be stock-tracked', NULL, N'_Version',1);
