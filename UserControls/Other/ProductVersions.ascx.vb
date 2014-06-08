@@ -761,9 +761,7 @@ Partial Class ProductVersions
             Dim numPrice As Single = VersionsBLL.GetCombinationPrice(ProductID, strOptionsList)
             Dim numVersionID As Integer = GetCombinationVersionID_s(ProductID, strOptionsList)
 
-            numPrice = GetPriceWithGroupDiscount(numVersionID, numPrice)
-
-            numPrice = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), numPrice)
+            numPrice = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), GetPriceWithGroupDiscount(numVersionID, numPrice))
 
             If numPrice <> Nothing Then
                 phdNotOutOfStock4.Visible = True

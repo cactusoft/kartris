@@ -30,10 +30,11 @@
                                             ValidationGroup="BasicVersion" />
                                     </li>
                                     <%-- Stock Tracking --%>
-                                    <asp:PlaceHolder ID="phdStockInfo" runat="server" Visible="false">
+                                    <asp:PlaceHolder ID="phdStockInfo" runat="server">
                                         <li>
                                             <asp:CheckBox ID="chkBasicStockTracking" runat="server" AutoPostBack="true" Checked="true"
-                                                CssClass="checkbox" Text="<%$ Resources:_Version,ContentText_StockTrackingText %>" />
+                                                CssClass="checkbox" />
+                                            
                                         </li>
                                         <li>
                                             <asp:Label ID="lblFormLabelStockQuantity" runat="server" Text="<%$ Resources:_Version,FormLabel_StockQuantity %>"
@@ -155,6 +156,8 @@
                                             ValidChars="." TargetControlID="txtBasicWeight" />
                                     </li>
                                 </ul>
+                                <br /><em><asp:Literal ID="litContentTextStockTrackingOptionsClarification" runat="server"
+                                    Text="<%$ Resources: _Version, ContentText_StockTrackingOptionsClarification %>"></asp:Literal></em>
                                 <%-- Save Button --%>
                                 <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
                                     <asp:LinkButton ID="lnkBtnSaveBasicVersion" runat="server" Text='<%$ Resources: _Kartris, FormButton_Save %>'
