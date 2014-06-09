@@ -110,6 +110,7 @@ Partial Class ProductQuantityDiscounts
                 Using tblDiscounts As New DataTable
                     tblDiscounts.Columns.Add(New DataColumn("Quantity", Type.GetType("System.String")))
                     tblDiscounts.Columns.Add(New DataColumn("Price", Type.GetType("System.String")))
+                    Dim blnHasAQtyDiscount As Boolean = False
                     For i As Integer = 0 To drwDiscount.Length - 1
                         Dim numPrice As Single = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), CDbl(FixNullFromDB(drwDiscount(i)("QD_Price"))))
 
@@ -125,13 +126,24 @@ Partial Class ProductQuantityDiscounts
                             'Format and add the price
                             tblDiscounts.Rows.Add(CStr(drwDiscount(i)("QD_Quantity")) & "+", _
                                     CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice))
+                            'We keep a track that at least one row is added
+                            'so if none at end, we can hide this whole thing
+                            blnHasAQtyDiscount = True
                         End If
-
                     Next
-                    CType(e.Item.FindControl("rptVersionsDiscount"), Repeater).DataSource = tblDiscounts
-                    CType(e.Item.FindControl("rptVersionsDiscount"), Repeater).DataBind()
+
+                    'Hide repeater if no rows, or databind if there are some
+                    'qty discounts to display in this section
+                    If blnHasAQtyDiscount = False Then
+                        CType(e.Item.FindControl("rptVersionsDiscount"), Repeater).Visible = False
+                    Else
+                        CType(e.Item.FindControl("rptVersionsDiscount"), Repeater).DataSource = tblDiscounts
+                        CType(e.Item.FindControl("rptVersionsDiscount"), Repeater).DataBind()
+                    End If
+
                 End Using
             End Using
+
         End If
     End Sub
 

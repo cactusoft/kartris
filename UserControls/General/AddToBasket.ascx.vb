@@ -249,8 +249,8 @@ Partial Class UserControls_General_AddToBasket
             If CInt(UnitSize) > 1 Then strMinimumAllowedQty = CInt(UnitSize)
         End If
 
+        'Set quantity selector type
         Select Case c_strSelectorType
-
             Case "textbox"
                 'Textbox for quantity next to 'add' button
 
@@ -312,8 +312,6 @@ Partial Class UserControls_General_AddToBasket
                 ddlItemsQuantity.Visible = True
                 'End If
         End Select
-
-        ' End If
 
     End Sub
 
