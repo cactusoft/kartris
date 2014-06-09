@@ -15,10 +15,11 @@
                                 <asp:TextBox ID="txtSearch" runat="server"></asp:TextBox>
                                 <asp:Label runat="server" ID="lblSortBy" Text="<%$ Resources: Filters, ContentText_SortBy %>" AssociatedControlID="ddlOrderBy"></asp:Label>     
                                 <asp:DropDownList ID="ddlOrderBy" runat="server">
-                                </asp:DropDownList>                                
-                                
-                                <asp:Label runat="server" ID="lblPriceRange" Text="<%$ Resources: Filters, ContentText_PriceRange %>" AssociatedControlID="ddlPriceRange"></asp:Label>     
+                                </asp:DropDownList>
+
                                 <asp:PlaceHolder ID="phdPriceRange" runat="server">
+                                    <asp:Label runat="server" ID="lblPriceRange" Text="<%$ Resources: Filters, ContentText_PriceRange %>" AssociatedControlID="ddlPriceRange"></asp:Label>
+
                                     <asp:DropDownList ID="ddlPriceRange" runat="server" AutoPostBack="true">
                                     </asp:DropDownList>
                                     <asp:PlaceHolder ID="phdCustomPrice" runat="server">
