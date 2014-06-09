@@ -150,20 +150,16 @@ Partial Class ProductVersions
         '' Depending on the ViewType, the corresponding viewControl will be activated,
         ''  and the corresponding repeater as well.
         Select Case pViewType
-            'single version product
-            Case "l"
+            Case "l" 'single version product
                 mvwVersion.SetActiveView(PrepareSelectView(tblVersions))
-                'tabular rows
-            Case "r"
+            Case "r" 'tabular rows
                 mvwVersion.SetActiveView(PrepareRowsView(tblVersions))
-                'dropdown views
-            Case "p"
+            Case "p" 'dropdown views
                 If Not Page.IsPostBack Then
                     mvwVersion.SetActiveView(PrepareDropDownView(tblVersions))
-                    UC_AddToBasketQty3.SelectorType = LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", _ProductID))
                 End If
-            Case "o", "g"
-                'options
+                UC_AddToBasketQty3.SelectorType = LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", _ProductID))
+            Case "o", "g" 'options
                 c_blnHasPrices = False
                 mvwVersion.SetActiveView(PrepareOptionsView(tblVersions))
             Case Else
@@ -266,7 +262,7 @@ Partial Class ProductVersions
                 strV_Name = drwVersion("V_Name") & " -- "
                 strV_Price = " " & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice, , False)
                 'Need to check if out of stock
-                If drwVersion("V_Quantity") < 1.0F And drwVersion("V_QuantityWarnLevel") > 0.0F Then
+                If drwVersion("V_Quantity") < 1.0F And drwVersion("V_QuantityWarnLevel") > 0.0F And KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y" Then
                     'out of stock
                     ddlName_DropDown.Items.Add(New ListItem(strV_Name & _
                      CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice, , False) & _
@@ -386,6 +382,7 @@ Partial Class ProductVersions
                     ''End If
                 End If
             End If
+
         Else
             If IsNumeric(lblVID_Options.Text) Then UC_AddToBasketQty4.VersionID = CLng(lblVID_Options.Text)
             btnAdd_Options.Text = GetGlobalResourceObject("_Kartris", "FormButton_Add")
@@ -906,6 +903,7 @@ Partial Class ProductVersions
 
         phdOutOfStock4.Visible = False
         phdNotOutOfStock4.Visible = True
+        UC_AddToBasketQty4.Visible = True
         phdNoValidCombinations.Visible = False
 
         'Just clean up the options a bit
@@ -919,7 +917,7 @@ Partial Class ProductVersions
 
         'The version is not live or does not exist,
         'probably because invalid options selections
-        If numQty = -1.0F Then
+        If numQty = -9999.0F Then
             phdOutOfStock4.Visible = False
             phdNotOutOfStock4.Visible = False
             UC_AddToBasketQty4.Visible = False
@@ -928,7 +926,7 @@ Partial Class ProductVersions
         End If
 
         'This handles showing 'out of stock' and hiding the 'add' button
-        If VersionsBLL.IsStockTrackingInBase(_ProductID) And numQty <= 0.0F Then
+        If VersionsBLL.IsStockTrackingInBase(_ProductID) And numQty <= 0.0F And KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y" Then
             phdOutOfStock4.Visible = True
             UC_AddToBasketQty4.Visible = False
             phdNotOutOfStock4.Visible = False

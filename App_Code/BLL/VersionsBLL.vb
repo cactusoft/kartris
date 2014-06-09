@@ -65,7 +65,7 @@ Public Class VersionsBLL
         Return Adptr.GetMinPriceByProductList(pLanguageID, pProductList, pCGID)
     End Function
     Public Shared Function GetOptionStockQty(ByVal ProductID As Integer, ByVal strOptionList As String) As Single
-        Dim numQty As Single = -1.0F
+        Dim numQty As Single = -9999.0F
         Adptr.GetOptionStockQty(ProductID, strOptionList, numQty)
         Return numQty
     End Function

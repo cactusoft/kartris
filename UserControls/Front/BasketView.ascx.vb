@@ -995,7 +995,7 @@ Partial Class Templates_BasketView
                     Exit For
                 End If
             Next
-            If tblVersion.Rows(0).Item("V_QuantityWarnLevel") > 0 And (numBasketQty + Quantity) > tblVersion.Rows(0).Item("V_Quantity") Then
+            If tblVersion.Rows(0).Item("V_QuantityWarnLevel") > 0 And (numBasketQty + Quantity) > tblVersion.Rows(0).Item("V_Quantity") And KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y" Then
                 Response.Redirect("~/Basket.aspx")
             End If
         End If
