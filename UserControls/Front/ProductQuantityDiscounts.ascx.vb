@@ -116,11 +116,17 @@ Partial Class ProductQuantityDiscounts
                         'If the numPrice from quantity discounts is higher than the 
                         'customer group price, we use the lower customer group price
                         'instead. Ignore lower if zero though.
-                        If numPrice > numCustomerGroupPrice And numCustomerGroupPrice > 0 Then numPrice = numCustomerGroupPrice
+                        If numPrice > numCustomerGroupPrice And numCustomerGroupPrice > 0 Then
+                            'This means the qty discount is higher than what the customer
+                            'should pay due to their customer group price. In this case,
+                            'we don't want to show the row, as it would show a higher price
+                            'that they won't actually have to pay
+                        Else
+                            'Format and add the price
+                            tblDiscounts.Rows.Add(CStr(drwDiscount(i)("QD_Quantity")) & "+", _
+                                    CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice))
+                        End If
 
-                        'Format and add the price
-                        tblDiscounts.Rows.Add(CStr(drwDiscount(i)("QD_Quantity")) & "+", _
-                                CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice))
                     Next
                     CType(e.Item.FindControl("rptVersionsDiscount"), Repeater).DataSource = tblDiscounts
                     CType(e.Item.FindControl("rptVersionsDiscount"), Repeater).DataBind()
