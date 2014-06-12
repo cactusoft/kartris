@@ -141,3 +141,301 @@ END
 
 /****** Object: Create new language string.  Script Date: 2014-06-07 15:16:20 ******/
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_StockTrackingOptionsClarification', N'*Only applies if combinations created; normal options products cannot be stock-tracked', NULL, 1, N'*Only applies if combinations created; normal options products cannot be stock-tracked', NULL, N'_Version',1);
+
+/****** Object:  StoredProcedure [dbo].[spKartrisDB_Search]    Script Date: 2014-06-12 10:17:55 ******/
+-- Updated to use nvarchar throughout for non-western charset support
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[spKartrisDB_Search]
+(	
+	@SearchText as nvarchar(500),
+	@keyWordsList as nvarchar(500),
+	@LANG_ID as tinyint,
+	@PageIndex as tinyint, -- 0 Based index
+	@RowsPerPage as tinyint,
+	@TotalResultProducts as int OUTPUT,
+	@MinPrice as real,
+	@MaxPrice as real,
+	@Method as nvarchar(10),
+	@CustomerGroupID as smallint
+)
+AS
+BEGIN
+SET NOCOUNT ON;
+	
+	SET NOCOUNT ON;
+	
+	IF @CustomerGroupID IS NULL BEGIN SET @CustomerGroupID = 0 END
+	
+	-----------------------
+	-- Variable Declaration
+	-----------------------
+	DECLARE @SIndx as int;
+	DECLARE @CIndx as int;
+	DECLARE @Keyword as nvarchar(150);
+	DECLARE @Counter as int;
+	
+	DECLARE @NoOfVersions as bigint;
+	SELECT @NoOfVersions = Count(1)	FROM tblKartrisVersions;
+	
+	-- Include Products and Attributes if no. of versions > 10,000
+	-- Include Versions, Products and Attributes if no. of versions <= 10,000
+	DECLARE @DataToSearch as nvarchar(100);
+	IF @NoOfVersions > 10000 BEGIN
+		SET @DataToSearch = '(LE_TypeID IN (2,14) AND LE_FieldID IN (1,2,5))'
+	END ELSE BEGIN
+		SET @DataToSearch = '(LE_TypeID IN (1,2,14) AND LE_FieldID IN (1,2,5))'
+	END
+		
+	DECLARE @ExactCriteriaNoNoise as nvarchar(500);
+	SET @ExactCriteriaNoNoise = Replace(@keyWordsList, ',', ' ');
+	
+	IF @Method = 'exact' BEGIN	
+		-- Searching value of LanguageElements - Add results to search helper (LIKE Operator)
+		EXECUTE('
+		INSERT INTO tblKartrisSearchHelper
+		SELECT TOP(1000) @@SPID, LE_TypeID, LE_FieldID, LE_ParentID, LE_Value, 
+					dbo.fnKartrisLanguageElement_GetProductID(LE_TypeID, LE_ParentID) , 0, 100/LE_FieldID, N''' + @KeyWord + '''
+		FROM       tblKartrisLanguageElements 
+		WHERE	LE_LanguageID = ' + @LANG_ID +' AND ' + @DataToSearch + '
+					AND (	(LE_Value LIKE N''% ' + @SearchText + ' %'')
+						OR	(LE_Value LIKE N''' + @SearchText + ' %'')
+						OR	(LE_Value LIKE N''% ' + @SearchText + ''')
+						OR	(LE_Value = N''' + @SearchText + ''')
+						)');
+						
+		-- Searching version code of Versions - Add results to search helper				
+		EXECUTE('
+		INSERT INTO tblKartrisSearchHelper
+		SELECT TOP(1000) @@SPID, 1, NULL, V_ID, NULL, V_ProductID, V_Price, 0, N''' + @SearchText + '''
+		FROM         tblKartrisVersions LEFT OUTER JOIN dbo.vKartrisObjectConfigValues 
+			ON V_ID = OCV_ParentID AND OC_Name = ''K:version.extrasku''
+		WHERE     (V_Live = 1) AND (V_CodeNumber LIKE N''' + @SearchText + '%'' OR OCV_Value LIKE N''' + @SearchText + '%'' )' );		
+	END ELSE BEGIN
+		-- Loop through out the list of keywords and search each keyword
+		SET @SIndx = 0;	SET @Counter = 0;
+		WHILE @SIndx <= LEN(@keyWordsList)	BEGIN
+		SET @Counter = @Counter + 1;	-- keywords counter
+		SET @CIndx = CHARINDEX(',', @keyWordsList, @SIndx)	-- Next keyword starting index (1-Based Index)
+		IF @CIndx = 0 BEGIN SET @CIndx = LEN(@keyWordsList)+ 1 END	-- If no more keywords, set next starting index to not exist
+		SET @KeyWord = SUBSTRING(@keyWordsList, @SIndx, @CIndx - @SIndx)
+		
+		-- The next starting index
+		SET @SIndx = @CIndx + 1;
+			
+		-- Searching value of LanguageElements - Add results to search helper (LIKE Operator)
+		EXECUTE('
+		INSERT INTO tblKartrisSearchHelper
+		SELECT TOP(1000) @@SPID, LE_TypeID, LE_FieldID, LE_ParentID, LE_Value, 
+					dbo.fnKartrisLanguageElement_GetProductID(LE_TypeID, LE_ParentID) , 0, 100/LE_FieldID, ''' + @KeyWord + '''
+		FROM       tblKartrisLanguageElements 
+		WHERE	LE_LanguageID = ' + @LANG_ID +' AND ' + @DataToSearch + '
+					AND (	(LE_Value LIKE N''% ' + @KeyWord + ' %'')
+						OR	(LE_Value LIKE N''' + @KeyWord + ' %'')
+						OR	(LE_Value LIKE N''% ' + @KeyWord + ''')
+						OR	(LE_Value = N''' + @KeyWord + ''')
+						)');
+						
+		-- Searching version code of Versions - Add results to search helper				
+		EXECUTE('
+		INSERT INTO tblKartrisSearchHelper
+		SELECT TOP(1000) @@SPID, 1, NULL, V_ID, NULL, V_ProductID, V_Price, 0, N''' + @KeyWord + '''
+		FROM         tblKartrisVersions LEFT OUTER JOIN dbo.vKartrisObjectConfigValues 
+			ON V_ID = OCV_ParentID AND OC_Name = ''K:version.extrasku''
+		WHERE     (V_Live = 1) AND (V_CodeNumber LIKE N''' + @Keyword + '%'' OR OCV_Value LIKE N''' + @Keyword + '%'' )' );	
+	END 
+	END
+	
+	-- (Advanced Search) Exclude products that are not between the price range
+	IF @MinPrice <> -1 AND @MaxPrice <> -1	BEGIN
+		UPDATE tblKartrisSearchHelper
+		SET SH_Price = dbo.fnKartrisProduct_GetMinPriceWithCG(SH_ProductID, @CustomerGroupID)
+		WHERE SH_SessionID = @@SPID;
+		DELETE FROM tblKartrisSearchHelper WHERE SH_SessionID = @@SPID AND SH_Price NOT BETWEEN @MinPrice AND @MaxPrice;
+	END
+
+	-- Exclude products in which their categories are not live
+	DELETE FROM tblKartrisSearchHelper
+	WHERE SH_SessionID = @@SPID
+		AND SH_ProductID NOT IN (SELECT distinct tblKartrisProductCategoryLink.PCAT_ProductID
+								 FROM	tblKartrisCategories INNER JOIN tblKartrisProductCategoryLink 
+										ON tblKartrisCategories.CAT_ID = tblKartrisProductCategoryLink.PCAT_CategoryID
+								 WHERE  tblKartrisCategories.CAT_Live = 1)
+
+	-- Exclude products that are Not Live or that are not belongs to customer group
+	DELETE FROM tblKartrisSearchHelper
+	WHERE SH_SessionID = @@SPID 
+		AND SH_ProductID IN (	SELECT P_ID 
+								FROM dbo.tblKartrisProducts 
+								WHERE P_Live = 0 OR (P_CustomerGroupID IS NOT NULL AND P_CustomerGroupID <> @CustomerGroupID)); 
+
+	-- Exclude products that has no Live versions or that are not belongs to customer group
+	DELETE FROM tblKartrisSearchHelper
+	WHERE SH_SessionID = @@SPID 
+		AND SH_ProductID NOT IN (SELECT V_ProductID 
+								 FROM dbo.tblKartrisVersions INNER JOIN dbo.tblKartrisProducts ON V_ProductID = P_ID
+								 WHERE V_Live = 1 AND (V_CustomerGroupID IS NULL OR V_CustomerGroupID = @CustomerGroupID)); 
+	
+	-- Exclude products that are not resulted from non-searchable attributes
+	DELETE FROM tblKartrisSearchHelper
+	WHERE SH_SessionID = @@SPID AND SH_TypeID = 14 
+			AND SH_ParentID IN (SELECT tblKartrisAttributeValues.ATTRIBV_ID
+							FROM tblKartrisAttributes INNER JOIN tblKartrisAttributeValues 
+							ON tblKartrisAttributes.ATTRIB_ID = tblKartrisAttributeValues.ATTRIBV_AttributeID
+							WHERE   tblKartrisAttributes.ATTRIB_ShowSearch = 0);
+					
+	-- Update the scores of the products with exact match			
+	IF @Counter > 1	BEGIN
+		UPDATE tblKartrisSearchHelper SET SH_Score = SH_Score + (400) 
+		WHERE SH_SessionID = @@SPID AND ((SH_TextValue LIKE N'%' + @ExactCriteriaNoNoise + '%') OR (SH_TextValue LIKE N'%' + @SearchText + '%'));
+	END
+	
+	-- Update the scores according to number of versions
+	IF @NoOfVersions > 10000 BEGIN
+		UPDATE tblKartrisSearchHelper SET SH_Score = SH_Score + (30) WHERE SH_SessionID = @@SPID AND SH_FieldID = 2;
+		UPDATE tblKartrisSearchHelper SET SH_Score = SH_Score + (200) WHERE SH_SessionID = @@SPID AND SH_FieldID IN (1, 5);
+	END	ELSE BEGIN
+		UPDATE tblKartrisSearchHelper SET SH_Score = SH_Score + (30 * SH_TypeID) WHERE SH_SessionID = @@SPID AND SH_TypeID IN (1, 2);
+	END
+	
+	-- Set the starting and ending row numbers
+	DECLARE @StartRowNumber as int;
+	SET @StartRowNumber = (@PageIndex * @RowsPerPage) + 1;
+	DECLARE @EndRowNumber as int;
+	SET @EndRowNumber = @StartRowNumber + @RowsPerPage - 1;	
+
+	-- Search method 'ANY' - Default Search and 'EXACT' - Advanced Search
+	IF @Method = 'any' OR @Method = 'exact' BEGIN
+		SELECT @TotalResultProducts =  Count(DISTINCT SH_ProductID) FROM tblKartrisSearchHelper WHERE SH_SessionID = @@SPID;
+		
+		WITH SearchResult as
+		(
+			SELECT ROW_NUMBER() OVER (ORDER BY TotalScore DESC) as Row, 
+					ProductID, TotalScore
+			FROM (	SELECT 
+						CASE 
+						WHEN T1.SH_ProductID IS NULL THEN T2.SH_ProductID
+						ELSE T1.SH_ProductID
+						END AS ProductID,
+						CASE 
+						WHEN Score1 IS NULL THEN Score2
+						WHEN Score2 IS NULL THEN Score1
+						ELSE (Score1 + Score2) 
+						END AS TotalScore
+					FROM (
+							SELECT SH_SessionID, SH_ProductID, Sum(SH_Score) as Score1
+							FROM tblKartrisSearchHelper 
+							WHERE SH_TypeID = 2 OR SH_TypeID = 14
+							GROUP BY SH_SessionID, SH_ProductID
+							HAVING SH_SessionID = @@SPID
+						) T1 
+						FULL OUTER JOIN 
+						(
+							SELECT SH_SessionID, SH_ProductID, Max(SH_Score) as Score2
+							FROM tblKartrisSearchHelper 
+							WHERE SH_TypeID = 1
+							Group BY SH_SessionID, SH_ProductID
+							HAVING SH_SessionID = @@SPID
+						) T2 
+						ON T1.SH_ProductID = T2.SH_ProductID
+				) T3
+		)
+		SELECT Row, P_ID, P_Name, dbo.fnKartrisDB_TruncateDescription(P_Desc) as P_Desc, 
+				dbo.fnKartrisProduct_GetMinPriceWithCG(P_ID, @CustomerGroupID) as MinPrice, TotalScore, 
+				dbo.fnKartrisSearchHelper_GetKeywordsListByProduct(@@SPID, P_ID) AS KeywordList
+		FROM SearchResult INNER JOIN dbo.vKartrisTypeProducts ON SearchResult.ProductID = dbo.vKartrisTypeProducts.P_ID
+		WHERE vKartrisTypeProducts.LANG_ID = @LANG_ID AND ROW BETWEEN @StartRowNumber AND @EndRowNumber
+		GROUP BY Row, P_ID, P_Name, P_Desc, TotalScore
+		ORDER BY TotalScore DESC
+	END
+	
+	-- Search method 'ALL' - Advanced Search
+	IF @Method = 'all' BEGIN
+	
+		DECLARE @SortedSearchKeywords as nvarchar(max);
+		SELECT @SortedSearchKeywords = COALESCE(@SortedSearchKeywords + ',', '') + T._ID
+		FROM (SELECT TOP(500) _ID FROM dbo.fnTbl_SplitStrings(@keyWordsList) ORDER BY _ID) AS T;
+
+		SELECT @TotalResultProducts =  Count(DISTINCT SH_ProductID) FROM tblKartrisSearchHelper 
+		WHERE SH_SessionID = @@SPID AND @SortedSearchKeywords = dbo.fnKartrisSearchHelper_GetKeywordsListByProduct(@@SPID, SH_ProductID);
+		
+		WITH SearchResult as
+		(
+			SELECT ROW_NUMBER() OVER (ORDER BY TotalScore DESC) as Row, 
+					ProductID, TotalScore
+			FROM (	SELECT 
+						CASE 
+						WHEN T1.SH_ProductID IS NULL THEN T2.SH_ProductID
+						ELSE T1.SH_ProductID
+						END AS ProductID,
+						CASE 
+						WHEN Score1 IS NULL THEN Score2
+						WHEN Score2 IS NULL THEN Score1
+						ELSE (Score1 + Score2) 
+						END AS TotalScore
+					FROM (
+							SELECT SH_SessionID, SH_ProductID, Sum(SH_Score) as Score1
+							FROM tblKartrisSearchHelper 
+							WHERE SH_TypeID = 2 OR SH_TypeID = 14
+							GROUP BY SH_SessionID, SH_ProductID
+							HAVING SH_SessionID = @@SPID AND @SortedSearchKeywords = dbo.fnKartrisSearchHelper_GetKeywordsListByProduct(@@SPID, SH_ProductID)
+						) T1 
+						FULL OUTER JOIN 
+						(
+							SELECT SH_SessionID, SH_ProductID, Max(SH_Score) as Score2
+							FROM tblKartrisSearchHelper 
+							WHERE SH_TypeID = 1
+							Group BY SH_SessionID, SH_ProductID
+							HAVING SH_SessionID = @@SPID AND @SortedSearchKeywords = dbo.fnKartrisSearchHelper_GetKeywordsListByProduct(@@SPID, SH_ProductID)
+						) T2 
+						ON T1.SH_ProductID = T2.SH_ProductID
+				) T3
+		)
+		SELECT Row, P_ID, P_Name, dbo.fnKartrisDB_TruncateDescription(P_Desc) as P_Desc, 
+				dbo.fnKartrisProduct_GetMinPriceWithCG(P_ID, @CustomerGroupID) as MinPrice, TotalScore, 
+				dbo.fnKartrisSearchHelper_GetKeywordsListByProduct(@@SPID,P_ID) AS KeywordList
+		FROM SearchResult INNER JOIN dbo.vKartrisTypeProducts ON SearchResult.ProductID = dbo.vKartrisTypeProducts.P_ID
+		WHERE vKartrisTypeProducts.LANG_ID = @LANG_ID AND ROW BETWEEN @StartRowNumber AND @EndRowNumber
+		GROUP BY Row, P_ID, P_Name, P_Desc, TotalScore
+		ORDER BY TotalScore DESC
+		
+	END
+	
+	-- Clear the result of the current search
+	DELETE FROM tblKartrisSearchHelper WHERE SH_SessionID=@@SPID;
+	
+END
+/****** Object:  UserDefinedFunction [dbo].[fnTbl_SplitStrings]    Script Date: 2014-06-12 10:28:36 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- MODIFIED 2014/06/12 Paul, nvarchar support
+-- =============================================
+ALTER FUNCTION [dbo].[fnTbl_SplitStrings]
+(	
+	@List NVarchar(max))
+RETURNS @ParsedList 
+table(_ID NVarchar(500)) AS BEGIN
+	DECLARE @_ID Nvarchar(500), @Pos int    
+	SET @List = LTRIM(RTRIM(@List))+ ','    
+	SET @Pos = CHARINDEX(',', @List, 1)    
+	IF REPLACE(@List, ',', '') <> '' BEGIN        
+		WHILE @Pos > 0 BEGIN                
+			SET @_ID = LTRIM(RTRIM(LEFT(@List, @Pos - 1)))                
+			IF @_ID <> '' BEGIN                        
+				INSERT INTO @ParsedList (_ID)                         
+				VALUES (@_ID)              
+			END                
+			SET @List = RIGHT(@List, LEN(@List) - @Pos)                
+			SET @Pos = CHARINDEX(',', @List, 1)        
+		END    
+	END     
+	RETURN
+END
