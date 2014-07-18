@@ -48,7 +48,7 @@
 		<div id="container">
 			<div id="centre_container">
 				<div class="row" id="header">
-					<div class="large-5 columns hide-for-small">
+					<div class="large-5 small-12 columns">
 						<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
 					</div>
 					<div class="small-12 large-4 columns">
