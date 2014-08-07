@@ -142,7 +142,7 @@ Public NotInheritable Class SSLHandler
         Dim blnIsSSLEnabled As Boolean = False
 
         'SSL enabled in config settings
-        If GetKartConfig("general.security.ssl") = "y" Then blnIsSSLEnabled = True
+        If GetKartConfig("general.security.ssl") = "y" Or GetKartConfig("general.security.ssl") = "a" Then blnIsSSLEnabled = True
 
         Return blnIsSSLEnabled
     End Function
@@ -184,6 +184,9 @@ Public NotInheritable Class SSLHandler
             If Current.Request.Url.AbsoluteUri.ToLower.Contains("customeraccount.aspx") Then blnNeedSSL = True
             If Current.Request.Url.AbsoluteUri.ToLower.Contains("checkout.aspx") Then blnNeedSSL = True
             If Current.Request.Url.AbsoluteUri.ToLower.Contains("customertickets.aspx") Then blnNeedSSL = True
+
+            'This handles SSL always on
+            If GetKartConfig("general.security.ssl") = "a" Then blnNeedSSL = True
 
             'Added v2.6000 - don't redirect on callback.aspx
             'We get problems in some payment systems, because we cannot necessarily
