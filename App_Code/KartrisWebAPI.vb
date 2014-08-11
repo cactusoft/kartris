@@ -12,7 +12,6 @@
 'overrides the GPL v2.
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
-
 Imports System.Reflection
 Imports Kartris
 Imports System.ServiceModel.Activation
@@ -213,8 +212,17 @@ Imports System.ServiceModel.Activation
                         m = t.GetMethod(strMethodName)
                     End If
 
+                    'If m IsNot Nothing Then
+                    '    strOutput = Payment.Serialize(m.Invoke(obj, Params))
+                    'Else
+                    '    Throw New Exception("Can't find method """ & strMethodName & """ in Class """ & strClassName & """")
+                    'End If
+
+                    'Modded by POLYCHROME, improved serialization
                     If m IsNot Nothing Then
-                        strOutput = Payment.Serialize(m.Invoke(obj, Params))
+                        'Call the method and serialize the results ''
+                        ''Changed by POLYCHROME from payments.Serialize
+                        strOutput = KartrisWebAPIHelperBLL.Serialize(m.Invoke(obj, Params))
                     Else
                         Throw New Exception("Can't find method """ & strMethodName & """ in Class """ & strClassName & """")
                     End If
