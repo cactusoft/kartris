@@ -1,0 +1,107 @@
+﻿'========================================================================
+'Kartris - www.kartris.com
+'Copyright 2014 CACTUSOFT INTERNATIONAL FZ LLC
+'Copyright 2014 POLYCHROME (additions and changes related to Web API)
+
+'GNU GENERAL PUBLIC LICENSE v2
+'This program is free software distributed under the GPL without any
+'warranty.
+'www.gnu.org/licenses/gpl-2.0.html
+
+'KARTRIS COMMERCIAL LICENSE
+'If a valid license.config issued by Cactusoft is present, the KCL
+'overrides the GPL v2.
+'www.kartris.com/t-Kartris-Commercial-License.aspx
+'========================================================================
+Imports System.Xml
+Imports System.Text
+Imports System.Xml.Serialization
+Imports System.IO
+
+Public Class KartrisHelper
+
+    Public Shared Function CallWebMethod(MethodName As String, ParametersXML As List(Of KartrisXMLParm)) As String
+
+        'Use the web service
+        Dim myKart As New svcKartris.KartrisWebAPIClient
+
+        Using New ServiceModel.OperationContextScope(myKart.InnerChannel)
+
+            ' Add a HTTP Header to an outgoing request
+            Dim requestMessage As New ServiceModel.Channels.HttpRequestMessageProperty()
+            requestMessage.Headers("Authorization") = My.Settings.KartrisWebAPIKey
+
+            ServiceModel.OperationContext.Current.OutgoingMessageProperties(ServiceModel.Channels.HttpRequestMessageProperty.Name) = requestMessage
+
+            'Login
+            Dim loginParms As New List(Of KartrisXMLParm)
+            loginParms.Clear()
+            loginParms.Add(New KartrisXMLParm With {.Name = "UserName", .Type = "string", .Value = My.Settings.KartrisUsername})
+            loginParms.Add(New KartrisXMLParm With {.Name = "Password", .Type = "string", .Value = My.Settings.KartrisPassword})
+            loginParms.Add(New KartrisXMLParm With {.Name = "blnDirect", .Type = "boolean", .Value = "false"})
+
+
+            Dim strLoginResult As String = myKart.Execute("LoginsBLL.Validate", KartrisHelper.MakeXMLParms(loginParms))
+            Debug.Print(strLoginResult)
+
+
+            Dim strParms As String = KartrisHelper.MakeXMLParms(ParametersXML)
+            Debug.Print(strParms)
+
+            Dim strFunctionResult As String = myKart.Execute(MethodName, strParms)
+
+            Debug.Print(strFunctionResult)
+
+            Return strFunctionResult
+
+        End Using
+
+        myKart.Close()
+
+
+    End Function
+
+
+
+    Public Shared Function MakeXMLParms(pParms As List(Of KartrisXMLParm)) As String
+
+        Dim settings As XmlWriterSettings = New XmlWriterSettings() With {.Encoding = Encoding.UTF8, .Indent = False, .ConformanceLevel = ConformanceLevel.Auto}
+        Dim sb As New StringBuilder
+
+        Using writer As XmlWriter = XmlWriter.Create(sb, settings)
+            writer.WriteStartDocument()
+            writer.WriteStartElement("KartrisWebAPI")
+            writer.WriteStartElement("Parameters")
+
+            For Each p As KartrisXMLParm In pParms
+                writer.WriteStartElement("Parameter")
+                writer.WriteAttributeString("Name", p.Name.ToString)
+                writer.WriteAttributeString("Type", p.Type.ToString)
+                writer.WriteElementString("Value", p.Value.ToString)
+                writer.WriteEndElement()
+            Next
+
+            ' End document.
+            writer.WriteEndElement()
+            writer.WriteEndElement()
+            writer.WriteEndDocument()
+        End Using
+
+        Dim returnValue As String = sb.ToString
+        returnValue = returnValue.Replace("&lt;", "<")
+        returnValue = returnValue.Replace("&gt;", ">")
+
+        Return returnValue
+
+    End Function
+
+
+End Class
+
+
+Public Class KartrisXMLParm
+    Public Property Name As String
+    Public Property Type As String
+    Public Property Value As Object
+End Class
+

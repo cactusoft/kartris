@@ -53,7 +53,7 @@ Partial Class UserControls_Back_TaskList
     End Sub
 
     Protected Sub LoadOrders()
-        Dim numOrdersToInvoice As Integer = 0, numOrdersNeedPayment As Integer = 0, numOrdersToDispatch As Integer = 0, numLinnworksOrders As Integer = 0
+        Dim numOrdersToInvoice As Integer = 0, numOrdersNeedPayment As Integer = 0, numOrdersToDispatch As Integer = 0
         Dim numStockWarning As Integer = 0, numOutOfStock As Integer = 0
         Dim numWaitingReviews As Integer = 0
         Dim numWaitingAffiliates As Integer = 0
@@ -62,7 +62,7 @@ Partial Class UserControls_Back_TaskList
         Dim strMessage As String = ""
         KartrisDBBLL._LoadTaskList(numOrdersToInvoice, numOrdersNeedPayment, numOrdersToDispatch, _
                                       numStockWarning, numOutOfStock, numWaitingReviews, numWaitingAffiliates, _
-                                      numCustomersAwatingRefunds, numCustomersInArrears, numLinnworksOrders, strMessage)
+                                      numCustomersAwatingRefunds, numCustomersInArrears, strMessage)
 
         'Orders
         If numOrdersToInvoice > 0 OrElse numOrdersNeedPayment > 0 OrElse numOrdersToDispatch > 0 Then
@@ -111,16 +111,9 @@ Partial Class UserControls_Back_TaskList
             phdReviews.Visible = False
         End If
 
-        'Linnworks
-        If CInt(numLinnworksOrders) > 0 And KartSettingsManager.GetKartConfig("general.linnworks.token") <> "" Then
-            litToLinnworks.Text = numLinnworksOrders
-        Else
-            phdToLinnworks.Visible = False
-        End If
-
         'Orders
         If phdOrders.Visible = False AndAlso phdStock.Visible = False AndAlso _
-            phdAffiliates.Visible = False AndAlso phdReviews.Visible = False AndAlso phdToLinnworks.Visible = False Then
+            phdAffiliates.Visible = False AndAlso phdReviews.Visible = False Then
             phdNoItems.Visible = True
         End If
 
