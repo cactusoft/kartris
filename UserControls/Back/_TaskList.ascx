@@ -38,20 +38,6 @@
                         </div>
                     </div>
                 </asp:PlaceHolder>
-                <!--Linnworks-->
-                <asp:PlaceHolder ID="phdToLinnworks" runat="server">
-                    <div class="task_section">
-                        <div class="level_1">
-                            <a href="_Linnworks.aspx">
-                                <asp:Literal ID="litLinnworks" runat="server" Text="<%$ Resources: _Linnworks, ContentText_Linnworks %>"></asp:Literal></a>
-                        </div>
-                        <div class="level_2">
-                            <a href="_Linnworks.aspx">
-                                <asp:Literal ID="litContentTextToLinnworks" runat="server" Text="<%$ Resources: _Linnworks, ContentText_OrdersToSend %>" />&nbsp;<asp:Literal
-                                    ID="litToLinnworks" runat="server" /></a>
-                        </div>
-                    </div>
-                </asp:PlaceHolder>
                 <%--Customer --%>
                 <asp:PlaceHolder ID="phdCustomers" runat="server" Visible="true">
                     <div class="task_section">

@@ -105,7 +105,7 @@ Public Class KartrisDBBLL
     Public Shared Sub _LoadTaskList(ByRef numOrdersToInvoice As Integer, ByRef numOrdersNeedPayment As Integer, ByRef numOrdersToDispatch As Integer, _
               ByRef numStockWarning As Integer, ByRef numOutOfStock As Integer, ByRef numWaitingReviews As Integer, _
                ByRef numWaitingAffiliates As Integer, ByRef numCustomersWaitingRefunds As Integer, _
-               ByRef numCustomersInArrears As Integer, ByRef numLinnworksOrders As Integer, ByRef strMsg As String)
+               ByRef numCustomersInArrears As Integer, ByRef strMsg As String)
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -123,7 +123,6 @@ Public Class KartrisDBBLL
                 cmdTaskListValues.Parameters.AddWithValue("@NoAffiliatesWaiting", 0).Direction = ParameterDirection.Output
                 cmdTaskListValues.Parameters.AddWithValue("@NoCustomersWaitingRefunds", 0).Direction = ParameterDirection.Output
                 cmdTaskListValues.Parameters.AddWithValue("@NoCustomersInArrears", 0).Direction = ParameterDirection.Output
-                cmdTaskListValues.Parameters.AddWithValue("@NoOfLinnworksOrdersToBeSent", 0).Direction = ParameterDirection.Output
                 sqlConn.Open()
 
                 cmdTaskListValues.ExecuteNonQuery()
@@ -137,7 +136,6 @@ Public Class KartrisDBBLL
                 numWaitingAffiliates = cmdTaskListValues.Parameters("@NoAffiliatesWaiting").Value
                 numCustomersWaitingRefunds = cmdTaskListValues.Parameters("@NoCustomersWaitingRefunds").Value
                 numCustomersInArrears = cmdTaskListValues.Parameters("@NoCustomersInArrears").Value
-                numLinnworksOrders = cmdTaskListValues.Parameters("@NoOfLinnworksOrdersToBeSent").Value
 
             Catch ex As Exception
                 ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod(), strMsg)

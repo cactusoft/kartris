@@ -186,8 +186,7 @@ ALTER PROCEDURE [dbo].[_spKartrisDB_GetTaskList]
 	@NoReviewsWaiting as int OUTPUT,
 	@NoAffiliatesWaiting as int OUTPUT,
 	@NoCustomersWaitingRefunds as int OUTPUT,
-	@NoCustomersInArrears as int OUTPUT,
-	@NoOfLinnworksOrdersToBeSent as int OUTPUT
+	@NoCustomersInArrears as int OUTPUT
 )
 AS
 BEGIN
@@ -202,8 +201,6 @@ BEGIN
 	SELECT @NoAffiliatesWaiting  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_IsAffiliate = 'True' AND U_AffiliateCommission = 0;
 	SELECT @NoCustomersWaitingRefunds  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance > 0;
 	SELECT @NoCustomersInArrears  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance < 0;
-
-	SELECT @NoOfLinnworksOrdersToBeSent = Count(O_ID) FROM tblKartrisOrders WHERE (O_Paid = 1) AND (O_Cancelled IS NULL or O_Cancelled = 0) AND O_ID NOT IN (SELECT [LWO_OrderID] FROM [dbo].[tblKartrisLinnworksOrders])
 END
 
 
