@@ -13,8 +13,9 @@
 'overrides the GPL v2.
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
-Imports System.Xml.Serialization
 Imports Microsoft.VisualBasic
+Imports CkartrisEnumerations
+Imports System.Xml.Serialization
 
 Public Class KartrisWebAPIHelperBLL
     ''' <summary>
@@ -99,4 +100,76 @@ Public Class KartrisWebAPIHelperBLL
     Public Shared Sub Add_ptblElements_Row(p_ptblElements As DataTable, pLE_LanguageID As Int32, p_LE_FieldID As Int32, p_LE_Value As String)
         p_ptblElements.Rows.Add(pLE_LanguageID, p_LE_FieldID, p_LE_Value)
     End Sub
+
+    ''' <summary>
+    ''' Get ID of country by ISO code
+    ''' </summary>
+    ''' <param name="pISOCode3Letter">Three letter ISO country code</param>
+    ''' <remarks></remarks>
+    Public Shared Function GetCountryID(pISOCode3Letter As String) As Int32
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Try
+            Using sqlConn As New SqlClient.SqlConnection(strConnString)
+
+                Dim cmd As SqlCommand = sqlConn.CreateCommand
+                cmd.CommandText = "SELECT D_ID, D_ISOCode3Letter FROM tblKartrisDestination WHERE (D_ISOCode3Letter = @Code)"
+                cmd.Parameters.AddWithValue("@Code", pISOCode3Letter)
+
+                Using da As New SqlClient.SqlDataAdapter
+                    Dim dt As New DataTable
+
+                    da.SelectCommand = cmd
+                    da.Fill(dt)
+
+                    If dt.Rows.Count > 0 Then
+                        For Each drow As DataRow In dt.Rows
+                            Return drow("D_ID")
+                        Next
+                    Else
+                        Return 0
+                    End If
+                End Using
+            End Using
+
+        Catch ex As Exception
+            Return 0
+        End Try
+        Return 0
+    End Function
+
+    ''' <summary>
+    ''' Check if language element exists, return parent ID if it does
+    ''' </summary>
+    ''' <param name="pCode">Code</param>
+    ''' <param name="pLE_Type">Language element type</param>
+    ''' <remarks></remarks>
+    Public Shared Function ItemExists(pCode As String, pLE_Type As LANG_ELEM_TABLE_TYPE) As Int32
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Try
+            Using sqlConn As New SqlClient.SqlConnection(strConnString)
+
+                Dim cmd As SqlCommand = sqlConn.CreateCommand
+                cmd.CommandText = String.Format("SELECT LE_LanguageID, LE_TypeID, LE_FieldID, LE_ParentID, LE_Value, LE_ID FROM tblKartrisLanguageElements WHERE (LE_TypeID = {0}) AND (LE_FieldID = 1) AND (LE_Value = @Code)", Convert.ToInt32(pLE_Type))
+                cmd.Parameters.AddWithValue("@Code", pCode)
+                Using da As New SqlClient.SqlDataAdapter
+
+                    Dim dt As New DataTable
+
+                    da.SelectCommand = cmd
+                    da.Fill(dt)
+
+                    If dt.Rows.Count > 0 Then
+                        For Each drow As DataRow In dt.Rows
+                            Return drow("LE_ParentID")
+                        Next
+                    Else
+                        Return 0
+                    End If
+                End Using
+            End Using
+        Catch ex As Exception
+            Return 0
+        End Try
+        Return 0
+    End Function
 End Class
