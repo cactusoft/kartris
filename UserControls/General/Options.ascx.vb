@@ -135,6 +135,7 @@ Partial Class Options
         Dim itemListOptions As New ListItem(pItemText, pItemValue)
         Dim itemListOptionsPrice As New ListItem(pItemText & "-" & CStr(pItemPriceChange), pItemPriceChange)
         Dim strPriceFormatted As String = ""
+        Dim strPriceToFormat As String = ""
 
         _ChangePricesOnSelection = pChangePriceOnSelection
 
@@ -145,15 +146,19 @@ Partial Class Options
             ''      and then Rounding to 2 digits after the decimal point.
             itemListOptionsPrice.Value = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), pItemPriceChange)
 
-            'If _OptionType = "d" Then
-            strPriceFormatted = CurrenciesBLL.FormatCurrencyPrice( _
-                Session("CUR_ID"), itemListOptionsPrice.Value, , _OptionType <> "DropDown")
-            'End If
+            strPriceToFormat = itemListOptionsPrice.Value
 
+            If _ChangePricesOnSelection Then
+                ' If the price changes on selection we will be adding a prefix to the displayed text and so we do not want 
+                ' the sign in the number that will be passed into CurrenciesBLL.FormatCurrencyPrice() so remove it here.
+                strPriceToFormat = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), Math.Abs(pItemPriceChange))
+            End If
+
+            strPriceFormatted = CurrenciesBLL.FormatCurrencyPrice( _
+                Session("CUR_ID"), strPriceToFormat, , _OptionType <> "DropDown")
 
             '' Changing the display text to the user with the amount increased if this option is selected.
-            If _ChangePricesOnSelection Then itemListOptions.Text += Space(3) & "(+ " & strPriceFormatted & ")"
-            'itemListOptions.Text += Space(3) & "(+ " & strPriceFormatted & ")"
+            If _ChangePricesOnSelection Then itemListOptions.Text += Space(3) & "(" & IIf(pItemPriceChange < 0, "-", "+") & " " & strPriceFormatted & ")"
         End If
         If pIsSelected Then
             _Control.ClearSelection()
