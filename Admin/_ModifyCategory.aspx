@@ -60,7 +60,7 @@
                         </asp:UpdatePanel>
                     </ContentTemplate>
                 </ajaxToolkit:TabPanel>
-                <%-- Category's Related Data Tab --%>
+                <%-- Category's Xml Filters Tab --%>
                 <ajaxToolkit:TabPanel ID="tabXmlFilters" runat="server">
                     <HeaderTemplate>
                         <asp:Literal ID="litContentTextCategoryFilters" runat="server" Text="Category Filters" />
