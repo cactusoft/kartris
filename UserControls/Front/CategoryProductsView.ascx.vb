@@ -221,7 +221,7 @@ Partial Class CategoryProductsView
             If itm.ItemType = ListItemType.Item OrElse itm.ItemType = ListItemType.AlternatingItem Then
                 Dim chkList As CheckBoxList = CType(itm.FindControl("chkList"), CheckBoxList)
                 For Each ls As ListItem In chkList.Items
-                    If ls.Selected Then strAttributeValues += ls.Text + ","
+                    If ls.Selected Then strAttributeValues += Replace(ls.Text, ",", "[;]") + ","
                 Next
             End If
         Next
@@ -244,8 +244,11 @@ Partial Class CategoryProductsView
     Protected Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
         txtSearch.Text = Nothing
         ddlOrderBy.SelectedIndex = 0
-        ddlPriceRange.SelectedIndex = 0
-        ddlPriceRange_SelectedIndexChanged(Me, New EventArgs())
+        Try
+            ddlPriceRange.SelectedIndex = 0
+            ddlPriceRange_SelectedIndexChanged(Me, New EventArgs())
+        Catch ex As Exception
+        End Try
         For Each itm As RepeaterItem In rptAttributes.Items
             If itm.ItemType = ListItemType.Item OrElse itm.ItemType = ListItemType.AlternatingItem Then
                 Dim chkList As CheckBoxList = CType(itm.FindControl("chkList"), CheckBoxList)
