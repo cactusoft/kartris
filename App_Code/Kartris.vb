@@ -1298,7 +1298,8 @@ Public NotInheritable Class CkartrisBLL
             (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("/admin/")) Or _
             (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("customeraccount.aspx")) Or _
             (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("checkout.aspx")) Or _
-            (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("customertickets.aspx")) Then _
+            (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("customertickets.aspx")) Or _
+            (GetKartConfig("general.security.ssl") = "a") Then _
             Return Replace(GetKartConfig("general.webshopurl").ToLower, "http://", "https://")
         Catch ex As Exception
         End Try

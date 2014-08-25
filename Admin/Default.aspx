@@ -27,7 +27,7 @@
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
 </head>
 <body id="page_login">
     <div id="centrecontainer">
