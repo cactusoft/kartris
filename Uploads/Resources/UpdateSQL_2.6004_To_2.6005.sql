@@ -13,23 +13,23 @@ GO
 CREATE VIEW [dbo].[vKartrisCategoryProductsVersionsLink]
 AS
 SELECT        dbo.tblKartrisProducts.P_ID, dbo.tblKartrisProducts.P_OrderVersionsBy, dbo.tblKartrisProducts.P_VersionsSortDirection, 
-                         dbo.tblKartrisProducts.P_VersionDisplayType, dbo.tblKartrisProducts.P_Type, tblKartrisTaxRates_1.T_Taxrate, 
-                         dbo.tblKartrisProductCategoryLink.PCAT_CategoryID AS CAT_ID, dbo.tblKartrisProducts.P_Live, dbo.tblKartrisCategories.CAT_Live, 
-                         dbo.tblKartrisVersions.V_Live, dbo.tblKartrisVersions.V_ID, dbo.tblKartrisVersions.V_CodeNumber, dbo.tblKartrisVersions.V_Price, 
-                         dbo.tblKartrisVersions.V_Tax, dbo.tblKartrisVersions.V_Weight, dbo.tblKartrisVersions.V_DeliveryTime, dbo.tblKartrisVersions.V_Quantity, 
-                         dbo.tblKartrisVersions.V_QuantityWarnLevel, dbo.tblKartrisVersions.V_DownLoadInfo, dbo.tblKartrisVersions.V_DownloadType, 
-                         dbo.tblKartrisVersions.V_RRP, dbo.tblKartrisVersions.V_OrderByValue, dbo.tblKartrisVersions.V_Type, dbo.tblKartrisVersions.V_CustomerGroupID, 
-                         dbo.tblKartrisProducts.P_Featured, dbo.tblKartrisProducts.P_SupplierID, dbo.tblKartrisProducts.P_CustomerGroupID, dbo.tblKartrisProducts.P_Reviews, 
-                         dbo.tblKartrisProducts.P_AverageRating, dbo.tblKartrisProducts.P_DateCreated, dbo.tblKartrisVersions.V_CustomizationType, 
-                         dbo.tblKartrisVersions.V_CustomizationDesc, dbo.tblKartrisVersions.V_CustomizationCost, dbo.tblKartrisTaxRates.T_Taxrate AS T_TaxRate2, 
-                         dbo.tblKartrisCategories.CAT_CustomerGroupID
+						 dbo.tblKartrisProducts.P_VersionDisplayType, dbo.tblKartrisProducts.P_Type, tblKartrisTaxRates_1.T_Taxrate, 
+						 dbo.tblKartrisProductCategoryLink.PCAT_CategoryID AS CAT_ID, dbo.tblKartrisProducts.P_Live, dbo.tblKartrisCategories.CAT_Live, 
+						 dbo.tblKartrisVersions.V_Live, dbo.tblKartrisVersions.V_ID, dbo.tblKartrisVersions.V_CodeNumber, dbo.tblKartrisVersions.V_Price, 
+						 dbo.tblKartrisVersions.V_Tax, dbo.tblKartrisVersions.V_Weight, dbo.tblKartrisVersions.V_DeliveryTime, dbo.tblKartrisVersions.V_Quantity, 
+						 dbo.tblKartrisVersions.V_QuantityWarnLevel, dbo.tblKartrisVersions.V_DownLoadInfo, dbo.tblKartrisVersions.V_DownloadType, 
+						 dbo.tblKartrisVersions.V_RRP, dbo.tblKartrisVersions.V_OrderByValue, dbo.tblKartrisVersions.V_Type, dbo.tblKartrisVersions.V_CustomerGroupID, 
+						 dbo.tblKartrisProducts.P_Featured, dbo.tblKartrisProducts.P_SupplierID, dbo.tblKartrisProducts.P_CustomerGroupID, dbo.tblKartrisProducts.P_Reviews, 
+						 dbo.tblKartrisProducts.P_AverageRating, dbo.tblKartrisProducts.P_DateCreated, dbo.tblKartrisVersions.V_CustomizationType, 
+						 dbo.tblKartrisVersions.V_CustomizationDesc, dbo.tblKartrisVersions.V_CustomizationCost, dbo.tblKartrisTaxRates.T_Taxrate AS T_TaxRate2, 
+						 dbo.tblKartrisCategories.CAT_CustomerGroupID
 FROM            dbo.tblKartrisCategories INNER JOIN
-                         dbo.tblKartrisProductCategoryLink ON dbo.tblKartrisCategories.CAT_ID = dbo.tblKartrisProductCategoryLink.PCAT_CategoryID INNER JOIN
-                         dbo.tblKartrisProducts ON dbo.tblKartrisProductCategoryLink.PCAT_ProductID = dbo.tblKartrisProducts.P_ID LEFT OUTER JOIN
-                         dbo.tblKartrisVersions LEFT OUTER JOIN
-                         dbo.tblKartrisTaxRates AS tblKartrisTaxRates_1 ON dbo.tblKartrisVersions.V_Tax = tblKartrisTaxRates_1.T_ID LEFT OUTER JOIN
-                         dbo.tblKartrisTaxRates ON dbo.tblKartrisVersions.V_Tax2 = dbo.tblKartrisTaxRates.T_ID ON 
-                         dbo.tblKartrisProducts.P_ID = dbo.tblKartrisVersions.V_ProductID
+						 dbo.tblKartrisProductCategoryLink ON dbo.tblKartrisCategories.CAT_ID = dbo.tblKartrisProductCategoryLink.PCAT_CategoryID INNER JOIN
+						 dbo.tblKartrisProducts ON dbo.tblKartrisProductCategoryLink.PCAT_ProductID = dbo.tblKartrisProducts.P_ID LEFT OUTER JOIN
+						 dbo.tblKartrisVersions LEFT OUTER JOIN
+						 dbo.tblKartrisTaxRates AS tblKartrisTaxRates_1 ON dbo.tblKartrisVersions.V_Tax = tblKartrisTaxRates_1.T_ID LEFT OUTER JOIN
+						 dbo.tblKartrisTaxRates ON dbo.tblKartrisVersions.V_Tax2 = dbo.tblKartrisTaxRates.T_ID ON 
+						 dbo.tblKartrisProducts.P_ID = dbo.tblKartrisVersions.V_ProductID
 WHERE        (dbo.tblKartrisCategories.CAT_Live = 1) AND (dbo.tblKartrisVersions.V_Live = 1) AND (dbo.tblKartrisProducts.P_Live = 1)
 
 GO
@@ -37,163 +37,163 @@ GO
 EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
 Begin DesignProperties = 
    Begin PaneConfigurations = 
-      Begin PaneConfiguration = 0
-         NumPanes = 4
-         Configuration = "(H (1[41] 4[21] 2[21] 3) )"
-      End
-      Begin PaneConfiguration = 1
-         NumPanes = 3
-         Configuration = "(H (1[50] 4[25] 3) )"
-      End
-      Begin PaneConfiguration = 2
-         NumPanes = 3
-         Configuration = "(H (1 [50] 2 [25] 3))"
-      End
-      Begin PaneConfiguration = 3
-         NumPanes = 3
-         Configuration = "(H (4 [30] 2 [40] 3))"
-      End
-      Begin PaneConfiguration = 4
-         NumPanes = 2
-         Configuration = "(H (1 [56] 3))"
-      End
-      Begin PaneConfiguration = 5
-         NumPanes = 2
-         Configuration = "(H (2 [66] 3))"
-      End
-      Begin PaneConfiguration = 6
-         NumPanes = 2
-         Configuration = "(H (4 [50] 3))"
-      End
-      Begin PaneConfiguration = 7
-         NumPanes = 1
-         Configuration = "(V (3))"
-      End
-      Begin PaneConfiguration = 8
-         NumPanes = 3
-         Configuration = "(H (1[56] 4[18] 2) )"
-      End
-      Begin PaneConfiguration = 9
-         NumPanes = 2
-         Configuration = "(H (1[63] 4) )"
-      End
-      Begin PaneConfiguration = 10
-         NumPanes = 2
-         Configuration = "(H (1[66] 2) )"
-      End
-      Begin PaneConfiguration = 11
-         NumPanes = 2
-         Configuration = "(H (4 [60] 2))"
-      End
-      Begin PaneConfiguration = 12
-         NumPanes = 1
-         Configuration = "(H (1) )"
-      End
-      Begin PaneConfiguration = 13
-         NumPanes = 1
-         Configuration = "(V (4))"
-      End
-      Begin PaneConfiguration = 14
-         NumPanes = 1
-         Configuration = "(V (2))"
-      End
-      ActivePaneConfig = 9
+	  Begin PaneConfiguration = 0
+		 NumPanes = 4
+		 Configuration = "(H (1[41] 4[21] 2[21] 3) )"
+	  End
+	  Begin PaneConfiguration = 1
+		 NumPanes = 3
+		 Configuration = "(H (1[50] 4[25] 3) )"
+	  End
+	  Begin PaneConfiguration = 2
+		 NumPanes = 3
+		 Configuration = "(H (1 [50] 2 [25] 3))"
+	  End
+	  Begin PaneConfiguration = 3
+		 NumPanes = 3
+		 Configuration = "(H (4 [30] 2 [40] 3))"
+	  End
+	  Begin PaneConfiguration = 4
+		 NumPanes = 2
+		 Configuration = "(H (1 [56] 3))"
+	  End
+	  Begin PaneConfiguration = 5
+		 NumPanes = 2
+		 Configuration = "(H (2 [66] 3))"
+	  End
+	  Begin PaneConfiguration = 6
+		 NumPanes = 2
+		 Configuration = "(H (4 [50] 3))"
+	  End
+	  Begin PaneConfiguration = 7
+		 NumPanes = 1
+		 Configuration = "(V (3))"
+	  End
+	  Begin PaneConfiguration = 8
+		 NumPanes = 3
+		 Configuration = "(H (1[56] 4[18] 2) )"
+	  End
+	  Begin PaneConfiguration = 9
+		 NumPanes = 2
+		 Configuration = "(H (1[63] 4) )"
+	  End
+	  Begin PaneConfiguration = 10
+		 NumPanes = 2
+		 Configuration = "(H (1[66] 2) )"
+	  End
+	  Begin PaneConfiguration = 11
+		 NumPanes = 2
+		 Configuration = "(H (4 [60] 2))"
+	  End
+	  Begin PaneConfiguration = 12
+		 NumPanes = 1
+		 Configuration = "(H (1) )"
+	  End
+	  Begin PaneConfiguration = 13
+		 NumPanes = 1
+		 Configuration = "(V (4))"
+	  End
+	  Begin PaneConfiguration = 14
+		 NumPanes = 1
+		 Configuration = "(V (2))"
+	  End
+	  ActivePaneConfig = 9
    End
    Begin DiagramPane = 
-      Begin Origin = 
-         Top = 0
-         Left = 0
-      End
-      Begin Tables = 
-         Begin Table = "tblKartrisCategories"
-            Begin Extent = 
-               Top = 263
-               Left = 70
-               Bottom = 393
-               Right = 258
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "tblKartrisProductCategoryLink"
-            Begin Extent = 
-               Top = 0
-               Left = 366
-               Bottom = 113
-               Right = 549
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "tblKartrisProducts"
-            Begin Extent = 
-               Top = 17
-               Left = 768
-               Bottom = 147
-               Right = 982
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "tblKartrisVersions"
-            Begin Extent = 
-               Top = 140
-               Left = 654
-               Bottom = 305
-               Right = 858
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "tblKartrisTaxRates_1"
-            Begin Extent = 
-               Top = 60
-               Left = 430
-               Bottom = 173
-               Right = 600
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-         Begin Table = "tblKartrisTaxRates"
-            Begin Extent = 
-               Top = 46
-               Left = 29
-               Bottom = 159
-               Right = 199
-            End
-            DisplayFlags = 280
-            TopColumn = 0
-         End
-      End
+	  Begin Origin = 
+		 Top = 0
+		 Left = 0
+	  End
+	  Begin Tables = 
+		 Begin Table = "tblKartrisCategories"
+			Begin Extent = 
+			   Top = 263
+			   Left = 70
+			   Bottom = 393
+			   Right = 258
+			End
+			DisplayFlags = 280
+			TopColumn = 0
+		 End
+		 Begin Table = "tblKartrisProductCategoryLink"
+			Begin Extent = 
+			   Top = 0
+			   Left = 366
+			   Bottom = 113
+			   Right = 549
+			End
+			DisplayFlags = 280
+			TopColumn = 0
+		 End
+		 Begin Table = "tblKartrisProducts"
+			Begin Extent = 
+			   Top = 17
+			   Left = 768
+			   Bottom = 147
+			   Right = 982
+			End
+			DisplayFlags = 280
+			TopColumn = 0
+		 End
+		 Begin Table = "tblKartrisVersions"
+			Begin Extent = 
+			   Top = 140
+			   Left = 654
+			   Bottom = 305
+			   Right = 858
+			End
+			DisplayFlags = 280
+			TopColumn = 0
+		 End
+		 Begin Table = "tblKartrisTaxRates_1"
+			Begin Extent = 
+			   Top = 60
+			   Left = 430
+			   Bottom = 173
+			   Right = 600
+			End
+			DisplayFlags = 280
+			TopColumn = 0
+		 End
+		 Begin Table = "tblKartrisTaxRates"
+			Begin Extent = 
+			   Top = 46
+			   Left = 29
+			   Bottom = 159
+			   Right = 199
+			End
+			DisplayFlags = 280
+			TopColumn = 0
+		 End
+	  End
    End
    Begin SQLPane = 
-      PaneHidden = 
+	  PaneHidden = 
    End
    Begin DataPane = 
-      PaneHidden = 
-      Begin ParameterDefaults' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisCategoryProductsVersionsLink'
+	  PaneHidden = 
+	  Begin ParameterDefaults' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisCategoryProductsVersionsLink'
 GO
 
 EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N' = ""
-      End
+	  End
    End
    Begin CriteriaPane = 
-      Begin ColumnWidths = 11
-         Column = 2955
-         Alias = 900
-         Table = 2610
-         Output = 720
-         Append = 1400
-         NewValue = 1170
-         SortType = 1350
-         SortOrder = 1410
-         GroupBy = 1350
-         Filter = 1350
-         Or = 1350
-         Or = 1350
-         Or = 1350
-      End
+	  Begin ColumnWidths = 11
+		 Column = 2955
+		 Alias = 900
+		 Table = 2610
+		 Output = 720
+		 Append = 1400
+		 NewValue = 1170
+		 SortType = 1350
+		 SortOrder = 1410
+		 GroupBy = 1350
+		 Filter = 1350
+		 Or = 1350
+		 Or = 1350
+		 Or = 1350
+	  End
    End
 End
 ' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisCategoryProductsVersionsLink'
