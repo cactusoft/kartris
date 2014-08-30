@@ -14,7 +14,8 @@
 '========================================================================
 Partial Class UserControls_Back_UploaderPopup
     Inherits System.Web.UI.UserControl
-    Dim blnFileSaved As Boolean = False
+    Private LastFileName As String = String.Empty       ' Prevent multiple saves of the same file.
+    Public Property AllowMultiple As Boolean = False
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         '' The following line is important for the confirmation msg box
@@ -29,10 +30,22 @@ Partial Class UserControls_Back_UploaderPopup
     Public Event NeedCategoryRefresh()
 
     Public Function HasFile() As Boolean
-        Return filUploader.HasFile
+        Return filUploader.HasFile Or filUploader.HasFiles
     End Function
     Public Function FileName() As String
         Return filUploader.FileName
+    End Function
+    Public Function FileNames() As List(Of String)
+        ' Return a list of file names from the collection of files that have been uploaded.
+        Dim Names As New List(Of String)
+        If HasFile() Then
+            For Each pf As HttpPostedFile In filUploader.PostedFiles
+                ' Loop through each posted file and add its name to the list.
+                Names.Add(pf.FileName)
+            Next
+        End If
+        ' Return the list.
+        Return Names
     End Function
     Protected Sub lnkUpload_Click(ByVal sender As Object, ByVal e As System.EventArgs) 'Handles lnkUpload.Click
         RaiseEvent UploadClicked()
@@ -42,17 +55,31 @@ Partial Class UserControls_Back_UploaderPopup
         popExtender.Show()
     End Sub
 
+    ''' <summary>
+    ''' Replication of FileName
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks>No idea why this exists.</remarks>
     Public Function GetFileName() As String
-        Return filUploader.FileName
+        Return FileName()
     End Function
 
-    Public Sub SaveFile(ByVal strPath As String)
+    ''' <summary>
+    ''' Replication of FileNames
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks>To Complement GetFileName()</remarks>
+    Public Function GetFileNames() As List(Of String)
+        Return FileNames()
+    End Function
+
+    Public Sub SaveFile(ByVal strPath As String,
+                        Optional ByVal FileIndex As Integer = 0,
+                        Optional ByVal SurpressRefresh As Boolean = False)
 
         Dim arrTemp = Split(strPath, ".")
         Dim numSegments = UBound(arrTemp)
         Dim strFileExt As String = arrTemp(numSegments)
-
-        'Dim strFileExt2 As String = strPath.GetType.ToString
 
         'Need to check the file being uploaded is not
         'of a type listed in the excludedUploadFiles
@@ -65,7 +92,7 @@ Partial Class UserControls_Back_UploaderPopup
         'info such as from the web.config. Basically,
         'damage limitation.
 
-        '(Similar code in _FileUploader.ascx.vb)
+        '(Similar(ish) code in _FileUploader.ascx.vb)
         Dim arrExcludedFileTypes() As String = ConfigurationManager.AppSettings("ExcludedUploadFiles").ToString().Split(",")
         For i As Integer = 0 To arrExcludedFileTypes.GetUpperBound(0)
             If Replace(strFileExt.ToLower, ".", "") = arrExcludedFileTypes(i).ToLower Then
@@ -79,14 +106,16 @@ Partial Class UserControls_Back_UploaderPopup
         Next
 
         '' To avoid saving the file twice
-        If Not blnFileSaved Then
-            filUploader.SaveAs(strPath)
-            blnFileSaved = True
-            RaiseEvent NeedCategoryRefresh()
-        Else
-            blnFileSaved = False
+        If strPath <> LastFileName Then
+            filUploader.PostedFiles(FileIndex).SaveAs(strPath)
+            LastFileName = strPath
         End If
+
+        If Not SurpressRefresh Then RaiseEvent NeedCategoryRefresh()
+
     End Sub
+
+
 
     Public Event UploadClicked()
 

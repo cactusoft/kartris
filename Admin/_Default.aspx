@@ -9,6 +9,18 @@
 </asp:Content>
 <asp:Content ID="cntMain" ContentPlaceHolderID="phdMain" runat="Server">
     <div id="page_default">
+
+        <asp:UpdatePanel ID="updControlBar" runat="server" UpdateMode="Conditional">
+            <ContentTemplate>
+                <div id="backendcontrolbar" class="submitbuttons topsubmitbuttons">
+                    <asp:LinkButton ID="btnRestart" runat="server" Text='<%$ Resources: _Kartris, ContentText_RestartKartris %>'
+                        CssClass="button restartbutton" />
+                </div>
+                <_user:PopupMessage ID="_UC_PopupMsg" runat="server" />
+
+            </ContentTemplate>
+        </asp:UpdatePanel>
+
         <_user:FeedSoftwareUpdate ID="_UC_FeedSoftwareUpdate" runat="server" />
 
         <_user:FeedNews ID="_UC_FeedNews" runat="server" />

@@ -25,6 +25,18 @@ Partial Class UserControls_Back_AdminErrorLogs
             litErrorLogStatus.Text = IIf(GetKartConfig("general.errorlogs.enabled") = "y", _
                                     GetGlobalResourceObject("_Kartris", "ContentText_Enabled"), _
                                     GetGlobalResourceObject("_Kartris", "ContentText_Disabled"))
+
+            btnSubmit_Click(sender, e) 'this submits most recent month to preload
+            Try
+                'Try to preset to today's file, most people will want to
+                'view this so handy to default it
+                'lbxFiles.SelectedValue = "2014.08/2014.08.30.config"
+                lbxFiles.SelectedValue = Format(Now, "yyyy.MM") & "/" & CStr(Now.Year) & "." & Format(Now, "MM") & "." & Format(Now, "dd") & ".config"
+                lbxFiles_SelectedIndexChanged(sender, e)
+            Catch ex As Exception
+                'No harm done
+            End Try
+
         End If
     End Sub
 
@@ -155,5 +167,6 @@ Partial Class UserControls_Back_AdminErrorLogs
             filReader.Close()
         Catch ex As Exception
         End Try
+
     End Sub
 End Class

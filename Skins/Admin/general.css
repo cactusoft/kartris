@@ -321,6 +321,9 @@ input.cancelbutton:hover                { background-color: #888; border-color: 
 .topsubmitbuttons input.deletebutton,
 .topsubmitbuttons a.deletebutton:visited,
 .topsubmitbuttons a.deletebutton:link   { background-image: url(Images/button_delete.png); }
+.topsubmitbuttons input.restartbutton,
+.topsubmitbuttons a.restartbutton:visited,
+.topsubmitbuttons a.restartbutton:link   { background-image: url(Images/button_restart.png); }
 .topsubmitbuttons input.editbutton,
 .topsubmitbuttons a.editbutton:visited,
 .topsubmitbuttons a.editbutton:link     { background-image: url(Images/button_edit.png); }

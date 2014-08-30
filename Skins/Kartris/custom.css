@@ -100,7 +100,7 @@ SMALL SCREENS
   #menubar .top-bar-section .title-area li.name a { padding: 0 5px; }
 
   #categorymenu .top-bar { min-height: 0px; }
-  #categorymenu .top-bar-section li a:not(.button) { width: auto; height: auto; font-size: 100%; padding: 5px 10px; }
+  #categorymenu .top-bar-section li a:not(.button) { width: auto; height: auto; padding: 5px 10px; }
   #categorymenu .top-bar.expanded .title-area { background: #f90; }
   #categorymenu .top-bar .title-area li.name a { padding: 0 10px; color: #fff; }
   #categorymenu .top-bar-section ul { background: #f94; }

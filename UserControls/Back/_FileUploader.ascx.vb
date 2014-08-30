@@ -31,6 +31,16 @@ Partial Class _FileUploader
         End Set
     End Property
 
+    Public Property AllowMultiple As Boolean
+        Get
+            Return _UC_UploaderPopup.AllowMultiple
+        End Get
+        Set(value As Boolean)
+            _UC_UploaderPopup.AllowMultiple = value
+        End Set
+    End Property
+
+
     Public Property ItemID() As Long
         Set(ByVal value As Long)
             c_numItemID = value
@@ -68,6 +78,7 @@ Partial Class _FileUploader
         Set(ByVal value As Boolean)
             c_blnOneFileOnly = value
             chkOneItemOnly.Checked = value
+            _UC_UploaderPopup.AllowMultiple = Not value
         End Set
     End Property
 
@@ -97,7 +108,11 @@ Partial Class _FileUploader
             If Not Directory.Exists(Server.MapPath(c_strUploadPath)) Then
                 Directory.CreateDirectory(Server.MapPath(c_strUploadPath))
             End If
-            Dim strFileExt As String = Path.GetExtension(_UC_UploaderPopup.GetFileName())
+            ' Load a list of extensions for each file in the upload control.
+            Dim strFileExts As New List(Of String)
+            For Each FileName As String In _UC_UploaderPopup.GetFileNames()
+                strFileExts.Add(Path.GetExtension(FileName))
+            Next
 
             'Need to check the file being uploaded is not
             'of a type listed in the excludedUploadFiles
@@ -112,30 +127,43 @@ Partial Class _FileUploader
 
             '(Similar code in _UploaderPopup.ascx.vb)
             Dim arrExcludedFileTypes() As String = ConfigurationManager.AppSettings("ExcludedUploadFiles").ToString().Split(",")
-            For i As Integer = 0 To arrExcludedFileTypes.GetUpperBound(0)
-                If Replace(strFileExt.ToLower, ".", "") = arrExcludedFileTypes(i).ToLower Then
-                    'Banned file type, don't upload
-                    'Log error so attempts can be seen in logs
-                    CkartrisFormatErrors.LogError("Attempt to upload a file of type: " & arrExcludedFileTypes(i).ToLower)
-                    litStatus.Text = "It is not permitted to upload files of this type. Change 'ExcludedUploadFiles' in the web.config if you need to upload this file."
-                    popExtender.Show()
-                    Exit Sub
-                End If
+            For Each ext As String In strFileExts
+                For i As Integer = 0 To arrExcludedFileTypes.GetUpperBound(0)
+                    If Replace(ext.ToLower, ".", "") = arrExcludedFileTypes(i).ToLower Then
+                        'Banned file type, don't upload
+                        'Log error so attempts can be seen in logs
+                        CkartrisFormatErrors.LogError("Attempt to upload a file of type: " & arrExcludedFileTypes(i).ToLower)
+                        litStatus.Text = "It is not permitted to upload files of this type. Change 'ExcludedUploadFiles' in the web.config if you need to upload this file."
+                        popExtender.Show()
+                        Exit Sub
+                    End If
+                Next
             Next
 
             'This is a softer check, it checks images are of an acceptable
             'type. The security check on file type above will overrule
             'this 'allow' list here.
             Dim arrAllowedImageTypes() As String = KartSettingsManager.GetKartConfig("backend.imagetypes").Split(",")
-            For i As Integer = 0 To arrAllowedImageTypes.GetUpperBound(0)
-                If strFileExt.ToLower = arrAllowedImageTypes(i).ToLower Then
-                    UploadFile()
+            Dim CheckPassed As Boolean = False
+            For Each ext As String In strFileExts
+                CheckPassed = False     ' Per loop reset.
+                For i As Integer = 0 To arrAllowedImageTypes.GetUpperBound(0)
+                    If ext.ToLower = arrAllowedImageTypes(i).ToLower Then
+                        'UploadFile()
+                        CheckPassed = True
+                        Exit For
+                        'Exit Sub
+                    End If
+                Next
+                If Not CheckPassed Then
+                    ' Check failed, there is a file that is not acceptable.
+                    CkartrisFormatErrors.LogError("Attempt to upload a file with rejected extension: " & ext.ToLower)
+                    litStatus.Text = "An attempt was made to upload a file with an extension that is not permitted. Add this file to the accepted file extension list if required. Extension was " & ext.ToLower
+                    popExtender.Show()
                     Exit Sub
                 End If
             Next
-
-            litStatus.Text = GetGlobalResourceObject("_Kartris", "ContentText_ErrorChkUploadFileType")
-            popExtender.Show()
+            UploadFile()
         Else
             litStatus.Text = GetGlobalResourceObject("_Kartris", "ContentText_NoFile")
             popExtender.Show()
@@ -159,26 +187,54 @@ Partial Class _FileUploader
 
     Private Sub UploadFile()
         Try
-            Dim existingFiles() As String = Directory.GetFiles(Server.MapPath(c_strUploadPath))
-            Dim numTotalFiles = existingFiles.Length()
-            '' --------------------------
-            Dim strTempName As String
-generateNewName:
-            Randomize()
-            If c_blnOneFileOnly Then
-                strTempName = c_numItemID & Path.GetExtension(_UC_UploaderPopup.GetFileName())
-            Else
-                strTempName = c_strFileName & CStr(Int(2 * Rnd() + (numTotalFiles * Rnd() + numTotalFiles / 2))) & Path.GetExtension(_UC_UploaderPopup.GetFileName())
+            Dim existingFiles() As String = Nothing
+            Dim numTotalFiles = 0
+            ' --------------------------
+            Dim strTempName As String = String.Empty
+
+            Dim FileNames As List(Of String) = _UC_UploaderPopup.GetFileNames
+
+            If c_blnOneFileOnly And FileNames.Count > 1 Then
+                ' Error. Too many files. 
+                CkartrisFormatErrors.LogError("Attempt to upload too many files. OneFileOnly set as true while uploaded file count is " & FileNames.Count.ToString)
+                litStatus.Text = "An attempt was made to upload more than one file. This is not permitted in the current context."
+                popExtender.Show()
+                Exit Sub
             End If
 
-            If Not File.Exists(Server.MapPath(c_strUploadPath & strTempName)) Then
-                _UC_UploaderPopup.SaveFile(Server.MapPath(c_strUploadPath & strTempName))
-                Dim strCompressQuality As String = KartSettingsManager.GetKartConfig("general.imagequality")
-                If IsNumeric(strCompressQuality) AndAlso strCompressQuality > 0 AndAlso strCompressQuality < 100 Then CompressImage(Server.MapPath(c_strUploadPath & strTempName), CLng(strCompressQuality))
-                _UC_ItemSorter.AddNewItem(strTempName)
-            Else
-                GoTo generateNewName
-            End If
+            For I = 0 To FileNames.Count - 1
+                ' Cycle through all of the file names in order and save each one individually.
+                ' Get list of existing files.
+                existingFiles = Directory.GetFiles(Server.MapPath(c_strUploadPath))
+                numTotalFiles = existingFiles.Length()
+
+generateNewName:
+                Randomize()
+
+                If c_blnOneFileOnly Then
+                    ' Used if the target folder will only ever have one file in it. 
+                    strTempName = c_numItemID & Path.GetExtension(FileNames(I))
+                Else
+                    strTempName = c_strFileName & CStr(Int(2 * Rnd() + (numTotalFiles * Rnd() + numTotalFiles / 2))) & Path.GetExtension(_UC_UploaderPopup.GetFileName())
+                End If
+
+                If Not File.Exists(Server.MapPath(c_strUploadPath & strTempName)) Then
+                    _UC_UploaderPopup.SaveFile(Server.MapPath(c_strUploadPath & strTempName), I, I < (FileNames.Count - 1))
+                    Dim strCompressQuality As String = KartSettingsManager.GetKartConfig("general.imagequality")
+                    If IsNumeric(strCompressQuality) AndAlso strCompressQuality > 0 AndAlso strCompressQuality < 100 Then CompressImage(Server.MapPath(c_strUploadPath & strTempName), CLng(strCompressQuality))
+                    ' Method below REM'd out as pointless. It is supersceded by the later call to LoadImages()
+                    '_UC_ItemSorter.AddNewItem(strTempName)
+                ElseIf c_blnOneFileOnly Then
+                    ' Prevent infinite loop.
+                    CkartrisFormatErrors.LogError("Existing file found when c_blnOneFileOnly = True")
+                    litStatus.Text = "A file already exists where we are trying to put a new file. Internal Error."
+                    popExtender.Show()
+                    Exit Sub
+                Else
+                    GoTo generateNewName
+                End If
+            Next
+            ' Show images.
             LoadImages()
             updMain.Update()
         Catch ex As Exception

@@ -46,6 +46,8 @@
 		<siteMapNode title="$resources:_Kartris,BackMenu_Reports" url="~/Admin/_Stats.aspx?" Value="config">
 			<siteMapNode title="$resources:_Kartris,BackMenu_Statistics" url="~/Admin/_Stats.aspx" Value="config"/>
 			<siteMapNode title="$resources:_Kartris,PageTitle_AffiliateStats" url="~/Admin/_AffiliateReport.aspx?" value="orders" />
+			<siteMapNode title="$resources:_DBAdmin,ContentText_AdminLogs" url="~/Admin/_AdminLogs.aspx" value="adminlogs" />
+			<siteMapNode title="$resources:_DBAdmin,ContentText_ErrorLogs" url="~/Admin/_ErrorLogs.aspx" value="errorlogs" />
 		</siteMapNode>
 		
 		<siteMapNode title="$resources:_Kartris,BackMenu_RegionalSetup" url="~/Admin/_LanguageStrings.aspx?" value="config">

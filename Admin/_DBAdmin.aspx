@@ -1,9 +1,7 @@
-﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="_dbadmin.aspx.vb" Inherits="Admin_DBAdmin"
+﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="_DBAdmin.aspx.vb" Inherits="Admin_DBAdmin"
     MasterPageFile="~/Skins/Admin/Template.master" %>
 
 <%@ Register TagPrefix="_user" TagName="AdminDataRemoval" Src="~/UserControls/Back/_AdminDataRemoval.ascx" %>
-<%@ Register TagPrefix="_user" TagName="AdminLog" Src="~/UserControls/Back/_AdminLog.ascx" %>
-<%@ Register TagPrefix="_user" TagName="AdminErrorLogs" Src="~/UserControls/Back/_AdminErrorLogs.ascx" %>
 <%@ Register TagPrefix="_user" TagName="AdminExecuteQuery" Src="~/UserControls/Back/_AdminExecuteQuery.ascx" %>
 <%@ Register TagPrefix="_user" TagName="AdminExportData" Src="~/UserControls/Back/_AdminExportData.ascx" %>
 <%@ Register TagPrefix="_user" TagName="AdminDBTools" Src="~/UserControls/Back/_AdminDBTools.ascx" %>
@@ -24,20 +22,50 @@
                             <div class="errormessage">
                                 <asp:Literal ID="litContentTextDataBaseAdminWarning" runat="server" Text='<%$ Resources: _Kartris, ContentText_DataBaseAdminWarning %>' />
                             </div>
-<%--                            <p>
-                                <asp:LinkButton ID="btnRefresh" runat="server" Text='<%$ Resources: _Kartris, ContentText_RefreshKartrisCaches %>'
-                                    CssClass="linkbutton icon_edit refreshbutton" />
-                            </p>--%>
-                            <p>
-                                <asp:LinkButton ID="btnRestart" runat="server" Text='<%$ Resources: _Kartris, ContentText_RestartKartris %>'
-                                    CssClass="linkbutton icon_edit refreshbutton" />
-                            </p>
-                            <_user:PopupMessage ID="_UC_PopupMsg" runat="server" />
+
+
+                        </div>
+                    </ContentTemplate>
+                </ajaxToolkit:TabPanel>
+                <%-- DB Admin Log Tab --%>
+                <ajaxToolkit:TabPanel ID="tabAdminLog" runat="server" HeaderText="<%$ Resources: _DBAdmin, ContentText_AdminLogs %>">
+                    <ContentTemplate>
+                        <div class="subtabsection">
+                            <h2>
+                                <asp:Literal ID="litAdminLogs" runat="server"
+                                    Text='<%$ Resources: _DBAdmin, ContentText_AdminLogs %>' /></h2>
+                            <p>Admin logs has moved to the 'Reports' menu.<br />
+                                <br />
+                                This tab will be removed in a future version.</p>
+                        </div>
+                    </ContentTemplate>
+                </ajaxToolkit:TabPanel>
+                <%-- DB Admin Error Logs --%>
+                <ajaxToolkit:TabPanel ID="tabErrorLogs" runat="server" HeaderText="<%$ Resources: _DBAdmin, ContentText_ErrorLogs %>">
+                    <ContentTemplate>
+                        <div class="subtabsection">
+                            <h2>
+                                <asp:Literal ID="litErrorLogs" runat="server"
+                                    Text='<%$ Resources: _DBAdmin, ContentText_ErrorLogs %>' /></h2>
+                            <p>Error logs has moved to the 'Reports' menu.<br />
+                                <br />
+                                This tab will be removed in a future version.</p>
+                        </div>
+                    </ContentTemplate>
+                </ajaxToolkit:TabPanel>
+                <%-- DB Admin Data Removal --%>
+                <ajaxToolkit:TabPanel ID="tabDBRemoval" runat="server" HeaderText="<%$ Resources: _DBAdmin, ContentText_ClearData %>">
+                    <ContentTemplate>
+                        <div class="subtabsection">
+                            <_user:AdminDataRemoval ID="_UC_AdminDataRemoval" runat="server" />
+                        </div>
+                        
                             <asp:UpdatePanel ID="updDeletedItems" runat="server" UpdateMode="Conditional">
                                 <ContentTemplate>
-                                    <asp:PlaceHolder ID="phdDeletedItems" runat="server" Visible="false">
+                                    <asp:PlaceHolder ID="phdDeletedItems" runat="server" Visible="false"><hr />
                                         <p>
-                                            <asp:Literal ID="litContentTextDeletedItemsText" runat="server" Text='<%$ Resources: _DBAdmin, ContentText_DeletedItemsText %>' />
+                                            <asp:Literal ID="litContentTextDeletedItemsText" runat="server"
+                                                Text='<%$ Resources: _DBAdmin, ContentText_DeletedItemsText %>' /><br />
                                             <asp:LinkButton ID="lnkBtnDeleteFiles" runat="server" Text='<%$ Resources: _Kartris, ContentText_DeleteAll %>'
                                                 CssClass="linkbutton icon_delete" CausesValidation="false" />
                                         </p>
@@ -52,29 +80,6 @@
                                     </div>
                                 </ProgressTemplate>
                             </asp:UpdateProgress>
-                        </div>
-                    </ContentTemplate>
-                </ajaxToolkit:TabPanel>
-                <%-- DB Admin Log Tab --%>
-                <ajaxToolkit:TabPanel ID="tabAdminLog" runat="server" HeaderText="<%$ Resources: _DBAdmin, ContentText_AdminLogs %>">
-                    <ContentTemplate>
-                        <div class="subtabsection">
-                            <_user:AdminLog ID="_UC_AdminLog" runat="server" />
-                        </div>
-                    </ContentTemplate>
-                </ajaxToolkit:TabPanel>
-                <%-- DB Admin Error Logs --%>
-                <ajaxToolkit:TabPanel ID="tabErrorLogs" runat="server" HeaderText="<%$ Resources: _DBAdmin, ContentText_ErrorLogs %>" >
-                    <ContentTemplate>
-                        <_user:AdminErrorLogs ID="_UC_AdminErrorLogs" runat="server" />
-                    </ContentTemplate>
-                </ajaxToolkit:TabPanel>
-                <%-- DB Admin Data Removal --%>
-                <ajaxToolkit:TabPanel ID="tabDBRemoval" runat="server" HeaderText="<%$ Resources: _DBAdmin, ContentText_ClearData %>">
-                    <ContentTemplate>
-                        <div class="subtabsection">
-                            <_user:AdminDataRemoval ID="_UC_AdminDataRemoval" runat="server" />
-                        </div>
                     </ContentTemplate>
                 </ajaxToolkit:TabPanel>
                 <%-- DB Admin Execute Query --%>

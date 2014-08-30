@@ -34,6 +34,18 @@
                                     CssClass="rightlist" />&nbsp;<asp:ImageButton ID="btnRefresh" 
                                     runat="server" ImageUrl="~/Skins/Admin/Images/button_refresh.png" 
                                     Visible="False" Height="32px" Width="32px" CssClass="hoverbutton" />
+                                <script>
+                                    Sys.WebForms.PageRequestManager.getInstance().add_endRequest(ScrollTextArea);
+                                    function ScrollTextArea(){
+                                        // Errors appear at bottom, so we want
+                                        // to scroll to bottom when it loads
+                                        var textarea = document.getElementById('phdMain__UC_AdminErrorLogs_tabAdminErrorLog_tabAdminErrorMessages_txtFileText');
+                                        textarea.scrollTop = textarea.scrollHeight;
+                                    }
+                                    ScrollTextArea();
+                                    
+                                </script>
+
                             </div>
 
                             <div class="spacer">

@@ -52,6 +52,7 @@ Partial Class UserControls_Back_AdminLog
 
     Protected Sub btnSearchAdminLog_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSearchAdminLog.Click
         LoadAdminLogRecords()
+        txtAdminLogSearchText.Text = "" 'blank search box
     End Sub
 
     Protected Sub gvwAdminLog_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvwAdminLog.PageIndexChanging
