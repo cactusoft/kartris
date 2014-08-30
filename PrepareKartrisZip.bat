@@ -43,20 +43,6 @@ ECHO Copying default web.config file...
 copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\*.default" "c:\CleanKartris\Kartris\*.config"
 ECHO DONE!
 ECHO **
-REM ECHO Copying default payment gateway config files...
-REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\2Checkout\*.default" "c:\CleanKartris\Kartris\Plugins\2Checkout\*.config"
-REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\Bitcoin\*.default" "c:\CleanKartris\Kartris\Plugins\Bitcoin\*.config"
-REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\AuthorizeNetAIM\*.default" "c:\CleanKartris\Kartris\Plugins\AuthorizeNetAIM\*.config"
-REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\AuthorizeNetSIM\*.default" "c:\CleanKartris\Kartris\Plugins\AuthorizeNetSIM\*.config"
-REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\GoogleCheckout\*.default" "c:\CleanKartris\Kartris\Plugins\GoogleCheckout\*.config"
-REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\Paypal\*.default" "c:\CleanKartris\Kartris\Plugins\Paypal\*.config"
-REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\PO_OfflinePayment\*.default" "c:\CleanKartris\Kartris\Plugins\PO_OfflinePayment\*.config"
-REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\RBSWorldPay\*.default" "c:\CleanKartris\Kartris\Plugins\RBSWorldPay\*.config"
-REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\SagePay\*.default" "c:\CleanKartris\Kartris\Plugins\SagePay\*.config"
-REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\SagePayDirect\*.default" "c:\CleanKartris\Kartris\Plugins\SagePayDirect\*.config"
-REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\SecureTrading\*.default" "c:\CleanKartris\Kartris\Plugins\SecureTrading\*.config"
-REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\UPS\*.default" "c:\CleanKartris\Kartris\Plugins\UPS\*.config"
-REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\USPS\*.default" "c:\CleanKartris\Kartris\Plugins\USPS\*.config"
 REM ECHO DONE!
 REM ECHO **
 ECHO Copying default WPI files...
