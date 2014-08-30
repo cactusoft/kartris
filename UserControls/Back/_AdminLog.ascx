@@ -17,7 +17,6 @@
                     </asp:DropDownList>
                     <asp:Button ID="btnSearchAdminLog" runat="server" Text="<%$ Resources:_Kartris, FormButton_Search %>"
                         CssClass="button" ValidationGroup="AdminLog" />
-                    <asp:Button ID="btnClear" runat="server" CssClass="button cancelbutton" Text='<%$ Resources:_Kartris, ContentText_Clear %>' />
                 </div>
                 <br />
                 <asp:Label ID="litFormLabelStartDate" runat="server" Text='<%$ Resources: _Kartris, FormLabel_StartDate %>'

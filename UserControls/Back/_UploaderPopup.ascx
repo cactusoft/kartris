@@ -22,7 +22,8 @@
         <ContentTemplate>
             <asp:LinkButton ID="lnkUpload" runat="server" OnClick="lnkUpload_Click" Text="<%$ Resources: _Kartris, ContentText_Upload %>"
                 CssClass="linkbutton icon_upload" />
-            <asp:FileUpload ID="filUploader" runat="server" />
+            
+            <asp:FileUpload ID="filUploader" AllowMultiple="true" runat="server" />
         </ContentTemplate>
     </asp:UpdatePanel>
 </asp:Panel>

@@ -47,7 +47,7 @@
                 <%-- Product Images Tab (Uploader) --%>
                 <asp:View runat="server" ID="tabImages">
                     <div class="subtabsection">
-                        <_user:FileUploader ID="_UC_Uploader" runat="server" />
+                        <_user:FileUploader ID="_UC_Uploader" AllowMultiple="true" runat="server" />
                     </div>
                 </asp:View>
                 <asp:View runat="server" ID="tabMedia">
