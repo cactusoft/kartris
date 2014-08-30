@@ -25,47 +25,41 @@
       <!--<add name="EventLog" type="System.Diagnostics.EventLogTraceListener" initializeData="APPLICATION_NAME"/> -->
     </sharedListeners>
   </system.diagnostics>
-  <applicationSettings>
-    <Kartris.My.MySettings>
-      <setting name="Business" serializeAs="String">
-        <value>PayPalBusiness</value>
-      </setting>
-      <setting name="ProcessCurrency" serializeAs="String">
-        <value>GBP</value>
-      </setting>
-      <setting name="AuthorizedOnly" serializeAs="String">
-        <value>FALSE</value>
-      </setting>
-      <setting name="cmd" serializeAs="String">
-        <value>_xclick</value>
-      </setting>
-      <setting name="ValidateCommand" serializeAs="String">
-        <value>_notify-validate</value>
-      </setting>
-      <setting name="VerifyCallback" serializeAs="String">
-        <value>ON</value>
-      </setting>
-      <setting name="Status" serializeAs="String">
-        <value>ON</value>
-      </setting>
-      <setting name="URL" serializeAs="String">
-        <value>https://www.sandbox.paypal.com/cgi-bin/webscr</value>
-      </setting>
-      <setting name="rm" serializeAs="String">
-        <value>1</value>
-      </setting>
-      <setting name="IsProtected" serializeAs="String">
-        <value>No</value>
-      </setting>
-      <setting name="FriendlyName(en-GB)" serializeAs="String">
-        <value>Paypal Website Payments Standard</value>
-      </setting>
-      <setting name="FriendlyName(de-DE)" serializeAs="String">
-        <value></value>
-      </setting>
-      <setting name="AnonymousCheckout" serializeAs="String">
-        <value>FALSE</value>
-      </setting>
-    </Kartris.My.MySettings>
-  </applicationSettings>
+    <applicationSettings>
+        <Kartris.My.MySettings>
+            <setting name="ProcessCurrency" serializeAs="String">
+                <value>BTC</value>
+            </setting>
+            <setting name="Status" serializeAs="String">
+                <value>OFF</value>
+            </setting>
+            <setting name="AuthorizedOnly" serializeAs="String">
+                <value>FALSE</value>
+            </setting>
+            <setting name="IsProtected" serializeAs="String">
+                <value>No</value>
+            </setting>
+            <setting name="BitcoinRPCHost" serializeAs="String">
+                <value>http://127.0.0.1</value>
+            </setting>
+            <setting name="BitcoinRPCPort" serializeAs="String">
+                <value>8332</value>
+            </setting>
+            <setting name="BitcoinRPCUser" serializeAs="String">
+                <value>bitcoinrpc</value>
+            </setting>
+            <setting name="BitcoinRPCPassword" serializeAs="String">
+                <value>test</value>
+            </setting>
+            <setting name="FriendlyName(en-GB)" serializeAs="String">
+                <value>Pay using Bitcoin</value>
+            </setting>
+            <setting name="AnonymousCheckout" serializeAs="String">
+                <value>TRUE</value>
+            </setting>
+            <setting name="FriendlyName(de-DE)" serializeAs="String">
+                <value></value>
+            </setting>
+        </Kartris.My.MySettings>
+    </applicationSettings>
 </configuration>

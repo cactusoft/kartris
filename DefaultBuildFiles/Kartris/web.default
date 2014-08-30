@@ -26,9 +26,9 @@ All rights reserved.
 		<add key="PercentageRegex" value="(^100([.]0{1,2})?)$|(^\d{1,2}([.]\d{1,2})?)$"/>
 		<add key="ChartImageHandler" value="Storage=file;Timeout=20;Url=~/Uploads/Temp/;;deleteAfterServicing=true;"/>
 		<add key="TaxRegime" value="EU"/>
-    <add key="com.kartris.livetile.Service1" value="http://livetile.kartris.com/KartrisNotificationServer.svc"/>
-    <add key="KartrisWebAPISecretKey" value=""/>
-    <add key="KartrisWebAPIIPLock" value=""/>
+		<add key="com.kartris.livetile.Service1" value="http://livetile.kartris.com/KartrisNotificationServer.svc"/>
+		<add key="KartrisWebAPISecretKey" value=""/>
+		<add key="KartrisWebAPIIPLock" value=""/>
 	</appSettings>
 	<connectionStrings>
 		<clear/>
@@ -226,7 +226,7 @@ All rights reserved.
 			 redirectMode="ResponseRewrite">
 			<error statusCode="404" redirect="~/404.aspx" />
 		</customErrors>
-		<compilation debug="false" batch="false" targetFramework="4.0">
+		<compilation debug="false" batch="false" targetFramework="4.5">
 			<assemblies>
 				<add assembly="System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=B03F5F7F11D50A3A"/>
 				<add assembly="System.Web.Extensions.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35"/>
@@ -264,59 +264,59 @@ All rights reserved.
 			<add type="KartrisHttpModule" name="KartrisHttpModule"/>
 		</modules>
 	</system.webServer>
-  <system.serviceModel>
-    <services>
-      <service behaviorConfiguration="DefaultBehavior"
-                name="KartrisWebAPI">
-        <endpoint address="" binding="basicHttpBinding"
-                  bindingConfiguration="DefaultHttpBinding"
-                  contract="IKartrisWebAPI" />
-        <endpoint address="mex" binding="mexHttpBinding"
-           contract="IMetadataExchange" />
-        <host>
-          <baseAddresses>
-            <!-- FIRST BIT MUST MATCH WEBSHOPURL CONFIG-->
-            <!-- 'TODO: add this to the setup routine -->
-            <add baseAddress="http://localhost:52038/Kartris/Protected/KartrisWebAPI.svc" />
-          </baseAddresses>
-        </host>
-      </service>
-    </services>
-    <behaviors>
-      <serviceBehaviors>
-        <behavior name="DefaultBehavior">
-          <serviceMetadata httpGetEnabled="true" />
-          <serviceDebug includeExceptionDetailInFaults="false" />
-          <serviceCredentials>
-            <!-- NEED TO UNCOMMENT THE TAG BELOW WHEN ENABLING SSL-->
-            <!--<serviceCertificate findValue="MyWebSite"
-                          storeLocation="LocalMachine"
-                          storeName="My"
-                          x509FindType="FindBySubjectName" />-->
-            <userNameAuthentication userNamePasswordValidationMode="Custom"
-             customUserNamePasswordValidatorType="UserNamePassValidator, App_Code" />
-          </serviceCredentials>
-        </behavior>
-      </serviceBehaviors>
-    </behaviors>
-    <serviceHostingEnvironment multipleSiteBindingsEnabled="true" aspNetCompatibilityEnabled="true"/>
-    <bindings>
-      <wsHttpBinding>
-        <!-- THIS BINDING IS MUCH MORE SECURED BUT IT REQUIRES A DEDICATED SERVER -->
-        <binding name="wsHTTPBinding">
-          <security mode="Message">
-            <message clientCredentialType="UserName"/>
-          </security>
-        </binding>
-      </wsHttpBinding>
-      <basicHttpBinding>
-        <binding name="DefaultHttpBinding">
-          <!-- NEED TO UNCOMMENT THE TAG BELOW WHEN ENABLING SSL-->
-          <!--<security mode="Transport">
-            <transport clientCredentialType="None" />
-          </security>-->
-        </binding>
-      </basicHttpBinding>
-    </bindings>
-  </system.serviceModel>
+	<system.serviceModel>
+		<services>
+			<service behaviorConfiguration="DefaultBehavior"
+								name="KartrisWebAPI">
+				<endpoint address="" binding="basicHttpBinding"
+									bindingConfiguration="DefaultHttpBinding"
+									contract="IKartrisWebAPI" />
+				<endpoint address="mex" binding="mexHttpBinding"
+					 contract="IMetadataExchange" />
+				<host>
+					<baseAddresses>
+						<!-- FIRST BIT MUST MATCH WEBSHOPURL CONFIG-->
+						<!-- 'TODO: add this to the setup routine -->
+						<add baseAddress="http://localhost:52038/Kartris/Protected/KartrisWebAPI.svc" />
+					</baseAddresses>
+				</host>
+			</service>
+		</services>
+		<behaviors>
+			<serviceBehaviors>
+				<behavior name="DefaultBehavior">
+					<serviceMetadata httpGetEnabled="true" />
+					<serviceDebug includeExceptionDetailInFaults="false" />
+					<serviceCredentials>
+						<!-- NEED TO UNCOMMENT THE TAG BELOW WHEN ENABLING SSL-->
+						<!--<serviceCertificate findValue="MyWebSite"
+													storeLocation="LocalMachine"
+													storeName="My"
+													x509FindType="FindBySubjectName" />-->
+						<userNameAuthentication userNamePasswordValidationMode="Custom"
+						 customUserNamePasswordValidatorType="UserNamePassValidator, App_Code" />
+					</serviceCredentials>
+				</behavior>
+			</serviceBehaviors>
+		</behaviors>
+		<serviceHostingEnvironment multipleSiteBindingsEnabled="true" aspNetCompatibilityEnabled="true"/>
+		<bindings>
+			<wsHttpBinding>
+				<!-- THIS BINDING IS MUCH MORE SECURED BUT IT REQUIRES A DEDICATED SERVER -->
+				<binding name="wsHTTPBinding">
+					<security mode="Message">
+						<message clientCredentialType="UserName"/>
+					</security>
+				</binding>
+			</wsHttpBinding>
+			<basicHttpBinding>
+				<binding name="DefaultHttpBinding">
+					<!-- NEED TO UNCOMMENT THE TAG BELOW WHEN ENABLING SSL-->
+					<!--<security mode="Transport">
+						<transport clientCredentialType="None" />
+					</security>-->
+				</binding>
+			</basicHttpBinding>
+		</bindings>
+	</system.serviceModel>
 </configuration>

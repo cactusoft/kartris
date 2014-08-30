@@ -30,7 +30,7 @@
 		<applicationSettings>
 		<Kartris.My.MySettings>
 			<setting name="ProcessCurrency" serializeAs="String">
-					<value>GBP</value>
+					<value></value>
 			</setting>
 			<setting name="AuthorizedOnly" serializeAs="String">
 					<value>FALSE</value>
