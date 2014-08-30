@@ -45,6 +45,9 @@ ECHO DONE!
 ECHO **
 REM ECHO Copying default payment gateway config files...
 REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\2Checkout\*.default" "c:\CleanKartris\Kartris\Plugins\2Checkout\*.config"
+REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\Bitcoin\*.default" "c:\CleanKartris\Kartris\Plugins\Bitcoin\*.config"
+REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\AuthorizeNetAIM\*.default" "c:\CleanKartris\Kartris\Plugins\AuthorizeNetAIM\*.config"
+REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\AuthorizeNetSIM\*.default" "c:\CleanKartris\Kartris\Plugins\AuthorizeNetSIM\*.config"
 REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\GoogleCheckout\*.default" "c:\CleanKartris\Kartris\Plugins\GoogleCheckout\*.config"
 REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\Paypal\*.default" "c:\CleanKartris\Kartris\Plugins\Paypal\*.config"
 REM copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\Plugins\PO_OfflinePayment\*.default" "c:\CleanKartris\Kartris\Plugins\PO_OfflinePayment\*.config"
