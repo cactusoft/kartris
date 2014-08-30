@@ -2,6 +2,11 @@
 'Kartris - www.kartris.com
 'Copyright 2014 CACTUSOFT INTERNATIONAL FZ LLC
 
+'Mods for multiple file upload - August 2014:
+'Craig Moore
+'Deadline Automation Limited
+'www.deadline-automation.com
+
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
 'warranty.
