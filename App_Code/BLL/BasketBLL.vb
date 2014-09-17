@@ -2248,139 +2248,6 @@ Public Class BasketBLL
 
     End Function
 
-    Private Function GetPromotionText_DEPRECATED(ByVal pPROM_ID As Integer, ByVal pPromTable As DataTable, Optional ByVal blnText As Boolean = False) As String
-
-        '' This one .. should be modified .. but right now it read nothing from DB.
-        Dim strPromotionPart1_BuyCategory As String = GetGlobalResourceObject("Promotions", "ContentText_PromotionTextCatBuyPart")
-        Dim strPromotionPart1_Buy As String = GetGlobalResourceObject("Promotions", "ContentText_PromotionTextBuyPart1")
-        Dim strPromotionPart1_Spend As String = GetGlobalResourceObject("Promotions", "ContentText_PromotionTextSpendPart1")
-        Dim strPromotionPart2_GetItemFree As String = GetGlobalResourceObject("Promotions", "ContentText_PromotionTextGetItemFreePart2")
-        Dim strPromotionPart2_GetPriceOff As String = GetGlobalResourceObject("Promotions", "ContentText_PromotionTextGetPriceOffPart2")
-        Dim strPromotionPart2_GetPercentOff As String = GetGlobalResourceObject("Promotions", "ContentText_PromotionTextGetPercentOffPart2")
-
-        Dim strPromotionText As String = ""
-        Dim strPartA As String = ""
-        Dim strPartB As String = ""
-
-        Dim drPartA As DataRow(), drPartB As DataRow()
-        drPartA = pPromTable.Select("PROM_ID=" & pPROM_ID & " AND PP_PartNo='a'")
-        drPartB = pPromTable.Select("PROM_ID=" & pPROM_ID & " AND PP_PartNo='b'")
-
-        For i As Integer = 0 To drPartA.Length - 1
-            If i > 0 Then
-                strPartA += ", "
-            End If
-            Dim strItemLink As String = ""
-            Select Case CChar(drPartA(i)("PP_ItemType"))
-                Case "c"
-                    If CChar(drPartA(i)("PP_Type")) = "q" Then ' BUY Part1
-                        strPartA += Replace(strPromotionPart1_BuyCategory, "[quantity1]", CStr(drPartA(i)("PP_Value"))) ' NEW
-                    End If
-                    strItemLink = " <b><a href='Category.aspx?CategoryID=" & _
-                      CStr(drPartA(i)("PP_ItemID")) & "'>" & CStr(drPartA(i)("PP_ItemName")) & "</a></b>"
-                    strItemLink = IIf(blnText, CStr(drPartA(i)("PP_ItemName")), strItemLink)
-                    strPartA = Replace(strPartA, "[item1]", strItemLink) ' NEW
-
-                Case "p"
-                    If CChar(drPartA(i)("PP_Type")) = "q" Then
-                        strPartA += Replace(strPromotionPart1_Buy, "[quantity1]", CStr(drPartA(i)("PP_Value"))) ' NEW
-                    End If
-                    If CChar(drPartA(i)("PP_Type")) = "v" Then
-                        Dim snglPrice As Single = 0.0F
-                        snglPrice = CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), CDbl(drPartA(i)("PP_Value")))
-                        Dim strPrice As String = ""
-                        strPrice = CurrenciesBLL.FormatCurrencyPrice(Current.Session("CUR_ID"), snglPrice)
-                        strPartA += Replace(strPromotionPart1_Spend, "[currencysymbol][value1]", strPrice) ' NEW
-                    End If
-                    strItemLink = " <b><a href='Product.aspx?ProductID=" & _
-                      CStr(drPartA(i)("PP_ItemID")) & "'>" & CStr(drPartA(i)("PP_ItemName")) & "</a></b>"
-                    strItemLink = IIf(blnText, CStr(drPartA(i)("PP_ItemName")), strItemLink)
-                    strPartA = Replace(strPartA, "[item1]", strItemLink) ' NEW
-
-                Case "v"
-                    If CChar(drPartA(i)("PP_Type")) = "q" Then
-                        strPartA += Replace(strPromotionPart1_Buy, "[quantity1]", CStr(drPartA(i)("PP_Value"))) ' NEW
-                    End If
-                    If CChar(drPartA(i)("PP_Type")) = "v" Then
-                        Dim snglPrice As Single = 0.0F
-                        snglPrice = CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), CDbl(drPartA(i)("PP_Value")))
-                        Dim strPrice As String = ""
-                        strPrice = CurrenciesBLL.FormatCurrencyPrice(Current.Session("CUR_ID"), snglPrice)
-                        strPartA += Replace(strPromotionPart1_Spend, "[currencysymbol][value1]", strPrice) ' NEW
-                    End If
-                    strItemLink = " <b><a href='Product.aspx?ProductID=" & _
-                      VersionsBLL.GetProductID_s(CInt(drPartA(i)("PP_ItemID"))) & "'>" & CStr(drPartA(i)("PP_ItemName")) & "</a></b>"
-                    strItemLink = IIf(blnText, CStr(drPartA(i)("PP_ItemName")), strItemLink)
-                    strPartA = Replace(strPartA, "[item1]", strItemLink) ' NEW
-
-            End Select
-        Next
-
-        For i As Integer = 0 To drPartB.Length - 1
-            If i > 0 Then
-                strPartB += ", "
-            End If
-            Dim strItemLink As String = ""
-            Select Case CChar(drPartB(i)("PP_ItemType"))
-                Case "c"                             ' Categories will not be used in part2 in this version .. 
-                    If CChar(drPartB(i)("PP_Type")) = "q" Then
-                        strPartB += " Get " & CStr(drPartB(i)("PP_Value")) & " Items From "
-                    Else
-                        strPartB += " Get " & CStr(drPartB(i)("PP_Value")) & "% Off on item From "
-                    End If
-                    strItemLink = " Category <b><a href='Category.aspx?CategoryID=" & _
-                      CStr(drPartB(i)("PP_ItemID")) & "'>" & CStr(drPartB(i)("PP_ItemName")) & "</a></b>"
-                    strItemLink = IIf(blnText, CStr(drPartB(i)("PP_ItemName")), strItemLink)
-                    strPartB += strItemLink
-
-                Case "p"
-                    If CChar(drPartB(i)("PP_Type")) = "q" Then
-                        strPartB += Replace(strPromotionPart2_GetItemFree, "[quantity2]", CStr(drPartB(i)("PP_Value"))) ' NEW
-                    End If
-                    If CChar(drPartB(i)("PP_Type")) = "p" Then
-                        strPartB += Replace(strPromotionPart2_GetPercentOff, "[value2]", CStr(drPartB(i)("PP_Value"))) ' NEW
-                    End If
-                    If CChar(drPartB(i)("PP_Type")) = "v" Then
-                        Dim snglPrice As Single = 0.0F
-                        snglPrice = CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), CDbl(drPartB(i)("PP_Value")))
-                        Dim strPrice As String = ""
-                        strPrice = CurrenciesBLL.FormatCurrencyPrice(Current.Session("CUR_ID"), snglPrice)
-
-                        strPartB += Replace(strPromotionPart2_GetPriceOff, "[currencysymbol][value2]", strPrice) ' NEW
-                    End If
-                    strItemLink = " <b><a href='Product.aspx?ProductID=" & _
-                      CStr(drPartB(i)("PP_ItemID")) & "'>" & CStr(drPartB(i)("PP_ItemName")) & "</a></b>"
-                    strItemLink = IIf(blnText, CStr(drPartB(i)("PP_ItemName")), strItemLink)
-                    strPartB = Replace(strPartB, "[item2]", strItemLink) ' NEW
-
-                Case "v"
-                    If CChar(drPartB(i)("PP_Type")) = "q" Then
-                        strPartB += Replace(strPromotionPart2_GetItemFree, "[quantity2]", CStr(drPartB(i)("PP_Value"))) ' NEW
-                    End If
-                    If CChar(drPartB(i)("PP_Type")) = "p" Then
-                        strPartB += Replace(strPromotionPart2_GetPercentOff, "[value2]", CStr(drPartB(i)("PP_Value"))) ' NEW
-                    End If
-                    If CChar(drPartB(i)("PP_Type")) = "v" Then
-                        Dim snglPrice As Single = 0.0F
-                        snglPrice = CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), CDbl(drPartB(i)("PP_Value")))
-                        Dim strPrice As String = ""
-                        strPrice = CurrenciesBLL.FormatCurrencyPrice(Current.Session("CUR_ID"), snglPrice)
-
-                        strPartB += Replace(strPromotionPart2_GetPriceOff, "[currencysymbol][value2]", strPrice) ' NEW
-                    End If
-                    strItemLink = " <b><a href='Product.aspx?ProductID=" & _
-                      VersionsBLL.GetProductID_s(CInt(drPartB(i)("PP_ItemID"))) & "'>" & CStr(drPartB(i)("PP_ItemName")) & "</a></b>"
-                    strItemLink = IIf(blnText, CStr(drPartB(i)("PP_ItemName")), strItemLink)
-                    strPartB = Replace(strPartB, "[item2]", strItemLink) ' NEW
-
-
-            End Select
-        Next
-
-        Return strPartA & ", " & strPartB
-
-    End Function
-
     Private Sub AddPromotion(ByVal blnBasketPromo As Boolean, ByRef strPromoDiscountIDs As String, ByRef objPromotion As Promotion, ByVal numPromoID As Integer, ByVal numIncTax As Double, ByVal numExTax As Double,
                              ByVal numQty As Double, ByVal numTaxRate As Double, Optional ByVal blnIsFixedValuePromo As Boolean = False, Optional ByVal blnForceAdd As Boolean = False)
         Dim intMaxPromoOrder As Integer = 0
@@ -2431,7 +2298,7 @@ Public Class BasketBLL
         Dim strItemType, strType As String
         Dim strItemVersionIDs, strItemProductIDs, strItemCategoryIDs As String
         Dim vIncTax, vExTax, vQuantity, vBuyQty, vValue, vTaxRate As Double
-
+        Dim numTotalBasketAmount As Double
         If BasketItems.Count = 0 Then Exit Sub
 
         'Clear AppliedPromotion to all Basket Items
@@ -2487,19 +2354,19 @@ Public Class BasketBLL
 
                     strList = "PP_PartNo='b' and PROM_ID=" & objPromotion.ID
                     drwGets = tblPromotions.Select(strList)
-                    For Each drGet As DataRow In drwGets '' loop the get items
+                    For Each drGet As DataRow In drwGets 'loop the get items
                         strItemType = drGet("PP_ItemType") & ""
                         strType = drGet("PP_Type") & ""
                         vItemID = drGet("PP_ItemID")
                         vValue = drGet("PP_Value")
                         vMaxPromoQty = IIf(drGet("PROM_MaxQuantity") = 0, 1000000, drGet("PROM_MaxQuantity"))
                         Select Case strItemType.ToLower
-                            Case "v"                             '' buy version and get item from version
+                            Case "v" 'buy version and get item from version
                                 If InStr("," & strItemVersionIDs & ",", "," & vItemID & ",") > 0 Then
-                                    '' vBuyQty (qty in basket), objPromo.value (buy qty in db), objItem.Quantity(qty in basket get promo), vValue (get qty in db) 
+                                    'vBuyQty (qty in basket), objPromo.value (buy qty in db), objItem.Quantity(qty in basket get promo), vValue (get qty in db) 
                                     objItem = GetBasketItemByVersionID(vItemID)
                                     If objItem.AppliedPromo = 1 Then Exit Select
-                                    If objPromotion.ItemID = vItemID Then '' buy item is equal to get item
+                                    If objPromotion.ItemID = vItemID Then 'buy item is equal to get item
                                         If (vBuyQty > vValue AndAlso strType = "q") OrElse _
                                            (vBuyQty >= drwBuy("PP_Value") AndAlso strType = "p") Then
                                             blnGetFound = True
@@ -2514,7 +2381,7 @@ Public Class BasketBLL
                                 If vQuantity <= 0 Then blnGetFound = False
                                 Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
                                 If blnGetFound Then objItem.AppliedPromo = 1
-                            Case "p"                             '' buy version and get item from product
+                            Case "p" 'buy version and get item from product
                                 If InStr("," & strItemProductIDs & ",", "," & vItemID & ",") > 0 Then
                                     Dim vTotalQtyGot, vQtyBalance As Double
                                     Dim index As Integer
@@ -2548,7 +2415,7 @@ Public Class BasketBLL
                                 blnGetFound = False
                                 Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
                                 If blnGetFound Then objItem.AppliedPromo = 1
-                            Case "c"                             '' buy version and get item from category
+                            Case "c" 'buy version and get item from category
                                 If InStr("," & strItemCategoryIDs & ",", "," & vItemID & ",") > 0 Then
                                     Dim index As Integer
                                     index = GetItemMinCategoryValue(vItemID)
@@ -2563,7 +2430,7 @@ Public Class BasketBLL
                                 If blnGetFound Then objItem.AppliedPromo = 1
                             Case "a"
                                 vQuantity = Math.Floor(Math.Min((vBuyQty / objPromotion.Value), (objItem.Quantity / objPromotion.Value)))
-                                vQuantity = Math.Min(vQuantity, vMaxPromoQty) '' Make sure it didn't exceed the MaxQty / promotion
+                                vQuantity = Math.Min(vQuantity, vMaxPromoQty) 'Make sure it didn't exceed the MaxQty / promotion
                                 If vQuantity <= 0 Then blnGetFound = False Else blnGetFound = True
 
                                 vTaxRate = TotalDiscountPriceTaxRate
@@ -2606,8 +2473,8 @@ Public Class BasketBLL
             End If
         Next
 
-        '' products
-        '' get promotions from basket product IDs
+        'products
+        'get promotions from basket product IDs
         strList = "PP_PartNo='a' and PP_ItemType='p' and PP_Type='q' and PP_ItemID in (" & strItemProductIDs & ")"
         drwBuys = tblPromotions.Select(strList)
         For Each drwBuy As DataRow In drwBuys
@@ -2929,7 +2796,7 @@ Public Class BasketBLL
             End If
         Next
 
-        '' get spend value from basket
+        'get spend value from basket
         Dim vSpend As Double
         strList = "PP_PartNo='a' and PP_ItemType='a'"
         drwSpends = tblPromotions.Select(strList)
@@ -2962,7 +2829,7 @@ Public Class BasketBLL
                     vMaxPromoQty = IIf(drGet("PROM_MaxQuantity") = 0, 1000000, drGet("PROM_MaxQuantity"))
                     blnIsFixedValuePromo = False
                     Select Case strItemType.ToLower
-                        Case "v"                    '' spend a certain amount and get item from version
+                        Case "v" 'spend a certain amount and get item from version
                             If InStr("," & strItemVersionIDs & ",", "," & vItemID & ",") > 0 Then
                                 objItem = GetBasketItemByVersionID(vItemID)
                                 If objItem.AppliedPromo = 1 Then Exit Select
@@ -2972,7 +2839,7 @@ Public Class BasketBLL
                                 Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate)
                             End If
 
-                        Case "p"                    '' spend a certain amount and get item from product
+                        Case "p" 'spend a certain amount and get item from product
                             If InStr("," & strItemProductIDs & ",", "," & vItemID & ",") > 0 Then
                                 Dim index As Integer
                                 index = GetItemMinProductValue(vItemID)
@@ -3012,7 +2879,7 @@ Public Class BasketBLL
 
                             End If
 
-                        Case "c"                    '' spend a certain amount and get item from category
+                        Case "c" 'spend a certain amount and get item from category
                             If InStr("," & strItemCategoryIDs & ",", "," & vItemID & ",") > 0 Then
                                 Dim index As Integer
                                 index = GetItemMinCategoryValue(vItemID)
@@ -3053,8 +2920,20 @@ Public Class BasketBLL
                                 Loop
 
                             End If
-                        Case "a"
-                            vQuantity = CInt(TotalExTax / vSpend)
+                        Case "a" 'Total spend promotion
+                            If GetKartConfig("general.tax.pricesinctax") = "y" Then
+                                numTotalBasketAmount = TotalIncTax
+                                vQuantity = CInt(TotalIncTax / vSpend)
+                            Else
+                                vQuantity = CInt(TotalExTax / vSpend)
+                            End If
+
+                            'If total in basket (inc or ex, depending on settings)
+                            'is more than the vSpend required, Qty will be above zero
+                            vQuantity = CInt(numTotalBasketAmount / vSpend)
+
+                            'If Qty above zero (i.e. promotion is triggered) then set
+                            'as zero so we don't apply multiple times
                             If vQuantity > 1 Then vQuantity = 1
                             If vQuantity <= 0 Then blnGetFound = False Else blnGetFound = True
 
@@ -3092,7 +2971,7 @@ Public Class BasketBLL
                 Next
 
                 If blnGetFound Then
-                    If TotalExTax >= vSpend Then
+                    If numTotalBasketAmount >= vSpend Then
                         Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
                     Else
                         Call AddPromotion(False, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
@@ -3103,7 +2982,7 @@ Public Class BasketBLL
         Next
 
 
-        '' get promotions from Basket version IDs (get parts)
+        'get promotions from Basket version IDs (get parts)
         strList = "PP_PartNo='b' and PP_ItemType='v' and PP_Type='q' and PP_ItemID in (" & strItemVersionIDs & ")"
         drwGets = tblPromotions.Select(strList)
 
