@@ -77,7 +77,6 @@
                             <asp:PlaceHolder ID="phdOutOfStock" runat="server"><a href="_StockWarning.aspx">
                                 <asp:Literal ID="litContentTextToDoListStock4" runat="server" Text="<%$ Resources: _TaskList, ContentText_ToDoListStock4 %>" />&nbsp;<asp:Literal
                                     ID="litOutOfStock" runat="server" /></a></asp:PlaceHolder>
-                            </a>
                         </div>
                     </div>
                 </asp:PlaceHolder>
