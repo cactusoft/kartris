@@ -69,3 +69,119 @@ BEGIN
 	ORDER BY ProductHits DESC
 
 END
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisUsers_Add]    Script Date: 2014-10-15 10:31:45 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Medz
+-- Last Modified: Paul - Oct 2014
+-- Description:	Add users
+-- Remarks:	Updated CustomerGroup to Int
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisUsers_Add]
+(
+			@U_AccountHolderName nvarchar(50),
+		   @U_EmailAddress nvarchar(100),
+		   @U_Password nvarchar(64),
+			@U_LanguageID tinyint,
+			@U_CustomerGroupID int,
+			@U_CustomerDiscount real,
+			@U_Approved bit,
+			@U_IsAffiliate bit,
+			@U_AffiliateCommission real,
+			@U_SupportEndDate datetime,
+			@U_Notes nvarchar(MAX),
+			@U_SaltValue nvarchar(64)
+)
+AS
+DECLARE @U_ID INT
+	SET NOCOUNT OFF;
+
+	
+	INSERT INTO [tblKartrisUsers]
+		   ([U_AccountHolderName] ,[U_EmailAddress] ,[U_Password] ,[U_LanguageID] ,[U_CustomerGroupID]
+			,[U_DefShippingAddressID]
+			,[U_DefBillingAddressID]
+			,[U_CustomerDiscount] ,[U_Approved] ,[U_IsAffiliate]
+			,[U_AffiliateCommission]
+			,[U_ML_Format]
+			,[U_SupportEndDate]
+			,[U_Notes]
+			,[U_SaltValue]
+			)
+	 VALUES
+		   (@U_AccountHolderName, @U_EmailAddress, @U_Password, @U_LanguageID, @U_CustomerGroupID,
+			0,
+			0,
+			@U_CustomerDiscount, @U_Approved, @U_IsAffiliate,
+			@U_AffiliateCommission,
+			't',
+			@U_SupportEndDate,
+			@U_Notes,
+			@U_SaltValue);
+	SET @U_ID = SCOPE_IDENTITY();
+	SELECT @U_ID;
+
+	/****** Object:  StoredProcedure [dbo].[_spKartrisUsers_Update]    Script Date: 2014-10-15 10:33:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Medz
+-- Last Modified: Paul - Oct 2014
+-- Description:	Update users
+-- Remarks:	Updated CustomerGroup to Int
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisUsers_Update]
+(
+		   @U_ID int,
+			@U_AccountHolderName nvarchar(50),
+		   @U_EmailAddress nvarchar(100),
+		   @U_Password nvarchar(64),
+			@U_LanguageID tinyint,
+			@U_CustomerGroupID int,
+			@U_CustomerDiscount real,
+			@U_Approved bit,
+			@U_IsAffiliate bit,
+			@U_AffiliateCommission real,
+			@U_SupportEndDate datetime,
+			@U_Notes nvarchar(MAX),
+			@U_SaltValue nvarchar(64)
+)
+AS
+	IF @U_Password = ''
+		BEGIN
+			SET @U_Password = NULL;
+			SET @U_SaltValue = NULL;
+		END;
+	IF @U_AccountHolderName = ''
+		BEGIN
+			SET @U_AccountHolderName = NULL;
+		END;
+		
+	IF @U_Notes = ''
+		BEGIN
+			SET @U_Notes = NULL;
+		END;
+	SET NOCOUNT OFF;
+
+	
+	UPDATE [tblKartrisUsers] SET
+			[U_AccountHolderName] = COALESCE (@U_AccountHolderName, U_AccountHolderName),
+			[U_EmailAddress] = @U_EmailAddress ,
+			[U_Password] = COALESCE (@U_Password, U_Password),
+			[U_LanguageID] = @U_LanguageID ,
+			[U_CustomerGroupID] = @U_CustomerGroupID , 
+			[U_CustomerDiscount] = @U_CustomerDiscount , 
+			[U_Approved] = @U_Approved ,
+			[U_IsAffiliate] = @U_IsAffiliate ,
+			[U_AffiliateCommission] = @U_AffiliateCommission,
+			[U_SupportEndDate] = @U_SupportEndDate,
+			[U_Notes] = COALESCE (@U_Notes, U_Notes),
+			[U_SaltValue] = COALESCE (@U_SaltValue, U_SaltValue)
+			WHERE U_ID = @U_ID;
+	SELECT @U_ID;
