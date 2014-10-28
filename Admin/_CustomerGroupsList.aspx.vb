@@ -24,8 +24,6 @@ Partial Class Admin_CustomerGroupsList
         Page.Title = GetLocalResourceObject("PageTitle_CustomerGroups") & " | " & GetGlobalResourceObject("_Kartris", "ContentText_KartrisName")
 
         lnkBtnSave.ValidationGroup = LANG_ELEM_TABLE_TYPE.CustomerGroups
-        valRequiredDiscount.ValidationGroup = LANG_ELEM_TABLE_TYPE.CustomerGroups
-        valRegexDiscount.ValidationGroup = LANG_ELEM_TABLE_TYPE.CustomerGroups
         valSummary.ValidationGroup = LANG_ELEM_TABLE_TYPE.CustomerGroups
 
         If Not Page.IsPostBack Then GetCustomersList()
@@ -108,7 +106,7 @@ Partial Class Admin_CustomerGroupsList
         Dim tblLanguageElements As New DataTable
         tblLanguageElements = _UC_LangContainer.ReadContent()
 
-        Dim snglDiscount As Single = HandleDecimalValues(txtDiscount.Text)
+        Dim snglDiscount As Single = 0
         Dim blnLive As Boolean = chkCGLive.Checked
 
         Dim strMessage As String = ""
@@ -141,7 +139,6 @@ Partial Class Admin_CustomerGroupsList
     Sub PrepareNewCG()
         litCustomerGroupID.Text = "0"
         _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.CustomerGroups, True)
-        txtDiscount.Text = "0"
         chkCGLive.Checked = False
         mvwCustomerGroups.SetActiveView(viwDetails)
         updCGDetails.Update()
@@ -150,7 +147,6 @@ Partial Class Admin_CustomerGroupsList
     Sub PrepareExistingCG()
         _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.CustomerGroups, False, CLng(litCustomerGroupID.Text))
         chkCGLive.Checked = DirectCast(gvwCustomers.SelectedRow.Cells(2).FindControl("chkCG_Live"), CheckBox).Checked
-        txtDiscount.Text = gvwCustomers.SelectedRow.Cells(1).Text
         mvwCustomerGroups.SetActiveView(viwDetails)
         updCGDetails.Update()
     End Sub

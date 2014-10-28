@@ -81,22 +81,6 @@
                                         <asp:Label ID="lblCGLive" runat="server" Text="<%$ Resources: _Kartris, ContentText_Live %>" /></span><span
                                             class="Kartris-DetailsView-Value">
                                             <asp:CheckBox runat="server" ID="chkCGLive" CssClass="checkbox" /></span></li>
-                                    <!-- this section is deprecated; set % discount at customer level -->
-                                    <li style="display:none;"><span class="Kartris-DetailsView-Name">
-                                        <asp:Label ID="lblCGDiscount" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Discount %>" /></span><span
-                                            class="Kartris-DetailsView-Value">
-                                            <asp:TextBox ID="txtDiscount" runat="server" CssClass="shorttext" MaxLength="8" />
-                                            <asp:RequiredFieldValidator ID="valRequiredDiscount" runat="server" CssClass="error"
-                                                ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
-                                                ControlToValidate="txtDiscount" SetFocusOnError="true" Display="Dynamic" />
-                                            <asp:RegularExpressionValidator ID="valRegexDiscount" runat="server" Display="Dynamic"
-                                                SetFocusOnError="true" ErrorMessage="<%$ Resources: _Kartris, ContentText_InvalidValue %>"
-                                                CssClass="error" ForeColor="" ControlToValidate="txtDiscount" ValidationExpression="<%$ AppSettings:DecimalRegex %>" />
-                                            <ajaxToolkit:FilteredTextBoxExtender ID="filPriceIncTax" runat="server" TargetControlID="txtDiscount"
-                                                FilterType="Numbers,Custom" ValidChars=".," />
-                                        </span></li>
-                                    <!-- end of deprecated customer group discount -->
-
                                 </ul>
                             </div>
                         </div>
