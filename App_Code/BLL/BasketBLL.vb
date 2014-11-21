@@ -1647,7 +1647,7 @@ Public Class BasketBLL
 
     Public Function GetWishListByID(ByVal numWishlistID As Long) As DataTable
         Dim tblWishList As DataTable
-        tblWishList = _CustomersAdptr.GetWishList(2, 0, 0, 0, numWishlistID, "", "", 0)
+        tblWishList = _CustomersAdptr.GetWishList(-1, 0, 0, 0, numWishlistID, "", "", 0)
         Return tblWishList
     End Function
 
