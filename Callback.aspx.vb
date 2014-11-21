@@ -139,7 +139,11 @@ Partial Class Callback
                     'Proceed to process order and despatch confirmation
                     '-----------------------------------------------------
                     If String.IsNullOrEmpty(strCallbackError) Then
-                        If Math.Round(clsPlugin.CallbackOrderAmount, 2) = Math.Round(O_TotalPriceGateway, 2) OrElse intCallbackStep = 2 Then
+
+                        If Math.Round(clsPlugin.CallbackOrderAmount, 2) = Math.Round(O_TotalPriceGateway, 2) OrElse _
+                            NeutralizeCurrencyValue(Math.Round(clsPlugin.CallbackOrderAmount, 2).ToString) = NeutralizeCurrencyValue(Math.Round(O_TotalPriceGateway, 2).ToString) OrElse
+                            intCallbackStep = 2 Then
+
                             If intCallbackStep <> 2 Then
                                 Dim blnCheckInvoicedOnPayment As Boolean = GetKartConfig("frontend.orders.checkinvoicedonpayment") = "y"
                                 Dim blnCheckReceivedOnPayment As Boolean = GetKartConfig("frontend.orders.checkreceivedonpayment") = "y"
@@ -153,7 +157,7 @@ Partial Class Callback
                                                                                           blnCheckInvoicedOnPayment, _
                                                                                           blnCheckReceivedOnPayment, _
                                                                                           GetGlobalResourceObject("Email", "EmailText_OrderTime") & " " & CkartrisDisplayFunctions.NowOffset, _
-                                                                                          O_CouponCode, O_WLID, O_CustomerID, O_CurrencyIDGateway, clsPlugin.GatewayName, clsPlugin.CallbackOrderAmount)
+                                                                                          O_CouponCode, O_WLID, O_CustomerID, O_CurrencyIDGateway, clsPlugin.GatewayName, O_TotalPriceGateway)
 
                                 '-----------------------------------------------------
                                 'FORMAT CONFIRMATION EMAIL
@@ -415,4 +419,10 @@ Partial Class Callback
             clsPlugin = Nothing
         End If
     End Sub
+
+    Function NeutralizeCurrencyValue(ByVal strInput As String) As String
+        strInput = Replace(strInput, ",", "")
+        strInput = Replace(strInput, ".", "")
+        Return strInput
+    End Function
 End Class
