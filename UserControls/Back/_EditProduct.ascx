@@ -137,11 +137,12 @@
                         </span><span class="Kartris-DetailsView-Value">
                             <asp:UpdatePanel ID="updSortVersions" runat="server" UpdateMode="Conditional">
                             <ContentTemplate><asp:DropDownList ID="ddlOrderVersionsBy" runat="server" CssClass="longtext">
-                                <asp:ListItem Text="<%$ Resources: _Product, FormLabel_ConfigOrderByVersions %>"
+                                <asp:ListItem Text="-"
                                     Value="d"></asp:ListItem>
                                 <asp:ListItem Text="<%$ Resources: _Product, FormLabel_NameOrderByVersions %>" Value="V_Name"></asp:ListItem>
                                 <asp:ListItem Text="<%$ Resources: _Product, FormLabel_PriceOrderByVersions %>" Value="V_Price"></asp:ListItem>
                                 <asp:ListItem Text="<%$ Resources: _Product, FormLabel_ValueOrderByVersions %>" Value="V_OrderByValue"></asp:ListItem>
+                                <asp:ListItem Text="<%$ Resources: _Version, FormLabel_StockQuantity %>" Value="V_Quantity"></asp:ListItem>
                             </asp:DropDownList></ContentTemplate>
                             </asp:UpdatePanel>
                         </span></li>
@@ -151,6 +152,7 @@
                         </span><span class="Kartris-DetailsView-Value">
                             <asp:UpdatePanel ID="updSortDirection" runat="server" UpdateMode="Conditional">
                             <ContentTemplate><asp:DropDownList ID="ddlVersionsSortDirection" runat="server" CssClass="longtext">
+                                <asp:ListItem Text="-" Value="-"></asp:ListItem>
                                 <asp:ListItem Text="<%$ Resources:_Kartris, ContentText_Ascending %>" Value="A"></asp:ListItem>
                                 <asp:ListItem Text="<%$ Resources:_Kartris, ContentText_Descending %>" Value="D"></asp:ListItem>
                             </asp:DropDownList></ContentTemplate>
