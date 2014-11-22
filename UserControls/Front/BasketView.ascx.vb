@@ -643,7 +643,7 @@ Partial Class Templates_BasketView
             With popMessage
                 .SetTitle = GetGlobalResourceObject("Basket", "PageTitle_ShoppingBasket")
                 .SetTextMessage = strCouponError
-                .SetWidthHeight(300, 50)
+                .SetWidthHeight(400, 140)
                 .ShowPopup()
             End With
         Else
