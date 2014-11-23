@@ -322,3 +322,222 @@ GO
 
 ALTER TABLE [dbo].[tblKartrisProducts] ADD  CONSTRAINT [DF_tblKartrisProducts_P_VersionsSortDirection]  DEFAULT ('-') FOR [P_VersionsSortDirection]
 GO
+
+USE [kartrisSQL_GPL]
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_Delete]    Script Date: 2014-11-23 21:54:14 ******/
+--Modified to delete the object config settings for versions
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisVersions_Delete](@V_ID as bigint, @DownloadFile as nvarchar(MAX) out)
+AS
+BEGIN
+	SET NOCOUNT ON;
+EXEC [dbo].[_spKartrisMediaLinks_DeleteByParent] 
+			@ParentID = @V_ID, 
+			@ParentType = 'v';
+			
+	EXEC [dbo].[_spKartrisPromotions_DeleteByParent] 
+			@ParentID = @V_ID, 
+			@ParentType = 'v';
+			
+
+	SELECT @DownloadFile = V_DownLoadInfo
+	FROM dbo.tblKartrisVersions
+	WHERE V_ID = @V_ID AND V_DownloadType = 'u';
+	
+	DELETE FROM tblKartrisLanguageElements
+	WHERE     (LE_TypeID = 1)	-- For Versions
+	AND (LE_ParentID = @V_ID);	-- VersionID
+	
+
+	
+	DELETE FROM dbo.tblKartrisVersionOptionLink
+	WHERE V_OPT_VersionID = @V_ID;
+	
+	DELETE FROM dbo.tblKartrisCustomerGroupPrices
+	WHERE CGP_VersionID = @V_ID;
+
+	DELETE FROM dbo.tblKartrisQuantityDiscounts
+	WHERE QD_VersionID = @V_ID;
+
+	DELETE FROM dbo.tblKartrisObjectConfigValue
+	WHERE OCV_ObjectConfigID = 6 AND OCV_ParentID = @V_ID;
+
+IF @V_ID <> 0 AND @V_ID NOT IN (SELECT DELETED_ID FROM dbo.tblKartrisDeletedItems WHERE Deleted_Type = 'v') BEGIN
+	
+		DECLARE @Timeoffset as int;
+		set @Timeoffset = CAST(dbo.fnKartrisConfig_GetValue('general.timeoffset') as int);
+		INSERT INTO dbo.tblKartrisDeletedItems VALUES(@V_ID, 'v', dbo.fnKartrisVersions_GetProductID(@V_ID), DateAdd(hour, @Timeoffset, GetDate()));
+	
+END
+;
+	
+	DELETE FROM dbo.tblKartrisVersions
+	WHERE V_ID = @V_ID;
+	
+	
+
+END
+GO
+
+USE [kartrisSQL_GPL]
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_DeleteByProduct]    Script Date: 2014-11-23 21:54:38 ******/
+--Modified to delete the object config settings for versions
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisVersions_DeleteByProduct](@P_ID as int, @DownloadFiles as nvarchar(MAX) OUTPUT)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SET @DownloadFiles = '';
+
+	DECLARE versionCursor CURSOR FOR 
+	SELECT V_ID
+	FROM dbo.tblKartrisVersions
+	WHERE V_ProductID = @P_ID
+		
+	DECLARE @V_ID as bigint;
+	
+	OPEN versionCursor
+	FETCH NEXT FROM versionCursor
+	INTO @V_ID;
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+
+	EXEC [dbo].[_spKartrisMediaLinks_DeleteByParent] 
+			@ParentID = @V_ID, 
+			@ParentType = 'v';
+			
+	EXEC [dbo].[_spKartrisPromotions_DeleteByParent] 
+			@ParentID = @V_ID, 
+			@ParentType = 'v';
+			
+	
+	DELETE FROM tblKartrisLanguageElements
+	WHERE     (LE_TypeID = 1)	-- For Versions
+	AND (LE_ParentID = @V_ID);	-- VersionID
+	
+
+	
+	DELETE FROM dbo.tblKartrisVersionOptionLink
+	WHERE V_OPT_VersionID = @V_ID;
+	
+	DELETE FROM dbo.tblKartrisCustomerGroupPrices
+	WHERE CGP_VersionID = @V_ID;
+
+	DELETE FROM dbo.tblKartrisQuantityDiscounts
+	WHERE QD_VersionID = @V_ID;
+
+	DELETE FROM dbo.tblKartrisObjectConfigValue
+	WHERE OCV_ObjectConfigID = 6 AND OCV_ParentID = @V_ID;
+
+	SELECT @DownloadFiles = V_DownLoadInfo + '##' + @DownloadFiles
+	FROM dbo.tblKartrisVersions
+	WHERE V_ID = @V_ID AND V_DownloadType = 'u';
+
+	DELETE FROM dbo.tblKartrisVersions
+	WHERE V_ID = @V_ID;
+	
+	IF @V_ID <> 0 AND @V_ID NOT IN (SELECT DELETED_ID FROM dbo.tblKartrisDeletedItems WHERE Deleted_Type = 'v') BEGIN
+		
+			DECLARE @Timeoffset as int;
+			set @Timeoffset = CAST(dbo.fnKartrisConfig_GetValue('general.timeoffset') as int);
+			INSERT INTO dbo.tblKartrisDeletedItems VALUES(@V_ID, 'v', @P_ID, DateAdd(hour, @Timeoffset, GetDate()));
+		
+	END
+		FETCH NEXT FROM versionCursor
+		INTO @V_ID;
+
+	END
+
+	CLOSE versionCursor
+	DEALLOCATE versionCursor;
+	
+		
+END
+GO
+
+USE [kartrisSQL_GPL]
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_DeleteSuspendedVersions]    Script Date: 2014-11-23 21:55:03 ******/
+--Modified to delete the object config settings for versions
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisVersions_DeleteSuspendedVersions](@P_ID as bigint)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	
+	-- 1. Delete Related Data From VersionOptionLink
+	
+	DELETE FROM tblKartrisVersionOptionLink
+	FROM        tblKartrisVersionOptionLink INNER JOIN
+				tblKartrisVersions ON tblKartrisVersionOptionLink.V_OPT_VersionID = tblKartrisVersions.V_ID
+	WHERE		(tblKartrisVersions.V_ProductID = @P_ID) AND (tblKartrisVersions.V_Type = 's');
+	
+
+	-- 2. Delete Related Data From LanguageElements
+	
+	DELETE FROM tblKartrisLanguageElements
+	FROM        tblKartrisLanguageElements INNER JOIN
+				tblKartrisLanguageElementTypes ON tblKartrisLanguageElements.LE_TypeID = tblKartrisLanguageElementTypes.LET_ID INNER JOIN
+				tblKartrisVersions ON tblKartrisLanguageElements.LE_ParentID = tblKartrisVersions.V_ID
+	WHERE		(tblKartrisLanguageElementTypes.LET_Name = 'tblKartrisVersions') AND (tblKartrisVersions.V_ProductID = @P_ID) AND (tblKartrisVersions.V_Type = 's');
+	
+	DELETE FROM tblKartrisCustomerGroupPrices
+	FROM        tblKartrisCustomerGroupPrices INNER JOIN
+				tblKartrisVersions ON tblKartrisCustomerGroupPrices.CGP_VersionID = tblKartrisVersions.V_ID
+	WHERE		(tblKartrisVersions.V_ProductID = @P_ID) AND (tblKartrisVersions.V_Type = 's');
+
+	DELETE FROM tblKartrisQuantityDiscounts
+	FROM        tblKartrisQuantityDiscounts INNER JOIN
+				tblKartrisVersions ON tblKartrisQuantityDiscounts.QD_VersionID = tblKartrisVersions.V_ID
+	WHERE		(tblKartrisVersions.V_ProductID = @P_ID) AND (tblKartrisVersions.V_Type = 's');
+
+	DELETE FROM tblKartrisObjectConfigValue
+	FROM        tblKartrisObjectConfigValue INNER JOIN
+				tblKartrisVersions ON tblKartrisObjectConfigValue.OCV_ParentID = tblKartrisVersions.V_ID
+	WHERE		(tblKartrisVersions.V_ProductID = @P_ID) AND (tblKartrisVersions.V_Type = 's') AND tblKartrisObjectConfigValue.OCV_ObjectConfigID = 6;
+
+	-- 3. Delete Suspended Versions From Versions
+	
+	DELETE FROM tblKartrisVersions
+	WHERE (tblKartrisVersions.V_ProductID = @P_ID) AND (tblKartrisVersions.V_Type = 's');
+	
+
+END
+GO
+
