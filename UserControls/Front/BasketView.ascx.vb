@@ -257,7 +257,13 @@ Partial Class Templates_BasketView
             APP_USMultiStateTax = True
         Else
             APP_PricesIncTax = LCase(GetKartConfig("general.tax.pricesinctax")) = "y"
-            APP_ShowTaxDisplay = LCase(GetKartConfig("frontend.display.showtax")) = "y"
+            'For checkout, we show tax if showtax is set to 'y' or 'c'.
+            'For other pages, only if it is set to 'y'.
+            If ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then
+                APP_ShowTaxDisplay = (LCase(GetKartConfig("frontend.display.showtax")) = "y") Or (LCase(GetKartConfig("frontend.display.showtax")) = "c")
+            Else
+                APP_ShowTaxDisplay = LCase(GetKartConfig("frontend.display.showtax")) = "y"
+            End If
             APP_USMultiStateTax = False
         End If
 
@@ -417,7 +423,13 @@ Partial Class Templates_BasketView
             APP_ShowTaxDisplay = False
             APP_USMultiStateTax = True
         Else
-            APP_ShowTaxDisplay = LCase(GetKartConfig("frontend.display.showtax")) = "y"
+            'For checkout, we show tax if showtax is set to 'y' or 'c'.
+            'For other pages, only if it is set to 'y'.
+            If ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then
+                APP_ShowTaxDisplay = (LCase(GetKartConfig("frontend.display.showtax")) = "y") Or (LCase(GetKartConfig("frontend.display.showtax")) = "c")
+            Else
+                APP_ShowTaxDisplay = LCase(GetKartConfig("frontend.display.showtax")) = "y"
+            End If
             APP_USMultiStateTax = False
         End If
 
@@ -705,7 +717,13 @@ Partial Class Templates_BasketView
             APP_USMultiStateTax = True
         Else
             APP_PricesIncTax = LCase(GetKartConfig("general.tax.pricesinctax")) = "y"
-            APP_ShowTaxDisplay = LCase(GetKartConfig("frontend.display.showtax")) = "y"
+            'For checkout, we show tax if showtax is set to 'y' or 'c'.
+            'For other pages, only if it is set to 'y'.
+            If ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then
+                APP_ShowTaxDisplay = (LCase(GetKartConfig("frontend.display.showtax")) = "y") Or (LCase(GetKartConfig("frontend.display.showtax")) = "c")
+            Else
+                APP_ShowTaxDisplay = LCase(GetKartConfig("frontend.display.showtax")) = "y"
+            End If
             APP_USMultiStateTax = False
         End If
 

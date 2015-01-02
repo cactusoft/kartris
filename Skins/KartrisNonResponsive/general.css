@@ -10,13 +10,13 @@ select,
 input,
 body                                    { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 13px; font-weight: normal; color: #555; padding: 0; margin: 0; }
 p                                       { margin: 5px 0 10px 0 }
-h1                                      { font-family: 'Open Sans',"Segoe UI Light",Arial,Sans-Serif; font-size: 210%; letter-spacing: -0.5px; color: #000; margin: 0; padding: 15px 0 5px 0; display: inline-block; font-weight: 100; line-height: 33px; }
+h1                                      { font-family: Segoe UI,Arial,Sans-Serif; font-size: 210%; letter-spacing: -0.5px; color: #000; margin: 0; padding: 15px 0 5px 0; display: inline-block; font-weight: 100; line-height: 33px; }
 h2                                      { font-size: 130%; color: #000; margin: 5px 0 5px 0; padding: 0; }
 
 .h2_light_extra                         { color: #aaa; font-weight: bold; }
 h3                                      { font-size: 95%; font-weight: normal; margin: 0 0 5px 0; padding: 0; }
 h4,
-h2.blockheader                          { font-family: 'Open Sans',"Segoe UI Light",Arial,Sans-Serif; font-weight: 100; font-size: 140%; color: #000; margin: 0; padding: 10px 0 15px 0; }
+h2.blockheader                          { font-family: Segoe UI,Arial,Sans-Serif; font-weight: 100; font-size: 140%; color: #000; margin: 0; padding: 10px 0 15px 0; }
 h5                                      { margin: 0px 0px 5px 0px; color: #000; text-transform: uppercase; padding: 2px 2px 2px 0px; text-align: left; }
 pre                                     { color: #008800 }
 iframe                                  { border: none }

@@ -13,8 +13,8 @@
 	<!--
 	========================================================================
 	KARTRIS by cactusoft
-	Copyright 2014 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
-	This work is licensed under a
+	Copyright 2015 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
+	This skin is licensed under a
 	Creative Commons Attribution-ShareAlike 3.0 Unported License
 
 	http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
@@ -27,12 +27,10 @@
 	<link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
 	<link href="normalize.css" rel="stylesheet" type="text/css" />
 	<link href="foundation.css" rel="stylesheet" type="text/css" />
-
 	<link href="general.css" rel="stylesheet" type="text/css" />
 	<link href="sections.css" rel="stylesheet" type="text/css" />
 	<link href="template.css" rel="stylesheet" type="text/css" />
 	<link href="custom.css" rel="stylesheet" type="text/css" />
-	<link href='//fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
 	<title>Kartris v1</title>
 </head>
 <body class="main">
@@ -41,10 +39,13 @@
 			EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"
 			CombineScripts="true" EnableViewState="True">
 			<Scripts>
-				<asp:ScriptReference Path="~/JavaScript/webkit.js" />
-				<asp:ScriptReference Path="~/JavaScript/k26000/modernizr.js" />
+				<asp:ScriptReference Path="~/JavaScript/k28000/modernizr.js" />
+				<asp:ScriptReference Path="~/JavaScript/k28000/jquery.js" />
+				<asp:ScriptReference Path="~/JavaScript/k28000/foundation.min.js" />
+				<asp:ScriptReference Path="~/JavaScript/k28000/fastclick.js" />
 			</Scripts>
 		</ajaxToolkit:ToolkitScriptManager>
+
 		<div id="container">
 			<div id="centre_container">
 				<div class="row" id="header">
@@ -155,9 +156,7 @@
 		<user:AdminBar ID="UC_AdminBar" runat="server" />
 	</form>
 	<!-- Load up javascript -->
-	<script src="JavaScript/k26000/jquery.js"></script>
-	<script src="JavaScript/k26000/foundation.min.js"></script>
-	<script src="JavaScript/k26000/fastclick.js"></script>
+
 	<script>
 		$(document).foundation();
 	</script>

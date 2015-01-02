@@ -13,6 +13,7 @@
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
 Imports CkartrisDataManipulation
+Imports KartSettingsManager
 
 Partial Class UserControls_Front_CustomerOrder
     Inherits System.Web.UI.UserControl
@@ -89,8 +90,9 @@ Partial Class UserControls_Front_CustomerOrder
 
             numCurrencyID = FixNullFromDB(tblBasket.Rows(0).Item("O_CurrencyID"))
 
-            'the tax should actually be in the invoice always
-            APP_ShowTaxDisplay = True
+            'show tax if config says so
+            APP_ShowTaxDisplay = (LCase(GetKartConfig("frontend.display.showtax")) = "y") Or (LCase(GetKartConfig("frontend.display.showtax")) = "c")
+
             'check if the prices in the order are inctax or extax
             APP_PricesIncTax = tblBasket.Rows(0).Item("O_PricesIncTax") = True
 
@@ -144,20 +146,27 @@ Partial Class UserControls_Front_CustomerOrder
             numQuantity = e.Item.DataItem("IR_Quantity")
 
             If APP_PricesIncTax Then
+                CType(e.Item.FindControl("phdIncTax"), PlaceHolder).Visible = True
                 If APP_ShowTaxDisplay Then
                     CType(e.Item.FindControl("phdIncTaxDisplay"), PlaceHolder).Visible = True
                     CType(e.Item.FindControl("litIncTaxPrice1"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numPricePerItem - numTaxPerItem)
                     CType(e.Item.FindControl("litIncTaxPrice2"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numPricePerItem)
                 Else
                     CType(e.Item.FindControl("phdIncTaxHide"), PlaceHolder).Visible = True
+                    CType(e.Item.FindControl("litIncTaxPrice"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numPricePerItem)
                 End If
-                CType(e.Item.FindControl("phdIncTax"), PlaceHolder).Visible = True
                 CType(e.Item.FindControl("litIncTaxQty"), Literal).Text = numQuantity
                 CType(e.Item.FindControl("litIncTaxTotal"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numPricePerItem * numQuantity)
             Else
                 CType(e.Item.FindControl("phdExTax"), PlaceHolder).Visible = True
-                CType(e.Item.FindControl("litExTaxPrice1"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numPricePerItem)
-                CType(e.Item.FindControl("litExTaxPrice2"), Literal).Text = Math.Round(100 * numTaxPerItem, 2) & "%"
+                If APP_ShowTaxDisplay Then
+                    CType(e.Item.FindControl("phdExTaxDisplay"), PlaceHolder).Visible = True
+                    CType(e.Item.FindControl("litExTaxPrice1"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numPricePerItem)
+                    CType(e.Item.FindControl("litExTaxPrice2"), Literal).Text = Math.Round(100 * numTaxPerItem, 6) & "%"
+                Else
+                    CType(e.Item.FindControl("phdExTaxHide"), PlaceHolder).Visible = True
+                    CType(e.Item.FindControl("litExTaxPrice"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numPricePerItem)
+                End If
                 CType(e.Item.FindControl("litExTaxQty"), Literal).Text = numQuantity
                 CType(e.Item.FindControl("litExTaxTotal"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, 0.0001 + (numPricePerItem * numQuantity * (1 + numTaxPerItem)))
             End If

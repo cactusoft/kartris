@@ -142,7 +142,7 @@ MAIN BASKET
                                                     EnableViewState="false"></asp:Literal>
                                             </th>
                                             <% If APP_PricesIncTax Then%>
-                                            <% If APP_ShowTaxDisplay Or ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then%>
+                                            <% If APP_ShowTaxDisplay Then%>
                                             <th class="extax">
                                                 <asp:Literal ID="litContentTextExTax1" runat="server" Text='<%$ Resources: Kartris, ContentText_ExTax %>'
                                                     EnableViewState="false"></asp:Literal>
@@ -158,7 +158,7 @@ MAIN BASKET
                                             </th>
                                             <% End If%>
                                             <% Else 'Ex Tax %>
-                                            <% If APP_ShowTaxDisplay Or (ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET And APP_USMultiStateTax = False) Then%>
+                                            <% If APP_ShowTaxDisplay Then%>
                                             <th class="price">
                                                 <asp:Literal ID="litContentTextExTax2" runat="server" Text='<%$ Resources: Kartris, ContentText_Price %>'
                                                     EnableViewState="false"></asp:Literal>
@@ -231,7 +231,7 @@ MAIN BASKET
                                             </div>
                                     </td>
                                     <% If APP_PricesIncTax Then%>
-                                    <% If APP_ShowTaxDisplay Or ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then%>
+                                    <% If APP_ShowTaxDisplay Then%>
                                     <td class="extax">
                                         <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Eval("ExTax"))%>
                                     </td>
@@ -244,7 +244,7 @@ MAIN BASKET
                                     </td>
                                     <% End If%>
                                     <% Else%>
-                                    <% If APP_ShowTaxDisplay Or (ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET And APP_USMultiStateTax = False) Then%>
+                                    <% If APP_ShowTaxDisplay Then%>
                                     <td class="extax">
                                         <asp:Literal ID="litExTax1" runat="server" />
                                         <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Eval("ExTax"))%>
@@ -323,7 +323,7 @@ MAIN BASKET
                                             </div>
                                         </td>
                                         <% If APP_PricesIncTax Then%>
-                                        <% If APP_ShowTaxDisplay Or ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then%>
+                                        <% If APP_ShowTaxDisplay Then%>
                                         <td class="extax">
                                             <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, CDbl(Eval("ExTax")))%>
                                         </td>
@@ -337,7 +337,7 @@ MAIN BASKET
                                         <% End If%>
                                         <!-- Ex Tax -->
                                         <% Else%>
-                                        <% If APP_ShowTaxDisplay Or (ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET And APP_USMultiStateTax = False) Then%>
+                                        <% If APP_ShowTaxDisplay Then%>
                                         <td class="extax">
                                             <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, CDbl(Eval("ExTax")))%>
                                         </td>
@@ -404,7 +404,7 @@ MAIN BASKET
                             <% End If%>
                             <%'' Ex Tax %>
                             <% Else%>
-                            <% If APP_ShowTaxDisplay Or (ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET And APP_USMultiStateTax = False) Then%>
+                            <% If APP_ShowTaxDisplay Then%>
                             <td class="extax">
                                 <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CouponDiscount.ExTax)%>
                             </td>
@@ -459,7 +459,7 @@ MAIN BASKET
                             </td>
                             <%'Inc Tax%>
                             <% If APP_PricesIncTax Then%>
-                            <% If APP_ShowTaxDisplay Or ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then%>
+                            <% If APP_ShowTaxDisplay Then%>
                             <td class="extax">
                                 <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CustomerDiscount.ExTax)%>
                             </td>
@@ -473,7 +473,7 @@ MAIN BASKET
                             <% End If%>
                             <%'Ex Tax%>
                             <% Else%>
-                            <% If APP_ShowTaxDisplay Or (ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET And APP_USMultiStateTax = False) Then%>
+                            <% If APP_ShowTaxDisplay Then%>
                             <td class="extax">
                                 <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CustomerDiscount.ExTax)%>
                             </td>
@@ -532,7 +532,7 @@ MAIN BASKET
                                 <asp:PlaceHolder ID="phdShippingTax" runat="server" Visible="false">
                                     <%=""%>
                                     <% If APP_PricesIncTax Then%>
-                                    <% If APP_ShowTaxDisplay Or ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then%>
+                                    <% If APP_ShowTaxDisplay Then%>
                                     <td class="extax">
                                         <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.ShippingPrice.ExTax)%>
                                     </td>
@@ -545,7 +545,7 @@ MAIN BASKET
                                     </td>
                                     <% End If%>
                                     <% Else%>
-                                    <% If APP_ShowTaxDisplay Or (ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET And APP_USMultiStateTax = False) Then%>
+                                    <% If APP_ShowTaxDisplay Then%>
                                     <td class="extax">
                                         <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.ShippingPrice.ExTax)%>
                                     </td>
@@ -589,7 +589,7 @@ MAIN BASKET
                                 </td>
                                 <%=""%>
                                 <% If APP_PricesIncTax Then%>
-                                <% If APP_ShowTaxDisplay Or ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then%>
+                                <% If APP_ShowTaxDisplay Then%>
                                 <td class="extax">
                                     <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.OrderHandlingPrice.ExTax)%>
                                 </td>
@@ -602,7 +602,7 @@ MAIN BASKET
                                 </td>
                                 <% End If%>
                                 <% Else%>
-                                <% If APP_ShowTaxDisplay Or (ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET And APP_USMultiStateTax = False) Then%>
+                                <% If APP_ShowTaxDisplay Then%>
                                 <td class="extax">
                                     <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.OrderHandlingPrice.ExTax)%>
                                 </td>
@@ -674,7 +674,7 @@ MAIN BASKET
                     <!-- Grand Totals Rows -->
 
                     <!-- ex tax -->
-                    <% If APP_ShowTaxDisplay Or (ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET) Then%>
+                    <% If APP_ShowTaxDisplay Then%>
                     <tr class="totals">
                         <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
                         <td class="image_cell hide-for-small"></td>
@@ -688,7 +688,8 @@ MAIN BASKET
                             <span class="value"><%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceExTax)%></span></td>
                         <td class="hide-for-small">&nbsp;</td>
                     </tr>
-
+                    <% End If%>
+                    <%If APP_USMultiStateTax Then%>
                     <!-- Show just tax amount for EU, non US -->
                     <tr class="totals">
                         <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
@@ -701,14 +702,14 @@ MAIN BASKET
                                 <asp:Literal ID="litContentTextTax2" runat="server" Text='<%$ Resources: Kartris, ContentText_Tax %>'
                                     EnableViewState="false"></asp:Literal></span>
                             <!-- show tax rate% for US -->
-                            <%If APP_USMultiStateTax And ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then%>
+
                             <span class="taxrate"><%=vFinalPriceTaxRate%>%</span>
-                            <% end if %>
+
                             <span class="value"><%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceTaxAmount)%></span></td>
                         <td class="hide-for-small">&nbsp;</td>
                     </tr>
-
                     <% End If%>
+
 
                     <!-- total inc tax -->
                     <tr class="totals">

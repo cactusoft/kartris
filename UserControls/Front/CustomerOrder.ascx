@@ -133,12 +133,19 @@
                     </td>
                 </asp:PlaceHolder>
                 <asp:PlaceHolder ID="phdExTax" runat="server" Visible="false">
+                    <asp:PlaceHolder ID="phdExTaxDisplay" runat="server" Visible="false">
                     <td class="price">
                         <asp:Literal ID="litExTaxPrice1" runat="server" Text='' />
                     </td>
                     <td class="tax">
                         <asp:Literal ID="litExTaxPrice2" runat="server" Text='' />
                     </td>
+                        </asp:PlaceHolder>
+                    <asp:PlaceHolder ID="phdExTaxHide" runat="server" Visible="false">
+                        <td class="price" colspan="2">
+                            <asp:Literal ID="litExTaxPrice" runat="server" Text='' />
+                        </td>
+                    </asp:PlaceHolder>
                     <td class="quantity">
                         <asp:Literal ID="litExTaxQty" runat="server" Text='' />
                     </td>

@@ -11,6 +11,10 @@
 'If a valid license.config issued by Cactusoft is present, the KCL
 'overrides the GPL v2.
 'www.kartris.com/t-Kartris-Commercial-License.aspx
+'
+'Modification by Craig Moore - Deadline Automation Limited
+'2014-11-20 - Add calls to custom control _DispatchLabels.ascx for the 
+'purpose of printing labels through PDFSharp
 '========================================================================
 Imports CkartrisBLL
 Imports CkartrisEnumerations
@@ -35,7 +39,16 @@ Partial Class UserControls_Back_OrdersList
         If Not IsPostBack Then
             RefreshOrdersList()
             GoToCorrectPage()
+            If CallMode = OrdersBLL.ORDERS_LIST_CALLMODE.DISPATCH Then
+                DispatchLabels.Visible = True
+            End If
         End If
+
+        ' Prevents the button triggering a partial postback as in some browsers that postback never
+        ' completes when using the response.redirect function
+        Dim PrintLabelButton As Button = CType(DispatchLabels.FindControl("btnPrint"), Button)
+        ScriptManager.GetCurrent(Page).RegisterPostBackControl(PrintLabelButton)
+
     End Sub
 
     ''' <summary>

@@ -197,11 +197,15 @@
 						<span class="Kartris-DetailsView-Value"><asp:DropDownList ID="ddlShowTaxConfig" runat="server" CssClass="midtext">
 							<asp:ListItem Text="<%$ Resources: _Kartris, ContentText_Yes%>" Value="y"></asp:ListItem>
 							<asp:ListItem Text="<%$ Resources: _Kartris, ContentText_No %>" Value="n"></asp:ListItem>
+							<asp:ListItem Text="Only at checkout" Value="c"></asp:ListItem>
 						</asp:DropDownList></span>
 					</li>    
 				</ul>
 
 				<asp:Button runat="server" ID="btnConfirmSetup" Text="<%$ Resources: _Kartris, ContentText_Confirm %>" class="button" />
+				<br /><br />
+				<asp:Hyperlink runat="server" ID="lnkCurrencyLink" Text="<%$ Resources: _Kartris, BackMenu_LiveCurrencyRates %>" Visible="false"
+					NavigateURL="~/Admin/_LiveCurrencies.aspx"/>
 			</asp:Panel>
 
 

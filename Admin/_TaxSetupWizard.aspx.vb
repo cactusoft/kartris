@@ -30,10 +30,10 @@ Partial Class Admin_Destinations
             Select Case strTaxRegime
                 Case "EU"
                     ddlPricesIncTaxConfig.SelectedValue = "y"
-                    ddlShowTaxConfig.SelectedValue = "n"
+                    ddlShowTaxConfig.SelectedValue = "c"
                 Case Else
                     ddlPricesIncTaxConfig.SelectedValue = "n"
-                    ddlShowTaxConfig.SelectedValue = "n"
+                    ddlShowTaxConfig.SelectedValue = "c"
             End Select
 
             'Populate currency dropdown
@@ -237,6 +237,9 @@ Partial Class Admin_Destinations
 
         Dim dtbAllCountries As DataTable = ShippingBLL._GetDestinationsByLanguage(CkartrisBLL.GetLanguageIDfromSession)
         Dim lstRegionCountries As List(Of KartrisClasses.Country) = GetCountryListFromTaxConfig()
+
+        'Show link to reset currency rates
+        lnkCurrencyLink.Visible = True
 
         Select Case TaxRegime.Name
             Case "EU"
