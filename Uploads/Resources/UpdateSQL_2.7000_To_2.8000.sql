@@ -856,3 +856,7 @@ UNION ALL
 SELECT 'L7169','A4 Sheet of 99.1 x 139mm BlockOut (tm) address labels',210.0,297.0,9.5,4.6,
 		99.1, 139.0, 5.0, 0.0, 8.0, 0.0, 139.0, 101.6, 2, 2
 
+/****** set this to tell Data tool which version of db we have ******/
+UPDATE tblKartrisConfig SET CFG_Value='2.8000', CFG_VersionAdded=2.8 WHERE CFG_Name='general.kartrisinfo.versionadded';
+
+
