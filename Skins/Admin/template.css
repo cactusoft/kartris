@@ -34,7 +34,7 @@ SEARCH BOX
 ========================================================================
 */
 #section_searchbox                      { position: fixed; top: 50px; right: 30px; width: 210px; z-index: 200; }
-#section_searchbox h2                   { font-family: "Open Sans","Segoe UI Light","Segoe UI",Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 180%; color: #000; text-transform: lowercase; }
+#section_searchbox h2                   { font-family: Segoe UI,Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 180%; color: #000; text-transform: lowercase; }
 #section_searchbox #searchboxes input.searchtextbox
 										{ border: none; background-color: #eee; color: #000; width: 190px; padding: 1px; margin-top: 1px; height: 18px; border: solid 1px #c05; height: 18px; }
 #section_searchbox #searchboxes input.searchtextbox:focus
@@ -89,7 +89,7 @@ TASKLIST
 ========================================================================
 */
 #section_tasklist                       { margin: 20px 0 0 0; padding: 0 0 5px 0; }
-#section_tasklist h2                    { font-family: "Open Sans","Segoe UI Light","Segoe UI",Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 180%; color: #000; text-transform: lowercase; padding: 0; }
+#section_tasklist h2                    { font-family: Segoe UI,Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 180%; color: #000; text-transform: lowercase; padding: 0; }
 #section_tasklist .task_section         { padding: 5px 10px 5px 0px }
 #section_tasklist .level_1 a            { display: block; text-decoration: none; padding: 1px 9px 1px 23px; color: #000; font-weight: bold; margin: 0 0 0 -24px; width: 208px; }
 #section_tasklist .level_2              { margin-bottom: 1px }
@@ -103,7 +103,7 @@ CATEGORIES BACK END NAVIGATION MENU
 */
 #categorymenu                           { margin: 8px 0 30px 0px; padding: 3px 0 7px 4px; }
 #categorymenu h2                        { margin: 0 0 10px 12px; font-weight: lighter; white-space: nowrap; }
-#categorymenu h2 a                      { font-family: "Open Sans","Segoe UI Light","Segoe UI",Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 140%; color: #000; text-transform: lowercase; }
+#categorymenu h2 a                      { font-family: Segoe UI,Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 140%; color: #000; text-transform: lowercase; }
 #categorymenu .treeview                 { margin: 0 0 4px 12px }
 #categorymenu td a                      { font-weight: normal; display: block; vertical-align: middle; color: #333; }
 #categorymenu .leafnode a,

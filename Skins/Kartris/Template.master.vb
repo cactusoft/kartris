@@ -1,16 +1,10 @@
 '========================================================================
-'Kartris - www.kartris.com
-'Copyright 2014 CACTUSOFT INTERNATIONAL FZ LLC
+'KARTRIS by cactusoft
+'Copyright 2015 CACTUSOFT INTERNATIONAL FZ LLC - www.kartris.com
+'This skin is licensed under a
+'Creative Commons Attribution-ShareAlike 3.0 Unported License
 
-'GNU GENERAL PUBLIC LICENSE v2
-'This program is free software distributed under the GPL without any
-'warranty.
-'www.gnu.org/licenses/gpl-2.0.html
-
-'KARTRIS COMMERCIAL LICENSE
-'If a valid license.config issued by Cactusoft is present, the KCL
-'overrides the GPL v2.
-'www.kartris.com/t-Kartris-Commercial-License.aspx
+'http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
 '========================================================================
 Imports System.Xml
 Imports System.Web.Security

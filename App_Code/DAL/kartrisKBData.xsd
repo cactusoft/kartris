@@ -100,7 +100,7 @@
       </DataSource>
     </xs:appinfo>
   </xs:annotation>
-  <xs:element name="kartrisKBData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msdata:EnforceConstraints="False" msprop:Generator_UserDSName="kartrisKBData" msprop:Generator_DataSetName="kartrisKBData">
+  <xs:element name="kartrisKBData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msdata:EnforceConstraints="false" msprop:Generator_UserDSName="kartrisKBData" msprop:Generator_DataSetName="kartrisKBData">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
         <xs:element name="KnowledgeBase" msprop:Generator_UserTableName="KnowledgeBase" msprop:Generator_RowDeletedName="KnowledgeBaseRowDeleted" msprop:Generator_RowChangedName="KnowledgeBaseRowChanged" msprop:Generator_RowClassName="KnowledgeBaseRow" msprop:Generator_RowChangingName="KnowledgeBaseRowChanging" msprop:Generator_RowEvArgName="KnowledgeBaseRowChangeEvent" msprop:Generator_RowEvHandlerName="KnowledgeBaseRowChangeEventHandler" msprop:Generator_TableClassName="KnowledgeBaseDataTable" msprop:Generator_TableVarName="tableKnowledgeBase" msprop:Generator_RowDeletingName="KnowledgeBaseRowDeleting" msprop:Generator_TablePropName="KnowledgeBase">

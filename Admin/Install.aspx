@@ -34,8 +34,8 @@
 
 	<style type="text/css">
 	html                        { height: 100%; background-color: #fff; }
-	body                        { font-family: "Segoe UI",Arial,Helvetica,Sans-Serif; font-size: 13px; font-weight: normal; color: #333; padding: 0; margin: 0; overflow: scroll; overflow: -moz-scrollbars-vertical; height: 100%; }
-	h2                          { font-family: "Segoe UI Light","Open Sans","Segoe UI",Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 210%; color: #000; margin: 20px 0 10px 0; display: inline-block; }
+	body                        { font-family: Segoe UI,Arial,Helvetica,Sans-Serif; font-size: 13px; font-weight: normal; color: #333; padding: 0; margin: 0; overflow: scroll; overflow: -moz-scrollbars-vertical; height: 100%; }
+	h2                          { font-family: Segoe UI,Tahoma,Arial,Sans-Serif; font-weight: lighter; font-size: 210%; color: #000; margin: 20px 0 10px 0; display: inline-block; }
 	#wizInstallation            { }
 	form                        { background-image: url(../Skins/Admin/Images/kartris_square.png); background-position: 0 160px; background-repeat: no-repeat; display: block; margin: 0 auto; width: 500px; padding: 0 0 0 120px; height: auto; min-height: 100%; }
 	.summarydetails             { background-color: #777; color: #fff; padding: 3px 10px 3px 10px; }

@@ -1,6 +1,7 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="_OrdersList.ascx.vb"
     Inherits="UserControls_Back_OrdersList" %>
 <%@ Register TagPrefix="_user" TagName="ItemPager" Src="~/UserControls/Back/_ItemPagerAjax.ascx" %>
+<%@ Register TagPrefix="_user" TagName="DispatchLabels" Src="~/UserControls/Back/_DispatchLabels.ascx" %>
 <div>
     <asp:PlaceHolder runat="server" ID="phdDateNavigation">
         <div class="breadcrumbtrail">
@@ -22,6 +23,9 @@
             </asp:Panel>
         </div>
     </asp:PlaceHolder>
+    <div>
+        <_user:DispatchLabels ID="DispatchLabels" runat="server" Visible="false" />
+    </div>
     <asp:GridView CssClass="kartristable" ID="gvwOrders" runat="server" AutoGenerateColumns="False"
         DataKeyNames="O_ID" GridLines="None" EnableViewState="true">
         <Columns>
