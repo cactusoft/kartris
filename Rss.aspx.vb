@@ -51,7 +51,7 @@ Partial Class rss
             xml.WriteElementString("title", strWebshopName & " RSS Feed")
             xml.WriteElementString("link", strWebshopURL)
             xml.WriteElementString("description", "All the latest news, marketing and promotions from " & strWebshopName)
-            xml.WriteElementString("copyright", "Copyright 2014. All rights reserved.")
+            xml.WriteElementString("copyright", "Copyright " & Year(now()) & ". All rights reserved.")
 
             ' Image
             xml.WriteStartElement("image")
