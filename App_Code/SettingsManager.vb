@@ -42,7 +42,7 @@ Public Class KartSettingsManager
 
         'Build up string of the 'powered by kartris' tag
         sbdLink.Append("<a onmouseover=""this.style.backgroundColor = '#AD004D';this.style.color = '#fff';"" onmouseout=""this.style.backgroundColor = '#fff';this.style.color = '#AD004D';"" style=""line-height: 13px;display:inline-block;padding:1px 2px 1px 3px;font-size:7pt;font-family:tahoma,arial,helvetica;position:fixed;bottom:0;right:30px;color:#AD004D;background-color:#fff;""" & vbCrLf)
-        sbdLink.Append(" href=""http://www.kartris.com/"" title=""Kartris - &copy;2014, CACTUSOFT. Distributed free and without warranty under the terms of the GNU GPL."">Powered by <span style=""font-weight: bold"">kartris</span></a>")
+        sbdLink.Append(" href=""http://www.kartris.com/"" title=""Kartris - &copy;2015, CACTUSOFT. Distributed free and without warranty under the terms of the GNU GPL."">Powered by <span style=""font-weight: bold"">kartris</span></a>")
 
         Return sbdLink.ToString
     End Function
@@ -231,7 +231,6 @@ Public Class KartSettingsManager
 
     ''=======  TaxRates Caching  ======
     Public Shared Sub RefreshTaxRateCache()
-        'If KartSettingsManager.GetKartConfig("general.tax.usmultistatetax") = "y" Then Return
 
         If Not HttpRuntime.Cache("KartrisTaxRatesCache") Is Nothing Then HttpRuntime.Cache.Remove("KartrisTaxRatesCache")
         Dim tblTaxRates As DataTable = TaxBLL._GetTaxRatesForCache()
@@ -240,7 +239,6 @@ Public Class KartSettingsManager
     End Sub
 
     Public Shared Function GetTaxRateFromCache() As DataTable
-        'If KartSettingsManager.GetKartConfig("general.tax.usmultistatetax") = "y" Then Return Nothing
 
         If HttpRuntime.Cache("KartrisTaxRatesCache") Is Nothing Then
             KartSettingsManager.RefreshTaxRateCache()
