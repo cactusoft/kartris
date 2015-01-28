@@ -16,7 +16,7 @@ xcopy Kartris "C:\CleanKartris\Kartris" /S /I /Y >> "KartrisDumpLogFile.txt"
 ECHO DONE!
 ECHO **
 cd "\CleanKartris\Kartris"
-del "c:\CleanKartris\Kartris\PrepareKartrisZip.bat"
+del "c:\CleanKartris\Kartris\_PrepareKartrisZip.bat"
 ECHO **
 ECHO CLEANING ERROR LOGS...
 IF EXIST "c:\CleanKartris\Kartris\Uploads\Logs\Errors" rd "c:\CleanKartris\Kartris\Uploads\Logs\Errors" /S /Q

@@ -828,7 +828,7 @@ MINI BASKET
 <asp:UpdatePanel ID="updPnlMiniBasket" runat="server" UpdateMode="Conditional">
     <ContentTemplate>
         <asp:PlaceHolder ID="phdMiniBasket" runat="server" Visible="false">
-
+            <user:PopupMessage ID="popMessage2" runat="server" />
             <script type="text/javascript" language="javascript">
                 //<![CDATA[
                 function ShowAddToBasketPopup(strDelayValue) {

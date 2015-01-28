@@ -19,6 +19,11 @@ Imports CkartrisBLL
 Imports KartSettingsManager
 Imports KartrisClasses
 
+''' <summary>
+''' This control runs the baskets on the site, including the basket
+''' page itself, the minibasket and the basket summary on the
+''' checkout
+''' </summary>
 Partial Class Templates_BasketView
     Inherits System.Web.UI.UserControl
 
@@ -136,8 +141,6 @@ Partial Class Templates_BasketView
                     Return Basket.ShippingTotalIncTax
                 End If
             End If
-
-
         End Get
     End Property
 
@@ -170,9 +173,19 @@ Partial Class Templates_BasketView
 
     Public Event ItemQuantityChanged()
 
+    ''' <summary>
+    ''' Loads the basket
+    ''' </summary>
+    ''' <remarks></remarks>
     Sub LoadBasket()
+        'We hide or disable some things during checkout, so
+        'need to check if this is being called on the checkout
+        'page
         Dim blnIsInCheckout As Boolean
         blnIsInCheckout = InStr(LCase(Request.ServerVariables("SCRIPT_NAME")), "checkout.aspx") > 0
+
+        'If user logged in, grab their customer ID, otherwise
+        'we set to zero
         If Context.User.Identity.IsAuthenticated Then
             Try
                 numCustomerID = DirectCast(Page, PageBaseClass).CurrentLoggedUser.ID
@@ -184,6 +197,7 @@ Partial Class Templates_BasketView
             numCustomerID = 0
         End If
 
+        'Set customer ID for the basket object
         Basket.DB_C_CustomerID = numCustomerID
 
         If ViewType = BasketBLL.VIEW_TYPE.MINI_BASKET And (Not blnIsInCheckout) Then
@@ -244,9 +258,14 @@ Partial Class Templates_BasketView
         End Try
 
         Session("Basket") = Basket
-
     End Sub
 
+    ''' <summary>
+    ''' On page load
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         SESS_CurrencyID = Session("CUR_ID")
@@ -290,6 +309,12 @@ Partial Class Templates_BasketView
 
     End Sub
 
+    ''' <summary>
+    ''' Pre-render
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Protected Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
 
         If ViewType = BasketBLL.VIEW_TYPE.MAIN_BASKET Then
@@ -382,30 +407,38 @@ Partial Class Templates_BasketView
         Session("Basket") = Basket
     End Sub
 
+    ''' <summary>
+    ''' Load the minibasket
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub LoadMiniBasket()
         Call LoadBasket()
         Call DisplayMiniBasket()
     End Sub
 
+    ''' <summary>
+    ''' Display the minibasket
+    ''' </summary>
+    ''' <remarks></remarks>
     Sub DisplayMiniBasket()
         Dim vFinalPriceExTax, vFinalPriceIncTax, vFinalPriceTaxAmount As Double
 
         rptMiniBasket.DataSource = BasketItems
         rptMiniBasket.DataBind()
 
-        Dim strNumberOfItems As Int16 = 0
+        Dim numTotalItems As Int32 = 0
 
         If BasketItems Is Nothing OrElse BasketItems.Count = 0 Then
             phdMiniBasketContent.Visible = False
             phdMiniBasketEmpty.Visible = True
-            strNumberOfItems = 0
+            numTotalItems = 0
         Else
             If GetKartConfig("frontend.minibasket.countversions") = "y" Then
                 'Absolute total of items in basket (rows x qty)
-                strNumberOfItems = Basket.TotalItems
+                numTotalItems = Basket.TotalItems
             Else
                 'No. of rows in basket (i.e. different items)
-                strNumberOfItems = BasketItems.Count
+                numTotalItems = BasketItems.Count
             End If
 
             phdMiniBasketEmpty.Visible = False
@@ -458,9 +491,8 @@ Partial Class Templates_BasketView
         End If
 
         'Build up string for compact basket, if enabled
-
         litCompactShoppingBasket.Text = "<a href=""" & CkartrisBLL.WebShopURL & "Basket.aspx" & """><span id=""compactbasket_title"">" & GetGlobalResourceObject("Basket", "PageTitle_ShoppingBasket") & "</span>" & vbCrLf
-        litCompactShoppingBasket.Text &= "<span id=""compactbasket_noofitems"">(" & strNumberOfItems.ToString & ")</span>" & vbCrLf
+        litCompactShoppingBasket.Text &= "<span id=""compactbasket_noofitems"">(" & numTotalItems.ToString & ")</span>" & vbCrLf
 
         If Basket.PricesIncTax Then
             litCompactShoppingBasket.Text &= "<span id=""compactbasket_totalprice"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceIncTax) & "</span>" & vbCrLf
@@ -479,75 +511,52 @@ Partial Class Templates_BasketView
 
     End Sub
 
-    'Need this to show promotions when recalculate button
-    'is pushed
+    ''' <summary>
+    ''' Prices update when quantities changed but need this to 
+    ''' reload basket to pull up promotions
+    ''' </summary>
+    ''' <remarks></remarks>
     Sub btnRecalculate_Click() Handles btnRecalculate.Click
         LoadBasket()
     End Sub
 
-    Sub QuantityChanged(ByVal Sender As Object, ByVal Args As EventArgs)
-        Dim objQuantity As TextBox = Sender.Parent.FindControl("txtQuantity")
-        Dim objBasketID As HiddenField = Sender.Parent.FindControl("hdfBasketID")
+    ''' <summary>
+    ''' Change a quantity of an item in basket
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Sub QuantityChanged(ByVal sender As Object, ByVal e As EventArgs)
+        Dim objQuantity As TextBox = sender.Parent.FindControl("txtQuantity")
+        Dim objBasketID As HiddenField = sender.Parent.FindControl("hdfBasketID")
+
         If Not IsNumeric(objQuantity.Text) Then
             objQuantity.Text = "0"
             objQuantity.Focus()
         Else
-            '' Get the unit size for the product (integer and decimal ones)
-            Dim strUnitSize As String = ObjectConfigBLL.GetValue("K:product.unitsize", CLng(CType(Sender.Parent.FindControl("litProductID_H"), Literal).Text))
-            strUnitSize = Replace(strUnitSize, ",", ".") '' Will use the "." instead of "," (just in case wrongly typed)
+            'Get the unit size for the product (integer and decimal ones)
+            Dim strUnitSize As String = ObjectConfigBLL.GetValue("K:product.unitsize", CLng(CType(sender.Parent.FindControl("litProductID_H"), Literal).Text))
             Dim numQuantity As Single = CSng(objQuantity.Text)
 
-            '' Check for wrong quantity
-            Dim numNoOfDecimalPlacesForUnit As Integer = IIf(strUnitSize.Contains("."), Mid(strUnitSize, strUnitSize.IndexOf(".") + 2).Length, 0)
-            Dim numNoOfDecimalPlacesForQty As Integer = IIf(CStr(numQuantity).Contains(".") AndAlso CLng(Mid(CStr(numQuantity), CStr(numQuantity).IndexOf(".") + 2)) <> 0, _
-                                                            Mid(CStr(numQuantity), CStr(numQuantity).IndexOf(".") + 2).Length, _
-                                                            0)
-            Dim numMod As Integer = CInt(numQuantity * Math.Pow(10, numNoOfDecimalPlacesForQty)) Mod CInt(strUnitSize * Math.Pow(10, numNoOfDecimalPlacesForUnit))
-            If numMod <> 0.0F OrElse numNoOfDecimalPlacesForQty > numNoOfDecimalPlacesForUnit Then
-                '' wrong quantity - quantity should be a multiplies of unit size
+            'We need to check if the quantity the user has changed to
+            'confirms to the unitsize setting
+            strUnitSize = Replace(strUnitSize, ",", ".") '' Will use the "." instead of "," (just in case wrongly typed)
+            Dim numMod As Decimal = CkartrisDataManipulation.SafeModulus(numQuantity, strUnitSize)
+            If numMod <> 0D Then
+                'wrong quantity - quantity should be a multiplies of unit size
                 ShowPopup(GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors"), _
                         Replace(GetGlobalResourceObject("ObjectConfig", "ContentText_OrderMultiplesOfUnitsize"), "[unitsize]", strUnitSize))
-            Else
-                '' Need to know if the decimal quantity is allowed or not
-                If IsNumeric(strUnitSize) AndAlso Math.Abs(CSng(strUnitSize) Mod 1) > 0.0F Then
-                    '' **** UnitSize is decimal **** 
-                    Dim numUnitSize As Object
-                    numUnitSize = CSng(strUnitSize)
-
-                    Dim intUnitSize As Integer = Math.Truncate(numUnitSize) '' Integer part of the unit size
-                    Dim sngUnitSize As Single = numUnitSize - intUnitSize   '' Fraction part of the unit size
-
-                    '' We need to specify the allowed number of decimal places for this product for rounding and formating the quantity
-                    Dim numDecimalPlaces As Integer = Right(CStr(sngUnitSize), InStrRev(CStr(sngUnitSize), ".") + 1).Length
-
-                    '' If the user enters less than the unit size, the unit size will be forced
-                    Dim sngQty As Single = Math.Max(CSng(objQuantity.Text), CSng(numUnitSize))
-
-                    '' Decimal Quantity => rounding the quantity
-                    Dim numQty As Decimal = Decimal.Round(CDec(sngQty), numDecimalPlaces)
-
-                    '' Quantity formating
-                    Dim sbdZeros As New Text.StringBuilder("")
-                    If numDecimalPlaces > 0 Then
-                        For i As Byte = 0 To numDecimalPlaces - 1
-                            If sbdZeros.ToString = "" Then sbdZeros.Append(".")
-                            sbdZeros.Append("0")
-                        Next
-                    End If
-                    objQuantity.Text = Format(numQty, "##0" & sbdZeros.ToString)
-                Else
-                    '' **** UnitSize is not decimal **** 
-                    '' If the user enters less than the unit size, the unit size will be forced
-                    objQuantity.Text = Math.Max(CInt(strUnitSize), CInt(objQuantity.Text))
-                End If
-                Try
-                    Basket.UpdateQuantity(CInt(objBasketID.Value), CSng(objQuantity.Text))
-                Catch ex As Exception
-                End Try
+                numQuantity = (numQuantity - CkartrisDataManipulation.SafeModulus(numQuantity, strUnitSize))
             End If
 
-            Call LoadBasket()
+            'Update basket with new quantity
+            Try
+                Basket.UpdateQuantity(CInt(objBasketID.Value), numQuantity)
+            Catch ex As Exception
+            End Try
 
+            'Show warning if quantities were updated or fixed
+            'due to stock level issue
             Try
                 phdOutOfStockElectronic.Visible = Basket.AdjustedForElectronic
                 phdOutOfStock.Visible = Basket.AdjustedQuantities
@@ -558,12 +567,20 @@ Partial Class Templates_BasketView
             'the shipping options available and force reselection
             RefreshShippingMethods()
 
+            Call LoadBasket()
+
             'refresh updatepanel
             updPnlMainBasket.Update()
         End If
-
     End Sub
 
+    ''' <summary>
+    ''' Remove an item from basket (click trash can
+    ''' icon on row)
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Sub RemoveItem_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         Dim numItemID As Long
         Dim strArgument As String
@@ -580,9 +597,14 @@ Partial Class Templates_BasketView
         Call LoadBasket()
 
         updPnlMainBasket.Update()
-
     End Sub
 
+    ''' <summary>
+    ''' Remove coupon link click
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Sub RemoveCoupon_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         Dim strCouponError As String = ""
 
@@ -602,6 +624,12 @@ Partial Class Templates_BasketView
 
     End Sub
 
+    ''' <summary>
+    ''' Click custom text link on customizable items
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Sub CustomText_Click(ByVal sender As Object, ByVal e As CommandEventArgs)
         Dim numItemID As Long
         Dim numCustomCost As Double
@@ -640,9 +668,14 @@ Partial Class Templates_BasketView
 
         popCustomText.Show()
         updPnlCustomText.Update()
-
     End Sub
 
+    ''' <summary>
+    ''' Click the 'apply coupon' button
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Sub ApplyCoupon_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         Dim strCouponError As String = ""
 
@@ -670,20 +703,30 @@ Partial Class Templates_BasketView
         updPnlMainBasket.Update()
 
         Call RefreshMiniBasket()
-
     End Sub
 
+    ''' <summary>
+    ''' Empty basket button click
+    ''' </summary>
     Sub EmptyBasket_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         Basket.DeleteBasket()
         Call LoadBasket()
         updPnlMainBasket.Update()
     End Sub
 
+    ''' <summary>
+    ''' Refresh mini basket by loading basket up
+    ''' and displaying minibasket
+    ''' </summary>
     Sub RefreshMiniBasket()
         Call LoadBasket()
         Call DisplayMiniBasket()
     End Sub
 
+    ''' <summary>
+    ''' Get semi-colon separated list of product IDs of
+    ''' items in basket
+    ''' </summary>
     Private Function GetProductIDs() As String
         Dim strProductIDs As String = ""
 
@@ -696,21 +739,32 @@ Partial Class Templates_BasketView
         Return strProductIDs
     End Function
 
+    ''' <summary>
+    ''' Get an item from basket using product ID
+    ''' </summary>
+    ''' <param name="numProductID"></param>
     Private Function GetBasketItemByProductID(ByVal numProductID As Integer) As BasketItem
-
         For Each Item As BasketItem In BasketItems
             If Item.ProductID = numProductID Then Return Item
         Next
-
         Return Nothing
     End Function
 
+    ''' <summary>
+    ''' Return shipping total including tax
+    ''' </summary>
     Public Function ShippingTotalIncTax() As Double
         Return Basket.ShippingTotalIncTax
     End Function
 
+    ''' <summary>
+    ''' Find and set shipping country's ID
+    ''' </summary>
+    ''' <param name="numShippingID"></param>
+    ''' <param name="numShippingAmount"></param>
+    ''' <param name="numDestinationID"></param>
+    ''' <remarks></remarks>
     Public Sub SetShipping(ByVal numShippingID As Integer, ByVal numShippingAmount As Double, ByVal numDestinationID As Integer)
-
         If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
             APP_PricesIncTax = False
             APP_ShowTaxDisplay = False
@@ -756,27 +810,37 @@ Partial Class Templates_BasketView
         Session("Basket") = Basket
     End Sub
 
+    ''' <summary>
+    ''' Update promotion discount
+    ''' country's ID
+    ''' </summary>
+    ''' <remarks></remarks>
     Private Sub UpdatePromotionDiscount()
-
         For Each objItem As PromotionBasketModifier In arrPromotionsDiscount
             objItem.ApplyTax = Basket.ApplyTax
-            'objItem.ExTax = objItem.ExTax
-            'objItem.IncTax = objItem.IncTax
         Next
 
         rptPromotionDiscount.DataSource = arrPromotionsDiscount
         rptPromotionDiscount.DataBind()
-
     End Sub
 
+    ''' <summary>
+    ''' Set order handling charge based on shipping
+    ''' country's ID
+    ''' </summary>
+    ''' <param name="numShippingCountryID"></param>
+    ''' <remarks></remarks>
     Public Sub SetOrderHandlingCharge(ByVal numShippingCountryID As Integer)
-
         Basket.CalculateOrderHandlingCharge(numShippingCountryID)
-
     End Sub
 
+    ''' <summary>
+    ''' Runs for each item in minibasket as bound
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Protected Sub rptMiniBasket_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptMiniBasket.ItemDataBound
-
         For Each ctlMiniBasket As Control In e.Item.Controls
 
             Dim objItem As New BasketItem
@@ -798,11 +862,15 @@ Partial Class Templates_BasketView
             'Set navigate URL of link control
             CType(e.Item.FindControl("lnkMiniBasketProduct"), HyperLink).NavigateUrl = strURL
         Next
-
     End Sub
 
+    ''' <summary>
+    ''' Runs for each item in basket as bound
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Protected Sub rptBasket_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptBasket.ItemDataBound
-
         If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem Then
 
             objItem = e.Item.DataItem
@@ -845,13 +913,16 @@ Partial Class Templates_BasketView
             If objItem.AdjustedQty Then
                 CType(e.Item.FindControl("txtQuantity"), TextBox).CssClass = "quantity_changed"
             End If
-
-
         End If
-
-
     End Sub
 
+    ''' <summary>
+    ''' Click button to save custom text for items
+    ''' that support this
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Protected Sub btnSaveCustomText_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSaveCustomText.Click
         Dim numSessionID, numBasketID, numVersionID As Long
         Dim numQuantity As Double
@@ -889,13 +960,16 @@ Partial Class Templates_BasketView
             Basket.AddNewBasketValue(BasketBLL.BASKET_PARENTS.BASKET, numSessionID, numVersionID, numQuantity, strCustomText, strOptions, numBasketID)
 
             ShowAddItemToBasket(numVersionID, numQuantity, True)
-
         End If
-
     End Sub
 
+    ''' <summary>
+    ''' Saves custom text for items that support it
+    ''' </summary>
+    ''' <param name="strCustomText"></param>
+    ''' <param name="numItemID"></param>
+    ''' <remarks></remarks>
     Private Sub SaveCustomText(ByVal strCustomText As String, Optional ByVal numItemID As Integer = 0)
-
         If numItemID = 0 Then
             numItemID = btnSaveCustomText.CommandArgument
         End If
@@ -912,9 +986,32 @@ Partial Class Templates_BasketView
         rptBasket.DataBind()
 
         updPnlMainBasket.Update()
-
     End Sub
 
+    ''' <summary>
+    ''' Shows popup for errors or events on minibasket. This can
+    ''' be useful for pages where errors need to be flagged with
+    ''' a popup as items are added to basket but break some rule
+    ''' such as unitsize.
+    ''' </summary>
+    ''' <param name="strTitle"></param>
+    ''' <param name="strMessage"></param>
+    ''' <remarks></remarks>
+    Public Sub ShowPopupMini(ByVal strTitle As String, strMessage As String)
+        popMessage2.SetTitle = strTitle
+        popMessage2.SetTextMessage = strMessage
+        popMessage2.SetWidthHeight(330, 100)
+        popMessage2.ShowPopup()
+    End Sub
+
+    ''' <summary>
+    ''' Shows popup detailing errors or problems when on the main
+    ''' basket page, such as changing qty to an amount which breaks
+    ''' a rule such as unitsize.
+    ''' </summary>
+    ''' <param name="strTitle"></param>
+    ''' <param name="strMessage"></param>
+    ''' <remarks></remarks>
     Public Sub ShowPopup(strTitle As String, strMessage As String)
         litSubHeadingInformation.Text = strTitle
         litContentTextItemsAdded.Text = strMessage
@@ -924,7 +1021,9 @@ Partial Class Templates_BasketView
     End Sub
 
     ''' <summary>
-    ''' Handles adding custom product items to basket, we don't need to show popup here because productversions.ascx already does this
+    ''' Handles adding custom product items to basket, we don't
+    ''' need to show popup here because productversions.ascx
+    ''' already does this
     ''' </summary>
     ''' <param name="numVersionID"></param>
     ''' <param name="numQuantity"></param>
@@ -936,6 +1035,15 @@ Partial Class Templates_BasketView
         Basket.AddNewBasketValue(BasketBLL.BASKET_PARENTS.BASKET, sessionID, numVersionID, numQuantity, strParameterValues, "", 0)
         ShowAddItemToBasket(numVersionID, numQuantity, True)
     End Sub
+
+    ''' <summary>
+    ''' Shows custom text for an item in basket
+    ''' </summary>
+    ''' <param name="numVersionID"></param>
+    ''' <param name="numQuantity"></param>
+    ''' <param name="strOptions"></param>
+    ''' <param name="numBasketValueID"></param>
+    ''' <remarks></remarks>
     Public Sub ShowCustomText(ByVal numVersionID As Long, ByVal numQuantity As Double, Optional ByVal strOptions As String = "", Optional ByVal numBasketValueID As Integer = 0)
         Dim strCustomType As String
         Dim tblCustomization As DataTable = Basket.GetCustomization(numVersionID)
@@ -997,23 +1105,60 @@ Partial Class Templates_BasketView
                 End If
             End If
         End If
-
     End Sub
 
-    Private Sub ShowAddItemToBasket(ByVal VersionID As Integer, ByVal Quantity As Double, Optional ByVal blnDisplayPopup As Boolean = False)
+    ''' <summary>
+    ''' Cancel button on custom text dialog. If this is pushed, the
+    ''' item is added to the basket without customization.
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Protected Sub btnCancelCustomText_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCancelCustomText.Click
+        Dim numSessionID As Long
+        Dim numBasketID, numVersionID As Long
+        Dim numQuantity As Double
+        Dim strOptions As String
+
+        If IsNumeric(hidBasketID.Value) Then numBasketID = CLng(hidBasketID.Value) Else numBasketID = 0
+
+        If numBasketID = 0 Then
+
+            numSessionID = Session("SessionID")
+            numVersionID = CLng(hidCustomVersionID.Value)
+            numQuantity = CDbl(hidCustomQuantity.Value)
+            strOptions = hidOptions.Value
+
+            Basket.AddNewBasketValue(BasketBLL.BASKET_PARENTS.BASKET, numSessionID, numVersionID, numQuantity, "", strOptions)
+
+            ShowAddItemToBasket(numVersionID, numQuantity)
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Show 'add to basket' shows for items where this
+    ''' is not triggered by client-side javascript, such as options
+    ''' products (which need error checking on whether required options
+    ''' were selected)
+    ''' </summary>
+    ''' <param name="numVersionID"></param>
+    ''' <param name="numQuantity"></param>
+    ''' <param name="blnDisplayPopup"></param>
+    ''' <remarks></remarks>
+    Private Sub ShowAddItemToBasket(ByVal numVersionID As Integer, ByVal numQuantity As Double, Optional ByVal blnDisplayPopup As Boolean = False)
 
         Dim tblVersion As DataTable
-        tblVersion = VersionsBLL._GetVersionByID(VersionID)
+        tblVersion = VersionsBLL._GetVersionByID(numVersionID)
         If tblVersion.Rows.Count > 0 Then
             ''// add basket item quantity to new item qty and check for stock
             Dim numBasketQty As Double = 0
             For Each itmBasket As BasketItem In BasketItems
-                If VersionID = itmBasket.VersionID Then
+                If numVersionID = itmBasket.VersionID Then
                     numBasketQty = itmBasket.Quantity
                     Exit For
                 End If
             Next
-            If tblVersion.Rows(0).Item("V_QuantityWarnLevel") > 0 And (numBasketQty + Quantity) > tblVersion.Rows(0).Item("V_Quantity") And KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y" Then
+            If tblVersion.Rows(0).Item("V_QuantityWarnLevel") > 0 And (numBasketQty + numQuantity) > tblVersion.Rows(0).Item("V_Quantity") And KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y" Then
                 Response.Redirect("~/Basket.aspx")
             End If
         End If
@@ -1047,34 +1192,39 @@ Partial Class Templates_BasketView
         End If
     End Sub
 
+    ''' <summary>
+    ''' Timer for how long 'add to basket' shows for items where this
+    ''' is not triggered by client-side javascript, such as options
+    ''' products (which need error checking on whether required options
+    ''' were selected)
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Protected Sub tmrAddToBasket_Tick(ByVal sender As Object, ByVal e As System.EventArgs) Handles tmrAddToBasket.Tick
         tmrAddToBasket.Enabled = False
         popAddToBasket.Hide()
     End Sub
 
-    Function SendOutputWithoutHTMLTags(ByVal strInput As String) As String
-        Dim strNewString As String = ""
-
-        For n As Integer = 1 To Len(strInput)
-            If Mid(strInput, n, 1) = "<" Then
-                While Mid(strInput, n, 1) <> ">"
-                    n = n + 1
-                End While
-                n = n + 1
-            End If
-            strNewString = strNewString & Mid(strInput, n, 1)
-        Next
-        Return strNewString
-    End Function
-
+    ''' <summary>
+    ''' Set shipping when a choice is made from the shipping
+    ''' dropdown menu
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
     Protected Sub UC_ShippingMethodsDropdown_ShippingSelected(ByVal sender As Object, ByVal e As System.EventArgs) Handles UC_ShippingMethodsDropdown.ShippingSelected
         SetShipping(UC_ShippingMethodsDropdown.SelectedShippingID, UC_ShippingMethodsDropdown.SelectedShippingAmount, ShippingDestinationID)
         updPnlMainBasket.Update()
-
     End Sub
 
+    ''' <summary>
+    ''' Refresh shipping methods - use this when a new
+    ''' selection is chosen, as this may change what
+    ''' shipping options are available
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub RefreshShippingMethods()
-
         SetShipping(UC_ShippingMethodsDropdown.SelectedShippingID, UC_ShippingMethodsDropdown.SelectedShippingAmount, ShippingDestinationID)
 
         UC_ShippingMethodsDropdown.DestinationID = ShippingDestinationID
@@ -1083,30 +1233,6 @@ Partial Class Templates_BasketView
         UC_ShippingMethodsDropdown.Refresh()
 
         updPnlMainBasket.Update()
-
-    End Sub
-
-    Protected Sub btnCancelCustomText_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCancelCustomText.Click
-        Dim numSessionID As Long
-        Dim numBasketID, numVersionID As Long
-        Dim numQuantity As Double
-        Dim strOptions As String
-
-        If IsNumeric(hidBasketID.Value) Then numBasketID = CLng(hidBasketID.Value) Else numBasketID = 0
-
-        If numBasketID = 0 Then
-
-            numSessionID = Session("SessionID")
-            numVersionID = CLng(hidCustomVersionID.Value)
-            numQuantity = CDbl(hidCustomQuantity.Value)
-            strOptions = hidOptions.Value
-
-            Basket.AddNewBasketValue(BasketBLL.BASKET_PARENTS.BASKET, numSessionID, numVersionID, numQuantity, "", strOptions)
-
-            ShowAddItemToBasket(numVersionID, numQuantity)
-
-        End If
-
     End Sub
 
 End Class

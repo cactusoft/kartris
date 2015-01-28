@@ -146,7 +146,6 @@ Partial Class ProductVersions
             Exit Sub
         End If
 
-
         '' Depending on the ViewType, the corresponding viewControl will be activated,
         ''  and the corresponding repeater as well.
         Select Case pViewType
@@ -158,7 +157,6 @@ Partial Class ProductVersions
                 If Not Page.IsPostBack Then
                     mvwVersion.SetActiveView(PrepareDropDownView(tblVersions))
                 End If
-                UC_AddToBasketQty3.SelectorType = LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", _ProductID))
             Case "o", "g" 'options
                 c_blnHasPrices = False
                 mvwVersion.SetActiveView(PrepareOptionsView(tblVersions))
@@ -978,11 +976,14 @@ Partial Class ProductVersions
 
     End Function
 
+    ''' <summary>
+    ''' Launches error popup if qty entered does not fit with
+    ''' unitsize setting
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub AddWrongQuantity(ByVal strTitle As String, strMessage As String)
-        UC_PopupMessage.SetTitle = strTitle
-        UC_PopupMessage.SetTextMessage = strMessage
-        UC_PopupMessage.SetWidthHeight(300, 90)
-        UC_PopupMessage.ShowPopup()
+        Dim objMiniBasket As Object = Page.Master.FindControl("UC_MiniBasket")
+        objMiniBasket.ShowPopupMini(strTitle, strMessage)
     End Sub
 
 End Class

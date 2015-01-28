@@ -21,8 +21,6 @@ Imports CkartrisDataManipulation
 ''' a separate add-to-basket button is used on those version display methods
 ''' (because they have add button specific code to fire)
 ''' </summary>
-''' <remarks>By Paul</remarks>
-''' 
 Partial Class UserControls_General_AddToBasket
     Inherits System.Web.UI.UserControl
 
@@ -32,6 +30,7 @@ Partial Class UserControls_General_AddToBasket
     'whether it should display with a button or
     'not'
     Private c_numVersionID As Long
+    Private c_numProductID As Long
     Private c_blnHasAddButton As Boolean
     Private c_blnCanCustomize As Boolean
     Private c_strSelectorType As String
@@ -79,18 +78,23 @@ Partial Class UserControls_General_AddToBasket
             Return c_strSelectorType
         End Get
         Set(ByVal value As String)
-            If value <> "" Then
-                c_strSelectorType = value
-            Else
-                'Try to set to the K:product.addtorbasketqty set at product level
-                c_strSelectorType = LCase(FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID))))
-                If c_strSelectorType Is Nothing Then c_strSelectorType = ""
-
-                'No per-product value set, default to global config setting frontend.basket.addtobasketdisplay
-                If c_strSelectorType = "" Then c_strSelectorType = KartSettingsManager.GetKartConfig("frontend.basket.addtobasketdisplay")
-            End If
+            GetSelectorType(value)
         End Set
     End Property
+
+    Public Function GetSelectorType(ByVal strSelectorType As String) As String
+        If strSelectorType <> "" Then
+            c_strSelectorType = strSelectorType
+        Else
+            'Try to set to the K:product.addtorbasketqty set at product level
+            c_strSelectorType = LCase(FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID))))
+            If c_strSelectorType Is Nothing Then c_strSelectorType = ""
+
+            'No per-product value set, default to global config setting frontend.basket.addtobasketdisplay
+            If c_strSelectorType = "" Then c_strSelectorType = KartSettingsManager.GetKartConfig("frontend.basket.addtobasketdisplay")
+        End If
+        Return c_strSelectorType
+    End Function
 
     'Read the item quantity from the dropdown
     Public ReadOnly Property ItemsQuantity() As Single
@@ -141,49 +145,53 @@ Partial Class UserControls_General_AddToBasket
 
     Public ReadOnly Property UnitSize() As String
         Get
-            '' check if there is (no value or invalid value)
-            If String.IsNullOrEmpty(c_UnitSize) OrElse Not IsNumeric(c_UnitSize) Then
-                '' Unit size default value is 1
-                If String.IsNullOrEmpty(litVersionID.Text) OrElse Not IsNumeric(litVersionID.Text) Then Return "1"
-
-                '' Unit size should be checked if the quantity control is "textbox" => qty entered by user
-                c_UnitSize = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.unitsize", CLng(VersionsBLL.GetProductID_s(CLng(litVersionID.Text)))))
-                If c_UnitSize Is Nothing Then c_UnitSize = ""
-                c_UnitSize = Replace(c_UnitSize, ",", ".") '' Will use the "." instead of "," (just in case wrongly typed)
-                If Not IsNumeric(c_UnitSize) Then c_UnitSize = "1" '' Unit size default value is 1
-            End If
-            Return c_UnitSize
+            Return GetUnitSize()
         End Get
     End Property
+
+    Public Function GetUnitSize() As String
+        'For some items, using ProductID works. Some like multiple versions seem not
+        'to pass this well, so better to use the VersionID and then lookup parent product from that
+        Dim numProductID As Long
+        numProductID = c_numProductID
+        If numProductID = 0 Then
+            Try
+                numProductID = VersionsBLL.GetProductID_s(litVersionID.Text)
+            Catch ex As Exception
+                'Hope we never land here
+            End Try
+        End If
+
+        'Unit size should be checked if the quantity control is "textbox" => qty entered by user
+        c_UnitSize = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.unitsize", numProductID))
+        If c_UnitSize Is Nothing Then c_UnitSize = ""
+        c_UnitSize = Replace(c_UnitSize, ",", ".") 'Will use the "." instead of "," (just in case wrongly typed)
+        If Not IsNumeric(c_UnitSize) Then c_UnitSize = "1" 'Unit size default value is 1
+        Return c_UnitSize
+    End Function
 
     'Handles the 'add' button being clicked.
     'Remember this does not happen for options
     'or version dropdowns, as these have their
     'own add buttons and click handling in
     'ProductVersions.aspx
-    Public Event WrongQuantity(strTitle As String, strMessage As String)
-
     Protected Sub btnAdd_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAdd.Click
 
-        Dim strUnitSize As String = UnitSize
+        Dim strUnitSize As String = GetUnitSize()
         Dim numQuantity As Single = Me.ItemsQuantity
+        Dim objMiniBasket As Object = Page.Master.FindControl("UC_MiniBasket")
 
-        '' Check for wrong quantity
-        Dim numNoOfDecimalPlacesForUnit As Integer = IIf(strUnitSize.Contains("."), Mid(strUnitSize, strUnitSize.IndexOf(".") + 2).Length, 0)
-        Dim numNoOfDecimalPlacesForQty As Integer = IIf(CStr(numQuantity).Contains(".") AndAlso CLng(Mid(CStr(numQuantity), CStr(numQuantity).IndexOf(".") + 2)) <> 0, _
-                                                        Mid(CStr(numQuantity), CStr(numQuantity).IndexOf(".") + 2).Length, _
-                                                        0)
-        Dim numMod As Integer = CInt(numQuantity * Math.Pow(10, numNoOfDecimalPlacesForQty)) Mod CInt(strUnitSize * Math.Pow(10, numNoOfDecimalPlacesForUnit))
-        If numMod <> 0.0F OrElse numNoOfDecimalPlacesForQty > numNoOfDecimalPlacesForUnit Then
+        Dim numMod As Decimal = SafeModulus(numQuantity, strUnitSize)
+        If numMod <> 0D Then
             '' wrong quantity - quantity should be a multiplies of unit size
-            RaiseEvent WrongQuantity(GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors"), _
-               Replace(GetGlobalResourceObject("ObjectConfig", "ContentText_OrderMultiplesOfUnitsize"), "[unitsize]", strUnitSize))
+            objMiniBasket.ShowPopupMini(GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors"), _
+                    Replace(GetGlobalResourceObject("ObjectConfig", "ContentText_OrderMultiplesOfUnitsize"), "[unitsize]", strUnitSize))
         Else
 
+            'qty ok, matches unitsize allowed
             Trace.Warn("Quantity: " & numQuantity)
 
-            Dim objMiniBasket As Object = Page.Master.FindControl("UC_MiniBasket")
-            Dim numVersionID As Long, numBasketItemID As Long = 0, numEditVersionID As Long = 0
+            Dim numBasketItemID As Long = 0, numEditVersionID As Long = 0
             Dim strAddToBasketQtyCFG As String = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID)))
             If strAddToBasketQtyCFG Is Nothing Then strAddToBasketQtyCFG = ""
             If Session("BasketItemInfo") & "" <> "" AndAlso LCase(strAddToBasketQtyCFG) = "dropdown" Then
@@ -194,7 +202,7 @@ Partial Class UserControls_General_AddToBasket
 
             If CLng(litVersionID.Text) <> numEditVersionID Then numBasketItemID = 0
 
-            numVersionID = CLng(litVersionID.Text)
+            'numVersionID = CLng(litVersionID.Text)
             objMiniBasket.ShowCustomText(CLng(litVersionID.Text), numQuantity, "", numBasketItemID)
 
             Session("AddItemVersionID") = litVersionID.Text
@@ -202,21 +210,14 @@ Partial Class UserControls_General_AddToBasket
     End Sub
 
     Private Sub LoadAddItemToBasket()
-
-        'If Not IsPostBack Or litVersionID.Text = Session("AddItemVersionID") Then
+        Dim strUnitSize As String = GetUnitSize()
+        Dim strMinimumAllowedQty As String = "1"
 
         'If nothing specified, set selector type based
         'on config setting.
-        If c_strSelectorType = "" Then
-            Dim strAddToBasketQtyCFG As String = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID)))
-            If strAddToBasketQtyCFG Is Nothing Then strAddToBasketQtyCFG = ""
-            If LCase(strAddToBasketQtyCFG) <> "" Then
-                c_strSelectorType = LCase(FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID))))
-                If c_strSelectorType Is Nothing Then c_strSelectorType = ""
-            Else
-                c_strSelectorType = KartSettingsManager.GetKartConfig("frontend.basket.addtobasketdisplay")
-            End If
-        End If
+        Dim strAddToBasketQtyCFG As String = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID)))
+        If strAddToBasketQtyCFG Is Nothing Then strAddToBasketQtyCFG = ""
+        c_strSelectorType = GetSelectorType(strAddToBasketQtyCFG)
 
         'Create onclientclick event to launch
         'the 'add to basket' popup. This way it
@@ -232,34 +233,23 @@ Partial Class UserControls_General_AddToBasket
             End If
         End If
 
-        '' If UnitSize is <> 1, we need to force the textbox as quantity control
-        If CSng(UnitSize) <> 1 Then c_strSelectorType = "textbox"
-
-        Dim strMinimumAllowedQty As String = "1"
-
-        '' Need to know if the decimal quantity is allowed or not
-        If Math.Abs(CSng(UnitSize) Mod 1) > 0.0F Then
-            '' UnitSize is decimal
-            If CSng(UnitSize) > 1 Then strMinimumAllowedQty = UnitSize
-            '' we need to exclude the "." if the unit size is decimal, so to accept both (numbers & ".")
+        'Need to know if the decimal quantity is allowed or not
+        If Math.Abs(CSng(strUnitSize) Mod 1) > 0.0F Then
+            'UnitSize is decimal
+            If CSng(strUnitSize) > 1 Then strMinimumAllowedQty = strUnitSize
+            strMinimumAllowedQty = strUnitSize
+            'we need to exclude the "." if the unit size is decimal, so to accept both (numbers & ".")
             filQuantity.FilterType = AjaxControlToolkit.FilterTypes.Numbers Or AjaxControlToolkit.FilterTypes.Custom
             filQuantity.ValidChars = "."
         Else
-            '' UnitSize is integer
-            If CInt(UnitSize) > 1 Then strMinimumAllowedQty = CInt(UnitSize)
+            'UnitSize is integer
+            If CInt(strUnitSize) > 1 Then strMinimumAllowedQty = CInt(strUnitSize)
         End If
 
         'Set quantity selector type
         Select Case c_strSelectorType
             Case "textbox"
-                'Textbox for quantity next to 'add' button
-
-                If c_numVersionID = c_ItemEditVersionID AndAlso c_ItemEditVersionID > 0 Then
-                    If Not IsPostBack Then txtItemsQuantity.Text = c_ItemEditQty
-                Else
-                    If Not IsPostBack OrElse Not IsNumeric(txtItemsQuantity.Text) Then txtItemsQuantity.Text = strMinimumAllowedQty
-                End If
-
+                txtItemsQuantity.Text = strMinimumAllowedQty
                 txtItemsQuantity.Visible = True
                 ddlItemsQuantity.Visible = False
 
@@ -268,10 +258,9 @@ Partial Class UserControls_General_AddToBasket
                 '(just adds a single item when button pushed, best
                 'for sites where there are only single items for sale, or large
                 'value items people are unlikely to order in quantity)
-
                 txtItemsQuantity.Visible = False
                 ddlItemsQuantity.Visible = False
-                txtItemsQuantity.Text = 1
+                txtItemsQuantity.Text = strMinimumAllowedQty
 
             Case Else
                 'Defaults the selector to dropdown if not specified explicitly.
@@ -282,15 +271,18 @@ Partial Class UserControls_General_AddToBasket
                 Catch ex As Exception
                 End Try
                 ddlItemsQuantity.Items.Clear()
-                'Create dropdown values based on config setting
+
+                'We want number of entries as in the config setting. However,
+                'if the item has a unitsize set, we want to reflect that. So
+                'we should multiply everything by unitsize.
                 For numCounter = 1 To CInt(KartSettingsManager.GetKartConfig("frontend.basket.addtobasketdropdown.max"))
-                    ddlItemsQuantity.Items.Add(numCounter.ToString)
+                    ddlItemsQuantity.Items.Add((numCounter * CSng(strUnitSize)).ToString)
                 Next
 
                 If c_numVersionID = c_ItemEditVersionID And c_ItemEditVersionID > 0 Then
                     btnAdd.Text = GetGlobalResourceObject("_Kartris", "FormButton_Update")
                     If Not IsPostBack Then
-                        If numCounter < c_ItemEditQty Then
+                        If numCounter < (c_ItemEditQty / CSng(strUnitSize)) Then
                             ddlItemsQuantity.Items.Add(c_ItemEditQty)
                             ddlItemsQuantity.SelectedValue = c_ItemEditQty
                         Else
@@ -305,14 +297,15 @@ Partial Class UserControls_General_AddToBasket
                         ddlItemsQuantity.Items.Add(bitValue)
                         ddlItemsQuantity.SelectedValue = bitValue
                     End If
-                    ddlItemsQuantity.Text = bitValue
+                    Try
+                        ddlItemsQuantity.Text = bitValue
+                    Catch ex As Exception
+                        'oh dear
+                    End Try
                 End If
-                'If Not Page.IsPostBack Then
                 txtItemsQuantity.Visible = False
                 ddlItemsQuantity.Visible = True
-                'End If
         End Select
-
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
@@ -320,7 +313,6 @@ Partial Class UserControls_General_AddToBasket
             Session("AddItemVersionID") = ""
         End If
     End Sub
-
 
     Protected Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
         LoadAddItemToBasket()

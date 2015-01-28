@@ -1,7 +1,5 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="AddToBasket.ascx.vb"
     Inherits="UserControls_General_AddToBasket" %>
-<%@ Register TagPrefix="usr" TagName="PopupMessage" Src="~/UserControls/General/PopupMessage.ascx"  %>
-
 <asp:UpdatePanel ID="updAddQuantity" runat="server" UpdateMode="Conditional" RenderMode="Inline">
     <ContentTemplate>
         <%
@@ -11,7 +9,9 @@
         <asp:DropDownList ID="ddlItemsQuantity" runat="server" CssClass="dropdown hide-for-small">
         </asp:DropDownList>
         <%
-            'Default the text box value to 1 so can just hit button 
+            'Default the text box value to 1 so can just hit button
+            'in AddToBasket.ascx.vb we will change this to the
+            'unitsize if required, e.g. 10, 12 etc.
         %>
         <asp:TextBox ID="txtItemsQuantity" runat="server" CssClass="textbox hide-for-small" text="1" MaxLength="6"></asp:TextBox>
         
@@ -31,5 +31,5 @@
             FilterType="Numbers" Enabled="true" />
     </ContentTemplate>
 </asp:UpdatePanel>
-<asp:Literal ID="litVersionID" runat="server" Visible="false"></asp:Literal>
+<asp:Literal ID="litVersionID" runat="server" Visible="False"></asp:Literal>
 

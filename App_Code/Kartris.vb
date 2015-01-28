@@ -29,8 +29,8 @@ Imports System.Xml
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 2.8
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #1/2/2015# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION As Decimal = 2.8001
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #1/27/2015# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
@@ -93,6 +93,9 @@ Public NotInheritable Class CkartrisEnumerations
     End Enum
 End Class
 
+''' <summary>
+''' Error formatting and handling
+''' </summary>
 Public NotInheritable Class CkartrisFormatErrors
     ''' <summary>
     ''' Log the errors
@@ -544,8 +547,24 @@ Public NotInheritable Class CkartrisDisplayFunctions
 
 End Class
 
-
+''' <summary>
+''' Various functions for manipulating and fixing data
+''' </summary>
 Public NotInheritable Class CkartrisDataManipulation
+
+    ''' <summary>
+    ''' The in-built ASP.NET mod function really isn't that great to use. Because of how
+    ''' it treats Double types, you can end up with the odd very small decimal portions of
+    ''' whole numbers which result in comparisons being wrong. This function fixes the input
+    ''' values and output to Decimal type which doesn't suffer this problem.
+    ''' </summary>
+    Public Shared Function SafeModulus(ByVal numQuantity As Decimal, ByVal strUnitSize As String) As Decimal
+        numQuantity = Math.Round(numQuantity, 4)
+        Dim numUnitSize As Decimal = Math.Round(CDec(strUnitSize), 4)
+
+        Return numQuantity Mod numUnitSize
+    End Function
+
     ''' <summary>
     ''' We can fix a number to be between certain ranges (e.g. zero and 100), if non-numeric, set as lower bound
     ''' </summary>

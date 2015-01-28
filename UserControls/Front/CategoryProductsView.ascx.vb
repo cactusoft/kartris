@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2015 CACTUSOFT
+'Copyright 2015
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -192,6 +192,10 @@ Partial Class CategoryProductsView
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             LoadCategoryFilters()
+        Else
+            If GetPostBackControlId(page) = "chkList" then
+                lnkBtnSearch_Click(sender, e)
+            End if
         End If
     End Sub
 
@@ -207,6 +211,55 @@ Partial Class CategoryProductsView
                                         rptAttributes)
     End Sub
 
+
+''' <summary>
+''' Gets the ID of the post back control.
+''' 
+''' See: http://geekswithblogs.net/mahesh/archive/2006/06/27/83264.aspx
+''' </summary>
+''' <param name = "page">The page.</param>
+''' <returns></returns>
+    Public Shared Function GetPostBackControlId(page As Page) As String
+      If Not page.IsPostBack Then
+        Return String.Empty
+      End If
+
+      Dim control As Control = Nothing
+      ' first we will check the "__EVENTTARGET" because if post back made by the controls
+      ' which used "_doPostBack" function also available in Request.Form collection.
+      Dim controlName As String = page.Request.Params("__EVENTTARGET")
+      If Not [String].IsNullOrEmpty(controlName) Then
+        control = page.FindControl(controlName)
+      Else
+        ' if __EVENTTARGET is null, the control is a button type and we need to
+        ' iterate over the form collection to find it
+
+        ' ReSharper disable TooWideLocalVariableScope
+        Dim controlId As String
+        Dim foundControl As Control
+        ' ReSharper restore TooWideLocalVariableScope
+
+        For Each ctl As String In page.Request.Form
+          ' handle ImageButton they having an additional "quasi-property" 
+          ' in their Id which identifies mouse x and y coordinates
+          If ctl.EndsWith(".x") OrElse ctl.EndsWith(".y") Then
+            controlId = ctl.Substring(0, ctl.Length - 2)
+            foundControl = page.FindControl(controlId)
+          Else
+            foundControl = page.FindControl(ctl)
+          End If
+
+          If Not (TypeOf foundControl Is Button OrElse TypeOf foundControl Is ImageButton) Then
+            Continue For
+          End If
+
+          control = foundControl
+          Exit For
+        Next
+      End If
+
+      Return If(control Is Nothing, [String].Empty, control.ID)
+    End Function
 
     Protected Sub rptAttributes_ItemDataBound(sender As Object, e As RepeaterItemEventArgs) Handles rptAttributes.ItemDataBound
         If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem Then
@@ -239,8 +292,17 @@ Partial Class CategoryProductsView
         Else
             phdCustomPrice.Visible = False
         End If
+        lnkBtnSearch_Click(sender, e)
     End Sub
 
+    Protected Sub ddlOrderBy_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ddlOrderBy.SelectedIndexChanged
+        lnkBtnSearch_Click(sender, e)
+    End Sub
+
+    'Protected Sub chkList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles chkList.SelectedIndexChanged
+    '    lnkBtnSearch_Click(sender, e)
+    'End Sub
+    
     Protected Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
         txtSearch.Text = Nothing
         ddlOrderBy.SelectedIndex = 0
