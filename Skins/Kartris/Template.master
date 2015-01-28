@@ -31,6 +31,7 @@
 	<link href="sections.css" rel="stylesheet" type="text/css" />
 	<link href="template.css" rel="stylesheet" type="text/css" />
 	<link href="custom.css" rel="stylesheet" type="text/css" />
+	<link href="powerpack.css" rel="stylesheet" type="text/css" />
 	<title>Kartris v1</title>
 </head>
 <body class="main">

@@ -376,11 +376,6 @@ Public Class BasketItem
     End Property
 
     Public Sub New()
-        'PricesIncTax = True
-        'intead of setting the initial value to true, get the proper config setting instead
-        'this was done because the basketbll.getbasketitems function returns the basketitems without validating the items first
-        'If LCase(GetKartConfig("general.tax.usmultistatetax")) = "y" Then PricesIncTax = False Else PricesIncTax = (LCase(GetKartConfig("general.tax.pricesinctax")) = "y")
-        'If TaxRegime.Name.ToLower = "us" Then PricesIncTax = False Else 
         PricesIncTax = (LCase(GetKartConfig("general.tax.pricesinctax")) = "y")
 
         HasCombinations = False
@@ -390,8 +385,6 @@ Public Class BasketItem
         _VersionID = 0
         ComboVersionID = 0
         _Free = False
-
-
     End Sub
 
     Public Property VersionID() As Long
@@ -613,7 +606,7 @@ Public Class BasketBLL
     Private _TotalIncTax, _TotalTaxRate, _DTax, _DTax2 As Double
     Private _DTaxExtra As String
 
-    Private _LastIndex As Integer
+    Private _LastIndex, _HighlightLowStockRowNumber As Integer
     Private _AdjustedForElectronic, _ApplyTax, _AdjustedQuantities As Boolean
     Private _ShippingName, _ShippingDescription As String
 
@@ -693,6 +686,12 @@ Public Class BasketBLL
     Public ReadOnly Property AdjustedQuantities() As Boolean
         Get
             Return _AdjustedQuantities
+        End Get
+    End Property
+
+    Public ReadOnly Property HighlightLowStockRowNumber() As Integer
+        Get
+            Return _HighlightLowStockRowNumber
         End Get
     End Property
 
@@ -930,8 +929,21 @@ Public Class BasketBLL
 
                 _AllDigital = _AllDigital AndAlso (.DownloadType = "l" Or .DownloadType = "u")
 
-                'Totals
-                _TotalItems = _TotalItems + .Quantity
+                'If we have an item in the basket that is sold in fractional
+                'quantities, such as rope sold by the metre, then we need to 
+                'think about how quantities are totalled. For example, if we
+                'place 0.05 of an item in the basket, this is really one item
+                'but would be considered as 0.05 items in the count. Similarly
+                'if we purchase 2.5m, it would be considered as 2.5 items. In
+                'both cases, these are really just one item. So, we only add
+                'quantities if the item is a round number.
+                If Round(.Quantity, 0) = .Quantity Then
+                    _TotalItems = _TotalItems + .Quantity
+                Else
+                    _TotalItems = _TotalItems + 1 'decimal qty, so assume is one item
+                End If
+
+                'Other totals
                 _TotalWeight = _TotalWeight + .RowWeight
                 _TotalExTax = _TotalExTax + .RowExTax
                 _TotalTaxAmount = _TotalTaxAmount + .RowTaxAmount
@@ -1360,6 +1372,7 @@ Public Class BasketBLL
         Dim numWeight, numPrice As Double
         Dim V_DownloadType As String
         Dim SESS_CurrencyID As Short
+        Dim numUnitSize As Single
 
         If numCurrencyID > 0 Then
             SESS_CurrencyID = numCurrencyID
@@ -1410,10 +1423,19 @@ Public Class BasketBLL
                             If .Quantity > .StockQty Then
                                 .AdjustedQty = True
                                 _AdjustedQuantities = True
+                                _HighlightLowStockRowNumber = i
                                 .Quantity = .StockQty
                             End If
                         End If
                     End If
+
+                    'Here we check that the quantity for each items is ok
+                    'with the unitsize for that item. For example, if items
+                    'can only be bought in units of 10, we need to ensure
+                    'the qty of that item is a multiple of 10, or fix it
+                    'down.
+                    numUnitSize = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.unitsize", objItem.P_ID))
+                    .Quantity = (.Quantity - SafeModulus(.Quantity, numUnitSize))
 
                     'Get basic price, modify for customer group pricing (if lower)
                     numPrice = .Price

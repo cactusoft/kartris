@@ -169,20 +169,20 @@
                             <asp:PlaceHolder ID="phdStockTrackingInputs" runat="server">
                                 <asp:Literal ID="litFormLabelStockTrackingText" runat="server" Text="<%$ Resources: _Version, ContentText_StockTrackingText %>"></asp:Literal><br />
                                 <asp:Literal ID="litFormLabelStockQuantity" runat="server" Text="<%$ Resources: _Version, FormLabel_StockQuantity %>" />&nbsp;
-                                <asp:TextBox ID="txtStockQuantity" runat="server" CssClass="shorttext" MaxLength="5" />
+                                <asp:TextBox ID="txtStockQuantity" runat="server" CssClass="shorttext" MaxLength="8" Width="65px" />
                                 <asp:CompareValidator ID="valCompareStockQuantity" runat="server" ControlToValidate="txtStockQuantity"
-                                    Display="Dynamic" CssClass="error" ForeColor="" ErrorMessage="0-32767!" Operator="LessThanEqual"
-                                    ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoShort %>" ValueToCompare="32767"
+                                    Display="Dynamic" CssClass="error" ForeColor="" ErrorMessage="0-9999999!" Operator="LessThanEqual"
+                                    ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoShort %>" ValueToCompare="9999999"
                                     Type="Double" SetFocusOnError="true" ValidationGroup="<%# LANG_ELEM_TABLE_TYPE.Versions %>" />
                                 <asp:RequiredFieldValidator ID="valRequiredStockQty" runat="server" CssClass="error"
                                     ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                     ControlToValidate="txtStockQuantity" Display="Dynamic" SetFocusOnError="true"
                                     ValidationGroup="<%# LANG_ELEM_TABLE_TYPE.Versions %>" />&nbsp;
                                 <asp:Literal ID="litFormLabelWarningLevel" runat="server" Text="<%$ Resources: _Version, FormLabel_WarningLevel %>" />&nbsp;
-                                <asp:TextBox ID="txtWarningLevel" runat="server" CssClass="shorttext" MaxLength="5" />
+                                <asp:TextBox ID="txtWarningLevel" runat="server" CssClass="shorttext" MaxLength="8" />
                                 <asp:CompareValidator ID="valCompareWarningLevel" runat="server" ControlToValidate="txtWarningLevel"
-                                    Display="Dynamic" CssClass="error" ForeColor="" ErrorMessage="0-32767!" Operator="LessThanEqual"
-                                    ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoShort %>" ValueToCompare="32767"
+                                    Display="Dynamic" CssClass="error" ForeColor="" ErrorMessage="0-9999999!" Operator="LessThanEqual"
+                                    ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoShort %>" ValueToCompare="9999999"
                                     Type="Double" SetFocusOnError="true" ValidationGroup="<%# LANG_ELEM_TABLE_TYPE.Versions %>" />
                                 <asp:RequiredFieldValidator ID="valRequiredWarnLevel" runat="server" CssClass="error"
                                     ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"

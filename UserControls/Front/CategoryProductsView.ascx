@@ -6,7 +6,7 @@
         <user:ItemPager ID="UC_ItemPager_Header" runat="server" Visible="False" />
         <div class="row">
             <asp:PlaceHolder ID="phdCategoryFilters" runat="server">
-                <div class="small-12 large-3 columns filterbar">
+                <div class="small-12 medium-3 columns filterbar">
                     <div id="filterbar_pad">
                         <asp:UpdatePanel ID="updCategoryFilters" runat="server" UpdateMode="Conditional">
                             <ContentTemplate>
@@ -14,7 +14,7 @@
                                 <asp:Label runat="server" ID="lblKeywords" Text="<%$ Resources: Search, ContentText_Keywords %>" AssociatedControlID="txtSearch"></asp:Label>
                                 <asp:TextBox ID="txtSearch" runat="server"></asp:TextBox>
                                 <asp:Label runat="server" ID="lblSortBy" Text="<%$ Resources: Filters, ContentText_SortBy %>" AssociatedControlID="ddlOrderBy"></asp:Label>     
-                                <asp:DropDownList ID="ddlOrderBy" runat="server">
+                                <asp:DropDownList ID="ddlOrderBy" runat="server" AutoPostBack="true">
                                 </asp:DropDownList>
 
                                 <asp:PlaceHolder ID="phdPriceRange" runat="server">
@@ -41,7 +41,7 @@
                                                 <asp:Repeater ID="rptAttributes" runat="server">
                                                     <ItemTemplate>
                                                         <asp:Label ID="lblAttributeName" runat="server" Text='<%# Eval("AttributeName")%>' CssClass="attribute_title"></asp:Label>
-                                                            <asp:CheckBoxList ID="chkList" runat="server" CssClass="checkbox"></asp:CheckBoxList>
+                                                            <asp:CheckBoxList ID="chkList" runat="server" CssClass="checkbox" AutoPostBack="true"></asp:CheckBoxList>
                                                     </ItemTemplate>
                                                 </asp:Repeater>
                                         </div>
@@ -56,7 +56,7 @@
                 </div>
             </asp:PlaceHolder>
             <% If phdCategoryFilters.Visible = True Then%>
-            <div class="small-12 large-9 columns">
+            <div class="small-12 medium-9 columns">
                 <%Else%>
                 <div class="small-12 columns">
                     <% End If%>
