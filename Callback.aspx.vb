@@ -386,12 +386,12 @@ Partial Class Callback
                         End Try
                         Response.Write(GetLocalResourceObject("ContentText_TransactionSuccess"))
                         Response.Write("<br/><br/>")
-                        Response.Write(Replace(strBodyText, vbCrLf, "<br/>"))
+                        'Response.Write(Replace(strBodyText, vbCrLf, "<br/>"))
                         Response.Write("<p><a href='" & WebShopURL() & "?strWipeBasket=yes'>" & GetGlobalResourceObject("Kartris", "ContentText_ReturnToHomepage") & "</a></p>")
 
                         'Closing part of HTML template
                         Try
-                            Response.Write(arrCallbackTemplateHTML(1)) 'First part of HTML template
+                            Response.Write(arrCallbackTemplateHTML(1)) 'Closing part of HTML template
                         Catch ex As Exception
                             'No HTML template or [orderdetails] tag missing
                             'just ignore

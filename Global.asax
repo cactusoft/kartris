@@ -68,6 +68,10 @@
         'apparently static callback page names like Callback-paypal.aspx,
         'and then map this to the appropriate querystring value.
         Dim strFullOriginalPath As String = Request.Url.ToString()
+        'Replace any ? with &
+        strFullOriginalPath = Replace(strFullOriginalPath, "?", "&")
+        'Replace first & back to ?
+        strFullOriginalPath = Replace(strFullOriginalPath, ".aspx&g", ".aspx?g")
         If strFullOriginalPath.ToLower.Contains("/callback-") Then
             Dim strGateway As String = Replace(strFullOriginalPath.ToLower.Substring(strFullOriginalPath.ToLower.IndexOf("callback-") + 9), ".aspx", "")
             Context.RewritePath("~/Callback.aspx?g=" & strGateway)
