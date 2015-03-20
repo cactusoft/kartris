@@ -37,7 +37,7 @@ Partial Class UserControls_Back_ProductAttributes
             For Each itm As RepeaterItem In rptAttributes.Items
                 If itm.ItemType = ListItemType.Item OrElse itm.ItemType = ListItemType.AlternatingItem Then
                     Try
-                        Dim AttributeID As Byte = CByte(CType(itm.FindControl("litAttributeID"), Literal).Text)
+                        Dim AttributeID As Integer = CInt(CType(itm.FindControl("litAttributeID"), Literal).Text)
                         Dim arrRowValues() As DataRow = tblAttributeValues.Select("ATTRIBV_AttributeID=" & AttributeID)
                         If arrRowValues.Length = 1 Then
                             CType(itm.FindControl("chkAttribute"), CheckBox).Checked = True
@@ -90,7 +90,7 @@ Partial Class UserControls_Back_ProductAttributes
                     If CType(itm.FindControl("chkAttribute"), CheckBox).Checked Then
                         CType(itm.FindControl("phdLanguageStrings"), PlaceHolder).Visible = True
                         CType(itm.FindControl("updLanguageStrings"), UpdatePanel).Update()
-                        Dim AttributeID As Byte = CByte(CType(itm.FindControl("litAttributeID"), Literal).Text)
+                        Dim AttributeID As Integer = CInt(CType(itm.FindControl("litAttributeID"), Literal).Text)
                         Dim arrRowValues() As DataRow = tblAttributeValues.Select("ATTRIBV_AttributeID=" & AttributeID)
                         If arrRowValues.Length = 1 Then
                             CType(itm.FindControl("_UC_LangContainer"),  _
@@ -122,11 +122,11 @@ Partial Class UserControls_Back_ProductAttributes
         tblLanguageElements.Columns.Add(New DataColumn("_LE_FieldID", Type.GetType("System.String")))
         tblLanguageElements.Columns.Add(New DataColumn("_LE_Value", Type.GetType("System.String")))
         tblLanguageElements.Columns.Add(New DataColumn("ProductID", Type.GetType("System.Int32")))
-        tblLanguageElements.Columns.Add(New DataColumn("AttributeID", Type.GetType("System.Byte")))
+        tblLanguageElements.Columns.Add(New DataColumn("AttributeID", Type.GetType("System.Int32")))
 
         Dim tblProductAttribute As New DataTable
         tblProductAttribute.Columns.Add(New DataColumn("ProductID", Type.GetType("System.Int32")))
-        tblProductAttribute.Columns.Add(New DataColumn("AttributeID", Type.GetType("System.Byte")))
+        tblProductAttribute.Columns.Add(New DataColumn("AttributeID", Type.GetType("System.Int32")))
 
 
         For Each itm As RepeaterItem In rptAttributes.Items
@@ -137,12 +137,12 @@ Partial Class UserControls_Back_ProductAttributes
                 Dim tblTempContents As New DataTable
                 tblTempContents = CType(itm.FindControl("_UC_LangContainer"), _LanguageContainer).ReadContent()
                 tblTempContents.Columns.Add(New DataColumn("ProductID", Type.GetType("System.Int32")))
-                tblTempContents.Columns.Add(New DataColumn("AttributeID", Type.GetType("System.Byte")))
+                tblTempContents.Columns.Add(New DataColumn("AttributeID", Type.GetType("System.Int32")))
                 For Each row As DataRow In tblTempContents.Rows
                     row("ProductID") = CInt(ProductID)
-                    row("AttributeID") = CByte(AttributeID)
+                    row("AttributeID") = CInt(AttributeID)
                 Next
-                tblProductAttribute.Rows.Add(CInt(ProductID), CByte(AttributeID))
+                tblProductAttribute.Rows.Add(CInt(ProductID), CInt(AttributeID))
 
                 tblLanguageElements.Merge(tblTempContents)
             End If

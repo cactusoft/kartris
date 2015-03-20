@@ -52,7 +52,7 @@ Public Class AttributesBLL
         Return AdptrValues._GetByProductID(intProductID)
     End Function
 
-    Public Shared Function _GetByAttributeID(ByVal numAttributeID As Byte) As DataTable
+    Public Shared Function _GetByAttributeID(ByVal numAttributeID As Integer) As DataTable
         Return Adptr._GetByAttributeID(numAttributeID)
     End Function
 
@@ -91,7 +91,7 @@ Public Class AttributesBLL
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
 
-                Dim intNewAttributeID As Byte = cmdAddAttribute.Parameters("@NewAttribute_ID").Value
+                Dim intNewAttributeID As Integer = cmdAddAttribute.Parameters("@NewAttribute_ID").Value
                 If Not LanguageElementsBLL._AddLanguageElements( _
                   tblElements, LANG_ELEM_TABLE_TYPE.Attributes, intNewAttributeID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
@@ -111,7 +111,8 @@ Public Class AttributesBLL
         End Using
         Return False
     End Function
-    Public Shared Function _UpdateAttribute(ByVal tblElements As DataTable, ByVal numAttributeID As Byte, ByVal chrType As Char, _
+
+    Public Shared Function _UpdateAttribute(ByVal tblElements As DataTable, ByVal numAttributeID As Integer, ByVal chrType As Char, _
               ByVal blnLive As Boolean, ByVal blnFastEntry As Boolean, ByVal blnShowFront As Boolean, _
               ByVal blnShowSearch As Boolean, ByVal numOrderNo As Byte, _
               ByVal chrCompare As Char, ByVal blnSpecial As Boolean, ByRef strMsg As String) As Boolean
@@ -160,7 +161,8 @@ Public Class AttributesBLL
         End Using
         Return False
     End Function
-    Public Shared Function _DeleteAttribute(ByVal numAttributeID As Byte, ByRef strMsg As String) As Boolean
+
+    Public Shared Function _DeleteAttribute(ByVal numAttributeID As Integer, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -212,7 +214,7 @@ Public Class AttributesBLL
                 '' 2. CREATE New Attribute Values
                 For Each row As DataRow In tblProductAttributes.Rows
                     Dim ProductID As Integer = CInt(row("ProductID"))
-                    Dim AttributeID As Byte = CByte(row("AttributeID"))
+                    Dim AttributeID As Integer = CInt(row("AttributeID"))
                     Dim AttributeValueID As Integer = _AddAttributeValue(ProductID, AttributeID, sqlConn, savePoint)
 
                     If AttributeValueID <> 0 Then
@@ -242,8 +244,8 @@ Public Class AttributesBLL
         End Using
         Return False
     End Function
-    Private Shared Function _DeleteAttributeValuesByProductID(ByVal intProductID As Integer, ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean
 
+    Private Shared Function _DeleteAttributeValuesByProductID(ByVal intProductID As Integer, ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean
         Try
             Dim cmdDelete As New SqlCommand("_spKartrisAttributeValues_DeleteByProductID", sqlConn, savePoint)
             cmdDelete.CommandType = CommandType.StoredProcedure
@@ -254,11 +256,10 @@ Public Class AttributesBLL
         Catch ex As Exception
             ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
         End Try
-
         Return False
-
     End Function
-    Private Shared Function _AddAttributeValue(ByVal intProductID As Integer, ByVal numAttributeID As Byte, ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Integer
+
+    Private Shared Function _AddAttributeValue(ByVal intProductID As Integer, ByVal numAttributeID As Integer, ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Integer
         Try
             Dim cmdAdd As New SqlCommand("_spKartrisAttributeValues_Add", sqlConn, savePoint)
             cmdAdd.CommandType = CommandType.StoredProcedure

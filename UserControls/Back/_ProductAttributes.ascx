@@ -17,7 +17,7 @@
                             <ItemTemplate>
                                 <tr>
                                     <td class="itemname">
-                                        <asp:Literal ID="litAttributeID" runat="server" Text='<%# Eval("ATTRIB_ID") %>' Visible="false" />
+                                        <asp:Literal ID="litAttributeID" runat="server" Text='<%# Eval("ATTRIB_ID") %>' Visible="False" />
                                         <asp:UpdatePanel ID="updSelection" runat="server" UpdateMode="Conditional">
                                             <ContentTemplate>
                                                 <asp:CheckBox ID="chkAttribute" runat="server" AutoPostBack="true" CssClass="checkbox" OnCheckedChanged="RefreshCategoryMenu" />

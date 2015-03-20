@@ -67,7 +67,7 @@ Partial Class UserControls_Back_EditAttributes
     Private Sub GetAttributeInfo()
 
         Dim tblAttribute As New DataTable
-        tblAttribute = AttributesBLL._GetByAttributeID(CByte(litAttributeID.Text))
+        tblAttribute = AttributesBLL._GetByAttributeID(CInt(litAttributeID.Text))
 
         If tblAttribute.Rows.Count = 0 Then Return '' the attribute is not exist 
 
@@ -117,7 +117,7 @@ Partial Class UserControls_Back_EditAttributes
         ''^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         ''^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
         '' 2. Attribute Main Info.
-        Dim numAttributeID As Byte = CByte(litAttributeID.Text)
+        Dim numAttributeID As Integer = CInt(litAttributeID.Text)
         Dim chrType As Char = CChar(ddlAttributeType.SelectedValue())
         Dim blnLive As Boolean = chkLive.Checked
 
