@@ -79,8 +79,9 @@
 						<aside class="sidebar columns medium-3">
 
 					        <!-- USER HEADER -->
-                            <user:HugoFoxContent ID="UC_LeftSideBarLinks" runat="server" DisplayItem="leftsidebarlinks"/>
-
+                            <div class="hide-for-small">
+                                <user:HugoFoxContent ID="UC_LeftSideBarLinks" runat="server" DisplayItem="leftsidebarlinks"/>
+                            </div>
 
 							<!-- TAG CATEGORY MENU -->
 							<user:CategoryMenu ID="UC_CategoryMenuCSSFoldout" runat="server" EnableViewState="False"

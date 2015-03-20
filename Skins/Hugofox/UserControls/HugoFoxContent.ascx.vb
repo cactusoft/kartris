@@ -64,6 +64,8 @@ Partial Class Skins_Hugofox_UserControls_HugoFoxContent
             Case "hugofoxheader"
                 litHugoFoxHeader.Text = aryHugoFoxHTML(2)
             Case "userheader"
+                aryHugoFoxHTML(3) = Replace(aryHugoFoxHTML(3), "<header class=""row main-header"">", "<div class=""row main-header hide-for-small"" style=""margin-top: 16px;"">")
+                aryHugoFoxHTML(3) = Replace(aryHugoFoxHTML(3), "</header>", "</div>")
                 litUserHeader.Text = aryHugoFoxHTML(3)
             Case "leftsidebarlinks"
                 litLeftSideBarLinks.Text = aryHugoFoxHTML(4)
@@ -87,7 +89,7 @@ Partial Class Skins_Hugofox_UserControls_HugoFoxContent
         'Nice easy way during dev to skip the caching so changes
         'we make show up instantly. Set to 'false' when site is
         'live and running to ensure caching for performance
-        Dim blnSkipCache As Boolean = False
+        Dim blnSkipCache As Boolean = True
 
         Dim strCacheKey As String = "HugoFoxSkinHTML_" & numHugoFoxID.ToString
         Dim xmlDoc As XDocument = Nothing
