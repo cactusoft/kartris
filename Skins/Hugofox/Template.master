@@ -34,7 +34,7 @@
 	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/base.css" media="all">
 	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/overrides.css" media="all">
 	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/stylesheet3.css" media="print">
-
+    <link rel="stylesheet" href="https://www.hugofox.com/scripts/jquery-ui-1.11.1.custom/jquery-ui.min.css">
 
 	<!-- KARTRIS STYLE SHEETS -->
 	<link href="general.css" rel="stylesheet" type="text/css" />
@@ -43,7 +43,7 @@
 	<link href="custom.css" rel="stylesheet" type="text/css" />
 	<link href="powerpack.css" rel="stylesheet" type="text/css" />
 
-    <!-- TAG COOKIE MESSAGE -->
+    <!-- HEADER IMAGE CSS -->
     <user:HugoFoxContent ID="UC_HeaderImageCSS" runat="server" DisplayItem="headerimagecss"/>
 	<title>Kartris v1</title>
 </head>
@@ -67,7 +67,7 @@
 			<div class="inner-wrap">
                 <!-- HUGOFOX HEADER -->
                 <user:HugoFoxContent ID="UC_HugoFoxHeader" runat="server" DisplayItem="hugofoxheader"/>
-				
+
 				<div class="main-wrapper">
 					<!-- USER HEADER -->
                     <user:HugoFoxContent ID="UC_UserHeader" runat="server" DisplayItem="userheader"/>
@@ -111,6 +111,13 @@
 								<asp:ContentPlaceHolder ID="cntMain" runat="server"></asp:ContentPlaceHolder>
 							</div>
 
+                            
+                        <script>
+                            /* This handles the email link on the share icons, top right of page */
+                            function reportCurrentPage() {
+                                window.location.href = "//www.hugofox.com/home/contact.asp?mode=report&url=" + escape(window.location.href);
+                            }
+                        </script>
                             <!-- REPORT PAGE -->
                             <user:HugoFoxContent ID="UC_ReportPage" runat="server" DisplayItem="reportpage"/>
 

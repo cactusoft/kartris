@@ -44,7 +44,7 @@ BASKET SUMMARY
 #minibasket:hover #minibasket_main      { background-color: #fff; border-right: solid 1px #fff; border-bottom: solid 1px #fff; display: block; z-index: 1999; text-align: left; height: auto; position: absolute; right: 15px; padding: 40px 8px 8px 8px; margin: -10px 0 0 0; }
 #minibasket:hover                       { background-color: #fff; z-index: 1999; max-height: 1px; }
 #minibasket:hover h4 strong             { color: #333; }
-#minibasket:hover h4 a                  { color: #333; }
+#minibasket:hover h4 a                  { color: #333; background-image: url(Images/icon_shopping_cart.png); }
 #minibasket #content                    { width: 100%; }
 #minibasket #contents #orderinprogress,
 #minibasket #contents #basketisempty    { padding: 1px 5px 12px 5px; font-weight: normal; font-size: 95%; color: #111; }
@@ -68,8 +68,6 @@ BASKET SUMMARY
 #minibasket:hover #compactbasket_totalprice,
 #minibasket:hover #compactbasket_noofitems
                                         { color: #333; }
-#minibasket:hover h4 a                  { background-image: url(Images/icon_shopping_cart.png); }
-
 .compactminibasket a:hover              { text-decoration: underline; }
 
 /* 
