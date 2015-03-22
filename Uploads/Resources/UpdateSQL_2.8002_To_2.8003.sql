@@ -235,4 +235,4 @@ WHERE vKartrisTypeAttributeValues.ATTRIBV_AttributeID = @ATTRIB_ID
 	AND vKartrisTypeAttributeValues.LANG_ID = @LANG_ID
 
 /****** set this to tell Data tool which version of db we have ******/
-UPDATE tblKartrisConfig SET CFG_Value='2.8003', CFG_VersionAdded=2.8 WHERE CFG_Name='general.kartrisinfo.versionadded';
+UPDATE tblKartrisConfig SET CFG_Value='2.8003', CFG_VersionAdded=2.8003 WHERE CFG_Name='general.kartrisinfo.versionadded';
