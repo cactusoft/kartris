@@ -267,14 +267,30 @@ Partial Class CategoryProductsView
         End If
     End Sub
 
-    Protected Sub lnkBtnSearch_Click(sender As Object, e As EventArgs) Handles lnkBtnSearch.Click
+    Protected Sub lnkBtnSearch_Click(sender As Object, e As EventArgs) Handles lnkBtnSearch.Click, lnkBtnSearch2.Click
         '' Read selected attribute values
         Dim strAttributeValues As String = String.Empty
+        'We need the attribute counter below so we know which attribute a value belongs to.
+        'For example, you could have two attributes, 'text colour' and 'background colour', which
+        'both have black/white as values. Previously we only looked at the attribute name, so
+        'we'd see 'white' and check any box that is for white, even if it was in the wrong attribute.
+        'To avoid this, we append which number attribute it is to the value with ||| as a separator
+        'because this should not occur in attribute names or values.
+        Dim numAttributeCounter As Integer = 0
         For Each itm As RepeaterItem In rptAttributes.Items
+            numAttributeCounter += 1
+            Dim strAttributeName As String = CType(itm.FindControl("lblAttributeName"), Label).Text
             If itm.ItemType = ListItemType.Item OrElse itm.ItemType = ListItemType.AlternatingItem Then
                 Dim chkList As CheckBoxList = CType(itm.FindControl("chkList"), CheckBoxList)
                 For Each ls As ListItem In chkList.Items
-                    If ls.Selected Then strAttributeValues += Replace(ls.Text, ",", "[;]") + ","
+                    'Note below we add attribute value + "|||" + attribute number, this
+                    'avoids falsely assuming any attribute value match checks a box. Now, it 
+                    'will only be checked if it is in the right attribute. So 'black' will only
+                    'be checked for 'background colour' for example, and not for 'text colour',
+                    'if appropriate.
+
+                    'See powerpackBLL.vb - BoundRepeaterAttributeItem
+                    If ls.Selected Then strAttributeValues += Replace(ls.Text & "|||" & strAttributeName, ",", "[;]") + ","
                 Next
             End If
         Next
@@ -291,34 +307,13 @@ Partial Class CategoryProductsView
             txtToPrice.Focus()
         Else
             phdCustomPrice.Visible = False
+            lnkBtnSearch_Click(sender, e)
         End If
-        lnkBtnSearch_Click(sender, e)
+
     End Sub
 
     Protected Sub ddlOrderBy_SelectedIndexChanged(sender As Object, e As EventArgs) Handles ddlOrderBy.SelectedIndexChanged
         lnkBtnSearch_Click(sender, e)
     End Sub
 
-    'Protected Sub chkList_SelectedIndexChanged(sender As Object, e As EventArgs) Handles chkList.SelectedIndexChanged
-    '    lnkBtnSearch_Click(sender, e)
-    'End Sub
-    
-    Protected Sub btnClear_Click(sender As Object, e As EventArgs) Handles btnClear.Click
-        txtSearch.Text = Nothing
-        ddlOrderBy.SelectedIndex = 0
-        Try
-            ddlPriceRange.SelectedIndex = 0
-            ddlPriceRange_SelectedIndexChanged(Me, New EventArgs())
-        Catch ex As Exception
-        End Try
-        For Each itm As RepeaterItem In rptAttributes.Items
-            If itm.ItemType = ListItemType.Item OrElse itm.ItemType = ListItemType.AlternatingItem Then
-                Dim chkList As CheckBoxList = CType(itm.FindControl("chkList"), CheckBoxList)
-                For Each ls As ListItem In chkList.Items
-                    ls.Selected = False
-                Next
-            End If
-        Next
-        lnkBtnSearch_Click(Me, New EventArgs())
-    End Sub
 End Class
