@@ -97,6 +97,10 @@ WHERE        (LANG_ID = @LANG_ID)
 ORDER BY SZ_OrderByValue
 GO
 
-/****** set this to tell Data tool which version of db we have ******/
+/****** Allow turning off back end homepage graphs on big sites where this can cause timeouts ******/
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'backend.homepage.graphs', N'ON', N's', N'b', 'ON|OFF', N'Hides the data summary graphs on the back end home page, suggested on large sites where the queries may time out and put unnecessary load on site.', 2.8004, N'ON', 0)
+GO
+
+/****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.8004', CFG_VersionAdded=2.8004 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
