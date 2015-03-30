@@ -23,7 +23,7 @@ Partial Class UserControls_Statistics_AverageHits
     End Property
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If Not Page.IsPostBack Then
+        If Not Page.IsPostBack And KartSettingsManager.GetKartConfig("backend.homepage.graphs") <> "OFF" Then
             LoadAverageVisits()
         End If
     End Sub

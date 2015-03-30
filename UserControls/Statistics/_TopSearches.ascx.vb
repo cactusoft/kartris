@@ -19,6 +19,7 @@ Partial Class UserControls_Statistics_TopSearches
     Inherits System.Web.UI.UserControl
 
     Private blnMiniDisplay As Boolean
+
     Public WriteOnly Property IsMiniDisplay() As Boolean
         Set(ByVal value As Boolean)
             blnMiniDisplay = value
@@ -26,7 +27,7 @@ Partial Class UserControls_Statistics_TopSearches
     End Property
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If Not Page.IsPostBack Then
+        If Not Page.IsPostBack And KartSettingsManager.GetKartConfig("backend.homepage.graphs") <> "OFF" Then
             For Each itm As ListItem In ddlDuration.Items
                 itm.Text &= " " & GetGlobalResourceObject("_Statistics", "ContentText_Days")
             Next
