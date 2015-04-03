@@ -220,10 +220,10 @@
                                                                 </div>
                                                                 <div class="optionsfield">
                                                                     <asp:TextBox ID="txtOrderByValue" runat="server" Text='<%# iif(CkartrisDataManipulation.FixNullFromDB(Eval("OPTG_DefOrderByValue")) IsNot Nothing, Eval("OPTG_DefOrderByValue"), "0") %>'
-                                                                        MaxLength="3" />
+                                                                        MaxLength="5" />
                                                                     <asp:CompareValidator ID="valCompareOrderByValue" runat="server" ControlToValidate="txtOrderByValue"
-                                                                        Display="Dynamic" CssClass="error" ForeColor="" ErrorMessage="0-255!" Operator="LessThanEqual"
-                                                                        ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoByte %>" ValueToCompare="255"
+                                                                        Display="Dynamic" CssClass="error" ForeColor="" ErrorMessage="0-32767!" Operator="LessThanEqual"
+                                                                        ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoByte %>" ValueToCompare="32767"
                                                                         Type="Integer" SetFocusOnError="true" ValidationGroup="ProductOptions" />
                                                                     <asp:RequiredFieldValidator ID="valRequiredOrderByValue" runat="server" ControlToValidate="txtOrderByValue"
                                                                         CssClass="error" ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"

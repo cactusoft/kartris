@@ -77,13 +77,13 @@
                                     <asp:Literal ID="litFormLabelOrderByValue2" runat="server" Text='<%$ Resources: _Kartris, FormLabel_OrderByValue %>'></asp:Literal></span>
                                     <span class="Kartris-DetailsView-Value">
                                         <asp:TextBox ID="txtOrderByValue" runat="server" CssClass="shorttext" Text='<%# Eval("OPTG_DefOrderByValue") %>'
-                                            MaxLength="3" />
+                                            MaxLength="5" />
                                         <asp:RequiredFieldValidator ID="valRequiredOrderByValue" runat="server" SetFocusOnError="true"
                                             Display="Dynamic" CssClass="error" ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                             ControlToValidate="txtOrderByValue" ValidationGroup="<%# LANG_ELEM_TABLE_TYPE.OptionGroups %>" />
                                         <asp:CompareValidator ID="valCompareOrderByValue" runat="server" ControlToValidate="txtOrderByValue"
-                                            Display="Dynamic" CssClass="error" ForeColor="" ErrorMessage="0-255!" Operator="LessThanEqual"
-                                            ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoByte %>" ValueToCompare="255"
+                                            Display="Dynamic" CssClass="error" ForeColor="" ErrorMessage="0-32767!" Operator="LessThanEqual"
+                                            ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoByte %>" ValueToCompare="32767"
                                             Type="Integer" ValidationGroup="<%# LANG_ELEM_TABLE_TYPE.OptionGroups %>" SetFocusOnError="true" />
                                         <ajaxToolkit:FilteredTextBoxExtender ID="filOrderByValue" runat="server" TargetControlID="txtOrderByValue"
                                             FilterType="Numbers" />
@@ -158,13 +158,13 @@
                                                 <span class="Kartris-DetailsView-Value">
                                                     <asp:UpdatePanel ID="updOrderByValue" runat="server" UpdateMode="Conditional">
                                                         <ContentTemplate>
-                                                            <asp:TextBox ID="txtOrderByValue" runat="server" CssClass="shorttext" Text="0" MaxLength="3" />
+                                                            <asp:TextBox ID="txtOrderByValue" runat="server" CssClass="shorttext" Text="0" MaxLength="5" />
                                                             <asp:RequiredFieldValidator ID="valOrderByValue" runat="server" SetFocusOnError="true"
                                                                 CssClass="error" ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                                                 ControlToValidate="txtOrderByValue" Display="Dynamic" ValidationGroup="<%# LANG_ELEM_TABLE_TYPE.OptionGroups %>" />
                                                             <asp:CompareValidator ID="valCompareOrderByValue" runat="server" ControlToValidate="txtOrderByValue"
-                                                                Display="Dynamic" CssClass="error" ForeColor="" ErrorMessage="0-255!" Operator="LessThanEqual"
-                                                                ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoByte %>" ValueToCompare="255"
+                                                                Display="Dynamic" CssClass="error" ForeColor="" ErrorMessage="0-32767!" Operator="LessThanEqual"
+                                                                ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoByte %>" ValueToCompare="32767"
                                                                 Type="Integer" SetFocusOnError="true" ValidationGroup="<%# LANG_ELEM_TABLE_TYPE.OptionGroups %>" />
                                                             <ajaxToolkit:FilteredTextBoxExtender ID="filOrderByValue" runat="server" TargetControlID="txtOrderByValue"
                                                                 FilterType="Numbers" />

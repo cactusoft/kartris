@@ -236,7 +236,8 @@ VERSIONS
 .versions .line                         { text-align: right; padding: 5px; }
 .versions .multipleversiondropdown      { background-color: #f5f5f5; border-top: solid 1px #f90; border-bottom: solid 1px #ddd; }
 .versions .addtobasket                  { clear: both }
-.versions .addtobasket .dropdown        { width: 45px }
+.versions .addtobasket select           { width: 450px } /* version name and price */
+.versions .addtobasket .dropdown        { width: 45px } /* qty */
 .versions .addtobasket .textbox         { width: 45px }
 .versions .addtobasket div.selector     { white-space: nowrap; text-align: right; float: right; }
 .versions .addtobasket div.outofstock   { color: #f00; font-weight: bold; }
