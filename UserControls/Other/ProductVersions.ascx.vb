@@ -20,7 +20,7 @@ Imports KartSettingsManager
 
 ''' <summary>
 ''' Used in the ProductView.ascx and ProductTemplateExtended.ascx, to view the available versions
-'''   of the current Product.
+''' of the current Product.
 ''' </summary>
 ''' <remarks></remarks>
 Partial Class ProductVersions
@@ -57,6 +57,10 @@ Partial Class ProductVersions
         End Set
     End Property
 
+    ''' <summary>
+    ''' Page load
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         ddlVersionImages.Visible = False
         Try
@@ -94,11 +98,11 @@ Partial Class ProductVersions
         _LanguageID = pLanguageID
 
         '' If the ProductID is -1, that means no Product was selected
-        ''   the viwEmpty is activated and Exit.
+        '' the viwEmpty is activated and Exit.
         If _ProductID = -1 Then mvwVersion.SetActiveView(viwEmpty) : Exit Sub
 
         '' If the viewType of the Versions is d(default), then will get the default
-        ''   from the CONFIG Settings
+        '' from the CONFIG Settings
         If pViewType = "d" Then pViewType = GetKartConfig("frontend.versions.display.default")
 
         _ViewType = pViewType
@@ -131,16 +135,6 @@ Partial Class ProductVersions
                 Next
                 'Get the first available version for the product and set it as the custom product version ID
                 litHiddenV_ID.Text = FixNullFromDB(tblVersions.Rows(0)("V_ID"))
-
-                'Create onclientclick event to launch
-                'the 'add to basket' popup. This way it
-                'appears instantly when the button is
-                'clicked, while the adding process can
-                'happen in the background.
-                'DISABLING INSTANT ADD TO BASKET POPUP AS CUSTOM PRODUCT CONTROLS NEED ADDITIONAL VALIDATION
-                'If IsNumeric(KartSettingsManager.GetKartConfig("frontend.basket.behaviour")) Then
-                'btnAddCustomVersion.OnClientClick = "ShowAddToBasketPopup(" & KartSettingsManager.GetKartConfig("frontend.basket.behaviour") * 1000 & ")"
-                'End If
             End If
             'Exit Sub as this is a custom product and we don't want to load a different view from the code below
             Exit Sub
@@ -178,10 +172,10 @@ Partial Class ProductVersions
             drwVersion("V_Price") = GetPriceWithGroupDiscount(drwVersion("V_ID"), drwVersion("V_Price"))
 
             Dim drwCurrencies As DataRow() = GetCurrenciesFromCache().Select("CUR_ID = " & Session("CUR_ID"))
-            Dim calculatedTax As Single = CalculateTax(Math.Round(CDbl(FixNullFromDB(drwVersion("V_Price"))), drwCurrencies(0)("CUR_RoundNumbers")), _
+            Dim numCalculatedTax As Single = CalculateTax(Math.Round(CDbl(FixNullFromDB(drwVersion("V_Price"))), drwCurrencies(0)("CUR_RoundNumbers")), _
               CDbl(FixNullFromDB(drwVersion("T_TaxRate"))))
             drwCurrencies = Nothing
-            drwVersion("CalculatedTax") = CStr(CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), calculatedTax))
+            drwVersion("CalculatedTax") = CStr(CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), numCalculatedTax))
 
             numPrice = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), CDbl(FixNullFromDB(drwVersion("V_Price"))))
             drwVersion("V_Price") = CStr(numPrice)
@@ -207,6 +201,7 @@ Partial Class ProductVersions
         '' Will move around all the resulted versions' rows and Convert the Pricing Currency.
         ''  and as this is the DropDownView .. every row will be added to the DropDownList.
         Dim numPrice As Single = 0.0F
+        Dim numPrice2 As Single = 0.0F
         Dim intCounter As Integer = 0
         Dim intFirstInStock As Integer = -1 'we use this so if there are out of stock items, we always pre-select an in-stock one
         Dim strV_Name As String = ""
@@ -250,15 +245,40 @@ Partial Class ProductVersions
             For Each drwVersion As DataRow In ptblVersions.Rows
                 ''//
                 drwVersion("V_Price") = GetPriceWithGroupDiscount(drwVersion("V_ID"), drwVersion("V_Price"))
+                Dim drwCurrencies As DataRow() = GetCurrenciesFromCache().Select("CUR_ID = " & Session("CUR_ID"))
+                Dim numCalculatedTax As Single = CalculateTax(Math.Round(CDbl(FixNullFromDB(drwVersion("V_Price"))), drwCurrencies(0)("CUR_RoundNumbers")), _
+                  CDbl(FixNullFromDB(drwVersion("T_TaxRate"))))
 
                 numPrice = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), CDbl(drwVersion("V_Price")))
+                numPrice2 = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), CDbl(numCalculatedTax))
                 'we want to format fixed length strings for:
                 ' - V_Name
                 ' - V_Price
                 ' - out of stock
 
                 strV_Name = drwVersion("V_Name") & " -- "
-                strV_Price = " " & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice, , False)
+                If KartSettingsManager.GetKartConfig("frontend.display.showtax") = "y" Then
+                    'Show tax display
+                    If KartSettingsManager.GetKartConfig("general.tax.pricesinctax") = "y" Then
+                        'ExTax / IncTax
+                        strV_Price = " " & _
+                        GetGlobalResourceObject("Kartris", "ContentText_ExTax") & " " & _
+                        CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice2, , False) & " -- " & _
+                        GetGlobalResourceObject("Kartris", "ContentText_IncTax") & " " & _
+                        CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice, , False)
+                    Else
+                        'litExTax / Tax%
+                        strV_Price = " " & _
+                        GetGlobalResourceObject("Kartris", "ContentText_ExTax") & " " & _
+                        CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice, , False) & " -- " & _
+                        GetGlobalResourceObject("Kartris", "ContentText_Tax") & " " & _
+                        drwVersion("T_TaxRate") & "%"
+                    End If
+                Else
+                    'Just show price
+                    strV_Price = " " & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice, , False)
+                End If
+
                 'Need to check if out of stock
                 If drwVersion("V_Quantity") < 1.0F And drwVersion("V_QuantityWarnLevel") > 0.0F And KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y" Then
                     'out of stock
@@ -271,8 +291,7 @@ Partial Class ProductVersions
                 Else
                     'available
                     If intFirstInStock = -1 Then intFirstInStock = intCounter
-                    ddlName_DropDown.Items.Add(New ListItem(strV_Name & _
-                     CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice, , False), drwVersion("V_ID")))
+                    ddlName_DropDown.Items.Add(New ListItem(strV_Name & strV_Price, drwVersion("V_ID")))
                 End If
                 intCounter += 1
             Next
@@ -528,7 +547,10 @@ Partial Class ProductVersions
         Next
     End Sub
 
-    '' Handles price display for single version product display
+    ''' <summary>
+    ''' Singe version product display
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub fvwPrice_DataBound(ByVal sender As Object, ByVal e As System.EventArgs) Handles fvwPrice.DataBound
         Try
             ''Show the panel with the correct price display
@@ -662,7 +684,7 @@ Partial Class ProductVersions
                 If [String].IsNullOrEmpty(strOptionString) Then strOptionString = ""
 
                 '' ------------------------------------------
-                '' Below is the code that will remove the duplicate options.
+                '' Code to remove the duplicate options.
                 Dim arrOptions() As String = strOptionString.Split(",")
                 For i As Integer = 0 To arrOptions.Length - 1
                     For j As Integer = 0 To i
@@ -724,7 +746,7 @@ Partial Class ProductVersions
     End Sub
 
     ''' <summary>
-    ''' Handles options price change
+    ''' Calculate options price change
     ''' </summary>
     ''' <remarks></remarks>
     Sub AddOptionsPrice(ByVal pOptionPrice As Single)
@@ -747,6 +769,10 @@ Partial Class ProductVersions
         updPricePanel.Update()
     End Sub
 
+    ''' <summary>
+    ''' Get price of combination
+    ''' </summary>
+    ''' <remarks></remarks>
     Sub GetCombinationPrice()
         'Reading the values of Options from the OptionsContainer in a muli-dimentional array
         Dim strOptionsList As String = UC_OptionsContainer.GetSelectedOptions()
@@ -777,6 +803,11 @@ Partial Class ProductVersions
         End If
     End Sub
 
+    ''' <summary>
+    ''' Hide price if option selections don't match
+    ''' any combination that is configured
+    ''' </summary>
+    ''' <remarks></remarks>
     Sub HidePriceForInvalidCombination()
         ''Hide prices if option selections don't
         'correspond to a particular combination that
@@ -934,6 +965,11 @@ Partial Class ProductVersions
         updOptions.Update()
     End Sub
 
+    ''' <summary>
+    ''' Cleans up the string of options, removing double
+    ''' commas where gaps occurred
+    ''' </summary>
+    ''' <remarks></remarks>
     Sub CleanOptionString(ByRef strOptionString As String)
         strOptionString = "," & strOptionString & ","
 
