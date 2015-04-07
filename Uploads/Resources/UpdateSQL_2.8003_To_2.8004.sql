@@ -7,7 +7,40 @@ Sorted some option sorting issues by changing option sort fields
 from tinyint to smallint
 
 Remove remaining linnworks stuff from database
+
+Default the address type to 'u', imported addresses from CactuShop otherwise
+don't get set to a type
 ******/
+
+/******
+Update Options tables to change the sort-order fields
+to smallint
+******/
+ALTER TABLE [dbo].[tblKartrisOptionGroups] DROP CONSTRAINT [DF__tblKartris__OPTG___5BE2A6F2]
+GO
+DROP INDEX [Indx_DefOrderByValue] ON [dbo].[tblKartrisOptionGroups]
+GO
+ALTER TABLE [dbo].[tblKartrisOptionGroups] ALTER COLUMN OPTG_DefOrderByValue [smallint] NOT NULL
+GO
+CREATE NONCLUSTERED INDEX [Indx_DefOrderByValue] ON [dbo].[tblKartrisOptionGroups]
+(
+	[OPTG_DefOrderByValue] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[tblKartrisOptionGroups] ADD  CONSTRAINT [DF__tblKartris__OPTG___5BE2A6F2]  DEFAULT ((0)) FOR [OPTG_DefOrderByValue]
+GO
+ALTER TABLE [dbo].[tblKartrisProductOptionGroupLink] DROP CONSTRAINT [DF__tblKartris__P_OPT__08EA5793]
+GO
+ALTER TABLE [dbo].[tblKartrisProductOptionGroupLink] ALTER COLUMN P_OPTG_OrderByValue [smallint] NOT NULL
+GO
+ALTER TABLE [dbo].[tblKartrisProductOptionGroupLink] ADD  CONSTRAINT [DF__tblKartris__P_OPT__08EA5793]  DEFAULT ((0)) FOR [P_OPTG_OrderByValue]
+GO
+ALTER TABLE [dbo].[tblKartrisProductOptionLink] DROP CONSTRAINT [DF__tblKartris__P_OPT__7E6CC920]
+GO
+ALTER TABLE [dbo].[tblKartrisProductOptionLink] ALTER COLUMN P_OPT_OrderByValue [smallint] NOT NULL
+GO
+ALTER TABLE [dbo].[tblKartrisProductOptionLink] ADD  CONSTRAINT [DF__tblKartris__P_OPT__7E6CC920]  DEFAULT ((0)) FOR [P_OPT_OrderByValue]
+GO
 
 /****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetTopList]    Script Date: 7/21/2014 10:14:31 PM ******/
 SET ANSI_NULLS ON
@@ -310,23 +343,11 @@ AS
 GO
 
 /******
-Update Options tables to change the sort-order fields
-to smallint
+Default ADR_Type to 'u' for universal, this helps when importing
+addresses from CactuShop, as they are presently not set as a type
+and so don't show in back end
 ******/
-DROP INDEX [Indx_DefOrderByValue] ON [dbo].[tblKartrisOptionGroups]
-GO
-ALTER TABLE [dbo].[tblKartrisOptionGroups] ALTER COLUMN OPTG_DefOrderByValue [smallint] NOT NULL
-GO
-CREATE NONCLUSTERED INDEX [Indx_DefOrderByValue] ON [dbo].[tblKartrisOptionGroups]
-(
-	[OPTG_DefOrderByValue] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[tblKartrisProductOptionGroupLink] ALTER COLUMN P_OPTG_OrderByValue [smallint] NOT NULL
-GO
-
-ALTER TABLE [dbo].[tblKartrisProductOptionLink] ALTER COLUMN P_OPT_OrderByValue [smallint] NOT NULL
+ALTER TABLE [dbo].[tblKartrisAddresses] ADD  CONSTRAINT [DF_tblKartrisAddresses_ADR_Type]  DEFAULT ('u') FOR [ADR_Type]
 GO
 
 /******
