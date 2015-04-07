@@ -33,6 +33,7 @@ Partial Class UserControls_Back_AdminDBTools
             litConfigBackupFolder.Text = GetKartConfig("general.backupfolder")
             GetDBInformation()
             CreateBackupName()
+            litRootPath.Text = Server.MapPath("../")
         End If
     End Sub
 
