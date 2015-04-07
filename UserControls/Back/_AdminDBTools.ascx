@@ -62,6 +62,10 @@
                                     class="Kartris-DetailsView-Value">
                                     <asp:TextBox ID="txtBackupDescription" runat="server" TextMode="MultiLine" MaxLength="4000" />
                                 </span></li>
+                            <li><span class="Kartris-DetailsView-Name">Kartris Root</span><span
+                                    class="Kartris-DetailsView-Value">
+                                    <asp:Literal ID="litRootPath" runat="server" />
+                                </span></li>
                         </ul>
                     </div>
                     <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
