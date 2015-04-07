@@ -246,7 +246,7 @@ Partial Class ProductView
         'Handle reviews tab
         '=================================
         Dim tabReviews As AjaxControlToolkit.TabPanel = CType(tbcProduct.FindControl("tabReviews"), AjaxControlToolkit.TabPanel) 'Finds tab panel in container
-        If KartSettingsManager.GetKartConfig("frontend.reviews.enabled") = "y" AndAlso _ReviewsEnabled = "y" Then
+        If KartSettingsManager.GetKartConfig("frontend.reviews.enabled") = "y" AndAlso _ReviewsEnabled <> "n" Then
             numVisibleTabs += 1
             UC_Reviews.LoadReviews(_ProductID, _LanguageID, _ProductName)
             Dim litContentTextCustomerReviews As Literal = CType(tabReviews.FindControl("litContentTextCustomerReviews"), Literal)
