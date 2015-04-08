@@ -28,8 +28,20 @@ Partial Class UserControls_Templates_New_ReviewTemplate
         '' 2. Calling the SetImage Function to set the POSITIVE star Image. (kartris.vb)
         '' 3. Adding the newly created Image to the PlaceHolder
 
+
+        Dim numRating As Short = 5 'Default to highest
+
+        'Try to see if there is a value stored. Occasionally
+        'upgrades can lead to null values, we just need
+        'to handle those without the page crashing
+        Try
+            numRating = CShort(litReviewRatingHidden.Text)
+        Catch ex As Exception
+            'oh well, it's a 5
+        End Try
+
         '' POSITIVE STARS
-        For i As Short = 1 To CShort(litReviewRatingHidden.Text)
+        For i As Short = 1 To numRating
             Dim imgReviewYes As New Image
             SetImage(imgReviewYes, IMAGE_TYPE.enum_OtherImage, "reviewYes")
             If Not File.Exists(Server.MapPath(imgReviewYes.ImageUrl)) Then imgReviewYes.Visible = False
@@ -38,7 +50,7 @@ Partial Class UserControls_Templates_New_ReviewTemplate
         Next
 
         '' NEGATIVE STARS 
-        For i As Short = CShort(litReviewRatingHidden.Text) + 1 To 5
+        For i As Short = numRating + 1 To 5
             Dim imgReviewNo As New Image
             SetImage(imgReviewNo, IMAGE_TYPE.enum_OtherImage, "reviewNo")
             If Not File.Exists(Server.MapPath(imgReviewNo.ImageUrl)) Then imgReviewNo.Visible = False
