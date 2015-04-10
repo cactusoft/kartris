@@ -100,6 +100,8 @@ a.linkbutton:hover,
 .linkbuttonfield a:hover	{ color: #000; }
 a.normalweight:link,
 a.normalweight:visited		{ font-weight: normal }
+div.optionlinks             { padding: 0 0 0 0; }
+div.optionlinks a           { font-weight: normal; font-size: 15px; color: #aaa; }
 /* 
 ========================================================================
 TABLES AND GRIDVIEWS

@@ -341,6 +341,11 @@ PAGE: OPTION GROUPS
 #page_optiongroups select               { width: 120px }
 #page_optiongroups div.column_optionname a
                                         { color: #000 }
+/* the filters that show up above options selections on products */
+#optionfilters { padding: 10px 0; }
+#optionfilters a { text-transform: uppercase; font-size: 11px; font-weight: normal; color: #000; display: inline-block; padding: 2px 5px; border: solid 1px #fff; }
+#optionfilters a.filterselected { border: solid 1px #000; }
+
 /* 
 ========================================================================
 PAGE: SHIPPING
@@ -520,6 +525,7 @@ SECTION: PRODUCTS
 #section_products strong a              { color: #000 }
 #section_products a,
 #section_products strong                { vertical-align: top }
+
 /* 
 ========================================================================
 SECTION: CATEGORIES

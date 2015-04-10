@@ -178,13 +178,47 @@
                 <ContentTemplate>
                     <asp:UpdatePanel ID="updProductOptions" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
+                            <asp:HiddenField ID="hidNumberOfOptionGroups" runat="server"></asp:HiddenField>
                             <div id="section_options">
                                 <asp:UpdatePanel ID="updOptionGroups" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
+                                        <asp:PlaceHolder ID="phdOptionsAllSelected" runat="server">
+                                            <div id="optionfilters">
+                                                <asp:LinkButton ID="lnkShowAll" runat="server"
+                                                    Text="All" />&nbsp;
+                                                <asp:LinkButton ID="lnkJustSelected" runat="server"
+                                                    Text="Selected" />
+                                                <asp:PlaceHolder ID="phdFilterBox" runat="server">&nbsp;&nbsp;
+                                                    <asp:TextBox ID="txtFilterText" runat="server" CssClass="mediumfield"></asp:TextBox>
+                                                    <asp:Button ID="btnFilterSubmit" runat="server" CssClass="button" Text="<%$ Resources: _Kartris, ContentText_AddNew %>" /></asp:PlaceHolder>
+                                            </div>
+                                        </asp:PlaceHolder>
+                                        <script type="text/javascript">
+                                            function selectAll(RowID) {
+                                                var allcheckboxes = document.getElementById("tab_" + RowID).getElementsByTagName("input");
+                                                for (var i = 0; i < allcheckboxes.length; i++) {
+                                                    var node = allcheckboxes[i];
+
+                                                    if (node.getAttribute('type') == 'checkbox') {
+                                                        allcheckboxes[i].checked = true;
+                                                    }
+                                                }
+                                            }
+                                            function deselectAll(RowID) {
+                                                var allcheckboxes = document.getElementById("tab_" + RowID).getElementsByTagName("input");
+                                                for (var i = 0; i < allcheckboxes.length; i++) {
+                                                    var node = allcheckboxes[i];
+
+                                                    if (node.getAttribute('type') == 'checkbox') {
+                                                        allcheckboxes[i].checked = false;
+                                                    }
+                                                }
+                                            }
+                                        </script>
                                         <table class="kartristable">
                                             <thead>
                                                 <tr>
-                                                    <th>
+                                                    <th colspan="2">
                                                     </th>
                                                     <th class="optionsfield">
                                                         <div class="optionsfield">
@@ -203,7 +237,12 @@
                                             <asp:Repeater ID="rptProductOptions" runat="server">
                                                 <ItemTemplate>
                                                     <tr>
+                                                        <td style="width:40px;"><div class="optionlinks">
+                                                                <asp:LinkButton ID="lnkExpand" runat="server"
+                                                                    CommandName="expand" CommandArgument='<%# Eval("OPTG_ID") %>' ToolTip="expand/collapse">&#10697;</asp:LinkButton>
+                                                            </div></td>
                                                         <td>
+                                                            
                                                             <asp:Literal ID="litOptionGrpID" runat="server" Text='<%# Eval("OPTG_ID") %>' Visible="false" />
                                                             <%--<asp:CheckBox ID="chkGrpBackName" runat="server" Checked='<%# Eval("ExistInTheProduct") %>'
                                                             OnCheckedChanged="CheckBoxChanged" AutoPostBack="true" CssClass="checkbox" Enabled="true" Visible="false" />--%>
@@ -211,6 +250,8 @@
                                                                 ItemNo='<%# Container.ItemIndex %>' runat="server" OnItemSelectionChanged="ItemSelectionChanged" />
                                                             <asp:LinkButton ID="lnkGrpName" runat="server" Text='<%# Eval("OPTG_BackendName") %>'
                                                                 CommandName="select" CommandArgument='<%# Eval("OPTG_ID") %>' />
+                                                            
+                                                            
                                                         </td>
                                                         <td class="optionsfield">
                                                             <asp:Panel ID="pnlOptions" runat="server" Enabled='<%# Eval("ExistInTheProduct") %>'>
@@ -241,7 +282,16 @@
                                                         </td>
                                                     </tr>
                                                     <asp:PlaceHolder ID="phdOptions" runat="server" Visible="false">
-                                                        <_user:_ProductOptions ID="_UC_ProductOptions" runat="server" />
+                                                        <tr class="Kartris-GridView-Alternate" style="background-image:none;">
+                                                            <td><div class="optionlinks">
+                                                                    <a title="check all" class="normalweight" href="javascript:selectAll(<asp:Literal runat='server' id='litDivID' text='<%# Eval("OPTG_ID") %>' />)">&#9745;</a>
+                                                                    <a title="clear all" class="normalweight" href="javascript:deselectAll(<asp:Literal runat='server' id='litDivID2' text='<%# Eval("OPTG_ID") %>' />)">&#9744;</a>
+                                                                </div></td>
+                                                            <td colspan="2">
+                                                                
+                                                                <_user:_ProductOptions ID="_UC_ProductOptions" runat="server" />
+                                                            </td>
+                                                        </tr>
                                                     </asp:PlaceHolder>
                                                 </ItemTemplate>
                                                 <FooterTemplate>

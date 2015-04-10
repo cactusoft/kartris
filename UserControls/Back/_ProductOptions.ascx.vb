@@ -22,6 +22,7 @@ Partial Class _ProductOptions
         'Reading the Options as they exist in the main table.
         Dim tblOptions As New DataTable
         litOptGrpID.Text = CStr(pGrpID)
+        litOptGrpID2.Text = CStr(pGrpID)
         litProductID.Text = pProductID
         tblOptions = OptionsBLL._GetOptionsByGroupID(pGrpID, Session("_LANG"))
 
@@ -43,6 +44,7 @@ Partial Class _ProductOptions
                     drwOption("OPT_DefWeightChange") = drwProduct("P_OPT_WeightChange")
                     drwOption("OPT_CheckBoxValue") = drwProduct("P_OPT_Selected")
                     drwOption("ExistInTheProduct") = True
+                    Exit For
                 End If
             Next
         Next
@@ -71,8 +73,6 @@ Partial Class _ProductOptions
         Dim numPriceChanged As Single = 0.0F, numWeightChanged As Single = 0.0F, blnSelected As Boolean = False
 
         For Each objItem As RepeaterItem In rptOptions.Items
-
-
             If CType(objItem.FindControl("_UC_ItemSelection"), UserControls_Back_ItemSelection).IsSelected Then
                 intOptionID = CInt(CType(objItem.FindControl("litOptionID"), Literal).Text)
                 intProductID = CInt(litProductID.Text)

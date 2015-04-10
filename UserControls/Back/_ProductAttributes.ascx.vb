@@ -26,14 +26,67 @@ Partial Class UserControls_Back_ProductAttributes
         Dim tblAttributes As New DataTable
         tblAttributes = AttributesBLL._GetAttributesByLanguage(Session("_LANG"))
 
+        'We add the column to say whether the attribute
+        'has value for this product in order to be able to
+        'sort by that, so when new attributes are added, we
+        'can make them show at the top of the list.
+        Dim colExistInTheProduct As New DataColumn("ExistInTheProduct")
+        colExistInTheProduct.DefaultValue = False
+        tblAttributes.Columns.Add(colExistInTheProduct)
+
+        'Get the attribute values for this product
+        Dim tblAttributeValues As New DataTable
+        tblAttributeValues = AttributesBLL._GetAttributeValuesByProduct(_GetProductID())
+
+        'We store the number of attributes here so we
+        'can use it to determine whether to expand the
+        'selected attributes or not. Basically over 50 we
+        'will collapse by default, over 50 we will expand
+        Dim numAttributesTotal As Integer = CInt(tblAttributes.Rows.Count)
+        If numAttributesTotal < 25 Then
+            phdOptionsAllSelected.Visible = False
+        End If
+
+        'If we display all items, then we want attributes to show in place
+        'without sorting. If there is text of items, we want to sort.
+
+        'Loop through all attribute values and then set whether the
+        'attribute has values as a new field ExistInTheProduct so 
+        'we can sort these to the bottom of the list.
+        'If Session("_ProductAttributeFilters") <> "ShowAll" Then
+        For Each drwAttributeValue As DataRow In tblAttributeValues.Rows
+            For Each drwAttribute As DataRow In tblAttributes.Rows
+                If drwAttributeValue("ATTRIBV_AttributeID") = drwAttribute("ATTRIB_ID") Then
+                    drwAttribute("ExistInTheProduct") = True
+                    Exit For
+                End If
+            Next
+
+        Next
+        'End If
+
+        'Put attributes into datavew so we can sort them, 
+        'which is not possible in raw datatable. If less 
+        'than 25 attributes, skip this, as we just show all
+        'of them.
+        Dim dvwAttributes As DataView = New DataView(tblAttributes)
+        If Session("_ProductAttributeFilters") <> "ShowAll" And numAttributesTotal >= 25 Then
+            Dim strFilterValue As String = ""
+            If txtFilterText.Text = "" Then
+                strFilterValue = "ExistInTheProduct=True"
+            Else
+                strFilterValue = "ATTRIB_Name LIKE'%" & txtFilterText.Text & "%' OR ExistInTheProduct=True"
+            End If
+            dvwAttributes.RowFilter = strFilterValue
+            dvwAttributes.Sort = "ExistInTheProduct"
+        End If
+
         If tblAttributes.Rows.Count = 0 Then
             mvwAttributes.SetActiveView(viwNoAttributes)
         Else
-            rptAttributes.DataSource = tblAttributes
+            rptAttributes.DataSource = dvwAttributes
             rptAttributes.DataBind()
 
-            Dim tblAttributeValues As New DataTable
-            tblAttributeValues = AttributesBLL._GetAttributeValuesByProduct(_GetProductID())
             For Each itm As RepeaterItem In rptAttributes.Items
                 If itm.ItemType = ListItemType.Item OrElse itm.ItemType = ListItemType.AlternatingItem Then
                     Try
@@ -79,11 +132,48 @@ Partial Class UserControls_Back_ProductAttributes
         btnSave.ValidationGroup = LANG_ELEM_TABLE_TYPE.AttributeValues
         valSummary.ValidationGroup = LANG_ELEM_TABLE_TYPE.AttributeValues
         If Session("_tab") = "attributes" Then CheckSelectedAttributes()
+
+        'Style the filter links on first load
+        If Not Me.IsPostBack Then
+            If Session("_ProductAttributeFilters") = "ShowAll" Then
+                phdFilterBox.Visible = False
+                lnkShowAll.CssClass = "filterselected"
+                lnkJustSelected.CssClass = ""
+            Else
+                phdFilterBox.Visible = True
+                lnkShowAll.CssClass = ""
+                lnkJustSelected.CssClass = "filterselected"
+            End If
+        End If
+    End Sub
+
+    Protected Sub lnkShowAll_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkShowAll.Click
+        Session("_ProductAttributeFilters") = "ShowAll"
+        phdFilterBox.Visible = False
+        lnkShowAll.CssClass = "filterselected"
+        lnkJustSelected.CssClass = ""
+        ShowProductAttributes()
+        updMain.Update()
+    End Sub
+
+    Protected Sub lnkJustSelected_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkJustSelected.Click
+        Session("_ProductAttributeFilters") = "JustSelected"
+        phdFilterBox.Visible = True
+        lnkShowAll.CssClass = ""
+        lnkJustSelected.CssClass = "filterselected"
+        ShowProductAttributes()
+        updMain.Update()
+    End Sub
+
+    Protected Sub btnFilterSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnFilterSubmit.Click
+        ShowProductAttributes()
+        updMain.Update()
     End Sub
 
     Private Sub CheckSelectedAttributes()
         Dim tblAttributeValues As New DataTable
         tblAttributeValues = AttributesBLL._GetAttributeValuesByProduct(_GetProductID())
+
         For Each itm As RepeaterItem In rptAttributes.Items
             If itm.ItemType = ListItemType.Item OrElse itm.ItemType = ListItemType.AlternatingItem Then
                 Try
@@ -116,6 +206,9 @@ Partial Class UserControls_Back_ProductAttributes
     End Sub
 
     Private Sub SaveChanges()
+
+        'Clear filter text
+        txtFilterText.Text = ""
 
         Dim tblLanguageElements As New DataTable
         tblLanguageElements.Columns.Add(New DataColumn("_LE_LanguageID", Type.GetType("System.String")))
