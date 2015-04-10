@@ -12,7 +12,19 @@
             </asp:View>
             <asp:View ID="viwAttributes" runat="server">
                 <div id="section_attributes">
+                    <asp:PlaceHolder ID="phdOptionsAllSelected" runat="server">
+                        <div id="optionfilters">
+                            <asp:LinkButton ID="lnkShowAll" runat="server"
+                                Text="All" />&nbsp;
+                            <asp:LinkButton ID="lnkJustSelected" runat="server"
+                                Text="Selected" />
+                            <asp:PlaceHolder ID="phdFilterBox" runat="server">&nbsp;&nbsp;
+                                <asp:TextBox ID="txtFilterText" runat="server" CssClass="mediumfield"></asp:TextBox>
+                                <asp:Button ID="btnFilterSubmit" runat="server" CssClass="button" Text="<%$ Resources: _Kartris, ContentText_AddNew %>" /></asp:PlaceHolder>
+                        </div>
+                    </asp:PlaceHolder>
                     <table class="kartristable">
+                        <asp:HiddenField ID="hidNumberOfAttributes" runat="server"></asp:HiddenField>
                         <asp:Repeater ID="rptAttributes" runat="server">
                             <ItemTemplate>
                                 <tr>

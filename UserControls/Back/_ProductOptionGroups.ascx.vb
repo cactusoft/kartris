@@ -47,6 +47,42 @@ Partial Class _ProductOptionGroups
         End If
         chkBasicStockTracking.Text = GetGlobalResourceObject("_Version", "ContentText_StockTrackingText") & "*"
 
+        'Style the filter links on first load
+        If Not Me.IsPostBack Then
+            If Session("_ProductOptionFilters") = "ShowAll" Then
+                phdFilterBox.Visible = False
+                lnkShowAll.CssClass = "filterselected"
+                lnkJustSelected.CssClass = ""
+            Else
+                phdFilterBox.Visible = True
+                lnkShowAll.CssClass = ""
+                lnkJustSelected.CssClass = "filterselected"
+            End If
+        End If
+
+    End Sub
+
+    Protected Sub lnkShowAll_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkShowAll.Click
+        Session("_ProductOptionFilters") = "ShowAll"
+        phdFilterBox.Visible = False
+        lnkShowAll.CssClass = "filterselected"
+        lnkJustSelected.CssClass = ""
+        GetProductOptionGroups()
+        updOptionGroups.Update()
+    End Sub
+
+    Protected Sub lnkJustSelected_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkJustSelected.Click
+        Session("_ProductOptionFilters") = "JustSelected"
+        phdFilterBox.Visible = True
+        lnkShowAll.CssClass = ""
+        lnkJustSelected.CssClass = "filterselected"
+        GetProductOptionGroups()
+        updOptionGroups.Update()
+    End Sub
+
+    Protected Sub btnFilterSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnFilterSubmit.Click
+        GetProductOptionGroups()
+        updOptionGroups.Update()
     End Sub
 
     Public Sub CreateProductOptionGroups()
@@ -245,13 +281,18 @@ Partial Class _ProductOptionGroups
 
         Dim tblOptionGrp As New DataTable
         tblOptionGrp = OptionsBLL._GetOptionGroups()
-        tblOptionGrp.Columns.Add(New DataColumn("MustSelected"))
-        tblOptionGrp.Columns.Add(New DataColumn("ExistInTheProduct"))
 
-        For Each drwGroup As DataRow In tblOptionGrp.Rows
-            drwGroup("MustSelected") = False
-            drwGroup("ExistInTheProduct") = False
-        Next
+        Dim colMustSelected As New DataColumn("MustSelected")
+        Dim colExistInTheProduct As New DataColumn("ExistInTheProduct")
+        colMustSelected.DefaultValue = False
+        colExistInTheProduct.DefaultValue = False
+        tblOptionGrp.Columns.Add(colMustSelected)
+        tblOptionGrp.Columns.Add(colExistInTheProduct)
+
+        'For Each drwGroup As DataRow In tblOptionGrp.Rows
+        '    drwGroup("MustSelected") = False
+        '    drwGroup("ExistInTheProduct") = False
+        'Next
 
         Dim tblProductGrps As New DataTable
         tblProductGrps = OptionsBLL._GetOptionGroupsByProductID(CInt(litProductID.Text))
@@ -262,11 +303,49 @@ Partial Class _ProductOptionGroups
                     drwGroup("OPTG_DefOrderByValue") = drwProduct("P_OPTG_OrderByValue")
                     drwGroup("MustSelected") = drwProduct("P_OPTG_MustSelected")
                     drwGroup("ExistInTheProduct") = True
+                    Exit For 'Found the match, no need to hang about expecting more
                 End If
             Next
         Next
 
-        rptProductOptions.DataSource = tblOptionGrp
+        'Some sites have a very large number of 
+        'options. In such cases, rather than show
+        'all and have the page grind to a halt, we
+        'just show the selected ones. There is a
+        'radio button option to show all if required
+        'and a text box to include extra ones (which
+        'can be checked to add them in)
+        Dim dvwOptions As DataView = New DataView(tblOptionGrp)
+
+        'We store the number of option groups here so we
+        'can use it to determine whether to expand the
+        'selected options or not. Basically over 25 we
+        'will collapse by default, over 25 we will expand
+        hidNumberOfOptionGroups.Value = tblOptionGrp.Rows.Count
+
+        If tblOptionGrp.Rows.Count > 25 Then
+            'We have larger number of options, so by default
+            'we're just going to show the selected ones, and
+            'filter tools to show all, or add more
+            If Session("_ProductOptionFilters") <> "ShowAll" Then
+                If txtFilterText.Text = "" Then
+                    'No filter text
+                    dvwOptions.RowFilter = "ExistInTheProduct=True"
+                Else
+                    'We have some filter text
+                    dvwOptions.RowFilter = "ExistInTheProduct=True OR OPTG_BackendName LIKE'%" & txtFilterText.Text & "%'"
+                    dvwOptions.Sort = "ExistInTheProduct"
+                End If
+
+            End If
+        Else
+            'Here only a low number of options so no filtering
+            'We also can hide the filters
+            phdOptionsAllSelected.Visible = False
+        End If
+
+        'Bind to the filtered data
+        rptProductOptions.DataSource = dvwOptions
         rptProductOptions.DataBind()
         CheckForCombination()
     End Sub
@@ -341,6 +420,8 @@ Partial Class _ProductOptionGroups
                 ResetCreateCombinations()
                 GetExistingCombinations() 'Need to Update the Current Combinations (No more..!! All are Suspended ..)
                 updCombinations.Update()
+            Case "expand"
+                ItemExpanded(e.Item)
         End Select
 
     End Sub
@@ -352,18 +433,33 @@ Partial Class _ProductOptionGroups
             CType(itm.FindControl("_UC_ItemSelection"), UserControls_Back_ItemSelection).IsSelected
     End Sub
 
-    Protected Sub rptProductOptions_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptProductOptions.ItemDataBound
+    'This is used to toggle the option values
+    'section under an option group if the +/- is
+    'clicked
+    Sub ItemExpanded(ByVal itm As RepeaterItem)
+        Dim phdOptions As PlaceHolder = CType(itm.FindControl("phdOptions"), PlaceHolder)
+        phdOptions.Visible = Not phdOptions.Visible
+    End Sub
 
+    Sub CheckAllItems(ByVal itm As RepeaterItem)
+        Dim phdOptions As PlaceHolder = CType(itm.FindControl("phdOptions"), PlaceHolder)
+        phdOptions.Visible = Not phdOptions.Visible
+    End Sub
+
+    Protected Sub rptProductOptions_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptProductOptions.ItemDataBound
+        'We stored the number of option groups earlier
+        'to use here to decide whether to expand items
+        'or not.
+        Dim numOptionGroupCount As Integer = CInt(hidNumberOfOptionGroups.Value)
         Try
             Dim intGrpID As Integer = CInt(CType(e.Item.FindControl("litOptionGrpID"), Literal).Text)
 
-            CType(e.Item.FindControl("_uc_ProductOptions"), _ProductOptions).CreateOptionsByGroupID(intGrpID, _GetProductID())
+            CType(e.Item.FindControl("_UC_ProductOptions"), _ProductOptions).CreateOptionsByGroupID(intGrpID, _GetProductID())
 
             Dim blnOptionSelected As Boolean = _
-                CType(e.Item.FindControl("_UC_ItemSelection"), UserControls_Back_ItemSelection).IsSelected
-            CType(e.Item.FindControl("phdOptions"), PlaceHolder).Visible = blnOptionSelected
+                (CType(e.Item.FindControl("_UC_ItemSelection"), UserControls_Back_ItemSelection).IsSelected)
+            CType(e.Item.FindControl("phdOptions"), PlaceHolder).Visible = blnOptionSelected And numOptionGroupCount < 25
             CType(e.Item.FindControl("pnlOptions"), Panel).Enabled = blnOptionSelected
-            
         Catch ex As Exception
         End Try
 

@@ -3,10 +3,11 @@
 
 <asp:Literal ID="litProductID" runat="server" Visible="false" />
 <asp:Literal ID="litOptGrpID" runat="server" Visible="false" />
+<table class="kartristable nested" id="tab_<asp:Literal ID='litOptGrpID2' runat='server' />">
 <asp:Repeater ID="rptOptions" runat="server">
     <ItemTemplate>
         <tr class="Kartris-GridView-Alternate">
-            <td class="indent">
+            <td class="indent" >
                 <asp:Literal ID="litOptionID" runat="server" Text='<%# Eval("OPT_ID") %>' Visible="false" />
                 <asp:Literal ID="litOptionGroupDisplayType" runat="server" Text='<%# Eval("OPTG_OptionDisplayType") %>'
                     Visible="false"></asp:Literal>
@@ -73,3 +74,4 @@
         </tr>
     </ItemTemplate>
 </asp:Repeater>
+</table>
