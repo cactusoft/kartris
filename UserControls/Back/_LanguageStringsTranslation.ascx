@@ -15,8 +15,7 @@
         <ContentTemplate>
             <div class="searchboxrow">
                 <asp:Panel ID="pnlTranslate" runat="server" DefaultButton="btnFind">
-                    <asp:TextBox runat="server" ID="txtSearch" MaxLength="100" />
-                    <asp:Button ID="btnFind" runat="server" Text="<%$ Resources:_Kartris, FormButton_Search %>"
+                    <asp:TextBox runat="server" ID="txtSearch" MaxLength="100" /><asp:Button ID="btnFind" runat="server" Text="<%$ Resources:_Kartris, FormButton_Search %>"
                         CssClass="button" />
                 </asp:Panel>
             </div>

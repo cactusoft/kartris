@@ -7,10 +7,8 @@
                 <asp:Panel ID="pnlFind" runat="server" DefaultButton="btnFind">
                     <asp:LinkButton ID="btnNew" runat="server" Text='<%$ Resources:_Kartris, FormButton_New %>'
                         CssClass="linkbutton icon_new floatright" />
-                    <asp:TextBox runat="server" ID="txtSearchStarting" MaxLength="100" />
-                    <asp:Button ID="btnFind" runat="server" Text="<%$ Resources:_Kartris, FormButton_Search %>"
-                        CssClass="button" />
-                    <asp:Button ID="btnClear" runat="server" CssClass="button cancelbutton" Text='<%$ Resources:_Kartris, ContentText_Clear %>' />
+                    <asp:TextBox runat="server" ID="txtSearchStarting" MaxLength="100" /><asp:Button ID="btnFind" runat="server" Text="<%$ Resources:_Kartris, FormButton_Search %>"
+                        CssClass="button" /><asp:Button ID="btnClear" runat="server" CssClass="button cancelbutton" Text='<%$ Resources:_Kartris, ContentText_Clear %>' />
                     <div>
                         <br />
                         <asp:Label ID="litLanguage" CssClass="nolabelwidth" runat="server" Text='<%$ Resources:_Kartris, FormLabel_Language %>'

@@ -496,7 +496,6 @@ SECTION: REVIEWS
 SECTION: OPTIONS
 ========================================================================
 */
-#section_options .submitbuttons input   { margin-right: 5px }
 #section_options td a                   { color: #000 }
 #section_options td.optionsfield,
 #section_options th.optionsfield        { width: 450px; text-align: right; }

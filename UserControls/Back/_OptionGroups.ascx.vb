@@ -61,6 +61,15 @@ Partial Class _OptionGroups
         '' ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     End Sub
 
+    Protected Sub btnSearch_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSearch.Click
+        ShowOptionGroups()
+    End Sub
+
+    Protected Sub btnClear_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnClear.Click
+        txtSearch.Text = ""
+        ShowOptionGroups()
+    End Sub
+
     Protected Sub dtlOptionGroups_ItemCommand(ByVal source As Object, ByVal e As System.Web.UI.WebControls.DataListCommandEventArgs) Handles dtlOptionGroups.ItemCommand
         Select Case e.CommandName
             Case "optionvalues" '' OPTION VALUES
@@ -171,7 +180,17 @@ Partial Class _OptionGroups
             End Select
         Next
         dtlOptionGroups.SelectedIndex = intIndex
-        dtlOptionGroups.DataSource = tblOptionGrps
+
+        'We need to put the data into a dataview in order to
+        'filter by the keywords
+        Dim dvwOptionGroups As DataView = New DataView(tblOptionGrps)
+
+        If txtSearch.Text <> "" Then
+            dvwOptionGroups.RowFilter = "OPTG_BackendName LIKE'%" & txtSearch.Text & "%'"
+            dvwOptionGroups.Sort = "OPTG_BackendName"
+        End If
+
+        dtlOptionGroups.DataSource = dvwOptionGroups
         dtlOptionGroups.DataBind()
 
         updOptionGrpList.Update()

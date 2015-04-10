@@ -14,13 +14,13 @@
                     <asp:Label ID="lblFindCustomer" runat="server" Text="<%$Resources: ContentText_FindACustomer%>"
                         Visible="False"></asp:Label>
                     <div>
-                        <asp:TextBox ID="txtSearch" runat="server" />
-                        <asp:Button ID="btnSearch" runat="server" Text="<%$ Resources:_Kartris, FormButton_Search %>"
+                        <asp:TextBox ID="txtSearch" runat="server" /><asp:Button ID="btnSearch" runat="server" Text="<%$ Resources:_Kartris, FormButton_Search %>"
                             CssClass="button" />
                     </div>
                     <br />
                     <p>
-                        <asp:Literal ID="litDetails" runat="server" Text="<%$Resources: ContentText_EnterEmailAddress%>"></asp:Literal></p>
+                        <asp:Literal ID="litDetails" runat="server" Text="<%$Resources: ContentText_EnterEmailAddress%>"></asp:Literal>
+                    </p>
                 </div>
                 <br />
                 <_user:CustomersList ID="_UC_CustomersList" runat="server" />

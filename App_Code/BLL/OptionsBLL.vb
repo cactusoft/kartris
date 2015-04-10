@@ -396,7 +396,7 @@ Public Class OptionsBLL
             For Each row As DataRow In tblProductOptionGroup.Rows
                 cmd.Parameters.AddWithValue("@ProductID", CInt(row("P_OPTG_ProductID")))
                 cmd.Parameters.AddWithValue("@GroupID", CShort(row("P_OPTG_OptionGroupID")))
-                cmd.Parameters.AddWithValue("@OrderBy", CByte(row("P_OPTG_OrderByValue")))
+                cmd.Parameters.AddWithValue("@OrderBy", CInt(row("P_OPTG_OrderByValue")))
                 cmd.Parameters.AddWithValue("@MustSelect", CBool(row("P_OPTG_MustSelected")))
                 cmd.ExecuteNonQuery()
                 cmd.Parameters.Clear()
@@ -417,7 +417,7 @@ Public Class OptionsBLL
             For Each row As DataRow In tblProductOptionLink.Rows
                 cmd.Parameters.AddWithValue("@OptionID", CInt(row("P_OPT_OptionID")))
                 cmd.Parameters.AddWithValue("@ProductID", CInt(row("P_OPT_ProductID")))
-                cmd.Parameters.AddWithValue("@OrderBy", CByte(row("P_OPT_OrderByValue")))
+                cmd.Parameters.AddWithValue("@OrderBy", CInt(row("P_OPT_OrderByValue")))
                 cmd.Parameters.AddWithValue("@PriceChange", CDbl(row("P_OPT_PriceChange")))
                 cmd.Parameters.AddWithValue("@WeightChange", CDbl(row("P_OPT_WeightChange")))
                 cmd.Parameters.AddWithValue("@Selected", CBool(row("P_OPT_Selected")))

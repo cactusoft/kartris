@@ -23,8 +23,17 @@ Partial Class Admin_Attributes
 
         valSummary.ValidationGroup = LANG_ELEM_TABLE_TYPE.Attributes
         lnkBtnSave.ValidationGroup = LANG_ELEM_TABLE_TYPE.Attributes
-        ShowAttributeList()
+        ShowAttributeList(txtSearch.Text)
 
+    End Sub
+
+    Protected Sub btnSearch_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSearch.Click
+        
+    End Sub
+
+    Protected Sub btnClear_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnClear.Click
+        txtSearch.Text = ""
+        ShowAttributeList("")
     End Sub
 
     Protected Sub lnkBtnNewAttribute_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnNewAttribute.Click
@@ -35,7 +44,7 @@ Partial Class Admin_Attributes
 
     Protected Sub gvwAttributes_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvwAttributes.PageIndexChanging
         gvwAttributes.PageIndex = e.NewPageIndex
-        ShowAttributeList()
+        ShowAttributeList(txtSearch.Text)
     End Sub
 
     Protected Sub gvwAttributes_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles gvwAttributes.RowCommand
@@ -54,7 +63,7 @@ Partial Class Admin_Attributes
 
     Protected Sub lnkBtnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnSave.Click
         If _UC_EditAttribute.SaveChanges() Then
-            ShowAttributeList()
+            ShowAttributeList("")
             mvwAttributes.SetActiveView(viwAttributeList)
             updAttributes.Update()
             CType(Me.Master, Skins_Admin_Template).DataUpdated()
@@ -65,7 +74,7 @@ Partial Class Admin_Attributes
         _UC_EditAttribute.Delete()
     End Sub
 
-    Private Sub ShowAttributeList()
+    Private Sub ShowAttributeList(ByVal strKeyword As String)
         Dim tblAttributes As New DataTable
         tblAttributes = AttributesBLL._GetAttributesByLanguage(Session("_LANG"))
 
@@ -95,13 +104,22 @@ Partial Class Admin_Attributes
             End Select
         Next
 
-        gvwAttributes.DataSource = tblAttributes
+        'We need to put the data into a dataview in order to
+        'filter by the keywords
+        Dim dvwAttributes As DataView = New DataView(tblAttributes)
+
+        If strKeyword <> "" Then
+            dvwAttributes.RowFilter = "ATTRIB_Name LIKE'%" & strKeyword & "%'"
+            dvwAttributes.Sort = "ATTRIB_Name"
+        End If
+
+        gvwAttributes.DataSource = dvwAttributes
         gvwAttributes.DataBind()
     End Sub
 
     
     Protected Sub _UC_EditAttribute_AttributeDeleted() Handles _UC_EditAttribute.AttributeDeleted
-        ShowAttributeList()
+        ShowAttributeList(txtSearch.Text)
         mvwAttributes.SetActiveView(viwAttributeList)
         updAttributes.Update()
         CType(Me.Master, Skins_Admin_Template).DataUpdated()
