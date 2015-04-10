@@ -32,8 +32,7 @@ Imports System.Collections.ObjectModel
 '
 '========================================================================
 Public Class MailChimpBLL
-    'Dim listId As String = "07891e3377"
-    Dim listId As String = KartSettingsManager.GetKartConfig("general.mailchimp.listid") '"5d5ad03475"     ' Kartris Store List
+    Dim listId As String = KartSettingsManager.GetKartConfig("general.mailchimp.listid")
     Dim apiKey As String = KartSettingsManager.GetKartConfig("general.mailchimp.apikey")
     Dim apiUrl As String = KartSettingsManager.GetKartConfig("general.mailchimp.apiurl")
     Dim mcStoreId As String = KartSettingsManager.GetKartConfig("general.mailchimp.storeid")
@@ -42,6 +41,10 @@ Public Class MailChimpBLL
     Dim kartrisBasket As Basket
     Dim kartrisCurrencyCode As String
 
+    ''' <summary>
+    ''' Create a new action
+    ''' if user not logged in
+    ''' </summary>
     Sub New()
         apiKey = KartSettingsManager.GetKartConfig("general.mailchimp.apikey")
         apiUrl = KartSettingsManager.GetKartConfig("general.mailchimp.apiurl")
@@ -51,6 +54,10 @@ Public Class MailChimpBLL
         kartrisBasket = New Basket()
     End Sub
 
+    ''' <summary>
+    ''' Create a new action
+    ''' for logged in user
+    ''' </summary>
     Sub New(ByVal user As KartrisMemberShipUser, ByVal currencyCode As String)
         apiKey = KartSettingsManager.GetKartConfig("general.mailchimp.apikey")
         apiUrl = KartSettingsManager.GetKartConfig("general.mailchimp.apiurl")
@@ -59,6 +66,10 @@ Public Class MailChimpBLL
         Me.kartrisCurrencyCode = currencyCode
     End Sub
 
+    ''' <summary>
+    ''' Create a new action
+    ''' logged in user with basket
+    ''' </summary>
     Sub New(ByVal user As KartrisMemberShipUser, ByVal basket As Basket, ByVal currencyCode As String)
         manager = New MailChimpManager(apiKey)
         currentLoggedUser = user
@@ -66,11 +77,10 @@ Public Class MailChimpBLL
         Me.kartrisCurrencyCode = currencyCode
     End Sub
 
-    'Dim FILE_NAME As String = "C:\test2.txt"
-    'Dim objWriter As New System.IO.StreamWriter(FILE_NAME)
-    'objWriter.WriteLine("begin")
-    'objWriter.Close()
-
+    ''' <summary>
+    ''' Get customer using Kartris customer ID
+    ''' from mailchimp account
+    ''' </summary>
     Public Async Function GetCustomer(ByVal kartrisUserId As Integer) As Task(Of Customer)
         Dim customer As Customer = Nothing
         Try
@@ -81,6 +91,10 @@ Public Class MailChimpBLL
         Return customer
     End Function
 
+    ''' <summary>
+    ''' Add cart to mailchimp and tagged for
+    ''' right customer
+    ''' </summary>
     Public Async Function AddCartToCustomerToStore(Optional ByVal orderId As Integer = 0) As Task(Of String)
         Dim mcStore As Store = New Store()
         Dim toReturn As String = ""
@@ -143,14 +157,17 @@ Public Class MailChimpBLL
     '    End Try
     'End Function
 
+    ''' <summary>
+    ''' Add customer record to mailchimp
+    ''' </summary>
     Public Async Function AddCustomer() As Task(Of Customer)
         Try
             Dim userFullName As String = ""
-            userFullName = UsersBLL.GetNameandEUVAT(CurrentLoggedUser.ID).Split("|||")(0)
+            userFullName = UsersBLL.GetNameandEUVAT(currentLoggedUser.ID).Split("|||")(0)
             Dim userNamesArray() As String = userFullName.Split(" ")
             'Use the Status property if updating an existing member
-            Dim customer As Customer = New Customer With {.Id = CurrentLoggedUser.ID,
-                                                            .EmailAddress = CurrentLoggedUser.Email,
+            Dim customer As Customer = New Customer With {.Id = currentLoggedUser.ID,
+                                                            .EmailAddress = currentLoggedUser.Email,
                                                             .OptInStatus = True
                                                         }
             customer.FirstName = userNamesArray(0)
@@ -165,6 +182,9 @@ Public Class MailChimpBLL
         End Try
     End Function
 
+    ''' <summary>
+    ''' Add product to mailchimp
+    ''' </summary>
     Public Async Function AddProduct(ByVal basketItem As BasketItem) As Task(Of Product)
         Try
             Dim product As Product
@@ -193,10 +213,13 @@ Public Class MailChimpBLL
             End If
             Return Nothing
         Catch ex As Exception
-                Debug.Print(ex.Message)
+            Debug.Print(ex.Message)
         End Try
     End Function
 
+    ''' <summary>
+    ''' Add cart to mailchimp
+    ''' </summary>
     Public Async Function AddCart(ByVal customer As Customer, ByVal orderId As Integer) As Task(Of Cart)
         Try
             Dim idSufix As String = orderId
@@ -205,17 +228,26 @@ Public Class MailChimpBLL
                 idSufix = customer.Id & "_" & timestamp
             End If
 
+            Dim strCurrencyIsoCode As String = "GBP"
 
+            Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
             Dim cart As Cart = New Cart With {.Id = "cart_" & idSufix,
                                             .Customer = New Customer With {.Id = customer.Id, .OptInStatus = True},
-                                            .CurrencyCode = CurrencyCode.GBP,
-                                          .OrderTotal = kartrisBasket.TotalIncTax,
-                                          .CheckoutUrl = "http://localhost:54147/Checkout.aspx",
+                                            .CurrencyCode = currencyCodeEnum,
+                                          .OrderTotal = kartrisBasket.FinalPriceIncTax,
+                                          .CheckoutUrl = CkartrisBLL.WebShopURL.ToLower & "Checkout.aspx",
                                           .Lines = New Collection(Of Line)
                                         }
             Dim product As Product
+            Dim itemprice As Double
             For counter As Integer = 0 To kartrisBasket.BasketItems.Count - 1
                 product = Await AddProduct(kartrisBasket.BasketItems(counter))
+
+                If kartrisBasket.BasketItems(counter).PricesIncTax = True Then
+                    itemprice = (kartrisBasket.BasketItems(counter).IR_PricePerItem)
+                Else
+                    itemprice = (kartrisBasket.BasketItems(counter).IR_PricePerItem + kartrisBasket.BasketItems(counter).IR_TaxPerItem)
+                End If
 
                 cart.Lines.Add(New Line With {.Id = "cart_" & idSufix & "_l" & counter,
                                             .ProductId = kartrisBasket.BasketItems(counter).ID,
@@ -223,8 +255,8 @@ Public Class MailChimpBLL
                                             .ProductVariantId = kartrisBasket.BasketItems(counter).ID,
                                             .ProductVariantTitle = kartrisBasket.BasketItems(counter).Name,
                                             .Quantity = kartrisBasket.BasketItems(counter).Quantity,
-                                            .Price = kartrisBasket.BasketItems(counter).Price
-                })
+                                            .Price = itemprice
+                               })
             Next
             Dim taskResult As Cart = Await manager.ECommerceStores.Carts(mcStoreId).AddAsync(cart).ConfigureAwait(False)
 
@@ -235,6 +267,9 @@ Public Class MailChimpBLL
         End Try
     End Function
 
+    ''' <summary>
+    ''' Delete cart
+    ''' </summary>
     Public Async Function DeleteCart(ByVal cartId As String) As Task(Of Boolean)
         Dim result As Boolean = False
         Try
@@ -251,6 +286,9 @@ Public Class MailChimpBLL
         Return result
     End Function
 
+    ''' <summary>
+    ''' Delete order
+    ''' </summary>
     Public Async Function DeleteOrder(ByVal orderId As String) As Task(Of Boolean)
         Dim result As Boolean = False
         Try
@@ -267,6 +305,9 @@ Public Class MailChimpBLL
         Return result
     End Function
 
+    ''' <summary>
+    ''' Add order
+    ''' </summary>
     Public Async Function AddOrder(ByVal customer As Customer, ByVal cartId As String) As Task(Of Order)
         Try
             Dim timestamp = CLng(DateTime.UtcNow.Subtract(New DateTime(1970, 1, 1)).TotalMilliseconds)
@@ -304,6 +345,9 @@ Public Class MailChimpBLL
         End Try
     End Function
 
+    ''' <summary>
+    ''' Add store
+    ''' </summary>
     Public Async Function AddStore(ByVal storeId As String, Optional ByVal storeName As String = "Kartris Store", Optional ByVal storeDomain As String = "www.kartris.com", Optional ByVal EmailAddress As String = "someemail@cactusoft.com") As Task(Of Store)
         Try
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)

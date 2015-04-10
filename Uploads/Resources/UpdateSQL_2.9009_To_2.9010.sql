@@ -535,6 +535,14 @@ INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_D
  (N'general.mailchimp.apikey', N'xxxxxxxxxxxxxxxxxxxx', N's', N't', N'', N'The API key you created in your MailChimp account', 2.9010, N'', 0);
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES
  (N'general.mailchimp.enabled', N'n', N's', N'b', N'y|n', N'Whether MailChimp ecommerce integration is enabled or not', 2.9010, N'n', 0);
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.mailchimp.storeid', N'', N's', N't',	'',N'You can choose a MailChimp store ID e.g. ''MyKartris''',2.9010, N'', 0);
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.mailchimp.listid', N'', N's', N't',	'',N'MailChimp Subscribers List ID. This list is created in the MailChimp website. MailChimp>Lists>Select Your List>Settings>List name and defaults>ListID should appear in the screen',2.9010, N'', 0);
 
 GO
 
@@ -687,19 +695,6 @@ BEGIN
 	END CATCH  
 END
 GO 
-
-INSERT INTO [tblKartrisConfig]
-(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
-VALUES
-('general.mailchimp.storeid', '', 's', 't',	'','MailChimp ECommerce Store ID.','2.9011', 'store', 0)
-
-INSERT INTO [tblKartrisConfig]
-(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
-VALUES
-('general.mailchimp.listid', '', 's', 't',	'','MailChimp Subscribers List ID. This list is created in the MailChimp website. MailChimp>Lists>Select Your List>Settings>List name and defaults>ListID should appear in the screen','2.9011', '', 0)
-
-
-GO
 
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.9010', CFG_VersionAdded=2.9010 WHERE CFG_Name='general.kartrisinfo.versionadded';

@@ -83,6 +83,7 @@
 			<siteMapNode title="$resources:_Kartris,BackMenu_Coupons" url="~/Admin/_Coupons.aspx" Value="config" />
 			<siteMapNode title="$resources:_Kartris,BackMenu_GenerateFeeds" url="~/Admin/_GenerateFeeds.aspx" value="products" />
 			<siteMapNode title="$resources:_Kartris,BackMenu_GeneralFiles" url="~/Admin/_GeneralFiles.aspx" value="config" />
+			<siteMapNode title="MailChimp" url="~/Admin/_MailChimp.aspx" value="config" />
 		</siteMapNode>
 		
 		<siteMapNode title="login" url="~/Admin/Default.aspx" visible="false" resourceKey="Default.aspx"/>
