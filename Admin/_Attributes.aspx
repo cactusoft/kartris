@@ -8,6 +8,14 @@ MasterPageFile="~/Skins/Admin/Template.master" %>
         <ContentTemplate>
             <h1>
                 <asp:Literal ID="litPageTitle" runat="server" Text='<%$ Resources:_Product, FormLabel_TabProductAttributes %>' /></h1>
+                <div id="searchboxrow">
+                    <div>
+                        <asp:TextBox ID="txtSearch" runat="server" /><asp:Button ID="btnSearch" runat="server" Text="<%$ Resources:_Kartris, FormButton_Search %>"
+                            CssClass="button" /><asp:Button ID="btnClear" runat="server" Text="<%$ Resources:_Kartris, ContentText_Clear %>"
+                                CssClass="button cancelbutton" />
+                    </div>
+                </div>
+                <br />
             <asp:UpdatePanel ID="updAttributes" runat="server" UpdateMode="Conditional">
                 <ContentTemplate>
                     <asp:MultiView ID="mvwAttributes" runat="server" ActiveViewIndex="0">

@@ -13,6 +13,16 @@
                 <asp:Literal ID="litContentTextOptions" runat="server" Text='<%$ Resources: _Kartris, ContentText_Options %>' />:
                 <span class="h1_light">
                     <asp:Literal ID="litPageTitleOptionGroups" runat="server" Text='<%$ Resources: _Options, PageTitle_OptionGroups %>' /></span></h1>
+
+            <div id="searchboxrow">
+                <div>
+                    <asp:TextBox ID="txtSearch" runat="server" /><asp:Button ID="btnSearch" runat="server" Text="<%$ Resources:_Kartris, FormButton_Search %>"
+                        CssClass="button" /><asp:Button ID="btnClear" runat="server" Text="<%$ Resources:_Kartris, ContentText_Clear %>"
+                            CssClass="button cancelbutton" />
+                </div>
+            </div>
+            <br />
+
             <asp:DataList CssClass="kartristable" ID="dtlOptionGroups" runat="server" DataKeyField="OPTG_ID">
                 <AlternatingItemStyle CssClass="Kartris-GridView-Alternate" />
                 <SelectedItemStyle CssClass="Kartris-DataList-SelectedItem" />

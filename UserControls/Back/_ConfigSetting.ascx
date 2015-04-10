@@ -22,15 +22,12 @@
                     <div class="searchboxline">
                         <asp:LinkButton ID="btnNew" runat="server" Text='<%$ Resources:_Kartris, FormButton_New %>'
                             CssClass="linkbutton icon_new floatright" />
-                        <asp:TextBox CssClass="longishtext" runat="server" ID="txtSearchStarting" MaxLength="100" />
-                        <asp:DropDownList ID="ddlConfigFilter" runat="server">
+                        <asp:TextBox CssClass="longishtext" runat="server" ID="txtSearchStarting" MaxLength="100" /><asp:DropDownList ID="ddlConfigFilter" runat="server">
                             <asp:ListItem Text="<%$ Resources:_Kartris, BackMenu_SearchAll %>" Value="a" Selected="True" />
                             <asp:ListItem Text="<%$ Resources:_Config, ContentText_ConfigImportant %>" Value="i" />
-                        </asp:DropDownList>
-                        <asp:Button ID="btnFind" runat="server" Text='<%$ Resources:_Kartris, FormButton_Search %>'
-                            CssClass="button" />
-                        <asp:Button ID="btnClear" runat="server" CssClass="button cancelbutton" Text='<%$ Resources:_Kartris, ContentText_Clear %>' />
-                        </div>
+                        </asp:DropDownList><asp:Button ID="btnFind" runat="server" Text='<%$ Resources:_Kartris, FormButton_Search %>'
+                            CssClass="button" /><asp:Button ID="btnClear" runat="server" CssClass="button cancelbutton" Text='<%$ Resources:_Kartris, ContentText_Clear %>' />
+                    </div>
                 </asp:Panel>
                 <asp:Panel ID="pnlNewSearch" runat="server" Visible="false">
                     <asp:LinkButton ID="btnNewSearch" runat="server" CssClass="linkbutton icon_edit"
