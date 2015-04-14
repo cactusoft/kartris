@@ -87,6 +87,7 @@ All rights reserved.
 				<add tagPrefix="user" tagName="CategoryMenu" src="~/UserControls/Skin/CategoryMenu.ascx"/>
 				<add tagPrefix="user" tagName="CategoryMenuAccordion" src="~/UserControls/Skin/CategoryMenuAccordion.ascx"/>
 				<add tagPrefix="user" tagName="CategoryMenuDropdownSelect" src="~/UserControls/Skin/CategoryMenuDropdownSelect"/>
+				<add tagPrefix="user" tagName="CategoryMenuSimple" src="~/UserControls/Skin/CategoryMenuSimple.ascx"/>
 				<add tagPrefix="user" tagName="CurrencyDropdown" src="~/UserControls/Skin/CurrencyDropdown.ascx"/>
 				<add tagPrefix="user" tagName="LanguageDropdown" src="~/UserControls/Skin/LanguageDropdown.ascx"/>
 				<add tagPrefix="user" tagName="LatestNews" src="~/UserControls/Skin/LatestNews.ascx"/>

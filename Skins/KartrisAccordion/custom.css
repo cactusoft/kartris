@@ -5,15 +5,32 @@ HORIZONTAL DROPDOWN MENU SYSTEM
 */
 #menubar								{ }
 
-#menubar .top-bar                       { background-color: #ddd; margin: 0 0 6px 0; }
-#menubar .top-bar.expanded .title-area  { background: #ccc; }
+#menubar .top-bar                       { border-bottom: solid 1px #f50; background-color: #f90; min-height: 51px; }
+#menubar .top-bar-section li            { border-right: dotted 1px #fff; }
 #menubar .top-bar-section li a:not(.button)
-                                        { background-color: #ddd; color: #333; font-weight: normal; font-size: 70%; text-transform: uppercase; }
-/* Style top level links */
-#menubar .top-bar-section li            { border-left: solid 1px #fff; }
+                                        { color: #fff; background-color: #f90; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; padding: 3px 15px; height: 50px; line-height: 1.2em; font-weight: bold; width: 125px; font-size: 80%; }
 #menubar .top-bar-section li a:hover
-                                        { background-color:#eee; }
-#menubar .top-bar li.name span          { display: inline-block; padding: 0 0 0 10px; }
+                                        { background-color: #666; color: #fff; }
+#menubar .top-bar-section li ul         { border-bottom: solid 1px #000; }
+#menubar .top-bar-section li li         { border-right: solid 1px #000; }
+
+#menubar .top-bar-section .has-dropdown > a:after
+                                        { border-color: rgba(255, 255, 255, 0.5) transparent transparent transparent; top: 13.5px; }
+#menubar .top-bar-section .dropdown li a
+                                        { background-color: #666; color: #fff; width: auto; height: auto; font-weight: normal; padding: 2px 15px 4px 15px; font-size: 90%; text-transform: none; }
+#menubar .top-bar-section .dropdown li a:hover
+                                        { color: #000; background-color: #aaa; }
+#menubar .top-bar-section .has-dropdown .dropdown li.has-dropdown > a:after
+                                        { top: 1px; }
+
+/* Mobile version */
+#menubar .top-bar.expanded li ul        { border: none; }
+#menubar .top-bar.expanded li li a      { background-color: #f90; }
+
+/* Button to replace main nav menu in small devices */
+#menubar .mobile-link                   { font-weight: bold; padding: 2px 15px; color: #ddd; display: block; }
+#menubar .mobile-link:hover             { color: #fff; background-color: #555; }
+
 /* 
 ========================================================================
 CATEGORY NAVIGATION MENU
@@ -34,36 +51,23 @@ a newer version), just just grab the bits we need to change here.
     Also, match the min-width in the style below to the same value as 
     the one you use in the foundation.css */
 
-@media only screen and (min-width: 930px) {
-  #menubar .title-area li.name,
-  #categorymenu .title-area li.name { display: none; }
-  .row { max-width: 880px; }
-  }
-
 /* 
 ========================================================================
-ADDITIONAL MEDIA QUERIES
-Special CSS rules for small screens, large screens, touch, etc.
+-- OFF CANVAS MENU
 ========================================================================
 */
-@media only screen and (max-width: 500px) {
-  .products_tabular .item,
-  .products_shortened .item,
-  .subcategories_shortened .item,
-  #homepage .products_tabular .item { display: block; float: none; width: 100%; margin: 0 0 5px 0; }
-  .Kartris-DetailsView-Value { width: 270px; }
-  ul { max-width: 100%; }
-  #pagecontent_pad { min-height: 200px; padding-bottom: 15px; }
-  .hand { cursor: default; }
-  .versions td.info { max-width: 200px; overflow: hidden; }
-  }
+a.off-canvas-open                       { color: #333; background: #ccc; text-transform: uppercase; font-size: 13px; font-weight: bold; position: relative; display: block; padding: 0 15px 0 43px; height: 45px; margin-bottom: 5px; border-bottom: solid 1px #888; line-height: 45px; }
+a.off-canvas-open::before               { content: ""; position: absolute; left: 15px; display: block; width: 16px; top: 6px; height: 0; box-shadow: 0 10px 0 1px #333, 0 16px 0 1px #333, 0 22px 0 1px #333; }
+a.off-canvas-close                      { color: #fff; font-size: 29px; font-weight: bold; display: block; padding: 8px 20px; }
+.left-off-canvas-menu ul li             { list-style-type:none; }
+.left-off-canvas-menu ul li a           { display: block; height: auto; background: #333333; border-top: solid 1px #999; padding: 3px 15px 9px 3px; line-height: 20px; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: bold; color: #fff; }
 
 /* 
 ========================================================================
 -- accordion style
 ========================================================================
 */
-#categorymenu .accordion                { display: block; margin: 2px 0 5px 0; }
+#categorymenu .accordion                { display: block; margin: 20px 0 5px 0; }
 #categorymenu .accordion .AccordionHeader + div
                                         { position: relative; z-index: 1; top: -1px; overflow: hidden; }
 #categorymenu .accordion .AccordionHeader
@@ -85,10 +89,51 @@ Special CSS rules for small screens, large screens, touch, etc.
 
 /* 
 ========================================================================
+BIG SCREENS
+========================================================================
+*/
+@media only screen and (min-width: 930px) {
+  #menubar .title-area li.name,
+  #categorymenu .title-area li.name { display: none; }
+  .row { max-width: 100%; }
+  #container #centre_container { padding: 0 20px; }
+  }
+
+/* 
+========================================================================
+SMALL SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 930px) {
+  .products_tabular .item,
+  .products_shortened .item,
+  .subcategories_shortened .item,
+  #homepage .products_tabular .item { display: block; float: none; width: 100%; margin: 0 0 5px 0; }
+  .Kartris-DetailsView-Value { width: 270px; }
+  ul { max-width: 100%; }
+  #pagecontent_pad { min-height: 200px; padding-bottom: 15px; }
+  .hand { cursor: default; }
+  .versions td.info { max-width: 200px; overflow: hidden; }
+  .basket td.quantity input { width: 32px; text-align: right; }
+  #container { padding: 0; }
+  select,
+  input { width: 100%; }
+  #footer_inside { margin: 0; }
+
+  /* Menus */
+  #menubar .top-bar { min-height: 0px; }
+  #menubar .top-bar-section li a:not(.button) { width: auto; height: auto; padding: 5px 10px; }
+  #menubar .top-bar.expanded .title-area { background: #f90; }
+  #menubar .top-bar .title-area li.name a { padding: 0 10px; color: #fff; }
+  #menubar .top-bar-section ul { background: #f94; }
+  }
+
+/* 
+========================================================================
 ORBIT SLIDESHOW
 ========================================================================
 */
-#front-slideshow                        { background-color: #fd5; }
+#front-slideshow                        { background-color: #e5e5e5; }
 #front-slideshow li                     { padding: 10px 80px; min-height: 200px; }
 
 /* 
