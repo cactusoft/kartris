@@ -127,6 +127,23 @@ Partial Class UserControls_Back_CustomPages
     End Function
 
     ''' <summary>
+    ''' Loads parents
+    ''' </summary>
+    ''' <value></value>
+    ''' <remarks></remarks>
+    Public Shared Function SafeDateFormat(ByVal objValue As Object, ByVal numLanguageID As Byte) As String
+        Dim strDate As String = ""
+        Try
+            strDate = objValue.ToString
+            Return CkartrisDisplayFunctions.FormatDate(strDate, "t", numLanguageID)
+        Catch ex As Exception
+            Return "-"
+        End Try
+
+    End Function
+
+
+    ''' <summary>
     ''' Loads list of all custom pages
     ''' </summary>
     ''' <value></value>

@@ -53,7 +53,7 @@
                                         <asp:Literal ID="litContentTextNewsDateCreated" runat="server" Text="<%$ Resources:_Kartris, ContentText_DateCreated %>" />
                                     </HeaderTemplate>
                                     <ItemTemplate>
-                                        <asp:Literal ID="litDateCreated" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(Eval("Page_DateCreated"), "t", Session("_LANG")) %>' />
+                                        <asp:Literal ID="litDateCreated" runat="server" Text='<%# SafeDateFormat(Eval("Page_DateCreated"), Session("_LANG")) %>' />
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField ItemStyle-CssClass="column5">
@@ -61,7 +61,7 @@
                                         <asp:Literal ID="litContentTextNewsLastUpdated" runat="server" Text="<%$ Resources:_Kartris, ContentText_LastUpdated %>" />
                                     </HeaderTemplate>
                                     <ItemTemplate>
-                                        <asp:Literal ID="litLastUpdated" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(Eval("Page_LastUpdated"), "t", Session("_LANG")) %>' />
+                                        <asp:Literal ID="litLastUpdated" runat="server" Text='<%# SafeDateFormat(Eval("Page_LastUpdated"), Session("_LANG"))%>' />
                                     </ItemTemplate>
                                 </asp:TemplateField>
                                 <asp:TemplateField ItemStyle-CssClass="selectfield">
