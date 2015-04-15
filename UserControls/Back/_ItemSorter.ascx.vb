@@ -101,10 +101,22 @@ Partial Class _ItemSorter
 
     Private Sub RenameItems()
         
+        Dim strBaseName As String = ""
         Dim strName As String = ""
         For i As Byte = 0 To lbxImagesOrder.Items.Count - 1
-            strName = "temp-" & lbxImagesOrder.Items(i).Text
-            strName = Left(strName, strName.IndexOf("_") + 1)
+            If i = 0 Then
+                strBaseName = "temp-" & lbxImagesOrder.Items(i).Text
+                If strBaseName.Contains("_") Then
+                    'This was uploaded via Kartris, should have ordinal
+                    'number part at end after an underscore
+                    strBaseName = Left(strBaseName, strBaseName.IndexOf("_") + 1)
+                Else
+                    'This could be from a CactuShop or spreadsheet upload
+                    'using the Data Tool
+                    strBaseName = Left(strBaseName, strBaseName.IndexOf(".")) & "_"
+                End If
+            End If
+            strName = strBaseName
             If i < 9 Then strName += "0"
             strName += (i + 1) & Right(lbxImagesOrder.Items(i).Text, 4)
             File.Copy(Server.MapPath(c_FolderPath & lbxImagesOrder.Items(i).Text), _
