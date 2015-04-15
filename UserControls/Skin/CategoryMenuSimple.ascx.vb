@@ -16,8 +16,25 @@ Partial Class UserControls_Skin_CategoryMenu
 
     Inherits System.Web.UI.UserControl
     Private _lngCategoryID As Long = 0
+    Private _numMenuLevels As Byte = 0
     Private _strParent As String = ""
     Private _strInitialDropdownText As String = "-"
+
+    ''' <summary>
+    ''' Number of levels to show in menu
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Property MenuLevels() As Byte
+        Get
+            Return _numMenuLevels
+        End Get
+        Set(ByVal value As Byte)
+            _numMenuLevels = value
+        End Set
+    End Property
+
 
     ''' <summary>
     ''' Get or set the root category for this control 
@@ -33,6 +50,7 @@ Partial Class UserControls_Skin_CategoryMenu
             _lngCategoryID = value
         End Set
     End Property
+
     ''' <summary>
     ''' Get or set the category parent string - QS: strParent
     ''' </summary>
@@ -50,7 +68,7 @@ Partial Class UserControls_Skin_CategoryMenu
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
-        menCategory.MaximumDynamicDisplayLevels = 0
+        menCategory.MaximumDynamicDisplayLevels = MenuLevels
 
         'Set starting node of sitemap
         'This allows the possibility of having two

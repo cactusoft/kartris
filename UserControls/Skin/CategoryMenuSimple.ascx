@@ -1,6 +1,6 @@
 <%@ Control Language="VB" AutoEventWireup="false" EnableViewState="false" CodeFile="CategoryMenuSimple.ascx.vb"
     Inherits="UserControls_Skin_CategoryMenu" %>
-<%@ OutputCache Duration="1" VaryByCustom="culture;user" VaryByParam="CategoryID" Shared="true" %>
+<%@ OutputCache Duration="300" VaryByCustom="culture;user" VaryByParam="CategoryID" Shared="true" %>
 <%
     '-----------------------------------
     'We cache this control for 300 secs,
