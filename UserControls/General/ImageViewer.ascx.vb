@@ -218,7 +218,7 @@ Partial Class ImageViewer
                                     litSingleImage.Text &= "<img alt=""" & strAltText & """ src=""" & _
                                         strImageMainViewStart & """ />"
                                     litSingleImage.Text &= "</div>" & vbCrLf
-                                    litLargeViewLink2.Text = "<span onclick=""javascript:ShowLargeViewPopup()"">" & GetGlobalResourceObject("Product", "ContentText_LargeView") & "</span>"
+                                    litLargeViewLink2.Text = "<span class=""hide-for-small"" onclick=""javascript:ShowLargeViewPopup()"">" & GetGlobalResourceObject("Product", "ContentText_LargeView") & "</span>"
                                 End If
 
                                 'We add gallery, and the 'imageviewer' in above to
@@ -368,7 +368,7 @@ Partial Class ImageViewer
                             "style=""height: " & numImageHeightMax & "px;"">"
                         litMainImage.Text &= "<img alt=""" & strAltText & """ id=""placeholder" & strJSFunctionDifferentiate & """ src=""" & strImageMainViewStart & """ />" & vbCrLf
                         litMainImage.Text &= "</div>"
-                        litLargeViewLink.Text = "<span onclick=""javascript:ShowLargeViewPopup()"">" & GetGlobalResourceObject("Product", "ContentText_LargeView") & "</span>"
+                        litLargeViewLink.Text = "<span class=""hide-for-small"" onclick=""javascript:ShowLargeViewPopup()"">" & GetGlobalResourceObject("Product", "ContentText_LargeView") & "</span>"
 
                     End If
 
