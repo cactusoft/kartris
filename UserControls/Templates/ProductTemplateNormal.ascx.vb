@@ -25,7 +25,7 @@ Partial Class ProductTemplateNormal
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         Dim strNavigateURL As String = SiteMapHelper.CreateURL(SiteMapHelper.Page.Product, litProductID.Text, Request.QueryString("strParent"), Request.QueryString("CategoryID"))
-
+        Dim blnCallForPrice As Boolean = ObjectConfigBLL.GetValue("K:product.callforprice", litProductID.Text) = 1
 
         lnkProductName.NavigateUrl = strNavigateURL
 
@@ -40,21 +40,33 @@ Partial Class ProductTemplateNormal
 
         'Determine what to show for 'from' price
         Select Case GetKartConfig("frontend.products.display.fromprice").ToLower
-
             Case "y" 'From $X.XX
-                litPriceView.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), CDbl(litPriceHidden.Text))
-                litPriceFrom.Visible = True
-                litPriceView.Visible = True
+                If blnCallForPrice Then
+                    litPriceFrom.Visible = True
+                    litPriceFrom.Text = GetGlobalResourceObject("Versions", "ContentText_CallForPrice")
+                    litPriceView.Visible = False
+                    divPrice.Visible = True
+                Else
+                    litPriceView.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), CDbl(litPriceHidden.Text))
+                    litPriceFrom.Visible = True
+                    litPriceView.Visible = True
+                End If
 
             Case "p" '$X.XX
-                litPriceView.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), CDbl(litPriceHidden.Text))
-                litPriceFrom.Visible = False
-                litPriceView.Visible = True
+                If blnCallForPrice Then
+                    litPriceFrom.Visible = True
+                    litPriceFrom.Text = GetGlobalResourceObject("Versions", "ContentText_CallForPrice")
+                    litPriceView.Visible = False
+                    divPrice.Visible = True
+                Else
+                    litPriceView.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), CDbl(litPriceHidden.Text))
+                    litPriceFrom.Visible = False
+                    litPriceView.Visible = True
+                End If
 
             Case Else 'No display
                 litPriceFrom.Visible = False
                 litPriceView.Visible = False
-
         End Select
     End Sub
 

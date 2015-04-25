@@ -37,6 +37,7 @@ Partial Class Templates_ProductTemplateSearchResult
             intPageNumber = 0
         End Try
 
+        Dim blnCallForPrice As Boolean = ObjectConfigBLL.GetValue("K:product.callforprice", CType(e.Item.FindControl("litProductID"), Literal).Text) = 1
         For Each ctlElement As Control In e.Item.Controls
 
             Dim strNavigateURL As String = "~/Product.aspx?ProductID=" & _
@@ -49,10 +50,8 @@ Partial Class Templates_ProductTemplateSearchResult
                     CType(e.Item.FindControl("lnkProductName"), HyperLink).NavigateUrl = strNavigateURL
 
                 Case "litPriceView"
-                    If ObjectConfigBLL.GetValue("K:product.callforprice", CType(e.Item.FindControl("litProductID"), Literal).Text) = 1 Then
-                        CType(e.Item.FindControl("litPriceView"), Literal).Visible = False
-                        CType(e.Item.FindControl("litPriceFrom"), Literal).Visible = False
-                    Else
+                    If Not blnCallForPrice Then
+
                         Dim numPrice As Single = 0.0F
                         numPrice = CDbl(CType(e.Item.FindControl("litPriceHidden"), Literal).Text)
                         numPrice = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), numPrice)
@@ -76,18 +75,31 @@ Partial Class Templates_ProductTemplateSearchResult
         Select Case GetKartConfig("frontend.products.display.fromprice").ToLower
 
             Case "y" 'From $X.XX
-                CType(e.Item.FindControl("litPriceFrom"), Literal).Visible = True
-                CType(e.Item.FindControl("litPriceView"), Literal).Visible = True
+                If blnCallForPrice Then
+                    CType(e.Item.FindControl("litPriceFrom"), Literal).Visible = True
+                    CType(e.Item.FindControl("litPriceView"), Literal).Visible = False
+                    CType(e.Item.FindControl("litPriceFrom"), Literal).Text = GetGlobalResourceObject("Versions", "ContentText_CallForPrice")
+                Else
+                    CType(e.Item.FindControl("litPriceFrom"), Literal).Visible = True
+                    CType(e.Item.FindControl("litPriceView"), Literal).Visible = True
+                End If
 
             Case "p" '$X.XX
-                CType(e.Item.FindControl("litPriceFrom"), Literal).Visible = False
-                CType(e.Item.FindControl("litPriceView"), Literal).Visible = True
+                If blnCallForPrice Then
+                    CType(e.Item.FindControl("litPriceFrom"), Literal).Visible = True
+                    CType(e.Item.FindControl("litPriceView"), Literal).Visible = False
+                    CType(e.Item.FindControl("litPriceFrom"), Literal).Text = GetGlobalResourceObject("Versions", "ContentText_CallForPrice")
+                Else
+                    CType(e.Item.FindControl("litPriceFrom"), Literal).Visible = False
+                    CType(e.Item.FindControl("litPriceView"), Literal).Visible = True
+                End If
 
             Case Else 'No display
                 CType(e.Item.FindControl("litPriceFrom"), Literal).Visible = False
                 CType(e.Item.FindControl("litPriceView"), Literal).Visible = False
 
         End Select
+
     End Sub
 
     'Do this with function as can use try catch,
