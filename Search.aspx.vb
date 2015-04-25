@@ -184,7 +184,7 @@ Partial Class Search
             'Write the search summary 'your search for XXX produced Y results'
             Dim strSearchSummaryTemplate = GetGlobalResourceObject("Search", "ContentText_SearchSummaryTemplate")
             If Not strSearchText = "" Then
-                strSearchSummaryTemplate = Replace(strSearchSummaryTemplate, "[searchterms]", strSearchText)
+                strSearchSummaryTemplate = Replace(strSearchSummaryTemplate, "[searchterms]", Server.HtmlEncode(strSearchText))
                 strSearchSummaryTemplate = Replace(strSearchSummaryTemplate, "[matches]", numTotalProducts)
                 litSearchResult.Text = strSearchSummaryTemplate
                 updSearchResultArea.Visible = True
