@@ -23,7 +23,7 @@ CATEGORY - Single page category
 ========================================================================
 */
 .category .main                         { display: block; padding: 2px 0 5px 0; border: 0; }
-.category .main .imageblock             { text-align: center; float: left; margin: 0 30px 20px 0; overflow: visible; width: 100px; }
+.category .main .imageblock             { text-align: center; float: left; margin: 0 30px 20px 0; overflow: visible; width: 150px; }
 .category .main .pad                    { margin: 0 0 0 0; zoom: 100%; /* To fix IE 'invisible text' rendering bug (http: //archivist.incutio.com/viewlist/css-discuss/57305) */; overflow: hidden; /* To fix image flow in extended view, mozz/opera */ }
 
 /* 
@@ -114,6 +114,7 @@ PRODUCT - Single page product
 .product div.textcolumn                 { padding: 0 0 20px 10px; }
 .product div.versions-holder            { float: right; }
 .product .section_promotions            { }
+.product div.spectable                  { margin-top: 20px; color: #090; white-space: pre-line; font-family: 'Courier New' } /* Imported specs field from CactuShop */
 /* 
 ========================================================================
 PRODUCTS - Multiple products per page listing
