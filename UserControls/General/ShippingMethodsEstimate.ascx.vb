@@ -79,34 +79,39 @@ Partial Class UserControls_ShippingMethodsEstimate
 
         Dim lstShippingMethods As List(Of ShippingMethod) = ShippingMethod.GetAll(_shippingdetails, _destinationid, CurrenciesBLL.ConvertCurrency(CurrenciesBLL.GetDefaultCurrency, _boundary, CUR_ID))
 
-        'add customer pickup if it is enabled in config
-        If Not String.IsNullOrEmpty(strPickupAvailable) Then
-            Dim spPickup As New ShippingMethod(strPickupAvailable, GetGlobalResourceObject("Shipping", "ContentText_ShippingPickupDesc"), 0, 0)
-            lstShippingMethods.Add(spPickup)
-        End If
-
-
-        If GetKartConfig("frontend.display.showtax") <> "y" Then
-            If GetKartConfig("general.tax.pricesinctax") <> "y" Then
-                'Show extax
-                gvwShippingMethods.Columns(2).HeaderText = GetGlobalResourceObject("Kartris", "ContentText_Price")
-                gvwShippingMethods.Columns(3).Visible = False
-            Else
-                'Show inctax
-                gvwShippingMethods.Columns(2).Visible = False
-                gvwShippingMethods.Columns(3).HeaderText = GetGlobalResourceObject("Kartris", "ContentText_Price")
+        If lstShippingMethods IsNot Nothing Then
+            lblError.Visible = False
+            'add customer pickup if it is enabled in config
+            If Not String.IsNullOrEmpty(strPickupAvailable) Then
+                Dim spPickup As New ShippingMethod(strPickupAvailable, GetGlobalResourceObject("Shipping", "ContentText_ShippingPickupDesc"), 0, 0)
+                lstShippingMethods.Add(spPickup)
             End If
-        End If
-        'hide extax field field showtax config is set to 'n'
-        'If GetKartConfig("frontend.display.showtax") <> "y" Then
-        '    gvwShippingMethods.Columns(2).Visible = False
-        '    gvwShippingMethods.Columns(3).HeaderText = GetGlobalResourceObject("Kartris", "ContentText_Price")
-        'Else
-        '    gvwShippingMethods.Columns(2).Visible = True
-        'End If
 
-        gvwShippingMethods.DataSource = lstShippingMethods
-        gvwShippingMethods.DataBind()
+
+            If GetKartConfig("frontend.display.showtax") <> "y" Then
+                If GetKartConfig("general.tax.pricesinctax") <> "y" Then
+                    'Show extax
+                    gvwShippingMethods.Columns(2).HeaderText = GetGlobalResourceObject("Kartris", "ContentText_Price")
+                    gvwShippingMethods.Columns(3).Visible = False
+                Else
+                    'Show inctax
+                    gvwShippingMethods.Columns(2).Visible = False
+                    gvwShippingMethods.Columns(3).HeaderText = GetGlobalResourceObject("Kartris", "ContentText_Price")
+                End If
+            End If
+            'hide extax field field showtax config is set to 'n'
+            'If GetKartConfig("frontend.display.showtax") <> "y" Then
+            '    gvwShippingMethods.Columns(2).Visible = False
+            '    gvwShippingMethods.Columns(3).HeaderText = GetGlobalResourceObject("Kartris", "ContentText_Price")
+            'Else
+            '    gvwShippingMethods.Columns(2).Visible = True
+            'End If
+
+            gvwShippingMethods.DataSource = lstShippingMethods
+            gvwShippingMethods.DataBind()
+        Else
+            lblError.Visible = True
+        End If
 
     End Sub
 
