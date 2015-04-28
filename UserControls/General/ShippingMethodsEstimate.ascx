@@ -20,7 +20,7 @@
             </asp:DropDownList>
             </div>
         </div>
-        
+        <asp:Label ID="lblError" runat="server" Text="Opps .. There is a problem in estimating the shipping cost in your address, please make sure your shipping address details are correct, then try again." Visible="false" ForeColor="Red"></asp:Label>
         <asp:Gridview ID="gvwShippingMethods" runat="server" AutoGenerateColumns="false" >
         <Columns>
              <asp:TemplateField ItemStyle-CssClass="name" HeaderText='<%$ Resources: Checkout, ContentText_ShipMethod %>'>
