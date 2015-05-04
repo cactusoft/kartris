@@ -7,7 +7,11 @@
 <%@ Register TagPrefix="user" TagName="CreditCardInput" Src="~/UserControls/Front/CreditCardInput.ascx" %>
 <%@ Register TagPrefix="user" Namespace="Kartris" Assembly="KartrisCheckboxValidator" %>
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
+
+
+
     <div id="checkout">
+
         <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
         <h1>
             <asp:Literal ID="litCheckoutTitle" runat="server" Text="<%$ Resources: PageTitle_CheckOut%>"
@@ -25,7 +29,7 @@
             </asp:View>
             <asp:View ID="viwCheckoutInput" runat="server">
 
-                 <!--
+                <!--
                 ===============================
                 PAYMENT METHODS
                 Dropdown if multiple choices
@@ -70,7 +74,8 @@
                         <div>
                             <br />
                             <asp:Button CausesValidation="false" ID="btnOk" CssClass="button" runat="server"
-                                Text="<%$ Resources: Kartris, ContentText_OK %>" /></div>
+                                Text="<%$ Resources: Kartris, ContentText_OK %>" />
+                        </div>
                         <asp:LinkButton ID="btnCancel" CssClass="closebutton linkbutton" runat="server" Text="X"
                             CausesValidation="false" />
                     </asp:Panel>
@@ -116,8 +121,9 @@
                                 <span class="checkbox">
                                     <asp:CheckBox ID="chkSameShippingAsBilling" runat="server" Checked="true" AutoPostBack="true" />
                                     <asp:Label ID="lblchkSameShipping" Text="<%$ Resources: Checkout, ContentText_SameShippingAsBilling %>"
-                                        runat="server" AssociatedControlID="chkSameShippingAsBilling" EnableViewState="true" /></span></p>
-                    <!--
+                                        runat="server" AssociatedControlID="chkSameShippingAsBilling" EnableViewState="true" /></span>
+                            </p>
+                            <!--
                     ===============================
                     EU VAT NUMBER
                     This section only displays if
@@ -135,7 +141,8 @@
                                             EnableViewState="false" /></h2>
                                     <div class="row">
                                         <div class="small-1 large-1 columns">
-                                            <strong><asp:Literal ID="litMSCode" runat="server" EnableViewState="true" /></strong>
+                                            <strong>
+                                                <asp:Literal ID="litMSCode" runat="server" EnableViewState="true" /></strong>
                                         </div>
                                         <div class="small-10 large-3 columns">
                                             <asp:TextBox ID="txtEUVAT" runat="server" EnableViewState="true" AutoPostBack="true"></asp:TextBox>
@@ -149,7 +156,7 @@
                     <div class="spacer">
                     </div>
                 </div>
-              
+
                 <!--
                 -------------------------------
                 PURCHASE ORDER NUMBER
@@ -158,17 +165,22 @@
                 selected.
                 -------------------------------
                 -->
-                <div class="section" id="phdPONumber" runat="server" style="display: none; margin-top: 10px;">
-                    <h2>
-                        <asp:Literal ID="litPONumber" runat="server" Text="<%$ Resources: Invoice, ContentText_PONumber %>"
-                            EnableViewState="false" /></h2>
-                    <div class="row">
-                        <div class="small-12 large-4 columns">
-                            <asp:TextBox ID="txtPurchaseOrderNo" Style="display: none" runat="server" />
-                        </div>
-                    </div>
-                </div>
-                
+                <asp:UpdatePanel ID="updMain" runat="server">
+                    <ContentTemplate>
+                        <asp:PlaceHolder ID="phdPONumber" runat="server" Visible="false">
+                            <div class="section">
+                                <h2>
+                                    <asp:Literal ID="litPONumber" runat="server" Text="<%$ Resources: Invoice, ContentText_PONumber %>"
+                                        EnableViewState="false" /></h2>
+                                <div class="row">
+                                    <div class="small-12 large-4 columns">
+                                        <asp:TextBox ID="txtPurchaseOrderNo" runat="server" />
+                                    </div>
+                                </div>
+                            </div>
+                        </asp:PlaceHolder>
+                    </ContentTemplate>
+                </asp:UpdatePanel>
                 <!--
                 ===============================
                 BASKET
@@ -186,7 +198,7 @@
                         </ContentTemplate>
                     </asp:UpdatePanel>
                 </div>
-                
+
                 <!--
                 ===============================
                 SHOW/HIDE JAVASCRIPT
@@ -198,14 +210,14 @@
                     'placeholder, as it is used for Ts and Cs too %>
                 <script type="text/javascript">
                 <!--
-                                       function toggle_visibility(id) {
-                                           var e = document.getElementById(id);
-                                           if (e.style.display == 'block')
-                                               e.style.display = 'none';
-                                           else
-                                               e.style.display = 'block';
-                                       }
-                //-->
+    function toggle_visibility(id) {
+        var e = document.getElementById(id);
+        if (e.style.display == 'block')
+            e.style.display = 'none';
+        else
+            e.style.display = 'block';
+    }
+    //-->
                 </script>
                 <!--
                 ===============================
@@ -214,12 +226,12 @@
                 ===============================
                 -->
                 <asp:PlaceHolder ID="phdCustomerComments" runat="server">
-                <a href="javascript:toggle_visibility('comments');" class="link2 icon_new">
-                    <asp:Literal ID="litComments" runat="server" Text="<%$ Resources: Checkout, SubTitle_Comments %>"
-                        EnableViewState="false" /></a>
-                <div id="comments" style="display: none; margin-top: 10px;">
-                    <asp:TextBox ID="txtComments" runat="server" TextMode="MultiLine"></asp:TextBox>
-                </div>
+                    <a href="javascript:toggle_visibility('comments');" class="link2 icon_new">
+                        <asp:Literal ID="litComments" runat="server" Text="<%$ Resources: Checkout, SubTitle_Comments %>"
+                            EnableViewState="false" /></a>
+                    <div id="comments" style="display: none; margin-top: 10px;">
+                        <asp:TextBox ID="txtComments" runat="server" TextMode="MultiLine"></asp:TextBox>
+                    </div>
                 </asp:PlaceHolder>
                 <!--
                 ===============================
@@ -234,7 +246,8 @@
                                 EnableViewState="false" /></h2>
                         <p>
                             <asp:Literal ID="litOrderEmailsText" runat="server" Text="<%$ Resources:Checkout,ContentText_OrderEmailsText%>"
-                                EnableViewState="false" /></p>
+                                EnableViewState="false" />
+                        </p>
                         <div class="inputform">
                             <span class="checkbox">
                                 <asp:CheckBox ID="chkOrderEmails" runat="server" Checked="true" />
@@ -253,31 +266,32 @@
                 ===============================
                 -->
                 <asp:PlaceHolder ID="phdMailingList" runat="server">
-                <div class="section">
-                    <h2>
-                        <asp:Literal ID="litMailingList" runat="server" Text="<%$ Resources: Kartris, PageTitle_MailingList%>" EnableViewState="false" /></h2>
-                    <p>
-                        <asp:Literal ID="litMailingListText" runat="server" Text="<%$ Resources: Checkout, ContentText_WantToMailingList%>"
-                            EnableViewState="false" /></p>
-                    <div class="inputform">
-                        <div>
-                            <span class="checkbox">
-                                <asp:CheckBox ID="chkMailingList" runat="server" Checked="true" />
-                                <asp:Label ID="lblYesAddMe" Text="<%$ Resources: Checkout, ContentText_YesAddMe %>"
-                                    runat="server" AssociatedControlID="chkMailingList" EnableViewState="true" /></span>
+                    <div class="section">
+                        <h2>
+                            <asp:Literal ID="litMailingList" runat="server" Text="<%$ Resources: Kartris, PageTitle_MailingList%>" EnableViewState="false" /></h2>
+                        <p>
+                            <asp:Literal ID="litMailingListText" runat="server" Text="<%$ Resources: Checkout, ContentText_WantToMailingList%>"
+                                EnableViewState="false" />
+                        </p>
+                        <div class="inputform">
+                            <div>
+                                <span class="checkbox">
+                                    <asp:CheckBox ID="chkMailingList" runat="server" Checked="true" />
+                                    <asp:Label ID="lblYesAddMe" Text="<%$ Resources: Checkout, ContentText_YesAddMe %>"
+                                        runat="server" AssociatedControlID="chkMailingList" EnableViewState="true" /></span>
+                            </div>
+                            <div class="spacer">
+                            </div>
+                            <div>
+                                <asp:DropDownList ID="ddlMailingList" runat="server">
+                                    <asp:ListItem Text="<%$ Resources: Checkout, ContentText_SendMailsPlain %>" Value="t" />
+                                    <asp:ListItem Text="<%$ Resources: Checkout, ContentText_SendMailsHTML %>" Value="h" />
+                                </asp:DropDownList>
+                            </div>
                         </div>
                         <div class="spacer">
                         </div>
-                        <div>
-                            <asp:DropDownList ID="ddlMailingList" runat="server">
-                                <asp:ListItem Text="<%$ Resources: Checkout, ContentText_SendMailsPlain %>" Value="t" />
-                                <asp:ListItem Text="<%$ Resources: Checkout, ContentText_SendMailsHTML %>" Value="h" />
-                            </asp:DropDownList>
-                        </div>
                     </div>
-                    <div class="spacer">
-                    </div>
-                </div>
                 </asp:PlaceHolder>
                 <!--
                 ===============================
@@ -292,7 +306,8 @@
                                 EnableViewState="false" /></h2>
                         <p>
                             <asp:Literal ID="litSaveBasketText" runat="server" Text="<%$ Resources: Checkout, ContentText_SaveBasketOnCheckout %>"
-                                EnableViewState="false" /></p>
+                                EnableViewState="false" />
+                        </p>
                         <div class="inputform">
                             <span class="checkbox">
                                 <asp:CheckBox ID="chkSaveBasket" runat="server" Checked="false" />
@@ -320,7 +335,8 @@
                         <div id="terms" style="display: none; margin-top: 10px;">
                             <div class="pad">
                                 <asp:Literal ID="litContentTextTermsAndConditions" runat="server" Text="<%$ Resources: Checkout, ContentText_TermsAndConditions %>"
-                                    EnableViewState="false" /></div>
+                                    EnableViewState="false" />
+                            </div>
                         </div>
                         <div class="spacer">
                         </div>
@@ -350,7 +366,8 @@
                     <p>
                         <strong>
                             <asp:Literal ID="litReviewOrder" runat="server" Text="<%$ Resources: PageTitle_ReviewYourOrder %>"
-                                EnableViewState="false" /></strong></p>
+                                EnableViewState="false" /></strong>
+                    </p>
                     <!--
                     -------------------------------
                     BILLING ADDRESS
@@ -393,7 +410,7 @@
                         <h2>
                             <asp:Literal ID="litProcessCurrencyText" runat="server" Text="<%$ Resources: Email, EmailText_ProcessCurrencyExp1 %>"
                                 EnableViewState="false" />
-                        <asp:Label ID="lblProcessCurrency" runat="server"></asp:Label>
+                            <asp:Label ID="lblProcessCurrency" runat="server"></asp:Label>
                         </h2>
                     </asp:Panel>
                     <!--
@@ -415,16 +432,21 @@
                     <p>
                         <asp:Literal ID="litFormLabelSelectPayment" runat="server" Text="<%$ Resources: FormLabel_SelectPayment %>"
                             EnableViewState="false" />: <strong>
-                                <asp:Literal ID="litPaymentMethod" runat="server" EnableViewState="true" /></strong></p>
+                                <asp:Literal ID="litPaymentMethod" runat="server" EnableViewState="true" /></strong>
+                    </p>
+                    <asp:Literal ID="litPONumberText" runat="server"></asp:Literal>
                     <div class="tick">
                         <asp:Literal ID="litOrderEmailsYes2" Text="<%$ Resources: Checkout, ContentText_OrderEmailsYes %>"
-                            runat="server" EnableViewState="true" /></div>
+                            runat="server" EnableViewState="true" />
+                    </div>
                     <div class="tick">
                         <asp:Literal ID="litMailingListYes" Text="<%$ Resources: Checkout, ContentText_YesAddMe %>"
-                            runat="server" EnableViewState="true" /></div>
+                            runat="server" EnableViewState="true" />
+                    </div>
                     <div class="tick">
                         <asp:Literal ID="litSaveBasketYes" Text="<%$ Resources: Checkout, ContentText_SaveBasketYes %>"
-                            runat="server" EnableViewState="true" /></div>
+                            runat="server" EnableViewState="true" />
+                    </div>
                     <asp:PlaceHolder ID="phdCreditCardInput" runat="server">
                         <div class="section">
                             <user:CreditCardInput runat="server" ID="UC_CreditCardInput" />
@@ -465,9 +487,10 @@
             'This function below disables the scrolling function so
             'when the page is submitted, we should see any errors in
             'Validators
-            %>
+        %>
         <script type="text/javascript">
             window.scrollTo = function () { }
         </script>
     </div>
+
 </asp:Content>

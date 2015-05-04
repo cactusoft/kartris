@@ -188,16 +188,6 @@ Partial Class _Checkout
                                     'Default name for PO (offline payment)
                                     strGatewayName = GetGlobalResourceObject("Checkout", "ContentText_Po")
 
-                                    txtPurchaseOrderNo.Style.Item("display") = ""
-                                    phdPONumber.Style.Item("display") = ""
-
-                                    'script to show PO Number input when PO is selected as the payment option
-                                    Dim strScript As String = String.Empty
-                                    strScript += "var textBox = document.getElementById('" & txtPurchaseOrderNo.ClientID & "');"
-                                    strScript += "var placeholder = document.getElementById('" & phdPONumber.ClientID & "');"
-                                    strScript += "if(document.getElementById('" & ddlPaymentGateways.ClientID & "').value=='" & arrGateway(0).ToString & "')"
-                                    strScript += "{placeholder.style.display='';textBox.style.display='';} else {placeholder.style.display='none';textBox.value=''}"
-                                    ddlPaymentGateways.Attributes.Add("onChange", strScript)
                                 End If
 
                             End If
@@ -236,13 +226,15 @@ Partial Class _Checkout
                         ddlPaymentGateways.SelectedValue = ddlPaymentGateways.Items(1).Value
                         phdPaymentMethods.Visible = False
                         valPaymentGateways.Enabled = False 'disable validation just to be sure
+                        If _SelectedPaymentMethod = "PO_OfflinePayment" Then phdPONumber.Visible = True Else phdPONumber.Visible = False
                     Else
                         'More than one payment method available,
                         'show dropdown and give user the choice.
                         'Hide the PO number field.
                         phdPaymentMethods.Visible = True
-                        txtPurchaseOrderNo.Style.Item("display") = "none"
-                        phdPONumber.Style.Item("display") = "none"
+                        'txtPurchaseOrderNo.Style.Item("display") = "none"
+                        'phdPONumber.Style.Item("display") = "none"
+                        phdPONumber.Visible = False
                     End If
 
                     '---------------------------------------
@@ -489,6 +481,13 @@ Partial Class _Checkout
         _SelectedPaymentMethod = arrSelectedGateway(0)
         _blnAnonymousCheckout = CBool(arrSelectedGateway(1))
         ConfigureAddressFields(True)
+        If _SelectedPaymentMethod = "PO_OfflinePayment" Then
+            phdPONumber.Visible = True
+        Else
+            phdPONumber.Visible = False
+            txtPurchaseOrderNo.Text = ""
+            litPONumberText.Text = ""
+        End If
     End Sub
 
     ''' <summary>
@@ -803,6 +802,7 @@ Partial Class _Checkout
                 If _SelectedPaymentMethod.ToLower = "po_offlinepayment" Then
                     'Change 'po_offlinepayment' to language string for this payment type
                     litPaymentMethod.Text = Server.HtmlEncode(GetGlobalResourceObject("Checkout", "ContentText_Po"))
+                    litPONumberText.Text = GetGlobalResourceObject("Invoice", "ContentText_PONumber") & ": <strong>" & txtPurchaseOrderNo.Text & "</strong><br/><br/>"
                 Else
                     'try to get the friendly name - use the payment gateway name if its blank
                     Dim strFriendlyName As String = Payment.GetPluginFriendlyName(strGatewayName)
