@@ -67,11 +67,14 @@ Partial Class ProductCompareValues
             '' Reading the array of the Excluded Attributes
             If pNotIncludedAttributes.Length > 0 Then
                 For i As Integer = 0 To pNotIncludedAttributes.Length - 1
-                    '' If the ArributeID is in the Excluded Attributes, then it will not be added to the Attributes Table.
-                    If FixNullFromDB(itmRow("ATTRIB_ID")) = CInt(pNotIncludedAttributes(i)) Then
-                        blnToBeAdded = False
-                        Exit For
-                    End If
+                    Try
+                        '' If the ArributeID is in the Excluded Attributes, then it will not be added to the Attributes Table.
+                        If FixNullFromDB(itmRow("ATTRIB_ID")) = CInt(pNotIncludedAttributes(i)) Then
+                            blnToBeAdded = False
+                            Exit For
+                        End If
+                    Catch ex As Exception
+                    End Try
                 Next
             End If
 
