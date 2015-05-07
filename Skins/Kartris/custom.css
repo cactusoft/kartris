@@ -49,6 +49,7 @@ a newer version), just just grab the bits we need to change here.
                                         { color: #000; background-color: #aaa; }
 #categorymenu .top-bar-section .has-dropdown .dropdown li.has-dropdown > a:after
                                         { top: 1px; }
+#categorymenu .title-area li.name span  { display: none; }
 
 /* Mobile version */
 #categorymenu .top-bar.expanded li ul   { border: none; }
@@ -64,8 +65,6 @@ BIG SCREENS
 ========================================================================
 */
 @media only screen and (min-width: 930px) {
-  #menubar .title-area li.name,
-  #categorymenu .title-area li.name { display: none; }
   .row { max-width: 100%; }
   #container #centre_container { padding: 0 20px; }
   }
