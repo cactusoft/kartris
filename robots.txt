@@ -16,3 +16,5 @@ Disallow: /CustomerTickets.aspx
 Disallow: /CustomerViewOrder.aspx
 Disallow: /Wishlist.aspx
 Disallow: /Basket.aspx
+Disallow: /WebResource.axd
+Disallow: /ScriptResource.axd
