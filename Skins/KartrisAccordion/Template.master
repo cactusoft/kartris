@@ -166,6 +166,8 @@
 								&copy;2015 CACTUSOFT
 							</div>
 						</div>
+						<!-- close the off-canvas menu -->
+						<a class="exit-off-canvas"></a>
 					</div>
 				</div>
 				<user:AdminBar ID="UC_AdminBar" runat="server" />
@@ -177,7 +179,6 @@
 			</script>
 		</div>
 	</div>
-	<!-- close the off-canvas menu -->
-	<a class="exit-off-canvas"></a>
+
 </body>
 </html>
