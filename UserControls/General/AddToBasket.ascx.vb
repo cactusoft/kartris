@@ -292,7 +292,7 @@ Partial Class UserControls_General_AddToBasket
                         ddlItemsQuantity.Text = bitValue
                     End If
                 Else
-                    btnAdd.Text = GetGlobalResourceObject("_Kartris", "FormButton_Add")
+                    btnAdd.Text = GetGlobalResourceObject("Products", "FormButton_Add")
                     If bitValue >= numCounter Then
                         ddlItemsQuantity.Items.Add(bitValue)
                         ddlItemsQuantity.SelectedValue = bitValue
