@@ -69,15 +69,23 @@ Partial Class UserControls_Back_EditAttributes
         Dim tblAttribute As New DataTable
         tblAttribute = AttributesBLL._GetByAttributeID(CInt(litAttributeID.Text))
 
-        If tblAttribute.Rows.Count = 0 Then Return '' the attribute is not exist 
+        If tblAttribute.Rows.Count = 0 Then Return '' the attribute does not exist 
 
         chkLive.Checked = CBool(tblAttribute.Rows(0)("ATTRIB_Live"))
         chkShowInProductPage.Checked = CBool(tblAttribute.Rows(0)("ATTRIB_ShowFrontend"))
         chkShowOnSearch.Checked = CBool(tblAttribute.Rows(0)("ATTRIB_ShowSearch"))
         ddlCompare.SelectedValue = CStr(tblAttribute.Rows(0)("ATTRIB_Compare"))
         txtSortByValue.Text = CStr(FixNullFromDB(tblAttribute.Rows(0)("ATTRIB_OrderByValue")))
+        chkGoogleSpecial.Checked = CBool(tblAttribute.Rows(0)("ATTRIB_Special"))
 
         _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.Attributes, False, CLng(litAttributeID.Text))
+
+        If chkGoogleSpecial.Checked = True Then
+            mvwOptions.SetActiveView(viwGoogleSpecial)
+        Else
+            mvwOptions.SetActiveView(viwNotGoogleSpecial)
+        End If
+
     End Sub
 
     ''' <summary>
