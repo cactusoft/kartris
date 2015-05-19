@@ -29,8 +29,8 @@ Imports System.Xml
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 2.8004
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #4/10/2015# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION As Decimal = 2.8005
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #5/5/2015# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
@@ -2240,10 +2240,10 @@ Public NotInheritable Class CKartrisCSVExporter
             strData.AppendLine(WriteDataInfo(tblToExport.Columns, row))
         Next
 
-        Dim data() As Byte = System.Text.ASCIIEncoding.ASCII.GetBytes(strData.ToString)
+        Dim data() As Byte = System.Text.UTF8Encoding.UTF8.GetBytes(strData.ToString)
 
         Current.Response.Clear()
-        Current.Response.AddHeader("Content-Type", "application/Excel")
+        Current.Response.AddHeader("Content-Type", "application/Excel; charset=utf-8")
         Current.Response.AddHeader("Content-Disposition", "inline;filename=" & strFileName.Replace(" ", "_") & ".csv")
         Current.Response.AddHeader("Content-Length", data.Length.ToString)
         Current.Response.BinaryWrite(data)
