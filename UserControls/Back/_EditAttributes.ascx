@@ -40,7 +40,7 @@
                                 ValueToCompare="0" /></span></li>
                     <!-- Google Feed Special -->
                     <li><span class="Kartris-DetailsView-Name">
-                        <asp:Literal ID="Literal1" runat="server" Text='<%$ Resources: _Attributes, FormLabel_SpecialUse %>' /></span><span
+                        <asp:Literal ID="litSpecialUse" runat="server" Text='<%$ Resources: _Attributes, FormLabel_SpecialUse %>' /></span><span
                             class="Kartris-DetailsView-Value">
                             <asp:CheckBox ID="chkGoogleSpecial" runat="server" CssClass="checkbox" AutoPostBack="true" /></span></li>
                     <asp:UpdatePanel ID="updOptions" runat="server" UpdateMode="Conditional">
