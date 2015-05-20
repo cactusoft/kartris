@@ -222,6 +222,7 @@ Partial Class Templates_BasketView
         End If
 
         If blnIsInCheckout And Not ViewType = BasketBLL.VIEW_TYPE.MINI_BASKET Then
+            RefreshShippingMethods()
             SetShipping(UC_ShippingMethodsDropdown.SelectedShippingID, UC_ShippingMethodsDropdown.SelectedShippingAmount, ShippingDestinationID)
         Else
             Call Basket.Validate(False)

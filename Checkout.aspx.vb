@@ -424,10 +424,6 @@ Partial Class _Checkout
                     End If
                 End If
 
-
-
-
-
                 '---------------------------------------
                 'SELECT DEFAULT ADDRESSES
                 '---------------------------------------
