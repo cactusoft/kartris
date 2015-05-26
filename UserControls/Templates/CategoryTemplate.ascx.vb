@@ -79,7 +79,6 @@ Partial Class CategoryTemplate
             phdCategoryImage.Visible = False
         End If
         
-
         phdCategoryDetails.Visible = True
 
     End Sub
