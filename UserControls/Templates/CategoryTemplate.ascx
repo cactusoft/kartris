@@ -7,13 +7,9 @@
     <div class="category">
         <div class="main">
             <div class="description">
-                <%--<% If KartSettingsManager.GetKartConfig("frontend.category.showimage") = "y" Then%>--%>
                 <asp:PlaceHolder ID="phdCategoryImage" runat="server">
-                    <div class="imageblock">
-                        <user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="True" />
-                    </div>
+                      <user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="True" />
                 </asp:PlaceHolder>
-                <%--<% End If%>--%>
                 <asp:Literal ID="litCategoryDesc" runat="server"></asp:Literal>
             </div>
         </div>

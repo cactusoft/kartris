@@ -148,8 +148,6 @@ Partial Class ImageViewer
 
         _eImageType = eImageType
         _strImagesDirName = strImagesDirName
-        '_strDifferentiation = strDifferentiation
-
         _eViewType = viewType
 
         'find what folder and images we're looking for
@@ -170,6 +168,12 @@ Partial Class ImageViewer
                 'But folder found
                 '=======================================
                 NoImage(numImageHeight, numImageWidth, _blnPlaceHolder, strHyperlink)
+
+                'If we don't want placeholders, then we hide whole 
+                'control instead
+                If _blnPlaceHolder = False Then
+                    Me.Visible = False
+                End If
 
             ElseIf dirFolder.GetFiles().Length = 1 Or strHyperlink <> "" Then
 
