@@ -46,6 +46,7 @@
                                         EnableViewState="false" /></h2>
 
                                 <asp:DropDownList CssClass="" ID="ddlPaymentGateways" runat="server" AutoPostBack="true" />
+                                <asp:Literal ID="litPaymentGatewayHidden" runat="server"></asp:Literal>
                                 <asp:RequiredFieldValidator EnableClientScript="True" ID="valPaymentGateways" runat="server"
                                     ControlToValidate="ddlPaymentGateways" CssClass="error" InitialValue="::False" ForeColor="" ValidationGroup="Checkout"
                                     Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator>
