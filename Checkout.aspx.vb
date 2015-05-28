@@ -76,7 +76,7 @@ Partial Class _Checkout
             'this user is not authorized to use it. We hide the other payment
             'methods.
             Dim objBasket As BasketBLL = Session("Basket")
-            Dim blnOrderIsFree = (objBasket.FinalPriceIncTax = 0)
+            Dim blnOrderIsFree = False 'Disable, suspect this might misfire (objBasket.FinalPriceIncTax = 0)
             If blnOrderIsFree Then
                 'Add the PO option with name 'FREE' and hide payment selection
                 'The 'False' flag indicates this is not for authorized users
@@ -227,6 +227,10 @@ Partial Class _Checkout
                         phdPaymentMethods.Visible = False
                         valPaymentGateways.Enabled = False 'disable validation just to be sure
                         If _SelectedPaymentMethod = "PO_OfflinePayment" Then phdPONumber.Visible = True Else phdPONumber.Visible = False
+
+                        'Store value in hidden field. We hope this will be more
+                        'robust if page times out
+                        litPaymentGatewayHidden.Text = _SelectedPaymentMethod
                     Else
                         'More than one payment method available,
                         'show dropdown and give user the choice.
@@ -399,7 +403,6 @@ Partial Class _Checkout
                 '---------------------------------------
                 'SHIPPING/BILLING ADDRESS NOT SAME
                 '---------------------------------------
-
                 If (Not CurrentLoggedUser.DefaultBillingAddressID = CurrentLoggedUser.DefaultShippingAddressID) Then
                     If Not _blnAnonymousCheckout Then
                         chkSameShippingAsBilling.Checked = False
@@ -477,6 +480,12 @@ Partial Class _Checkout
         _SelectedPaymentMethod = arrSelectedGateway(0)
         _blnAnonymousCheckout = CBool(arrSelectedGateway(1))
         ConfigureAddressFields(True)
+
+        'Store value in hidden field. We hope this will be more
+        'robust if page times out
+        litPaymentGatewayHidden.Text = _SelectedPaymentMethod
+
+        'Decide whether to show PO field
         If _SelectedPaymentMethod = "PO_OfflinePayment" Then
             phdPONumber.Visible = True
         Else
@@ -901,8 +910,7 @@ Partial Class _Checkout
             'order) / offline payment method, where a
             'user can checkout without giving card
             'details and will pay offline.
-            If LCase(clsPlugin.GatewayType) <> "local" Or blnValid Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
-                clsPlugin.GatewayName.ToLower = "bitcoin" Then
+            If LCase(clsPlugin.GatewayType) <> "local" Or blnValid Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin" Then
 
                 'Setup variables to use later
                 Dim C_ID As Integer = 0
