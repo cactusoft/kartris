@@ -34,6 +34,7 @@
             <asp:TemplateField ItemStyle-CssClass="datefield" HeaderText='<%$ Resources:_Kartris, ContentText_Date %>'>
                 <ItemTemplate>
                     <asp:Literal ID="litOrderDate" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(Eval("O_Date"), "t", Session("_LANG")) %>' />
+                    <asp:Literal ID="litO_Date" runat="server" Text='<%# CkartrisDisplayFunctions.FormatBackwardsDate(Eval("O_Date"))%>' Visible="false" />
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField ItemStyle-CssClass="currencyfield" HeaderText='<%$ Resources:_Kartris, ContentText_Value %>'>

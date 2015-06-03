@@ -289,7 +289,6 @@ Partial Class UserControls_Back_OrdersList
                     litOrderValue.Text = "? " & numOrderValue
                 End Try
 
-
                 If ViewState("_BatchProcess") Then
                     Dim phdBatchProcess As PlaceHolder = DirectCast(e.Row.FindControl("phdBatchProcess"), PlaceHolder)
                     Dim hidOrderID As HiddenField = DirectCast(e.Row.FindControl("hidOrderID"), HiddenField)
@@ -300,10 +299,11 @@ Partial Class UserControls_Back_OrdersList
                     Dim chkOrderInvoiced As CheckBox = DirectCast(e.Row.FindControl("chkOrderInvoiced"), CheckBox)
                     Dim chkOrderShipped As CheckBox = DirectCast(e.Row.FindControl("chkOrderShipped"), CheckBox)
                     Dim litOrderDate As Literal = DirectCast(e.Row.FindControl("litOrderDate"), Literal)
+                    Dim litO_Date As Literal = DirectCast(e.Row.FindControl("litO_Date"), Literal) 'Unformatted, for use later rather than converting the friendly date back
 
                     Dim chkOrderCancelled As CheckBox = DirectCast(e.Row.FindControl("chkOrderCancelled"), CheckBox)
 
-                    Dim datOrderDate As Date = CType(litOrderDate.Text, Date)
+                    Dim datOrderDate As Date = CType(litO_Date.Text, Date)
 
                     'This block changes the row style based on the Order Status
                     If chkOrderPaid.Checked Then
@@ -448,6 +448,4 @@ Partial Class UserControls_Back_OrdersList
         Response.Redirect("_OrdersList.aspx?callmode=unfinished")
     End Sub
 
-
-    
 End Class
