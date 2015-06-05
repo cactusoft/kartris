@@ -81,6 +81,7 @@ Partial Class UserControls_Front_MediaGallery
             Dim strWebShopURL As String = CkartrisBLL.WebShopURL
 
             Dim strIconLink As String
+            Dim blnCustomThumb As Boolean
 
             Dim drvMediaLink As DataRowView = CType(e.Item.DataItem, DataRowView)
 
@@ -116,6 +117,14 @@ Partial Class UserControls_Front_MediaGallery
             'Get thumbnail or media type icon
             strIconLink = GetThumbPath(intML_ID, strMT_Extension)
 
+            'Need to know if this is a custom thumbnail, can find this
+            'from the path. If it is, we will make it a bit bigger and
+            'can format a little differently. Custom thumbs will normally
+            'be thumbnail images of a video for example, rather than an
+            'icon which you'd generally set centrally for a particular file
+            'type.
+            blnCustomThumb = Not strIconLink.Contains("Images/MediaTypes/")
+
             Dim strML_EmbedSource1 As String = ""
 
             If String.IsNullOrEmpty(strML_EmbedSource) Then
@@ -131,7 +140,6 @@ Partial Class UserControls_Front_MediaGallery
                     Exit Sub
                 End If
             End If
-
 
             If blnisInline Then
                 Dim litInline As New Literal
@@ -152,13 +160,10 @@ Partial Class UserControls_Front_MediaGallery
                         UC_Media.Attributes.Add("Width", intWidth)
                         If strMT_Extension = "html5video" Then UC_Media.Attributes.Add("WebM", strML_EmbedSource1)
 
-                        'try to get if media link has its own set of parameters
-                        Dim strParameters As String = FixNullFromDB(drvMediaLink.Item("ML_Parameters"))
-
-                        'and get the default paramters from the media type if none
-                        If String.IsNullOrEmpty(strParameters) Then
-                            strParameters = FixNullFromDB(drvMediaLink.Item("MT_DefaultParameters"))
-                        End If
+                        'Previously we got this from db, but now we just preset this, and
+                        'use the parameters field for text which is more useful. Nobody
+                        'seems to change these anyway.
+                        Dim strParameters As String = "autostart=0;autoreplay=1;showtime=1;randomplay=1;nopointer=1"
 
                         'parse the parameters
                         'format: parameter1=value1;parameter2=value2;parameter3=value3
@@ -185,36 +190,48 @@ Partial Class UserControls_Front_MediaGallery
                 End If
 
             Else
-                If blnisDownloadable Then
-                    'Show media popup
-                    Dim strMediaImageLink As String = "<img alt="""" class=""media_image"" src=""" & _
-                                    strIconLink & """ />"
 
+                'Set image
+                Dim strMediaImageLink As String = "<img alt="""" class=""media_link"" src=""" & _
+                                strIconLink & """ />"
+
+
+                If blnisDownloadable Or strMT_Extension = "urlnewtab" Then
                     'Show download link
                     Dim lnkDownload As HyperLink = CType(e.Item.FindControl("lnkDownload"), HyperLink)
                     If lnkDownload IsNot Nothing Then
-                        If blnisDownloadable Then
+                        If blnisDownloadable Or strMT_Extension = "urlnewtab" Then 'Handle URL new tab
                             lnkDownload.Visible = True
-                            lnkDownload.Text = strMediaImageLink
+                            lnkDownload.Text = strMediaImageLink & FixNullFromDB(drvMediaLink.Item("ML_Parameters"))
                             lnkDownload.NavigateUrl = strML_EmbedSource
                             lnkDownload.Target = "_blank"
+                            If blnCustomThumb Then
+                                lnkDownload.CssClass = lnkDownload.CssClass & " customthumb"
+                            End If
                         Else
                             lnkDownload.Visible = False
                         End If
                     End If
                 Else
-                    'Show media popup
-                    Dim strMediaImageLink As String = "<img alt="""" class=""media_image"" src=""" & _
-                                    strIconLink & """ />"
+                    If strMT_Extension = "urlpopup" Then
+                        'popup with URL in iframe
+                        CType(e.Item.FindControl("litMediaLink"), Literal).Text = "<a class=""" & IIf(blnCustomThumb, "customthumb", "") & """ id=""poplink_" & intML_ID & """ href=""javascript:ShowURLPopup('" & _
+                                        strML_EmbedSource & "','" & intWidth & "','" & intHeight & "')"">" & _
+                                        strMediaImageLink & FixNullFromDB(drvMediaLink.Item("ML_Parameters")) & "</a>"
+                    Else
+                        'popup media launcher
+                        CType(e.Item.FindControl("litMediaLink"), Literal).Text = "<a class=""" & IIf(blnCustomThumb, "customthumb", "") & """ id=""poplink_" & intML_ID & """ href=""javascript:ShowMediaPopup('" & _
+                                        intML_ID & "','" & strMT_Extension & "','" & _ParentID & "','" & _ParentType & "','" & intWidth & "','" & intHeight & "')"">" & _
+                                        strMediaImageLink & FixNullFromDB(drvMediaLink.Item("ML_Parameters")) & "</a>"
+                    End If
 
-                    CType(e.Item.FindControl("litMediaLink"), Literal).Text = "<a class = """ & intML_ID & """ href=""javascript:ShowMediaPopup('" & _
-                                    intML_ID & "','" & strMT_Extension & "','" & _ParentID & "','" & _ParentType & "','" & intWidth & "','" & intHeight & "')"">" & _
-                                    strMediaImageLink & "</a>"
                 End If
             End If
         End If
     End Sub
-    
+
+    'Function to find either default icon, or custom
+    'thumbnail (if available)
     Function GetThumbPath(ByVal numMediaID As String, ByVal strMediaType As String) As String
         Dim strWebShopURL As String = CkartrisBLL.WebShopURL
 

@@ -193,11 +193,18 @@ MEDIA (Video, audio, etc.)
 .imagecolumn .media_gallery             { padding: 5px 0 0 0 }
 .imagecolumn .media_gallery h2			{ font-size: 100%; margin: 0; padding: 3px 0 5px 0; color: #000; font-weight: bold; }
 .imagecolumn .media_gallery_inner       { margin: 1px 0 1px 0 }
+/* media links, new styles (v2.8006 and earlier) */
 .media_links .mediaholder a             { text-align: center; padding: 0px; display: block; margin: auto auto auto auto; height: 52px; }
 .media_links .mediaholder:hover			{ border: solid 1px #fc5 }
 .media_links .mediaholder img           { vertical-align: middle; margin: 5px; height: 50px; width: 50px; }
-.media_links .mediaholder               { display: inline-block; float: left; margin: 0 1px 2px 1px; vertical-align: middle; border: solid 1px #aaa; width: 60px; height: 60px; overflow: visible; }
-.media_downloadlink                     { }
+.media_links .mediaholder               { display: inline-block; float: left; margin: 0 1px 2px 0; vertical-align: middle; border: solid 1px #aaa; width: 60px; height: 60px; overflow: visible; }
+/* media links, new styles (v2.8006 onwards) */
+.media_links .mediaholder_horiz a       { text-align: left; padding: 1px; display: block; font-weight: bold; }
+.media_links .mediaholder_horiz a:hover { color: #000; text-decoration: none; }
+.media_links .mediaholder_horiz img     { vertical-align: middle; margin-right: 5px; }
+.media_links .mediaholder_horiz         { display: block; margin: 0 1px 2px 0; vertical-align: middle; overflow: visible;}                { }
+.media_links .mp3player                 { border: solid 1px #888; background-color: #888; margin: 2px 1px; border-radius: 3px; }
+.media_links .customthumb img           { width: 100px; }
 /* media gallery for versions, hide title */
 .versions .media_gallery h2             { display: none }
 /* 

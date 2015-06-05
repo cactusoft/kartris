@@ -117,9 +117,7 @@ Partial Class UserControls_Back_EditMedia
             e.Item.ItemType = ListItemType.Item Then
 
             Dim strWebShopURL As String = CkartrisBLL.WebShopURL
-
             Dim strIconLink As String
-
             Dim drvMediaLink As DataRowView = CType(e.Item.DataItem, DataRowView)
 
             'get this item's media type details
@@ -165,9 +163,13 @@ Partial Class UserControls_Back_EditMedia
                 litInline.Text += strML_EmbedSource & "</div>"
                 phdInline.Controls.Add(litInline)
             End If
+
             'Show media popup
+            Dim blnCustomThumb As Boolean = Not strIconLink.Contains("Images/MediaTypes/")
+            Dim numHeightWidth As Integer = 80
+            If Not blnCustomThumb Then numHeightWidth = 32
             Dim strMediaImageLink As String = "<img alt="""" class=""media_image"" src=""" & _
-                            "../Image.aspx?strFullPath=" & strIconLink & "&numMaxHeight=80&numMaxWidth=80"" />"
+                            "../Image.aspx?strFullPath=" & strIconLink & "&numMaxHeight=" & numHeightWidth & "&numMaxWidth=" & numHeightWidth & """ />"
 
             CType(e.Item.FindControl("litMediaLink"), Literal).Text = "<a class = """ & intML_ID & """>" & _
                             strMediaImageLink & "</a>"
@@ -184,7 +186,7 @@ Partial Class UserControls_Back_EditMedia
         Dim strMediaLinksFolder As String = KartSettingsManager.GetKartConfig("general.uploadfolder") & "Media/"
         Dim strMT_IconFolder As String = "Images/MediaTypes/"
         Dim strMT_Extension As String = FixNullFromDB(drwLink("MT_Extension"))
-        Dim blnDefaultMediaThumb = True
+        Dim blnDefaultMediaThumb As Boolean = True
         Dim strThumbNameLink As String = GetThumbPath(numMediaID, strMT_Extension, blnDefaultMediaThumb)
         Dim strFileName As String = numMediaID & "." & FixNullFromDB(drwLink("MT_Extension"))
         Dim strFileName2 As String = ""
@@ -195,7 +197,7 @@ Partial Class UserControls_Back_EditMedia
         Dim intHeight As Integer = 0
         Dim intWidth As Integer = 0
 
-        '' Thumb
+        'Thumb
         Dim blnThumbExist As Boolean = False
         If strThumbNameLink IsNot Nothing Then
             imgMediaThumb.ImageUrl = strThumbNameLink & "?nocache=" & Now.Hour & Now.Minute & Now.Second
@@ -206,12 +208,19 @@ Partial Class UserControls_Back_EditMedia
             litImgName.Visible = False
         End If
 
+        'Set height and width of icon/image
+        If blnDefaultMediaThumb Then
+            litImgHeight.Text = 32
+            litImgWidth.Text = 32
+        Else
+            litImgHeight.Text = 60
+            litImgWidth.Text = 60
+        End If
+
         'If blnDefaultMediaThumb Then lnkRemoveThumb.Visible = False
         lnkUploadThumb.Visible = blnDefaultMediaThumb : lnkRemoveThumb.Visible = Not blnDefaultMediaThumb
 
-        '' File
-
-
+        'File
         Dim blnFileExist As Boolean = File.Exists(Server.MapPath(strMediaLinksFolder & strFileName))
         lnkUploadFile.Visible = Not blnFileExist : lnkRemoveFile.Visible = blnFileExist
 
@@ -251,8 +260,11 @@ Partial Class UserControls_Back_EditMedia
             intWidth = FixNullFromDB(drwMediaType("MT_DefaultWidth"))
         End If
 
-        'get parameters
+        'get parameters, there are two because
+        'this field is used in both the embedded and
+        'non-embedded route
         txtParameters.Text = FixNullFromDB(drwLink("ML_Parameters"))
+        txtParameters2.Text = FixNullFromDB(drwLink("ML_Parameters"))
 
         'Set the height and width on the page
         txtHeight.Text = intHeight
@@ -325,19 +337,31 @@ Partial Class UserControls_Back_EditMedia
     Sub CheckType(Optional ByVal blnSetDefaultValues As Boolean = False)
         phdMediaDetails.Visible = True
         Dim drwType As DataRow = MediaBLL._GetMediaTypesByID(ddlMediaType.SelectedValue).Rows(0)
+
+        'Find default height and width settings
         litDefaultHeight.Text = FixNullFromDB(drwType("MT_DefaultHeight"))
         litDefaultWidth.Text = FixNullFromDB(drwType("MT_DefaultWidth"))
+
+        'For legacy reasons, this is called parameter text. But now
+        'we just use it as a text label for the media
         litDefaultParameter.Text = FixNullFromDB(drwType("MT_DefaultParameters"))
+
+        'Is item a downloadable file?
         If GetMediaLinkID() = 0 Then chkDownloadable.Checked = CBool(FixNullFromDB(drwType("MT_DefaultisDownloadable")))
+
+        'Is item embedded?
         Dim blnIsEmbed As Boolean = CBool(FixNullFromDB(drwType("MT_Embed")))
+
+        'Set some stuff up in form
         chkEmbed.Checked = blnIsEmbed
         phdEmbed.Visible = blnIsEmbed
         phdNonEmbedControls.Visible = Not blnIsEmbed
         valRequiredEmbedSource.Enabled = blnIsEmbed
+
         If Not blnIsEmbed Then
             valRequiredHeight.Enabled = Not chkDefaultHeight.Checked
             valRequiredWidth.Enabled = Not chkDefaultWidth.Checked
-            valRequiredParameters.Enabled = Not chkDefaultParameters.Checked
+
             If FixNullFromDB(drwType("MT_Extension")) = "html5video" Then
                 lblUploadFile2.Visible = True
                 lblUploadFile2.Text = GetGlobalResourceObject("_Media", "ContentText_MediaFile") & " (WebM)"
@@ -376,19 +400,23 @@ Partial Class UserControls_Back_EditMedia
         If GetMediaLinkID() = 0 AndAlso blnSetDefaultValues Then
             chkDefaultHeight.Checked = True : chkDefaultHeight_CheckedChanged(Me, New EventArgs)
             chkDefaultWidth.Checked = True : chkDefaultWidth_CheckedChanged(Me, New EventArgs)
-            chkDefaultParameters.Checked = True : chkDefaultParameters_CheckedChanged(Me, New EventArgs)
+            'chkDefaultParameters.Checked = True : chkDefaultParameters_CheckedChanged(Me, New EventArgs)
         End If
+
+        'Hide the height and width for items where not needed. These normally default to 10, so
+        'we use that to decide when to hide.
+        If FixNullFromDB(drwType("MT_DefaultHeight")) < 20 Then phdHeightWidth.Visible = False Else phdHeightWidth.Visible = True
     End Sub
 
-    Protected Sub chkDefaultParameters_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkDefaultParameters.CheckedChanged
-        txtParameters.Enabled = Not chkDefaultParameters.Checked
-        If chkDefaultParameters.Checked Then
-            txtParameters.Text = litDefaultParameter.Text
-            valRequiredParameters.Enabled = False
-        Else
-            valRequiredParameters.Enabled = Not chkEmbed.Checked
-        End If
-    End Sub
+    'Protected Sub chkDefaultParameters_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkDefaultParameters.CheckedChanged
+    '    txtParameters.Enabled = Not chkDefaultParameters.Checked
+    '    If chkDefaultParameters.Checked Then
+    '        txtParameters.Text = litDefaultParameter.Text
+    '        valRequiredParameters.Enabled = False
+    '    Else
+    '        valRequiredParameters.Enabled = Not chkEmbed.Checked
+    '    End If
+    'End Sub
 
     Protected Sub chkDefaultHeight_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkDefaultHeight.CheckedChanged
         txtHeight.Enabled = Not chkDefaultHeight.Checked
@@ -605,7 +633,7 @@ Partial Class UserControls_Back_EditMedia
             strEmbedSource = txtEmbedSource.Text
             numHeight = 0
             numWidth = 0
-            strParameter = Nothing
+            strParameter = txtParameters2.Text
             blnDownloadable = False
         Else
             strEmbedSource = Nothing

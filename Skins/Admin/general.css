@@ -234,7 +234,7 @@ ITEM SORTER (IMAGE RE-ORDERING)
 #column_sorter_right                    { display: block }
 .placeholder_sorter                     { display: block; height: 90px; padding: 5px 0 5px 0; border-bottom: solid 3px #eee; }
 #column_sorter_right .updownbuttons     { float: left; width: 30px; }
-.sort_image_holder                      { float: left; width: 100px; height: 90px; }
+.sort_image_holder                      { float: left; width: 100px; height: 90px; padding-right: 10px; text-align: right; }
 .sort_details_holder                    { float: left; width: 190px; font-size: 90%; }
 .sort_remove_holder                     { float: left; width: 100px; text-align: right; }
 span.media_label                        { display: inline-block; width: 120px; padding: 0 0 1px 0; font-weight: bold; }

@@ -11,7 +11,7 @@
             <asp:Repeater ID="rptMediaLinks" runat="server">
                 <ItemTemplate>
                     <div class="media_links">
-                        <div class="mediaholder">
+                        <div class="mediaholder_horiz">
                             <asp:Literal ID="litMediaLink" runat="server"></asp:Literal>
                             <asp:PlaceHolder ID="phdInline" runat="server" />
                             <asp:HyperLink Visible="false" CssClass="media_downloadlink" ID="lnkDownload" runat="server"
