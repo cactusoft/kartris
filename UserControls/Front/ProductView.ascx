@@ -41,6 +41,24 @@
         objFrame.show();
     }
 
+    //Function to set URL for iframe of media popup, size it, and show it
+    function ShowURLPopup(ML_EmbedSource, intWidth, intHeight) {
+        //Set some variables we use later
+        var objFrame = $find('cntMain_UC_ProductView_tbcProduct_tabMain_UC_PopUpMedia_popMessage');
+
+        var objMediaIframeBaseUrl = ML_EmbedSource;
+        var objPopupWindow = document.getElementById('cntMain_UC_ProductView_tbcProduct_tabMain_UC_PopUpMedia_pnlMessage');
+        var objMediaIframe = document.getElementById('media_iframe');
+
+        //Set target URL
+        objMediaIframe.src = objMediaIframeBaseUrl;
+
+        //Size popup dynamically based on file type
+        objPopupWindow.style.width = (intWidth * 1 + 20) + "px";
+        objPopupWindow.style.height = (intHeight * 1 + 15) + "px";
+        //Show the popup
+        objFrame.show();
+    }
     //]]>
 </script>
 
