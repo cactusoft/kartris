@@ -272,6 +272,7 @@ Partial Class UserControls_Back_EditMedia
 
         chkDownloadable.Checked = FixNullFromDB(drwLink("ML_isDownloadable"))
         chkLive.Checked = FixNullFromDB(drwLink("ML_Live"))
+        If strMT_Extension.Contains("url") Then litMediaSource.Text = "URL"
         mvwMedia.SetActiveView(viwEditMedia)
 
         'Create preview link
@@ -357,6 +358,13 @@ Partial Class UserControls_Back_EditMedia
         phdEmbed.Visible = blnIsEmbed
         phdNonEmbedControls.Visible = Not blnIsEmbed
         valRequiredEmbedSource.Enabled = blnIsEmbed
+
+        'For url types, change 'embed source' text to 'URL'
+        If FixNullFromDB(drwType("MT_Extension")).Contains("url") Then
+            litMediaSource.Text = "URL"
+        Else
+            litMediaSource.Text = GetGlobalResourceObject("_Media", "ContentText_EmbedSource")
+        End If
 
         If Not blnIsEmbed Then
             valRequiredHeight.Enabled = Not chkDefaultHeight.Checked
