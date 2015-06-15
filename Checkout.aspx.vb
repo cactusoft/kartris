@@ -76,7 +76,7 @@ Partial Class _Checkout
             'this user is not authorized to use it. We hide the other payment
             'methods.
             Dim objBasket As BasketBLL = Session("Basket")
-            Dim blnOrderIsFree = False 'Disable, suspect this might misfire (objBasket.FinalPriceIncTax = 0)
+            Dim blnOrderIsFree As Boolean = False 'Disable, suspect this might misfire (objBasket.FinalPriceIncTax = 0)
             If blnOrderIsFree Then
                 'Add the PO option with name 'FREE' and hide payment selection
                 'The 'False' flag indicates this is not for authorized users
