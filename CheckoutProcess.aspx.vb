@@ -24,11 +24,11 @@ Partial Class checkout_process
             strOutput = Session("_CallBackMessage")
             btnSubmit.PostBackUrl = Session("_PostBackURL")
         Else
-            Dim BasketObject As BasketBLL = DirectCast(Session("BasketObject"), BasketBLL)
+            Dim BasketObject As Kartris.Basket = DirectCast(Session("BasketObject"), Kartris.Basket)
             strGatewayName = Session("GateWayName")
             Dim clsPlugin As Kartris.Interfaces.PaymentGateway
             clsPlugin = Payment.PPLoader(strGatewayName)
-            Dim GatewayBasketBLL As New BasketBLL
+            Dim GatewayBasketBLL As New kartris.Basket
             Dim BasketXML As String
             If clsPlugin.RequiresBasketItems Then
                 Dim intGatewayCurrencyID As Integer = 0

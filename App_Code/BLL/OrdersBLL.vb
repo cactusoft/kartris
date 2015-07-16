@@ -118,7 +118,7 @@ Public Class OrdersBLL
                                            ByVal BillingAddress As KartrisClasses.Address, ByVal ShippingAddress As KartrisClasses.Address, _
                                            ByVal blnSameShippingAsBilling As Boolean, _
                                             ByVal O_Sent As Boolean, ByVal O_Invoiced As Boolean, ByVal O_Paid As Boolean, ByVal O_Shipped As Boolean, _
-                                          ByVal BasketObject As BasketBLL, ByVal BasketArray As ArrayList, _
+                                          ByVal BasketObject As Kartris.Basket, ByVal BasketArray As List(Of Kartris.BasketItem), _
                                            ByVal strShippingMethod As String, ByVal strNotes As String, _
                                           ByVal numGatewayTotalPrice As Double, ByVal O_PurchaseOrderNo As String, _
                                           ByVal strPromotionDescription As String, ByVal intCurrencyID As Integer, _
@@ -137,8 +137,8 @@ Public Class OrdersBLL
 
 
                 Dim intNewOrderID As Integer = 0
-                Dim objBasket As BasketBLL = BasketObject
-                Dim arrBasketItems As ArrayList = BasketArray
+                Dim objBasket As Kartris.Basket = BasketObject
+                Dim arrBasketItems As List(Of Kartris.BasketItem) = BasketArray
                 Dim strBillingAddressText As String, strShippingAddressText As String
 
                 'Build the billing address string to be used in the order record
@@ -235,9 +235,9 @@ Public Class OrdersBLL
 
 
                 If objBasket.PromotionDiscount.IncTax < 0 Then
-                    Dim objPromotions As New ArrayList
+                    Dim objPromotions As New List(Of Kartris.Promotion)
                     Dim objPromotionsDiscount As New ArrayList
-                    objBasket.CalculatePromotions(objPromotions, objPromotionsDiscount, False)
+                    BasketBLL.CalculatePromotions(objBasket, objPromotions, objPromotionsDiscount, False)
                     For Each objPromotion As PromotionBasketModifier In objPromotionsDiscount
                         Dim cmdAddPromotionLinks As New SqlCommand("spKartrisOrdersPromotions_Add", sqlConn, savePoint)
                         cmdAddPromotionLinks.CommandType = CommandType.StoredProcedure
@@ -552,7 +552,7 @@ Public Class OrdersBLL
     ''' <returns>Returns the newly created order ID</returns>
     Public Shared Function Add(ByVal C_ID As Integer, ByVal strUserEmailAddress As String, ByVal strUserPassword As String, _
               ByVal BillingAddress As KartrisClasses.Address, ByVal ShippingAddress As KartrisClasses.Address, _
-              ByVal blnSameShippingAsBilling As Boolean, ByVal BasketObject As BasketBLL, ByVal BasketArray As ArrayList, _
+              ByVal blnSameShippingAsBilling As Boolean, ByVal BasketObject As Kartris.Basket, ByVal BasketArray As List(Of Kartris.BasketItem), _
               ByVal strOrderDetails As String, ByVal strGatewayName As String, _
               ByVal intLanguageID As Integer, ByVal intCurrencyID As Integer, ByVal intGatewayCurrencyID As Integer, _
               ByVal blnOrderEmails As Boolean, ByVal strShippingMethod As String, ByVal numGatewayTotalPrice As Double, _
@@ -573,8 +573,8 @@ Public Class OrdersBLL
                 Dim blnNewUser As Boolean
                 Dim strBillingAddressText As String = "", strShippingAddressText As String = ""
 
-                Dim objBasket As BasketBLL = BasketObject
-                Dim arrBasketItems As ArrayList = BasketArray
+                Dim objBasket As Kartris.Basket = BasketObject
+                Dim arrBasketItems As List(Of Kartris.BasketItem) = BasketArray
 
                 'if C_ID has a value then we have a legitimate user - proceed with the order transaction
                 If C_ID = 0 Then
@@ -686,7 +686,7 @@ Public Class OrdersBLL
                 If HttpContext.Current.Session("C_AffiliateID") IsNot Nothing Then
                     intAffiliateID = CInt(HttpContext.Current.Session("C_AffiliateID"))
                     If intAffiliateID > 0 Then
-                        If objBasket.IsCustomerAffiliate(intAffiliateID) Then
+                        If AffiliateBLL.IsCustomerAffiliate(intAffiliateID) Then
                             Dim cmdUpdateAffiliate As New SqlCommand("spKartrisCustomer_UpdateAffiliate", sqlConn, savePoint)
                             cmdUpdateAffiliate.CommandType = CommandType.StoredProcedure
                             With cmdUpdateAffiliate.Parameters
@@ -786,9 +786,9 @@ Public Class OrdersBLL
 
 
                 If objBasket.PromotionDiscount.IncTax < 0 Then
-                    Dim objPromotions As New ArrayList
+                    Dim objPromotions As New List(Of Kartris.Promotion)
                     Dim objPromotionsDiscount As New ArrayList
-                    objBasket.CalculatePromotions(objPromotions, objPromotionsDiscount, False)
+                    BasketBLL.CalculatePromotions(objBasket, objPromotions, objPromotionsDiscount, False)
                     For Each objPromotion As PromotionBasketModifier In objPromotionsDiscount
                         Dim cmdAddPromotionLinks As New SqlCommand("spKartrisOrdersPromotions_Add", sqlConn, savePoint)
                         With cmdAddPromotionLinks

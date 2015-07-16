@@ -519,6 +519,7 @@ MAIN BASKET
                                                 <user:ShippingMethods ID="UC_ShippingMethodsDropdown" runat="server" />
                                                 <br />
                                             </asp:PlaceHolder>
+                                            <%="" %>
                                             <% If ViewOnly Then%>
                                             <strong>
                                                 <%=Basket.ShippingName%></strong> -

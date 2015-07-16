@@ -128,7 +128,7 @@ Partial Class UserControls_Back_CreateOrder
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub LoadBasket()
-        Dim objBasket As BasketBLL = _UC_BasketMain.GetBasket
+        Dim objBasket As kartris.Basket = _UC_BasketMain.GetBasket
         Dim sessionID As Long = Session("SessionID")
 
         objBasket = Session("Basket")
@@ -406,9 +406,9 @@ Partial Class UserControls_Back_CreateOrder
                     _UC_OptionsPopup.ShowPopup(intVersionID, FixNullFromDB(dr("V_ProductID")), FixNullFromDB(dr("V_CodeNumber"))) '' Show options for selected product
                 Case Else           '' Normal Product
                     litOptionsVersion.Text = ""
-                    Dim objBasket As BasketBLL = _UC_BasketMain.GetBasket
+                    Dim objBasket As kartris.Basket = _UC_BasketMain.GetBasket
                     Dim sessionID As Long = Session("SessionID")
-                    objBasket.AddNewBasketValue(BasketBLL.BASKET_PARENTS.BASKET, sessionID, intVersionID, 1, "", "")
+                    BasketBLL.AddNewBasketValue(objBasket.BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, intVersionID, 1, "", "")
                     _UC_AutoComplete_Item.SetText("")
                     Session("Basket") = objBasket
                     LoadBasket()
@@ -454,8 +454,9 @@ Partial Class UserControls_Back_CreateOrder
             Dim _blnAnonymousCheckout As Boolean = False
             Dim blnBasketAllDigital As Boolean = False
 
-            Dim arrBasketItems As ArrayList
-            Dim objBasket As BasketBLL = Session("Basket")
+            'Dim arrBasketItems As ArrayList
+            Dim BasketItems As List(Of Kartris.BasketItem)
+            Dim objBasket As kartris.Basket = Session("Basket")
             Dim objOrder As Kartris.Interfaces.objOrder = Nothing
             Dim strOrderDetails As String = ""
 
@@ -854,20 +855,19 @@ Partial Class UserControls_Back_CreateOrder
 
                 sbdBodyText.Insert(0, sbdBasketItems.ToString)
 
-                arrBasketItems = _UC_BasketMain.GetBasketItems
-                If Not (arrBasketItems Is Nothing) Then
+                BasketItems = _UC_BasketMain.GetBasketItems
+                If Not (BasketItems Is Nothing) Then
                     Dim BasketItem As New BasketItem
                     'final check if basket items are still there
-                    If arrBasketItems.Count = 0 Then
+                    If BasketItems.Count = 0 Then
                         CkartrisFormatErrors.LogError("Basket items were lost in the middle of Checkout! Customer redirected to main Basket page." & vbCrLf & _
                                                       "Details: " & vbCrLf & "C_ID:" & IIf(Not String.IsNullOrEmpty(Trim(litOrderCustomerID.Text)), litOrderCustomerID.Text, " New User") & vbCrLf & _
                                                         "Payment Gateway: " & clsPlugin.GatewayName & vbCrLf & _
                                                         "Generated Body Text: " & sbdBodyText.ToString)
                         Response.Redirect("~/Basket.aspx")
                     End If
-                    For i As Integer = 0 To arrBasketItems.Count - 1
-                        BasketItem = arrBasketItems(i)
-                        With BasketItem
+                    For Each Item As Kartris.BasketItem In BasketItems
+                        With Item
                             Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", BasketItem.ProductID)
                             Dim strCustomText As String = ""
 
@@ -920,7 +920,7 @@ Partial Class UserControls_Back_CreateOrder
                 'Create the order record
                 O_ID = OrdersBLL.Add(C_ID, txtOrderCustomerEmail.Text, txtNewPassword.Text, _UC_BillingAddress.SelectedAddress, _
                                      _UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket, _
-                                      arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID, _
+                                      BasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID, _
                                      intGatewayCurrency, chkSendOrderUpdateEmail.Checked, _UC_BasketMain.SelectedShippingMethod, numGatewayTotalPrice, _
                                      IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtOrderPONumber.Text, "")
 
@@ -1232,8 +1232,8 @@ Partial Class UserControls_Back_CreateOrder
                                 'Clear object, transfer to the 
                                 'CheckoutComplete.aspx page
                                 '---------------------------------------
-                                Dim BasketObject As BasketBLL = New BasketBLL
-                                BasketObject.DeleteBasket()
+                                'Dim BasketObject As Kartris.Basket = New Kartris.Basket
+                                BasketBLL.DeleteBasket()
                                 Session("Basket") = Nothing
                                 'Session("OrderDetails") = strCallBodyText
                                 'Session("OrderID") = O_ID
@@ -1339,9 +1339,9 @@ Partial Class UserControls_Back_CreateOrder
         If Not String.IsNullOrEmpty(litOptionsVersion.Text) AndAlso litOptionsVersion.Text = numVersionID Then
             _UC_OptionsPopup.ClearIDs() '' reset product id and version id for the options popup
             litOptionsVersion.Text = Nothing
-            Dim objBasket As BasketBLL = _UC_BasketMain.GetBasket
+            Dim objBasket As kartris.Basket = _UC_BasketMain.GetBasket
             Dim sessionID As Long = Session("SessionID")
-            objBasket.AddNewBasketValue(BasketBLL.BASKET_PARENTS.BASKET, sessionID, numVersionID, 1, "", strOptions)
+            BasketBLL.AddNewBasketValue(objBasket.BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, numVersionID, 1, "", strOptions)
             LoadBasket()
         End If
     End Sub

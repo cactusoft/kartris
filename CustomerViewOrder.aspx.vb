@@ -19,7 +19,7 @@ Partial Class Customer_ViewOrder
 
 	Protected APP_PricesIncTax, APP_ShowTaxDisplay As Boolean
 	Private objCurrency As New CurrenciesBLL
-	Private objBasket As New BasketBLL
+	Private objBasket As New kartris.Basket
 	Private numTaxDue, numTotalPriceExTax, numTotalPriceIncTax, numCouponDiscount, numCustomerDiscount, numShipping, numOrderHandlingCharge, numTotal As Double
 	Private numDiscountPercentage, numPromotionDiscountTotal, numCouponDiscountTotal, CP_DiscountValue As Double
 	Private strCouponCode, CP_DiscountType, CP_CouponCode As String
@@ -51,7 +51,7 @@ Partial Class Customer_ViewOrder
         UC_CustomerOrder.ShowOrderSummary = True
         UC_CustomerOrder.OrderID = numOrderID
 
-        tblOrder = objBasket.GetCustomerOrderDetails(numOrderID)
+        tblOrder = BasketBLL.GetCustomerOrderDetails(numOrderID)
 
         If tblOrder.Rows.Count > 0 Then
             If tblOrder.Rows(0).Item("O_CustomerID") <> numCustomerID Then

@@ -96,10 +96,10 @@ Partial Class _Affiliate_PayRep
     End Function
 
     Sub RefreshCommissionSummary()
-        Dim objBasket As New BasketBLL
+        Dim objBasket As New kartris.Basket
         Dim tblCommissions As New DataTable
 
-        tblCommissions = objBasket._GetCustomerAffiliateCommissionSummary(UserID)
+        tblCommissions = AffiliateBLL._GetCustomerAffiliateCommissionSummary(UserID)
         If tblCommissions.Rows.Count > 0 Then
             litEmail.Text = tblCommissions.Rows(0).Item("EmailAddress")
             litPaidCommission.Text = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, tblCommissions.Rows(0).Item("PaidCommission"))
@@ -116,11 +116,11 @@ Partial Class _Affiliate_PayRep
     End Sub
 
     Sub RefreshUnpaidCommissionList()
-        Dim objBasket As New BasketBLL
+        Dim objBasket As New kartris.Basket
         Dim intTotalRowCount As Integer
         Dim tblCommissions As New DataTable
 
-        tblCommissions = objBasket._GetCustomerAffiliateUnpaidCommission(UserID, 1, 1000000)
+        tblCommissions = AffiliateBLL._GetCustomerAffiliateUnpaidCommission(UserID, 1, 1000000)
         intTotalRowCount = tblCommissions.Rows.Count
 
         If intTotalRowCount = 0 Then
@@ -139,7 +139,7 @@ Partial Class _Affiliate_PayRep
             _UC_UnpaidPager.CurrentPage = IIf(_UC_UnpaidPager.CurrentPage - 1 < 0, 0, _UC_UnpaidPager.CurrentPage - 1)
         End If
 
-        gvwUnpaid.DataSource = objBasket._GetCustomerAffiliateUnpaidCommission(UserID, _UC_UnpaidPager.CurrentPage + 1, intPageSize)
+        gvwUnpaid.DataSource = AffiliateBLL._GetCustomerAffiliateUnpaidCommission(UserID, _UC_UnpaidPager.CurrentPage + 1, intPageSize)
         gvwUnpaid.DataBind()
         _UC_UnpaidPager.TotalItems = intTotalRowCount
         _UC_UnpaidPager.ItemsPerPage = intPageSize
@@ -152,11 +152,11 @@ Partial Class _Affiliate_PayRep
     End Sub
 
     Sub RefreshPaidCommissionList()
-        Dim objBasket As New BasketBLL
+        Dim objBasket As New kartris.Basket
         Dim intTotalRowCount As Integer
         Dim tblCommissions As New DataTable
 
-        tblCommissions = objBasket._GetCustomerAffiliatePaidCommission(UserID, 1, 1000000)
+        tblCommissions = AffiliateBLL._GetCustomerAffiliatePaidCommission(UserID, 1, 1000000)
         intTotalRowCount = tblCommissions.Rows.Count
 
         If intTotalRowCount = 0 Then
@@ -173,7 +173,7 @@ Partial Class _Affiliate_PayRep
             _UC_PaidPager.CurrentPage = IIf(_UC_PaidPager.CurrentPage - 1 < 0, 0, _UC_PaidPager.CurrentPage - 1)
         End If
 
-        gvwPaid.DataSource = objBasket._GetCustomerAffiliatePaidCommission(UserID, _UC_PaidPager.CurrentPage + 1, intPageSize)
+        gvwPaid.DataSource = AffiliateBLL._GetCustomerAffiliatePaidCommission(UserID, _UC_PaidPager.CurrentPage + 1, intPageSize)
         gvwPaid.DataBind()
 
         _UC_PaidPager.TotalItems = intTotalRowCount
@@ -215,15 +215,15 @@ Partial Class _Affiliate_PayRep
 
 
     Protected Sub btnSetAsPaid_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSetAsPaid.Click
-        Dim objBasket As New BasketBLL
+        Dim objBasket As New kartris.Basket
         Dim intAffiliatePaymentID, intOrderID As Integer
 
-        intAffiliatePaymentID = objBasket._AddAffiliatePayments(UserID)
+        intAffiliatePaymentID = AffiliateBLL._AddAffiliatePayments(UserID)
 
         For Each grwCommission As GridViewRow In gvwUnpaid.Rows
             If CType(grwCommission.FindControl("chkPaid"), CheckBox).Checked Then
                 intOrderID = CInt(CType(grwCommission.FindControl("hidOrderID"), HiddenField).Value)
-                objBasket._UpdateAffiliateCommission(intAffiliatePaymentID, intOrderID)
+                AffiliateBLL._UpdateAffiliateCommission(intAffiliatePaymentID, intOrderID)
             End If
         Next
 
@@ -240,12 +240,12 @@ Partial Class _Affiliate_PayRep
     End Sub
 
     Protected Sub MarkUnpaid_Click(ByVal sender As Object, ByVal E As CommandEventArgs)
-        Dim objBasket As New BasketBLL
+        Dim objBasket As New kartris.Basket
         Dim intAffiliatePaymentID As Integer
 
         intAffiliatePaymentID = E.CommandArgument
 
-        objBasket._UpdateAffiliatePayment(intAffiliatePaymentID)
+        AffiliateBLL._UpdateAffiliatePayment(intAffiliatePaymentID)
 
         RefreshCommissionSummary()
 

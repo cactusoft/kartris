@@ -281,8 +281,8 @@ Partial Class Callback
                                                   Request.Form.ToString & vbCrLf & "QS: " & Request.QueryString.ToString)
                 End If
 
-                Dim BasketObject As BasketBLL = New BasketBLL
-                BasketObject.DeleteBasket()
+                'Dim BasketObject As kartris.Basket = new OldBasketBLL
+                BasketBLL.DeleteBasket()
                 Session("Basket") = Nothing
 
                 '-----------------------------------------------------

@@ -615,7 +615,7 @@ Partial Class ProductVersions
         If UC_CustomControl IsNot Nothing Then
             If UC_CustomControl.ComputeFromSelectedOptions() = "success" Then
                 Dim objMiniBasket As Object = Page.Master.FindControl("UC_MiniBasket")
-                Dim objBasket As BasketBLL = objMiniBasket.GetBasket
+                Dim objBasket As kartris.Basket = objMiniBasket.GetBasket
                 objMiniBasket.AddCustomItemToBasket(litHiddenV_ID.Text, ddlCustomVersionQuantity.SelectedValue,
                                             UC_CustomControl.ParameterValues & "|||" & UC_CustomControl.ItemDescription & "|||" & UC_CustomControl.ItemPrice)
             End If
@@ -993,7 +993,7 @@ Partial Class ProductVersions
     ''' </summary>
     ''' <remarks></remarks>
     Private Function GetPriceWithGroupDiscount(ByVal numVersionID As Long, ByVal numPrice As Double) As Double
-        Dim objBasket As New BasketBLL
+        Dim objBasket As New kartris.Basket
         Dim numCustomerID As Long = 0
         Dim numNewPrice, numCustomerGroupPrice As Double
 
@@ -1001,7 +1001,7 @@ Partial Class ProductVersions
             numCustomerID = CLng(DirectCast(Page, PageBaseClass).CurrentLoggedUser.ID)
         End If
 
-        numCustomerGroupPrice = objBasket.GetCustomerGroupPriceForVersion(numCustomerID, numVersionID)
+        numCustomerGroupPrice = BasketBLL.GetCustomerGroupPriceForVersion(numCustomerID, numVersionID)
         If numCustomerGroupPrice > 0 Then
             numNewPrice = Math.Min(numCustomerGroupPrice, numPrice)
         Else

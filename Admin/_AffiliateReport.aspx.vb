@@ -81,7 +81,7 @@ Partial Class _AffiliateReport
     Private Sub DisplayHitsReport()
         Dim aryAffiliateHits As New ArrayList
         Dim tblAffiliateHits As New Data.DataTable
-        Dim objBasket As New BasketBLL
+        Dim objBasket As New kartris.Basket
         Dim datReport As Date = CkartrisDisplayFunctions.NowOffset
         Dim numMaxValue, numHitsTotal As Integer
         Dim numMonth As Integer = Month(CkartrisDisplayFunctions.NowOffset)
@@ -109,7 +109,7 @@ Partial Class _AffiliateReport
 
         ''// get monthly hits
         numTotalMonthlyHits = 0
-        tblAffiliateHits = objBasket._GetAffiliateMonthlyHitsReport(numMonth, numYear)
+        tblAffiliateHits = AffiliateBLL._GetAffiliateMonthlyHitsReport(numMonth, numYear)
         rptMonthlyHits.DataSource = tblAffiliateHits
         rptMonthlyHits.DataBind()
         litTotalMonthlyHits.Text = numTotalMonthlyHits
@@ -127,7 +127,7 @@ Partial Class _AffiliateReport
         Next
 
         numMaxValue = 0
-        tblAffiliateHits = objBasket._GetAffiliateAnnualHitsReport
+        tblAffiliateHits = AffiliateBLL._GetAffiliateAnnualHitsReport
         For i As Integer = 1 To tblAffiliateHits.Rows.Count
             For Each itmAffiliateMonth As AffiliateReport In aryAffiliateHits
                 If tblAffiliateHits.Rows(i - 1).Item("TheMonth") = itmAffiliateMonth.AffMonth AndAlso tblAffiliateHits.Rows(i - 1).Item("TheYear") = itmAffiliateMonth.AffYear Then
@@ -156,7 +156,7 @@ Partial Class _AffiliateReport
     Private Sub DisplaySalesReport()
         Dim aryAffiliateSales As New ArrayList
         Dim tblAffiliateSales As New Data.DataTable
-        Dim objBasket As New BasketBLL
+        Dim objBasket As New kartris.Basket
         Dim datReport As Date = CkartrisDisplayFunctions.NowOffset
         Dim numMaxValue, numSalesTotal As Integer
         Dim numMonth As Integer = Month(CkartrisDisplayFunctions.NowOffset)
@@ -186,7 +186,7 @@ Partial Class _AffiliateReport
 
         ''// get monthly sales
         numTotalMonthlySales = 0
-        tblAffiliateSales = objBasket._GetAffiliateMonthlySalesReport(numMonth, numYear)
+        tblAffiliateSales = AffiliateBLL._GetAffiliateMonthlySalesReport(numMonth, numYear)
         rptMonthlySales.DataSource = tblAffiliateSales
         rptMonthlySales.DataBind()
         litTotalMonthlySales.Text = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, numTotalMonthlySales)
@@ -204,7 +204,7 @@ Partial Class _AffiliateReport
         Next
 
         numMaxValue = 0
-        tblAffiliateSales = objBasket._GetAffiliateAnnualSalesReport
+        tblAffiliateSales = AffiliateBLL._GetAffiliateAnnualSalesReport
         For i As Integer = 1 To tblAffiliateSales.Rows.Count
             For Each itmAffiliateMonth As AffiliateReport In aryAffiliateSales
                 If tblAffiliateSales.Rows(i - 1).Item("TheMonth") = itmAffiliateMonth.AffMonth AndAlso tblAffiliateSales.Rows(i - 1).Item("TheYear") = itmAffiliateMonth.AffYear Then
@@ -294,9 +294,9 @@ Partial Class _AffiliateReport
         Report_Year = numYear
 
         Dim tblAffiliateHits As New Data.DataTable
-        Dim objBasket As New BasketBLL
+        Dim objBasket As New kartris.Basket
 
-        tblAffiliateHits = objBasket._GetAffiliateMonthlyHitsReport(numMonth, numYear)
+        tblAffiliateHits = AffiliateBLL._GetAffiliateMonthlyHitsReport(numMonth, numYear)
 
         numTotalMonthlyHits = 0
         rptMonthlyHits.DataSource = tblAffiliateHits
@@ -319,9 +319,9 @@ Partial Class _AffiliateReport
         litSalesReportDate.Text = MonthName(numMonth) & " " & numYear
 
         Dim tblAffiliateSales As New Data.DataTable
-        Dim objBasket As New BasketBLL
+        Dim objBasket As New kartris.Basket
 
-        tblAffiliateSales = objBasket._GetAffiliateMonthlySalesReport(numMonth, numYear)
+        tblAffiliateSales = AffiliateBLL._GetAffiliateMonthlySalesReport(numMonth, numYear)
 
         numTotalMonthlySales = 0
         rptMonthlySales.DataSource = tblAffiliateSales

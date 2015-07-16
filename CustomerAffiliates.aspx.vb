@@ -106,9 +106,9 @@ Partial Class CustomerAffiliates
 				Dim objCurrency As New CurrenciesBLL
 				Dim numTotalPrice, numTotalCommission, numTotalHits As Double
 				Dim dtbCommission As Data.DataTable
-				Dim Basket As New BasketBLL
+				Dim Basket As New kartris.Basket
 
-				dtbCommission = Basket.GetCustomerAffiliateCommission(numCustomerID, numMonth, numYear)
+                dtbCommission = AffiliateBLL.GetCustomerAffiliateCommission(numCustomerID, numMonth, numYear)
 				If dtbCommission.Rows.Count > 0 Then
 					numTotalPrice = dtbCommission.Rows(0).Item("OrderTotal")
 					numTotalCommission = dtbCommission.Rows(0).Item("Commission")
@@ -118,7 +118,7 @@ Partial Class CustomerAffiliates
 				litAffMonthly_TotalCommission.Text = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency(), numTotalCommission)
 				litAffMonthly_TotalHits.Text = numTotalHits
 
-				dtbCommission = Basket.GetCustomerAffiliateSalesLink(numCustomerID, numMonth, numYear)
+                dtbCommission = AffiliateBLL.GetCustomerAffiliateSalesLink(numCustomerID, numMonth, numYear)
 
 				SalesLinkCount = 0
 				rptAffiliateSalesLink.DataSource = dtbCommission
@@ -130,8 +130,8 @@ Partial Class CustomerAffiliates
 				phdApply.Visible = True
 				phdBalance.Visible = False
 				phdActivity.Visible = False
-				Dim BasketBLL As New BasketBLL
-				Call BasketBLL.UpdateCustomerAffiliateStatus(numCustomerID)
+				Dim OldBasketBLL As New kartris.Basket
+                Call AffiliateBLL.UpdateCustomerAffiliateStatus(numCustomerID)
 
 			Case "balance"
 				phdMonthly.Visible = False
@@ -140,17 +140,17 @@ Partial Class CustomerAffiliates
 				phdActivity.Visible = False
 
 				Dim dtbPayments As New Data.DataTable
-				Dim Basket As New BasketBLL
+				Dim Basket As New kartris.Basket
 
 				''// payments made
-				dtbPayments = Basket.GetCustomerAffiliatePayments(numCustomerID)
+                dtbPayments = AffiliateBLL.GetCustomerAffiliatePayments(numCustomerID)
 
 				PaymentCount = 0 : PaymentTotal = 0
 				rptAffPayments.DataSource = dtbPayments
 				rptAffPayments.DataBind()
 
 				''// unpaid sales
-				dtbPayments = Basket.GetCustomerAffiliateUnpaidSales(numCustomerID)
+                dtbPayments = AffiliateBLL.GetCustomerAffiliateUnpaidSales(numCustomerID)
 
 				UnpaidCount = 0 : UnpaidTotal = 0
 				rptAffiliateUnpaid.DataSource = dtbPayments
@@ -164,7 +164,7 @@ Partial Class CustomerAffiliates
 
 				Dim aryAffiliateSales, aryAffiliateHits As New ArrayList
 				Dim dtbActivity As New Data.DataTable
-				Dim Basket As New BasketBLL
+				Dim Basket As New kartris.Basket
 				Dim ActivityDate As Date = CkartrisDisplayFunctions.NowOffset
 				Dim numMaxValue As Integer
 
@@ -180,7 +180,7 @@ Partial Class CustomerAffiliates
 				Next
 
 				numMaxValue = 0
-				dtbActivity = Basket.GetCustomerAffiliateActivitySales(numCustomerID)
+                dtbActivity = AffiliateBLL.GetCustomerAffiliateActivitySales(numCustomerID)
 				For i As Integer = 1 To dtbActivity.Rows.Count
 					For Each objItem As AffiliateActivity In aryAffiliateSales
 						If dtbActivity.Rows(i - 1).Item("TheMonth") = objItem.ActivityMonth AndAlso dtbActivity.Rows(i - 1).Item("TheYear") = objItem.ActivityYear Then
@@ -215,7 +215,7 @@ Partial Class CustomerAffiliates
 				Next
 
 				numMaxValue = 0
-				dtbActivity = Basket.GetCustomerAffiliateActivityHits(numCustomerID)
+                dtbActivity = AffiliateBLL.GetCustomerAffiliateActivityHits(numCustomerID)
 				For i As Integer = 1 To dtbActivity.Rows.Count
 					For Each objItem As AffiliateActivity In aryAffiliateHits
 						If dtbActivity.Rows(i - 1).Item("TheMonth") = objItem.ActivityMonth AndAlso dtbActivity.Rows(i - 1).Item("TheYear") = objItem.ActivityYear Then

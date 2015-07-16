@@ -29,7 +29,7 @@ Partial Class UserControls_Front_EcommerceTracking
     'Declare parameters
     Public _OrderID As Long
     Public _UserID As Long
-    Private objBasket As New BasketBLL
+    Private objBasket As New kartris.Basket
 
     'Order ID
     Public Property OrderID() As Long
@@ -66,7 +66,7 @@ Partial Class UserControls_Front_EcommerceTracking
                 Dim tblOrder As System.Data.DataTable
 
                 'Fill datatable width basket items
-                tblOrder = objBasket.GetCustomerOrderDetails(_OrderID)
+                tblOrder = BasketBLL.GetCustomerOrderDetails(_OrderID)
 
                 'Examine data of order, if exists
                 If tblOrder.Rows.Count > 0 Then

@@ -175,7 +175,7 @@ Partial Class UserControls_Back_EditOrder
     End Sub
 
     Protected Sub LoadBasket(Optional ByVal blnCopyOrderItems As Boolean = False)
-        Dim objBasket As BasketBLL = UC_BasketMain.GetBasket
+        Dim objBasket As kartris.Basket = UC_BasketMain.GetBasket
         Dim sessionID As Long = Session("SessionID")
 
         objBasket = Payment.Deserialize(ViewState("arrOrderData")(1), objBasket.GetType)
@@ -188,7 +188,7 @@ Partial Class UserControls_Back_EditOrder
 
                 For Each item As BasketItem In objBasket.BasketItems
                     With item
-                        objBasket.AddNewBasketValue(BasketBLL.BASKET_PARENTS.BASKET, sessionID, .VersionID, .Quantity, .CustomText, .OptionText)
+                        BasketBLL.AddNewBasketValue(objBasket.BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, .VersionID, .Quantity, .CustomText, .OptionText)
                     End With
                 Next
             End If
@@ -323,9 +323,9 @@ Partial Class UserControls_Back_EditOrder
                     _UC_OptionsPopup.ShowPopup(intVersionID, FixNullFromDB(dr("V_ProductID")), FixNullFromDB(dr("V_CodeNumber"))) '' Show options for selected product
                 Case Else           '' Normal Product
                     litOptionsVersion.Text = ""
-                    Dim objBasket As BasketBLL = UC_BasketMain.GetBasket
+                    Dim objBasket As kartris.Basket = UC_BasketMain.GetBasket
                     Dim sessionID As Long = Session("SessionID")
-                    objBasket.AddNewBasketValue(BasketBLL.BASKET_PARENTS.BASKET, sessionID, intVersionID, 1, "", "")
+                    BasketBLL.AddNewBasketValue(objBasket.BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, intVersionID, 1, "", "")
                     _UC_AutoComplete_Item.SetText("")
                     LoadBasket()
             End Select
@@ -347,8 +347,8 @@ Partial Class UserControls_Back_EditOrder
         Dim sbdBodyText As StringBuilder = New StringBuilder
         Dim sbdBasketItems As StringBuilder = New StringBuilder
 
-        Dim arrBasketItems As ArrayList
-        Dim objBasket As BasketBLL = Session("Basket")
+        Dim arrBasketItems As List(Of Kartris.BasketItem)
+        Dim objBasket As kartris.Basket = Session("Basket")
         Dim objOrder As Kartris.Interfaces.objOrder = Nothing
         Dim strOrderDetails As String = ""
 
@@ -614,9 +614,9 @@ Partial Class UserControls_Back_EditOrder
         If Not String.IsNullOrEmpty(litOptionsVersion.Text) AndAlso litOptionsVersion.Text = numVersionID Then
             _UC_OptionsPopup.ClearIDs() '' reset product id and version id for the options popup
             litOptionsVersion.Text = Nothing
-            Dim objBasket As BasketBLL = UC_BasketMain.GetBasket
+            Dim objBasket As kartris.Basket = UC_BasketMain.GetBasket
             Dim sessionID As Long = Session("SessionID")
-            objBasket.AddNewBasketValue(BasketBLL.BASKET_PARENTS.BASKET, sessionID, numVersionID, 1, "", strOptions)
+            BasketBLL.AddNewBasketValue(objBasket.BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, numVersionID, 1, "", strOptions)
             LoadBasket()
         End If
     End Sub
