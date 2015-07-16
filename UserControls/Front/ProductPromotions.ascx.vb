@@ -63,8 +63,8 @@ Partial Class ProductPromotions
             Dim strCouponError As String = ""
             Dim numCouponValue As Double
 
-            Dim objCouponBasket As New BasketBLL
-            Call objCouponBasket.GetCouponDiscount(strCouponCode, strCouponError, strCouponType, numCouponValue)
+            Dim objCouponBasket As New kartris.Basket
+            Call BasketBLL.GetCouponDiscount(objCouponBasket, strCouponCode, strCouponError, strCouponType, numCouponValue)
             If strCouponType = "t" Then
                 intCouponPromotionID = CInt(numCouponValue)
             End If
@@ -105,8 +105,8 @@ Partial Class ProductPromotions
             Dim strCouponError As String = ""
             Dim numCouponValue As Double
 
-            Dim objCouponBasket As New BasketBLL
-            Call objCouponBasket.GetCouponDiscount(strCouponCode, strCouponError, strCouponType, numCouponValue)
+            Dim objCouponBasket As New kartris.Basket
+            Call BasketBLL.GetCouponDiscount(objCouponBasket, strCouponCode, strCouponError, strCouponType, numCouponValue)
             If strCouponType = "t" Then
                 intCouponPromotionID = CInt(numCouponValue)
             End If

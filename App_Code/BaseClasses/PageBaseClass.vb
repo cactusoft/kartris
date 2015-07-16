@@ -499,15 +499,15 @@ Public MustInherit Class PageBaseClass
         If Not Page.IsPostBack Then
             'Check if this is an affiliate link and we
             'need to log affiliate credit
-            BasketBLL.CheckAffiliateLink()
+            AffiliateBLL.CheckAffiliateLink()
 
             'Check if we are emptying the basket. Callbacks
             'from payment gateways often use this so when
             'a customer is returned, they don't still have
             'items in their basket.
             If Request.QueryString("strWipeBasket") = "yes" Then
-                Dim BasketObject As BasketBLL = New BasketBLL
-                BasketObject.DeleteBasket()
+                Dim BasketObject As Kartris.Basket = New Kartris.Basket
+                BasketBLL.DeleteBasket()
                 Session("Basket") = Nothing
             End If
 

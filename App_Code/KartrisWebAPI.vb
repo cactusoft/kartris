@@ -161,7 +161,7 @@ Imports System.ServiceModel.Activation
                                     Dim arrObject As ArrayList = Payment.Deserialize(strValue, GetType(ArrayList))
                                     objParam = arrObject
                                 Case "basket"
-                                    Dim objBasket As BasketBLL = Payment.Deserialize(strValue, GetType(BasketBLL))
+                                    Dim objBasket As Kartris.Basket = Payment.Deserialize(strValue, GetType(Kartris.Basket))
                                     objParam = objBasket
                                 Case "datatable"
                                     Dim tblObject As DataTable = Payment.Deserialize(strValue, GetType(DataTable))

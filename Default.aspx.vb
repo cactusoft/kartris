@@ -17,7 +17,7 @@ Imports KartSettingsManager
 Partial Class Main
     Inherits PageBaseClass
 
-    Private objBasket As New BasketBLL
+    Private objBasket As New kartris.Basket
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -33,7 +33,7 @@ Partial Class Main
             strPassword = Request.QueryString("r")
             'strAction = "home"
 
-            intResult = objBasket.ConfirmMail(UserID, strPassword)
+            intResult = BasketBLL.ConfirmMail(UserID, strPassword)
             If intResult <> 0 Then
                 With UC_PopUpConfirmMail
                     '.SetWidthHeight(300, 75)

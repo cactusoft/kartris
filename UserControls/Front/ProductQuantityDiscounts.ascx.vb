@@ -100,8 +100,8 @@ Partial Class ProductQuantityDiscounts
             Dim numVersionID As Integer = CType(e.Item.FindControl("hidVersionID"), HiddenField).Value
 
             'Get the customer group price for this version
-            Dim objBasket As New BasketBLL
-            Dim numCustomerGroupPrice As Double = objBasket.GetCustomerGroupPriceForVersion(numCustomerID, numVersionID)
+            Dim objBasket As New kartris.Basket
+            Dim numCustomerGroupPrice As Double = BasketBLL.GetCustomerGroupPriceForVersion(numCustomerID, numVersionID)
 
             Using tblQuantityDiscount As DataTable = VersionsBLL.GetQuantityDiscountByProduct(ProductID, Session("LANG"))
                 Dim strVersionCode As String = CType(e.Item.FindControl("litVersionCode_Hidden"), Literal).Text

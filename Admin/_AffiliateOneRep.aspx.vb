@@ -54,9 +54,9 @@ Partial Class _AffiliateOneRep
 
     Private Sub DisplaySummaryReport()
         Dim tblSummary As New Data.DataTable
-        Dim objBasket As New BasketBLL
+        Dim objBasket As New kartris.Basket
 
-        tblSummary = objBasket._GetAffiliateSummaryReport(numMonth, numYear, numAffiliateID)
+        tblSummary = AffiliateBLL._GetAffiliateSummaryReport(numMonth, numYear, numAffiliateID)
         If tblSummary.Rows.Count > 0 Then
             litAffiliateName.Text = tblSummary.Rows(0).Item("U_EmailAddress")
             litTotalOrder.Text = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, tblSummary.Rows(0).Item("OrderTotal"))
@@ -71,10 +71,10 @@ Partial Class _AffiliateOneRep
 
     Private Sub DisplayRawDataHitsReport()
         Dim tblSummary As New Data.DataTable
-        Dim objBasket As New BasketBLL
+        Dim objBasket As New kartris.Basket
         Dim intTotalRowCount As Integer
 
-        tblSummary = objBasket._GetAffiliateRawDataHitsReport(numMonth, numYear, numAffiliateID, 1, 1000000)
+        tblSummary = AffiliateBLL._GetAffiliateRawDataHitsReport(numMonth, numYear, numAffiliateID, 1, 1000000)
         intTotalRowCount = tblSummary.Rows.Count
 
         phdNoResults.Visible = IIf(intTotalRowCount > 0, False, True)
@@ -83,7 +83,7 @@ Partial Class _AffiliateOneRep
             _UC_RawDataHitsPager.CurrentPage = IIf(_UC_RawDataHitsPager.CurrentPage - 1 < 0, 0, _UC_RawDataHitsPager.CurrentPage - 1)
         End If
 
-        gvwRawDataHits.DataSource = objBasket._GetAffiliateRawDataHitsReport(numMonth, numYear, numAffiliateID, _UC_RawDataHitsPager.CurrentPage + 1, intPageSize)
+        gvwRawDataHits.DataSource = AffiliateBLL._GetAffiliateRawDataHitsReport(numMonth, numYear, numAffiliateID, _UC_RawDataHitsPager.CurrentPage + 1, intPageSize)
         gvwRawDataHits.DataBind()
 
         _UC_RawDataHitsPager.TotalItems = intTotalRowCount
@@ -97,10 +97,10 @@ Partial Class _AffiliateOneRep
 
     Private Sub DisplayRawDataSalesReport()
         Dim tblSummary As New Data.DataTable
-        Dim objBasket As New BasketBLL
+        Dim objBasket As New kartris.Basket
         Dim intTotalRowCount As Integer
 
-        tblSummary = objBasket._GetAffiliateRawDataSalesReport(numMonth, numYear, numAffiliateID, 1, 1000000)
+        tblSummary = AffiliateBLL._GetAffiliateRawDataSalesReport(numMonth, numYear, numAffiliateID, 1, 1000000)
         intTotalRowCount = tblSummary.Rows.Count
 
         phdNoResults2.Visible = IIf(intTotalRowCount > 0, False, True)
@@ -109,7 +109,7 @@ Partial Class _AffiliateOneRep
             _UC_RawDataSalesPager.CurrentPage = IIf(_UC_RawDataSalesPager.CurrentPage - 1 < 0, 0, _UC_RawDataSalesPager.CurrentPage - 1)
         End If
 
-        gvwRawDataSales.DataSource = objBasket._GetAffiliateRawDataSalesReport(numMonth, numYear, numAffiliateID, _UC_RawDataSalesPager.CurrentPage + 1, intPageSize)
+        gvwRawDataSales.DataSource = AffiliateBLL._GetAffiliateRawDataSalesReport(numMonth, numYear, numAffiliateID, _UC_RawDataSalesPager.CurrentPage + 1, intPageSize)
         gvwRawDataSales.DataBind()
 
         _UC_RawDataSalesPager.TotalItems = intTotalRowCount

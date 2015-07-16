@@ -1,1046 +1,91 @@
-﻿'========================================================================
-'Kartris - www.kartris.com
-'Copyright 2015 CACTUSOFT
-
-'GNU GENERAL PUBLIC LICENSE v2
-'This program is free software distributed under the GPL without any
-'warranty.
-'www.gnu.org/licenses/gpl-2.0.html
-
-'KARTRIS COMMERCIAL LICENSE
-'If a valid license.config issued by Cactusoft is present, the KCL
-'overrides the GPL v2.
-'www.kartris.com/t-Kartris-Commercial-License.aspx
-'========================================================================
-Imports System.Xml.Serialization
+﻿Imports Microsoft.VisualBasic
 Imports kartrisBasketDataTableAdapters
-Imports kartrisBasketData
-Imports System.Collections.Generic
 Imports System.Web.HttpContext
-Imports System.Math
-Imports CkartrisDataManipulation
 Imports KartSettingsManager
-Imports SiteMapHelper
+Imports kartrisBasketData
+Imports CkartrisDataManipulation
 Imports KartrisClasses
-
-<Serializable()> _
-Public Class BasketModifier
-
-    Private _ExTax As Double
-    Private _IncTax As Double
-    Private _TaxRate As Double
-
-    Public Property ExTax() As Double
-        Get
-            Return Math.Round(_ExTax, 2)
-        End Get
-        Set(ByVal value As Double)
-            _ExTax = value
-        End Set
-    End Property
-
-    Public Property IncTax() As Double
-        Get
-            Return Math.Round(_IncTax, 2)
-        End Get
-        Set(ByVal value As Double)
-            _IncTax = value
-        End Set
-    End Property
-
-    Public Property TaxRate() As Double
-        Get
-            Dim numRounding As Integer = 0
-            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
-                numRounding = 4
-            Else
-                numRounding = 6
-            End If
-            Return Math.Round(_TaxRate, numRounding)
-        End Get
-        Set(ByVal value As Double)
-            _TaxRate = value
-        End Set
-    End Property
-
-    Public ReadOnly Property TaxAmount() As Double
-        Get
-            Dim numRounding As Integer = 0
-            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
-                numRounding = 2
-            Else
-                numRounding = 4
-            End If
-            Return Math.Round(IncTax - ExTax, numRounding)
-        End Get
-    End Property
-
-End Class
-
-<Serializable()> _
-Public Class BasketItem
-
-    Public _VersionID As Long           'The version ID
-    Public ComboVersionID As Long       'The ID of the combination version
-    Private _Quantity As Single     'The quantity in the basket
-    Private _StockQty As Double
-    Public _AppliedPromo As Integer 'The number of promotion already applied for this version
-    Private _ExTax As Double            'The price of the item, before tax
-
-    Private _TaxRate1 As Double          'The tax rate applied to this item
-    Private _TaxRate2 As Double
-    Private _ComputedTaxRate As Double
-
-    Public FreeShipping As Boolean  'Whether the item has free shipping
-    Public Weight As Double             'Weight of a single item
-    Public RRP As Double                    'The RRP of the version
-
-    Public Shared ApplyTax As Boolean   'Whether the tax is on or off
-    Public PricesIncTax As Boolean      'Whether prices are entered incl or ex of tax
-
-    Public HasCombinations As Boolean   'Whether the options have specific combinations
-    Public VersionCode As String
-    Public Price As Double
-
-    Public TableText As String
-    Private _DownloadType As String
-    Private _QtyWarnLevel As Double
-    Private _IncTax As Double
-
-    Private _CodeNumber As String
-    Private _VersionName As String
-    Private _ProductName As String
-    Private _ProductType As String
-    Private _VersionType As String
-    Private _ID As Long
-    Private _ProductID As Long
-    Private _CategoryIDs As String
-    Private _OptionPrice As Double
-    Private _OptionText As String
-    Private _OptionLink As String
-    Private _Free As Boolean
-    Private _ApplyTax As Boolean
-    Private _CustomText As String
-    Private _CustomType, _CustomDesc As String
-    Private _CustomCost As Double
-    Private _TaxRateItem As Double
-    Private _AdjustedQty As Boolean
-    Private _VersionBaseID As Long
-    Private _PromoQty As Long
-
-
-    Public Property CustomText() As String
-        Get
-            Return _CustomText
-        End Get
-        Set(ByVal value As String)
-            _CustomText = value
-        End Set
-    End Property
-
-    Public Property CodeNumber() As String
-        Get
-            Return _CodeNumber
-        End Get
-        Set(ByVal value As String)
-            _CodeNumber = value
-        End Set
-    End Property
-
-    Public Property VersionName() As String
-        Get
-            Return _VersionName
-        End Get
-        Set(ByVal value As String)
-            _VersionName = value
-        End Set
-    End Property
-
-    Public Property ProductName() As String
-        Get
-            Return _ProductName
-        End Get
-        Set(ByVal value As String)
-            _ProductName = value
-        End Set
-    End Property
-
-    'Duplicate, used in basket for image control
-    Public Property P_Name() As String
-        Get
-            Return _ProductName
-        End Get
-        Set(ByVal value As String)
-            _ProductName = value
-        End Set
-    End Property
-
-    Public Property ProductType() As String
-        Get
-            Return _ProductType
-        End Get
-        Set(ByVal value As String)
-            _ProductType = value
-        End Set
-    End Property
-
-    Public Property VersionType() As String
-        Get
-            Return _VersionType
-        End Get
-        Set(ByVal value As String)
-            _VersionType = value
-        End Set
-    End Property
-
-    Public Property ID() As Long
-        Get
-            Return _ID
-        End Get
-        Set(ByVal value As Long)
-            _ID = value
-        End Set
-    End Property
-
-    Public Property ProductID() As Long
-        Get
-            Return _ProductID
-        End Get
-        Set(ByVal value As Long)
-            _ProductID = value
-        End Set
-    End Property
-
-    'Duplicate, used in basket for image control
-    Public Property P_ID() As Long
-        Get
-            Return _ProductID
-        End Get
-        Set(ByVal value As Long)
-            _ProductID = value
-        End Set
-    End Property
-
-    Public Property CategoryIDs() As String
-        Get
-            Return _CategoryIDs
-        End Get
-        Set(ByVal value As String)
-            _CategoryIDs = value
-        End Set
-    End Property
-
-    Public Property CustomType() As String
-        Get
-            Return _CustomType
-        End Get
-        Set(ByVal value As String)
-            _CustomType = value
-        End Set
-    End Property
-
-    Public Property CustomDesc() As String
-        Get
-            Return _CustomDesc
-        End Get
-        Set(ByVal value As String)
-            _CustomDesc = value
-        End Set
-    End Property
-
-    Public Property CustomCost() As Double
-        Get
-            Return Math.Round(_CustomCost, BasketBLL.CurrencyRoundNumber)
-        End Get
-        Set(ByVal value As Double)
-            _CustomCost = value
-        End Set
-    End Property
-
-    Public Property PromoQty() As Long
-        Get
-            Return _PromoQty
-        End Get
-        Set(ByVal value As Long)
-            _PromoQty = value
-        End Set
-    End Property
-
-    Public Function HasOptions() As Boolean
-        'The item has options if the first option group ID > 0
-        Return False
-    End Function
-
-    Public Property Quantity() As Single
-        Get
-            Return _Quantity
-        End Get
-        Set(ByVal value As Single)
-            _Quantity = value
-            If _Quantity > 2147483647 Then _Quantity = 2147483647
-        End Set
-    End Property
-
-    Public Property StockQty() As Double
-        Get
-            Return _StockQty
-        End Get
-        Set(ByVal value As Double)
-            _StockQty = value
-        End Set
-    End Property
-
-    Public Property AdjustedQty() As Boolean
-        Get
-            Return _AdjustedQty
-        End Get
-        Set(ByVal value As Boolean)
-            _AdjustedQty = value
-        End Set
-    End Property
-
-    Public Property AppliedPromo() As Double
-        Get
-            Return _AppliedPromo
-        End Get
-        Set(ByVal value As Double)
-            _AppliedPromo = CLng(value)
-            If _AppliedPromo > 32767 Then _AppliedPromo = 32767
-        End Set
-    End Property
-
-    Public Sub IncreaseQuantity(ByVal value As Double)
-        Quantity = _Quantity + value
-    End Sub
-
-    Public Sub DecreaseQuantity(ByVal value As Double)
-        Quantity = _Quantity - value
-    End Sub
-
-    Public Function GetLinkQS() As String
-        Return ""
-    End Function
-
-    Public Property DownloadType() As String
-        Get
-            Return _DownloadType
-        End Get
-        Set(ByVal value As String)
-            _DownloadType = value
-        End Set
-    End Property
-
-    Public Property QtyWarnLevel() As Double
-        Get
-            Return _QtyWarnLevel
-        End Get
-        Set(ByVal value As Double)
-            _QtyWarnLevel = value
-        End Set
-    End Property
-
-    Public Property OptionPrice() As Double
-        Get
-            Return Math.Round(_OptionPrice, BasketBLL.CurrencyRoundNumber)
-        End Get
-        Set(ByVal value As Double)
-            _OptionPrice = value
-        End Set
-    End Property
-
-    Public Property OptionText() As String
-        Get
-            Return _OptionText
-        End Get
-        Set(ByVal value As String)
-            _OptionText = value
-        End Set
-    End Property
-
-    Public Property OptionLink() As String
-        Get
-            Return _OptionLink
-        End Get
-        Set(ByVal value As String)
-            _OptionLink = value
-        End Set
-    End Property
-
-    Public Property Free() As Boolean
-        Get
-            Return _Free
-        End Get
-        Set(ByVal value As Boolean)
-            _Free = value
-        End Set
-    End Property
-
-    Public Sub New()
-        PricesIncTax = (LCase(GetKartConfig("general.tax.pricesinctax")) = "y")
-
-        HasCombinations = False
-        VersionID = 0
-
-        '' added
-        _VersionID = 0
-        ComboVersionID = 0
-        _Free = False
-    End Sub
-
-    Public Property VersionID() As Long
-        Get
-            Return _VersionID
-        End Get
-        Set(ByVal value As Long)
-            _VersionID = value
-        End Set
-    End Property
-
-    Public Property VersionBaseID() As Long
-        Get
-            Return _VersionBaseID
-        End Get
-        Set(ByVal value As Long)
-            _VersionBaseID = value
-        End Set
-    End Property
-
-    Public ReadOnly Property Name() As String
-        Get
-            If ProductName = VersionName Then
-                Return ProductName
-            Else
-                Return ProductName & " - " & VersionName
-            End If
-        End Get
-    End Property
-
-    Public Property ExTax() As Double
-        Get
-            Return Math.Round(_ExTax, BasketBLL.CurrencyRoundNumber)
-        End Get
-        Set(ByVal value As Double)
-            _ExTax = value
-        End Set
-    End Property
-
-    Public Property IncTax() As Double
-        Get
-            Return Math.Round(_ExTax + TaxAmount, BasketBLL.CurrencyRoundNumber)
-        End Get
-        Set(ByVal value As Double)
-            _IncTax = value
-        End Set
-    End Property
-
-    Public ReadOnly Property TaxAmount() As Double
-        Get
-            Dim numRounding As Integer = 0
-            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
-                numRounding = 4
-            Else
-                numRounding = 6
-            End If
-            Return Math.Round(IIf(Not (ApplyTax), 0, _ExTax * ComputedTaxRate), numRounding)
-        End Get
-    End Property
-
-
-    Public Property ComputedTaxRate() As Double
-        Get
-            Return Math.Round(_ComputedTaxRate, 6)
-        End Get
-        Set(ByVal value As Double)
-            _ComputedTaxRate = value
-        End Set
-    End Property
-    Public Property TaxRate1() As Double
-        Get
-            Return Math.Round(_TaxRate1, 6)
-        End Get
-        Set(ByVal value As Double)
-            _TaxRate1 = value
-        End Set
-    End Property
-
-    Public Property TaxRate2() As Double
-        Get
-            Return Math.Round(_TaxRate2, 6)
-        End Get
-        Set(ByVal value As Double)
-            _TaxRate2 = value
-        End Set
-    End Property
-
-    Public Property TaxRateItem() As Double
-        Get
-            Return Math.Round(_TaxRateItem, 6)
-        End Get
-        Set(ByVal value As Double)
-            _TaxRateItem = value
-        End Set
-    End Property
-
-    Public ReadOnly Property ExTaxNoRound() As Double
-        Get
-            Return _ExTax
-        End Get
-    End Property
-
-    Public ReadOnly Property IncTaxNoRound() As Double
-        Get
-            Return _ExTax * (IIf(Not (ApplyTax), 0, ComputedTaxRate) + 1)
-        End Get
-    End Property
-
-    Public ReadOnly Property RowExTax() As Double
-        Get
-            Dim numRounding As Integer = 0
-            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
-                numRounding = BasketBLL.CurrencyRoundNumber
-            Else
-                numRounding = 4
-            End If
-            Return Math.Round(IIf(PricesIncTax, ExTax * Quantity, ExTaxNoRound * Quantity), numRounding)
-        End Get
-    End Property
-
-    Public ReadOnly Property RowIncTax() As Double
-        Get
-            Return Math.Round(IIf(PricesIncTax, IncTax * Quantity, IncTaxNoRound * Quantity), BasketBLL.CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public ReadOnly Property RowTaxAmount() As Double
-        Get
-            Return Math.Round(IIf(Not (ApplyTax), 0, IIf(PricesIncTax, RowIncTax - RowExTax, IncTaxNoRound * Quantity - RowExTax)), 4)
-        End Get
-    End Property
-
-    Public ReadOnly Property RowWeight() As Double
-        Get
-            Return Weight * Quantity
-        End Get
-    End Property
-
-    Public ReadOnly Property RowAmountSaved() As Double
-        Get
-            Return Math.Round(IIf(PricesIncTax, Math.Max(Quantity * (RRP - IncTax), 0), Math.Max(Quantity * (RRP - ExTax), 0)), BasketBLL.CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public ReadOnly Property IR_PricePerItem() As Double
-        Get
-            Return Math.Round(IIf(PricesIncTax, IncTax, ExTax), BasketBLL.CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public ReadOnly Property IR_TaxPerItem() As Double
-        Get
-            If PricesIncTax Then
-                'Return currency amount
-                Return Math.Round((TaxAmount), BasketBLL.CurrencyRoundNumber)
-            Else
-                'Return number (e.g. tax rate 17.5%, returns 0.175)
-                Return ComputedTaxRate
-            End If
-        End Get
-    End Property
-
-
-End Class
-
-<Serializable()> <XmlInclude(GetType(BasketItem))> _
+Imports SiteMapHelper
+
+''' <summary>
+''' Basket business logic layer
+''' </summary>
+''' <remarks></remarks>
 Public Class BasketBLL
 
+    ''' <summary>
+    ''' Where the basket comes from. This can be a normal basket or something saved such as a wishlist etc.
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Enum BASKET_PARENTS
         BASKET = 1
         SAVED_BASKET = 2
         WISH_LIST = 3
     End Enum
 
+    ''' <summary>
+    ''' Defines the usage purpose of this entity object
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Enum VIEW_TYPE
         MAIN_BASKET = 1
         CHECKOUT_BASKET = 2
         MINI_BASKET = 3
     End Enum
 
-    Public DB_C_CustomerDiscount As Double
-    Public DB_C_CustomerID As Integer
-
-    'Basket modifiers
-    Public ShippingPrice As BasketModifier
-    Public OrderHandlingPrice As BasketModifier
-    Public CouponDiscount As BasketModifier
-    Public CustomerDiscount As BasketModifier
-    Public PromotionDiscount As BasketModifier
+    ''' <summary>
+    ''' Basket Values Table Adapter
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Protected Shared ReadOnly Property _BasketValuesAdptr() As BasketValuesTblAdptr
         Get
             Return New BasketValuesTblAdptr
         End Get
     End Property
+
+    ''' <summary>
+    ''' Basket Options Table Adapter
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Protected Shared ReadOnly Property _BasketOptionsAdptr() As BasketOptionValuesTblAdptr
         Get
             Return New BasketOptionValuesTblAdptr
         End Get
     End Property
+
+    ''' <summary>
+    ''' Coupons Table Adapter
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Protected Shared ReadOnly Property _CouponsAdptr() As CouponsTblAdptr
         Get
             Return New CouponsTblAdptr
         End Get
     End Property
+
+    ''' <summary>
+    ''' Customers Table Adapter
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Protected Shared ReadOnly Property _CustomersAdptr() As CustomersTblAdptr
         Get
             Return New CustomersTblAdptr
         End Get
     End Property
 
-    Public BasketItems As New ArrayList
-
-    Private _AllFreeShipping, _HasFreeShipping, _PricesIncTax, _AllDigital As Boolean
-    Private _TotalWeight, _TotalExTax, _TotalTaxAmount, _TotalAmountSaved As Double
-    Private _TotalItems As Single
-    Private _ShippingTotalWeight, _ShippingTotalExTax, _ShippingTotalTaxAmount As Double
-    Private _CustomerDiscountPercentage, _TotalDiscountPriceIncTax, _TotalDiscountPriceExTax As Double
-    Private _TotalDiscountPriceTaxAmount, _TotalDiscountPriceTaxRate As Double
-    Private _TotalIncTax, _TotalTaxRate, _DTax, _DTax2 As Double
-    Private _DTaxExtra As String
-
-    Private _LastIndex, _HighlightLowStockRowNumber As Integer
-    Private _AdjustedForElectronic, _ApplyTax, _AdjustedQuantities As Boolean
-    Private _ShippingName, _ShippingDescription As String
-
-    Private _CouponName As String
-    Private _CouponCode As String
-
-    Private objPromotions As New ArrayList
-    Private objPromotionsDiscount As New ArrayList
-
-    Private numLanguageID As Integer
-    Private numCurrencyID As Integer = 0
-    Private numSessionID As Long
-
-    Public Property CurrencyID() As Integer
-        Get
-            Return numCurrencyID
-        End Get
-        Set(ByVal value As Integer)
-            numCurrencyID = value
-        End Set
-    End Property
-
-    Public ReadOnly Property TotalItems() As Single
-        Get
-            Return _TotalItems
-        End Get
-    End Property
-
-    Public ReadOnly Property HasFreeShipping() As Boolean
-        Get
-            Return _HasFreeShipping
-        End Get
-    End Property
-
-    Public ReadOnly Property AllFreeShipping() As Boolean
-        Get
-            Return _AllFreeShipping
-        End Get
-    End Property
-
-    Public ReadOnly Property AllDigital() As Boolean
-        Get
-            Return _AllDigital
-        End Get
-    End Property
-
-    Public ReadOnly Property TotalAmountSaved() As Double
-        Get
-            Return Math.Max(_TotalAmountSaved, 0)
-        End Get
-    End Property
-
-    Public ReadOnly Property ShippingTotalWeight() As Double
-        Get
-            Return _ShippingTotalWeight
-        End Get
-    End Property
-
-    Public ReadOnly Property ShippingTotalExTax() As Double
-        Get
-            Return Math.Round(_ShippingTotalExTax, CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public ReadOnly Property ShippingTotalTaxAmount() As Double
-        Get
-            Return Math.Round(_ShippingTotalTaxAmount, CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public ReadOnly Property ShippingTotalIncTax() As Double
-        Get
-            Return Math.Round(ShippingTotalExTax + ShippingTotalTaxAmount, CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public ReadOnly Property AdjustedQuantities() As Boolean
-        Get
-            Return _AdjustedQuantities
-        End Get
-    End Property
-
-    Public ReadOnly Property HighlightLowStockRowNumber() As Integer
-        Get
-            Return _HighlightLowStockRowNumber
-        End Get
-    End Property
-
-    Public ReadOnly Property AdjustedForElectronic() As Boolean
-        Get
-            Return _AdjustedForElectronic
-        End Get
-    End Property
-
-    Public ReadOnly Property ShippingName() As String
-        Get
-            If AllFreeShipping Then
-                ShippingPrice.IncTax = 0 : ShippingPrice.ExTax = 0
-                Return GetGlobalResourceObject("Kartris", "ContentText_ShippingElectronic")
-            Else
-                Return _ShippingName & ""
-            End If
-        End Get
-    End Property
-
-    Public ReadOnly Property ShippingDescription() As String
-        Get
-            If AllFreeShipping Then
-                ShippingPrice.IncTax = 0 : ShippingPrice.ExTax = 0
-                Return GetGlobalResourceObject("Kartris", "ContentText_ShippingElectronicDesc")
-            Else
-                Return _ShippingDescription
-            End If
-        End Get
-    End Property
-
-    Public ReadOnly Property CustomerDiscountPercentage() As Double
-        Get
-            Return _CustomerDiscountPercentage
-        End Get
-    End Property
-
-    Public ReadOnly Property TotalWeight() As Double
-        Get
-            Return _TotalWeight
-        End Get
-    End Property
-
-    Public ReadOnly Property TotalExTax() As Double
-        Get
-            Return Math.Round(_TotalExTax, CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public ReadOnly Property TotalIncTax() As Double
-        Get
-            Return Math.Round(TotalExTax + TotalTaxAmount, CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public ReadOnly Property TotalTaxRate() As Double
-        Get
-            Dim numRounding As Integer = 0
-            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
-                numRounding = 4
-            Else
-                numRounding = 6
-            End If
-            If TotalExTax = 0 Then
-                Return 0
-            Else
-                Return Math.Round(TotalTaxAmount / TotalExTax, numRounding)
-            End If
-        End Get
-    End Property
-
-    Public ReadOnly Property TotalTaxAmount() As Double
-        Get
-            Return Math.Round(_TotalTaxAmount, CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public ReadOnly Property TotalDiscountPriceIncTax() As Double
-        Get
-            Return Math.Round(TotalIncTax + CouponDiscount.IncTax + PromotionDiscount.IncTax + CustomerDiscount.IncTax, CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public ReadOnly Property TotalDiscountPriceExTax() As Double
-        Get
-            Return Math.Round(TotalExTax + CouponDiscount.ExTax + PromotionDiscount.ExTax + CustomerDiscount.ExTax, CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public ReadOnly Property TotalDiscountPriceTaxAmount() As Double
-        Get
-            Return Math.Round(TotalDiscountPriceIncTax - TotalDiscountPriceExTax, CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public ReadOnly Property TotalDiscountPriceTaxRate() As Double
-        Get
-            Dim numRounding As Integer = 0
-            If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
-                numRounding = 4
-            Else
-                numRounding = 6
-            End If
-            Return Math.Round(IIf(TotalDiscountPriceExTax = 0, 0, TotalDiscountPriceTaxAmount / TotalDiscountPriceExTax), numRounding)
-        End Get
-    End Property
-
-    Public ReadOnly Property FinalPriceIncTax() As Double
-        Get
-            Dim numFinalPriceIncTax As Double
-            numFinalPriceIncTax = Math.Round(TotalDiscountPriceIncTax + ShippingPrice.IncTax + OrderHandlingPrice.IncTax, CurrencyRoundNumber)
-            Return IIf(numFinalPriceIncTax < 0, 0, numFinalPriceIncTax)
-        End Get
-    End Property
-
-    Public ReadOnly Property FinalPriceExTax() As Double
-        Get
-            Dim numFinalPriceExTax As Double
-            numFinalPriceExTax = Math.Round(TotalDiscountPriceExTax + ShippingPrice.ExTax + OrderHandlingPrice.ExTax, CurrencyRoundNumber)
-            Return IIf(numFinalPriceExTax < 0, 0, numFinalPriceExTax)
-        End Get
-    End Property
-
-    Public ReadOnly Property FinalPriceTaxAmount() As Double
-        Get
-            Return Math.Round(FinalPriceIncTax - FinalPriceExTax, CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public Property ApplyTax() As Boolean
-        Get
-            Return _ApplyTax
-        End Get
-        Set(ByVal value As Boolean)
-            _ApplyTax = value
-            'Loop through all basket items and set their tax setting
-            For i = 0 To BasketItems.Count - 1
-                BasketItems.Item(i).ApplyTax = _ApplyTax
-            Next
-            'Rebuild
-            Call CalculateTotals()
-        End Set
-    End Property
-
-    Public Property PricesIncTax() As Boolean
-        Get
-            Return _PricesIncTax
-        End Get
-        Set(ByVal value As Boolean)
-            If _PricesIncTax <> value Then
-                _PricesIncTax = value
-                'Loop through all basket items and set their tax setting
-                For i = 0 To BasketItems.Count - 1
-                    BasketItems.Item(i).PricesIncTax = _PricesIncTax
-                Next
-                'Rebuild
-                Call CalculateTotals()
-            End If
-        End Set
-    End Property
-
-    Public ReadOnly Property CouponName() As String
-        Get
-            Return _CouponName
-        End Get
-    End Property
-
-    Public ReadOnly Property CouponCode() As String
-        Get
-            Return _CouponCode
-        End Get
-    End Property
-
-    Public ReadOnly Property TotalValueToAffiliate() As Double
-        Get
-            Return Math.Round(TotalExTax / 1, CurrencyRoundNumber)
-        End Get
-    End Property
-
-    Public Shared Function SafeRound(ByVal numValue As Double, ByVal numDecimalPlaces As Integer) As Double
-        Return Math.Round(numValue + 0.00001, numDecimalPlaces)
-    End Function
-
-    Public Shared Function NegSafeRound(ByVal numValue As Double, ByVal numDecimalPlaces As Integer) As Double
-        NegSafeRound = Math.Round(numValue - 0.00001, numDecimalPlaces)
-    End Function
-
-    Public Property D_Tax() As Double
-        Get
-            Return _DTax
-        End Get
-        Set(ByVal value As Double)
-            _DTax = value
-        End Set
-    End Property
-    Public Property D_Tax2() As Double
-        Get
-            Return _DTax2
-        End Get
-        Set(ByVal value As Double)
-            _DTax2 = value
-        End Set
-    End Property
-    Public Property D_TaxExtra() As String
-        Get
-            Return _DTaxExtra
-        End Get
-        Set(ByVal value As String)
-            _DTaxExtra = value
-        End Set
-    End Property
-
-    Public Sub CalculateTotals()
-        'Set intial settings
-        _AllFreeShipping = True
-        _AllDigital = True
-        _HasFreeShipping = False
-        _TotalItems = 0
-        _TotalWeight = 0
-        _TotalExTax = 0
-        _TotalTaxAmount = 0
-        _TotalAmountSaved = 0
-        _ShippingTotalWeight = 0
-        _ShippingTotalExTax = 0
-        _ShippingTotalTaxAmount = 0
-
-        'Loop through all items in the basket
-        For i = 0 To BasketItems.Count - 1
-            With BasketItems(i)
-                'Are all the items free-shipping?
-                _AllFreeShipping = _AllFreeShipping AndAlso .FreeShipping
-
-                'Is at least one item got free shipping?
-                _HasFreeShipping = _HasFreeShipping OrElse .FreeShipping
-
-                _AllDigital = _AllDigital AndAlso (.DownloadType = "l" Or .DownloadType = "u")
-
-                'If we have an item in the basket that is sold in fractional
-                'quantities, such as rope sold by the metre, then we need to 
-                'think about how quantities are totalled. For example, if we
-                'place 0.05 of an item in the basket, this is really one item
-                'but would be considered as 0.05 items in the count. Similarly
-                'if we purchase 2.5m, it would be considered as 2.5 items. In
-                'both cases, these are really just one item. So, we only add
-                'quantities if the item is a round number.
-                If Round(.Quantity, 0) = .Quantity Then
-                    _TotalItems = _TotalItems + .Quantity
-                Else
-                    _TotalItems = _TotalItems + 1 'decimal qty, so assume is one item
-                End If
-
-                'Other totals
-                _TotalWeight = _TotalWeight + .RowWeight
-                _TotalExTax = _TotalExTax + .RowExTax
-                _TotalTaxAmount = _TotalTaxAmount + .RowTaxAmount
-                _TotalAmountSaved = _TotalAmountSaved + .RowAmountSaved
-
-                'Shipping Totals
-                If Not .FreeShipping Then
-                    _ShippingTotalWeight = _ShippingTotalWeight + .RowWeight
-                    _ShippingTotalExTax = _ShippingTotalExTax + .RowExTax
-                    If ApplyTax Then
-                        _ShippingTotalTaxAmount = _ShippingTotalTaxAmount + .RowTaxAmount
-                    End If
-                End If
-            End With
-        Next
-
-    End Sub
-
-    Public Sub CalculateCoupon(ByVal strCouponCode As String, ByRef strCouponError As String, ByVal blnZeroTotalTaxRate As Boolean)
-        Dim strCouponType As String = ""
-        Dim numCouponValue As Double
-
-        CouponDiscount = New BasketModifier
-        CustomerDiscount = New BasketModifier
-
-        Call GetCouponDiscount(strCouponCode, strCouponError, strCouponType, numCouponValue)
-
-        CouponDiscount.TaxRate = TotalDiscountPriceTaxRate
-        Select Case strCouponType.ToLower
-            Case "p"
-                'Percentage coupons
-                CouponDiscount.IncTax = -Math.Round((numCouponValue * TotalDiscountPriceIncTax / 100), CurrencyRoundNumber)
-                CouponDiscount.ExTax = -Math.Round((numCouponValue * TotalDiscountPriceExTax / 100), CurrencyRoundNumber)
-
-            Case "f"
-                'Fixed rate coupons
-                If numCouponValue > TotalDiscountPriceExTax Then
-                    CouponDiscount.ExTax = -TotalDiscountPriceExTax
-                    CouponDiscount.IncTax = -TotalDiscountPriceIncTax
-                Else
-                    Dim blnPricesExtax As Boolean = False
-
-                    If Not blnZeroTotalTaxRate Then
-                        If GetKartConfig("general.tax.pricesinctax") = "y" Then
-                            CouponDiscount.ExTax = -Math.Round(numCouponValue * (1 / (1 + CouponDiscount.TaxRate)), CurrencyRoundNumber)
-                            If D_Tax = 1 Then
-                                CouponDiscount.IncTax = -Math.Round(numCouponValue, CurrencyRoundNumber)
-                            Else
-                                CouponDiscount.IncTax = CouponDiscount.ExTax
-                            End If
-                        Else
-                            blnPricesExtax = True
-                        End If
-                    Else
-                        blnPricesExtax = True
-                    End If
-
-                    If blnPricesExtax Then
-                        CouponDiscount.IncTax = -Math.Round(numCouponValue, CurrencyRoundNumber)
-                        CouponDiscount.ExTax = -Math.Round(numCouponValue / (1 + CouponDiscount.TaxRate), CurrencyRoundNumber)
-                    End If
-                End If
-
-            Case Else
-                'Dodgy coupon - ignore
-                CouponDiscount.IncTax = 0
-                CouponDiscount.ExTax = 0
-        End Select
-
-    End Sub
-
-    Public Sub CalculateCustomerDiscount(ByVal numCustomerDiscount As Double)
-
-        CustomerDiscount = New BasketModifier
-
-        CustomerDiscount.TaxRate = TotalDiscountPriceTaxRate
-        CustomerDiscount.IncTax = -Math.Round(TotalDiscountPriceIncTax * (numCustomerDiscount / 100), CurrencyRoundNumber)
-        CustomerDiscount.ExTax = -Math.Round(TotalDiscountPriceExTax * (numCustomerDiscount / 100), CurrencyRoundNumber)
-
-        If Not (ApplyTax) Then
-            CustomerDiscount.IncTax = CustomerDiscount.ExTax
-        End If
-
-    End Sub
-
-    Sub New()
-
-        _ApplyTax = True
-
-        ShippingPrice = New BasketModifier
-        OrderHandlingPrice = New BasketModifier
-        CouponDiscount = New BasketModifier
-        CustomerDiscount = New BasketModifier
-        PromotionDiscount = New BasketModifier
-
-    End Sub
-
+    ''' <summary>
+    ''' The precision to be used with rounding currency numbers. 
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks>in other words how many numbers after the decimal point (e.g. 1.123456 to a precision of 3 is 1.123)</remarks>
     Public Shared Function CurrencyRoundNumber() As Short
         Try
             Dim numCurrencyID As Integer = Current.Session("CUR_ID")
@@ -1051,10 +96,146 @@ Public Class BasketBLL
         End Try
     End Function
 
-    Public Sub AddNewBasketValue(ByVal pParentType As BASKET_PARENTS, ByVal pParentID As Integer, _
-     ByVal pVersionID As Long, ByVal pQuantity As Single, _
-     Optional ByVal pCustomText As String = Nothing, _
-     Optional ByVal pOptionsValues As String = Nothing, Optional ByVal numBasketValueID As Integer = 0)
+    ''' <summary>
+    ''' Calculate the values of the coupons
+    ''' </summary>
+    ''' <param name="strCouponCode"></param>
+    ''' <param name="strCouponError"></param>
+    ''' <param name="blnZeroTotalTaxRate"></param>
+    ''' <remarks>This instanciates the CustomerDiscount and CouponDiscount BasketModifier but only initialises the CouponDiscount</remarks>
+    Public Shared Sub CalculateCoupon(ByRef Basket As Kartris.Basket, ByVal strCouponCode As String, ByRef strCouponError As String, ByVal blnZeroTotalTaxRate As Boolean)
+        Dim strCouponType As String = ""
+        Dim numCouponValue As Double
+        With Basket
+            .CouponDiscount = New Kartris.BasketModifier
+            .CustomerDiscount = New Kartris.BasketModifier       ' Possibly remove?
+
+            Call GetCouponDiscount(Basket, strCouponCode, strCouponError, strCouponType, numCouponValue)
+
+            .CouponDiscount.TaxRate = .TotalDiscountPriceTaxRate
+            Select Case strCouponType.ToLower
+                Case "p"
+                    'Percentage coupons
+                    .CouponDiscount.IncTax = -Math.Round((numCouponValue * .TotalDiscountPriceIncTax / 100), CurrencyRoundNumber)
+                    .CouponDiscount.ExTax = -Math.Round((numCouponValue * .TotalDiscountPriceExTax / 100), CurrencyRoundNumber)
+
+                Case "f"
+                    'Fixed rate coupons
+                    If numCouponValue > .TotalDiscountPriceExTax Then
+                        .CouponDiscount.ExTax = -.TotalDiscountPriceExTax
+                        .CouponDiscount.IncTax = -.TotalDiscountPriceIncTax
+                    Else
+                        Dim blnPricesExtax As Boolean = False
+
+                        If Not blnZeroTotalTaxRate Then
+                            If GetKartConfig("general.tax.pricesinctax") = "y" Then
+                                .CouponDiscount.ExTax = -Math.Round(numCouponValue * (1 / (1 + .CouponDiscount.TaxRate)), CurrencyRoundNumber)
+                                If .D_Tax = 1 Then
+                                    .CouponDiscount.IncTax = -Math.Round(numCouponValue, CurrencyRoundNumber)
+                                Else
+                                    .CouponDiscount.IncTax = .CouponDiscount.ExTax
+                                End If
+                            Else
+                                blnPricesExtax = True
+                            End If
+                        Else
+                            blnPricesExtax = True
+                        End If
+
+                        If blnPricesExtax Then
+                            .CouponDiscount.IncTax = -Math.Round(numCouponValue, CurrencyRoundNumber)
+                            .CouponDiscount.ExTax = -Math.Round(numCouponValue / (1 + .CouponDiscount.TaxRate), CurrencyRoundNumber)
+                        End If
+                    End If
+
+                Case Else
+                    'Dodgy coupon - ignore
+                    .CouponDiscount.IncTax = 0
+                    .CouponDiscount.ExTax = 0
+            End Select
+        End With
+    End Sub
+
+    ''' <summary>
+    ''' Get information about an existing discount coupon.
+    ''' </summary>
+    ''' <param name="strCouponCode">Coupon to get the information from</param>
+    ''' <param name="strCouponError">Error data (return)</param>
+    ''' <param name="strCouponType">Type such as percentage or fixed amount (return)</param>
+    ''' <param name="numCouponValue">Value (return)</param>
+    ''' <remarks></remarks>
+    Public Shared Sub GetCouponDiscount(ByRef Basket As Kartris.Basket, ByVal strCouponCode As String, ByRef strCouponError As String,
+                                        ByRef strCouponType As String, ByRef numCouponValue As Double)
+        Dim tblCoupons As CouponsDataTable
+        With Basket
+            .SetCouponName("") : .SetCouponCode("")
+
+            tblCoupons = _CouponsAdptr.GetCouponCode(strCouponCode)
+            If tblCoupons.Rows.Count = 0 Then
+                strCouponError = GetGlobalResourceObject("Basket", "ContentText_CouponDoesntExist")
+            Else
+                Dim drwCoupon As DataRow = tblCoupons.Rows(0)
+                If drwCoupon("CP_Used") AndAlso Not (drwCoupon("CP_Reusable")) Then
+                    strCouponError = GetGlobalResourceObject("Basket", "ContentText_CouponExpended")
+                ElseIf CDate(drwCoupon("CP_StartDate")) > CkartrisDisplayFunctions.NowOffset Then
+                    strCouponError = GetGlobalResourceObject("Basket", "ContentText_CouponNotYetValid")
+                ElseIf CDate(drwCoupon("CP_EndDate")) < CkartrisDisplayFunctions.NowOffset OrElse Not (drwCoupon("CP_Enabled")) Then
+                    strCouponError = GetGlobalResourceObject("Basket", "ContentText_CouponExpired")
+                Else
+                    numCouponValue = drwCoupon("CP_DiscountValue")
+                    strCouponType = drwCoupon("CP_DiscountType")
+                    If strCouponType.ToLower = "p" Then
+                        .SetCouponName(drwCoupon("CP_CouponCode") & " - " & numCouponValue & "%")
+                    ElseIf strCouponType.ToLower = "t" Then
+                        .SetCouponName(drwCoupon("CP_CouponCode") & " - " & PromotionsBLL.GetPromotionText(drwCoupon("CP_DiscountValue"), True))
+                    Else
+                        .SetCouponName(drwCoupon("CP_CouponCode") & " - " & CurrenciesBLL.FormatCurrencyPrice(HttpContext.Current.Session("CUR_ID"), drwCoupon("CP_DiscountValue")))
+                    End If
+                    .SetCouponCode(drwCoupon("CP_CouponCode"))
+                End If
+            End If
+        End With
+    End Sub
+
+    ''' <summary>
+    ''' Calculate the value of the customer discount
+    ''' </summary>
+    ''' <param name="numCustomerDiscount"></param>
+    ''' <remarks></remarks>
+    Public Overloads Shared Sub CalculateCustomerDiscount(ByRef Basket As Kartris.Basket, ByVal numCustomerDiscount As Double)
+        With Basket
+            .CustomerDiscount = New Kartris.BasketModifier
+
+            .CustomerDiscount.TaxRate = .TotalDiscountPriceTaxRate
+            .CustomerDiscount.IncTax = -Math.Round(.TotalDiscountPriceIncTax * (numCustomerDiscount / 100), CurrencyRoundNumber)
+            .CustomerDiscount.ExTax = -Math.Round(.TotalDiscountPriceExTax * (numCustomerDiscount / 100), CurrencyRoundNumber)
+
+            If Not (.ApplyTax) Then
+                .CustomerDiscount.IncTax = .CustomerDiscount.ExTax
+            End If
+
+            ' Remember the percentage that was applied.
+            .CustomerDiscountPercentage = numCustomerDiscount
+        End With
+
+    End Sub
+
+    ''' <summary>
+    ''' Add a new item to a basket. This may be added to an existing row or create a new row. 
+    ''' </summary>
+    ''' <param name="pParentType">What type of basket is it (stored, wishlist etc.)</param>
+    ''' <param name="pParentID">The basket ID (or wishlist ID etc. if the parent is not a basket)</param>
+    ''' <param name="pVersionID">Product version ID to be added</param>
+    ''' <param name="pQuantity">Quantity of product to be added</param>
+    ''' <param name="pCustomText">Custom text if the product being added has custom text</param>
+    ''' <param name="pOptionsValues">Options value if the product being added has an options list.</param>
+    ''' <param name="numBasketValueID">The basket item from within the target basket that this product replaces. Only use for replacing, not for adding to existing</param>
+    ''' <remarks></remarks>
+    Public Shared Sub AddNewBasketValue(ByRef BasketItems As List(Of Kartris.BasketItem), ByVal pParentType As BASKET_PARENTS, ByVal pParentID As Integer, _
+                                 ByVal pVersionID As Long, ByVal pQuantity As Single, _
+                                 Optional ByVal pCustomText As String = Nothing, _
+                                 Optional ByVal pOptionsValues As String = Nothing, Optional ByVal numBasketValueID As Integer = 0)
+
         Dim chrParentType As Char = ""
         Select Case pParentType
             Case BASKET_PARENTS.BASKET
@@ -1077,7 +258,7 @@ Public Class BasketBLL
             End If
 
             Dim cntOption As Integer, numFoundBasketValueID As Integer = 0
-            For Each oBasketItem As BasketItem In Current.Session("Basket").BasketItems
+            For Each oBasketItem As Kartris.BasketItem In basketitems
                 If oBasketItem.VersionID = pVersionID Then
                     Dim strOption As String = Replace(oBasketItem.OptionLink, "&strOptions=", "")
                     If strOption = "" OrElse strOption = "0" Then '' not a version options so exit
@@ -1143,11 +324,20 @@ Public Class BasketBLL
 
     End Sub
 
-    Private Function GetIdenticalBasketValueID(ByVal pParentID As Integer, ByVal pVersionID As Long, ByVal pOptionsValues As String, Optional ByVal strCustomText As String = "") As Long
+    ''' <summary>
+    ''' Find a basket item within the given basket that matches the supplied product information
+    ''' </summary>
+    ''' <param name="pParentID">The basket ID (or wishlist ID etc. if the parent is not a basket)</param>
+    ''' <param name="pVersionID">Product version ID to be added</param>
+    ''' <param name="pOptionsValues">Options value if the product being added has an options list.</param>
+    ''' <param name="strCustomText">Custom text if the product being added has custom text</param>
+    ''' <returns></returns>
+    ''' <remarks>Can be used to replace an existing entry of the same product in a given basket.</remarks>
+    Public Shared Function GetIdenticalBasketValueID(ByVal pParentID As Integer, ByVal pVersionID As Long, ByVal pOptionsValues As String, Optional ByVal strCustomText As String = "") As Long
         Dim numLanguageID As Short = 1
         Dim tblBasketItems As New DataTable
 
-        tblBasketItems = GetBasketItems(pParentID, numLanguageID)
+        tblBasketItems = GetBasketItemsDatatable(pParentID, numLanguageID)
 
         Dim drwIdenticalVersion As DataRow()
         drwIdenticalVersion = tblBasketItems.Select("BV_VersionID=" & pVersionID & " AND isnull(BV_CustomText,'')='" & strCustomText & "'")
@@ -1202,15 +392,175 @@ Public Class BasketBLL
         Return -1
     End Function
 
-    Private Sub AddQuantityToMyBasket(ByVal pBasketValueID As Long, ByVal pQuantityToAdd As String)
+    ''' <summary>
+    ''' Add quantity to a given basket item. 
+    ''' </summary>
+    ''' <param name="pBasketValueID">Basket item ID</param>
+    ''' <param name="pQuantityToAdd">Quantity to add</param>
+    ''' <remarks>Basket item IDs are unique within the database so we do not need to know the basket as no two baskets will contain the same basket item IDs</remarks>
+    Private Shared Sub AddQuantityToMyBasket(ByVal pBasketValueID As Long, ByVal pQuantityToAdd As String)
         _BasketValuesAdptr.AddQuantityToItem(pQuantityToAdd, pBasketValueID)
     End Sub
 
-    Public Function GetBasketItems(ByVal pSessionID As Long, ByVal pLanguageID As Short) As DataTable
+    ''' <summary>
+    ''' Get all basket items for a given session. 
+    ''' </summary>
+    ''' <param name="pSessionID">Session ID</param>
+    ''' <param name="pLanguageID">Language that is being used (used for retrieving product and shipping names etc.)</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetBasketItemsDatatable(ByVal pSessionID As Long, ByVal pLanguageID As Short) As DataTable
         Return _BasketValuesAdptr.GetBasketItems(pSessionID, pLanguageID)
     End Function
 
-    Public Function GetMiniBasketOptions(ByVal pBasketValueID As Long) As String
+    Public Overloads Shared Function GetBasketItems() As List(Of Kartris.BasketItem)
+        Dim numLanguageID As Integer = Current.Session("LANG")
+        Dim numSessionID As Integer = Current.Session("SessionID")
+        Return GetBasketItems(numSessionID, numLanguageID)
+    End Function
+
+    ''' <summary>
+    ''' Return a list of basket items retrieved from database
+    ''' </summary>
+    ''' <param name="SessionId">The session ID that the basket is associated with</param>
+    ''' <param name="LangaugeId">Language that the text should be in.</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Overloads Shared Function GetBasketItems(ByVal SessionId As Long, ByVal LangaugeId As String) As List(Of Kartris.BasketItem)
+        GetBasketItems = New List(Of Kartris.BasketItem)        ' Initial value
+        Dim objItem As Kartris.BasketItem
+        Dim tblBasketValues As DataTable
+        Dim numCurrencyID As Integer ', numLanguageId, numSessionId
+        Dim BasketItems As New List(Of Kartris.BasketItem)
+
+        Dim SESS_CurrencyID As Short
+        If numCurrencyID > 0 Then
+            SESS_CurrencyID = numCurrencyID
+        Else
+            SESS_CurrencyID = Current.Session("CUR_ID")
+        End If
+
+        'numLanguageID = Current.Session("LANG")
+        'numSessionID = Current.Session("SessionID")
+
+        ' Load datatable from database
+        tblBasketValues = _BasketValuesAdptr.GetItems(LangaugeId, SessionId)
+
+            Try
+                For Each drwBasketValues As DataRow In tblBasketValues.Rows
+                    objItem = New Kartris.BasketItem
+                    objItem.ProductID = drwBasketValues("ProductID")
+                    objItem.ProductType = drwBasketValues("ProductType")
+                    objItem.TaxRate1 = FixNullFromDB(drwBasketValues("TaxRate"))
+                    objItem.TaxRate2 = FixNullFromDB(drwBasketValues("TaxRate2"))
+                    objItem.TaxRateItem = FixNullFromDB(drwBasketValues("TaxRate"))
+                    objItem.Weight = FixNullFromDB(drwBasketValues("Weight"))
+                    objItem.RRP = FixNullFromDB(drwBasketValues("RRP"))
+                    objItem.ProductName = drwBasketValues("ProductName") & ""
+                    objItem.ID = drwBasketValues("BV_ID")
+                    objItem.VersionBaseID = drwBasketValues("V_ID")
+                    objItem.VersionID = drwBasketValues("BV_VersionID")
+                    objItem.VersionName = drwBasketValues("VersionName") & ""
+                    objItem.VersionCode = drwBasketValues("CodeNumber") & ""
+                    objItem.CodeNumber = drwBasketValues("CodeNumber") & ""
+                    objItem.Price = FixNullFromDB(drwBasketValues("Price"))
+                    objItem.Quantity = FixNullFromDB(drwBasketValues("Quantity"))
+                    objItem.StockQty = FixNullFromDB(drwBasketValues("V_Quantity"))
+                    objItem.QtyWarnLevel = FixNullFromDB(drwBasketValues("QtyWarnLevel"))
+                    objItem.DownloadType = drwBasketValues("V_DownloadType") & ""
+                    objItem.OptionPrice = Math.Round(CDbl(FixNullFromDB(drwBasketValues("OptionsPrice"))), CurrencyRoundNumber)
+                    objItem.CategoryIDs = GetCategoryIDs(objItem.ProductID)
+                    objItem.PromoQty = objItem.Quantity
+                    objItem.VersionType = FixNullFromDB(drwBasketValues("VersionType"))
+
+                    'We can tell if this is an combinations product
+                    If objItem.VersionType = "c" Then
+                        objItem.HasCombinations = True
+                        objItem.DownloadType = FixNullFromDB(drwBasketValues("BaseVersion_DownloadType"))
+
+                        'Normally, combinations products will use the price derived from the base version
+                        'and any options that are selected, just like a regular options product. However,
+                        'by setting the usecombination object config setting for the product to 'on', you
+                        'can specify pricing individually for each combination.
+                        If ObjectConfigBLL.GetValue("K:product.usecombinationprice", objItem.ProductID) = "1" Then
+                            objItem.Price = FixNullFromDB(drwBasketValues("CombinationPrice"))
+                            objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
+                            objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
+                        End If
+
+                        'We determine whether stock tracking is on or not from the
+                        'base version rather than the actual combination in the
+                        'basket
+                        If VersionsBLL.IsStockTrackingInBase(objItem.ProductID) Then
+                            'Nowt
+                        Else
+                            objItem.QtyWarnLevel = 0
+                        End If
+
+                    ElseIf objItem.ProductType = "o" Then
+                        objItem.OptionLink = ""
+
+                        'We don't stock track plain old versions; it doesn't really make sense
+                        'since they're configurable items, and if stock tracking is needed you
+                        'really need to track individual combinations rather than the base
+                        'version
+                        objItem.QtyWarnLevel = 0
+                    End If
+
+                objItem.OptionText = GetOptionText(LangaugeId, objItem.ID, objItem.OptionLink)
+                    objItem.CustomText = drwBasketValues("CustomText") & ""
+                    objItem.CustomType = drwBasketValues("V_CustomizationType") & ""
+                    objItem.CustomDesc = drwBasketValues("V_CustomizationDesc") & ""
+                    objItem.CustomCost = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, FixNullFromDB(drwBasketValues("V_CustomizationCost")))), CurrencyRoundNumber)
+                    objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
+                    objItem.TableText = ""
+
+                    'Handle the price differently if basket item is from a custom product
+                    Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", objItem.ProductID)
+                    If Not String.IsNullOrEmpty(strCustomControlName) Then
+                        Try
+                            Dim strParameterValues As String = FixNullFromDB(drwBasketValues("CustomText"))
+                            'Split the custom text field
+                            Dim arrParameters As String() = Split(strParameterValues, "|||")
+
+                            ' arrParameters(0) contains the comma separated list of the custom control's parameters values
+                            ' we don't use this value when loading the basket, this is only needed when validating the price in the checkout
+
+                            ' arrParameters(1) contains the custom description of the item
+                            If Not String.IsNullOrEmpty(arrParameters(1)) Then
+                                objItem.VersionName = arrParameters(1)
+                            End If
+
+                            ' arrParameters(2) contains the custom price
+                            objItem.Price = arrParameters(2)
+
+                            'just set the option price to 0 just to be safe
+                            objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
+                        Catch ex As Exception
+                            'Failed to retrieve custom price, ignore this basket item
+                            objItem.Quantity = 0
+                        End Try
+
+                    End If
+
+                    'there must be something wrong if quantity is 0 so don't add this item to the basketitems array
+                    If objItem.Quantity > 0 Then BasketItems.Add(objItem)
+                Next
+            Catch ex As Exception
+                SqlConnection.ClearPool(_BasketValuesAdptr.Connection)
+                CkartrisFormatErrors.LogError("BasketBLL.LoadBasketItems - " & ex.Message)
+        End Try
+
+        Return BasketItems
+    End Function
+
+    ''' <summary>
+    ''' Get a list of product options that are inside a basket
+    ''' </summary>
+    ''' <param name="pBasketValueID">Basket row to get options from</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetMiniBasketOptions(ByVal pBasketValueID As Long) As String
         Dim tblBasketOptions As New DataTable
         tblBasketOptions = _BasketOptionsAdptr.GetBasketOptionsByBasketValueID(pBasketValueID)
 
@@ -1223,348 +573,61 @@ Public Class BasketBLL
         Return strBasketOptions
     End Function
 
-    Private Sub AddBasketOptionValues(ByVal pBasketValueID As Long, ByVal pOptionID As Integer)
+    ''' <summary>
+    ''' Add a product option to a basket
+    ''' </summary>
+    ''' <param name="pBasketValueID">Basket row to add option to</param>
+    ''' <param name="pOptionID">Option to add</param>
+    ''' <remarks></remarks>
+    Private Shared Sub AddBasketOptionValues(ByVal pBasketValueID As Long, ByVal pOptionID As Integer)
         _BasketOptionsAdptr.Insert(pBasketValueID, pOptionID)
     End Sub
 
-    Public Function GetItems() As ArrayList
-        Return BasketItems
-    End Function
     ''' <summary>
-    ''' Loads the basket items from the database - this is usually called in every postback
+    ''' Delete all items in a basket 
     ''' </summary>
     ''' <remarks></remarks>
-    Public Sub LoadBasketItems()
-        Dim objItem As BasketItem
-        Dim tblBasketValues As New DataTable
-
-        Dim SESS_CurrencyID As Short
-        If numCurrencyID > 0 Then
-            SESS_CurrencyID = numCurrencyID
-        Else
-            SESS_CurrencyID = Current.Session("CUR_ID")
-        End If
-
-        numLanguageID = Current.Session("LANG")
-        numSessionID = Current.Session("SessionID")
-        BasketItems.Clear()
-
-        tblBasketValues = _BasketValuesAdptr.GetItems(numLanguageID, numSessionID)
-
-        Try
-            For Each drwBasketValues As DataRow In tblBasketValues.Rows
-                objItem = New BasketItem
-                objItem.ProductID = drwBasketValues("ProductID")
-                objItem.ProductType = drwBasketValues("ProductType")
-                objItem.TaxRate1 = FixNullFromDB(drwBasketValues("TaxRate"))
-                objItem.TaxRate2 = FixNullFromDB(drwBasketValues("TaxRate2"))
-                objItem.TaxRateItem = FixNullFromDB(drwBasketValues("TaxRate"))
-                objItem.Weight = FixNullFromDB(drwBasketValues("Weight"))
-                objItem.RRP = FixNullFromDB(drwBasketValues("RRP"))
-                objItem.ProductName = drwBasketValues("ProductName") & ""
-                objItem.ID = drwBasketValues("BV_ID")
-                objItem.VersionBaseID = drwBasketValues("V_ID")
-                objItem.VersionID = drwBasketValues("BV_VersionID")
-                objItem.VersionName = drwBasketValues("VersionName") & ""
-                objItem.VersionCode = drwBasketValues("CodeNumber") & ""
-                objItem.CodeNumber = drwBasketValues("CodeNumber") & ""
-                objItem.Price = FixNullFromDB(drwBasketValues("Price"))
-                objItem.Quantity = FixNullFromDB(drwBasketValues("Quantity"))
-                objItem.StockQty = FixNullFromDB(drwBasketValues("V_Quantity"))
-                objItem.QtyWarnLevel = FixNullFromDB(drwBasketValues("QtyWarnLevel"))
-                objItem.DownloadType = drwBasketValues("V_DownloadType") & ""
-                objItem.OptionPrice = Math.Round(CDbl(FixNullFromDB(drwBasketValues("OptionsPrice"))), CurrencyRoundNumber)
-                objItem.CategoryIDs = GetCategoryIDs(objItem.ProductID)
-                objItem.PromoQty = objItem.Quantity
-                objItem.VersionType = FixNullFromDB(drwBasketValues("VersionType"))
-
-                'We can tell if this is an combinations product
-                If objItem.VersionType = "c" Then
-                    objItem.HasCombinations = True
-                    objItem.DownloadType = FixNullFromDB(drwBasketValues("BaseVersion_DownloadType"))
-
-                    'Normally, combinations products will use the price derived from the base version
-                    'and any options that are selected, just like a regular options product. However,
-                    'by setting the usecombination object config setting for the product to 'on', you
-                    'can specify pricing individually for each combination.
-                    If ObjectConfigBLL.GetValue("K:product.usecombinationprice", objItem.ProductID) = "1" Then
-                        objItem.Price = FixNullFromDB(drwBasketValues("CombinationPrice"))
-                        objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
-                        objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
-                    End If
-
-                    'We determine whether stock tracking is on or not from the
-                    'base version rather than the actual combination in the
-                    'basket
-                    If VersionsBLL.IsStockTrackingInBase(objItem.ProductID) Then
-                        'Nowt
-                    Else
-                        objItem.QtyWarnLevel = 0
-                    End If
-
-                ElseIf objItem.ProductType = "o" Then
-                    objItem.OptionLink = ""
-
-                    'We don't stock track plain old versions; it doesn't really make sense
-                    'since they're configurable items, and if stock tracking is needed you
-                    'really need to track individual combinations rather than the base
-                    'version
-                    objItem.QtyWarnLevel = 0
-                End If
-
-                objItem.OptionText = GetOptionText(numLanguageID, objItem.ID, objItem.OptionLink)
-                objItem.CustomText = drwBasketValues("CustomText") & ""
-                objItem.CustomType = drwBasketValues("V_CustomizationType") & ""
-                objItem.CustomDesc = drwBasketValues("V_CustomizationDesc") & ""
-                objItem.CustomCost = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, FixNullFromDB(drwBasketValues("V_CustomizationCost")))), CurrencyRoundNumber)
-                objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
-                objItem.TableText = ""
-
-                'Handle the price differently if basket item is from a custom product
-                Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", objItem.ProductID)
-                If Not String.IsNullOrEmpty(strCustomControlName) Then
-                    Try
-                        Dim strParameterValues As String = FixNullFromDB(drwBasketValues("CustomText"))
-                        'Split the custom text field
-                        Dim arrParameters As String() = Split(strParameterValues, "|||")
-
-                        ' arrParameters(0) contains the comma separated list of the custom control's parameters values
-                        ' we don't use this value when loading the basket, this is only needed when validating the price in the checkout
-
-                        ' arrParameters(1) contains the custom description of the item
-                        If Not String.IsNullOrEmpty(arrParameters(1)) Then
-                            objItem.VersionName = arrParameters(1)
-                        End If
-
-                        ' arrParameters(2) contains the custom price
-                        objItem.Price = arrParameters(2)
-
-                        'just set the option price to 0 just to be safe
-                        objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
-                    Catch ex As Exception
-                        'Failed to retrieve custom price, ignore this basket item
-                        objItem.Quantity = 0
-                    End Try
-
-                End If
-
-                'there must be something wrong if quantity is 0 so don't add this item to the basketitems array
-                If objItem.Quantity > 0 Then BasketItems.Add(objItem)
-            Next
-        Catch ex As Exception
-            SqlConnection.ClearPool(_BasketValuesAdptr.Connection)
-            CkartrisFormatErrors.LogError("BasketBLL.LoadBasketItems - " & ex.Message)
-        End Try
-        
-
-        ShippingPrice = New BasketModifier
-        OrderHandlingPrice = New BasketModifier
-        CouponDiscount = New BasketModifier
-        CustomerDiscount = New BasketModifier
-        PromotionDiscount = New BasketModifier
-
+    Public Overloads Shared Sub DeleteBasket()
+        DeleteBasket(Current.Session("SessionID"))
     End Sub
 
-    Public Function Validate(ByVal blnAllowOutOfStock As Boolean) As Boolean
-        Dim blnAllowPurchaseOutOfStock, blnOnlyOneDownload As Boolean
-        Dim objItem As New BasketItem
-        Dim blnWarn As Boolean
-        Dim numWeight, numPrice As Double
-        Dim V_DownloadType As String
-        Dim SESS_CurrencyID As Short
-        Dim numUnitSize As Single
-
-        If numCurrencyID > 0 Then
-            SESS_CurrencyID = numCurrencyID
-        Else
-            SESS_CurrencyID = Current.Session("CUR_ID")
-        End If
-
-        'Set variables from application
-        _AdjustedForElectronic = False
-        _AdjustedQuantities = False
-
-        'If LCase(GetKartConfig("general.tax.usmultistatetax")) = "y" Then PricesIncTax = False Else PricesIncTax = (LCase(GetKartConfig("general.tax.pricesinctax")) = "y")
-        'If TaxRegime.Name.ToLower = "us" Then PricesIncTax = False Else PricesIncTax = (LCase(GetKartConfig("general.tax.pricesinctax")) = "y")
-        PricesIncTax = (LCase(GetKartConfig("general.tax.pricesinctax")) = "y")
-
-        blnAllowPurchaseOutOfStock = LCase(GetKartConfig("frontend.orders.allowpurchaseoutofstock")) = "y"
-        blnOnlyOneDownload = LCase(GetKartConfig("onlyonedownload")) = "y"
-
-        'Only proceed if we have basket items
-        If BasketItems.Count > 0 Then
-
-            ''Loop through all basket records
-            For i As Integer = 0 To BasketItems.Count - 1
-                objItem = BasketItems(i)
-                With objItem
-                    numWeight = .Weight
-
-                    .ComputedTaxRate = TaxRegime.CalculateTaxRate(.TaxRate1, .TaxRate2, IIf(D_Tax > 0, D_Tax, 1), IIf(D_Tax2 > 0, D_Tax2, 1), D_TaxExtra)
-
-                    If D_Tax > 0 Or D_Tax2 > 0 Then ApplyTax = True Else ApplyTax = False
-
-                    'Set whether this item has free shipping
-                    V_DownloadType = LCase(.DownloadType)
-                    .FreeShipping = Not (V_DownloadType = "" OrElse V_DownloadType = "n")
-
-                    'If the item is electronic, one download is allowed, and the user has
-                    'more than one for quantity, change quantity and warn user
-                    If blnOnlyOneDownload AndAlso (V_DownloadType = "l" OrElse V_DownloadType = "u") AndAlso .Quantity > 1 Then
-                        .Quantity = 1
-                        _AdjustedForElectronic = True
-                    End If
-
-                    'Adjust quantities if stock level too low
-                    If Not blnAllowPurchaseOutOfStock Then
-                        'Only warn if tracking turned on for this item (warn level not set to 0)
-                        blnWarn = (.QtyWarnLevel <> 0)
-                        If blnWarn Then
-                            If .Quantity > .StockQty Then
-                                .AdjustedQty = True
-                                _AdjustedQuantities = True
-                                _HighlightLowStockRowNumber = i
-                                .Quantity = .StockQty
-                            End If
-                        End If
-                    End If
-
-                    'Here we check that the quantity for each items is ok
-                    'with the unitsize for that item. For example, if items
-                    'can only be bought in units of 10, we need to ensure
-                    'the qty of that item is a multiple of 10, or fix it
-                    'down.
-                    numUnitSize = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.unitsize", objItem.P_ID))
-                    .Quantity = (.Quantity - SafeModulus(.Quantity, numUnitSize))
-
-                    'Get basic price, modify for customer group pricing (if lower)
-                    numPrice = .Price
-
-                    'Get basic price, modify for customer group pricing (if lower)
-                    Dim numCustomerGroupPrice As Double
-                    Dim numBaseVersionID As Integer = objItem.VersionBaseID
-                    Dim numActualVersionID As Integer = objItem.VersionID
-                    Dim numVersionID As Integer = 0
-
-                    'For options products, look up customer group discounts
-                    'related to the base version. For combinations products
-                    'use the actual version
-                    If objItem.HasCombinations Then
-                        'Set version ID to use for price to the actual version in basket
-                        numVersionID = numActualVersionID
-                    Else
-                        'Set version ID to use for price to the base version
-                        numVersionID = numBaseVersionID
-                    End If
-
-                    numCustomerGroupPrice = GetCustomerGroupPriceForVersion(DB_C_CustomerID, numVersionID)
-
-                    If numCustomerGroupPrice > 0 Then
-                        'convert customer group price to current user currency
-                        numCustomerGroupPrice = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, numCustomerGroupPrice)), CurrencyRoundNumber)
-                        numPrice = Math.Min(numCustomerGroupPrice, numPrice)
-                    End If
-
-                    If Not String.IsNullOrEmpty(.CustomText) Then
-                        Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", objItem.ProductID)
-                        If Not String.IsNullOrEmpty(strCustomControlName) Then
-                            'Split the custom text field
-                            Dim arrParameters As String() = Split(.CustomText, "|||")
-                            ' arrParameters(0) contains the comma separated list of the custom control's parameters values
-                        Else
-                            numPrice += .CustomCost
-                        End If
-
-                    End If
-
-                    'Get price break level (if lower)
-                    If CInt(KartSettingsManager.GetKartConfig("general.quantitydiscounts.bands")) > 0 Then
-                        Dim numDiscountPrice As Double = 0
-                        numDiscountPrice = GetQuantityDiscount(objItem.VersionBaseID, objItem.Quantity)
-                        If numDiscountPrice > 0 Then
-                            'convert discount price to current user currency
-                            numDiscountPrice = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, numDiscountPrice)), CurrencyRoundNumber)
-                            numPrice = Math.Min(numDiscountPrice, numPrice)
-                        End If
-                    End If
-
-                    If LCase(.ProductType) = "o" Then
-                        numPrice = numPrice + objItem.OptionPrice
-                    End If
-
-                    'Calculate the ex-tax - this differs as numPrice will hold 
-                    'a different value depending on pricesinctax
-                    If PricesIncTax Then
-                        .ExTax = numPrice * (1 / (1 + .ComputedTaxRate))
-                    Else
-                        .ExTax = numPrice
-                    End If
-
-                    If Not ApplyTax Then .ComputedTaxRate = 0
-
-                    'Set the weight
-                    .Weight = numWeight
-
-                    If .Quantity = 0 Then
-                        BasketItems.Remove(objItem)
-                        _BasketValuesAdptr.UpdateQuantity(.ID, 0)
-                        Current.Response.Redirect("~/Basket.aspx")
-                    End If
-
-                End With
-            Next
-        End If
-        Return True
-    End Function
-
-    Public Sub DeleteBasket(Optional ByVal numParentID As Long = 0)
-        If numParentID = 0 Then numParentID = Current.Session("SessionID")
+    ''' <summary>
+    ''' Delete all items in a basket
+    ''' </summary>
+    ''' <param name="numParentID">Reference to the basket parent (same for entire basket)</param>
+    ''' <remarks></remarks>
+    Public Overloads Shared Sub DeleteBasket(ByVal numParentID As Long)
         _BasketValuesAdptr.DeleteBasketItems(1, numParentID)
     End Sub
 
-    Public Sub DeleteBasketItems(ByVal numBasketID As Long)
+    ''' <summary>
+    ''' Delete a single basket item
+    ''' </summary>
+    ''' <param name="numBasketID">reference to the item in the basket we wish to delete</param>
+    ''' <remarks></remarks>
+    Public Shared Sub DeleteBasketItems(ByVal numBasketID As Long)
         _BasketValuesAdptr.DeleteBasketItems(2, numBasketID)
     End Sub
 
-    Public Sub UpdateQuantity(ByVal intBasketID As Integer, ByVal numQuantity As Single)
+    ''' <summary>
+    ''' Replace the quantity for a single row in the basket
+    ''' </summary>
+    ''' <param name="intBasketID">Basket row to affect (BasketValueID)</param>
+    ''' <param name="numQuantity">Quantity that it should be updated to.</param>
+    ''' <remarks></remarks>
+    Public Shared Sub UpdateQuantity(ByVal intBasketID As Integer, ByVal numQuantity As Single)
         If numQuantity > 0 Then
             _BasketValuesAdptr.UpdateQuantity(intBasketID, numQuantity)
         End If
     End Sub
 
-    Public Sub GetCouponDiscount(ByVal strCouponCode As String, ByRef strCouponError As String, ByRef strCouponType As String, ByRef numCouponValue As Double)
-        Dim tblCoupons As CouponsDataTable
-
-        _CouponName = "" : _CouponCode = ""
-
-        tblCoupons = _CouponsAdptr.GetCouponCode(strCouponCode)
-        If tblCoupons.Rows.Count = 0 Then
-            strCouponError = GetGlobalResourceObject("Basket", "ContentText_CouponDoesntExist")
-        Else
-            Dim drwCoupon As DataRow = tblCoupons.Rows(0)
-            If drwCoupon("CP_Used") AndAlso Not (drwCoupon("CP_Reusable")) Then
-                strCouponError = GetGlobalResourceObject("Basket", "ContentText_CouponExpended")
-            ElseIf CDate(drwCoupon("CP_StartDate")) > CkartrisDisplayFunctions.NowOffset Then
-                strCouponError = GetGlobalResourceObject("Basket", "ContentText_CouponNotYetValid")
-            ElseIf CDate(drwCoupon("CP_EndDate")) < CkartrisDisplayFunctions.NowOffset OrElse Not (drwCoupon("CP_Enabled")) Then
-                strCouponError = GetGlobalResourceObject("Basket", "ContentText_CouponExpired")
-            Else
-                numCouponValue = drwCoupon("CP_DiscountValue")
-                strCouponType = drwCoupon("CP_DiscountType")
-                If strCouponType.ToLower = "p" Then
-                    _CouponName = drwCoupon("CP_CouponCode") & " - " & numCouponValue & "%"
-                ElseIf strCouponType.ToLower = "t" Then
-                    _CouponName = drwCoupon("CP_CouponCode") & " - " & GetPromotionText(drwCoupon("CP_DiscountValue"), True)
-                Else
-                    _CouponName = drwCoupon("CP_CouponCode") & " - " & CurrenciesBLL.FormatCurrencyPrice(HttpContext.Current.Session("CUR_ID"), drwCoupon("CP_DiscountValue"))
-                End If
-                _CouponCode = drwCoupon("CP_CouponCode")
-            End If
-        End If
-
-    End Sub
-
-    Public Function GetCustomerDiscount(ByVal numCustomerID As Integer) As Double
+    ''' <summary>
+    ''' Get the customer percentage discount
+    ''' </summary>
+    ''' <param name="numCustomerID"></param>
+    ''' <returns></returns>
+    ''' <remarks>how much discount we give to the given customer as a percentage</remarks>
+    Public Shared Function GetCustomerDiscount(ByVal numCustomerID As Integer) As Double
         Dim tblCustomers As CustomersDataTable
         Dim numDiscount As Double = 0
 
@@ -1573,12 +636,17 @@ Public Class BasketBLL
             numDiscount = tblCustomers.Rows(0).Item("Discount")
         End If
 
-        _CustomerDiscountPercentage = numDiscount
-
         Return numDiscount
     End Function
 
-    Public Function GetCustomerGroupPriceForVersion(ByVal intCustomerID As Integer, ByVal numVersionID As Long) As Double
+    ''' <summary>
+    ''' Get the price for the given customer for a product version.
+    ''' </summary>
+    ''' <param name="intCustomerID">Customer ID</param>
+    ''' <param name="numVersionID">Product Version ID</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetCustomerGroupPriceForVersion(ByVal intCustomerID As Integer, ByVal numVersionID As Long) As Double
         Dim tblCustomers As CustomersDataTable
         Dim numPrice As Double = 0
 
@@ -1591,7 +659,14 @@ Public Class BasketBLL
 
     End Function
 
-    Public Function GetQuantityDiscount(ByVal numVersionID As Long, ByVal numQuantity As Double) As Double
+    ''' <summary>
+    ''' Get the quantity discount for this product version
+    ''' </summary>
+    ''' <param name="numVersionID">Product version we want to get discount for</param>
+    ''' <param name="numQuantity">Quantity being purchased</param>
+    ''' <returns></returns>
+    ''' <remarks>Some versions have a discount (e.g. purchase more than 100 and price is reduced 25%). Retrieve this discount here.</remarks>
+    Public Shared Function GetQuantityDiscount(ByVal numVersionID As Long, ByVal numQuantity As Double) As Double
         Dim tblCustomers As CustomersDataTable
         Dim numDiscount As Double = 0
 
@@ -1603,27 +678,60 @@ Public Class BasketBLL
         Return numDiscount
     End Function
 
-    Public Function GetCustomerData(ByVal numUserID As Long) As DataTable
+    ''' <summary>
+    ''' Get customer information
+    ''' </summary>
+    ''' <param name="numUserID">Customer ID</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetCustomerData(ByVal numUserID As Long) As DataTable
         Dim tblCustomers As New DataTable
         tblCustomers = _CustomersAdptr.GetCustomer(numUserID, "", "")
         Return tblCustomers
     End Function
 
-    Public Sub SaveCustomText(ByVal numBasketItemID As Long, ByVal strCustomText As String)
+    ''' <summary>
+    ''' Save custom text against an item in the basket. 
+    ''' </summary>
+    ''' <param name="numBasketItemID">The basket item (row) that we wish to save the text against</param>
+    ''' <param name="strCustomText">The custom text to be saved</param>
+    ''' <remarks></remarks>
+    Public Shared Sub SaveCustomText(ByVal numBasketItemID As Long, ByVal strCustomText As String)
         _BasketValuesAdptr.SaveCustomText(numBasketItemID, strCustomText)
     End Sub
 
-    Public Sub SaveBasket(ByVal numCustomerID As Long, ByVal strBasketName As String, ByVal numBasketID As Long)
+    ''' <summary>
+    ''' Save the basket. This takes an active basket and stores it for retrieval at a later date. This is a customer triggered event
+    ''' </summary>
+    ''' <param name="numCustomerID">The customer that this basket is stored for</param>
+    ''' <param name="strBasketName">Name of basket (to help customer remember it later)</param>
+    ''' <param name="numBasketID">Basket identifier</param>
+    ''' <remarks>Can only be used for a logged in customer (or else there is no customer ID)</remarks>
+    Public Shared Sub SaveBasket(ByVal numCustomerID As Long, ByVal strBasketName As String, ByVal numBasketID As Long)
         _CustomersAdptr.SaveBasket(numCustomerID, strBasketName, numBasketID, CkartrisDisplayFunctions.NowOffset)
     End Sub
 
-    Public Function GetSavedBasket(ByVal numUserID As Long, Optional ByVal PageIndex As Integer = -1, Optional ByVal PageSize As Integer = -1) As DataTable
+    ''' <summary>
+    ''' Retrieve a basket that was previously saved using OldBasketBLL.SaveBasket
+    ''' </summary>
+    ''' <param name="numUserID">User or Customer ID</param>
+    ''' <param name="PageIndex">Page to display (paginated output)</param>
+    ''' <param name="PageSize">Number of rows to show per page (paginated output)</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetSavedBasket(ByVal numUserID As Long, Optional ByVal PageIndex As Integer = -1, Optional ByVal PageSize As Integer = -1) As DataTable
         Dim tblSavedBaskets As New DataTable
         tblSavedBaskets = _CustomersAdptr.GetSavedBasket(1, numUserID, PageIndex, PageIndex + PageSize - 1)
         Return tblSavedBaskets
     End Function
 
-    Public Function GetSavedBasketTotal(ByVal numUserID As Long) As Integer
+    ''' <summary>
+    ''' Gets the total value of all saved baskets for a single customer. 
+    ''' </summary>
+    ''' <param name="numUserID">The customer we want to retrieve the total for.</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetSavedBasketTotal(ByVal numUserID As Long) As Integer
         Dim tblSavedBaskets As New DataTable
         Dim numTotalBasket As Integer = 0
 
@@ -1636,19 +744,46 @@ Public Class BasketBLL
         Return numTotalBasket
     End Function
 
-    Public Sub DeleteSavedBasket(ByVal numBasketID As Long)
+    ''' <summary>
+    ''' Delete a single saved basket from the database
+    ''' </summary>
+    ''' <param name="numBasketID">The basket to delete</param>
+    ''' <remarks></remarks>
+    Public Shared Sub DeleteSavedBasket(ByVal numBasketID As Long)
         _CustomersAdptr.DeleteSavedBasket(numBasketID)
     End Sub
 
-    Public Sub LoadSavedBasket(ByVal numBasketSavedID As Long, ByVal numBasketID As Long)
+    ''' <summary>
+    ''' Load a saved basket into an active basket
+    ''' </summary>
+    ''' <param name="numBasketSavedID">The saved basket ID to load</param>
+    ''' <param name="numBasketID">The target active basket to put the items into</param>
+    ''' <remarks></remarks>
+    Public Shared Sub LoadSavedBasket(ByVal numBasketSavedID As Long, ByVal numBasketID As Long)
         _CustomersAdptr.LoadSavedBasket(numBasketSavedID, numBasketID, CkartrisDisplayFunctions.NowOffset)
     End Sub
 
-    Public Sub SaveWishLists(ByVal numWishlistsID As Long, ByVal numBasketID As Long, ByVal numUserID As Integer, ByVal strName As String, ByVal strPublicPassword As String, ByVal strMessage As String)
+    ''' <summary>
+    ''' Save a basket to a wishlist 
+    ''' </summary>
+    ''' <param name="numWishlistsID">The wishlist to be updated. Leave as zero to create a new wishlist</param>
+    ''' <param name="numBasketID">The basket that contains the items that should be put in the wishlist. Ignored if updating an existing wishlist</param>
+    ''' <param name="numUserID">Customer or User ID</param>
+    ''' <param name="strName">Name of wishlist (used to help customer identify wishlist)</param>
+    ''' <param name="strPublicPassword">Public password to allow other users to open wishlist</param>
+    ''' <param name="strMessage">Text message to users other than the customer that may open wishlist. For example, to purchase items from the wishlist for the customer.</param>
+    ''' <remarks>If the wishlist ID is zero a new wishlist will be generated. If a wishlist ID is supplied the name and comments will be replaced, but not the actual basket rows</remarks>
+    Public Shared Sub SaveWishLists(ByVal numWishlistsID As Long, ByVal numBasketID As Long, ByVal numUserID As Integer, ByVal strName As String, ByVal strPublicPassword As String, ByVal strMessage As String)
         _CustomersAdptr.SaveWishList(numWishlistsID, numBasketID, numUserID, strName, strPublicPassword, strMessage, CkartrisDisplayFunctions.NowOffset)
     End Sub
 
-    Public Function GetWishListTotal(ByVal numUserId As Long) As Integer
+    ''' <summary>
+    ''' Return the total value for all items in all wishlists for a given customer.
+    ''' </summary>
+    ''' <param name="numUserId">Customer that we want to calculate for.</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetWishListTotal(ByVal numUserId As Long) As Integer
         Dim tblWishList As New DataTable
         Dim numTotalWishList As Integer = 0
 
@@ -1661,104 +796,97 @@ Public Class BasketBLL
         Return numTotalWishList
     End Function
 
-    Public Function GetWishLists(ByVal numUserId As Long, Optional ByVal PageIndex As Integer = -1, Optional ByVal PageSize As Integer = -1) As DataTable
+    ''' <summary>
+    ''' Get a list of wishlists for a given customer.
+    ''' </summary>
+    ''' <param name="numUserId">The customer we want to find wishlists for</param>
+    ''' <param name="PageIndex">Page to display (paginated output)</param>
+    ''' <param name="PageSize">Number of rows to show per page (paginated output)</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetWishLists(ByVal numUserId As Long, Optional ByVal PageIndex As Integer = -1, Optional ByVal PageSize As Integer = -1) As DataTable
         Dim tblWishList As New DataTable
         tblWishList = _CustomersAdptr.GetWishList(1, numUserId, PageIndex, PageIndex + PageSize - 1, 0, "", "", 0)
         Return tblWishList
     End Function
 
-    Public Function GetWishListByID(ByVal numWishlistID As Long) As DataTable
+    ''' <summary>
+    ''' Get a single wishlist
+    ''' </summary>
+    ''' <param name="numWishlistID">Identifier for wishlist we wish to retrieve</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetWishListByID(ByVal numWishlistID As Long) As DataTable
         Dim tblWishList As DataTable
         tblWishList = _CustomersAdptr.GetWishList(-1, 0, 0, 0, numWishlistID, "", "", 0)
         Return tblWishList
     End Function
 
-    Public Function GetCustomerWishList(ByVal numCustomerID As Long, ByVal numWishlistID As Long) As DataTable
+    ''' <summary>
+    ''' Get a single wishlist 
+    ''' </summary>
+    ''' <param name="numCustomerID">Identifier for customer that created wishlist</param>
+    ''' <param name="numWishlistID">Identifier for wishlist.</param>
+    ''' <returns></returns>
+    ''' <remarks>Consider using GetWishListById for simplicity and speedier execution</remarks>
+    Public Shared Function GetCustomerWishList(ByVal numCustomerID As Long, ByVal numWishlistID As Long) As DataTable
         Dim tblWishList As New DataTable
         tblWishList = _CustomersAdptr.GetWishList(2, numCustomerID, 0, 0, numWishlistID, "", "", 0)
         Return tblWishList
     End Function
 
-    Public Function GetWishListLogin(ByVal strEmail As String, ByVal strPassword As String) As DataTable
+    ''' <summary>
+    ''' Retrieve wishlist using login details
+    ''' </summary>
+    ''' <param name="strEmail">Email account that wishlist is attached to</param>
+    ''' <param name="strPassword">Password required to access wishlist.</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetWishListLogin(ByVal strEmail As String, ByVal strPassword As String) As DataTable
         Dim tblWishList As New DataTable
         tblWishList = _CustomersAdptr.GetWishList(3, 0, 0, 0, 0, strEmail, strPassword, 0)
         Return tblWishList
     End Function
 
-    Public Function GetRequiredWishlist(ByVal numCustomerID As Long, ByVal numWishlistID As Long, ByVal numLanguage As Short) As DataTable
+    ''' <summary>
+    ''' Get the remaining items from a wishlist
+    ''' </summary>
+    ''' <param name="numCustomerID">The customer that owns the wishlist</param>
+    ''' <param name="numWishlistID">The required wishlist</param>
+    ''' <param name="numLanguage">Display language</param>
+    ''' <returns>Returns items that have not been purchased from wishlist. Does not return items that have already been purchased</returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetRequiredWishlist(ByVal numCustomerID As Long, ByVal numWishlistID As Long, ByVal numLanguage As Short) As DataTable
         Dim tblWishList As New DataTable
         tblWishList = _CustomersAdptr.GetWishList(4, numCustomerID, 0, 0, numWishlistID, "", "", numLanguage)
         Return tblWishList
     End Function
 
-    Public Sub DeleteWishLists(ByVal numWishListsID As Long)
+    ''' <summary>
+    ''' Delete a wishlist
+    ''' </summary>
+    ''' <param name="numWishListsID">The wishlist to be deleted.</param>
+    ''' <remarks></remarks>
+    Public Shared Sub DeleteWishLists(ByVal numWishListsID As Long)
         _CustomersAdptr.DeleteWishList(numWishListsID)
     End Sub
 
-    Public Sub LoadWishlists(ByVal numWishlistsID As Long, ByVal numBasketID As Long)
+    ''' <summary>
+    ''' Transfer a stored wishlist into an active basket
+    ''' </summary>
+    ''' <param name="numWishlistsID">The wishlist to be loaded</param>
+    ''' <param name="numBasketID">The basket to transfer the wishlist into</param>
+    ''' <remarks></remarks>
+    Public Shared Sub LoadWishlists(ByVal numWishlistsID As Long, ByVal numBasketID As Long)
         _CustomersAdptr.LoadWishlist(numWishlistsID, numBasketID, CkartrisDisplayFunctions.NowOffset)
     End Sub
 
-    Public Sub CalculateShipping(ByVal numLanguageID As Integer, ByVal numShippingID As Integer, ByVal numShippingPriceValue As Double, ByVal numDestinationID As Integer, ByVal objShippingDetails As Interfaces.objShippingDetails)
-
-        ShippingPrice = New BasketModifier
-
-        If numShippingID = 999 Then
-            _ShippingName = GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
-            _ShippingDescription = GetGlobalResourceObject("Shipping", "ContentText_ShippingPickupDesc")
-            With ShippingPrice
-                .ExTax = 0
-                .IncTax = 0
-                .TaxRate = 0
-            End With
-        Else
-            If numDestinationID > 0 And numShippingID > 0 Then
-                Try
-                    Dim numCurrencyID As Integer
-                    numCurrencyID = Current.Session("CUR_ID")
-                    Dim ShippingBoundary As Double
-                    If GetKartConfig("frontend.checkout.shipping.calcbyweight") = "y" Then
-                        ShippingBoundary = _ShippingTotalWeight
-                    Else
-                        If KartSettingsManager.GetKartConfig("general.tax.pricesinctax") <> "y" Then
-                            ShippingBoundary = _ShippingTotalExTax
-                        Else
-                            ShippingBoundary = ShippingTotalIncTax
-                        End If
-                    End If
-
-                    Dim SelectedSM As ShippingMethod = ShippingMethod.GetByID(objShippingDetails, numShippingID, numDestinationID, CurrenciesBLL.ConvertCurrency(CurrenciesBLL.GetDefaultCurrency, ShippingBoundary, numCurrencyID), numLanguageID)
-                    With SelectedSM
-                        _ShippingName = .Name & ""
-                        _ShippingDescription = .Description & ""
-
-                        ShippingPrice.ExTax = CurrenciesBLL.ConvertCurrency(numCurrencyID, .ExTax)
-                        ShippingPrice.IncTax = CurrenciesBLL.ConvertCurrency(numCurrencyID, .IncTax)
-                        ShippingPrice.TaxRate = IIf(ApplyTax, .ComputedTaxRate, 0)
-                    End With
-                Catch ex As Exception
-                    CkartrisFormatErrors.LogError("BasketBLL.CalculateShipping: " & ex.Message & vbCrLf & _
-                                                          "DestinationID: " & numDestinationID & vbCrLf _
-                                                          & "ShippingID: " & numShippingID & vbCrLf _
-                                                          & "This can happen if there is no valid shipping method for the weight/cost of this order.")
-
-                    _ShippingName = ""
-                    _ShippingDescription = ""
-                    'Current.Response.Redirect("~/Checkout.aspx")
-                End Try
-            Else
-                _ShippingName = ""
-                _ShippingDescription = ""
-                If numShippingID > 0 Then CkartrisFormatErrors.LogError("BasketBLL.CalculateShipping Error - " & _
-                                                          "DestinationID: " & numDestinationID & vbCrLf _
-                                                          & "ShippingID: " & numShippingID)
-
-            End If
-        End If
-
-    End Sub
-
-    Public Sub CalculateOrderHandlingCharge(ByVal numShippingCountryID As Integer)
+    ''' <summary>
+    ''' Calculate the handling charge for the order inside the current basket. 
+    ''' </summary>
+    ''' <param name="numShippingCountryID">Country that the items will be shipped to.</param>
+    ''' <remarks></remarks>
+    Public Shared Sub CalculateOrderHandlingCharge(ByRef Basket As Kartris.Basket, ByVal numShippingCountryID As Integer)
         Dim numOrderHandlingPriceValue As Double, numOrderHandlingTaxBand1 As Double = 0, numOrderHandlingTaxBand2 As Double = 0
 
         If numShippingCountryID = 0 Then Exit Sub
@@ -1766,93 +894,112 @@ Public Class BasketBLL
         numOrderHandlingPriceValue = KartSettingsManager.GetKartConfig("frontend.checkout.orderhandlingcharge")
 
         Dim SESS_CurrencyID As Short
-        If numCurrencyID > 0 Then
-            SESS_CurrencyID = numCurrencyID
-        Else
-            SESS_CurrencyID = Current.Session("CUR_ID")
-        End If
 
-        If SESS_CurrencyID <> CurrenciesBLL.GetDefaultCurrency Then numOrderHandlingPriceValue = CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, numOrderHandlingPriceValue)
-
-        Dim DestinationCountry As Country = Country.Get(numShippingCountryID)
-
-        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
-            OrderHandlingPrice.TaxRate = DestinationCountry.ComputedTaxRate
-            D_Tax = DestinationCountry.ComputedTaxRate
-
-            Try
-                If Current.Session("blnEUVATValidated") IsNot Nothing Then
-                    If CBool(Current.Session("blnEUVATValidated")) Then
-                        DestinationCountry.D_Tax = False
-                        DestinationCountry.ComputedTaxRate = 0
-                        DestinationCountry.TaxRate1 = 0
-                        DestinationCountry.TaxRate2 = 0
-                        D_Tax = 0
-                    End If
-                End If
-            Catch ex As Exception
-
-            End Try
-        Else
-            If DestinationCountry.D_Tax Then D_Tax = 1 Else D_Tax = 0
-
-            Try
-                If Current.Session("blnEUVATValidated") IsNot Nothing Then
-                    If CBool(Current.Session("blnEUVATValidated")) Then
-                        DestinationCountry.D_Tax = False
-                        D_Tax = 0
-                    End If
-                End If
-            Catch ex As Exception
-
-            End Try
-
-            Try
-                numOrderHandlingTaxBand1 = KartSettingsManager.GetKartConfig("frontend.checkout.orderhandlingchargetaxband")
-                numOrderHandlingTaxBand2 = KartSettingsManager.GetKartConfig("frontend.checkout.orderhandlingchargetaxband2")
-            Catch ex As Exception
-            End Try
-
-            OrderHandlingPrice.TaxRate = TaxRegime.CalculateTaxRate(TaxBLL.GetTaxRate(numOrderHandlingTaxBand1), TaxBLL.GetTaxRate(numOrderHandlingTaxBand2), DestinationCountry.TaxRate1,
-                                                            DestinationCountry.TaxRate2, DestinationCountry.TaxExtra)
-
-        End If
+        With Basket
 
 
-
-        If PricesIncTax Then
-            OrderHandlingPrice.ExTax = Math.Round(numOrderHandlingPriceValue * (1 / (1 + OrderHandlingPrice.TaxRate)), CurrencyRoundNumber)
-
-            'If tax is off, then inc tax can be set to just the ex tax
-            If DestinationCountry.D_Tax Then
-                'Set the inctax order handling values
-                OrderHandlingPrice.IncTax = Math.Round(numOrderHandlingPriceValue, CurrencyRoundNumber)
+            If .CurrencyID > 0 Then
+                SESS_CurrencyID = .CurrencyID
             Else
-                OrderHandlingPrice.IncTax = OrderHandlingPrice.ExTax
-                OrderHandlingPrice.TaxRate = 0
+                SESS_CurrencyID = Current.Session("CUR_ID")
             End If
-        Else
-            'Set the extax order handling values
-            OrderHandlingPrice.ExTax = numOrderHandlingPriceValue
 
-            'Tax rate for order handling
-            If DestinationCountry.D_Tax Then
-                OrderHandlingPrice.IncTax = Math.Round(OrderHandlingPrice.ExTax * (1 + OrderHandlingPrice.TaxRate), CurrencyRoundNumber)
+            If SESS_CurrencyID <> CurrenciesBLL.GetDefaultCurrency Then numOrderHandlingPriceValue = CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, numOrderHandlingPriceValue)
+
+            Dim DestinationCountry As Country = Country.Get(numShippingCountryID)
+
+            If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
+                .OrderHandlingPrice.TaxRate = DestinationCountry.ComputedTaxRate
+                .D_Tax = DestinationCountry.ComputedTaxRate
+
+                Try
+                    If Current.Session("blnEUVATValidated") IsNot Nothing Then
+                        If CBool(Current.Session("blnEUVATValidated")) Then
+                            DestinationCountry.D_Tax = False
+                            DestinationCountry.ComputedTaxRate = 0
+                            DestinationCountry.TaxRate1 = 0
+                            DestinationCountry.TaxRate2 = 0
+                            .D_Tax = 0
+                        End If
+                    End If
+                Catch ex As Exception
+
+                End Try
             Else
-                OrderHandlingPrice.IncTax = numOrderHandlingPriceValue
-                OrderHandlingPrice.TaxRate = 0
-            End If
-        End If
+                If DestinationCountry.D_Tax Then .D_Tax = 1 Else .D_Tax = 0
 
+                Try
+                    If Current.Session("blnEUVATValidated") IsNot Nothing Then
+                        If CBool(Current.Session("blnEUVATValidated")) Then
+                            DestinationCountry.D_Tax = False
+                            .D_Tax = 0
+                        End If
+                    End If
+                Catch ex As Exception
+
+                End Try
+
+                Try
+                    numOrderHandlingTaxBand1 = KartSettingsManager.GetKartConfig("frontend.checkout.orderhandlingchargetaxband")
+                    numOrderHandlingTaxBand2 = KartSettingsManager.GetKartConfig("frontend.checkout.orderhandlingchargetaxband2")
+                Catch ex As Exception
+                End Try
+
+                .OrderHandlingPrice.TaxRate = TaxRegime.CalculateTaxRate(TaxBLL.GetTaxRate(numOrderHandlingTaxBand1), TaxBLL.GetTaxRate(numOrderHandlingTaxBand2), DestinationCountry.TaxRate1,
+                                                                DestinationCountry.TaxRate2, DestinationCountry.TaxExtra)
+
+            End If
+
+
+
+            If .PricesIncTax Then
+                .OrderHandlingPrice.ExTax = Math.Round(numOrderHandlingPriceValue * (1 / (1 + .OrderHandlingPrice.TaxRate)), CurrencyRoundNumber)
+
+                'If tax is off, then inc tax can be set to just the ex tax
+                If DestinationCountry.D_Tax Then
+                    'Set the inctax order handling values
+                    .OrderHandlingPrice.IncTax = Math.Round(numOrderHandlingPriceValue, CurrencyRoundNumber)
+                Else
+                    .OrderHandlingPrice.IncTax = .OrderHandlingPrice.ExTax
+                    .OrderHandlingPrice.TaxRate = 0
+                End If
+            Else
+                'Set the extax order handling values
+                .OrderHandlingPrice.ExTax = numOrderHandlingPriceValue
+
+                'Tax rate for order handling
+                If DestinationCountry.D_Tax Then
+                    .OrderHandlingPrice.IncTax = Math.Round(.OrderHandlingPrice.ExTax * (1 + .OrderHandlingPrice.TaxRate), CurrencyRoundNumber)
+                Else
+                    .OrderHandlingPrice.IncTax = numOrderHandlingPriceValue
+                    .OrderHandlingPrice.TaxRate = 0
+                End If
+            End If
+        End With
     End Sub
 
-    Public Function GetCustomerOrders(ByVal numUserId As Long, Optional ByVal PageIndex As Integer = -1, Optional ByVal PageSize As Integer = -1) As DataTable
+    ''' <summary>
+    ''' Get a list of orders for the given customer
+    ''' </summary>
+    ''' <param name="numUserId">The customer to get the orders for</param>
+    ''' <param name="PageIndex">The page number to get (paginated output)</param>
+    ''' <param name="PageSize">The size of the page to return (paginated output)</param>
+    ''' <returns>Complete and incomplete orders.</returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetCustomerOrders(ByVal numUserId As Long, Optional ByVal PageIndex As Integer = -1, Optional ByVal PageSize As Integer = -1) As DataTable
         Dim tblCustomerOrders As New DataTable
         tblCustomerOrders = _CustomersAdptr.GetCustomerOrders(1, numUserId, PageIndex, PageIndex + PageSize - 1)
         Return tblCustomerOrders
     End Function
 
-    Public Function GetCustomerOrdersTotal(ByVal numUserId As Long) As Integer
+
+    ''' <summary>
+    ''' Get total value of all orders for a given customer
+    ''' </summary>
+    ''' <param name="numUserId">The customer we want to totalise data for</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetCustomerOrdersTotal(ByVal numUserId As Long) As Integer
         Dim tblCustomerOrders As New DataTable
         Dim numTotalOrders As Integer = 0
 
@@ -1865,13 +1012,25 @@ Public Class BasketBLL
         Return numTotalOrders
     End Function
 
-    Public Function GetCustomerOrderDetails(ByVal numOrderID As Integer) As DataTable
+    ''' <summary>
+    ''' Get all of the details related to a single order.
+    ''' </summary>
+    ''' <param name="numOrderID">The order we want to get data for</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetCustomerOrderDetails(ByVal numOrderID As Integer) As DataTable
         Dim tblCustomerOrders As New DataTable
         tblCustomerOrders = _CustomersAdptr.GetOrderDetails(numOrderID)
         Return tblCustomerOrders
     End Function
 
-    Public Function GetDownloadableProducts(ByVal numUserID As Integer) As DataTable
+    ''' <summary>
+    ''' Get a list of all downloadable products that a particular customer has purchased and are available for download.
+    ''' </summary>
+    ''' <param name="numUserID">The customer that we want to get the orders for</param>
+    ''' <returns>Does not return products where the download date has expired</returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetDownloadableProducts(ByVal numUserID As Integer) As DataTable
         Dim tblDownloads As New DataTable
         Dim O_Shipped As Boolean = LCase(GetKartConfig("frontend.downloads.instant")) = "n"
         Dim intDaysAvailable As Integer = 0
@@ -1890,12 +1049,26 @@ Public Class BasketBLL
         Return tblDownloads
     End Function
 
+    ''' <summary>
+    ''' Return a single invoice
+    ''' </summary>
+    ''' <param name="numOrderID">The order reference number taken from the order table (non visible)</param>
+    ''' <param name="numUserID">Reference to the selected customer</param>
+    ''' <param name="numType">Defines what data should be returned. A value of 0 returns only summary and address data; any other value returns the row level detail</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Shared Function GetCustomerInvoice(ByVal numOrderID As Integer, ByVal numUserID As Integer, Optional ByVal numType As Integer = 0) As DataTable
         Dim tblInvoice As New DataTable
         tblInvoice = _CustomersAdptr.GetInvoice(numOrderID, numUserID, numType)
         Return tblInvoice
     End Function
 
+    ''' <summary>
+    ''' Generate a random string
+    ''' </summary>
+    ''' <param name="numLength"></param>
+    ''' <returns></returns>
+    ''' <remarks>used for password generation</remarks>
     Public Shared Function GetRandomString(ByVal numLength As Integer) As String
         Dim strRandomString As String
         Dim numRandomNumber As Integer
@@ -1928,13 +1101,25 @@ Public Class BasketBLL
         Return strRandomString
     End Function
 
-    Public Function GetCouponData(ByVal strCouponName As String) As DataTable
+    ''' <summary>
+    ''' Get all information related to a coupon.
+    ''' </summary>
+    ''' <param name="strCouponName">The coupon code.</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetCouponData(ByVal strCouponName As String) As DataTable
         Dim tblCoupon As New DataTable
         tblCoupon = _CouponsAdptr.GetCouponCode(strCouponName)
         Return tblCoupon
     End Function
 
-    Public Function GetVersionCustomType(ByVal numVersionID As Long) As String
+    ''' <summary>
+    ''' Get the type for a version customization
+    ''' </summary>
+    ''' <param name="numVersionID">The version to get customisation data for</param>
+    ''' <returns>a single character (e.g. 't' = text)</returns>
+    ''' <remarks>Customisation data is applied to the product in the version table. This data is not customer / order specific; this data is product version specific</remarks>
+    Public Shared Function GetVersionCustomType(ByVal numVersionID As Long) As String
         Dim strCustomType As String = ""
         Dim tblCoupon As CustomersDataTable
 
@@ -1947,19 +1132,27 @@ Public Class BasketBLL
         Return strCustomType
     End Function
 
-    Public Function GetCustomization(ByVal numVersionID As Long) As DataTable
+    ''' <summary>
+    ''' Get customisation data for a product version
+    ''' </summary>
+    ''' <param name="numVersionID">The version to get customisation data for</param>
+    ''' <returns></returns>
+    ''' <remarks>Customisation data is applied to the product in the version table. This data is not customer / order specific; this data is product version specific</remarks>
+    Public Shared Function GetCustomization(ByVal numVersionID As Long) As DataTable
         Dim tblCustomization As DataTable
         tblCustomization = _CustomersAdptr.GetCustomization(numVersionID)
         Return tblCustomization
     End Function
 
-#Region "Promotions"
-
-    Private Function GetBasketItemVersionIDs() As String
+    ''' <summary>
+    ''' Get all Version IDs for the current basket.
+    ''' </summary>
+    ''' <returns>a comma delimited string.</returns>
+    ''' <remarks></remarks>
+    Private Shared Function GetBasketItemVersionIDs(ByRef BasketItems As List(Of Kartris.BasketItem)) As String
         Dim strIDs As String = ""
-        For i As Integer = 0 To BasketItems.Count - 1
-            Dim objItem As BasketItem = BasketItems(i)
-            strIDs = strIDs & objItem.VersionID & ","
+        For Each Item As Kartris.BasketItem In BasketItems
+            strIDs = strIDs & Item.VersionID & ","
         Next
         If strIDs <> "" Then
             strIDs = Left(strIDs, Len(strIDs) - 1)
@@ -1967,43 +1160,60 @@ Public Class BasketBLL
         Return strIDs
     End Function
 
-    Private Function GetBasketItemProductIDs() As String
+    ''' <summary>
+    ''' Get all product IDs for the current basket
+    ''' </summary>
+    ''' <returns>a comma delimited string</returns>
+    ''' <remarks></remarks>
+    Private Shared Function GetBasketItemProductIDs(ByRef BasketItems As List(Of Kartris.BasketItem)) As String
         Dim strIDs As String = ""
-        For i As Integer = 0 To BasketItems.Count - 1
-            Dim objItem As BasketItem = BasketItems(i)
-            strIDs = strIDs & objItem.ProductID & ","
+        For Each Item As Kartris.BasketItem In BasketItems
+            strIDs = strIDs & Item.ProductID & ","
         Next
         strIDs = IIf(strIDs <> "", Left(strIDs, Len(strIDs) - 1), strIDs)
         Return strIDs
     End Function
 
-    Private Function GetBasketItemCategoryIDs() As String
+    ''' <summary>
+    ''' Get all category IDs in the current basket
+    ''' </summary>
+    ''' <returns>a comma delimited string</returns>
+    ''' <remarks></remarks>
+    Private Shared Function GetBasketItemCategoryIDs(ByRef BasketItems As List(Of Kartris.BasketItem)) As String
         Dim strIDs As String = ""
-        For i As Integer = 0 To BasketItems.Count - 1
-            Dim objItem As BasketItem = BasketItems(i)
-            strIDs = strIDs & objItem.CategoryIDs & ","
+        For Each Item As Kartris.BasketItem In BasketItems
+            strIDs = strIDs & Item.CategoryIDs & ","
         Next
         strIDs = IIf(strIDs <> "", Left(strIDs, Len(strIDs) - 1), strIDs)
         Return strIDs
     End Function
 
-    Private Function GetBasketItemByVersionID(ByVal numVersionID As Integer, Optional ByVal blnReload As Boolean = False) As BasketItem
-        If blnReload Then
-            LoadBasketItems()
-            BasketItems = GetItems()
-        End If
-
-        For i As Integer = 0 To BasketItems.Count - 1
-            Dim objItem As BasketItem = BasketItems(i)
-            If objItem.VersionID = numVersionID Then Return objItem
+    ''' <summary>
+    ''' Return the basket items that matches the given version ID
+    ''' </summary>
+    ''' <param name="numVersionID">The product version ID we are looking for</param>
+    ''' <returns></returns>
+    ''' <remarks>acts upon the current basket</remarks>
+    Private Shared Function GetBasketItemByVersionID(ByRef BasketItems As List(Of Kartris.BasketItem), ByVal numVersionID As Integer) As Kartris.BasketItem
+        GetBasketItemByVersionID = Nothing
+        ' Removed blnReload logic as not used.
+        For Each Item As Kartris.BasketItem In BasketItems
+            ' Item found
+            If Item.VersionID = numVersionID Then Return Item
         Next
-        Return Nothing
     End Function
 
-    Private Function GetItemMaxProductValue(ByVal numProductID As Integer) As Integer
-        Dim objItem, tmpItem As New BasketItem
+    ''' <summary>
+    ''' Find the highest value of a given product within the current basket. 
+    ''' </summary>
+    ''' <param name="numProductID"></param>
+    ''' <returns>finds highest value (including tax) from all versions of a single product in the basket</returns>
+    ''' <remarks></remarks>
+    Private Shared Function GetItemMaxProductValue(ByRef BasketItems As List(Of Kartris.BasketItem), ByVal numProductID As Integer) As Integer
+        Dim objItem, tmpItem As New Kartris.BasketItem
         Dim index As Integer = -1
 
+        ' Search through the items in the basket to find the product we are looking for
         For i As Integer = 0 To BasketItems.Count - 1
             objItem = BasketItems(i)
             If objItem.ProductID = numProductID And objItem.PromoQty > 0 Then
@@ -2018,8 +1228,15 @@ Public Class BasketBLL
         Return index
     End Function
 
-    Private Function GetItemMinProductValue(ByVal numProductID As Integer, Optional ByVal strVersionIDArray As String = "") As Integer
-        Dim objItem, tmpItem As New BasketItem
+    ''' <summary>
+    ''' Find the ordinal position of the lowest value of a given product within the current basket. 
+    ''' </summary>
+    ''' <param name="numProductID">Product to search for</param>
+    ''' <param name="strVersionIDArray">comma delimited string of versions that should be excluded from our search.</param>
+    ''' <returns>finds lowest value (including tax) from all versions of a single product in the basket and returns its ordinal position within the collection</returns>
+    ''' <remarks></remarks>
+    Private Shared Function GetItemMinProductValue(ByRef BasketItems As List(Of Kartris.BasketItem), ByVal numProductID As Integer, Optional ByVal strVersionIDArray As String = "") As Integer
+        Dim objItem, tmpItem As New Kartris.BasketItem
         Dim index As Integer = -1
         Dim arrVersionIDsToExclude As String() = Nothing
 
@@ -2054,8 +1271,14 @@ Public Class BasketBLL
         Return index
     End Function
 
-    Private Function GetItemMaxCategoryValue(ByVal numProductID As Integer) As Integer
-        Dim objItem, tmpItem As New BasketItem
+    ''' <summary>
+    ''' Find the ordinal position of the highest value item in the basket that belongs to a given product category
+    ''' </summary>
+    ''' <param name="numProductID">Category that we are searching within (not Product ID strangely)</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Shared Function GetItemMaxCategoryValue(ByRef BasketItems As List(Of Kartris.BasketItem), ByVal numProductID As Integer) As Integer
+        Dim objItem, tmpItem As New Kartris.BasketItem
         Dim index As Integer = -1
 
         For i As Integer = 0 To BasketItems.Count - 1
@@ -2071,8 +1294,16 @@ Public Class BasketBLL
 
         Return index
     End Function
-    Private Function GetItemMinCategoryValue(ByVal numProductID As Integer, Optional ByVal strVersionIDArray As String = "") As Integer
-        Dim objItem, tmpItem As New BasketItem
+
+    ''' <summary>
+    ''' Find the ordinal position of the lowest value item in the basket that belongs to a given product category
+    ''' </summary>
+    ''' <param name="numProductID">The category to search within (not the product ID)</param>
+    ''' <param name="strVersionIDArray">comma delimited string of product versions to exclude from this search</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Shared Function GetItemMinCategoryValue(ByRef BasketItems As List(Of Kartris.BasketItem), ByVal numProductID As Integer, Optional ByVal strVersionIDArray As String = "") As Integer
+        Dim objItem, tmpItem As New Kartris.BasketItem
         Dim index As Integer = -1
         Dim arrVersionIDsToExclude As String() = Nothing
 
@@ -2105,13 +1336,27 @@ Public Class BasketBLL
         Return index
     End Function
 
-    Public Function GetPromotions(ByVal numLanguageID As Integer) As DataTable
+    ''' <summary>
+    ''' Get all promotions
+    ''' </summary>
+    ''' <param name="numLanguageID">Applicable language</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetPromotions(ByVal numLanguageID As Integer) As DataTable
         Dim tblPromotions As New DataTable
         tblPromotions = _CustomersAdptr.GetPromotions(numLanguageID)
         Return tblPromotions
     End Function
 
-    Public Function GetOptionText(ByVal numLanguageID As Integer, ByVal numBasketItemID As Integer, ByRef strOptionLink As String) As String
+    ''' <summary>
+    ''' Get the option text for an item in the basket
+    ''' </summary>
+    ''' <param name="numLanguageID">Applicable language</param>
+    ''' <param name="numBasketItemID">Basket item to search for</param>
+    ''' <param name="strOptionLink">return parameter which has a comma delimited string of the option numbers</param>
+    ''' <returns>All option texts seperated by HTML break symbols</returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetOptionText(ByVal numLanguageID As Integer, ByVal numBasketItemID As Integer, ByRef strOptionLink As String) As String
         Dim tblOptionText As New DataTable
         Dim strOptionText As String = ""
         Dim strOptions, strBreak As String
@@ -2139,7 +1384,13 @@ Public Class BasketBLL
         Return strOptionText
     End Function
 
-    Public Function GetCategoryIDs(ByVal numProductID As Long) As String
+    ''' <summary>
+    ''' Find all categories that a product appears in 
+    ''' </summary>
+    ''' <param name="numProductID">The product we want to find categories for</param>
+    ''' <returns>a comma delimited string</returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetCategoryIDs(ByVal numProductID As Long) As String
         Dim tblCategoryIDs As New DataTable
         Dim strCategoryIDs As String = ""
 
@@ -2156,7 +1407,13 @@ Public Class BasketBLL
         Return strCategoryIDs
     End Function
 
-    Private Sub SetPromotionData(ByRef objPromotion As Promotion, ByVal drwBuy As DataRow)
+    ''' <summary>
+    ''' Transfer the information in the data row into the promotion object
+    ''' </summary>
+    ''' <param name="objPromotion">promotion object</param>
+    ''' <param name="drwBuy">data row containing data to be put into promotion object</param>
+    ''' <remarks></remarks>
+    Private Shared Sub SetPromotionData(ByRef objPromotion As Promotion, ByVal drwBuy As DataRow)
 
         With objPromotion
             .ID = drwBuy("PROM_ID")
@@ -2175,7 +1432,23 @@ Public Class BasketBLL
 
     End Sub
 
-    Private Sub SetPromotionValue(ByVal numMaxPromoQty As Integer, ByVal Item As BasketItem, ByVal strType As String, ByVal numBuyQty As Double, ByVal numBuyValue As Double, ByVal numGetQty As Double, ByVal numGetValue As Double, _
+    ''' <summary>
+    ''' Set the promotion quantities and values using reference parameters
+    ''' </summary>
+    ''' <param name="numMaxPromoQty">Maximum quantity permitted by promotion</param>
+    ''' <param name="Item">The basket item object</param>
+    ''' <param name="strType">promotion type (e.g. 'q' = free, 'p' = percentage off, 'v' price (or value) off.</param>
+    ''' <param name="numBuyQty"></param>
+    ''' <param name="numBuyValue"></param>
+    ''' <param name="numGetQty"></param>
+    ''' <param name="numGetValue"></param>
+    ''' <param name="numIncTax"></param>
+    ''' <param name="numExTax"></param>
+    ''' <param name="numQty"></param>
+    ''' <param name="numTaxRate"></param>
+    ''' <param name="intExcessGetQty"></param>
+    ''' <remarks></remarks>
+    Private Shared Sub SetPromotionValue(ByVal numMaxPromoQty As Integer, ByVal Item As Kartris.BasketItem, ByVal strType As String, ByVal numBuyQty As Double, ByVal numBuyValue As Double, ByVal numGetQty As Double, ByVal numGetValue As Double, _
       ByRef numIncTax As Double, ByRef numExTax As Double, ByRef numQty As Double, ByRef numTaxRate As Double, Optional ByRef intExcessGetQty As Integer = 0)
 
         If strType.ToLower = "q" Then   ''  for free
@@ -2188,13 +1461,6 @@ Public Class BasketBLL
             numIncTax = -(Item.IncTax * numGetValue) / 100
             numExTax = -(Item.ExTax * numGetValue) / 100
             numQty = Math.Floor(Math.Min((numBuyQty / numBuyValue), numGetQty))
-            'If (numBuyQty / numBuyValue) > numGetQty Then
-            '    If (Math.Floor(numBuyQty / numBuyValue) - numGetQty) >= 1 Then
-            '        blnMinItemUsedUp = True
-            '    Else
-            '        blnMinItemUsedUp = False
-            '    End If
-            'End If
             numQty = Math.Min(numMaxPromoQty, numQty)
         ElseIf strType.ToLower = "v" Then '' price off
             numIncTax = -(Item.IncTax - numGetValue)
@@ -2207,14 +1473,22 @@ Public Class BasketBLL
 
     End Sub
 
-    Private Function GetPromotionText(ByVal intPromotionID As Integer, Optional ByVal blnTextOnly As Boolean = False) As String
+    ''' <summary>
+    ''' Get the text related to the promotion
+    ''' </summary>
+    ''' <param name="intPromotionID">The promotion we want the text for</param>
+    ''' <param name="blnTextOnly">return on the text and not a HTML anchor etc. (used when calling from presentation layer)</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Shared Function GetPromotionText(ByVal intPromotionID As Integer, Optional ByVal blnTextOnly As Boolean = False) As String
         Dim tblPromotionParts As New DataTable    ''==== language_ID =====
         tblPromotionParts = PromotionsBLL._GetPartsByPromotion(intPromotionID, Current.Session("LANG"))
 
         Dim strPromotionText As String = ""
         Dim intTextCounter As Integer = 0
+        Dim numLanguageId As Integer
 
-        numLanguageID = Current.Session("LANG")
+        numLanguageId = Current.Session("LANG")
 
         For Each drwPromotionParts As DataRow In tblPromotionParts.Rows
 
@@ -2235,21 +1509,21 @@ Public Class BasketBLL
             End If
 
             If strText.Contains("[C]") AndAlso strItemID <> "" Then ''==== language_ID =====
-                strItemName = CategoriesBLL.GetNameByCategoryID(CInt(strItemID), numLanguageID)
+                strItemName = CategoriesBLL.GetNameByCategoryID(CInt(strItemID), numLanguageId)
                 strItemLink = " <b><a href='" & CreateURL(Page.CanonicalCategory, strItemID) & "'>" & strItemName & "</a></b>"
                 strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
                 strText = strText.Replace("[C]", strItemLink)
             End If
 
             If strText.Contains("[P]") AndAlso strItemID <> "" Then ''==== language_ID =====
-                strItemName = ProductsBLL.GetNameByProductID(CInt(strItemID), numLanguageID)
+                strItemName = ProductsBLL.GetNameByProductID(CInt(strItemID), numLanguageId)
                 strItemLink = " <b><a href='" & CreateURL(Page.CanonicalProduct, strItemID) & "'>" & strItemName & "</a></b>"
                 strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
                 strText = strText.Replace("[P]", strItemLink)
             End If
 
             If strText.Contains("[V]") AndAlso strItemID <> "" Then ''==== language_ID =====
-                strItemName = ProductsBLL.GetNameByProductID(intProductID, numLanguageID) & " (" & VersionsBLL._GetNameByVersionID(CInt(strItemID), numLanguageID) & ")"
+                strItemName = ProductsBLL.GetNameByProductID(intProductID, numLanguageId) & " (" & VersionsBLL._GetNameByVersionID(CInt(strItemID), numLanguageId) & ")"
                 strItemLink = " <b><a href='" & CreateURL(Page.CanonicalProduct, intProductID) & "'>" & strItemName & "</a></b>"
                 strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
                 strText = strText.Replace("[V]", strItemLink)
@@ -2270,19 +1544,33 @@ Public Class BasketBLL
 
     End Function
 
-    Private Sub AddPromotion(ByVal blnBasketPromo As Boolean, ByRef strPromoDiscountIDs As String, ByRef objPromotion As Promotion, ByVal numPromoID As Integer, ByVal numIncTax As Double, ByVal numExTax As Double,
+    ''' <summary>
+    ''' Add promotion to the promotion collection for this basket.
+    ''' </summary>
+    ''' <param name="blnBasketPromo">Allow promotion to be added multiple times to same basket</param>
+    ''' <param name="strPromoDiscountIDs"></param>
+    ''' <param name="objPromotion">The promotion to be added</param>
+    ''' <param name="numPromoID"></param>
+    ''' <param name="numIncTax"></param>
+    ''' <param name="numExTax"></param>
+    ''' <param name="numQty"></param>
+    ''' <param name="numTaxRate"></param>
+    ''' <param name="blnIsFixedValuePromo"></param>
+    ''' <param name="blnForceAdd"></param>
+    ''' <remarks></remarks>
+    Private Shared Sub AddPromotion(ByRef Basket As Kartris.Basket, ByVal blnBasketPromo As Boolean, ByRef strPromoDiscountIDs As String, ByRef objPromotion As Kartris.Promotion, ByVal numPromoID As Integer, ByVal numIncTax As Double, ByVal numExTax As Double,
                              ByVal numQty As Double, ByVal numTaxRate As Double, Optional ByVal blnIsFixedValuePromo As Boolean = False, Optional ByVal blnForceAdd As Boolean = False)
         Dim intMaxPromoOrder As Integer = 0
 
         intMaxPromoOrder = Val(GetKartConfig("frontend.promotions.maximum"))
 
-        If (blnBasketPromo And (objPromotionsDiscount.Count < intMaxPromoOrder Or intMaxPromoOrder = 0)) OrElse blnForceAdd Then
+        If (blnBasketPromo And (Basket.objPromotionsDiscount.Count < intMaxPromoOrder Or intMaxPromoOrder = 0)) OrElse blnForceAdd Then
             strPromoDiscountIDs = strPromoDiscountIDs & numPromoID & ";"
             Dim objPromotionDiscount As New PromotionBasketModifier
             With objPromotionDiscount
                 .PromotionID = numPromoID
                 .Name = GetPromotionText(objPromotion.ID, True)
-                .ApplyTax = ApplyTax
+                .ApplyTax = Basket.ApplyTax
                 .ComputedTaxRate = numTaxRate
                 .ExTax = CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), numExTax)
                 .IncTax = CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), numIncTax)
@@ -2291,11 +1579,11 @@ Public Class BasketBLL
                 .TotalExTax = .TotalExTax + (.ExTax * .Quantity)
                 .isFixedValuePromo = blnIsFixedValuePromo
             End With
-            objPromotionsDiscount.Add(objPromotionDiscount)
+            Basket.objPromotionsDiscount.Add(objPromotionDiscount)
         Else
             '' add only to promotion if not in promotion discount yet
             Dim blnFound As Boolean = False
-            For Each objPromo As PromotionBasketModifier In objPromotionsDiscount
+            For Each objPromo As PromotionBasketModifier In Basket.objPromotionsDiscount
                 If objPromo.PromotionID = objPromotion.ID Then
                     blnFound = True : Exit For
                 End If
@@ -2303,14 +1591,21 @@ Public Class BasketBLL
 
             If blnFound = False Then
                 objPromotion.PromoText = GetPromotionText(objPromotion.ID)
-                objPromotions.Add(objPromotion)
+                Basket.objPromotions.Add(objPromotion)
             End If
 
         End If
 
     End Sub
 
-    Public Sub CalculatePromotions(ByRef aryPromotions As ArrayList, ByRef aryPromotionsDiscount As ArrayList, ByVal blnZeroTotalTaxRate As Boolean)
+    ''' <summary>
+    ''' Reset any applied promotions and apply the promotion collection to the basket and all items contained therein.
+    ''' </summary>
+    ''' <param name="aryPromotions">List of promotions</param>
+    ''' <param name="aryPromotionsDiscount"></param>
+    ''' <param name="blnZeroTotalTaxRate">Do not calculate tax</param>
+    ''' <remarks></remarks>
+    Public Shared Sub CalculatePromotions(ByRef Basket As Kartris.Basket, ByRef aryPromotions As List(Of Kartris.Promotion), ByRef aryPromotionsDiscount As ArrayList, ByVal blnZeroTotalTaxRate As Boolean)
         Dim tblPromotions As Data.DataTable
         Dim drwBuys() As Data.DataRow
         Dim drwGets() As Data.DataRow
@@ -2321,33 +1616,33 @@ Public Class BasketBLL
         Dim strItemVersionIDs, strItemProductIDs, strItemCategoryIDs As String
         Dim vIncTax, vExTax, vQuantity, vBuyQty, vValue, vTaxRate As Double
         Dim numTotalBasketAmount As Double
-        If BasketItems.Count = 0 Then Exit Sub
+        If Basket.BasketItems.Count = 0 Then Exit Sub
 
         'Clear AppliedPromotion to all Basket Items
-        For Each objBasketItem As BasketItem In BasketItems
+        For Each objBasketItem As Kartris.BasketItem In Basket.BasketItems
             objBasketItem.AppliedPromo = 0
         Next
 
         Dim numLanguageID As Integer
-        Dim objItem As New BasketItem
+        Dim objItem As New Kartris.BasketItem
 
         numLanguageID = 1
         strPromoIDs = ";" : strPromoDiscountIDs = ";"
-        strItemVersionIDs = GetBasketItemVersionIDs()
-        strItemProductIDs = GetBasketItemProductIDs()
-        strItemCategoryIDs = GetBasketItemCategoryIDs()
-        PromotionDiscount.IncTax = 0 : PromotionDiscount.ExTax = 0
+        strItemVersionIDs = GetBasketItemVersionIDs(Basket.BasketItems)
+        strItemProductIDs = GetBasketItemProductIDs(Basket.BasketItems)
+        strItemCategoryIDs = GetBasketItemCategoryIDs(Basket.BasketItems)
+        Basket.PromotionDiscount.IncTax = 0 : Basket.PromotionDiscount.ExTax = 0
 
         aryPromotions.Clear() : aryPromotionsDiscount.Clear()
-        objPromotions.Clear() : objPromotionsDiscount.Clear()
+        Basket.objPromotions.Clear() : Basket.objPromotionsDiscount.Clear()
 
         Dim intCouponPromotionID As Integer = 0
-        If Not String.IsNullOrEmpty(CouponCode) Then
+        If Not String.IsNullOrEmpty(Basket.CouponCode) Then
             Dim strCouponType As String = ""
             Dim strCouponError As String = ""
             Dim numCouponValue As Double
 
-            Call GetCouponDiscount(CouponCode, strCouponError, strCouponType, numCouponValue)
+            Call GetCouponDiscount(Basket, Basket.CouponCode, strCouponError, strCouponType, numCouponValue)
             If strCouponType = "t" Then
                 intCouponPromotionID = CInt(numCouponValue)
             End If
@@ -2366,7 +1661,7 @@ Public Class BasketBLL
                 Dim objPromotion As New Promotion
                 Call SetPromotionData(objPromotion, drwBuy)
 
-                objItem = GetBasketItemByVersionID(objPromotion.ItemID)
+                objItem = GetBasketItemByVersionID(Basket.BasketItems, objPromotion.ItemID)
 
                 If objItem.Quantity >= objPromotion.Value And objItem.AppliedPromo = 0 Then
                     vIncTax = 0 : vExTax = 0 : vQuantity = 0 : vTaxRate = 0
@@ -2386,7 +1681,7 @@ Public Class BasketBLL
                             Case "v" 'buy version and get item from version
                                 If InStr("," & strItemVersionIDs & ",", "," & vItemID & ",") > 0 Then
                                     'vBuyQty (qty in basket), objPromo.value (buy qty in db), objItem.Quantity(qty in basket get promo), vValue (get qty in db) 
-                                    objItem = GetBasketItemByVersionID(vItemID)
+                                    objItem = GetBasketItemByVersionID(Basket.BasketItems, vItemID)
                                     If objItem.AppliedPromo = 1 Then Exit Select
                                     If objPromotion.ItemID = vItemID Then 'buy item is equal to get item
                                         If (vBuyQty > vValue AndAlso strType = "q") OrElse _
@@ -2401,7 +1696,7 @@ Public Class BasketBLL
                                 End If
 
                                 If vQuantity <= 0 Then blnGetFound = False
-                                Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
+                                Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
                                 If blnGetFound Then objItem.AppliedPromo = 1
                             Case "p" 'buy version and get item from product
                                 If InStr("," & strItemProductIDs & ",", "," & vItemID & ",") > 0 Then
@@ -2414,16 +1709,16 @@ Public Class BasketBLL
                                     vQtyBalance = (vBuyQty / objPromotion.Value) - vTotalQtyGot
 
                                     Do While vQtyBalance > 0
-                                        index = GetItemMinProductValue(vItemID)
+                                        index = GetItemMinProductValue(Basket.BasketItems, vItemID)
                                         If index < 0 Then Exit Do
-                                        objItem = BasketItems(index)
+                                        objItem = Basket.BasketItems(index)
                                         If objItem.AppliedPromo = 0 Then
-                                            vQtyBalance = Min(vQtyBalance, objItem.Quantity)
+                                            vQtyBalance = Math.Min(vQtyBalance, objItem.Quantity)
                                             Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, vQtyBalance, vValue, vIncTax, vExTax, vQuantity, vTaxRate)
-                                            BasketItems(index).PromoQty = BasketItems(index).quantity - vQuantity
+                                            Basket.BasketItems(index).PromoQty = Basket.BasketItems(index).Quantity - vQuantity
 
                                             If vQuantity <= 0 Then blnGetFound = False
-                                            Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
+                                            Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
                                             If blnGetFound Then objItem.AppliedPromo = 1
                                             vTotalQtyGot = vTotalQtyGot + vQuantity
                                             vQtyBalance = (vBuyQty / objPromotion.Value) - vTotalQtyGot
@@ -2435,38 +1730,38 @@ Public Class BasketBLL
                                 End If
 
                                 blnGetFound = False
-                                Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
+                                Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
                                 If blnGetFound Then objItem.AppliedPromo = 1
                             Case "c" 'buy version and get item from category
                                 If InStr("," & strItemCategoryIDs & ",", "," & vItemID & ",") > 0 Then
                                     Dim index As Integer
-                                    index = GetItemMinCategoryValue(vItemID)
-                                    objItem = BasketItems(index)
+                                    index = GetItemMinCategoryValue(Basket.BasketItems, vItemID)
+                                    objItem = Basket.BasketItems(index)
                                     If objItem.AppliedPromo = 1 Then Exit Select
                                     blnGetFound = True
                                     Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate)
                                 End If
 
                                 If vQuantity <= 0 Then blnGetFound = False
-                                Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
+                                Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
                                 If blnGetFound Then objItem.AppliedPromo = 1
                             Case "a"
                                 vQuantity = Math.Floor(Math.Min((vBuyQty / objPromotion.Value), (objItem.Quantity / objPromotion.Value)))
                                 vQuantity = Math.Min(vQuantity, vMaxPromoQty) 'Make sure it didn't exceed the MaxQty / promotion
                                 If vQuantity <= 0 Then blnGetFound = False Else blnGetFound = True
 
-                                vTaxRate = TotalDiscountPriceTaxRate
+                                vTaxRate = Basket.TotalDiscountPriceTaxRate
 
-                                If vValue > TotalDiscountPriceExTax Then
-                                    vExTax = -TotalDiscountPriceExTax
-                                    vIncTax = -TotalDiscountPriceIncTax
+                                If vValue > Basket.TotalDiscountPriceExTax Then
+                                    vExTax = -Basket.TotalDiscountPriceExTax
+                                    vIncTax = -Basket.TotalDiscountPriceIncTax
                                 Else
                                     Dim blnPricesExtax As Boolean = False
 
                                     If Not blnZeroTotalTaxRate Then
                                         If GetKartConfig("general.tax.pricesinctax") = "y" Then
                                             vExTax = -Math.Round(vValue * (1 / (1 + vTaxRate)), CurrencyRoundNumber)
-                                            If D_Tax = 1 Then
+                                            If Basket.D_Tax = 1 Then
                                                 vIncTax = -Math.Round(vValue, CurrencyRoundNumber)
                                             Else
                                                 vIncTax = vExTax
@@ -2484,12 +1779,12 @@ Public Class BasketBLL
                                     End If
                                 End If
 
-                                Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, True)
+                                Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, True)
                                 objItem.AppliedPromo = 1
                         End Select
                     Next
                 Else
-                    Call AddPromotion(False, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
+                    Call AddPromotion(Basket, False, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
                 End If
 
             End If
@@ -2508,8 +1803,8 @@ Public Class BasketBLL
                 Call SetPromotionData(objPromotion, drwBuy)
 
                 Dim cnt As Integer = 0
-                For i As Integer = 0 To BasketItems.Count - 1
-                    objItem = BasketItems(i)
+                For i As Integer = 0 To Basket.BasketItems.Count - 1
+                    objItem = Basket.BasketItems(i)
                     If objItem.ProductID = objPromotion.ItemID And objItem.AppliedPromo = 0 Then cnt = cnt + objItem.Quantity
                 Next
 
@@ -2534,7 +1829,7 @@ Public Class BasketBLL
                         Select Case strItemType.ToLower
                             Case "v"                    '' buy product and get item from version
                                 If InStr("," & strItemVersionIDs & ",", "," & vItemID & ",") > 0 Then
-                                    objItem = GetBasketItemByVersionID(vItemID)
+                                    objItem = GetBasketItemByVersionID(Basket.BasketItems, vItemID)
                                     If objItem.AppliedPromo = 1 Then Continue For
                                     blnGetFound = True
                                     Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate)
@@ -2543,8 +1838,8 @@ Public Class BasketBLL
                             Case "p"                    '' buy product and get item from product
                                 If InStr("," & strItemProductIDs & ",", "," & vItemID & ",") > 0 Then
                                     Dim index As Integer
-                                    index = GetItemMinProductValue(vItemID)
-                                    objItem = BasketItems(index)
+                                    index = GetItemMinProductValue(Basket.BasketItems, vItemID)
+                                    objItem = Basket.BasketItems(index)
                                     If objItem.AppliedPromo = 1 Then Continue For
                                     blnGetFound = True
                                     Dim intExcessGetQty As Integer
@@ -2559,13 +1854,13 @@ Public Class BasketBLL
                                             intExcessGetQty = 0
                                             Exit Do
                                         End If
-                                        Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                                        Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
                                         If blnGetFound Then objItem.AppliedPromo = 1
                                         strVersionIDArray = strVersionIDArray & objItem.VersionID
                                         'Dim numExcessItemsInPromo As Double = vBuyQty - (objPromotion.Value * objItem.Quantity)
-                                        index = GetItemMinProductValue(vItemID, strVersionIDArray)
+                                        index = GetItemMinProductValue(Basket.BasketItems, vItemID, strVersionIDArray)
                                         If index <> -1 Then
-                                            objItem = BasketItems(index)
+                                            objItem = Basket.BasketItems(index)
                                             If objItem.AppliedPromo = 1 Then Continue For
                                             Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
                                             blnForceAdd = True
@@ -2578,8 +1873,8 @@ Public Class BasketBLL
                             Case "c"                    '' buy product and get item from category
                                 If InStr("," & strItemCategoryIDs & ",", "," & vItemID & ",") > 0 Then
                                     Dim index As Integer
-                                    index = GetItemMinCategoryValue(vItemID)
-                                    objItem = BasketItems(index)
+                                    index = GetItemMinCategoryValue(Basket.BasketItems, vItemID)
+                                    objItem = Basket.BasketItems(index)
                                     If objItem.AppliedPromo = 1 Then Continue For
                                     blnGetFound = True
                                     Dim intExcessGetQty As Integer = 0
@@ -2594,13 +1889,13 @@ Public Class BasketBLL
                                             intExcessGetQty = 0
                                             Exit Do
                                         End If
-                                        Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                                        Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
                                         If blnGetFound Then objItem.AppliedPromo = 1
                                         strVersionIDArray = strVersionIDArray & objItem.VersionID
                                         'Dim numExcessItemsInPromo As Double = vBuyQty - (objPromotion.Value * objItem.Quantity)
-                                        index = GetItemMinCategoryValue(vItemID, strVersionIDArray)
+                                        index = GetItemMinCategoryValue(Basket.BasketItems, vItemID, strVersionIDArray)
                                         If index <> -1 Then
-                                            objItem = BasketItems(index)
+                                            objItem = Basket.BasketItems(index)
                                             If objItem.AppliedPromo = 1 Then Continue For
                                             Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
                                             blnForceAdd = True
@@ -2614,18 +1909,18 @@ Public Class BasketBLL
                                 vQuantity = Math.Min(vQuantity, vMaxPromoQty) '' Make sure it didn't exceed the MaxQty / promotion
                                 If vQuantity <= 0 Then blnGetFound = False Else blnGetFound = True
 
-                                vTaxRate = TotalDiscountPriceTaxRate
+                                vTaxRate = Basket.TotalDiscountPriceTaxRate
 
-                                If vValue > TotalDiscountPriceExTax Then
-                                    vExTax = -TotalDiscountPriceExTax
-                                    vIncTax = -TotalDiscountPriceIncTax
+                                If vValue > Basket.TotalDiscountPriceExTax Then
+                                    vExTax = -Basket.TotalDiscountPriceExTax
+                                    vIncTax = -Basket.TotalDiscountPriceIncTax
                                 Else
                                     Dim blnPricesExtax As Boolean = False
 
                                     If Not blnZeroTotalTaxRate Then
                                         If GetKartConfig("general.tax.pricesinctax") = "y" Then
                                             vExTax = -Math.Round(vValue * (1 / (1 + vTaxRate)), CurrencyRoundNumber)
-                                            If D_Tax = 1 Then
+                                            If Basket.D_Tax = 1 Then
                                                 vIncTax = -Math.Round(vValue, CurrencyRoundNumber)
                                             Else
                                                 vIncTax = vExTax
@@ -2647,10 +1942,10 @@ Public Class BasketBLL
                                 objItem.AppliedPromo = 1
                         End Select
                     Next
-                    Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                    Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
                     If blnGetFound Then objItem.AppliedPromo = 1
                 Else
-                    Call AddPromotion(False, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
+                    Call AddPromotion(Basket, False, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
                 End If
 
             End If
@@ -2668,8 +1963,8 @@ Public Class BasketBLL
                 Call SetPromotionData(objPromotion, drwBuy)
 
                 Dim cnt As Integer = 0
-                For i As Integer = 0 To BasketItems.Count - 1
-                    objItem = BasketItems(i)
+                For i As Integer = 0 To Basket.BasketItems.Count - 1
+                    objItem = Basket.BasketItems(i)
                     If InStr("," & objItem.CategoryIDs & ",", "," & objPromotion.ItemID & ",") > 0 Then
                         cnt = cnt + objItem.Quantity
                     End If
@@ -2696,7 +1991,7 @@ Public Class BasketBLL
                         Select Case strItemType.ToLower
                             Case "v"                    '' buy category and get item from version
                                 If InStr("," & strItemVersionIDs & ",", "," & vItemID & ",") > 0 Then
-                                    objItem = GetBasketItemByVersionID(vItemID)
+                                    objItem = GetBasketItemByVersionID(Basket.BasketItems, vItemID)
                                     If objItem.AppliedPromo = 1 Then Exit Select
                                     blnGetFound = True
                                     Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate)
@@ -2705,8 +2000,8 @@ Public Class BasketBLL
                             Case "p"                    '' buy category and get item from product
                                 If InStr("," & strItemProductIDs & ",", "," & vItemID & ",") > 0 Then
                                     Dim index As Integer
-                                    index = GetItemMinProductValue(vItemID)
-                                    objItem = BasketItems(index)
+                                    index = GetItemMinProductValue(Basket.BasketItems, vItemID)
+                                    objItem = Basket.BasketItems(index)
                                     If objItem.AppliedPromo = 1 Then Exit Select
                                     blnGetFound = True
                                     Dim intExcessGetQty As Integer = 0
@@ -2721,13 +2016,13 @@ Public Class BasketBLL
                                             intExcessGetQty = 0
                                             Exit Do
                                         End If
-                                        Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                                        Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
                                         If blnGetFound Then objItem.AppliedPromo = 1
                                         strVersionIDArray = strVersionIDArray & objItem.VersionID
                                         'Dim numExcessItemsInPromo As Double = vBuyQty - (objPromotion.Value * objItem.Quantity)
-                                        index = GetItemMinProductValue(vItemID, strVersionIDArray)
+                                        index = GetItemMinProductValue(Basket.BasketItems, vItemID, strVersionIDArray)
                                         If index <> -1 Then
-                                            objItem = BasketItems(index)
+                                            objItem = Basket.BasketItems(index)
                                             If objItem.AppliedPromo = 1 Then Continue For
                                             Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
                                             blnForceAdd = True
@@ -2740,8 +2035,8 @@ Public Class BasketBLL
                             Case "c"                    '' buy category and get item from category
                                 If InStr("," & strItemCategoryIDs & ",", "," & vItemID & ",") > 0 Then
                                     Dim index As Integer
-                                    index = GetItemMinCategoryValue(vItemID)
-                                    objItem = BasketItems(index)
+                                    index = GetItemMinCategoryValue(Basket.BasketItems, vItemID)
+                                    objItem = Basket.BasketItems(index)
                                     If objItem.AppliedPromo = 1 Then Exit Select
                                     blnGetFound = True
                                     Dim intExcessGetQty As Integer = 0
@@ -2756,13 +2051,13 @@ Public Class BasketBLL
                                             intExcessGetQty = 0
                                             Exit Do
                                         End If
-                                        Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                                        Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
                                         If blnGetFound Then objItem.AppliedPromo = 1
                                         strVersionIDArray = strVersionIDArray & objItem.VersionID
                                         'Dim numExcessItemsInPromo As Double = vBuyQty - (objPromotion.Value * objItem.Quantity)
-                                        index = GetItemMinCategoryValue(vItemID, strVersionIDArray)
+                                        index = GetItemMinCategoryValue(Basket.BasketItems, vItemID, strVersionIDArray)
                                         If index <> -1 Then
-                                            objItem = BasketItems(index)
+                                            objItem = Basket.BasketItems(index)
                                             If objItem.AppliedPromo = 1 Then Continue For
                                             Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
                                             blnForceAdd = True
@@ -2776,18 +2071,18 @@ Public Class BasketBLL
                                 vQuantity = Math.Min(vQuantity, vMaxPromoQty) '' Make sure it didn't exceed the MaxQty / promotion
                                 If vQuantity <= 0 Then blnGetFound = False Else blnGetFound = True
 
-                                vTaxRate = TotalDiscountPriceTaxRate
+                                vTaxRate = Basket.TotalDiscountPriceTaxRate
 
-                                If vValue > TotalDiscountPriceExTax Then
-                                    vExTax = -TotalDiscountPriceExTax
-                                    vIncTax = -TotalDiscountPriceIncTax
+                                If vValue > Basket.TotalDiscountPriceExTax Then
+                                    vExTax = -Basket.TotalDiscountPriceExTax
+                                    vIncTax = -Basket.TotalDiscountPriceIncTax
                                 Else
                                     Dim blnPricesExtax As Boolean = False
 
                                     If Not blnZeroTotalTaxRate Then
                                         If GetKartConfig("general.tax.pricesinctax") = "y" Then
                                             vExTax = -Math.Round(vValue * (1 / (1 + vTaxRate)), CurrencyRoundNumber)
-                                            If D_Tax = 1 Then
+                                            If Basket.D_Tax = 1 Then
                                                 vIncTax = -Math.Round(vValue, CurrencyRoundNumber)
                                             Else
                                                 vIncTax = vExTax
@@ -2809,10 +2104,10 @@ Public Class BasketBLL
                                 objItem.AppliedPromo = 1
                         End Select
                     Next
-                    Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                    Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
                     If blnGetFound Then objItem.AppliedPromo = 1
                 Else
-                    Call AddPromotion(False, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
+                    Call AddPromotion(Basket, False, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
                 End If
 
             End If
@@ -2853,10 +2148,10 @@ Public Class BasketBLL
                     Select Case strItemType.ToLower
                         Case "v" 'spend a certain amount and get item from version
                             If InStr("," & strItemVersionIDs & ",", "," & vItemID & ",") > 0 Then
-                                objItem = GetBasketItemByVersionID(vItemID)
+                                objItem = GetBasketItemByVersionID(Basket.BasketItems, vItemID)
                                 If objItem.AppliedPromo = 1 Then Exit Select
                                 blnGetFound = True
-                                vBuyQty = vValue * (CInt(TotalExTax / vSpend))
+                                vBuyQty = vValue * (CInt(Basket.TotalExTax / vSpend))
                                 objPromotion.Value = vValue
                                 Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate)
                             End If
@@ -2864,11 +2159,11 @@ Public Class BasketBLL
                         Case "p" 'spend a certain amount and get item from product
                             If InStr("," & strItemProductIDs & ",", "," & vItemID & ",") > 0 Then
                                 Dim index As Integer
-                                index = GetItemMinProductValue(vItemID)
-                                objItem = BasketItems(index)
+                                index = GetItemMinProductValue(Basket.BasketItems, vItemID)
+                                objItem = Basket.BasketItems(index)
                                 If objItem.AppliedPromo = 1 Then Exit Select
                                 blnGetFound = True
-                                vBuyQty = vValue * (CInt(TotalExTax / vSpend))
+                                vBuyQty = vValue * (CInt(Basket.TotalExTax / vSpend))
                                 objPromotion.Value = vValue
                                 Dim intExcessGetQty As Integer = 0
                                 Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
@@ -2884,13 +2179,13 @@ Public Class BasketBLL
                                     End If
 
                                     strVersionIDArray = strVersionIDArray & objItem.VersionID
-                                    index = GetItemMinProductValue(vItemID, strVersionIDArray)
+                                    index = GetItemMinProductValue(Basket.BasketItems, vItemID, strVersionIDArray)
                                     If index <> -1 Then
                                         If objItem.AppliedPromo = 0 Then
-                                            Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                                            Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
                                             objItem.AppliedPromo = 1
                                         End If
-                                        objItem = BasketItems(index)
+                                        objItem = Basket.BasketItems(index)
                                         If objItem.AppliedPromo = 1 Then Continue For
                                         Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
                                         blnForceAdd = True
@@ -2904,11 +2199,11 @@ Public Class BasketBLL
                         Case "c" 'spend a certain amount and get item from category
                             If InStr("," & strItemCategoryIDs & ",", "," & vItemID & ",") > 0 Then
                                 Dim index As Integer
-                                index = GetItemMinCategoryValue(vItemID)
-                                objItem = BasketItems(index)
+                                index = GetItemMinCategoryValue(Basket.BasketItems, vItemID)
+                                objItem = Basket.BasketItems(index)
                                 If objItem.AppliedPromo = 1 Then Exit Select
                                 blnGetFound = True
-                                vBuyQty = vValue * (CInt(TotalExTax / vSpend))
+                                vBuyQty = vValue * (CInt(Basket.TotalExTax / vSpend))
                                 objPromotion.Value = vValue
 
                                 Dim intExcessGetQty As Integer = 0
@@ -2924,15 +2219,15 @@ Public Class BasketBLL
                                     End If
 
                                     strVersionIDArray = strVersionIDArray & objItem.VersionID
-                                    index = GetItemMinCategoryValue(vItemID, strVersionIDArray)
+                                    index = GetItemMinCategoryValue(Basket.BasketItems, vItemID, strVersionIDArray)
                                     If index <> -1 Then
 
                                         If objItem.AppliedPromo = 0 Then
-                                            Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                                            Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
                                             objItem.AppliedPromo = 1
                                         End If
 
-                                        objItem = BasketItems(index)
+                                        objItem = Basket.BasketItems(index)
                                         If objItem.AppliedPromo = 1 Then Continue For
                                         Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
                                         blnForceAdd = True
@@ -2944,10 +2239,10 @@ Public Class BasketBLL
                             End If
                         Case "a" 'Total spend promotion
                             If GetKartConfig("general.tax.pricesinctax") = "y" Then
-                                numTotalBasketAmount = TotalIncTax
-                                vQuantity = CInt(TotalIncTax / vSpend)
+                                numTotalBasketAmount = Basket.TotalIncTax
+                                vQuantity = CInt(Basket.TotalIncTax / vSpend)
                             Else
-                                vQuantity = CInt(TotalExTax / vSpend)
+                                vQuantity = CInt(Basket.TotalExTax / vSpend)
                             End If
 
                             'If total in basket (inc or ex, depending on settings)
@@ -2959,18 +2254,18 @@ Public Class BasketBLL
                             If vQuantity > 1 Then vQuantity = 1
                             If vQuantity <= 0 Then blnGetFound = False Else blnGetFound = True
 
-                            vTaxRate = TotalDiscountPriceTaxRate
+                            vTaxRate = Basket.TotalDiscountPriceTaxRate
 
-                            If vValue > TotalDiscountPriceExTax Then
-                                vExTax = -TotalDiscountPriceExTax
-                                vIncTax = -TotalDiscountPriceIncTax
+                            If vValue > Basket.TotalDiscountPriceExTax Then
+                                vExTax = -Basket.TotalDiscountPriceExTax
+                                vIncTax = -Basket.TotalDiscountPriceIncTax
                             Else
                                 Dim blnPricesExtax As Boolean = False
 
                                 If Not blnZeroTotalTaxRate Then
                                     If GetKartConfig("general.tax.pricesinctax") = "y" Then
                                         vExTax = -Math.Round(vValue * (1 / (1 + vTaxRate)), CurrencyRoundNumber)
-                                        If D_Tax = 1 Then
+                                        If Basket.D_Tax = 1 Then
                                             vIncTax = -Math.Round(vValue, CurrencyRoundNumber)
                                         Else
                                             vIncTax = vExTax
@@ -2994,9 +2289,9 @@ Public Class BasketBLL
 
                 If blnGetFound Then
                     If numTotalBasketAmount >= vSpend Then
-                        Call AddPromotion(blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                        Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
                     Else
-                        Call AddPromotion(False, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
+                        Call AddPromotion(Basket, False, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
                     End If
                 End If
 
@@ -3014,235 +2309,41 @@ Public Class BasketBLL
                 strPromoIDs = strPromoIDs & vPromoID & ";"
                 Dim objPromotion As New Promotion
                 Call SetPromotionData(objPromotion, drGet)
-                Call AddPromotion(False, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
+                Call AddPromotion(Basket, False, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
             End If
         Next
 
-        For i As Integer = 1 To objPromotionsDiscount.Count
-            PromotionDiscount.ExTax = PromotionDiscount.ExTax + objPromotionsDiscount.Item(i - 1).TotalexTax
-            PromotionDiscount.IncTax = PromotionDiscount.IncTax + objPromotionsDiscount.Item(i - 1).TotalIncTax
+        For i As Integer = 1 To Basket.objPromotionsDiscount.Count
+            Basket.PromotionDiscount.ExTax = Basket.PromotionDiscount.ExTax + Basket.objPromotionsDiscount.Item(i - 1).TotalexTax
+            Basket.PromotionDiscount.IncTax = Basket.PromotionDiscount.IncTax + Basket.objPromotionsDiscount.Item(i - 1).TotalIncTax
         Next
 
-        aryPromotions = objPromotions
-        aryPromotionsDiscount = objPromotionsDiscount
+        aryPromotions = Basket.objPromotions
+        aryPromotionsDiscount = Basket.objPromotionsDiscount
 
     End Sub
-
-
-#End Region
-
-#Region "Affiliates"
-
-    Public Sub UpdateCustomerAffiliateStatus(ByVal numUserID As Integer)
-        _CustomersAdptr.UpdateAffiliate(1, numUserID, 0, 0)
-    End Sub
-
-    Public Sub UpdateCustomerAffiliateCommission(ByVal numUserID As Integer, ByVal numCommission As Double)
-        _CustomersAdptr.UpdateAffiliate(2, numUserID, numCommission, 0)
-    End Sub
-
-    Public Sub UpdateCustomerAffiliateID(ByVal numUserID As Integer, ByVal numAffiliateID As Integer)
-        _CustomersAdptr.UpdateAffiliate(3, numUserID, 0, numAffiliateID)
-    End Sub
-
-    Public Sub UpdateCustomerAffiliateLog(ByVal numAffiliateId As Integer, ByVal strReferer As String, ByVal strIP As String, ByVal strRequestedItem As String)
-        _CustomersAdptr.UpdateAffiliateLog(numAffiliateId, strReferer, strIP, strRequestedItem, CkartrisDisplayFunctions.NowOffset)
-    End Sub
-
-    Public Function IsCustomerAffiliate(ByVal numUserID As Long) As Boolean
-        Dim tblAffiliate As DataTable
-        Dim blnIsAffiliate As Boolean = False
-
-        tblAffiliate = GetCustomerData(numUserID)
-        If tblAffiliate.Rows.Count > 0 Then
-            blnIsAffiliate = tblAffiliate.Rows(0).Item("U_IsAffiliate")
-        End If
-        tblAffiliate.Dispose()
-
-        Return blnIsAffiliate
-    End Function
-
-    Public Function GetCustomerAffiliateID(ByVal numUserID As Long) As Long
-        Dim tblAffiliate As DataTable
-        Dim numAffiliateID As Long
-
-        tblAffiliate = GetCustomerData(numUserID)
-        If tblAffiliate.Rows.Count > 0 Then
-            numAffiliateID = tblAffiliate.Rows(0).Item("U_AffiliateID")
-        End If
-        tblAffiliate.Dispose()
-
-        Return numAffiliateID
-    End Function
-
-    Public Shared Sub CheckAffiliateLink()
-        Dim numAffiliateID, sessAffiliateID As Integer
-        Dim objBasket As New BasketBLL
-
-        numAffiliateID = Val(Current.Request.QueryString("af"))
-
-        If numAffiliateID > 0 AndAlso objBasket.IsCustomerAffiliate(numAffiliateID) Then
-
-            If Not (Current.Session("C_AffiliateID") Is Nothing) Then
-                sessAffiliateID = Val(Current.Session("C_AffiliateID"))
-            Else
-                sessAffiliateID = 0
-            End If
-
-            If numAffiliateID <> sessAffiliateID Then
-                Dim strReferer, strIP, strRequestedItem As String
-                strReferer = Current.Request.ServerVariables("HTTP_REFERER")
-                If strReferer Is Nothing Then strReferer = ""
-                strIP = Current.Request.ServerVariables("REMOTE_ADDR")
-                strRequestedItem = Left(Current.Request.ServerVariables("PATH_INFO") & "?" & Current.Request.ServerVariables("QUERY_STRING"), 255)
-
-                objBasket.UpdateCustomerAffiliateLog(numAffiliateID, strReferer, strIP, strRequestedItem)
-                Current.Session("C_AffiliateID") = numAffiliateID
-
-            End If
-
-        End If
-
-        objBasket = Nothing
-    End Sub
-
-    Public Function GetCustomerAffiliateActivitySales(ByVal numUserID As Integer) As DataTable
-        Dim tblAffiliate As New DataTable
-        tblAffiliate = _CustomersAdptr.GetAffiliateData(1, numUserID, 0, 0)
-        Return tblAffiliate
-    End Function
-
-    Public Function GetCustomerAffiliateActivityHits(ByVal numUserID As Integer) As DataTable
-        Dim tblAffiliate As New DataTable
-        tblAffiliate = _CustomersAdptr.GetAffiliateData(2, numUserID, 0, 0)
-        Return tblAffiliate
-    End Function
-
-    Public Function GetCustomerAffiliateCommission(ByVal numUserID As Integer, ByVal numMonth As Integer, ByVal numYear As Integer) As DataTable
-        Dim tblAffiliate As New DataTable
-        tblAffiliate = _CustomersAdptr.GetAffiliateData(3, numUserID, numMonth, numYear)
-        Return tblAffiliate
-    End Function
-
-    Public Function GetCustomerAffiliateSalesLink(ByVal numUserID As Integer, ByVal numMonth As Integer, ByVal numYear As Integer) As DataTable
-        Dim tblAffiliate As New DataTable
-        tblAffiliate = _CustomersAdptr.GetAffiliateData(4, numUserID, numMonth, numYear)
-        Return tblAffiliate
-    End Function
-
-    Public Function GetCustomerAffiliatePayments(ByVal numUserID As Integer) As DataTable
-        Dim tblAffiliate As New DataTable
-        tblAffiliate = _CustomersAdptr.GetAffiliateData(5, numUserID, 0, 0)
-        Return tblAffiliate
-    End Function
-
-    Public Function GetCustomerAffiliateUnpaidSales(ByVal numUserID As Integer) As DataTable
-        Dim tblAffiliate As New DataTable
-        tblAffiliate = _CustomersAdptr.GetAffiliateData(6, numUserID, 0, 0)
-        Return tblAffiliate
-    End Function
-
-    Public Function _GetCustomerAffiliateCommissionSummary(ByVal numUserId As Long) As DataTable
-        Dim tblAffiliate As New DataTable
-        Dim intPaid As Integer = IIf(LCase(KartSettingsManager.GetKartConfig("frontend.users.affiliates.commissiononlyonpaid")) = "y", 1, 0)
-        tblAffiliate = _CustomersAdptr._GetAffiliateCommission(0, numUserId, intPaid, 0, 0)
-        Return tblAffiliate
-    End Function
-
-    Public Function _GetCustomerAffiliateUnpaidCommission(ByVal numUserId As Long, Optional ByVal PageIndex As Integer = 0, Optional ByVal PageSize As Integer = 10) As DataTable
-        Dim tblAffiliate As New DataTable
-        Dim intPaid As Integer = IIf(LCase(KartSettingsManager.GetKartConfig("frontend.users.affiliates.commissiononlyonpaid")) = "y", 1, 0)
-        tblAffiliate = _CustomersAdptr._GetAffiliateCommission(1, numUserId, intPaid, ((PageIndex - 1) * PageSize) + 1, (PageIndex * PageSize))
-        Return tblAffiliate
-    End Function
-
-    Public Function _GetCustomerAffiliatePaidCommission(ByVal numUserId As Long, Optional ByVal PageIndex As Integer = 0, Optional ByVal PageSize As Integer = 10) As DataTable
-        Dim tblAffiliate As New DataTable
-        Dim intPaid As Integer = IIf(LCase(KartSettingsManager.GetKartConfig("frontend.users.affiliates.commissiononlyonpaid")) = "y", 1, 0)
-        tblAffiliate = _CustomersAdptr._GetAffiliateCommission(2, numUserId, intPaid, ((PageIndex - 1) * PageSize) + 1, (PageIndex * PageSize))
-        Return tblAffiliate
-    End Function
-
-    Public Function _AddAffiliatePayments(ByVal intAffiliateID As Integer) As Integer
-        Dim tblAffiliate As New DataTable
-
-        tblAffiliate = _CustomersAdptr._AddAffiliatePayments(intAffiliateID, CkartrisDisplayFunctions.NowOffset)
-        If tblAffiliate.Rows.Count > 0 Then
-            Return tblAffiliate.Rows(0).Item("AFP_ID")
-        Else
-            Return 0
-        End If
-
-    End Function
-
-    Public Sub _UpdateAffiliateCommission(ByVal intAffilliatePaymentID As Integer, ByVal intOrderID As Integer)
-
-        _CustomersAdptr._UpdateAffiliateOrders(1, intAffilliatePaymentID, intOrderID)
-
-    End Sub
-
-    Public Sub _UpdateAffiliatePayment(ByVal intAffilliatePaymentID As Integer)
-
-        _CustomersAdptr._UpdateAffiliateOrders(2, intAffilliatePaymentID, 0)
-
-    End Sub
-
-    Public Function _GetAffiliateMonthlyHitsReport(ByVal numMonth As Integer, ByVal numYear As Integer) As DataTable
-
-        Return _CustomersAdptr._GetAffiliateReport(1, numMonth, numYear, CkartrisDisplayFunctions.NowOffset, 0, 0, 0, 0)
-
-    End Function
-
-    Public Function _GetAffiliateAnnualHitsReport() As DataTable
-
-        Return _CustomersAdptr._GetAffiliateReport(2, 0, 0, Format(DateAdd(DateInterval.Month, -11, CkartrisDisplayFunctions.NowOffset), "yyyy/MM/01 0:00:00"), 0, 0, 0, 0)
-
-    End Function
-
-    Public Function _GetAffiliateMonthlySalesReport(ByVal numMonth As Integer, ByVal numYear As Integer) As DataTable
-
-        Dim numPaid As Short = IIf(Trim(LCase(GetKartConfig("frontend.users.affiliates.commissiononlyonpaid"))) = "y", 1, 0)
-        Return _CustomersAdptr._GetAffiliateReport(3, numMonth, numYear, CkartrisDisplayFunctions.NowOffset, numPaid, 0, 0, 0)
-
-    End Function
-
-    Public Function _GetAffiliateAnnualSalesReport() As DataTable
-
-        Dim numPaid As Short = IIf(Trim(LCase(GetKartConfig("frontend.users.affiliates.commissiononlyonpaid"))) = "y", 1, 0)
-        Return _CustomersAdptr._GetAffiliateReport(4, 0, 0, Format(DateAdd(DateInterval.Month, -11, CkartrisDisplayFunctions.NowOffset), "yyyy/MM/01 0:00:00"), numPaid, 0, 0, 0)
-
-    End Function
-
-    Public Function _GetAffiliateSummaryReport(ByVal numMonth As Integer, ByVal numYear As Integer, ByVal numAffiliateID As Integer) As DataTable
-
-        Dim numPaid As Short = IIf(Trim(LCase(GetKartConfig("frontend.users.affiliates.commissiononlyonpaid"))) = "y", 1, 0)
-        Return _CustomersAdptr._GetAffiliateReport(5, numMonth, numYear, CkartrisDisplayFunctions.NowOffset, numPaid, numAffiliateID, 0, 0)
-
-    End Function
-
-    Public Function _GetAffiliateRawDataHitsReport(ByVal numMonth As Integer, ByVal numYear As Integer, ByVal numAffiliateID As Integer, Optional ByVal PageIndex As Integer = 0, Optional ByVal PageSize As Integer = 10) As DataTable
-
-        Return _CustomersAdptr._GetAffiliateReport(6, numMonth, numYear, CkartrisDisplayFunctions.NowOffset, 0, numAffiliateID, ((PageIndex - 1) * PageSize) + 1, (PageIndex * PageSize))
-
-    End Function
-
-    Public Function _GetAffiliateRawDataSalesReport(ByVal numMonth As Integer, ByVal numYear As Integer, ByVal numAffiliateID As Integer, Optional ByVal PageIndex As Integer = 0, Optional ByVal PageSize As Integer = 10) As DataTable
-
-        Dim numPaid As Short = IIf(Trim(LCase(GetKartConfig("frontend.users.affiliates.commissiononlyonpaid"))) = "y", 1, 0)
-        Return _CustomersAdptr._GetAffiliateReport(7, numMonth, numYear, CkartrisDisplayFunctions.NowOffset, numPaid, numAffiliateID, ((PageIndex - 1) * PageSize) + 1, (PageIndex * PageSize))
-
-    End Function
-
-
-#End Region
 
 #Region "MailingList"
 
-    Public Sub UpdateCustomerMailFormat(ByVal numUserID As Integer, ByVal strMailFormat As String)
-        _CustomersAdptr.UpdateMailFormat(numLanguageID, numUserID, strMailFormat)
+    ''' <summary>
+    ''' Update the customer mail format
+    ''' </summary>
+    ''' <param name="numUserID">Customer ID</param>
+    ''' <param name="strMailFormat">Mail format (plain, html etc.)</param>
+    ''' <remarks></remarks>
+    Public Shared Sub UpdateCustomerMailFormat(ByVal numUserID As Integer, ByVal strMailFormat As String)
+        _CustomersAdptr.UpdateMailFormat(CkartrisBLL.GetLanguageIDfromSession, numUserID, strMailFormat)
     End Sub
 
-    Public Sub UpdateCustomerMailingList(ByVal strEmail As String, ByRef strPassword As String, Optional ByVal strMailFormat As String = "t", Optional ByVal strSignupIP As String = "")
+    ''' <summary>
+    ''' Update settings for the mailing list for a given customer.
+    ''' </summary>
+    ''' <param name="strEmail"></param>
+    ''' <param name="strPassword"></param>
+    ''' <param name="strMailFormat"></param>
+    ''' <param name="strSignupIP"></param>
+    ''' <remarks></remarks>
+    Public Shared Sub UpdateCustomerMailingList(ByVal strEmail As String, ByRef strPassword As String, Optional ByVal strMailFormat As String = "t", Optional ByVal strSignupIP As String = "")
         Dim datSignup As DateTime
         Dim numPasswordLength As Integer
 
@@ -3252,11 +2353,12 @@ Public Class BasketBLL
 
         datSignup = CkartrisDisplayFunctions.NowOffset
 
-        _CustomersAdptr.UpdateMailingList(strEmail, datSignup, strSignupIP, strPassword, strMailFormat, numLanguageID)
+        _CustomersAdptr.UpdateMailingList(strEmail, datSignup, strSignupIP, strPassword, strMailFormat, CkartrisBLL.GetLanguageIDfromSession)
 
     End Sub
 
-    Public Function ConfirmMail(ByVal numUserID As Integer, ByVal strPassword As String, Optional ByVal strIP As String = "") As Integer
+
+    Public Shared Function ConfirmMail(ByVal numUserID As Integer, ByVal strPassword As String, Optional ByVal strIP As String = "") As Integer
         Dim tblConfirmMail As New DataTable
         Dim UserID As Integer = 0
 
@@ -3270,263 +2372,5 @@ Public Class BasketBLL
     End Function
 
 #End Region
-
-    Protected Overrides Sub Finalize()
-        MyBase.Finalize()
-    End Sub
-
-
-End Class
-
-<Serializable()> _
-Public Class PromotionBasketModifier
-    Private _ExTax As Double
-    Private _IncTax As Double
-    Private _TaxRate As Double
-    Private _TaxAmount As Double
-    Private _Quantity As Double
-    Private _TotalExTax As Double
-    Private _TotalIncTax As Double
-    Private _PromotionID As Integer
-    Private _Name As String
-    Private _ApplyTax As Boolean
-    Private _isFixedValuePromo As Boolean
-
-
-    Public Property PromotionID() As Integer
-        Get
-            Return _PromotionID
-        End Get
-        Set(ByVal value As Integer)
-            _PromotionID = value
-        End Set
-    End Property
-
-    Public Property Name() As String
-        Get
-            Return _Name
-        End Get
-        Set(ByVal value As String)
-            _Name = value
-        End Set
-    End Property
-
-    Public Property ExTax() As Double
-        Get
-            Return (_ExTax)
-        End Get
-        Set(ByVal value As Double)
-            _ExTax = (value)
-        End Set
-    End Property
-
-    Public Property IncTax() As Double
-        Get
-            Return _IncTax
-        End Get
-        Set(ByVal value As Double)
-            _IncTax = (value)
-        End Set
-    End Property
-
-    Public Property TaxAmount() As Double
-        Get
-            Return IIf(Not (ApplyTax), 0, (ExTax * ComputedTaxRate))
-        End Get
-        Set(ByVal value As Double)
-            _TaxAmount = value
-        End Set
-    End Property
-
-    Public Property ComputedTaxRate() As Double
-        Get
-            Return _TaxRate
-        End Get
-        Set(ByVal value As Double)
-            _TaxRate = value
-        End Set
-
-    End Property
-
-    Public Property Quantity() As Double
-        Get
-            Return _Quantity
-        End Get
-        Set(ByVal value As Double)
-            _Quantity = value
-        End Set
-    End Property
-
-    Public Property TotalExTax() As Double
-        Get
-            Return _TotalExTax
-        End Get
-        Set(ByVal value As Double)
-            _TotalExTax = value
-        End Set
-    End Property
-
-    Public Property TotalIncTax() As Double
-        Get
-            Return _TotalIncTax
-        End Get
-        Set(ByVal value As Double)
-            _TotalIncTax = value
-        End Set
-    End Property
-
-    Public Property isFixedValuePromo() As Boolean
-        Get
-            Return _isFixedValuePromo
-        End Get
-        Set(ByVal value As Boolean)
-            _isFixedValuePromo = value
-        End Set
-    End Property
-
-    Public Property ApplyTax() As Boolean
-        Get
-            Return _ApplyTax
-        End Get
-        Set(ByVal value As Boolean)
-            _ApplyTax = value
-        End Set
-    End Property
-
-End Class
-
-<Serializable()> _
-Public Class Promotion
-    Private _ID As Integer
-    Private _StartDate As Date
-    Private _EndDate As Date
-    Private _Live As Integer
-    Private _OrderByValue As Double
-    Private _MaxQuantity As Double
-    Private _PartNo As String
-    Private _Type As String
-    Private _Value As Double
-    Private _ItemType As String
-    Private _ItemID As Integer
-    Private _ItemName As String
-    Private _PromoText As String
-
-
-    Public Property ID() As Integer
-        Get
-            Return _ID
-        End Get
-        Set(ByVal value As Integer)
-            _ID = value
-        End Set
-    End Property
-
-    Public Property StartDate() As Date
-        Get
-            Return _StartDate
-        End Get
-        Set(ByVal value As Date)
-            _StartDate = value
-        End Set
-    End Property
-
-    Public Property EndDate() As Date
-        Get
-            Return _EndDate
-        End Get
-        Set(ByVal value As Date)
-            _EndDate = value
-        End Set
-    End Property
-
-    Public Property Live() As Integer
-        Get
-            Return _Live
-        End Get
-        Set(ByVal value As Integer)
-            _Live = value
-        End Set
-    End Property
-
-    Public Property OrderByValue() As Double
-        Get
-            Return _OrderByValue
-        End Get
-        Set(ByVal value As Double)
-            _OrderByValue = value
-        End Set
-    End Property
-
-    Public Property MaxQuantity() As Double
-        Get
-            Return _MaxQuantity
-        End Get
-        Set(ByVal value As Double)
-            _MaxQuantity = value
-        End Set
-    End Property
-
-    Public Property PartNo() As String
-        Get
-            Return _PartNo
-        End Get
-        Set(ByVal value As String)
-            _PartNo = value
-        End Set
-    End Property
-
-    Public Property Type() As String
-        Get
-            Return _Type
-        End Get
-        Set(ByVal value As String)
-            _Type = value
-        End Set
-    End Property
-
-    Public Property Value() As Double
-        Get
-            Return _Value
-        End Get
-        Set(ByVal value As Double)
-            _Value = value
-        End Set
-    End Property
-
-    Public Property ItemType() As String
-        Get
-            Return _ItemType
-        End Get
-        Set(ByVal value As String)
-            _ItemType = value
-        End Set
-    End Property
-
-    Public Property ItemID() As Integer
-        Get
-            Return _ItemID
-        End Get
-        Set(ByVal value As Integer)
-            _ItemID = value
-        End Set
-    End Property
-
-    Public Property ItemName() As String
-        Get
-            Return _ItemName
-        End Get
-        Set(ByVal value As String)
-            _ItemName = value
-        End Set
-    End Property
-
-    Public Property PromoText() As String
-        Get
-            Return _PromoText
-        End Get
-        Set(ByVal value As String)
-            _PromoText = value
-        End Set
-    End Property
 
 End Class

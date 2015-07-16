@@ -25,7 +25,7 @@ Partial Class Customer
     Protected Shared AFF_AffiliateCommission As Double
     Protected ML_SignupDateTime, ML_ConfirmationDateTime As DateTime
 
-    Private objBasket As New BasketBLL
+    Private objBasket As New kartris.Basket
     Private numAppMaxOrders, numAppMaxBaskets As Integer
     Private strAppUploadsFolder, strShow As String
     Private tblOrder, tblSavedBasket, tblWishLists, dtbDownloadableProducts As Data.DataTable
@@ -65,7 +65,7 @@ Partial Class Customer
         If numAppMaxBaskets = 0 Or strShow = "baskets" Then numAppMaxBaskets = -2
         If numAppMaxBaskets = 0 Or strShow = "wishlists" Then numAppMaxBaskets = -2
 
-        numCustomerDiscount = objBasket.GetCustomerDiscount(numCustomerID)
+        numCustomerDiscount = BasketBLL.GetCustomerDiscount(numCustomerID)
 
         'Hide tabs when not necessary
         If LCase(KartSettingsManager.GetKartConfig("frontend.cataloguemode")) = "y" Then
@@ -138,7 +138,7 @@ Partial Class Customer
             phdHome.Visible = False
             phdSaveWishLists.Visible = False
 
-            dtbDownloadableProducts = objBasket.GetDownloadableProducts(numCustomerID)
+            dtbDownloadableProducts = BasketBLL.GetDownloadableProducts(numCustomerID)
             If dtbDownloadableProducts.Rows.Count > 0 Then
                 phdDownloadableProducts.Visible = True
                 rptDownloadableProducts.DataSource = dtbDownloadableProducts
@@ -160,7 +160,7 @@ Partial Class Customer
 
                     ''// initialize orders navigation page
                     Order_PageSize = CInt(KartSettingsManager.GetKartConfig("frontend.users.myaccount.orderhistory.max"))
-                    ViewState("Order_PageTotalSize") = objBasket.GetCustomerOrdersTotal(numCustomerID)
+                    ViewState("Order_PageTotalSize") = BasketBLL.GetCustomerOrdersTotal(numCustomerID)
                     ViewState("Order_PageIndex") = 1
                     lnkBtnOrderPrev.Enabled = False : lnkBtnOrderNext.Enabled = True
                     If Order_PageSize >= ViewState("Order_PageTotalSize") Then
@@ -171,7 +171,7 @@ Partial Class Customer
 
                     ''// initialize saved baskets navigation page
                     SavedBasket_PageSize = CInt(KartSettingsManager.GetKartConfig("frontend.users.myaccount.savedbaskets.max"))
-                    ViewState("SavedBasket_PageTotalSize") = objBasket.GetSavedBasketTotal(numCustomerID)
+                    ViewState("SavedBasket_PageTotalSize") = BasketBLL.GetSavedBasketTotal(numCustomerID)
                     ViewState("SavedBasket_PageIndex") = 1
                     lnkBtnBasketPrev.Enabled = False : lnkBtnBasketNext.Enabled = True
                     If SavedBasket_PageSize >= ViewState("SavedBasket_PageTotalSize") Then
@@ -182,7 +182,7 @@ Partial Class Customer
 
                     ''// initialize wishlists navigation page
                     WishList_PageSize = CInt(KartSettingsManager.GetKartConfig("frontend.users.myaccount.wishlists.max"))
-                    ViewState("WishList_PageTotalSize") = objBasket.GetWishListTotal(numCustomerID)
+                    ViewState("WishList_PageTotalSize") = BasketBLL.GetWishListTotal(numCustomerID)
                     ViewState("WishList_PageIndex") = 1
                     lnkBtnWishlistPrev.Enabled = False : lnkBtnWishlistNext.Enabled = True
                     If WishList_PageSize >= ViewState("WishList_PageTotalSize") Then
@@ -191,13 +191,13 @@ Partial Class Customer
 
                     Call BuildNavigatePage("wishlist")
 
-                    Dim oItems As New ArrayList
+                    Dim oItems As New List(Of Kartris.BasketItem)
                     objBasket.LoadBasketItems()
-                    oItems = objBasket.GetItems
+                    oItems = objBasket.BasketItems
                     blnNoBasketItem = (oItems.Count = 0)
 
 
-                    tblCustomerData = objBasket.GetCustomerData(numCustomerID)
+                    tblCustomerData = BasketBLL.GetCustomerData(numCustomerID)
                     If tblCustomerData.Rows.Count > 0 Then
                         ''// affiliate
                         AFF_IsAffiliate = FixNullFromDB(tblCustomerData.Rows(0).Item("U_IsAffiliate"))
@@ -235,7 +235,7 @@ Partial Class Customer
                     End Try
 
                     If numWishlistsID <> 0 Then
-                        tblWishLists = objBasket.GetCustomerWishList(numCustomerID, numWishlistsID)
+                        tblWishLists = BasketBLL.GetCustomerWishList(numCustomerID, numWishlistsID)
 
                         If tblWishLists.Rows.Count > 0 Then
                             txtWL_Name.Text = FixNullFromDB(tblWishLists.Rows(0).Item("WL_Name")) & ""
@@ -249,7 +249,7 @@ Partial Class Customer
 
                     Else
                         Dim tblCustomerData As New Data.DataTable
-                        tblCustomerData = objBasket.GetCustomerData(numCustomerID)
+                        tblCustomerData = BasketBLL.GetCustomerData(numCustomerID)
                     End If
                 Case Else
 
@@ -281,7 +281,7 @@ Partial Class Customer
         Dim numBasketID As Long
 
         numBasketID = E.CommandArgument
-        objBasket.DeleteSavedBasket(numBasketID)
+        BasketBLL.DeleteSavedBasket(numBasketID)
         Call BuildNavigatePage("basket")
 
     End Sub
@@ -291,7 +291,7 @@ Partial Class Customer
 
         numSavedBasketID = E.CommandArgument
         numBasketID = SESSION_ID
-        objBasket.LoadSavedBasket(numSavedBasketID, numBasketID)
+        BasketBLL.LoadSavedBasket(numSavedBasketID, numBasketID)
         blnNoBasketItem = objBasket.BasketItems.Count > 0
 
         Call RefreshMiniBasket()
@@ -301,7 +301,7 @@ Partial Class Customer
 
     Sub SaveBasket_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         If Me.IsValid Then
-            Call objBasket.SaveBasket(numCustomerID, Trim(txtBasketName.Text), SESSION_ID)
+            Call BasketBLL.SaveBasket(numCustomerID, Trim(txtBasketName.Text), SESSION_ID)
             Response.Redirect("~/Customer.aspx?action=home")
         End If
     End Sub
@@ -324,7 +324,7 @@ Partial Class Customer
                 Dim strEmail As String = ""
                 strEmail = CurrentLoggedUser.Email
 
-                tblWishLists = objBasket.GetWishListLogin(strEmail, strPublicPassword)
+                tblWishLists = BasketBLL.GetWishListLogin(strEmail, strPublicPassword)
                 If tblWishLists.Rows.Count > 0 Then ''// password already exist for this owner
                     With UC_PopUpInfo
                         Dim strError As String = GetGlobalResourceObject("Kartris", "ContentText_WishListPublicPasswordExists")
@@ -334,12 +334,12 @@ Partial Class Customer
                         .ShowPopup()
                     End With
                 Else ''// new wishlist (create it)
-                    Call objBasket.SaveWishLists(numWishlistsID, SESSION_ID, numCustomerID, strName, strPublicPassword, strMessage)
+                    Call BasketBLL.SaveWishLists(numWishlistsID, SESSION_ID, numCustomerID, strName, strPublicPassword, strMessage)
                     Response.Redirect("~/Customer.aspx?action=home")
                 End If
 
             Else ''// existing wishlist (update it)
-                Call objBasket.SaveWishLists(numWishlistsID, SESSION_ID, numCustomerID, strName, strPublicPassword, strMessage)
+                Call BasketBLL.SaveWishLists(numWishlistsID, SESSION_ID, numCustomerID, strName, strPublicPassword, strMessage)
                 Response.Redirect("~/Customer.aspx?action=home")
             End If
 
@@ -359,7 +359,7 @@ Partial Class Customer
         Dim numWishListsID As Long
 
         numWishListsID = E.CommandArgument
-        objBasket.DeleteWishLists(numWishListsID)
+        BasketBLL.DeleteWishLists(numWishListsID)
         Call BuildNavigatePage("wishlist")
 
     End Sub
@@ -379,7 +379,7 @@ Partial Class Customer
         numWishListsID = E.CommandArgument
         numBasketID = SESSION_ID
 
-        objBasket.LoadWishlists(numWishListsID, numBasketID)
+        BasketBLL.LoadWishlists(numWishListsID, numBasketID)
 
         blnNoBasketItem = objBasket.BasketItems.Count > 0
 
@@ -400,7 +400,7 @@ Partial Class Customer
     Function GetCustomerDiscount() As Double
         Dim numCustomerID As Integer
         numCustomerID = Val(SESSION_ID)
-        Return objBasket.GetCustomerDiscount(numCustomerID)
+        Return BasketBLL.GetCustomerDiscount(numCustomerID)
     End Function
 
     Protected Sub PageNavigate_Click(ByVal sender As Object, ByVal E As CommandEventArgs)
@@ -444,19 +444,19 @@ Partial Class Customer
 
         Select Case LCase(strPage)
             Case "order"
-                tblOrder = objBasket.GetCustomerOrders(numCustomerID, (((ViewState("Order_PageIndex") - 1) * Order_PageSize) + 1), Order_PageSize)
+                tblOrder = BasketBLL.GetCustomerOrders(numCustomerID, (((ViewState("Order_PageIndex") - 1) * Order_PageSize) + 1), Order_PageSize)
                 rptOrder.DataSource = tblOrder
                 rptOrder.DataBind()
                 updOrder.Update()
 
             Case "basket"
-                tblSavedBasket = objBasket.GetSavedBasket(numCustomerID, (((ViewState("SavedBasket_PageIndex") - 1) * SavedBasket_PageSize) + 1), SavedBasket_PageSize)
+                tblSavedBasket = BasketBLL.GetSavedBasket(numCustomerID, (((ViewState("SavedBasket_PageIndex") - 1) * SavedBasket_PageSize) + 1), SavedBasket_PageSize)
                 rptSavedBasket.DataSource = tblSavedBasket
                 rptSavedBasket.DataBind()
                 updSavedBaskets.Update()
 
             Case "wishlist"
-                tblWishLists = objBasket.GetWishLists(numCustomerID, (((ViewState("WishList_PageIndex") - 1) * WishList_PageSize) + 1), WishList_PageSize)
+                tblWishLists = BasketBLL.GetWishLists(numCustomerID, (((ViewState("WishList_PageIndex") - 1) * WishList_PageSize) + 1), WishList_PageSize)
                 rptWishLists.DataSource = tblWishLists
                 rptWishLists.DataBind()
                 updWishlists.Update()
@@ -474,9 +474,9 @@ Partial Class Customer
             .ShowPopup()
         End With
 
-        objBasket.UpdateCustomerAffiliateStatus(numCustomerID)
+        AffiliateBLL.UpdateCustomerAffiliateStatus(numCustomerID)
 
-        tblAffiliates = objBasket.GetCustomerData(numCustomerID)
+        tblAffiliates = BasketBLL.GetCustomerData(numCustomerID)
         If tblAffiliates.Rows.Count > 0 Then
             AFF_IsAffiliate = tblAffiliates.Rows(0).Item("U_IsAffiliate")
             AFF_AffiliateCommission = tblAffiliates.Rows(0).Item("U_AffiliateCommission")
@@ -494,7 +494,7 @@ Partial Class Customer
 
         If LCase(strCommand) = LCase("MailVerified") Then
 
-            objBasket.UpdateCustomerMailFormat(numCustomerID, LCase(ddlMailingList.SelectedValue))
+            BasketBLL.UpdateCustomerMailFormat(numCustomerID, LCase(ddlMailingList.SelectedValue))
 
             With UC_PopUpMessage
                 .SetTitle = GetGlobalResourceObject("Kartris", "PageTitle_MailingList")
@@ -504,14 +504,14 @@ Partial Class Customer
 
         Else ''// mail not verified or mail not signed up
 
-            tblCustomerData = objBasket.GetCustomerData(numCustomerID)
+            tblCustomerData = BasketBLL.GetCustomerData(numCustomerID)
             Dim strEmail As String = "", strPassword As String = ""
 
             If tblCustomerData.Rows.Count > 0 Then
                 strEmail = FixNullFromDB(tblCustomerData.Rows(0).Item("U_EmailAddress")) & ""
             End If
 
-            objBasket.UpdateCustomerMailingList(strEmail, strPassword)
+            BasketBLL.UpdateCustomerMailingList(strEmail, strPassword)
 
             Dim sbdBodyText As StringBuilder = New StringBuilder()
             Dim strBodyText As String
@@ -545,7 +545,7 @@ Partial Class Customer
             SendEmail(strFrom, strEmail, GetGlobalResourceObject("Kartris", "PageTitle_MailingList"), strBodyText, , , , , blnHTMLEmail)
         End If
 
-        tblCustomerData = objBasket.GetCustomerData(numCustomerID)
+        tblCustomerData = BasketBLL.GetCustomerData(numCustomerID)
         If tblCustomerData.Rows.Count Then
             ML_ConfirmationDateTime = FixNullFromDB(tblCustomerData.Rows(0).Item("U_ML_ConfirmationDateTime"))
             ML_SignupDateTime = FixNullFromDB(tblCustomerData.Rows(0).Item("U_ML_SignupDateTime"))

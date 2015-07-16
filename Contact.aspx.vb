@@ -21,8 +21,8 @@ Imports CkartrisDataManipulation
 Partial Class contact
     Inherits PageBaseClass
 
-    Shared Basket As New BasketBLL
-    Shared BasketItems As ArrayList
+    Shared Basket As New kartris.Basket
+    Shared BasketItems As List(Of Kartris.BasketItem)
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Page.Title = GetGlobalResourceObject("Kartris", "PageTitle_ContactUs") & " | " & Server.HtmlEncode(GetGlobalResourceObject("Kartris", "Config_Webshopname"))
@@ -73,7 +73,7 @@ Partial Class contact
     Function GetBasket() As String
         Dim _Item As BasketItem
         Basket.LoadBasketItems()
-        BasketItems = Basket.GetItems
+        BasketItems = Basket.BasketItems
         If BasketItems.Count = 0 Then Return vbCrLf
         Dim strBldrItems As New StringBuilder("")
         strBldrItems.Append(vbCrLf & GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))

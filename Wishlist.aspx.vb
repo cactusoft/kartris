@@ -37,9 +37,9 @@ Partial Class Wishlist
                 End If
 
                 Dim tblWishList As New DataTable
-                Dim objBasket As New BasketBLL
+                Dim objBasket As New kartris.Basket
 
-                tblWishList = objBasket.GetCustomerWishList(numCustomerID, numWishlistID)
+                tblWishList = BasketBLL.GetCustomerWishList(numCustomerID, numWishlistID)
 
                 Dim blnAllow As Boolean = False
                 If tblWishList.Rows.Count > 0 Then
@@ -51,7 +51,7 @@ Partial Class Wishlist
                     litOwnerName.Text = Server.HtmlEncode(CkartrisDataManipulation.FixNullFromDB(tblWishList.Rows(0).Item("U_AccountHolderName"))) & ""
                     If litOwnerName.Text = "" Then litOwnerName.Text = Server.HtmlEncode(tblWishList.Rows(0).Item("U_EmailAddress")) & ""
                     litMessage.Text = tblWishList.Rows(0).Item("WL_Message")
-                    rptWishList.DataSource = objBasket.GetRequiredWishlist(numCustomerID, numWishlistID, Session("LANG"))
+                    rptWishList.DataSource = BasketBLL.GetRequiredWishlist(numCustomerID, numWishlistID, Session("LANG"))
                     rptWishList.DataBind()
                     pnlLogin.Visible = False
                     pnlWishlist.Visible = True
@@ -77,7 +77,7 @@ Partial Class Wishlist
                 If Val(objSession.Value("WL_ID")) > 0 Then ''// get wishlist from current session
 
                     Dim tblWishList As New DataTable
-                    Dim objBasket As New BasketBLL
+                    Dim objBasket As New kartris.Basket
 
 
                     ''// for kartris v2
@@ -85,7 +85,7 @@ Partial Class Wishlist
                         Session("WL_ID") = .Value("WL_ID")
                         litOwnerName.Text = Server.HtmlEncode(.Value("WL_Owner"))
                         litMessage.Text = Server.HtmlEncode(.Value("WL_Message"))
-                        rptWishList.DataSource = objBasket.GetRequiredWishlist(Val(.Value("WL_UserID")), Val(.Value("WL_ID")), Session("LANG"))
+                        rptWishList.DataSource = BasketBLL.GetRequiredWishlist(Val(.Value("WL_UserID")), Val(.Value("WL_ID")), Session("LANG"))
                         rptWishList.DataBind()
                     End With
 
@@ -121,9 +121,9 @@ Partial Class Wishlist
             Dim strURL As String = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, e.Item.DataItem("V_ProductID"))
             Dim strOptionLink As String = ""
 
-            Dim objOptionsBasket As New BasketBLL
+            'Dim objOptionsBasket As New kartris.Basket
 
-            If Not String.IsNullOrEmpty(objOptionsBasket.GetOptionText(CkartrisBLL.GetLanguageIDfromSession, e.Item.DataItem("BV_ID"), strOptionLink)) Then
+            If Not String.IsNullOrEmpty(BasketBLL.GetOptionText(CkartrisBLL.GetLanguageIDfromSession, e.Item.DataItem("BV_ID"), strOptionLink)) Then
                 strOptionLink = "&strOptions=" & strOptionLink
             Else
                 strOptionLink = "&strOptions=0"
@@ -137,7 +137,7 @@ Partial Class Wishlist
 
             CType(e.Item.FindControl("lnkWishListItem"), HyperLink).NavigateUrl = strURL
 
-            objOptionsBasket = Nothing
+            'objOptionsBasket = Nothing
 
             If blnPrivate Then
                 CType(e.Item.FindControl("litRequired"), Literal).Text = e.Item.DataItem("WishlistQty") & "/" & e.Item.DataItem("BV_Quantity") & " " & GetGlobalResourceObject("Kartris", "ContentText_StillRequired")
@@ -154,12 +154,12 @@ Partial Class Wishlist
     End Sub
 
     Sub WishListLogin_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
-        Dim objBasket As New BasketBLL
+        ' Dim objBasket As New kartris.Basket
 
         Dim strWishlistEmail As String = Trim(txtWishListEmail.Text)
         Dim strPassword As String = Trim(txtPassword.Text)
 
-        Dim tblWishList As DataTable = objBasket.GetWishListLogin(strWishlistEmail, strPassword)
+        Dim tblWishList As DataTable = BasketBLL.GetWishListLogin(strWishlistEmail, strPassword)
 
         If tblWishList.Rows.Count > 0 Then
 
@@ -174,7 +174,7 @@ Partial Class Wishlist
             litOwnerName.Text = Server.HtmlEncode(IIf(tblWishList.Rows(0).Item("U_AccountHolderName") & "" = "", strWishlistEmail, tblWishList.Rows(0).Item("U_AccountHolderName")))
             litMessage.Text = Server.HtmlEncode(tblWishList.Rows(0).Item("WL_Message"))
 
-            rptWishList.DataSource = objBasket.GetRequiredWishlist(tblWishList.Rows(0).Item("WL_UserID"), tblWishList.Rows(0).Item("WL_ID"), Session("LANG"))
+            rptWishList.DataSource = BasketBLL.GetRequiredWishlist(tblWishList.Rows(0).Item("WL_UserID"), tblWishList.Rows(0).Item("WL_ID"), Session("LANG"))
             rptWishList.DataBind()
 
             Session("WL_UserID") = tblWishList.Rows(0).Item("WL_UserID")
@@ -183,7 +183,7 @@ Partial Class Wishlist
             Session("WL_Message") = tblWishList.Rows(0).Item("WL_Message")
 
             tblWishList.Dispose()
-            objBasket = Nothing
+            'objBasket = Nothing
 
             pnlLogin.Visible = False
             pnlWishlist.Visible = True
@@ -198,7 +198,7 @@ Partial Class Wishlist
         End If
 
         tblWishList.Dispose()
-        objBasket = Nothing
+        'objBasket = Nothing
 
     End Sub
 

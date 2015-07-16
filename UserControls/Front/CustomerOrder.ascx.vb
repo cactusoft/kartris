@@ -19,7 +19,7 @@ Partial Class UserControls_Front_CustomerOrder
     Inherits System.Web.UI.UserControl
 
     Protected APP_PricesIncTax, APP_ShowTaxDisplay As Boolean
-    Private objBasket As New BasketBLL
+    Private objBasket As New kartris.Basket
     Private numTaxDue, numTotalPriceExTax, numTotalPriceIncTax, numCouponDiscount, numCustomerDiscount, numShipping, numOrderHandlingCharge, numTotal As Double
     Private numDiscountPercentage, numPromotionDiscountTotal, numCouponDiscountTotal, CP_DiscountValue As Double
     Private strCouponCode, CP_DiscountType, CP_CouponCode As String
@@ -61,7 +61,7 @@ Partial Class UserControls_Front_CustomerOrder
 
         phdViewOrder.Visible = ShowOrderSummary
 
-        tblBasket = objBasket.GetCustomerOrderDetails(OrderID)
+        tblBasket = BasketBLL.GetCustomerOrderDetails(OrderID)
 
         If tblBasket.Rows.Count > 0 Then
             Dim datOrderDate, datLastModified As DateTime
@@ -98,7 +98,7 @@ Partial Class UserControls_Front_CustomerOrder
 
             If strCouponCode <> "" Then
                 Dim tblCoupon As Data.DataTable
-                tblCoupon = objBasket.GetCouponData(strCouponCode)
+                tblCoupon = BasketBLL.GetCouponData(strCouponCode)
                 If tblCoupon.Rows.Count > 0 Then
                     CP_DiscountValue = tblCoupon.Rows(0).Item("CP_DiscountValue")
                     CP_DiscountType = tblCoupon.Rows(0).Item("CP_DiscountType") & ""

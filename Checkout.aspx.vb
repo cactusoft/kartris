@@ -75,7 +75,7 @@ Partial Class _Checkout
             'to bill the customer. Instead we activate the PO method, even if
             'this user is not authorized to use it. We hide the other payment
             'methods.
-            Dim objBasket As BasketBLL = Session("Basket")
+            Dim objBasket As kartris.Basket = Session("Basket")
             Dim blnOrderIsFree As Boolean = False 'Disable, suspect this might misfire (objBasket.FinalPriceIncTax = 0)
             If blnOrderIsFree Then
                 'Add the PO option with name 'FREE' and hide payment selection
@@ -187,7 +187,6 @@ Partial Class _Checkout
 
                                     'Default name for PO (offline payment)
                                     strGatewayName = GetGlobalResourceObject("Checkout", "ContentText_Po")
-
                                 End If
 
                             End If
@@ -403,6 +402,7 @@ Partial Class _Checkout
                 '---------------------------------------
                 'SHIPPING/BILLING ADDRESS NOT SAME
                 '---------------------------------------
+
                 If (Not CurrentLoggedUser.DefaultBillingAddressID = CurrentLoggedUser.DefaultShippingAddressID) Then
                     If Not _blnAnonymousCheckout Then
                         chkSameShippingAsBilling.Checked = False
@@ -426,6 +426,10 @@ Partial Class _Checkout
                         UC_ShippingAddress.Visible = False
                     End If
                 End If
+
+
+
+
 
                 '---------------------------------------
                 'SELECT DEFAULT ADDRESSES
@@ -837,7 +841,7 @@ Partial Class _Checkout
 
                 'Set various variables for use later
                 Dim CUR_ID As Integer = CInt(Session("CUR_ID"))
-                Dim objBasket As BasketBLL = Session("Basket")
+                Dim objBasket As kartris.Basket = Session("Basket")
                 Dim intGatewayCurrency As Int16
 
                 'Set payment gateway
@@ -887,7 +891,7 @@ Partial Class _Checkout
 
             'Load the basket again to verify contents. Check if quantities are still valid
             UC_BasketSummary.LoadBasket()
-            Dim objValidateBasket As BasketBLL = UC_BasketSummary.GetBasket
+            Dim objValidateBasket As kartris.Basket = UC_BasketSummary.GetBasket
             If objValidateBasket.AdjustedQuantities Then
                 UC_BasketView.LoadBasket()
                 mvwCheckout.ActiveViewIndex = "1"
@@ -930,8 +934,8 @@ Partial Class _Checkout
                 Dim sbdBodyText As StringBuilder = New StringBuilder
                 Dim sbdBasketItems As StringBuilder = New StringBuilder
 
-                Dim arrBasketItems As ArrayList
-                Dim objBasket As BasketBLL = Session("Basket")
+                Dim arrBasketItems As List(Of Kartris.BasketItem)
+                Dim objBasket As kartris.Basket = Session("Basket")
                 Dim objOrder As Kartris.Interfaces.objOrder = Nothing
 
                 Dim blnNewUser As Boolean = True
@@ -1319,10 +1323,9 @@ Partial Class _Checkout
                                                         "Generated Body Text: " & sbdBodyText.ToString)
                         Response.Redirect("~/Basket.aspx")
                     End If
-                    For i As Integer = 0 To arrBasketItems.Count - 1
-                        BasketItem = arrBasketItems(i)
-                        With BasketItem
-                            Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", BasketItem.ProductID)
+                    For Each Item As Kartris.BasketItem In arrBasketItems
+                        With Item
+                            Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", Item.ProductID)
                             Dim strCustomText As String = ""
 
                             Dim sbdOptionText As New StringBuilder("")
@@ -1478,7 +1481,7 @@ Partial Class _Checkout
                         Dim ML_SignupDateTime, ML_ConfirmationDateTime As DateTime
                         Dim blnSignupCustomer As Boolean = False
                         If objOrder.CustomerID > 0 Then
-                            Dim tblCustomerData As DataTable = objBasket.GetCustomerData(objOrder.CustomerID)
+                            Dim tblCustomerData As DataTable = BasketBLL.GetCustomerData(objOrder.CustomerID)
                             If tblCustomerData.Rows.Count > 0 Then
                                 ''// mailing list
                                 ML_ConfirmationDateTime = FixNullFromDB(tblCustomerData.Rows(0).Item("U_ML_ConfirmationDateTime"))
@@ -1493,7 +1496,7 @@ Partial Class _Checkout
                         If blnSignupCustomer Then
                             Dim strRandomString As String = ""
 
-                            objBasket.UpdateCustomerMailingList(UC_KartrisLogin.UserEmailAddress, strRandomString, ddlMailingList.SelectedValue, objOrder.CustomerIPAddress)
+                            BasketBLL.UpdateCustomerMailingList(UC_KartrisLogin.UserEmailAddress, strRandomString, ddlMailingList.SelectedValue, objOrder.CustomerIPAddress)
 
                             Dim sbdMLBodyText As StringBuilder = New StringBuilder()
                             Dim strBodyText As String
@@ -1529,7 +1532,7 @@ Partial Class _Checkout
 
                     'Save Basket
                     If chkSaveBasket.Checked Then
-                        Call objBasket.SaveBasket(objOrder.CustomerID, "Order #" & O_ID & ", " & CkartrisDisplayFunctions.NowOffset, Session("SessionID"))
+                        Call BasketBLL.SaveBasket(objOrder.CustomerID, "Order #" & O_ID & ", " & CkartrisDisplayFunctions.NowOffset, Session("SessionID"))
                     End If
 
                     objOrder.WebShopURL = Page.Request.Url.ToString.Replace("?new=y", "")
@@ -1750,8 +1753,8 @@ Partial Class _Checkout
                                 'Clear object, transfer to the 
                                 'CheckoutComplete.aspx page
                                 '---------------------------------------
-                                Dim BasketObject As BasketBLL = New BasketBLL
-                                BasketObject.DeleteBasket()
+                                'Dim BasketObject As Kartris.Basket = New Kartris.Basket
+                                BasketBLL.DeleteBasket()
                                 Session("Basket") = Nothing
                                 Session("OrderDetails") = strCallBodyText
                                 Session("OrderID") = O_ID

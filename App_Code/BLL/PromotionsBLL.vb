@@ -18,6 +18,8 @@ Imports CkartrisEnumerations
 Imports kartrisPromotionsData
 Imports kartrisPromotionsDataTableAdapters
 Imports CkartrisDisplayFunctions
+Imports CkartrisDataManipulation
+Imports SiteMapHelper
 
 Public Class PromotionsBLL
 
@@ -193,6 +195,70 @@ Public Class PromotionsBLL
             End Try
         End Using
         Return False
+    End Function
+
+    Public Shared Function GetPromotionText(ByVal intPromotionID As Integer, Optional ByVal blnTextOnly As Boolean = False) As String
+        Dim tblPromotionParts As New DataTable    ''==== language_ID =====
+        tblPromotionParts = PromotionsBLL._GetPartsByPromotion(intPromotionID, Current.Session("LANG"))
+
+        Dim strPromotionText As String = ""
+        Dim intTextCounter As Integer = 0
+        Dim numLanguageID As Long
+
+        numLanguageID = Current.Session("LANG")
+
+        For Each drwPromotionParts As DataRow In tblPromotionParts.Rows
+
+            Dim strText As String = drwPromotionParts("PS_Text")
+            Dim strStringID As String = drwPromotionParts("PS_ID")
+            Dim strValue As String = FixNullFromDB(drwPromotionParts("PP_Value"))
+            Dim strItemID As String = FixNullFromDB(drwPromotionParts("PP_ItemID"))
+            Dim intProductID As Integer = VersionsBLL.GetProductID_s(CLng(strItemID))
+            Dim strItemName As String = ""
+            Dim strItemLink As String = ""
+
+            If strText.Contains("[X]") Then
+                If strText.Contains("[£]") Then
+                    strText = strText.Replace("[X]", CurrenciesBLL.FormatCurrencyPrice(Current.Session("CUR_ID"), CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), drwPromotionParts("PP_Value"))))
+                Else
+                    strText = strText.Replace("[X]", drwPromotionParts("PP_Value"))
+                End If
+            End If
+
+            If strText.Contains("[C]") AndAlso strItemID <> "" Then ''==== language_ID =====
+                strItemName = CategoriesBLL.GetNameByCategoryID(CInt(strItemID), numLanguageID)
+                strItemLink = " <b><a href='" & CreateURL(Page.CanonicalCategory, strItemID) & "'>" & strItemName & "</a></b>"
+                strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
+                strText = strText.Replace("[C]", strItemLink)
+            End If
+
+            If strText.Contains("[P]") AndAlso strItemID <> "" Then ''==== language_ID =====
+                strItemName = ProductsBLL.GetNameByProductID(CInt(strItemID), numLanguageID)
+                strItemLink = " <b><a href='" & CreateURL(Page.CanonicalProduct, strItemID) & "'>" & strItemName & "</a></b>"
+                strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
+                strText = strText.Replace("[P]", strItemLink)
+            End If
+
+            If strText.Contains("[V]") AndAlso strItemID <> "" Then ''==== language_ID =====
+                strItemName = ProductsBLL.GetNameByProductID(intProductID, numLanguageID) & " (" & VersionsBLL._GetNameByVersionID(CInt(strItemID), numLanguageID) & ")"
+                strItemLink = " <b><a href='" & CreateURL(Page.CanonicalProduct, intProductID) & "'>" & strItemName & "</a></b>"
+                strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
+                strText = strText.Replace("[V]", strItemLink)
+            End If
+
+            If strText.Contains("[£]") Then
+                strText = strText.Replace("[£]", "")
+            End If
+
+            intTextCounter += 1
+            If intTextCounter > 1 Then
+                strPromotionText += ", "
+            End If
+            strPromotionText += strText
+        Next
+
+        Return strPromotionText
+
     End Function
 
     Private Shared Function _DeletePromotionParts(ByVal intPromotionID As Integer, ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean

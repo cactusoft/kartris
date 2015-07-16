@@ -30,7 +30,7 @@ Partial Class Back_BasketView
     Protected SESS_CurrencyID As Integer
     Protected APP_PricesIncTax, APP_ShowTaxDisplay, APP_USMultiStateTax As Boolean
 
-    Private arrPromotions As New ArrayList
+    Private arrPromotions As New List(Of Kartris.Promotion)
     Private numCustomerID As Integer
     Private _objShippingDetails As Interfaces.objShippingDetails
 
@@ -39,30 +39,30 @@ Partial Class Back_BasketView
 
     Private blnShowPromotion As Boolean = True
 
-    Public Shared ReadOnly Property Basket() As BasketBLL
+    Public Shared ReadOnly Property Basket() As kartris.Basket
         Get
-            If HttpContext.Current.Session("Basket") Is Nothing Then HttpContext.Current.Session("Basket") = New BasketBLL
+            If HttpContext.Current.Session("Basket") Is Nothing Then HttpContext.Current.Session("Basket") = New Kartris.Basket
             Return HttpContext.Current.Session("Basket")
         End Get
     End Property
 
-    Public Shared Property BasketItems() As ArrayList
+    Public Shared Property BasketItems() As List(Of Kartris.BasketItem)
         Get
-            If HttpContext.Current.Session("_BasketItems") Is Nothing Then HttpContext.Current.Session("_BasketItems") = New ArrayList
+            If HttpContext.Current.Session("_BasketItems") Is Nothing Then HttpContext.Current.Session("_BasketItems") = New List(Of Kartris.BasketItem)
             Return HttpContext.Current.Session("_BasketItems")
         End Get
-        Set(ByVal value As ArrayList)
+        Set(ByVal value As List(Of Kartris.BasketItem))
             HttpContext.Current.Session("_BasketItems") = value
         End Set
     End Property
 
-    Public ReadOnly Property GetBasket() As BasketBLL
+    Public ReadOnly Property GetBasket() As kartris.Basket
         Get
             Return Basket
         End Get
     End Property
 
-    Public ReadOnly Property GetBasketItems() As ArrayList
+    Public ReadOnly Property GetBasketItems() As List(Of Kartris.BasketItem)
         Get
             Return BasketItems
         End Get
@@ -174,7 +174,7 @@ Partial Class Back_BasketView
         Basket.DB_C_CustomerID = numCustomerID
 
         Call Basket.LoadBasketItems()
-        BasketItems = Basket.GetItems
+        BasketItems = Basket.BasketItems
 
         If BasketItems.Count = 0 Then
             litBasketEmpty.Text = GetGlobalResourceObject("Basket", "ContentText_BasketEmpty")
@@ -190,15 +190,15 @@ Partial Class Back_BasketView
 
         Call Basket.CalculateTotals()
 
-        Call Basket.CalculatePromotions(arrPromotions, arrPromotionsDiscount, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
+        Call BasketBLL.CalculatePromotions(Basket, arrPromotions, arrPromotionsDiscount, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
 
         Dim strCouponError As String = ""
-        Call Basket.CalculateCoupon(CouponCode & "", strCouponError, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
+        Call BasketBLL.CalculateCoupon(Basket, CouponCode & "", strCouponError, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
 
-        BSKT_CustomerDiscount = Basket.GetCustomerDiscount(numCustomerID)
-        Call Basket.CalculateCustomerDiscount(BSKT_CustomerDiscount)
+        BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(numCustomerID)
+        Call BasketBLL.CalculateCustomerDiscount(Basket, BSKT_CustomerDiscount)
 
-        Call Basket.CalculateOrderHandlingCharge(Session("numShippingCountryID"))
+        Call BasketBLL.CalculateOrderHandlingCharge(Basket, Session("numShippingCountryID"))
 
         phdShipping.Visible = True
         UC_ShippingMethodsDropdown.Visible = True
@@ -260,7 +260,7 @@ Partial Class Back_BasketView
             phdBasketButtons.Visible = True
         ElseIf ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then
             phdControls.Visible = False
-            
+
             If Not _ViewOnly Then phdShippingSelection.Visible = True
         End If
 
@@ -319,7 +319,7 @@ Partial Class Back_BasketView
         If ViewType = BasketBLL.VIEW_TYPE.MINI_BASKET Then
             For Each objItem As BasketItem In BasketItems
                 If objItem.AdjustedQty Then
-                    Basket.UpdateQuantity(objItem.ID, objItem.StockQty)
+                    BasketBLL.UpdateQuantity(objItem.ID, objItem.StockQty)
                 End If
             Next
         End If
@@ -413,7 +413,7 @@ Partial Class Back_BasketView
             objQuantity.Focus()
         Else
             Try
-                Basket.UpdateQuantity(CInt(objBasketID.Value), CSng(objQuantity.Text))
+                BasketBLL.UpdateQuantity(CInt(objBasketID.Value), CSng(objQuantity.Text))
             Catch ex As Exception
             End Try
         End If
@@ -444,7 +444,7 @@ Partial Class Back_BasketView
         numItemID = CLng(arrArguments(0))
         numRemoveVersionID = CLng(arrArguments(1))
 
-        Basket.DeleteBasketItems(CLng(numItemID))
+        BasketBLL.DeleteBasketItems(CLng(numItemID))
 
         Call LoadBasket()
 
@@ -457,15 +457,15 @@ Partial Class Back_BasketView
 
         Call Basket.CalculateTotals()
 
-        Call Basket.CalculatePromotions(arrPromotions, arrPromotionsDiscount, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
+        Call BasketBLL.CalculatePromotions(Basket, arrPromotions, arrPromotionsDiscount, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
 
         Session("CouponCode") = ""
-        Call Basket.CalculateCoupon("", strCouponError, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
+        Call BasketBLL.CalculateCoupon(Basket, "", strCouponError, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
 
-        BSKT_CustomerDiscount = Basket.GetCustomerDiscount(numCustomerID)
-        Call Basket.CalculateCustomerDiscount(BSKT_CustomerDiscount)
+        BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(numCustomerID)
+        Call BasketBLL.CalculateCustomerDiscount(Basket, BSKT_CustomerDiscount)
 
-        Call Basket.CalculateOrderHandlingCharge(Session("numShippingCountryID"))
+        Call BasketBLL.CalculateOrderHandlingCharge(Basket, Session("numShippingCountryID"))
 
         updPnlMainBasket.Update()
 
@@ -539,9 +539,9 @@ Partial Class Back_BasketView
 
         Call Basket.CalculateTotals()
 
-        Call Basket.CalculatePromotions(arrPromotions, arrPromotionsDiscount, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
+        Call BasketBLL.CalculatePromotions(Basket, arrPromotions, arrPromotionsDiscount, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
 
-        Call Basket.CalculateCoupon(Trim(txtCouponCode.Text), strCouponError, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
+        Call BasketBLL.CalculateCoupon(Basket, Trim(txtCouponCode.Text), strCouponError, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
         If strCouponError <> "" Then
             With popMessage
                 .SetTitle = GetGlobalResourceObject("Basket", "PageTitle_ShoppingBasket")
@@ -553,10 +553,11 @@ Partial Class Back_BasketView
             Session("CouponCode") = Trim(txtCouponCode.Text)
         End If
 
-        BSKT_CustomerDiscount = Basket.GetCustomerDiscount(numCustomerID)
-        Call Basket.CalculateCustomerDiscount(BSKT_CustomerDiscount)
+        BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(numCustomerID)
+        Call BasketBLL.CalculateCustomerDiscount(Basket, BSKT_CustomerDiscount)
 
-        Call Basket.CalculateOrderHandlingCharge(Session("numShippingCountryID"))
+
+        Call BasketBLL.CalculateOrderHandlingCharge(Basket, Session("numShippingCountryID"))
 
         updPnlMainBasket.Update()
 
@@ -565,7 +566,7 @@ Partial Class Back_BasketView
     End Sub
 
     Sub EmptyBasket_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
-        Basket.DeleteBasket()
+        BasketBLL.DeleteBasket()
         Call LoadBasket()
         updPnlMainBasket.Update()
     End Sub
@@ -617,7 +618,7 @@ Partial Class Back_BasketView
         Session("numShippingCountryID") = numDestinationID
         Basket.CalculateShipping(Val(HttpContext.Current.Session("LANG")), numShippingID, numShippingAmount, Session("numShippingCountryID"), ShippingDetails)
 
-        Basket.CalculateOrderHandlingCharge(Session("numShippingCountryID"))
+        BasketBLL.CalculateOrderHandlingCharge(Basket, Session("numShippingCountryID"))
         If Basket.OrderHandlingPrice.IncTax = 0 Then phdOrderHandling.Visible = False Else phdOrderHandling.Visible = True
 
         UpdatePromotionDiscount()
@@ -626,15 +627,16 @@ Partial Class Back_BasketView
 
         Call Basket.CalculateTotals()
 
-        Call Basket.CalculatePromotions(arrPromotions, arrPromotionsDiscount, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
+        Call BasketBLL.CalculatePromotions(Basket, arrPromotions, arrPromotionsDiscount, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
 
         Dim strCouponError As String = ""
-        Call Basket.CalculateCoupon(Session("CouponCode") & "", strCouponError, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
+        Call BasketBLL.CalculateCoupon(Basket, Session("CouponCode") & "", strCouponError, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
 
-        BSKT_CustomerDiscount = Basket.GetCustomerDiscount(numCustomerID)
-        Call Basket.CalculateCustomerDiscount(BSKT_CustomerDiscount)
+        BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(numCustomerID)
+        Call BasketBLL.CalculateCustomerDiscount(Basket, BSKT_CustomerDiscount)
 
-        BasketItems = Basket.GetItems
+
+        BasketItems = Basket.BasketItems
 
         rptBasket.DataSource = BasketItems
         rptBasket.DataBind()
@@ -656,7 +658,7 @@ Partial Class Back_BasketView
 
     Public Sub SetOrderHandlingCharge(ByVal numShippingCountryID As Integer)
 
-        Basket.CalculateOrderHandlingCharge(numShippingCountryID)
+        BasketBLL.CalculateOrderHandlingCharge(Basket, numShippingCountryID)
 
     End Sub
 
@@ -737,7 +739,7 @@ Partial Class Back_BasketView
             strCustomText = Trim(txtCustomText.Text)
             strCustomText = CkartrisDisplayFunctions.StripHTML(strCustomText)
 
-            Basket.SaveCustomText(numBasketID, strCustomText)
+            BasketBLL.SaveCustomText(numBasketID, strCustomText)
 
             For Each objItem As BasketItem In BasketItems
                 If numBasketID = objItem.ID Then
@@ -760,7 +762,7 @@ Partial Class Back_BasketView
             strCustomText = CkartrisDisplayFunctions.StripHTML(strCustomText)
             strOptions = hidOptions.Value
             numBasketID = hidOptionBasketID.Value
-            Basket.AddNewBasketValue(BasketBLL.BASKET_PARENTS.BASKET, numSessionID, numVersionID, numQuantity, strCustomText, strOptions, numBasketID)
+            BasketBLL.AddNewBasketValue(BasketItems, BasketBLL.BASKET_PARENTS.BASKET, numSessionID, numVersionID, numQuantity, strCustomText, strOptions, numBasketID)
 
             ShowAddItemToBasket(numVersionID, numQuantity, True)
 
@@ -774,7 +776,7 @@ Partial Class Back_BasketView
             numItemID = btnSaveCustomText.CommandArgument
         End If
 
-        Basket.SaveCustomText(numItemID, strCustomText)
+        BasketBLL.SaveCustomText(numItemID, strCustomText)
 
         For Each objItem As BasketItem In BasketItems
             If numItemID = objItem.ID Then
@@ -791,7 +793,7 @@ Partial Class Back_BasketView
 
     Public Sub ShowCustomText(ByVal numVersionID As Long, ByVal numQuantity As Double, Optional ByVal strOptions As String = "", Optional ByVal numBasketValueID As Integer = 0)
         Dim strCustomType As String
-        Dim tblCustomization As DataTable = Basket.GetCustomization(numVersionID)
+        Dim tblCustomization As DataTable = BasketBLL.GetCustomization(numVersionID)
         Dim sessionID As Long
 
         If tblCustomization.Rows.Count > 0 Then
@@ -839,7 +841,7 @@ Partial Class Back_BasketView
                 updPnlCustomText.Update()
             Else
                 sessionID = Session("SessionID")
-                Basket.AddNewBasketValue(BasketBLL.BASKET_PARENTS.BASKET, sessionID, numVersionID, numQuantity, "", strOptions, numBasketValueID)
+                BasketBLL.AddNewBasketValue(BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, numVersionID, numQuantity, "", strOptions, numBasketValueID)
                 Dim strUpdateBasket As String = GetGlobalResourceObject("Basket", "ContentText_ItemsUpdated")
                 If strUpdateBasket = "" Then strUpdateBasket = "The item(s) were updated to your basket."
                 litContentTextItemsAdded.Text = IIf(numBasketValueID > 0, strUpdateBasket, GetGlobalResourceObject("Basket", "ContentText_ItemsAdded"))
@@ -956,7 +958,7 @@ Partial Class Back_BasketView
             numQuantity = CDbl(hidCustomQuantity.Value)
             strOptions = hidOptions.Value
 
-            Basket.AddNewBasketValue(BasketBLL.BASKET_PARENTS.BASKET, numSessionID, numVersionID, numQuantity, "", strOptions)
+            BasketBLL.AddNewBasketValue(BasketItems, BasketBLL.BASKET_PARENTS.BASKET, numSessionID, numVersionID, numQuantity, "", strOptions)
 
             ShowAddItemToBasket(numVersionID, numQuantity)
 

@@ -264,10 +264,15 @@ Public Class TaxRegime
         If _VTax2_Type.ToLower = "boolean" AndAlso V_Tax2 > 0 Then V_Tax2 = 1 Else V_Tax2 = V_Tax2 / 100
 
         'Replace the variables in the TaxRate Formula with the actual values
-        strCorrectFormula = Replace(strCorrectFormula, "D_Tax", D_Tax)
+        'strCorrectFormula = Replace(strCorrectFormula, "D_Tax", D_Tax)
+        'strCorrectFormula = Replace(strCorrectFormula, "D_Tax2", D_Tax2)
+        'strCorrectFormula = Replace(strCorrectFormula, "V_Tax", V_Tax)
+        'strCorrectFormula = Replace(strCorrectFormula, "V_Tax2", V_Tax2)
         strCorrectFormula = Replace(strCorrectFormula, "D_Tax2", D_Tax2)
-        strCorrectFormula = Replace(strCorrectFormula, "V_Tax", V_Tax)
         strCorrectFormula = Replace(strCorrectFormula, "V_Tax2", V_Tax2)
+        strCorrectFormula = Replace(strCorrectFormula, "D_Tax", D_Tax)
+        strCorrectFormula = Replace(strCorrectFormula, "V_Tax", V_Tax)
+
 
         Dim expr As String = String.Format(formula, strCorrectFormula)
         expr = expr.Replace(",", GetCurrenciesFromCache().Select("CUR_ID=" & HttpContext.Current.Session("CUR_ID"))(0)("CUR_DecimalPoint"))
