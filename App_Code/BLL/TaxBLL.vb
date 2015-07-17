@@ -233,6 +233,18 @@ Public Class TaxRegime
 
     End Sub
 
+    ''' <summary>
+    ''' Calculate the applicable tax rate
+    ''' </summary>
+    ''' <param name="V_Tax">Product Version Tax. The tax that is defined when creating or editting a single product version</param>
+    ''' <param name="V_Tax2">Product Version Tax 2. Same use as V_Tax but used in countries with a 2 tier tax system (e.g. Canada)</param>
+    ''' <param name="D_Tax">Destination Country Tax. The tax applicable in the destination country</param>
+    ''' <param name="D_Tax2">Destination Country Tax 2. Same as D_Tax but used in countries with a 2 tier tax system (e.g. Canada)</param>
+    ''' <param name="D_TaxExtra">The Tax Rate Calculation Type Name. View TaxRegime.Default and then for the country of interest look 
+    ''' at the TaxRateCalculation node. If there is no node name then there is only one calculation, if there are multiple nodes then 
+    ''' the name is used here to descriminate between them</param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
     Public Shared Function CalculateTaxRate(ByVal V_Tax As Double, ByVal V_Tax2 As Double, ByVal D_Tax As Double,
                                          ByVal D_Tax2 As Double, ByVal D_TaxExtra As String) As Double
 
