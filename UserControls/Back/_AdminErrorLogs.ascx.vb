@@ -72,8 +72,8 @@ Partial Class UserControls_Back_AdminErrorLogs
     End Sub
 
     Protected Sub lbxFiles_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles lbxFiles.SelectedIndexChanged
-        Dim strFilePath As String = Server.MapPath("~/" & ConfigurationManager.AppSettings("errorlogpath")) & _
-                  "/Errors/" & lbxFiles.SelectedValue
+        Dim strFilePath As String = Server.MapPath("~/" & ConfigurationManager.AppSettings("errorlogpath") & _
+                  "/Errors/" & lbxFiles.SelectedValue)
         Dim filReader As New StreamReader(strFilePath)
         Try
             txtFileText.Text = filReader.ReadToEnd()
@@ -154,8 +154,8 @@ Partial Class UserControls_Back_AdminErrorLogs
     End Function
 
     Protected Sub btnRefresh_Click(ByVal sender As Object, ByVal e As System.Web.UI.ImageClickEventArgs) Handles btnRefresh.Click
-        Dim strFilePath As String = Server.MapPath("~/" & ConfigurationManager.AppSettings("errorlogpath")) & _
-                  "/Errors/" & lbxFiles.SelectedValue
+        Dim strFilePath As String = Server.MapPath("~/" & ConfigurationManager.AppSettings("errorlogpath") & _
+                  "/Errors/" & lbxFiles.SelectedValue)
         Dim filReader As New StreamReader(strFilePath)
         Try
             txtFileText.Text = filReader.ReadToEnd()
