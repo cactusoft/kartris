@@ -108,19 +108,24 @@ Partial Class KartrisLogin
 
     'Set which page to redirect to after login
     Public Function RedirectTo(Optional ByVal blnNew As Boolean = False) As String
-
         Dim strRedirectTo As String = ""
-        Select Case Me.ForSection
-            Case "checkout"
-                strRedirectTo = "~/Checkout.aspx"
-                If blnNew Then strRedirectTo += "?new=y"
-            Case "myaccount"
-                strRedirectTo = "~/Customer.aspx"
-            Case "support"
-                strRedirectTo = "~/CustomerTickets.aspx"
-            Case Else
-                strRedirectTo = "~/Error.aspx"
-        End Select
+
+        Dim strReturnURL As String = Request.QueryString("return")
+        If Len(strReturnURL) > 1 Then
+            strRedirectTo = "~" & strReturnURL
+        Else
+            Select Case Me.ForSection
+                Case "checkout"
+                    strRedirectTo = "~/Checkout.aspx"
+                    If blnNew Then strRedirectTo += "?new=y"
+                Case "myaccount"
+                    strRedirectTo = "~/Customer.aspx"
+                Case "support"
+                    strRedirectTo = "~/CustomerTickets.aspx"
+                Case Else
+                    strRedirectTo = "~/Error.aspx"
+            End Select
+        End If
         Return strRedirectTo
     End Function
 

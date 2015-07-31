@@ -440,7 +440,7 @@ Public MustInherit Class PageBaseClass
             Request.Path.ToString.Contains("/CustomerDetails.aspx") And Not _
             Request.Path.ToString.ToLower.Contains("callback") And Not _
             User.Identity.IsAuthenticated Then
-            Response.Redirect("CustomerAccount.aspx")
+            Response.Redirect("CustomerAccount.aspx?return=" & HttpContext.Current.Request.RawUrl)
         End If
         MyBase.OnPreInit(e)
     End Sub
