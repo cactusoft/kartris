@@ -79,12 +79,18 @@
                         </th>
                         <%End If%>
                         <%Else 'Ex Tax %>
+                        <%If APP_ShowTaxDisplay Then%>
                         <th class="price">
                             <asp:Literal ID="litContentTextPrice2" runat="server" Text='<%$ Resources: Kartris, ContentText_Price %>' />
                         </th>
                         <th class="tax">
                             <asp:Literal ID="litContentTextTax" runat="server" Text='<%$ Resources: Kartris, ContentText_Tax %>' />
                         </th>
+                        <% Else%>
+                        <th class="price" colspan="2">
+                            <asp:Literal ID="litContentTextPrice3" runat="server" Text='<%$ Resources: Kartris, ContentText_Price %>' />
+                        </th>
+                        <%End If%>
                         <%End If%>
                         <th class="quantity">
                             <asp:Literal ID="litContentTextQty" runat="server" Text='<%$ Resources: Basket, ContentText_Qty %>' />
