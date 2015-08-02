@@ -330,6 +330,13 @@ Partial Class Callback
                 'might enforce. For more details, see the documentation
                 'from the particular gateway to determine what is and is
                 'not allowed in the HTML they relay to end users.
+
+                'Tags that will be replaced:
+                '[orderdetails] with full order text, same as in email
+                '[siterooturl] with the site's root URL. This is used
+                'by 2checkout or other gateways that relay the page
+                'text on their own server to provide a return link or
+                'autodirect.
                 '-----------------------------------------------------
 
                 '-----------------------------------------------------
@@ -357,7 +364,12 @@ Partial Class Callback
                         'the required [orderdetails] tag was not found
                         CkartrisFormatErrors.LogError("Callback template " & strPathToCallbackTemplate & " does not contain required [orderdetails] tag.")
                     Else
+                        'replace the [siterooturl] tag if used with site root URL
+                        strCallbackTemplateHTML = Replace(strCallbackTemplateHTML, "[siterooturl]", CkartrisBLL.WebShopURL)
+
+                        'Split the page template around the [orderdetails] tag and store in array
                         arrCallbackTemplateHTML = Split(strCallbackTemplateHTML, "[orderdetails]", -1)
+
                     End If
                 End If
 
