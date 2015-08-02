@@ -233,8 +233,8 @@ Partial Class UserControls_General_Invoice
                 numItemPriceTax = e.Item.DataItem("IR_TaxPerItem")
                 strItemPriceTax = (Math.Round(numItemPriceTax * 100, 4)) & "%"
                 numRowPriceExTax = Math.Round(e.Item.DataItem("IR_PricePerItem") * e.Item.DataItem("IR_Quantity"), numCurrencyRoundNumber)
-                'In following line, the 0.000001 is there to ensure tax is rounded up rather than down, if is 0.5
-                numRowPriceIncTax = Math.Round(e.Item.DataItem("IR_PricePerItem") * e.Item.DataItem("IR_Quantity") * ((1 + e.Item.DataItem("IR_TaxPerItem")) + 0.000001), numCurrencyRoundNumber)
+                'In following line, the 0.0000000001 is there to ensure tax is rounded up rather than down, if is 0.5
+                numRowPriceIncTax = Math.Round(e.Item.DataItem("IR_PricePerItem") * e.Item.DataItem("IR_Quantity") * ((1 + e.Item.DataItem("IR_TaxPerItem")) + 0.0000000001), numCurrencyRoundNumber)
             End If
 
             numTotalPriceExTax = numTotalPriceExTax + numRowPriceExTax
@@ -242,9 +242,14 @@ Partial Class UserControls_General_Invoice
             numRowTaxAmount = Math.Round(numRowPriceIncTax - numRowPriceExTax, numCurrencyRoundNumber)
             numTotalTaxAmount = numTotalTaxAmount + numRowTaxAmount
 
+            'Set the various controls to appropriate value
             CType(e.Item.FindControl("litItemPriceExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numItemPriceExTax)
             CType(e.Item.FindControl("litTaxPerItem"), Literal).Text = strItemPriceTax
-            CType(e.Item.FindControl("litItemPrice"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numItemPriceIncTax)
+            If e.Item.DataItem("O_PricesIncTax") Then 'Price is either inc or ex tax
+                CType(e.Item.FindControl("litItemPrice"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numItemPriceIncTax)
+            Else
+                CType(e.Item.FindControl("litItemPrice"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numItemPriceExTax)
+            End If
             CType(e.Item.FindControl("litQuantity"), Literal).Text = CSng(e.Item.DataItem("IR_Quantity"))
             CType(e.Item.FindControl("litRowPriceExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numRowPriceExTax)
             CType(e.Item.FindControl("litTaxAmount"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numRowTaxAmount)
