@@ -66,7 +66,7 @@ Partial Class Category
                         'likely the item is no longer available.
                         strErrorThrown = "404"
                         Try
-                            HttpContext.Current.Server.Execute("~/404.aspx")
+                            HttpContext.Current.Server.Transfer("~/404.aspx")
                         Catch exError As Exception
 
                         End Try
