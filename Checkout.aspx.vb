@@ -256,9 +256,16 @@ Partial Class _Checkout
             UC_ShippingAddress.Clear()
 
             '---------------------------------------
-            'EMAIL UPDATES TO ORDER STATUS?
+            'CUSTOMER OPTION TO SELECT
+            'EMAIL UPDATES OF ORDER STATUS?
             '---------------------------------------
-            If GetKartConfig("backend.orders.emailupdates") <> "n" Then phdOrderEmails.Visible = True Else phdOrderEmails.Visible = False
+            If GetKartConfig("frontend.checkout.ordertracking") <> "n" Then
+                phdOrderEmails.Visible = True
+
+            Else
+                phdOrderEmails.Visible = False
+                chkOrderEmails.Checked = False
+            End If
 
             '---------------------------------------
             'SHOW MAILING LIST OPT-IN BOX?
@@ -338,110 +345,110 @@ Partial Class _Checkout
 
         End If
 
-        '=======================================
-        'SHOW LOGIN BOX
-        'If the user is not logged in, or has
-        'not proceeded through first steps of
-        'creating new user, then we show the
-        'login / new user options.
-        'The 'proceed' button is hidden.
-        '=======================================
-        If Not (UC_KartrisLogin.Cleared Or User.Identity.IsAuthenticated) Then
+            '=======================================
+            'SHOW LOGIN BOX
+            'If the user is not logged in, or has
+            'not proceeded through first steps of
+            'creating new user, then we show the
+            'login / new user options.
+            'The 'proceed' button is hidden.
+            '=======================================
+            If Not (UC_KartrisLogin.Cleared Or User.Identity.IsAuthenticated) Then
 
-            'Show login box
-            mvwCheckout.ActiveViewIndex = 0
-            btnProceed.Visible = False
-        Else
+                'Show login box
+                mvwCheckout.ActiveViewIndex = 0
+                btnProceed.Visible = False
+            Else
 
-            'Show checkout form if not already set to
-            'go to confirmation page
-            If mvwCheckout.ActiveViewIndex <> 2 Then mvwCheckout.ActiveViewIndex = 1 Else valSummary.Enabled = False
-            btnProceed.Visible = True
-        End If
+                'Show checkout form if not already set to
+                'go to confirmation page
+                If mvwCheckout.ActiveViewIndex <> 2 Then mvwCheckout.ActiveViewIndex = 1 Else valSummary.Enabled = False
+                btnProceed.Visible = True
+            End If
 
-        '=======================================
-        'SETUP CHECKOUT FORM
-        'Runs if user is logged in already
-        '=======================================
-        If Not IsNothing(CurrentLoggedUser) Then
+            '=======================================
+            'SETUP CHECKOUT FORM
+            'Runs if user is logged in already
+            '=======================================
+            If Not IsNothing(CurrentLoggedUser) Then
 
-            'Show checkout form if not already set to
-            'go to confirmation page
-            If mvwCheckout.ActiveViewIndex <> 2 Then mvwCheckout.ActiveViewIndex = 1 Else valSummary.Enabled = False
+                'Show checkout form if not already set to
+                'go to confirmation page
+                If mvwCheckout.ActiveViewIndex <> 2 Then mvwCheckout.ActiveViewIndex = 1 Else valSummary.Enabled = False
 
-            'Fresh form arrival
-            If Not Page.IsPostBack Then
+                'Fresh form arrival
+                If Not Page.IsPostBack Then
 
-                'Set up first user address (billing)
-                Dim lstUsrAddresses As Collections.Generic.List(Of KartrisClasses.Address) = Nothing
+                    'Set up first user address (billing)
+                    Dim lstUsrAddresses As Collections.Generic.List(Of KartrisClasses.Address) = Nothing
 
-                '---------------------------------------
-                'BILLING ADDRESS
-                '---------------------------------------
-                If UC_BillingAddress.Addresses Is Nothing Then
+                    '---------------------------------------
+                    'BILLING ADDRESS
+                    '---------------------------------------
+                    If UC_BillingAddress.Addresses Is Nothing Then
 
-                    'Find all addresses in this user's account
-                    lstUsrAddresses = KartrisClasses.Address.GetAll(CurrentLoggedUser.ID)
+                        'Find all addresses in this user's account
+                        lstUsrAddresses = KartrisClasses.Address.GetAll(CurrentLoggedUser.ID)
 
-                    'Populate dropdown by filtering billing/universal addresses
-                    UC_BillingAddress.Addresses = lstUsrAddresses.FindAll(Function(p) p.Type = "b" Or p.Type = "u")
-                End If
-
-                '---------------------------------------
-                'SHIPPING ADDRESS
-                '---------------------------------------
-                If UC_ShippingAddress.Addresses Is Nothing Then
-
-                    'Find all addresses in this user's account
-                    If lstUsrAddresses Is Nothing Then lstUsrAddresses = KartrisClasses.Address.GetAll(CurrentLoggedUser.ID)
-
-                    'Populate dropdown by filtering shipping/universal addresses
-                    UC_ShippingAddress.Addresses = lstUsrAddresses.FindAll(Function(ShippingAdd) ShippingAdd.Type = "s" Or ShippingAdd.Type = "u")
-                End If
-
-                '---------------------------------------
-                'SHIPPING/BILLING ADDRESS NOT SAME
-                '---------------------------------------
-
-                If (Not CurrentLoggedUser.DefaultBillingAddressID = CurrentLoggedUser.DefaultShippingAddressID) Then
-                    If Not _blnAnonymousCheckout Then
-                        chkSameShippingAsBilling.Checked = False
-                    Else
-                        chkSameShippingAsBilling.Checked = True
+                        'Populate dropdown by filtering billing/universal addresses
+                        UC_BillingAddress.Addresses = lstUsrAddresses.FindAll(Function(p) p.Type = "b" Or p.Type = "u")
                     End If
-                Else
-                    chkSameShippingAsBilling.Checked = False
-                End If
 
-                If UC_BasketSummary.GetBasket.AllDigital Then
-                    pnlShippingAddress.Visible = False
-                    UC_ShippingAddress.Visible = False
-                Else
-                    If Not chkSameShippingAsBilling.Checked Then
-                        'Show shipping address block
-                        pnlShippingAddress.Visible = True
-                        UC_ShippingAddress.Visible = True
+                    '---------------------------------------
+                    'SHIPPING ADDRESS
+                    '---------------------------------------
+                    If UC_ShippingAddress.Addresses Is Nothing Then
+
+                        'Find all addresses in this user's account
+                        If lstUsrAddresses Is Nothing Then lstUsrAddresses = KartrisClasses.Address.GetAll(CurrentLoggedUser.ID)
+
+                        'Populate dropdown by filtering shipping/universal addresses
+                        UC_ShippingAddress.Addresses = lstUsrAddresses.FindAll(Function(ShippingAdd) ShippingAdd.Type = "s" Or ShippingAdd.Type = "u")
+                    End If
+
+                    '---------------------------------------
+                    'SHIPPING/BILLING ADDRESS NOT SAME
+                    '---------------------------------------
+
+                    If (Not CurrentLoggedUser.DefaultBillingAddressID = CurrentLoggedUser.DefaultShippingAddressID) Then
+                        If Not _blnAnonymousCheckout Then
+                            chkSameShippingAsBilling.Checked = False
+                        Else
+                            chkSameShippingAsBilling.Checked = True
+                        End If
                     Else
+                        chkSameShippingAsBilling.Checked = False
+                    End If
+
+                    If UC_BasketSummary.GetBasket.AllDigital Then
                         pnlShippingAddress.Visible = False
                         UC_ShippingAddress.Visible = False
+                    Else
+                        If Not chkSameShippingAsBilling.Checked Then
+                            'Show shipping address block
+                            pnlShippingAddress.Visible = True
+                            UC_ShippingAddress.Visible = True
+                        Else
+                            pnlShippingAddress.Visible = False
+                            UC_ShippingAddress.Visible = False
+                        End If
+                    End If
+
+
+
+
+
+                    '---------------------------------------
+                    'SELECT DEFAULT ADDRESSES
+                    '---------------------------------------
+                    If UC_BillingAddress.SelectedID = 0 Then
+                        UC_BillingAddress.SelectedID = CurrentLoggedUser.DefaultBillingAddressID
+                    End If
+                    If UC_ShippingAddress.SelectedID = 0 Then
+                        UC_ShippingAddress.SelectedID = CurrentLoggedUser.DefaultShippingAddressID
                     End If
                 End If
-
-
-
-
-
-                '---------------------------------------
-                'SELECT DEFAULT ADDRESSES
-                '---------------------------------------
-                If UC_BillingAddress.SelectedID = 0 Then
-                    UC_BillingAddress.SelectedID = CurrentLoggedUser.DefaultBillingAddressID
-                End If
-                If UC_ShippingAddress.SelectedID = 0 Then
-                    UC_ShippingAddress.SelectedID = CurrentLoggedUser.DefaultShippingAddressID
-                End If
             End If
-        End If
 
     End Sub
 
