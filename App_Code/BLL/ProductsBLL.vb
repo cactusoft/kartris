@@ -238,7 +238,7 @@ Public Class ProductsBLL
         If String.IsNullOrEmpty(strMetaDescription) Or strMetaDescription = "# -LE- #" Then _
             strMetaDescription = LanguageElementsBLL.GetElementValue(_LanguageID, LANG_ELEM_TABLE_TYPE.Products, LANG_ELEM_FIELD_NAME.Description, _ProductID)
         If strMetaDescription = "# -LE- #" Then strMetaDescription = Nothing
-        Return StripHTML(strMetaDescription)
+        Return Left(StripHTML(strMetaDescription), 160)
     End Function
 
     Public Shared Function GetMetaKeywordsByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As String
