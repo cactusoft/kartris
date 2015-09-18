@@ -256,7 +256,7 @@
               <xs:element name="PS_Text" msprop:Generator_ColumnVarNameInTable="columnPS_Text" msprop:Generator_ColumnPropNameInRow="PS_Text" msprop:Generator_ColumnPropNameInTable="PS_TextColumn" msprop:Generator_UserColumnName="PS_Text" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
-                    <xs:maxLength value="50" />
+                    <xs:maxLength value="100" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
