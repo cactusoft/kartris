@@ -51,13 +51,19 @@
               <value>ON</value>
             </setting>
             <setting name="URL" serializeAs="String">
-                <value>https://www.sandbox.paypal.com/cgi-bin/webscr</value>
+                <value>https://www.paypal.com/cgi-bin/webscr</value>
+            </setting>
+            <setting name="URLSandbox" serializeAs="String">
+              <value>https://www.sandbox.paypal.com/cgi-bin/webscr</value>
             </setting>
             <setting name="rm" serializeAs="String">
                 <value>1</value>
             </setting>
             <setting name="IsProtected" serializeAs="String">
                 <value>No</value>
+            </setting>
+            <setting name="AnonymousCheckout" serializeAs="String">
+              <value>FALSE</value>
             </setting>
         </Kartris.My.MySettings>
     </applicationSettings>
