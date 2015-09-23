@@ -34,10 +34,14 @@ Partial Class Admin_PaymentGateways
         Dim dtsGateways As DataSet = New DataSet
         Dim tblGateways As DataTable = New DataTable
         Dim colGateway As DataColumn
+        Dim strDLLPath As String
+
         With tblGateways.Columns
             colGateway = New DataColumn("ID", System.Type.GetType("System.Int32"))
             .Add(colGateway)
             colGateway = New DataColumn("Name", System.Type.GetType("System.String"))
+            .Add(colGateway)
+            colGateway = New DataColumn("DLL", System.Type.GetType("System.String"))
             .Add(colGateway)
             colGateway = New DataColumn("Type", System.Type.GetType("System.String"))
             .Add(colGateway)
@@ -48,14 +52,19 @@ Partial Class Admin_PaymentGateways
         Dim aryGateways() As String = Split(LoadGateways, ",")
 
         For Each strGatewayName In aryGateways
+
             strGatewayName = Left(strGatewayName, InStr(strGatewayName, "::") - 1)
+            strDLLPath = Server.MapPath("/Plugins/" & strGatewayName & "/" & strGatewayName & ".dll")
+            'Response.Write(strDLLPath)
             If Not String.IsNullOrEmpty(strGatewayName) Then
+
                 Try
                     clsPlugin = Payment.PPLoader(strGatewayName)
                     If clsPlugin IsNot Nothing Then
                         Dim rowGateway As DataRow = tblGateways.NewRow
                         rowGateway("ID") = 1
                         rowGateway("Name") = clsPlugin.GatewayName
+                        rowGateway("DLL") = FileVersionInfo.GetVersionInfo(strDLLPath).FileVersion
                         rowGateway("Type") = GetGlobalResourceObject("_Orders", "ContentText_PaymentGateWay")
                         rowGateway("Status") = UCase(clsPlugin.Status)
                         tblGateways.Rows.Add(rowGateway)
@@ -65,6 +74,7 @@ Partial Class Admin_PaymentGateways
                             Dim rowGateway As DataRow = tblGateways.NewRow
                             rowGateway("ID") = 1
                             rowGateway("Name") = clsShippingPlugin.GatewayName
+                            rowGateway("DLL") = FileVersionInfo.GetVersionInfo(strDLLPath).FileVersion
                             rowGateway("Type") = GetGlobalResourceObject("_Orders", "ContentText_ShippingGateway")
                             rowGateway("Status") = UCase(clsShippingPlugin.Status)
                             tblGateways.Rows.Add(rowGateway)
@@ -73,7 +83,7 @@ Partial Class Admin_PaymentGateways
                     clsPlugin = Nothing
                     clsShippingPlugin = Nothing
                 Catch ex As Exception
-
+                    'Whoops, this means something didn't go right above
                 End Try
             End If
         Next

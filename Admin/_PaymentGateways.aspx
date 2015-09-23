@@ -17,6 +17,9 @@
                 <th scope="col" class="itemname">
                     <asp:Literal ID="litFormLabelName" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Name %>" />
                 </th>
+                <th scope="col">
+                    <asp:Literal ID="litDLLVersion" runat="server" Text="DLL" />
+                </th>
                 <th scope="col" >
                     <asp:Literal ID="litContentTextType" runat="server" Text="<%$ Resources: _Kartris, ContentText_Type %>" />
                 </th>
@@ -34,6 +37,9 @@
                     <tr class="<%# If(Container.ItemIndex Mod 2 = 0, "", "Kartris-GridView-Alternate") %>">
                         <td class="itemname">
                             <asp:Literal ID="litName" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "Name") %>'></asp:Literal>
+                        </td>
+                        <td>
+                            <asp:Literal ID="litDLL" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "DLL") %>'></asp:Literal>
                         </td>
                         <td>
                             <asp:Literal ID="litGatewayType" runat="server" Text='<%# DataBinder.Eval(Container.DataItem, "Type") %>'></asp:Literal>
