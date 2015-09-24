@@ -17,8 +17,8 @@ h4,
 h2.blockheader                          { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 100; font-size: 140%; color: #000; margin: 0; padding: 0 0 15px 0; }
 h5                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0px 0px 5px 0px; color: #000; text-transform: uppercase; padding: 2px 2px 2px 0px; text-align: left; }
 pre                                     { color: #008800 }
-iframe                                  { border: none; }
-iframe body                             { padding: 5px 0 0 0 }
+iframe                                  { border: none; overflow: hidden; }
+iframe body                             { padding: 5px 0 0 0;  overflow: hidden; }
 .strong                                 { font-weight: bold }
 .floatright                             { float: right }
 ul, ol, dl                              { font-size: inherit; }
@@ -186,6 +186,23 @@ html>body .imageviewer .gallery .imageholder
 .hand                                   { cursor: pointer; }
 /* 
 ========================================================================
+LIGHTBOX (FOUNDATION 'CLEARING')
+This replaces the popup we used to use
+========================================================================
+*/
+.clearing-assembled .clearing-container                     { background: #fff; }
+.clearing-assembled .clearing-container .visible-img        { background: #fff; }
+.clearing-assembled .clearing-container .carousel           { background: #fff; }
+.clearing-assembled .clearing-container .carousel > ul      { width: auto !important; } /* centre the thumbs */
+.carousel > ul li                                           { height: 70px; width: 70px; border: solid 1px #aaa; margin-right: 2px; overflow: hidden; }
+.clearing-assembled .clearing-container .carousel > ul li   { border: solid 1px #444; display: block; height: 100%; margin-right: 4px; overflow: hidden; }
+.clearing-assembled .clearing-container .carousel > ul li:hover { border: solid 1px #fc5; }
+a.clearing-close                                            { font-size: 27pt; font-weight: bold; color: #000; }
+.clearing-main-prev > span                                  { border-right-color: #444; }
+.clearing-main-next > span                                  { border-left-color: #444; }
+
+/* 
+========================================================================
 MEDIA (Video, audio, etc.)
 ========================================================================
 */
@@ -276,7 +293,7 @@ POPUP MESSAGE
 */
 #largeimagepopup                        { overflow-y: hidden; overflow: hidden; background-image: none; }
 .popup_background                       { background-color: #000; filter: alpha(opacity=30); opacity: 0.3; }
-.popup                                  { background-color: #fff; border: solid 2px #222; padding: 45px 10px 13px 10px; width: 650px; max-width: 100%; max-height: 100%; min-height: 150px; text-align: left; top: 0px; left: 0px; overflow-y: auto; }
+.popup                                  { background-color: #fff; border: solid 2px #222; padding: 45px 10px 13px 10px; width: 650px; max-width: 100%; max-height: 100%; min-height: 150px; text-align: left; top: 0px; left: 0px; overflow-x: hidden; }
 .popup h2                               { position: absolute; left: 10px; top: 0; padding: 10px 0 10px 0; margin: 0px; font-size: 125%; }
 .popup p                                { padding: 10px 0 0 0; margin: 0; }
 .popup strong                           { color: #000 }

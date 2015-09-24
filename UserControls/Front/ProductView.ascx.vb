@@ -156,22 +156,25 @@ Partial Class ProductView
 
         '-------------------------------------
         'IMAGE POPUP
+        'This is now retired from Kartris v2.9
+        'as we now use Foundation's Clearing
+        'lightbox
         '-------------------------------------
         'Here we create the whole large image popup, which will load in background
         'but with a div around it with display:none;
         'This way we can use a javascript to show/hide it, which is much
         'faster than triggering it with a server-side callback
-        Dim numPopupWidth As Integer = KartSettingsManager.GetKartConfig("frontend.display.images.large.width") + 80
-        Dim numPopupHeight As Integer = KartSettingsManager.GetKartConfig("frontend.display.images.large.height") + 155
+        'Dim numPopupWidth As Integer = KartSettingsManager.GetKartConfig("frontend.display.images.large.width") + 80
+        'Dim numPopupHeight As Integer = KartSettingsManager.GetKartConfig("frontend.display.images.large.height") + 155
 
-        UC_PopUpLargeView.SetTitle = GetGlobalResourceObject("Product", "ContentText_LargeView") & " - " & _ProductName
-        UC_PopUpLargeView.SetImagePath = _ProductID
-        UC_PopUpLargeView.SetWidthHeight(numPopupWidth, numPopupHeight)
+        'UC_PopUpLargeView.SetTitle = GetGlobalResourceObject("Product", "ContentText_LargeView") & " - " & _ProductName
+        'UC_PopUpLargeView.SetImagePath = _ProductID
+        'UC_PopUpLargeView.SetWidthHeight(999, 999)
 
         'Use new 'PreLoad' so we can trigger
         'from javascript but popup is already
         'formatted. Nice and fast for user!
-        UC_PopUpLargeView.PreLoadPopup()
+        'UC_PopUpLargeView.PreLoadPopup()
 
         '-------------------------------------
         'MEDIA POPUP

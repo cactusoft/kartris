@@ -1,9 +1,12 @@
 ﻿/****** 
-v2.8005 
+v2.9000 
 Fixes spKartrisProducts_GetAttributeValue where P_ID was set as
 a smallint, meaning that on the comparison table, products with
 ID of more than 32,767 showed no attributes. Products DAL also
 updated.
+
+Updates some config settings with information in the description
+that they are now deprecated.
 ******/
 
 /****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetAttributeValue]    Script Date: 2015-05-16 13:06:05 ******/
@@ -123,6 +126,13 @@ BEGIN
 	ORDER BY Cat5_Name1, P_Name1
 END
 
+/****** Let's update some config setting descriptions, if they're deprecated ******/
+UPDATE tblKartrisConfig SET CFG_Description='[DEPRECATED] - Category menu type now fixed by choice of user control in skin template' WHERE CFG_Name='frontend.display.categorymenu.type';
+GO
+
+DELETE FROM tblKartrisConfig WHERE CFG_Name='general.sessions.usecookies' --this one should be removed if present, not used for ages
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
-UPDATE tblKartrisConfig SET CFG_Value='2.8005', CFG_VersionAdded=2.8005 WHERE CFG_Name='general.kartrisinfo.versionadded';
+UPDATE tblKartrisConfig SET CFG_Value='2.9000', CFG_VersionAdded=2.9000 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

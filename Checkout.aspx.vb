@@ -481,6 +481,11 @@ Partial Class _Checkout
                 End If
             End If
         End If
+
+        'Just to be sure we get shipping price, have
+        'had issues where sometimes a single shipping method
+        'doesn't trigger lookup for shipping price
+        UC_BasketView.RefreshShippingMethods()
     End Sub
 
     ''' <summary>
