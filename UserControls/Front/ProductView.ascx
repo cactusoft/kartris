@@ -11,13 +11,6 @@
 <script type="text/javascript" language="javascript">
     //<![CDATA[
 
-    //Show the large image popup - but not on small screens
-    function ShowLargeViewPopup() {
-        if ($(window).width() > 930) {
-            $find('cntMain_UC_ProductView_tbcProduct_tabMain_UC_PopUpLargeView_popMessage').show();
-        }
-    }
-
     //Function to set URL for iframe of media popup, size it, and show it
     function ShowMediaPopup(ML_ID, MT_Extension, intParentID, strParentType, intWidth, intHeight) {
         //Set some variables we use later
@@ -86,7 +79,6 @@
                             <div class="imagecolumn small-12 large-4 columns">
                                 <asp:UpdatePanel ID="updImages" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
-                                        <user:PopupMessage ID="UC_PopUpLargeView" runat="server" EnableViewState="false" />
                                         <user:ImageViewer ID="UC_ImageView2" runat="server" LargeViewClickable="false" EnableViewState="false" />
                                         <asp:PlaceHolder ID="phdImageColumn" runat="server">
                                             <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />

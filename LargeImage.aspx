@@ -12,7 +12,7 @@
         <form id="frmLargeImage" runat="server">
         <asp:ScriptManager ID="scrManager" runat="server">
         </asp:ScriptManager>
-        <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="False" />
+        <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="False" AllowShrinking="True" />
         </form>
     </div>
 </body>

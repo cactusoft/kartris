@@ -14,9 +14,6 @@
                         <asp:Literal ID="litMessage" runat="server" /></p>
                     <br />
                 </asp:View>
-                <asp:View ID="viwImage" runat="server">
-                    <asp:Literal ID="litIframeLargeImage" runat="server"></asp:Literal>
-                </asp:View>
                 <asp:View ID="viwMedia" runat="server">
                     <asp:Literal ID="litIframeMedia" runat="server"></asp:Literal>
                 </asp:View>

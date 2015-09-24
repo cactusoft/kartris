@@ -17,7 +17,7 @@ Partial Class UserControls_General_PopupMessage
 
     Enum POPUP_TYPE
         TEXT = 1
-        IMAGE = 2
+        IMAGE = 2 'This is deprecated from v2.9, we use the Foundation Clearing lightbox now
         PANEL = 3
         MEDIA = 4
     End Enum
@@ -73,15 +73,20 @@ Partial Class UserControls_General_PopupMessage
             mvwDisplay.SetActiveView(viwText)
             litMessage.Text = _TextMessage
         ElseIf _PopupType = POPUP_TYPE.IMAGE Then
+
+            'We now use Foundation's Clearing lightbox
+            'so this code is not needed from
+            'Kartris v2.9 onwards
+
             'Create iframe
 
-            litIframeLargeImage.Text &= "<iframe frameBorder=""0""" & vbCrLf
-            litIframeLargeImage.Text &= " src=""" & CkartrisBLL.WebShopURL & "LargeImage.aspx" & vbCrLf
-            litIframeLargeImage.Text &= "?P_ID=" & _ImagePath & """" & vbCrLf
-            litIframeLargeImage.Text &= " width=""100%""" & vbCrLf
-            litIframeLargeImage.Text &= " height=""100%""" & vbCrLf
-            litIframeLargeImage.Text &= " class=""iframe""" & vbCrLf
-            litIframeLargeImage.Text &= "></iframe>" & vbCrLf
+            'litIframeLargeImage.Text &= "<iframe frameBorder=""0""" & vbCrLf
+            'litIframeLargeImage.Text &= " src=""" & CkartrisBLL.WebShopURL & "LargeImage.aspx" & vbCrLf
+            'litIframeLargeImage.Text &= "?P_ID=" & _ImagePath & """" & vbCrLf
+            'litIframeLargeImage.Text &= " width=""100%""" & vbCrLf
+            'litIframeLargeImage.Text &= " height=""100%""" & vbCrLf
+            'litIframeLargeImage.Text &= " class=""iframe""" & vbCrLf
+            'litIframeLargeImage.Text &= "></iframe>" & vbCrLf
 
             'Actually we should use an object tag. This is now
             'preferred in 'strict' xhtml, syntax is slightly
@@ -99,8 +104,8 @@ Partial Class UserControls_General_PopupMessage
             'litIframeLargeImage.Text &= " class=""iframe""" & vbCrLf
             'litIframeLargeImage.Text &= "></object>" & vbCrLf
 
-            mvwDisplay.SetActiveView(viwImage)
-            litMessage.Text = _ImagePath
+            'mvwDisplay.SetActiveView(viwImage)
+            'litMessage.Text = _ImagePath
         ElseIf _PopupType = POPUP_TYPE.PANEL Then
             'errrr.. nothing
         ElseIf _PopupType = POPUP_TYPE.MEDIA Then
@@ -136,7 +141,13 @@ Partial Class UserControls_General_PopupMessage
 
 
     Public Sub SetWidthHeight(ByVal pWidth As Integer, ByVal pHeight As Integer)
-        pnlMessage.Width = New Unit(pWidth, UnitType.Pixel)
-        pnlMessage.Height = New Unit(pHeight, UnitType.Pixel)
+        'If values of 999 used, we assume 100% rather than pixel
+        If pWidth = 999 And pHeight = 999 Then
+            pnlMessage.Width = New Unit(100, UnitType.Percentage)
+            pnlMessage.Height = New Unit(100, UnitType.Percentage)
+        Else
+            pnlMessage.Width = New Unit(pWidth, UnitType.Pixel)
+            pnlMessage.Height = New Unit(pHeight, UnitType.Pixel)
+        End If
     End Sub
 End Class

@@ -155,6 +155,7 @@ Partial Class ImageViewer
         Dim objFile As FileInfo = Nothing
         Dim intIndex As Integer = 0
         Dim strImageLinkPath As String = ""
+        Dim strImageFilePath As String = ""
         Dim strImageMainView As String = ""
         Dim strImageMainViewStart As String = ""
         Dim strJSFunctionDifferentiate As String = "_" & _strItemType & "_" & strImagesDirName ' & "_" & _strDifferentiation
@@ -175,12 +176,11 @@ Partial Class ImageViewer
                     Me.Visible = False
                 End If
 
-            ElseIf dirFolder.GetFiles().Length = 1 Or strHyperlink <> "" Then
+            ElseIf (dirFolder.GetFiles().Length = 1 Or strHyperlink <> "") And _blnLargeViewClickable = False Then
 
                 '=======================================
                 'SINGLE IMAGE
                 '=======================================
-                'either zero or just one file - no need for gallery
                 pnlImageViewer.Visible = False
                 pnlSingleImage.Visible = True
 
@@ -193,83 +193,42 @@ Partial Class ImageViewer
                         Case SmallImagesType.enum_ImageButton
                             strImageMainViewStart = "Image.aspx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
 
-                            If _blnLargeViewClickable = True Then
+                            '---------------------------------------
+                            'LARGE VIEW DISPLAY, OR GENERAL IMAGE
+                            'DISPLAY WHERE NO POPUP LARGE VIEW IS
+                            'REQUIRED
+                            'Can be 'New page' or AJAX type
+                            '---------------------------------------
+                            If blnFullSizeImage Then
                                 '---------------------------------------
-                                'MAIN IMAGE PREVIEW (not large view)
+                                'IN 'NEW PAGE' LARGE VIEW MODE
+                                'Direct link to the image itself
                                 '---------------------------------------
-                                'Add imageviewer in to ensure similar formatting
-                                'to multiple images with gallery
-                                litSingleImage.Text &= "<div class=""imageviewer"">"
-                                If KartSettingsManager.GetKartConfig("frontend.display.images.large.linktype") = "n" Then
-                                    '---------------------------------------
-                                    'IN 'NEW PAGE' LARGE VIEW MODE
-                                    '---------------------------------------
-                                    litSingleImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'NEW PAGE' LARGE VIEW MODE --><div class=""imageholder singleimage hand"" style=""height: " & numImageHeightMax & "px;"">"
-                                    litSingleImage.Text &= "<a target=""_blank"" href=""" & _
-                                        "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>"
-                                    litSingleImage.Text &= "<img alt=""" & strAltText & """ src=""" & _
-                                        strImageMainViewStart & """ /></a>"
-                                    litSingleImage.Text &= "</div>" & vbCrLf
-                                    litLargeViewLink2.Text &= "<a target=""_blank"" href=""" & _
-                                        "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>" & _
-                                        GetGlobalResourceObject("Product", "ContentText_LargeView") & "</a>"
-                                Else
-                                    '---------------------------------------
-                                    'IN 'AJAX' LARGE VIEW MODE
-                                    '---------------------------------------
-                                    litSingleImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div title=""" & strAltText & """ class=""imageholder singleimage hand"" onclick=""javascript:ShowLargeViewPopup()"" " & _
-                                        "style=""height: " & numImageHeightMax & "px;"">"
-                                    litSingleImage.Text &= "<img alt=""" & strAltText & """ src=""" & _
-                                        strImageMainViewStart & """ />"
-                                    litSingleImage.Text &= "</div>" & vbCrLf
-                                    litLargeViewLink2.Text = "<span class=""hide-for-small"" onclick=""javascript:ShowLargeViewPopup()"">" & GetGlobalResourceObject("Product", "ContentText_LargeView") & "</span>"
-                                End If
-
-                                'We add gallery, and the 'imageviewer' in above to
-                                'make sure single image previews format similarly
-                                'to those for multiple images with gallery
-                                litSingleImage.Text &= "<div class=""gallery""></div></div>"
-
+                                strImageMainView = Replace(_strFolderPath & objFile.Name, "~/", "")
+                                litSingleImage.Text &= "<!-- LARGE VIEW DISPLAY: IN 'NEW PAGE' LARGE VIEW MODE Direct link to the image itself --><img alt=""" & strAltText & """ src=""" & _
+                                    strImageMainView & """ />"
                             Else
                                 '---------------------------------------
-                                'LARGE VIEW DISPLAY, OR GENERAL IMAGE
-                                'DISPLAY WHERE NO POPUP LARGE VIEW IS
-                                'REQUIRED
-                                'Can be 'New page' or AJAX type
+                                'IN 'AJAX' LARGE VIEW MODE
+                                'Link to image.aspx resizer
                                 '---------------------------------------
-                                If blnFullSizeImage Then
-                                    '---------------------------------------
-                                    'IN 'NEW PAGE' LARGE VIEW MODE
-                                    'Direct link to the image itself
-                                    '---------------------------------------
-                                    strImageMainView = Replace(_strFolderPath & objFile.Name, "~/", "")
-                                    litSingleImage.Text &= "<!-- LARGE VIEW DISPLAY: IN 'NEW PAGE' LARGE VIEW MODE Direct link to the image itself --><img alt=""" & strAltText & """ src=""" & _
-                                        strImageMainView & """ />"
-                                Else
-                                    '---------------------------------------
-                                    'IN 'AJAX' LARGE VIEW MODE
-                                    'Link to image.aspx resizer
-                                    '---------------------------------------
-                                    litSingleImage.Text &= "<!-- IMAGE DISPLAY: Image with no 'large view' click --><div class=""imageholder singleimage"" style=""width: " & _
-                                        numImageWidthMax & "px;" & _
-                                        "height: " & numImageHeightMax & "px;"">"
+                                litSingleImage.Text &= "<!-- IMAGE DISPLAY: Image with no 'large view' click --><div class=""imageholder singleimage"" style=""width: " & _
+                                    numImageWidthMax & "px;" & _
+                                    "height: " & numImageHeightMax & "px;"">"
 
-                                    If strHyperlink <> "" Then litSingleImage.Text &= "<a href=""" & strHyperlink & """>"
-                                    litSingleImage.Text &= "<img alt=""" & strAltText & """ src=""" & _
-                                        strImageMainViewStart & """ />"
-                                    If strHyperlink <> "" Then litSingleImage.Text &= "</a>"
-                                    litSingleImage.Text &= "</div>" & vbCrLf
-                                End If
-
+                                If strHyperlink <> "" Then litSingleImage.Text &= "<a href=""" & strHyperlink & """>"
+                                litSingleImage.Text &= "<img alt=""" & strAltText & """ src=""" & _
+                                    strImageMainViewStart & """ />"
+                                If strHyperlink <> "" Then litSingleImage.Text &= "</a>"
+                                litSingleImage.Text &= "</div>" & vbCrLf
                             End If
-
                     End Select
                     Exit For
                 Next
             Else
 
                 '=======================================
-                'MULTIPLE IMAGES - MAIN PLUS GALLERY
+                'PRODUCT PAGE VIEWER WITH GALLERY
                 '=======================================
                 pnlImageViewer.Visible = True
                 pnlSingleImage.Visible = False
@@ -291,114 +250,71 @@ Partial Class ImageViewer
                                 'Direct link to the image itself
                                 '---------------------------------------
                                 strImageMainView = Replace(_strFolderPath & objFile.Name, "~/", "")
-
-                                If intIndex = 1 Then
-                                    '---------------------------------------
-                                    'SET INITIAL LARGE IMAGE PREVIEW
-                                    'Defaults to first image in folder
-                                    '---------------------------------------
-                                    strFirstImageName = objFile.Name
-                                    strImageMainViewStart = "Image.aspx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
-                                End If
                             Else
                                 '---------------------------------------
                                 'IN 'AJAX' LARGE VIEW MODE
                                 'Link to image.aspx resizer
                                 '---------------------------------------
                                 strImageMainView = "Image.aspx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
+                            End If
 
-                                If intIndex = 1 Then
-                                    '---------------------------------------
-                                    'SET INITIAL LARGE IMAGE PREVIEW
-                                    'Defaults to first image in folder
-                                    '---------------------------------------
-                                    strFirstImageName = objFile.Name
-                                    strImageMainViewStart = "Image.aspx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
-                                End If
+                            If intIndex = 1 Then
+                                '---------------------------------------
+                                'SET INITIAL LARGE IMAGE PREVIEW
+                                'Defaults to first image in folder
+                                '---------------------------------------
+                                strFirstImageName = objFile.Name
+                                strImageMainViewStart = "Image.aspx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
                             End If
 
                             '---------------------------------------
                             'BUILD UP GALLERY
                             '---------------------------------------
-                            litGalleryThumbs.Text &= "<!-- BUILD UP GALLERY --><div class=""imageholder"">"
-                            litGalleryThumbs.Text &= "<a class=""gallerybutton""  style=""width: " & _
-                                KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "px;" & _
-                                "height: " & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "px;"" onclick=""return displaypic" & _
-                                strJSFunctionDifferentiate & "(this)"" href=""" & strImageMainView & """><img alt="""" src=""" & _
-                                strImageLinkPath & """ /></a>"
-                            litGalleryThumbs.Text &= "</div>" ' & vbCrLf
 
+                            'Foundation Clearing lightbox version
+                            strImageFilePath = Replace(_strFolderPath & objFile.Name, "~/", "")
+
+                            'Only need gallery if more than one image; but
+                            'if we don't have this code at all, the main
+                            'image doesn't seem to produce a popup. Instead,
+                            'we just set it invisible, this seems to hide
+                            'it while the popup functionality is retained.
+                            If dirFolder.GetFiles().Length > 1 Then
+                                litGalleryThumbs.Text &= "<li><a href=""" & strImageFilePath & """><img src=""" & strImageLinkPath & """></a></li>" ' & vbCrLf
+                            Else
+                                litGalleryThumbs.Text &= "<li style=""visibility: hidden;""><a href=""" & strImageFilePath & """><img src=""" & strImageLinkPath & """></a></li>" ' & vbCrLf
+                            End If
                     End Select
 
                 Next
 
+
                 '---------------------------------------
-                'JAVASCRIPT FUNCTION FOR IMAGE SWAP
+                'MAIN IMAGE PREVIEW (not large view)
                 '---------------------------------------
-                litJSFunction.Text &= "<script type=""text/javascript"" language=""javascript"">" & vbCrLf
-                litJSFunction.Text &= "function displaypic" & strJSFunctionDifferentiate & " (newpicture) {" & vbCrLf
-                litJSFunction.Text &= " if (document.getElementById) {" & vbCrLf
-                litJSFunction.Text &= "  document.getElementById('placeholder" & strJSFunctionDifferentiate & "').src = newpicture.href;" & vbCrLf
-                litJSFunction.Text &= "  return false;" & vbCrLf
-                litJSFunction.Text &= " } else {" & vbCrLf
-                litJSFunction.Text &= "  return true;" & vbCrLf
-                litJSFunction.Text &= " }" & vbCrLf
-                litJSFunction.Text &= "}" & vbCrLf
-                litJSFunction.Text &= "</script>" & vbCrLf
-
-                If _blnLargeViewClickable = True Then
+                If KartSettingsManager.GetKartConfig("frontend.display.images.large.linktype") = "n" Then
                     '---------------------------------------
-                    'MAIN IMAGE PREVIEW (not large view)
+                    'IN 'NEW PAGE' LARGE VIEW MODE
+                    'Direct link to the image itself
                     '---------------------------------------
-                    If KartSettingsManager.GetKartConfig("frontend.display.images.large.linktype") = "n" Then
-                        '---------------------------------------
-                        'IN 'NEW PAGE' LARGE VIEW MODE
-                        'Direct link to the image itself
-                        '---------------------------------------
-                        litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'NEW PAGE' LARGE VIEW MODE Direct link to the image itself --><div class=""imageholder hand"" style=""height: " & numImageHeightMax & "px;"">"
-                        litMainImage.Text &= "<a target=""_blank"" href=""" & _
-                            "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>"
-                        litMainImage.Text &= "<img alt=""" & strAltText & """ id=""placeholder" & strJSFunctionDifferentiate & """ src=""" & _
-                            strImageMainViewStart & """ /></a>"
-                        litMainImage.Text &= "</div>" & vbCrLf
-                        litLargeViewLink.Text &= "<a target=""_blank"" href=""" & _
-                            "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>" & _
-                            GetGlobalResourceObject("Product", "ContentText_LargeView") & "</a>"
-                    Else
-                        '---------------------------------------
-                        'IN 'AJAX' LARGE VIEW MODE
-                        '---------------------------------------
-                        litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div class=""imageholder hand"" onclick=""javascript:ShowLargeViewPopup()"" " & _
-                            "style=""height: " & numImageHeightMax & "px;"">"
-                        litMainImage.Text &= "<img alt=""" & strAltText & """ id=""placeholder" & strJSFunctionDifferentiate & """ src=""" & strImageMainViewStart & """ />" & vbCrLf
-                        litMainImage.Text &= "</div>"
-                        litLargeViewLink.Text = "<span class=""hide-for-small"" onclick=""javascript:ShowLargeViewPopup()"">" & GetGlobalResourceObject("Product", "ContentText_LargeView") & "</span>"
-
-                    End If
-
+                    litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'NEW PAGE' LARGE VIEW MODE Direct link to the image itself --><div class=""imageholder hand"" >"
+                    litMainImage.Text &= "<a target=""_blank"" href=""" & _
+                        "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>"
+                    litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" & _
+                        strImageMainViewStart & """ /></a>"
+                    litMainImage.Text &= "</div>" & vbCrLf
+                    litLargeViewLink.Text &= "<a target=""_blank"" href=""" & _
+                        "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>" & _
+                        GetGlobalResourceObject("Product", "ContentText_LargeView") & "</a>"
                 Else
                     '---------------------------------------
-                    'LARGE VIEW DISPLAY
-                    'Can be 'New page' or AJAX type
+                    'IN 'AJAX' LARGE VIEW MODE
                     '---------------------------------------
-                    If blnFullSizeImage Then
-                        '---------------------------------------
-                        'IN 'NEW PAGE' LARGE VIEW MODE
-                        'Direct link to the image itself
-                        '---------------------------------------
-                        litMainImage.Text &= "<!-- LARGE VIEW DISPLAY: IN 'NEW PAGE' LARGE VIEW MODE Direct link to the image itself --><div class=""imageholder"">"
-                        litMainImage.Text &= "<img alt=""" & strAltText & """ id=""placeholder" & strJSFunctionDifferentiate & """ src=""" & _
-                            Replace(_strFolderPath & strFirstImageName, "~/", "") & """ />" & vbCrLf
-                        litMainImage.Text &= "</div>"
-                    Else
-                        '---------------------------------------
-                        'IN 'AJAX' LARGE VIEW MODE
-                        'Link to image.aspx resizer
-                        '---------------------------------------
-                        litMainImage.Text &= "<!-- LARGE VIEW DISPLAY: IN 'AJAX' LARGE VIEW MODE Link to image.aspx resizer --><div class=""imageholder"" style=""height: " & numImageHeightMax & "px;"">"
-                        litMainImage.Text &= "<img alt=""" & strAltText & """ id=""placeholder" & strJSFunctionDifferentiate & """ src=""" & strImageMainViewStart & """ />" & vbCrLf
-                        litMainImage.Text &= "</div>"
-                    End If
+                    litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div class=""imageholder hand"" onclick=""javascript:ShowLargeViewPopup()"" " & _
+                        "style=""height: " & numImageHeightMax & "px;"">"
+                    litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" & strImageMainViewStart & """ />" & vbCrLf
+                    litMainImage.Text &= "</div>"
+                    litLargeViewLink.Text = "<span>" & GetGlobalResourceObject("Product", "ContentText_LargeView") & "</span>"
 
                 End If
 
@@ -406,12 +322,12 @@ Partial Class ImageViewer
 
 
         Else
-            '=======================================
-            'NO FOLDER FOUND
-            'No images, and even no folder for this
-            'item
-            '=======================================
-            NoImage(numImageHeight, numImageWidth, _blnPlaceHolder, strHyperlink)
+        '=======================================
+        'NO FOLDER FOUND
+        'No images, and even no folder for this
+        'item
+        '=======================================
+        NoImage(numImageHeight, numImageWidth, _blnPlaceHolder, strHyperlink)
 
         End If
 
