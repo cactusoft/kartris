@@ -335,8 +335,6 @@ input.cancelbutton:hover                { background-color: #888; border-color: 
 .topsubmitbuttons a:hover,
 .squarebuttons input:hover,
 .squarebuttons a:hover                  { background-color: #fc5; cursor: pointer; }
-.blackbuttons input:hover,
-.blackbuttons a:hover					{ background-color: #fff; }
 .bluebuttons input:hover,
 .bluebuttons a:hover					{ z-index: 201; background-color: #888; }
 .blackbuttons input:hover,
@@ -353,7 +351,6 @@ label.nolabelwidth,
 input[disabled='disabled'],
 textarea[disabled='disabled'],
 select[disabled='disabled']				{ background-color: #ccc }
-.imagebutton:link, .imagebutton:hover, .imagebutton:visited { display: block; font-family: Verdana; font-size: smaller; text-decoration: none; letter-spacing: 0px; display: inline-block; text-align: center; font-size: inherit; margin: 1px 2px 1px 0px; padding-left: 3px; padding-right: 3px; height: 12px; }
 .imagebutton:link,
 .imagebutton:hover,
 .imagebutton:visited { display: block; font-family: Verdana; font-size: smaller; text-decoration: none; letter-spacing: 0px; display: inline-block; text-align: center; font-size: inherit; margin: 1px 2px 1px 0px; padding-left: 3px; padding-right: 3px; height: 12px; }
@@ -412,7 +409,7 @@ POPUP MESSAGE
 ========================================================================
 */
 .popup_background                       { background-color: #fff; filter: alpha(opacity=70); opacity: 0.7; z-index: 500 !important; }
-.popup                                  { position: fixed; margin: 0 auto; background-color: #fff; border: solid 2px #000; padding: 10px; width: 550px; padding-top: 30px; text-align: left; vertical-align: middle; }
+.popup                                  { overflow: hidden; position: fixed; margin: 0 auto; background-color: #fff; border: solid 2px #000; padding: 10px; width: 550px; padding-top: 30px; text-align: left; vertical-align: middle; }
 .popup h2                               { position: absolute; left: 10px; top: 5px; padding: 0px; margin: 0px; font-size: 100%; border: none; }
 .popup p                                { padding: 10px 0 0 0; margin: 0; color: #333; }
 .popup strong                           { color: #000 }

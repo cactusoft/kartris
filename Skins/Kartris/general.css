@@ -17,7 +17,7 @@ h4,
 h2.blockheader                          { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 100; font-size: 140%; color: #000; margin: 0; padding: 0 0 15px 0; }
 h5                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0px 0px 5px 0px; color: #000; text-transform: uppercase; padding: 2px 2px 2px 0px; text-align: left; }
 pre                                     { color: #008800 }
-iframe                                  { border: none; overflow: hidden; }
+iframe                                  { border: none; overflow: hidden; display: inline;}
 iframe body                             { padding: 5px 0 0 0;  overflow: hidden; }
 .strong                                 { font-weight: bold }
 .floatright                             { float: right }
@@ -187,7 +187,7 @@ html>body .imageviewer .gallery .imageholder
 /* 
 ========================================================================
 LIGHTBOX (FOUNDATION 'CLEARING')
-This replaces the popup we used to use
+v2.9 This replaces the popup we used to use
 ========================================================================
 */
 .clearing-assembled .clearing-container                     { background: #fff; }
@@ -224,6 +224,9 @@ MEDIA (Video, audio, etc.)
 .media_links .customthumb img           { width: 100px; }
 /* media gallery for versions, hide title */
 .versions .media_gallery h2             { display: none }
+/* v2.9 we apply a new class to popups for media, so can make them full screen, hide border and match Foundation lightbox look and feel */
+.popup.popup_media                      { border: none; min-height: 100%; min-width: 100%; }
+.popup.popup_media .closebutton         { font-size: 27pt; font-weight: bold; color: #000; top: 18px; right: 14px; }
 /* 
 ========================================================================
 TABS AJAX CONTROL
@@ -297,8 +300,8 @@ POPUP MESSAGE
 .popup h2                               { position: absolute; left: 10px; top: 0; padding: 10px 0 10px 0; margin: 0px; font-size: 125%; }
 .popup p                                { padding: 10px 0 0 0; margin: 0; }
 .popup strong                           { color: #000 }
-.popup .closebutton                     { position: absolute; right: 5px; top: 4px; text-align: center; padding: 1px 6px 1px 6px; border-bottom: solid 1px #333; border-right: solid 1px #333; background-color: #ccc; font-family: Verdana,Arial,Helvetica,Sans-Serif; font-size: 9pt; font-weight: bold; color: #000; width: 21px; }
-.popup .closebutton:active              { background-color: #ccc; border-top: none; border-left: none; border-bottom: solid 1px #ccc; border-right: solid 1px #ccc; color: #666; }
+.popup .closebutton                     { position: absolute; right: 5px; top: 4px; text-align: center; padding: 1px 6px 1px 6px; font-size: 17pt; font-weight: bold; color: #000; }
+.popup .closebutton:hover               { color: #ccc; }
 .imagecolumn .popup                     { overflow-y: hidden; } /* needed in chrome to turn right hand scroll bar off */
 /* 
 ========================================================================

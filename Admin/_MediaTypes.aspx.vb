@@ -42,6 +42,7 @@ Partial Class admin_MediaTypes
             EditMediaType(e.CommandArgument)
         End If
     End Sub
+
     Sub EditMediaType(ByVal numMediaTypeID As Integer)
         Dim drType As DataRow = MediaBLL._GetMediaTypesByID(numMediaTypeID).Rows(0)
         litMediaTypeID.Text = FixNullFromDB(drType("MT_ID"))
@@ -53,6 +54,12 @@ Partial Class admin_MediaTypes
         chkDownloadable.Checked = CBool(FixNullFromDB(drType("MT_DefaultisDownloadable")))
         chkEmbed.Checked = CBool(FixNullFromDB(drType("MT_Embed")))
         chkInline.Checked = CBool(FixNullFromDB(drType("MT_Inline")))
+        If txtDefaultWidth.Text = "999" Then
+            txtDefaultHeight.Text = 999
+            chkFullScreen.Checked = True
+            txtDefaultWidth.Enabled = False
+            txtDefaultHeight.Enabled = False
+        End If
         PreviewIcon()
         mvwMedia.SetActiveView(vwEditType)
         updMediaTypes.Update()
@@ -61,6 +68,7 @@ Partial Class admin_MediaTypes
     Protected Sub lnkUploadIcon_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkUploadIcon.Click
         _UC_IconUploaderPopup.OpenFileUpload()
     End Sub
+
     Function GetMediaTypeID() As Integer
         Dim numMediaTypeID As Integer = 0
         Try
@@ -70,6 +78,7 @@ Partial Class admin_MediaTypes
         End Try
         Return numMediaTypeID
     End Function
+
     Protected Sub _UC_IconUploaderPopup_UploadClicked() Handles _UC_IconUploaderPopup.UploadClicked
         If _UC_IconUploaderPopup.HasFile Then
             Dim strFileExt As String = Path.GetExtension(_UC_IconUploaderPopup.GetFileName())
@@ -126,6 +135,7 @@ Partial Class admin_MediaTypes
             lnkRemoveIcon.Visible = False
         End If
     End Sub
+
     Protected Sub lnkBtnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnCancel.Click
         mvwMedia.SetActiveView(vwTypeList)
         updMediaTypes.Update()
@@ -134,6 +144,7 @@ Partial Class admin_MediaTypes
     Protected Sub lnkBtnNewType_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnNewType.Click
         PrepareNewType()
     End Sub
+
     Sub PrepareNewType()
         litMediaTypeID.Text = "0"
         txtMediaType.Text = Nothing
@@ -158,6 +169,7 @@ Partial Class admin_MediaTypes
             SaveMediaType(DML_OPERATION.UPDATE)
         End If
     End Sub
+
     Private Sub SaveMediaType(ByVal enumOperation As DML_OPERATION)
 
         Dim strMediaTypeName As String, numDefaultHeight As Integer
@@ -255,5 +267,18 @@ Partial Class admin_MediaTypes
 
     Protected Sub _UC_IconUploaderPopup_NeedCategoryRefresh() Handles _UC_IconUploaderPopup.NeedCategoryRefresh
         CType(Me.Master, Skins_Admin_Template).LoadCategoryMenu()
+    End Sub
+
+    Protected Sub chkFullScreen_Checked(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkFullScreen.CheckedChanged
+        If chkFullScreen.Checked Then
+            txtDefaultWidth.Text = 999
+            txtDefaultHeight.Text = 999
+            txtDefaultWidth.Enabled = False
+            txtDefaultHeight.Enabled = False
+        Else
+            txtDefaultWidth.Enabled = True
+            txtDefaultHeight.Enabled = True
+        End If
+        updMediaTypes.Update()
     End Sub
 End Class

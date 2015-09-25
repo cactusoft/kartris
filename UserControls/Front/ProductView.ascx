@@ -28,8 +28,19 @@
         //Set file type
         objMediaIframe.src = objMediaIframe.src + "&MT_Extension=" + MT_Extension;
         //Size popup dynamically based on file type
+        //If 999 width, we make full screen
+        if (intWidth == '999')
+        {
+            objPopupWindow.style.width = "100%";
+            objPopupWindow.style.height = "100%";
+            objPopupWindow.className += ' popup_media';
+        }
+        else
+        {
         objPopupWindow.style.width = (intWidth * 1 + 20) + "px";
         objPopupWindow.style.height = (intHeight * 1 + 15) + "px";
+        objPopupWindow.className = 'popup';
+        }
         //Show the popup
         objFrame.show();
     }

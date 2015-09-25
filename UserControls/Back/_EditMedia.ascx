@@ -11,6 +11,7 @@
         var objMediaIframeBaseUrl = document.getElementById('media_iframe_base_url').value;
         var objPopupWindow = document.getElementById('phdMain__UC_EditMedia_UC_PopUpMedia_pnlMessage');
         var objMediaIframe = document.getElementById('media_iframe');
+        var objIframeContainer = document.getElementById('iframe_container');
         //Set media ID
         objMediaIframe.src = objMediaIframeBaseUrl + "?ML_ID=" + ML_ID;
         //Set parent ID
@@ -20,8 +21,18 @@
         //Set file type
         objMediaIframe.src = objMediaIframe.src + "&MT_Extension=" + MT_Extension;
         //Size popup dynamically based on file type
-        objPopupWindow.style.width = (intWidth*1 + 20) + "px";
-        objPopupWindow.style.height = (intHeight * 1 + 15) + "px";
+        //If 999 width, we make full screen
+        if (intWidth == '999') {
+            objPopupWindow.style.width = "90%";
+            objPopupWindow.style.height = "90%";
+            objIframeContainer.style.margin = "0";
+            objIframeContainer.style.maxHeight = "100%"
+        }
+        else {
+            objPopupWindow.style.width = (intWidth * 1 + 20) + "px";
+            objPopupWindow.style.height = (intHeight * 1 + 15) + "px";
+            objPopupWindow.className = 'popup';
+        }
         //Show the popup
         objFrame.show();
     }
@@ -206,10 +217,14 @@
                                             CssClass="error" ForeColor="" SetFocusOnError="true" ControlToValidate="txtHeight"
                                             Enabled="false" />
                                         <asp:CheckBox ID="chkDefaultHeight" runat="server" Text="<%$ Resources:_Kartris, ContentText_DefaultValue %>" Checked="false"
-                                            AutoPostBack="true" CssClass="checkbox" />
+                                            AutoPostBack="true" CssClass="checkbox checkbox_label" />
                                         <asp:Literal ID="litDefaultHeight" runat="server" Visible="false" />
                                         <ajaxToolkit:FilteredTextBoxExtender ID="filHeight" runat="server"
                                             TargetControlID="txtHeight" FilterType="Numbers" />
+                                        <%--FULL SCREEN--%>
+                                        <div style="display: inline-block; position: absolute; margin: 13px 0 0 40px;">
+                                            <asp:CheckBox ID="chkFullScreen" runat="server" CssClass="checkbox checkbox_label" Text="100%" AutoPostBack="True" />
+                                        </div>
                                     </span></li>
                                     <%--Media Width--%>
                                     <li><span class="Kartris-DetailsView-Name">
@@ -221,7 +236,7 @@
                                             CssClass="error" ForeColor="" SetFocusOnError="true" ControlToValidate="txtWidth"
                                             Enabled="false" />
                                         <asp:CheckBox ID="chkDefaultWidth" runat="server" Text="<%$ Resources:_Kartris, ContentText_DefaultValue %>" Checked="false"
-                                            AutoPostBack="true" CssClass="checkbox" />
+                                            AutoPostBack="true" CssClass="checkbox checkbox_label" />
                                         <asp:Literal ID="litDefaultWidth" runat="server" Visible="false" />
                                         <ajaxToolkit:FilteredTextBoxExtender ID="filWidth" runat="server"
                                             TargetControlID="txtWidth" FilterType="Numbers" />
