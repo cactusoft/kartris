@@ -78,34 +78,6 @@ Partial Class UserControls_General_PopupMessage
             'so this code is not needed from
             'Kartris v2.9 onwards
 
-            'Create iframe
-
-            'litIframeLargeImage.Text &= "<iframe frameBorder=""0""" & vbCrLf
-            'litIframeLargeImage.Text &= " src=""" & CkartrisBLL.WebShopURL & "LargeImage.aspx" & vbCrLf
-            'litIframeLargeImage.Text &= "?P_ID=" & _ImagePath & """" & vbCrLf
-            'litIframeLargeImage.Text &= " width=""100%""" & vbCrLf
-            'litIframeLargeImage.Text &= " height=""100%""" & vbCrLf
-            'litIframeLargeImage.Text &= " class=""iframe""" & vbCrLf
-            'litIframeLargeImage.Text &= "></iframe>" & vbCrLf
-
-            'Actually we should use an object tag. This is now
-            'preferred in 'strict' xhtml, syntax is slightly
-            'different too, but similar. Problem is that Opera
-            'seems to choke on it, and does not display anything 
-            'for the object below. So we reverted to iframe as
-            'above. But will keep this here so hopefully one
-            'day we can set this compliant code free.
-
-            'litIframeLargeImage.Text &= "<object type=""text/html"" " & vbCrLf
-            'litIframeLargeImage.Text &= " data=""" & CkartrisBLL.WebShopURL & "LargeImage.aspx" & vbCrLf
-            'litIframeLargeImage.Text &= "?P_ID=" & _ImagePath & """" & vbCrLf
-            'litIframeLargeImage.Text &= " width=""100%""" & vbCrLf
-            'litIframeLargeImage.Text &= " height=""100%""" & vbCrLf
-            'litIframeLargeImage.Text &= " class=""iframe""" & vbCrLf
-            'litIframeLargeImage.Text &= "></object>" & vbCrLf
-
-            'mvwDisplay.SetActiveView(viwImage)
-            'litMessage.Text = _ImagePath
         ElseIf _PopupType = POPUP_TYPE.PANEL Then
             'errrr.. nothing
         ElseIf _PopupType = POPUP_TYPE.MEDIA Then
@@ -118,12 +90,14 @@ Partial Class UserControls_General_PopupMessage
 
             'Create iframe
             litIframeMedia.Text &= "<input type=""hidden"" id=""media_iframe_base_url"" value=""" & CkartrisBLL.WebShopURL & "MultiMedia.aspx"" />" & vbCrLf
+            litIframeMedia.Text &= "<div id=""iframe_container"" style=""margin-right:-50px;height:2000px;"">" & vbCrLf
             litIframeMedia.Text &= "<iframe id=""media_iframe"" frameBorder=""0""" & vbCrLf
             litIframeMedia.Text &= " src=""" & CkartrisBLL.WebShopURL & "MultiMedia.aspx""" & vbCrLf
             litIframeMedia.Text &= " width=""100%""" & vbCrLf
             litIframeMedia.Text &= " height=""100%""" & vbCrLf
             litIframeMedia.Text &= " class=""iframe""" & vbCrLf
             litIframeMedia.Text &= "></iframe>" & vbCrLf
+            litIframeMedia.Text &= "</div>" & vbCrLf
 
             mvwDisplay.SetActiveView(viwMedia)
             litMessage.Text = _MediaPath
@@ -145,6 +119,11 @@ Partial Class UserControls_General_PopupMessage
         If pWidth = 999 And pHeight = 999 Then
             pnlMessage.Width = New Unit(100, UnitType.Percentage)
             pnlMessage.Height = New Unit(100, UnitType.Percentage)
+            'If is full height and width, we want to hide
+            'the border and make the close button bigger to
+            'match the Foundation lightbox. We just activate
+            'the DIV around the contents which lets us
+            'apply an extra style to the popup
         Else
             pnlMessage.Width = New Unit(pWidth, UnitType.Pixel)
             pnlMessage.Height = New Unit(pHeight, UnitType.Pixel)

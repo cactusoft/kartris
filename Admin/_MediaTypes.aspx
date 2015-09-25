@@ -94,7 +94,7 @@
                                                     </span><span class="Kartris-DetailsView-Value">
                                                         <asp:UpdatePanel ID="updUploadIcon" runat="server" UpdateMode="Conditional">
                                                             <ContentTemplate>
-                                                                <asp:Image ID="imgMediaIcon" runat="server" Height="50" Width="50" />
+                                                                <asp:Image ID="imgMediaIcon" runat="server" />
                                                                 <asp:LinkButton ID="lnkUploadIcon" runat="server" CssClass="linkbutton icon_upload"
                                                                     Text="<%$ Resources:_Kartris, ContentText_Upload %>" />
                                                                 <asp:LinkButton ID="lnkRemoveIcon" runat="server" CssClass="linkbutton icon_delete"
@@ -132,10 +132,14 @@
                                                             CssClass="error" ForeColor="" SetFocusOnError="true" ControlToValidate="txtDefaultHeight" />
                                                         <ajaxToolkit:FilteredTextBoxExtender ID="filDefaultHeight" runat="server"
                                                             TargetControlID="txtDefaultHeight" FilterType="Numbers" />
+                                                        <%--FULL SCREEN--%>
+                                                        <div style="display:inline-block;position: absolute; margin: 13px 0 0 40px;">
+                                                            <asp:CheckBox ID="chkFullScreen" runat="server" CssClass="checkbox checkbox_label" Text="100%" AutoPostBack="True" />
+                                                        </div>
                                                     </span></li>
                                                     <%--Media Default Width--%>
                                                     <li><span class="Kartris-DetailsView-Name">
-                                                        <asp:Label ID="Label1" runat="server" Text="<%$ Resources: _Media, ContentText_DefaultWidth %>"
+                                                        <asp:Label ID="litDefaultWidth" runat="server" Text="<%$ Resources: _Media, ContentText_DefaultWidth %>"
                                                             AssociatedControlID="txtDefaultWidth"></asp:Label>
                                                     </span><span class="Kartris-DetailsView-Value">
                                                         <asp:TextBox ID="txtDefaultWidth" runat="server" CssClass="shorttext" MaxLength="4" />

@@ -5,7 +5,7 @@
             <h2>
                 <asp:Literal ID="litTitle" runat="server" /></h2>
             <asp:LinkButton ID="lnkBtn" runat="server"></asp:LinkButton>
-            <asp:LinkButton ID="btnExtenderCancel" runat="server" Text="X" CssClass="closebutton" />
+            <asp:LinkButton ID="btnExtenderCancel" runat="server" Text="×" CssClass="closebutton" />
             <asp:MultiView ID="mvwDisplay" runat="server" ActiveViewIndex="0">
                 <asp:View ID="viwEmpty" runat="server">
                 </asp:View>
@@ -28,3 +28,5 @@
 
     </ContentTemplate>
 </asp:UpdatePanel>
+
+

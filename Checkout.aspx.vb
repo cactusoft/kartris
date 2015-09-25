@@ -485,7 +485,7 @@ Partial Class _Checkout
         'Just to be sure we get shipping price, have
         'had issues where sometimes a single shipping method
         'doesn't trigger lookup for shipping price
-        UC_BasketView.RefreshShippingMethods()
+        'UC_BasketView.RefreshShippingMethods()
     End Sub
 
     ''' <summary>

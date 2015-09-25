@@ -109,7 +109,7 @@ SMALL SCREENS
 ORBIT SLIDESHOW
 ========================================================================
 */
-#front-slideshow                        { background-color: #e5e5e5; }
+#front-slideshow                        { background-color: #e5e5e5; z-index: 1; }
 #front-slideshow li                     { padding: 10px 80px; min-height: 200px; }
 
 /* 

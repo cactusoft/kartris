@@ -260,6 +260,16 @@ Partial Class UserControls_Back_EditMedia
             intWidth = FixNullFromDB(drwMediaType("MT_DefaultWidth"))
         End If
 
+        'For full screen checkbox
+        If intWidth = "999" Then
+            txtHeight.Text = 999
+            chkFullScreen.Checked = True
+            txtWidth.Enabled = False
+            txtHeight.Enabled = False
+            chkDefaultHeight.Enabled = False
+            chkDefaultWidth.Enabled = False
+        End If
+
         'get parameters, there are two because
         'this field is used in both the embedded and
         'non-embedded route
@@ -637,16 +647,15 @@ Partial Class UserControls_Back_EditMedia
         chrParentType = ParentType
         numMediaTypeID = ddlMediaType.SelectedValue
         blnLive = chkLive.Checked
+        numHeight = txtHeight.Text
+        numWidth = txtWidth.Text
+
         If chkEmbed.Checked Then
             strEmbedSource = txtEmbedSource.Text
-            numHeight = 0
-            numWidth = 0
             strParameter = txtParameters2.Text
             blnDownloadable = False
         Else
             strEmbedSource = Nothing
-            numHeight = txtHeight.Text
-            numWidth = txtWidth.Text
             strParameter = txtParameters.Text
             blnDownloadable = chkDownloadable.Checked
         End If
@@ -797,5 +806,22 @@ Partial Class UserControls_Back_EditMedia
         Else
             args.IsValid = True
         End If
+    End Sub
+
+    Protected Sub chkFullScreen_Checked(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkFullScreen.CheckedChanged
+        If chkFullScreen.Checked Then
+            txtWidth.Text = 999
+            txtHeight.Text = 999
+            txtWidth.Enabled = False
+            txtHeight.Enabled = False
+            chkDefaultHeight.Enabled = False
+            chkDefaultWidth.Enabled = False
+        Else
+            txtWidth.Enabled = True
+            txtHeight.Enabled = True
+            chkDefaultHeight.Enabled = True
+            chkDefaultWidth.Enabled = True
+        End If
+        updMain.Update()
     End Sub
 End Class
