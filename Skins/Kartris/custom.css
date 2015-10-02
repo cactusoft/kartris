@@ -71,10 +71,45 @@ BIG SCREENS
 
 /* 
 ========================================================================
-SMALL SCREENS
+MEDIUM SCREENS
 ========================================================================
 */
 @media only screen and (max-width: 930px) {
+  .products_tabular .item,
+  .products_shortened .item,
+  .subcategories_shortened .item,
+  #homepage .products_tabular .item { display: block; float: none; width: 50%; margin: 0 0 5px 0; }
+  .Kartris-DetailsView-Value { width: 270px; }
+  ul { max-width: 100%; }
+  #pagecontent_pad { min-height: 200px; padding-bottom: 15px; }
+  .versions td.info { max-width: 200px; overflow: hidden; }
+  .basket td.quantity input { width: 32px; text-align: right; }
+  #container { padding: 0; }
+  select,
+  input { width: 100%; }
+  #footer_inside { margin: 0; }
+
+  /* Menus */
+  #menubar { margin: 5px 0 0 0; }
+  #menubar .top-bar .title-area { background: #ddd; }
+  #menubar .top-bar-section ul { background: #ddd; }
+  #menubar .top-bar-section li { border-right: none; background-color: #ddd; }
+  #menubar .top-bar-section li a:not(.button) { background: #ddd; font-size: 90%; padding: 5px 10px; }
+  #menubar .top-bar-section .title-area li.name a { padding: 0 5px; }
+
+  #categorymenu .top-bar { min-height: 0px; }
+  #categorymenu .top-bar-section li a:not(.button) { width: auto; height: auto; padding: 5px 10px; }
+  #categorymenu .top-bar.expanded .title-area { background: #f90; }
+  #categorymenu .top-bar .title-area li.name a { padding: 0 10px; color: #fff; }
+  #categorymenu .top-bar-section ul { background: #f94; }
+  }
+
+/* 
+========================================================================
+SMALL SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 530px) {
   .products_tabular .item,
   .products_shortened .item,
   .subcategories_shortened .item,

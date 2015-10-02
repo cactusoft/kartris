@@ -1,15 +1,15 @@
 ﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="MultiMedia.aspx.vb" Inherits="MultiMedia" %>
 
 <%@ Register TagPrefix="user" TagName="NoMasterCSS" Src="~/UserControls/Front/NoMasterCSS.ascx" %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" style="border: none;">
+<!doctype html>
+<html style="border: none;">
 <head runat="server">
     <user:NoMasterCSS ID="UC_NoMasterCSS" runat="server" />
     <title></title>
 </head>
-<body style="border: none; text-align: center;">
-    <div>
-        <form id="frmMediaPopup" runat="server">
+
+<body style="border: none; text-align: center;padding-right: 50px; height: 100%;">
+        <form id="frmMediaPopup" runat="server" style="height: 100%;">
         <asp:ScriptManager ID="scrManager" runat="server">
         </asp:ScriptManager>
         <asp:Repeater ID="rptMediaLinks" runat="server">
@@ -24,6 +24,5 @@
         </asp:Repeater>
         <asp:PlaceHolder ID="phdInline" runat="server"></asp:PlaceHolder>
         </form>
-    </div>
 </body>
 </html>

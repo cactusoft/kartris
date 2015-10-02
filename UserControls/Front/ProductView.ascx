@@ -87,13 +87,11 @@
                                         <%--
                     IMAGE COLUMN
                                         --%>
-                            <div class="imagecolumn small-12 large-4 columns">
+                            <div class="<asp:Literal runat='server' id='litImageColumnClasses' text='imagecolumn small-12 medium-5 large-4 columns'/>">
                                 <asp:UpdatePanel ID="updImages" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
                                         <user:ImageViewer ID="UC_ImageView2" runat="server" LargeViewClickable="false" EnableViewState="false" />
-                                        <asp:PlaceHolder ID="phdImageColumn" runat="server">
-                                            <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />
-                                        </asp:PlaceHolder>
+                                        <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
                                 <asp:UpdatePanel ID="updMedia" runat="server" UpdateMode="Conditional">
@@ -109,7 +107,7 @@
                                         <%--
                     TEXT COLUMN
                                         --%>
-                            <div class="textcolumn small-12 large-8 columns">
+                            <div class="<asp:Literal runat='server' id='litTextColumnClasses' text='textcolumn small-12 medium-7 large-8 columns'/>">
                                 <asp:FormView ID="fvwProduct" runat="server">
                                     <HeaderTemplate>
                                         <asp:Literal ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>

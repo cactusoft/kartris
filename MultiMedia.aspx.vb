@@ -104,15 +104,14 @@ Partial Class MultiMedia
             End If
 
             Dim litInline As New Literal
-            litInline.Text = "<div id='inline_" & intML_ID & "'>"
-
 
             'check if the media link item already contains the embed code
             If blnisEmbedded Then
                 'embed - just write it directly to the page
-                litInline.Text += strML_EmbedSource & "</div>"
+                litInline.Text += strML_EmbedSource
                 phdInline.Controls.Add(litInline)
             Else
+                litInline.Text = "<div id='inline_" & intML_ID & "'>"
                 phdInline.Controls.Add(litInline)
                 'template is needed so load up the appropriate control
                 Dim UC_Media As UserControl = LoadControl("~/UserControls/MediaTemplates/" & strMT_Extension & ".ascx")
