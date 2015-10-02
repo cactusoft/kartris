@@ -29,7 +29,7 @@ Imports System.Xml
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 2.9001
+    Public Const KARTRIS_VERSION As Decimal = 2.9002
     Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #9/25/2015# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
@@ -2100,7 +2100,7 @@ Public NotInheritable Class CkartrisImages
     ''' compress images
     ''' </summary>
     Public Shared Sub CompressImage(ByVal strImagePath As String, ByVal numQuality As Long)
-        Dim numMaxWidth As Integer = 1500, numMaxHeight As Integer = 1500
+        Dim numMaxWidth As Integer = 1500, numMaxHeight As Integer = 4000
         Try
             Dim numImageNewWidth, numImageNewHeight As Integer
 

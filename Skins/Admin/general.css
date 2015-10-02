@@ -205,7 +205,7 @@ DETAILS VIEW / SECTIONS
 .Kartris-DetailsView-Data               { margin-bottom: 10px }
 .Kartris-DetailsView-Data ul            { list-style-type: none; padding: 0; margin-left: 0; }
 .Kartris-DetailsView-Data ul li         { min-height: 20px; padding-top: 5px; }
-.Kartris-DetailsView-Name               { display: -moz-inline-box; display: inline-block; width: 180px; color: #000; font-weight: bold; vertical-align: top; padding-right: 10px; }
+.Kartris-DetailsView-Name               { display: -moz-inline-box; display: inline-block; width: 200px; color: #000; font-weight: bold; vertical-align: top; padding-right: 10px; }
 .Kartris-DetailsView-Value              { display: -moz-inline-box; display: inline-block; width: 490px; vertical-align: top; color: #000; overflow: visible; }
 .buttonfield .Kartris-DetailsView-Name  { vertical-align: top; width: auto; }
 .rightpad                               { margin: 7px 5px 0 0 }

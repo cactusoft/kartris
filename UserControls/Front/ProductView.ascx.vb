@@ -138,7 +138,13 @@ Partial Class ProductView
             'If tblProducts.Rows(0)("P_Desc").ToString.Contains("<overridelargeimagelinktype>") Then
             If CBool(ObjectConfigBLL.GetValue("K:product.showlargeimageinline", pProductID)) Then
                 'Override triggered - for MTMC large images
-                phdImageColumn.Visible = False
+                UC_ImageView.Visible = False
+
+                'Need to override the Foundation column widths
+                'To make sure both full 12 width, so image
+                'stacks over text
+                litImageColumnClasses.Text = "imagecolumn small-12 columns"
+                litTextColumnClasses.Text = "textcolumn small-12 columns"
 
                 'Set full size image visible
                 UC_ImageView2.CreateImageViewer(IMAGE_TYPE.enum_ProductImage, _
@@ -155,35 +161,13 @@ Partial Class ProductView
         UC_MediaGallery.ParentID = _ProductID
 
         '-------------------------------------
-        'IMAGE POPUP
-        'This is now retired from Kartris v2.9
-        'as we now use Foundation's Clearing
-        'lightbox
-        '-------------------------------------
-        'Here we create the whole large image popup, which will load in background
-        'but with a div around it with display:none;
-        'This way we can use a javascript to show/hide it, which is much
-        'faster than triggering it with a server-side callback
-        'Dim numPopupWidth As Integer = KartSettingsManager.GetKartConfig("frontend.display.images.large.width") + 80
-        'Dim numPopupHeight As Integer = KartSettingsManager.GetKartConfig("frontend.display.images.large.height") + 155
-
-        'UC_PopUpLargeView.SetTitle = GetGlobalResourceObject("Product", "ContentText_LargeView") & " - " & _ProductName
-        'UC_PopUpLargeView.SetImagePath = _ProductID
-        'UC_PopUpLargeView.SetWidthHeight(999, 999)
-
-        'Use new 'PreLoad' so we can trigger
-        'from javascript but popup is already
-        'formatted. Nice and fast for user!
-        'UC_PopUpLargeView.PreLoadPopup()
-
-        '-------------------------------------
         'MEDIA POPUP
         '-------------------------------------
         'We set width and height later with
         'javascript, as popup size will vary
         'depending on the media type
 
-        UC_PopUpMedia.SetTitle = _ProductName
+        'UC_PopUpMedia.SetTitle = _ProductName 'blank this out to match Foundation popup for large images which has no title
         UC_PopUpMedia.SetMediaPath = _ProductID
 
         UC_PopUpMedia.PreLoadPopup()

@@ -101,59 +101,59 @@
 				<div class="spacer"></div>
 			</div>
 		</div>
-        <div id="footer">
-            <div id="footer_inside">
-                <div class="row">
-                    <div class="small-12 large-3 columns">
-                        <h2>Section</h2>
-                        <ul>
-                            <li>
-                                <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-                            <li>
-                                <asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-                            <li>
-                                <asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-                        </ul>
-                    </div>
-                    <div class="small-12 large-3 columns">
-                        <h2>Section</h2>
-                        <ul>
-                            <li>
-                                <asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-                            <li>
-                                <asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-                            <li>
-                                <asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-                        </ul>
-                    </div>
-                    <div class="small-12 large-3 columns">
-                        <h2>Section</h2>
-                        <ul>
-                            <li>
-                                <asp:HyperLink ID="HyperLink10" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-                            <li>
-                                <asp:HyperLink ID="HyperLink11" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-                            <li>
-                                <asp:HyperLink ID="HyperLink12" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-                        </ul>
-                    </div>
-                    <div class="small-12 large-3 columns">
-                        <h2>Section</h2>
-                        <ul>
-                            <li>
-                                <asp:HyperLink ID="HyperLink7" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-                            <li>
-                                <asp:HyperLink ID="HyperLink8" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-                            <li>
-                                <asp:HyperLink ID="HyperLink9" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-                        </ul>
-                    </div>
-                    <div class="small-12 large-12 columns" id="copyright">
-                        &copy;2015 CACTUSOFT
-                    </div>
-                </div>
-            </div>
-        </div>
+		<div id="footer">
+			<div id="footer_inside">
+				<div class="row">
+					<div class="small-12 large-3 columns">
+						<h2>Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="small-12 large-3 columns">
+						<h2>Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="small-12 large-3 columns">
+						<h2>Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink10" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink11" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink12" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="small-12 large-3 columns">
+						<h2>Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink7" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink8" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink9" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="small-12 large-12 columns" id="copyright">
+						&copy;2015 CACTUSOFT
+					</div>
+				</div>
+			</div>
+		</div>
 		<user:AdminBar ID="UC_AdminBar" runat="server" />
 	</form>
 	<!-- Load up javascript -->

@@ -90,7 +90,7 @@ Partial Class UserControls_General_PopupMessage
 
             'Create iframe
             litIframeMedia.Text &= "<input type=""hidden"" id=""media_iframe_base_url"" value=""" & CkartrisBLL.WebShopURL & "MultiMedia.aspx"" />" & vbCrLf
-            litIframeMedia.Text &= "<div id=""iframe_container"" style=""margin-right:-50px;height:2000px;"">" & vbCrLf
+            litIframeMedia.Text &= "<div id=""iframe_container"" style=""margin-right:-50px;height:100%;"">" & vbCrLf
             litIframeMedia.Text &= "<iframe id=""media_iframe"" frameBorder=""0""" & vbCrLf
             litIframeMedia.Text &= " src=""" & CkartrisBLL.WebShopURL & "MultiMedia.aspx""" & vbCrLf
             litIframeMedia.Text &= " width=""100%""" & vbCrLf
