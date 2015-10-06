@@ -811,7 +811,7 @@ Namespace Kartris
                         End If
 
                         If LCase(.ProductType) = "o" Then
-                            numPrice = numPrice + .OptionPrice
+                            numPrice = numPrice + CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, .OptionPrice)
                         End If
 
                         'Calculate the ex-tax - this differs as numPrice will hold 
