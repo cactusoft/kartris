@@ -900,16 +900,18 @@ Partial Class _Checkout
             'PROCEED CLICKED ON ORDER REVIEW PAGE
             '=======================================
             Dim blnValid As Boolean = False
+            Dim numSelectedShippingID As Integer = UC_BasketView.SelectedShippingID
 
+            'This causes issues with shipping selection, drop it for now
             'Load the basket again to verify contents. Check if quantities are still valid
-            UC_BasketSummary.LoadBasket()
-            Dim objValidateBasket As kartris.Basket = UC_BasketSummary.GetBasket
-            If objValidateBasket.AdjustedQuantities Then
-                UC_BasketView.LoadBasket()
-                mvwCheckout.ActiveViewIndex = "1"
-                Exit Sub
-            End If
-            objValidateBasket = Nothing
+            'UC_BasketSummary.LoadBasket()
+            'Dim objValidateBasket As Kartris.Basket = UC_BasketSummary.GetBasket
+            'If objValidateBasket.AdjustedQuantities Then
+            '    UC_BasketView.LoadBasket()
+            '    mvwCheckout.ActiveViewIndex = "1"
+            '    Exit Sub
+            'End If
+            'objValidateBasket = Nothing
 
             'For local payment gateway types, credit
             'card details were entered. Validate these.
@@ -947,7 +949,7 @@ Partial Class _Checkout
                 Dim sbdBasketItems As StringBuilder = New StringBuilder
 
                 Dim arrBasketItems As List(Of Kartris.BasketItem)
-                Dim objBasket As kartris.Basket = Session("Basket")
+                Dim objBasket As Kartris.Basket = Session("Basket")
                 Dim objOrder As Kartris.Interfaces.objOrder = Nothing
 
                 Dim blnNewUser As Boolean = True
@@ -1821,7 +1823,7 @@ Partial Class _Checkout
             End If
 
 
-        End If
+            End If
 
     End Sub
 
