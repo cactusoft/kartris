@@ -653,7 +653,7 @@ Namespace Kartris
         ''' <remarks>remember that a row can include multiples of a single product</remarks>
         Public ReadOnly Property RowTaxAmount() As Double
             Get
-                Return Math.Round(IIf(Not (ApplyTax), 0, IIf(PricesIncTax, RowIncTax - RowExTax, IncTaxNoRound * Quantity - RowExTax)), 4)
+                Return Math.Round(IIf(Not (ApplyTax), 0, IIf(PricesIncTax, RowIncTax - RowExTax, IncTaxNoRound * Quantity - RowExTax)), BasketBLL.CurrencyRoundNumber)
             End Get
         End Property
 
