@@ -928,6 +928,18 @@ Public NotInheritable Class CkartrisDataManipulation
                     Else
                         objEmailFrom = New MailAddress(strFrom)
                     End If
+
+                    'New test mode; if mail is set to TEST, this
+                    'will send mail to the value set in
+                    If LCase(GetKartConfig("general.email.method")) = "test" Then
+                        If LCase(GetKartConfig("general.email.testaddress")) <> "" Then
+                            strSubject &= " {" & strTo & "}" 'change subject by adding the 'To' address the mail would go to if not in test mode
+                            strTo = LCase(GetKartConfig("general.email.testaddress")) 'change the 'To' address, need to do this after subject
+                            objBCCAddress = Nothing 'Don't want any BCC
+                            objAdditionalToAddresses = Nothing 'Don't want any additional addresses
+                        End If
+                    End If
+
                     Dim objEmailTo As MailAddress = New MailAddress(strTo)
                     Dim objMailMessage As MailMessage = New MailMessage(objEmailFrom, objEmailTo)
 

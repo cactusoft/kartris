@@ -135,7 +135,7 @@ Partial Class UserControls_Front_CustomerOrder
         Dim strVersionCode As String
         Dim numPricePerItem, numTaxPerItem, numQuantity As Single
         Dim numRowPriceExTax, numRowPriceIncTax As Double
-
+        Dim numCurrencyRoundPlaces As Integer = BasketBLL.CurrencyRoundNumber
         If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem Then
             strVersionCode = e.Item.DataItem("IR_VersionCode")
             If e.Item.DataItem("IR_OptionsText") = "" Then strVersionCode = strVersionCode & "<br />" & e.Item.DataItem("IR_OptionsText")
@@ -162,25 +162,25 @@ Partial Class UserControls_Front_CustomerOrder
                 If APP_ShowTaxDisplay Then
                     CType(e.Item.FindControl("phdExTaxDisplay"), PlaceHolder).Visible = True
                     CType(e.Item.FindControl("litExTaxPrice1"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numPricePerItem)
-                    CType(e.Item.FindControl("litExTaxPrice2"), Literal).Text = Math.Round(100 * numTaxPerItem, 6) & "%"
+                    CType(e.Item.FindControl("litExTaxPrice2"), Literal).Text = Math.Round(100 * numTaxPerItem, numCurrencyRoundPlaces) & "%"
                 Else
                     CType(e.Item.FindControl("phdExTaxHide"), PlaceHolder).Visible = True
                     CType(e.Item.FindControl("litExTaxPrice"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numPricePerItem)
                 End If
                 CType(e.Item.FindControl("litExTaxQty"), Literal).Text = numQuantity
-                CType(e.Item.FindControl("litExTaxTotal"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, 0.0001 + (numPricePerItem * numQuantity * (1 + numTaxPerItem)))
+                CType(e.Item.FindControl("litExTaxTotal"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, 0.0000001 + (numPricePerItem * numQuantity * (1 + numTaxPerItem)))
             End If
 
             If APP_PricesIncTax Then
                 'INC TAX - Price of row inc tax (row = items x qty)
-                numRowPriceExTax = Math.Round((numQuantity * (numPricePerItem - numTaxPerItem)) - 0.0001, 2)
                 numRowPriceIncTax = numPricePerItem * numQuantity
+                numRowPriceExTax = Math.Round((numQuantity * (numPricePerItem - numTaxPerItem)) - 0.0000001, numCurrencyRoundPlaces)
                 numTotalPriceExTax = numTotalPriceExTax + numRowPriceExTax
                 numTotalPriceIncTax = numTotalPriceIncTax + numRowPriceIncTax
             Else
                 'EX TAX  - Price of row ex tax (row = items x qty)
-                numRowPriceExTax = Math.Round(numPricePerItem * numQuantity, 2)
-                numRowPriceIncTax = 0.0001 + (numPricePerItem * numQuantity * (1 + numTaxPerItem))
+                numRowPriceExTax = Math.Round(numPricePerItem * numQuantity, numCurrencyRoundPlaces)
+                numRowPriceIncTax = Math.Round(0.0000001 + (numRowPriceExTax * (1 + numTaxPerItem)), numCurrencyRoundPlaces)
                 numTotalPriceExTax = numTotalPriceExTax + numRowPriceExTax
                 numTotalPriceIncTax = numTotalPriceIncTax + numRowPriceIncTax
             End If
