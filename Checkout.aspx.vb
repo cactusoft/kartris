@@ -472,11 +472,11 @@ Partial Class _Checkout
             If GetKartConfig("general.tax.pricesinctax") = "y" Then
 
                 'Prices include tax
-                If UC_BasketView.GetBasket.TotalIncTax < numMinOrderValue Then
+                If UC_BasketView.GetBasket.TotalIncTax < CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), numMinOrderValue) Then
                     Response.Redirect("~/Basket.aspx?error=minimum")
                 End If
             Else
-                If UC_BasketView.GetBasket.TotalExTax < numMinOrderValue Then
+                If UC_BasketView.GetBasket.TotalExTax < CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), numMinOrderValue) Then
                     Response.Redirect("~/Basket.aspx?error=minimum")
                 End If
             End If
