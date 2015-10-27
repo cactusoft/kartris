@@ -246,6 +246,8 @@ Partial Class Callback
                             strCallbackError = "Callback Failure: " & vbCrLf & "Order ID: " & O_ID & "- Order Amount doesn't match. " & vbCrLf & _
                                         "Order Value in DB: " & Math.Round(O_TotalPriceGateway, 2) & vbCrLf & _
                                         "  Order Value from Gateway: " & Math.Round(clsPlugin.CallbackOrderAmount, 2) & vbCrLf & _
+                                        "Order Value in DB (neutralized): " & NeutralizeCurrencyValue(Math.Round(O_TotalPriceGateway, 2)) & vbCrLf & _
+                                        "  Order Value from Gateway (neutralized): " & NeutralizeCurrencyValue(Math.Round(clsPlugin.CallbackOrderAmount, 2)) & vbCrLf & _
                                         "  Ref: " & clsPlugin.CallbackReferenceCode
                         End If
                     End If
@@ -435,6 +437,8 @@ Partial Class Callback
     Function NeutralizeCurrencyValue(ByVal strInput As String) As String
         strInput = Replace(strInput, ",", "")
         strInput = Replace(strInput, ".", "")
+        'Need to trim leading zeroes
+        strInput = strInput.TrimStart(New [Char]() {"0"c})
         Return strInput
     End Function
 End Class
