@@ -402,7 +402,7 @@ Partial Class ProductVersions
 
         Else
             If IsNumeric(lblVID_Options.Text) Then UC_AddToBasketQty4.VersionID = CLng(lblVID_Options.Text)
-            btnAdd_Options.Text = GetGlobalResourceObject("_Kartris", "FormButton_Add")
+            btnAdd_Options.Text = GetGlobalResourceObject("Products", "FormButton_Add")
         End If
         'End If
         'UC_OptionsContainer.
