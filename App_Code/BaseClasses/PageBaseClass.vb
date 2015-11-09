@@ -415,7 +415,11 @@ Public MustInherit Class PageBaseClass
         'logged into back end - if so, redirect to
         'closed message
         If Not HttpSecureCookie.IsBackendAuthenticated() Then
-            If GetKartConfig("general.storestatus") <> "open" Then Server.Transfer("~/Closed.aspx")
+            If Not Current.Request.Url.AbsoluteUri.ToLower.Contains("callback") Then
+                'We want to allow the callback to work so we can test payment
+                'gateways even while the site is closed
+                If GetKartConfig("general.storestatus") <> "open" Then Server.Transfer("~/Closed.aspx")
+            End If
         End If
 
         '301 Redirect Code
