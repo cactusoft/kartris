@@ -209,6 +209,7 @@ Public Class KartrisClasses
             CkartrisFormatErrors.LogError("Can't retrieve country info in the specified language -- COUNTRY_ID: " & countryId & "  LANGUAGE_ID: " & numLANGID)
             Return Nothing
         End Function
+
         ''' <param name="LanguageID">Optional. Gets the default language if not specified</param>
         Public Shared Function [GetByIsoCode](ByVal countryIsoCode As String, Optional ByVal LanguageID As Int16 = 0) As Country
             Dim numLANGID As Int16

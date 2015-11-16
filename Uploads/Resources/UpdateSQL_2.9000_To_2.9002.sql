@@ -82,3 +82,129 @@ BEGIN
 	DEALLOCATE crsrPriceList;
 END
 GO
+
+/****** Object:  StoredProcedure [dbo].[spKartrisVersions_GetOptionsStockQuantity]    Script Date: 2015-11-10 17:35:28 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul/Mohammad
+-- Create date: <Create Date,,>
+-- Description:	Updated so returns base version
+-- stock level if not combinatoins product
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisVersions_GetOptionsStockQuantity]
+(
+	@P_ID as int,
+	@OptionList as nvarchar(500),
+	@Qty as real OUT
+)
+AS
+BEGIN
+	DECLARE @NoOfCombinations as int;
+	SELECT	@NoOfCombinations = Count(V_ID)
+	FROM    tblKartrisVersions 
+	WHERE   (tblKartrisVersions.V_ProductID = @P_ID) 
+			AND (tblKartrisVersions.V_Type = 'c') 
+			AND (tblKartrisVersions.V_Live = 1);
+	IF @NoOfCombinations = 0
+	BEGIN
+		SET @Qty = 100;
+		GoTo No_Combinations_Exist;
+	END
+	
+	DECLARE @SIndx as int;
+	DECLARE @CIndx as int;
+	DECLARE @OptionID as nvarchar(4);
+	DECLARE @Counter as int;
+
+	DECLARE @VersionID AS bigint;
+	DECLARE ProductVersionsCursor CURSOR FOR
+	SELECT	V_ID
+	FROM    tblKartrisVersions 
+	WHERE   (tblKartrisVersions.V_ProductID = @P_ID) 
+			AND (tblKartrisVersions.V_Type = 'c') 
+			AND (tblKartrisVersions.V_Live = 1)
+
+	OPEN ProductVersionsCursor
+	FETCH NEXT FROM ProductVersionsCursor
+	INTO @VersionID;
+
+	DECLARE @WantedVersionID as bigint;
+	SET @WantedVersionID = 0;
+
+	DECLARE @No as tinyint;
+	SET @No = 0;
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		PRINT 'Version' + Cast(@VersionID as nvarchar);
+		SET @SIndx = 0;
+		SET @Counter = 0;
+		WHILE @SIndx <= LEN(@OptionList)
+		BEGIN
+
+			-- Loop through out the keyword's list
+			SET @Counter = @Counter + 1;	-- keywords counter
+			SET @CIndx = CHARINDEX(',', @OptionList, @SIndx)	-- Next keyword starting index (1-Based Index)
+			IF @CIndx = 0 BEGIN SET @CIndx = LEN(@OptionList)+ 1 END	-- If no more keywords, set next starting index to not exist
+			SET @OptionID = SUBSTRING(@OptionList, @SIndx, @CIndx - @SIndx)
+			PRINT 'Key:' + @OptionID;
+			
+			SELECT @No = Count(1)
+			FROM tblKartrisVersionOptionLink
+			WHERE V_OPT_OptionID = CAST(@OptionID AS BIGINT) AND V_OPT_VersionID = @VersionID;
+			PRINT 'No:' + Cast(@No as nvarchar) + ' ON option:' + @OptionID + ' AND version:' + CAST(@VersionID AS nvarchar);
+
+			IF @No = 0
+			BEGIN
+				BREAK;
+			END
+
+			SET @SIndx = @CIndx + 1;	-- The next starting index
+		END
+
+		IF @No <> 0
+		BEGIN
+			DECLARE @NoOfRecords as int;
+			SET @NoOfRecords = 0;
+
+			SELECT	@NoOfRecords = Count(1)
+			FROM	tblKartrisVersionOptionLink 
+			WHERE tblKartrisVersionOptionLink.V_OPT_VersionID = @VersionID;
+
+			IF @NoOfRecords = @Counter
+			BEGIN			
+				SET @WantedVersionID = @VersionID;
+				BREAK;
+			END
+		END	
+		
+		FETCH NEXT FROM ProductVersionsCursor
+		INTO @VersionID;	
+	END
+
+	CLOSE ProductVersionsCursor
+	DEALLOCATE ProductVersionsCursor;
+
+	SELECT	@Qty = tblKartrisVersions.V_Quantity
+	FROM    tblKartrisVersions 
+	WHERE   V_ID = @WantedVersionID;
+		
+
+	No_Combinations_Exist:
+	-- Get stock quanity of the base version, should be only one
+	SELECT @Qty = V_Quantity FROM tblKartrisVersions WHERE V_ProductID = @P_ID
+END
+
+GO
+
+/* New Config settings for postcodes4u data lookup */
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES
+ (N'general.services.postcodes4u.username', N'', N's', N't', NULL, N'Your account username for postcodes4u. Leave blank to disable this feature.', 2.9002, N'', 0)
+GO
+
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES
+ (N'general.services.postcodes4u.key', N'', N's', N't', NULL, N'Product key for your postcodes4u account.', 2.9002, N'', 0)
+GO
