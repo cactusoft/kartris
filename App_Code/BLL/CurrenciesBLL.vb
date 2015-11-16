@@ -65,14 +65,21 @@ Public Class CurrenciesBLL
         ByVal _CurrencyID As Short, ByVal _Price As Single, _
         Optional ByVal blnShowSymbol As Boolean = True, Optional ByVal blnIncludeLeftDirectionTag As Boolean = True) As String
 
-        If KartSettingsManager.GetKartConfig("frontend.users.access") = "partial" And Not HttpContext.Current.User.Identity.IsAuthenticated Then
-            'Change text to hidden message
-            Try
-                Return GetGlobalResourceObject("Kartris", "ContentText_HiddenPriceText")
-            Catch
-                Return "XXXX"
-            End Try
-            Exit Function
+        If KartSettingsManager.GetKartConfig("frontend.users.access") = "partial" Then
+            'We check path of page, as we only want to obscure prices for front end 
+            'if 'partial'
+            Dim strFullOriginalPath As String = HttpContext.Current.Request.Url.ToString()
+
+            If Not HttpContext.Current.User.Identity.IsAuthenticated _
+            And Not strFullOriginalPath.ToLower.Contains("/admin") Then
+                'Change text to hidden message
+                Try
+                    Return GetGlobalResourceObject("Kartris", "ContentText_HiddenPriceText")
+                Catch
+                    Return "XXXX"
+                End Try
+                Exit Function
+            End If
         End If
 
         Dim rowCurrencies As DataRow()
