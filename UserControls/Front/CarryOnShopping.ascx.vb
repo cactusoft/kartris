@@ -54,6 +54,8 @@ Partial Class CarryOnShopping
         '' Gets the Title of CarryOnShopping's section, if one of the lists has data.
         If rptRelatedProducts.Items.Count > 0 OrElse rptLinkedCategories.Items.Count > 0 OrElse rptPeopleWhoBoughtThis.Items.Count > 0 Then
             litCarryOnShoppingHeader.Text = GetGlobalResourceObject("Products", "ContentText_CarryOnShopping")
+        Else
+            Me.Visible = False
         End If
 
     End Sub
@@ -119,17 +121,29 @@ Partial Class CarryOnShopping
     ''' <remarks></remarks>
     Sub LoadLinkedCategories()
 
-        '' Add the linked categories to a DataTable
-        Dim tblCategories As New DataTable
-        tblCategories = CategoriesBLL.GetCategoriesByProductID(_ProductID, _LanguageID)
+        Dim intLinkedCategories As Integer
 
-        '' If there is no linked categories, then exit this section.
-        If tblCategories.Rows.Count = 0 Then Exit Sub
+        Try
+            intLinkedCategories = CInt(GetKartConfig("frontend.crossselling.trythesecategories"))
+        Catch ex As Exception
+            intLinkedCategories = 0
+        End Try
 
-        '' Bind the linked categories in to rptLinkedCategories, and View its container.
-        phdLinkedCategories.Visible = True
-        rptLinkedCategories.DataSource = tblCategories.DefaultView
-        rptLinkedCategories.DataBind()
+        If intLinkedCategories > 0 Then
+            '' Add the linked categories to a DataTable
+            Dim tblCategories As New DataTable
+            tblCategories = CategoriesBLL.GetCategoriesByProductID(_ProductID, _LanguageID)
+
+            '' If there is no linked categories, then exit this section.
+            If tblCategories.Rows.Count = 0 Then Exit Sub
+
+            '' Bind the linked categories in to rptLinkedCategories, and View its container.
+            phdLinkedCategories.Visible = True
+            rptLinkedCategories.DataSource = tblCategories.DefaultView
+            rptLinkedCategories.DataBind()
+        Else
+            phdLinkedCategories.Visible = False
+        End If
     End Sub
 
     Protected Sub rptLinkedCategories_ItemDataBound(ByVal Sender As Object, ByVal e As RepeaterItemEventArgs) Handles rptLinkedCategories.ItemDataBound

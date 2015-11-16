@@ -34,17 +34,25 @@
                         <asp:LinkButton ID="lnkNewOptionGroup" CssClass="linkbutton icon_new" runat="server"
                             Text="<%$ Resources: _Kartris, FormButton_New %>" CommandName="new" />
                     </div>
+                    <div class="column_displaytype" style="width: 55px;">
+                        <asp:Literal ID="litID" runat="server" Text='ID'></asp:Literal></div>
                     <div class="column_optionname">
                         <asp:Literal ID="litContentTextName" runat="server" Text='<%$ Resources: _Kartris, ContentText_Name %>'></asp:Literal></div>
+                    <div class="column_displaytype" style="width: 130px;">
+                        <asp:Literal ID="litFormLabelOrderByValue1" runat="server" Text='<%$ Resources: _Kartris, FormLabel_OrderByValue %>'/></div>
                     <div class="column_displaytype">
                         <asp:Literal ID="litFormLabelOptionDisplayType" runat="server" Text='<%$ Resources: _Kartris, FormLabel_OptionDisplayType %>'></asp:Literal></div>
                 </HeaderTemplate>
                 <%-- Item --%>
                 <ItemTemplate>
+                    <div class="column_displaytype" style="width: 55px;">
+                        <asp:Literal ID="litOptionGrpID" runat="server" Text='<%# Eval("OPTG_ID") %>' Visible="true"></asp:Literal></div>
                     <div class="column_optionname">
-                        <asp:Literal ID="litOptionGrpID" runat="server" Text='<%# Eval("OPTG_ID") %>' Visible="false"></asp:Literal>
+                        
                         <asp:LinkButton ID="lnkBtnGrpName" runat="server" Text='<%# Eval("OPTG_BackendName") %>'
                             CommandArgument='<%# Eval("OPTG_ID") %>' CommandName="edit" /></div>
+                    <div class="column_displaytype" style="width: 130px;">
+                        <asp:Literal ID="litOrderByValue1" runat="server" Text='<%# Eval("OPTG_DefOrderByValue") %>'/></div>
                     <div class="column_displaytype">
                         <asp:Literal ID="litDisplay" runat="server" Text='<%# Eval("Display") %>' />
                         <asp:Literal ID="litDisplayType" runat="server" Text='<%# Eval("OPTG_OptionDisplayType") %>'

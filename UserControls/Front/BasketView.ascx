@@ -13,7 +13,7 @@ CUSTOMIZE POPUP
                 <asp:Literal ID="litContentTextCustomization" runat="server" Text='<%$ Resources: Kartris, ContentText_Customization %>'
                     EnableViewState="false" /></h2>
             <asp:LinkButton ID="lnkClose" runat="server" Text="" CssClass="closebutton" />
-            <asp:LinkButton ID="lnkDummy" runat="server" Text="X" CssClass="closebutton" />
+            <asp:LinkButton ID="lnkDummy" runat="server" Text="×" CssClass="closebutton" />
             <div>
                 <!-- Cancel Customization Link -->
                 <asp:PlaceHolder ID="phdCustomizationCancel" runat="server" Visible="True">
@@ -1017,7 +1017,7 @@ ADD TO BASKET POPUP
                     EnableViewState="false" />
             </p>
             <asp:Button ID="btnDummy" runat="server" Text="dummy" CssClass="invisible" />
-            <asp:LinkButton ID="btnCancel" runat="server" Text="X" CssClass="closebutton" />
+            <asp:LinkButton ID="btnCancel" runat="server" Text="×" CssClass="closebutton" />
         </asp:Panel>
         <ajaxToolkit:ModalPopupExtender ID="popAddToBasket" runat="server" TargetControlID="btnDummy"
             PopupControlID="pnlAddToBasket" BackgroundCssClass="popup_background" OkControlID="btnDummy"

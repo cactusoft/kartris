@@ -16,6 +16,7 @@ Imports System.Collections
 Imports System.Collections.Generic
 Imports Payment
 Imports KartrisClasses
+Imports KartSettingsManager
 
 Partial Class UserControls_General_CheckoutAddress
 
@@ -213,6 +214,8 @@ Partial Class UserControls_General_CheckoutAddress
 
     Protected Sub btnEdit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnEdit.Click
         If ViewState("_SelectedAddress") IsNot Nothing Then UC_CustomerAddress.InitialAddressToDisplay = DirectCast(ViewState("_SelectedAddress"), Address)
+        phdAddressEnterForm.Visible = True
+        phdAddressLookup.Visible = False
         popExtender.Show()
     End Sub
 
@@ -255,8 +258,213 @@ Partial Class UserControls_General_CheckoutAddress
 
     Protected Sub lnkNew_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkNew.Click, lnkAdd.Click
         UC_CustomerAddress.Clear()
+        RunAddressLookupRoutine()
         popExtender.Show()
     End Sub
 
     Public Event CountryUpdated(ByVal sender As Object, ByVal e As System.EventArgs)
+
+    ''' <summary>
+    ''' Postcodes4u is a UK based web service that
+    ''' provides full address details from a postcode.
+    ''' If the site has an account setup with them, 
+    ''' we can use this to populate UK addresses to 
+    ''' the address control
+    ''' </summary>
+    Private Sub RunAddressLookupRoutine()
+        If GetKartConfig("general.services.postcodes4u.username") <> "" Then
+            'We are using postcodes4u
+            phdAddressEnterForm.Visible = False
+            phdAddressLookup.Visible = True
+            txtZipCode.Text = ""
+            lbxChooseAddress.ClearSelection()
+
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Postcodes4u - when country selected, show
+    ''' main form and pre-select country. This is
+    ''' for non-UK selections
+    ''' </summary>
+    Protected Sub ddlCountry_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlCountry.SelectedIndexChanged
+
+        'Not uk, so stop checking, just show the form
+        'and select the country
+        phdAddressEnterForm.Visible = True
+        phdAddressLookup.Visible = False
+        UC_CustomerAddress.CountryId = ddlCountry.SelectedValue
+
+        popExtender.Show()
+    End Sub
+
+    ''' <summary>
+    ''' Postcode entered, we need to look this up
+    ''' and provide a list of addresses
+    ''' </summary>
+    Protected Sub lnkLookup_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkLookup.Click
+        Dim dtsAddresses As DataSet = PostcodeSearch(txtZipCode.Text)
+        Try
+            If dtsAddresses.Tables("Summary").Rows.Count = 0 Then
+                litNotValidError.Text = "<span class=""error"">Postcode is not valid!</span>"
+            Else
+                litNotValidError.Text = ""
+                lbxChooseAddress.DataSource = dtsAddresses.Tables("Summary")
+                lbxChooseAddress.DataValueField = "Id"
+                lbxChooseAddress.DataTextField = "StreetAddress"
+                lbxChooseAddress.DataBind()
+                phdChooseAddress.Visible = True
+            End If
+        Catch ex As Exception
+            'Probably got an error back
+            litNotValidError.Text = "<span class=""error"">Postcode is not valid!</span>"
+        End Try
+        popExtender.Show()
+    End Sub
+
+    ''' <summary>
+    ''' This gets a dataset of addresses from
+    ''' postcodes4u, containing Id, Street Address
+    ''' and place
+    ''' </summary>
+    Private Function PostcodeSearch(ByVal strPostcode As String) As DataSet
+        Dim strFormat As String = "xml"
+        Dim strKey As String = GetKartConfig("general.services.postcodes4u.key")
+        Dim strUsername As String = GetKartConfig("general.services.postcodes4u.username")
+        Dim strURL As String = "http://services.3xsoftware.co.uk/search/bypostcode/"
+        strURL &= System.Web.HttpUtility.UrlEncode(strFormat)
+        strURL &= "?username=" + System.Web.HttpUtility.UrlEncode(strUsername)
+        strURL &= "&key=" + System.Web.HttpUtility.UrlEncode(strKey)
+        strURL &= "&postcode=" + System.Web.HttpUtility.UrlEncode(Replace(strPostcode, " ", "").ToUpper)
+
+        'Create the dataset  
+        Dim dtsAddresses = New DataSet()
+        dtsAddresses.ReadXml(strURL)
+
+        'Check for an error      
+        If (dtsAddresses.Tables("Error") IsNot Nothing) AndAlso (dtsAddresses.Tables("Error").Columns("Description") IsNot Nothing) Then
+            Dim exc As String = dtsAddresses.Tables("Error").Rows(0)("Description").ToString()
+            'Throw New Exception(exc)
+        Else
+            litNotValidError.Text = ""
+            If dtsAddresses.Tables("Summary") IsNot Nothing Then
+                dtsAddresses.Tables("Summary").Constraints.Clear()
+                If dtsAddresses.Tables("Summary").Rows.Count > 0 Then
+                    'We want to merge Street Address & Place together
+                    For i = 0 To dtsAddresses.Tables("Summary").Rows.Count - 1
+                        dtsAddresses.Tables("Summary").Rows(i)("StreetAddress") &= ", " & dtsAddresses.Tables("Summary").Rows(i)("Place")
+                    Next
+                End If
+
+            End If
+            dtsAddresses.Relations.Clear()
+            If dtsAddresses.Tables("Summaries") IsNot Nothing Then
+                dtsAddresses.Tables.Remove("Summaries")
+            End If
+            'Return the dataset  
+            Return dtsAddresses
+        End If
+
+        'FYI: The dataset contains the following columns:     
+        'Id        
+        'StreetAddress      
+        'Place   
+    End Function
+
+    ''' <summary>
+    ''' Looks up address details from selected
+    ''' address ID
+    ''' </summary>
+    Private Function AddressLookupByID(ByVal numID As Integer) As DataSet
+        Dim strFormat As String = "xml"
+        Dim strKey As String = GetKartConfig("general.services.postcodes4u.key")
+        Dim strUsername As String = GetKartConfig("general.services.postcodes4u.username")
+        Dim strURL As String = "http://services.3xsoftware.co.uk/search/byid/"
+        strURL &= System.Web.HttpUtility.UrlEncode(strFormat)
+        strURL &= "?username=" + System.Web.HttpUtility.UrlEncode(strUsername)
+        strURL &= "&key=" + System.Web.HttpUtility.UrlEncode(strKey)
+        strURL &= "&id=" + System.Web.HttpUtility.UrlEncode(numID)
+
+        'Create the dataset  
+        Dim dtsAddress = New DataSet()
+        dtsAddress.ReadXml(strURL)
+
+        'Check for an error      
+        If (dtsAddress.Tables("Error") IsNot Nothing) AndAlso (dtsAddress.Tables("Error").Columns("Description") IsNot Nothing) Then
+            Dim exc As String = dtsAddress.Tables("Error").Rows(0)("Description").ToString()
+            Throw New Exception(exc)
+            litNotValidError.Text = "<span class=""error"">" & exc & "</span>"
+        Else
+            litNotValidError.Text = """"
+        End If
+        If dtsAddress.Tables("Summary") IsNot Nothing Then
+            dtsAddress.Tables("Summary").Constraints.Clear()
+        End If
+        dtsAddress.Relations.Clear()
+
+        'Return the dataset  
+        Return dtsAddress
+    End Function
+
+    ''' <summary>
+    ''' Postcodes4u - when a looked up
+    ''' address is chosen, grab the ID
+    ''' look up details, fill address form
+    ''' </summary>
+    Protected Sub lbxChooseAddress_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles lbxChooseAddress.SelectedIndexChanged
+
+        'Lookup address by ID from postcodes4u
+        Dim dtsAddress As DataSet = AddressLookupByID(lbxChooseAddress.SelectedValue)
+        Dim strAddress As String = ""
+
+        'Let's format a string for street address
+        'This will include building name, number and street
+        'if available. We use pipes to separate, this way we
+        'can work out any blank entries and end up joining 
+        'what is left with comma-spaces
+        strAddress &= "|" & dtsAddress.Tables("Address").Rows(0)("BuildingName") & "|"
+        strAddress &= "|" & Trim(dtsAddress.Tables("Address").Rows(0)("BuildingNumber") & " " & dtsAddress.Tables("Address").Rows(0)("PrimaryStreet")) & "|"
+
+        'Remove four pipes, this gets rid of any blank entries from above
+        'where have buildingname and primarystreet only
+        strAddress = Replace(strAddress, "||||", "")
+
+        'Remove three pipes, this gets rid of any blank entries from above
+        strAddress = Replace(strAddress, "|||", "")
+
+        'Any two pipes left should be joins between two values
+        strAddress = Replace(strAddress, "||", ", ")
+
+        'Single pipes might be left and start or finish
+        'so remove them
+        strAddress = Replace(strAddress, "|", "")
+
+        'Set customer address form fields to values returned from
+        'postcodes4u
+        UC_CustomerAddress.Company = dtsAddress.Tables("Address").Rows(0)("Company")
+        UC_CustomerAddress.Address = strAddress
+        UC_CustomerAddress.City = dtsAddress.Tables("Address").Rows(0)("PostTown")
+        UC_CustomerAddress.State = dtsAddress.Tables("Address").Rows(0)("County")
+        UC_CustomerAddress.Postcode = dtsAddress.Tables("Address").Rows(0)("Postcode")
+        UC_CustomerAddress.ISOCountryFilter = "GB" 'Tell the address control to only show GB destination records
+
+        'We also want to pre-select country. But some stores
+        'in UK may have multiple UK destination records for
+        'shipping purposes, for example Mainland, NI, Highlands
+        'and Islands etc. So what we'll do is try to select
+        'it by name rather than value, this should not select
+        'anything if there are multiple UK records
+        Try
+            UC_CustomerAddress.CountryId = 199
+            If UC_CustomerAddress.CountryName = "United Kingdom" Then
+                UC_CustomerAddress.CountryId = 0
+            End If
+        Catch ex As Exception
+
+        End Try
+
+        phdAddressEnterForm.Visible = True
+        phdAddressLookup.Visible = False
+        popExtender.Show()
+    End Sub
 End Class
