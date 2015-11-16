@@ -129,7 +129,7 @@
                                         <br />
                                     </asp:View>
                                 </asp:MultiView>
-                                <asp:LinkButton ID="btnCancel" CssClass="closebutton linkbutton" runat="server" Text="X"
+                                <asp:LinkButton ID="btnCancel" CssClass="closebutton linkbutton" runat="server" Text="×"
                                     CausesValidation="false" EnableViewState="false" />
                             </asp:Panel>
                         </Content>
@@ -184,7 +184,7 @@
                                 <asp:Button CausesValidation="false" ID="btnRecoveryClose" CssClass="button" runat="server"
                                     Text="<%$ Resources: Kartris, ContentText_Close %>" />
                                 <asp:LinkButton ID="lnkRecoveryClose" CssClass="closebutton linkbutton" runat="server"
-                                    Text="X" CausesValidation="false" EnableViewState="false" />
+                                    Text="×" CausesValidation="false" EnableViewState="false" />
                             </asp:Panel>
                         </Content>
                     </ajaxToolkit:AccordionPane>

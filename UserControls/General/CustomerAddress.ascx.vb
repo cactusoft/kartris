@@ -24,6 +24,8 @@ Partial Public Class UserControls_Front_CustomerAddress
     Inherits ValidatableUserControl
     Public Event CountryUpdated(ByVal sender As Object, ByVal e As System.EventArgs)
 
+    Dim strISOCountryFilter As String = ""
+
     Public Property DisplayType() As String
         Get
             Return hidDisplayType.Value
@@ -60,6 +62,12 @@ Partial Public Class UserControls_Front_CustomerAddress
     Public WriteOnly Property AutoPostCountry() As Boolean
         Set(ByVal value As Boolean)
             ddlCountry.AutoPostBack = value
+        End Set
+    End Property
+
+    Public WriteOnly Property ISOCountryFilter() As String
+        Set(ByVal value As String)
+            strISOCountryFilter = value
         End Set
     End Property
 
@@ -130,64 +138,109 @@ Partial Public Class UserControls_Front_CustomerAddress
         End Get
     End Property
 
-    Public ReadOnly Property FullName() As String
+    Public Property FullName() As String
         Get
             Return StripHTML(txtLastName.Text.Trim())
         End Get
+        Set(ByVal value As String)
+            If Not String.IsNullOrEmpty(value) Then
+                txtLastName.Text = value
+            End If
+        End Set
     End Property
 
-    Public ReadOnly Property LastName() As String
+    Public Property LastName() As String
         Get
             Return StripHTML(txtLastName.Text.Trim())
         End Get
+        Set(ByVal value As String)
+            If Not String.IsNullOrEmpty(value) Then
+                txtLastName.Text = value
+            End If
+        End Set
     End Property
 
-    Public ReadOnly Property Company() As String
+    Public Property Company() As String
         Get
             Return StripHTML(txtCompanyName.Text.Trim())
         End Get
+        Set(ByVal value As String)
+            If Not String.IsNullOrEmpty(value) Then
+                txtCompanyName.Text = value
+            End If
+        End Set
     End Property
 
-    Public ReadOnly Property Address() As String
+    Public Property Address() As String
         Get
             Return StripHTML(txtAddress.Text.Trim())
         End Get
+        Set(ByVal value As String)
+            If Not String.IsNullOrEmpty(value) Then
+                txtAddress.Text = value
+            End If
+        End Set
     End Property
 
-    Public ReadOnly Property City() As String
+    Public Property City() As String
         Get
             Return StripHTML(txtCity.Text.Trim())
         End Get
+        Set(ByVal value As String)
+            If Not String.IsNullOrEmpty(value) Then
+                txtCity.Text = value
+            End If
+        End Set
     End Property
 
-    Public ReadOnly Property State() As String
+    Public Property State() As String
         Get
             If String.IsNullOrEmpty(txtState.Text) OrElse String.IsNullOrEmpty(ddlCountry.SelectedValue) Then
                 Return StripHTML(txtState.Text)
             End If
             Return StripHTML(txtState.Text)
         End Get
+        Set(ByVal value As String)
+            If Not String.IsNullOrEmpty(value) Then
+                txtState.Text = value
+            End If
+        End Set
     End Property
 
-    Public ReadOnly Property CountryId() As Integer
+    Public Property CountryId() As Integer
         Get
             If String.IsNullOrEmpty(ddlCountry.SelectedValue) Then
                 Return 0
             End If
             Return Integer.Parse(ddlCountry.SelectedValue)
         End Get
+        Set(ByVal value As Integer)
+            If Not String.IsNullOrEmpty(value) Then
+                ddlCountry.SelectedValue = value
+            End If
+        End Set
     End Property
 
-    Public ReadOnly Property Postcode() As String
+    Public Property Postcode() As String
         Get
             Return StripHTML(txtZipCode.Text.Trim())
         End Get
+        Set(ByVal value As String)
+            If Not String.IsNullOrEmpty(value) Then
+                txtZipCode.Text = value
+            End If
+        End Set
     End Property
 
-    Public ReadOnly Property Phone() As String
+    Public Property Phone() As String
         Get
             Return StripHTML(txtPhone.Text)
         End Get
+        Set(ByVal value As String)
+            If Not String.IsNullOrEmpty(value) Then
+                txtPhone.Text = value
+            End If
+        End Set
     End Property
 
     Public ReadOnly Property AddressID() As Integer

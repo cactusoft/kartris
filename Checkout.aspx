@@ -77,7 +77,7 @@
                             <asp:Button CausesValidation="false" ID="btnOk" CssClass="button" runat="server"
                                 Text="<%$ Resources: Kartris, ContentText_OK %>" />
                         </div>
-                        <asp:LinkButton ID="btnCancel" CssClass="closebutton linkbutton" runat="server" Text="X"
+                        <asp:LinkButton ID="btnCancel" CssClass="closebutton linkbutton" runat="server" Text="×"
                             CausesValidation="false" />
                     </asp:Panel>
                     <!--

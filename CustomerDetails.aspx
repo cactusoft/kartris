@@ -168,7 +168,7 @@
                                     CausesValidation="true" />
                             </div>
                         </div>
-                        <asp:LinkButton ID="btnAddressCancel" runat="server" Text="X" CssClass="closebutton linkbutton2" />
+                        <asp:LinkButton ID="btnAddressCancel" runat="server" Text="×" CssClass="closebutton linkbutton2" />
                     </div>
                 </asp:Panel>
                 <user:AnimatedText runat="server" ID="UC_Updated" />
