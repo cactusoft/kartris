@@ -208,3 +208,18 @@ GO
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES
  (N'general.services.postcodes4u.key', N'', N's', N't', NULL, N'Product key for your postcodes4u account.', 2.9002, N'', 0)
 GO
+
+/****** Object:  Index [idxOrderStatus]    Script Date: 2015-11-17 10:44:08 ******/
+/* This creates an index incorporating the order status fields. Without this
+the order count used when displaying orders list in the back end can run slowly
+when there are huge numbers of orders. With this, it's zippy, even with 100s of
+1000s of orders */
+CREATE NONCLUSTERED INDEX [idxOrderStatus] ON [dbo].[tblKartrisOrders]
+(
+	[O_Sent] ASC,
+	[O_Invoiced] ASC,
+	[O_Shipped] ASC,
+	[O_Paid] ASC,
+	[O_Cancelled] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
