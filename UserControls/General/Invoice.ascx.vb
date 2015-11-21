@@ -138,6 +138,13 @@ Partial Class UserControls_General_Invoice
         strShippingAddress = Replace(strShippingAddress, vbCrLf & vbCrLf, vbCrLf)
         strShippingAddress = Replace(strShippingAddress & "", vbCrLf, "<br />" & vbCrLf)
 
+        'Remove phone number, last line of address
+        Dim aryShippingAddress As Array = Split(strShippingAddress, "<br />")
+        strShippingAddress = ""
+        For numCounter = 0 To UBound(aryShippingAddress) - 1
+            strShippingAddress &= aryShippingAddress(numCounter) & "<br />"
+        Next
+
         strOrderComments = Replace(strOrderComments, vbCrLf & vbCrLf, vbCrLf)
         strOrderComments = Replace(strOrderComments & "", vbCrLf, "<br />" & vbCrLf)
 
