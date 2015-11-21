@@ -223,3 +223,13 @@ CREATE NONCLUSTERED INDEX [idxOrderStatus] ON [dbo].[tblKartrisOrders]
 	[O_Cancelled] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
+
+/****** Object:  Index [idxOrderDate]    Script Date: 2015-11-21 14:13:56 ******/
+/* This creates an index of the order date field, without which the date
+search for orders in the back end can be very slow on sites with huge numbers
+of orders */
+CREATE NONCLUSTERED INDEX [idxOrderDate] ON [dbo].[tblKartrisOrders]
+(
+	[O_Date] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
+GO
