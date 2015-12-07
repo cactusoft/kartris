@@ -102,12 +102,12 @@ Partial Class UserControls_Back_OrderDetails
         'Hide edit button if order data is empty and if order is not flagged as replaced
         If Trim(hidOrderData.Value) <> "" And OrdersBLL._GetChildOrderID(ViewState("numOrderID")) = 0 Then
             DirectCast(fvwOrderDetails.FindControl("lnkBtnEdit"), LinkButton).Visible = True
-            DirectCast(fvwOrderDetails.FindControl("btnOrderUpdate"), LinkButton).Visible = True
-            DirectCast(fvwOrderDetails.FindControl("lnkBtnDelete"), LinkButton).Visible = True
+            'DirectCast(fvwOrderDetails.FindControl("btnOrderUpdate"), LinkButton).Visible = True
+            'DirectCast(fvwOrderDetails.FindControl("lnkBtnDelete"), LinkButton).Visible = True
         Else
             DirectCast(fvwOrderDetails.FindControl("lnkBtnEdit"), LinkButton).Visible = False
-            DirectCast(fvwOrderDetails.FindControl("btnOrderUpdate"), LinkButton).Visible = False
-            DirectCast(fvwOrderDetails.FindControl("lnkBtnDelete"), LinkButton).Visible = False
+            'DirectCast(fvwOrderDetails.FindControl("btnOrderUpdate"), LinkButton).Visible = False
+            'DirectCast(fvwOrderDetails.FindControl("lnkBtnDelete"), LinkButton).Visible = False
 
             'Show a clear message that this order was replaced
             DirectCast(fvwOrderDetails.FindControl("phdCancelledMessage"), PlaceHolder).Visible = True
