@@ -195,7 +195,7 @@
                 </HeaderTemplate>
                 <ContentTemplate>
                     <div class="subtabsection">
-                        <asp:Label ID="lblOrderText" runat="server" Text=""></asp:Label></div>
+                        <asp:Literal ID="litOrderText" runat="server" Text=""></asp:Literal></div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
         </ajaxToolkit:TabContainer>

@@ -148,10 +148,20 @@ Partial Class UserControls_Back_OrderDetails
         Else
             strOrderText = Replace(strOrderText, vbCrLf, "<br/>").Replace(vbLf, "<br/>")
         End If
-        DirectCast(tabOrderText.FindControl("lblOrderText"), Label).Text = strOrderText
+
+        'If the order string is HTML, that's fine. But if
+        'it is text, we want to put HTML line breaks where
+        'the vbcrlfs are. We can detect text simply, we just
+        'see if there are fewer than 5 HTML <> angle brackets
+        'in the text. Simple, but effective.
+        If strOrderText.Split("<").Length - 1 < 5 Then
+            strOrderText = Replace(strOrderText, vbCrLf, "<br/>" & vbCrLf)
+        End If
+
+        'Show the text
+        DirectCast(tabOrderText.FindControl("litOrderText"), Literal).Text = strOrderText
         ViewState("O_Details") = hidOrderText.Value
         hidOrderText.Value = ""
-
 
         If KartSettingsManager.GetKartConfig("backend.orders.emailupdates") = "n" Then
             phdSendEmailToCustomer.Visible = False

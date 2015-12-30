@@ -225,7 +225,7 @@ PAGES: MODIFY & CREATE ORDER (Editing and Creating)
 #page_createorder .details select,
 #page_createorder .address select,
 #page_modifyorder .details select,
-#page_modifyorder .address select       { width: 210px; }
+#page_modifyorder .address select       { min-width: 210px; }
 #page_createorder a,
 #page_modifyorder a                     { font-size: 100%; }
 #page_modifyorder .popup .price         { font-weight: bold; color: #090; }
@@ -233,6 +233,15 @@ PAGES: MODIFY & CREATE ORDER (Editing and Creating)
 #page_modifyorder .popup label          { width: 140px }
 #page_modifyorder .popup .Kartris-DetailsView-Value
                                         { width: 390px }
+
+.popup .lookuppopup  .shorttext         { width: 60px; }
+.popup .lookuppopup #nonUKaddressH2     { display: none; }
+#UKaddresscol                           { border-bottom: solid 1px #000; padding: 0 0 20px 0; }
+#nonUKaddresscol                        { padding: 20px 0; }
+#UKcolpostcode                          { display: inline-block; }
+#UKcolpostcodelookup                    { display: inline-block; padding: 0; margin: -15px 0 0 0; }
+#chooseaddress                          { display: block; width: 100%; margin-top: 20px; }
+.popup .lookuppopup  .addresslistbox    { width: 350px; }
 /* 
 ========================================================================
 PAGE: CUSTOMER GROUPS
@@ -690,7 +699,7 @@ span.link2 a                            { background-position: left top; backgro
                                         { color: #000; font-weight: bold; }
 .basket table.baskettable .applycoupon .couponbox
                                         { width: 120px; margin-right: 5px; }
-.basket select                          { width: 240px }
+.basket select                          { width: 200px; max-width: 100%; }
 .basket table.baskettable tr.shippingrow div.smallupdateprogress
                                         { float: left; margin-top: -20px; margin-left: 250px; }
 .basket table.baskettable tr.couponrow div.smallupdateprogress

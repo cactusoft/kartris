@@ -233,3 +233,7 @@ CREATE NONCLUSTERED INDEX [idxOrderDate] ON [dbo].[tblKartrisOrders]
 	[O_Date] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON)
 GO
+
+/****** 2.9002 Original Order Text ******/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_OriginalOrderText', N'Original Order Text', NULL, 2.9002, N'Original Order Text', NULL, N'_Orders',1);
+GO

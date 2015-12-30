@@ -1568,7 +1568,7 @@ Public NotInheritable Class CkartrisBLL
 
         Dim sbdItemEmailText As StringBuilder = New StringBuilder
 
-        sbdItemEmailText.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf & " " & strName & vbCrLf)
+        sbdItemEmailText.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & " " & strName & vbCrLf)
         If strDescription <> "" Then sbdItemEmailText.Append(" " & strDescription & vbCrLf)
         If GetKartConfig("general.tax.pricesinctax") = "n" Or GetKartConfig("frontend.display.showtax") = "y" Then
             sbdItemEmailText.Append(" ")
