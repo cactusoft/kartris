@@ -36,11 +36,8 @@ Partial Class UserControls_Back_EditOrder
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
-
             ViewState("Referer") = Request.ServerVariables("HTTP_REFERER")
-
             Try
-
                 'Payment gateways
                 Dim strPaymentMethods As String = GetKartConfig("frontend.payment.gatewayslist")
                 Dim arrPaymentsMethods As String() = Split(strPaymentMethods, ",")
@@ -69,28 +66,45 @@ Partial Class UserControls_Back_EditOrder
                         Else
                             Throw New Exception("Invalid gatewaylist config setting!")
                         End If
-
                     Next
-
                 Catch ex As Exception
                     Throw New Exception("Error loading payment gateway list")
                 End Try
 
+                'Check we have a payment system
                 If ddlPaymentGateways.Items.Count = 1 Then
                     Throw New Exception("No valid payment gateways")
                 End If
 
-
                 'Get the Order ID QueryString - if it won't convert to integer then force return to Orders List page
                 ViewState("numOrderID") = CType(Request.QueryString("OrderID"), Integer)
                 If ViewState("numOrderID") = 0 Then
-
+                    'jeepers, let's hope this doesn't happen
                 Else
                     Dim dtOrderRecord As DataTable = OrdersBLL.GetOrderByID(ViewState("numOrderID"))
                     If dtOrderRecord IsNot Nothing Then
                         If dtOrderRecord.Rows.Count = 1 Then
                             Dim strOrderData As String = ""
                             litOrderID.Text = dtOrderRecord.Rows(0)("O_ID")
+
+                            'If the order string is HTML, that's fine. But if
+                            'it is text, we want to put HTML line breaks where
+                            'the vbcrlfs are. We can detect text simply, we just
+                            'see if there are fewer than 5 HTML <> angle brackets
+                            'in the text. Simple, but effective.
+                            Dim strOrderText As String = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_Details"))
+                            strOrderText = Server.HtmlEncode(strOrderText)
+                            Try
+                                If strOrderText.Split("<").Length - 1 < 5 Then
+                                    strOrderText = Replace(strOrderText, vbCrLf, "<br/>" & vbCrLf)
+                                End If
+                                litOrderText.Text = strOrderText
+                            Catch ex As Exception
+                                strOrderText = Replace(strOrderText, vbCrLf, "<br/>" & vbCrLf)
+                            End Try
+
+
+
                             strOrderData = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_Data"))
                             Dim intOrderLanguageID As Int16 = CShort(dtOrderRecord.Rows(0)("O_LanguageID"))
                             Dim intOrderCurrencyID As Int16 = CShort(dtOrderRecord.Rows(0)("O_CurrencyID"))
@@ -137,6 +151,7 @@ Partial Class UserControls_Back_EditOrder
                                     End With
                                 End If
                             End With
+
                             Dim lstBilling As New Generic.List(Of Address)
                             lstBilling.Add(addBilling)
                             UC_BillingAddress.Addresses = lstBilling
@@ -155,9 +170,7 @@ Partial Class UserControls_Back_EditOrder
                                 _SelectedPaymentMethod = strOrderPaymentGateway
                                 ddlPaymentGateways.SelectedValue = strOrderPaymentGateway
                             End If
-
                             LoadBasket()
-
                         Else
                             Exit Sub
                         End If
@@ -165,8 +178,6 @@ Partial Class UserControls_Back_EditOrder
                         Exit Sub
                     End If
                 End If
-
-
             Catch ex As Exception
                 CkartrisFormatErrors.LogError(ex.Message)
                 Response.Redirect("_OrdersList.aspx")
@@ -174,19 +185,29 @@ Partial Class UserControls_Back_EditOrder
         End If
     End Sub
 
+    ''' <summary>
+    ''' Load the basket; if we pass TRUE into this, it
+    ''' will use a second basket object to load up the 
+    ''' old order data from the viewstate and then run
+    ''' each item into the main basket and save it
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub LoadBasket(Optional ByVal blnCopyOrderItems As Boolean = False)
-        Dim objBasket As kartris.Basket = UC_BasketMain.GetBasket
+        Dim objBasket As Kartris.Basket = UC_BasketMain.GetBasket
         Dim sessionID As Long = Session("SessionID")
 
-        objBasket = Payment.Deserialize(ViewState("arrOrderData")(1), objBasket.GetType)
-
         If blnCopyOrderItems Then
+            Dim objBasketTemp As Kartris.Basket = UC_BasketMain.GetBasket
+            objBasketTemp = Payment.Deserialize(ViewState("arrOrderData")(1), objBasketTemp.GetType)
             UC_BasketMain.EmptyBasket_Click(Nothing, Nothing)
-            If objBasket.BasketItems IsNot Nothing Then
+
+
+            If objBasketTemp.BasketItems IsNot Nothing Then
+
                 Dim BasketItem As New BasketItem
                 'final check if basket items are still there
 
-                For Each item As BasketItem In objBasket.BasketItems
+                For Each item As BasketItem In objBasketTemp.BasketItems
                     With item
                         BasketBLL.AddNewBasketValue(objBasket.BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, .VersionID, .Quantity, .CustomText, .OptionText)
                     End With
@@ -201,6 +222,7 @@ Partial Class UserControls_Back_EditOrder
         'reload the basketitems from the database - this confirms if the items were correctly added from the invoicerows data
         objBasket.LoadBasketItems()
 
+        'save it
         Session("Basket") = objBasket
         Session("BasketItems") = objBasket.BasketItems
 
@@ -211,7 +233,10 @@ Partial Class UserControls_Back_EditOrder
 
     End Sub
 
-    'Format back link
+    ''' <summary>
+    ''' Format back link
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Function FormatBackLink(ByVal strDate As String, ByVal strFromDate As String, ByVal strPage As String) As String
         Dim strURL As String = ""
         If strFromDate = "false" And (strPage = "" Or strPage = "1") Then
@@ -228,10 +253,13 @@ Partial Class UserControls_Back_EditOrder
                 strURL &= "&Page=" & strPage
             End If
         End If
-
         Return strURL
     End Function
 
+    ''' <summary>
+    ''' Handle checkbox for same shipping/billing
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub chkSameShippingAsBilling_CheckedChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles chkSameShippingAsBilling.CheckedChanged
         If chkSameShippingAsBilling.Checked Then
             pnlShippingAddress.Visible = False
@@ -240,9 +268,12 @@ Partial Class UserControls_Back_EditOrder
             pnlShippingAddress.Visible = True
             RefreshShippingMethods("shipping")
         End If
-
     End Sub
 
+    ''' <summary>
+    ''' Refresh shipping methods
+    ''' </summary>
+    ''' <remarks></remarks>
     Private Sub RefreshShippingMethods(Optional ByVal strControl As String = "shipping")
         Dim numShippingDestinationID As Integer
         If strControl = "billing" Then
@@ -301,17 +332,26 @@ Partial Class UserControls_Back_EditOrder
 
     End Sub
 
+    ''' <summary>
+    ''' Cancel button
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub lnkBtnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         Response.Redirect(ViewState("Referer"))
     End Sub
 
     '''' <summary>
-    '''' handles the reset and copy linkbutton being clicked
+    '''' Reset basket from order data button was clicked
     '''' </summary>
     '''' <remarks></remarks>
     Protected Sub lnkBtnResetAndCopy_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         LoadBasket(True)
     End Sub
+
+    ''' <summary>
+    ''' Add to basket on lookup box clicked
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub lnkBtnAddToBasket_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         Dim intVersionID As Long = CheckAutoCompleteData()
         If intVersionID > 0 Then
@@ -331,19 +371,26 @@ Partial Class UserControls_Back_EditOrder
             End Select
         End If
     End Sub
+
+    ''' <summary>
+    ''' Save button
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub lnkBtnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.Confirmation, GetLocalResourceObject("ContentText_ConfirmEditOrder"))
     End Sub
+
     ''' <summary>
-    ''' if the save is confirmed, "Yes" is chosen
+    ''' Confirmed save
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub _UC_PopupMsg_Confirmed() Handles _UC_PopupMsg.Confirmed
-
         Dim CUR_ID As Integer = CInt(Session("CUR_ID"))
 
         Dim strBillingAddressText As String, strShippingAddressText As String
+        Dim blnUseHTMLOrderEmail As Boolean = (GetKartConfig("general.email.enableHTML") = "y")
 
+        Dim sbdNewCustomerEmailText As StringBuilder = New StringBuilder
         Dim sbdBodyText As StringBuilder = New StringBuilder
         Dim sbdBasketItems As StringBuilder = New StringBuilder
 
@@ -402,7 +449,6 @@ Partial Class UserControls_Back_EditOrder
         Dim blnDifferentGatewayCurrency As Boolean = CUR_ID <> intGatewayCurrency
         Dim blnDifferentOrderCurrency As Boolean = CurrenciesBLL.GetDefaultCurrency <> CUR_ID
 
-
         'Promotion discount
         Dim strPromotionDescription As String = ""
         If objBasket.PromotionDiscount.IncTax < 0 Then
@@ -416,7 +462,6 @@ Partial Class UserControls_Back_EditOrder
 
         'Coupon discount
         If objBasket.CouponDiscount.IncTax < 0 Then
-
             sbdBodyText.Append(GetBasketModifierEmailText(objBasket.CouponDiscount, GetGlobalResourceObject("Kartris", "ContentText_CouponDiscount"), "strCouponName"))
         End If
 
@@ -426,7 +471,6 @@ Partial Class UserControls_Back_EditOrder
         End If
 
         sbdBodyText.Append(GetBasketModifierEmailText(objBasket.ShippingPrice, GetGlobalResourceObject("Address", "ContentText_Shipping"), IIf(String.IsNullOrEmpty(objBasket.ShippingDescription), objBasket.ShippingName, objBasket.ShippingDescription)))
-
 
         'Order handling charge
         If objBasket.OrderHandlingPrice.ExTax > 0 Then
@@ -556,6 +600,7 @@ Partial Class UserControls_Back_EditOrder
                 objOrder.Billing.Postcode = .Postcode
                 objOrder.Billing.Phone = .Phone
                 objOrder.Billing.CountryIsoCode = .Country.IsoCode
+                objOrder.Billing.Company = .Company
             End With
 
             If chkSameShippingAsBilling.Checked Then
@@ -570,6 +615,7 @@ Partial Class UserControls_Back_EditOrder
                     objOrder.Shipping.Postcode = .Postcode
                     objOrder.Shipping.Phone = .Phone
                     objOrder.Shipping.CountryIsoCode = .Country.IsoCode
+                    objOrder.Shipping.Company = .Company
                 End With
             End If
             objOrder.CustomerIPAddress = Request.ServerVariables("REMOTE_HOST")
@@ -582,6 +628,10 @@ Partial Class UserControls_Back_EditOrder
         End If
     End Sub
 
+    ''' <summary>
+    ''' Checks autocomplete data
+    ''' </summary>
+    ''' <remarks></remarks>
     Function CheckAutoCompleteData() As Long
         Dim strAutoCompleteText As String = ""
         strAutoCompleteText = _UC_AutoComplete_Item.GetText

@@ -48,11 +48,11 @@ Partial Class Back_BasketView
 
     Public Shared Property BasketItems() As List(Of Kartris.BasketItem)
         Get
-            If HttpContext.Current.Session("_BasketItems") Is Nothing Then HttpContext.Current.Session("_BasketItems") = New List(Of Kartris.BasketItem)
-            Return HttpContext.Current.Session("_BasketItems")
+            If HttpContext.Current.Session("BasketItems") Is Nothing Then HttpContext.Current.Session("BasketItems") = New List(Of Kartris.BasketItem)
+            Return HttpContext.Current.Session("BasketItems")
         End Get
         Set(ByVal value As List(Of Kartris.BasketItem))
-            HttpContext.Current.Session("_BasketItems") = value
+            HttpContext.Current.Session("BasketItems") = value
         End Set
     End Property
 
@@ -184,12 +184,10 @@ Partial Class Back_BasketView
         End If
 
         Call Basket.Validate(False)
-
         rptBasket.DataSource = BasketItems
         rptBasket.DataBind()
 
         Call Basket.CalculateTotals()
-
         Call BasketBLL.CalculatePromotions(Basket, arrPromotions, arrPromotionsDiscount, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
 
         Dim strCouponError As String = ""
@@ -197,7 +195,6 @@ Partial Class Back_BasketView
 
         BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(numCustomerID)
         Call BasketBLL.CalculateCustomerDiscount(Basket, BSKT_CustomerDiscount)
-
         Call BasketBLL.CalculateOrderHandlingCharge(Basket, Session("numShippingCountryID"))
 
         phdShipping.Visible = True
@@ -207,14 +204,12 @@ Partial Class Back_BasketView
             SetShipping(UC_ShippingMethodsDropdown.SelectedShippingID, UC_ShippingMethodsDropdown.SelectedShippingAmount, ShippingDestinationID)
         End If
 
-        If Basket.OrderHandlingPrice.IncTax = 0 Or ViewType <> BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then phdOrderHandling.Visible = False Else phdOrderHandling.Visible = True
-
+        If Basket.OrderHandlingPrice.IncTax = 0 Then phdOrderHandling.Visible = False Else phdOrderHandling.Visible = True
         Try
             phdOutOfStockElectronic.Visible = Basket.AdjustedForElectronic
             phdOutOfStock.Visible = Basket.AdjustedQuantities
         Catch ex As Exception
         End Try
-
         Session("Basket") = Basket
 
     End Sub
@@ -231,12 +226,7 @@ Partial Class Back_BasketView
             APP_PricesIncTax = LCase(GetKartConfig("general.tax.pricesinctax")) = "y"
             'For checkout, we show tax if showtax is set to 'y' or 'c'.
             'For other pages, only if it is set to 'y'.
-            If ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then
-                APP_ShowTaxDisplay = LCase(GetKartConfig("frontend.display.showtax")) = "y" Or LCase(GetKartConfig("frontend.display.showtax")) = "c"
-            Else
-                APP_ShowTaxDisplay = LCase(GetKartConfig("frontend.display.showtax")) = "y"
-            End If
-
+            APP_ShowTaxDisplay = LCase(GetKartConfig("frontend.display.showtax")) = "y"
             APP_USMultiStateTax = False
         End If
 
@@ -245,10 +235,8 @@ Partial Class Back_BasketView
         If Not (IsPostBack) Then
             Call LoadBasket()
         Else
-            If Basket.OrderHandlingPrice.IncTax = 0 Or ViewType <> BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then phdOrderHandling.Visible = False Else phdOrderHandling.Visible = True
+            If Basket.OrderHandlingPrice.IncTax = 0 Then phdOrderHandling.Visible = False Else phdOrderHandling.Visible = True
         End If
-
-        tmrAddToBasket.Enabled = False
 
     End Sub
 
@@ -269,6 +257,10 @@ Partial Class Back_BasketView
             rptBasket.DataBind()
         End If
 
+        phdMainBasket.Visible = True
+        phdControls.Visible = True
+        phdBasketButtons.Visible = True
+
         blnShowPromotion = True
         phdPromotions.Visible = True
 
@@ -284,9 +276,6 @@ Partial Class Back_BasketView
             phdBasket.Visible = False
         End If
 
-        phdMainBasket.Visible = (ViewType <> BasketBLL.VIEW_TYPE.MINI_BASKET)
-        phdShipping.Visible = (ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET)
-
         If UC_ShippingMethodsDropdown.SelectedShippingID > 0 Then
             phdShippingTax.Visible = True
             phdShippingTaxHide.Visible = False
@@ -295,113 +284,7 @@ Partial Class Back_BasketView
             phdShippingTaxHide.Visible = True
         End If
 
-        If InStr(LCase(HttpContext.Current.Request.ServerVariables("SCRIPT_NAME")), "checkout.aspx") = 0 And ViewType = BasketBLL.VIEW_TYPE.MINI_BASKET Then
-            If Not Page.IsPostBack Then
-                If Not Page.User.Identity.IsAuthenticated Then
-                    Session("blnLoginCleared") = False
-                End If
-            End If
-        End If
-
-        If InStr(LCase(HttpContext.Current.Request.ServerVariables("SCRIPT_NAME")), "checkout.aspx") > 0 And ViewType = BasketBLL.VIEW_TYPE.MINI_BASKET Then
-            phdOrderInProgress.Visible = True
-            phdMiniBasketContent.Visible = False
-            UC_ShippingMethodsDropdown.EnableViewState = False
-        Else
-            phdMiniBasketContent.Visible = True
-        End If
-
-        If ViewType = BasketBLL.VIEW_TYPE.MINI_BASKET Then
-            Call DisplayMiniBasket()
-        End If
-
-        ''// update basket item adjusted quantity
-        If ViewType = BasketBLL.VIEW_TYPE.MINI_BASKET Then
-            For Each objItem As BasketItem In BasketItems
-                If objItem.AdjustedQty Then
-                    BasketBLL.UpdateQuantity(objItem.ID, objItem.StockQty)
-                End If
-            Next
-        End If
-
         Session("Basket") = Basket
-    End Sub
-
-    Public Sub LoadMiniBasket()
-        Call LoadBasket()
-        Call DisplayMiniBasket()
-    End Sub
-
-    Sub DisplayMiniBasket()
-        Dim vFinalPriceExTax, vFinalPriceIncTax, vFinalPriceTaxAmount As Double
-
-        rptMiniBasket.DataSource = BasketItems
-        rptMiniBasket.DataBind()
-
-        If BasketItems Is Nothing OrElse BasketItems.Count = 0 Then
-            phdMiniBasketContent.Visible = False
-            phdMiniBasketEmpty.Visible = True
-            If BasketItems Is Nothing Then litNumberOfItems.Text = "0" Else litNumberOfItems.Text = BasketItems.Count
-        Else
-            litNumberOfItems.Text = Basket.TotalItems
-            phdMiniBasketEmpty.Visible = False
-        End If
-
-        phdMiniBasketPromotions.Visible = IIf(Basket.PromotionDiscount.IncTax = 0, False, True)
-        phdMiniBasketCouponDiscount.Visible = IIf(Basket.CouponDiscount.IncTax = 0, False, True)
-        phdMiniBasketCustomerDiscount.Visible = IIf(BSKT_CustomerDiscount <> 0, True, False)
-
-        lnkMiniBasketPromotions.NavigateUrl = "/" & WebShopFolder() & "Basket.aspx"
-        lnkMiniBasketCouponDiscount.NavigateUrl = "/" & WebShopFolder() & "Basket.aspx"
-        lnkMiniBasketCustomerDiscount.NavigateUrl = "/" & WebShopFolder() & "Basket.aspx"
-
-        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
-            APP_ShowTaxDisplay = False
-            APP_USMultiStateTax = True
-        Else
-            APP_ShowTaxDisplay = LCase(GetKartConfig("frontend.display.showtax")) = "y"
-            APP_USMultiStateTax = False
-        End If
-
-        vFinalPriceExTax = (Basket.FinalPriceExTax - Basket.ShippingPrice.ExTax - Basket.OrderHandlingPrice.ExTax)
-        vFinalPriceIncTax = (Basket.FinalPriceIncTax - Basket.ShippingPrice.IncTax - Basket.OrderHandlingPrice.IncTax)
-        vFinalPriceTaxAmount = (Basket.FinalPriceTaxAmount - Basket.ShippingPrice.TaxAmount - Basket.OrderHandlingPrice.TaxAmount)
-
-        If Basket.PricesIncTax Then
-            If APP_ShowTaxDisplay Then
-                phdMiniBasketTotal.Visible = False
-                litMiniBasketTax1.Text = GetGlobalResourceObject("Kartris", "ContentText_MinibasketExTax") & "&nbsp;<span class=""price"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceExTax) & "</span>"
-                litMiniBasketTax2.Text = GetGlobalResourceObject("Kartris", "ContentText_MinibasketIncludingTax") & "&nbsp;<span class=""total"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceIncTax) & "</span>"
-            Else
-                phdMiniBasketTax.Visible = False
-                litMiniBasketTotal.Text = GetGlobalResourceObject("Kartris", "ContentText_MinibasketTotal") & "&nbsp;<span class=""total"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceIncTax) & "</span>"
-            End If
-        Else
-            If APP_ShowTaxDisplay Then
-                phdMiniBasketTotal.Visible = False
-                litMiniBasketTax1.Text = GetGlobalResourceObject("Kartris", "ContentText_MinibasketTotal") & "&nbsp;<span class=""total"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceExTax) & "</span>"
-                litMiniBasketTax2.Text = GetGlobalResourceObject("Kartris", "ContentText_Tax") & "&nbsp;<span class=""price"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceTaxAmount) & "</span>"
-            Else
-                phdMiniBasketTax.Visible = False
-                litMiniBasketTotal.Text = GetGlobalResourceObject("Kartris", "ContentText_MinibasketTotal") & "&nbsp;<span class=""total"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceExTax) & "</span>"
-            End If
-        End If
-
-        'Build up string for compact basket, if enabled
-        If KartSettingsManager.GetKartConfig("frontend.minibasket.compactversion") = "y" Then
-            litCompactShoppingBasket.Text = "<span id=""compactbasket_title""><a href=""" & CkartrisBLL.WebShopURL & "Basket.aspx" & """>" & GetGlobalResourceObject("Basket", "PageTitle_ShoppingBasket") & "</a></span>" & vbCrLf
-            litCompactShoppingBasket.Text &= "<span id=""compactbasket_noofitems"">(" & Basket.TotalItems.ToString & ")</span>" & vbCrLf
-
-            If Basket.PricesIncTax Then
-                litCompactShoppingBasket.Text &= "<span id=""compactbasket_totalprice"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceIncTax) & "</span>" & vbCrLf
-            Else
-                litCompactShoppingBasket.Text &= "<span id=""compactbasket_totalprice"">" & CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), vFinalPriceExTax) & "</span>" & vbCrLf
-            End If
-        End If
-
-
-        updPnlMiniBasket.Update()
-
     End Sub
 
     Sub QuantityChanged(ByVal Sender As Object, ByVal Args As EventArgs)
@@ -426,11 +309,7 @@ Partial Class Back_BasketView
         Catch ex As Exception
         End Try
 
-
         updPnlMainBasket.Update()
-
-        'RaiseEvent ItemQuantityChanged()
-
     End Sub
 
     Sub RemoveItem_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
@@ -556,24 +435,15 @@ Partial Class Back_BasketView
         BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(numCustomerID)
         Call BasketBLL.CalculateCustomerDiscount(Basket, BSKT_CustomerDiscount)
 
-
         Call BasketBLL.CalculateOrderHandlingCharge(Basket, Session("numShippingCountryID"))
 
         updPnlMainBasket.Update()
-
-        Call RefreshMiniBasket()
-
     End Sub
 
     Sub EmptyBasket_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         BasketBLL.DeleteBasket()
         Call LoadBasket()
         updPnlMainBasket.Update()
-    End Sub
-
-    Sub RefreshMiniBasket()
-        Call LoadBasket()
-        Call DisplayMiniBasket()
     End Sub
 
     Private Function GetProductIDs() As String
@@ -659,29 +529,6 @@ Partial Class Back_BasketView
     Public Sub SetOrderHandlingCharge(ByVal numShippingCountryID As Integer)
 
         BasketBLL.CalculateOrderHandlingCharge(Basket, numShippingCountryID)
-
-    End Sub
-
-    Protected Sub rptMiniBasket_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptMiniBasket.ItemDataBound
-
-        For Each ctlMiniBasket As Control In e.Item.Controls
-            Select Case ctlMiniBasket.ID
-                Case "lnkProduct", "lnkBtnProduct"
-                    Dim objItem As New BasketItem
-                    objItem = e.Item.DataItem
-
-                    Dim strURL As String
-                    strURL = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, objItem.ProductID)
-                    If strURL.Contains("?") Then
-                        strURL = strURL & objItem.OptionLink
-                    Else
-                        strURL = strURL & Replace(objItem.OptionLink, "&", "?")
-                    End If
-                    CType(e.Item.FindControl("lnkBtnProduct"), LinkButton).CommandName = strURL
-                Case Else
-
-            End Select
-        Next
 
     End Sub
 
@@ -844,7 +691,6 @@ Partial Class Back_BasketView
                 BasketBLL.AddNewBasketValue(BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, numVersionID, numQuantity, "", strOptions, numBasketValueID)
                 Dim strUpdateBasket As String = GetGlobalResourceObject("Basket", "ContentText_ItemsUpdated")
                 If strUpdateBasket = "" Then strUpdateBasket = "The item(s) were updated to your basket."
-                litContentTextItemsAdded.Text = IIf(numBasketValueID > 0, strUpdateBasket, GetGlobalResourceObject("Basket", "ContentText_ItemsAdded"))
                 If strOptions <> "" Then
                     ShowAddItemToBasket(numVersionID, numQuantity, True)
                 Else
@@ -869,7 +715,7 @@ Partial Class Back_BasketView
                 End If
             Next
             If tblVersion.Rows(0).Item("V_QuantityWarnLevel") > 0 And (numBasketQty + Quantity) > tblVersion.Rows(0).Item("V_Quantity") Then
-                Response.Redirect("~/Basket.aspx")
+                'Response.Redirect("~/Basket.aspx")
             End If
         End If
 
@@ -877,37 +723,6 @@ Partial Class Back_BasketView
         'need to run for options products
         Dim strBasketBehavior As String
         strBasketBehavior = LCase(KartSettingsManager.GetKartConfig("frontend.basket.behaviour"))
-
-        If blnDisplayPopup = True Then
-
-            If IsNumeric(strBasketBehavior) Then
-                popAddToBasket.Show()
-                tmrAddToBasket.Interval = CDbl(strBasketBehavior) * 1000
-                tmrAddToBasket.Enabled = True
-                updPnlAddToBasket.Update()
-            ElseIf strBasketBehavior = "y" Then
-                tmrAddToBasket.Enabled = False
-                Response.Redirect("~/Basket.aspx")
-            Else
-                tmrAddToBasket.Enabled = False
-            End If
-        Else
-            'Got to handle redirect to basket
-            'for products that use the js
-            'code to speed up the 'add to basket'
-            'dis
-            If strBasketBehavior = "y" Then
-                Response.Redirect("~/Basket.aspx")
-            End If
-        End If
-
-
-
-    End Sub
-
-    Protected Sub tmrAddToBasket_Tick(ByVal sender As Object, ByVal e As System.EventArgs) Handles tmrAddToBasket.Tick
-        tmrAddToBasket.Enabled = False
-        popAddToBasket.Hide()
     End Sub
 
     Function SendOutputWithoutHTMLTags(ByVal strInput As String) As String

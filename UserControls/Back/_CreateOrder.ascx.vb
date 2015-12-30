@@ -864,7 +864,7 @@ Partial Class UserControls_Back_CreateOrder
                                                       "Details: " & vbCrLf & "C_ID:" & IIf(Not String.IsNullOrEmpty(Trim(litOrderCustomerID.Text)), litOrderCustomerID.Text, " New User") & vbCrLf & _
                                                         "Payment Gateway: " & clsPlugin.GatewayName & vbCrLf & _
                                                         "Generated Body Text: " & sbdBodyText.ToString)
-                        Response.Redirect("~/Basket.aspx")
+                        'Response.Redirect("~/Basket.aspx")
                     End If
                     For Each Item As Kartris.BasketItem In BasketItems
                         With Item
@@ -1298,9 +1298,10 @@ Partial Class UserControls_Back_CreateOrder
                         '---------------------------------------
                         'FORMAT FORM TO POST TO REMOTE GATEWAY
                         '---------------------------------------
-
-
                         Session("OrderID") = O_ID
+                        Session("Basket") = Nothing
+                        Session("BasketObject") = Nothing
+                        BasketBLL.DeleteBasket()
                         Response.Redirect("_OrdersList.aspx?callmode=payment")
                     End If
                 End If

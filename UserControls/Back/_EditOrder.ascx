@@ -143,13 +143,21 @@
                             <asp:Button CssClass="button" runat="server" ID="lnkBtnResetAndCopy" Text="<%$ Resources:FormButton_CopyItemsToBasket%>"
                                 ToolTip="" OnClick="lnkBtnResetAndCopy_Click" /></span><h2>
                                     <asp:Literal ID="litTabOrderSummary" runat="server" Text="<%$ Resources: _Kartris, ContentText_ItemSummary %>" /></h2>
-
-
                         <_user:AutoComplete runat="server" ID="_UC_AutoComplete_Item" MethodName="GetVersions" />
                         <asp:LinkButton CssClass="link2 icon_new" runat="server" ID="lnkBtnAddToBasket" OnClick="lnkBtnAddToBasket_Click"
                             Text="<%$ Resources:_Kartris, FormButton_Add%>" ToolTip="" />
                         <_user:BasketView ID="UC_BasketMain" runat="server" ViewType="CHECKOUT_BASKET" />
                     </div>
+                </ContentTemplate>
+            </ajaxToolkit:TabPanel>
+            <%-- Ordertext tab --%>
+            <ajaxToolkit:TabPanel ID="tabOrderText" runat="server">
+                <HeaderTemplate>
+                    <asp:Literal ID="litTabOrderText" runat="server" Text="<%$ Resources: _Orders, ContentText_OriginalOrderText%>" />
+                </HeaderTemplate>
+                <ContentTemplate>
+                    <div class="subtabsection">
+                        <asp:Literal ID="litOrderText" runat="server"></asp:Literal></div>
                 </ContentTemplate>
             </ajaxToolkit:TabPanel>
         </ajaxToolkit:TabContainer>

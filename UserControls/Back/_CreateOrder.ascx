@@ -2,7 +2,7 @@
 <%@ Register TagPrefix="_user" TagName="CustomerOrder" Src="~/UserControls/Front/CustomerOrder.ascx" %>
 <%@ Register TagPrefix="_user" TagName="BasketView" Src="~/UserControls/Back/_BasketView.ascx" %>
 <%@ Register TagPrefix="_user" TagName="CustomerAddress" Src="~/UserControls/General/CustomerAddress.ascx" %>
-<%@ Register TagPrefix="_user" TagName="NewOrderAddress" Src="~/UserControls/Back/_NewOrderAddress.ascx" %>
+<%@ Register TagPrefix="_user" TagName="CheckoutAddressPopup" Src="~/UserControls/Front/CheckoutAddressPopup.ascx" %>
 <%@ Register TagPrefix="_user" TagName="AutoComplete" Src="~/UserControls/Back/_AutoCompleteInput.ascx" %>
 <%@ Register TagPrefix="_user" TagName="OptionsPopup" Src="~/UserControls/Back/_OptionsPopup.ascx" %>
 <asp:UpdatePanel ID="updEditOrder" runat="server" UpdateMode="Conditional">
@@ -110,13 +110,13 @@
                 <asp:UpdatePanel runat="server" ID="updAddresses" UpdateMode="Conditional">
                     <ContentTemplate>
                         <div class="checkoutaddress">
-                            <_user:NewOrderAddress runat="server" ID="_UC_BillingAddress" Title="<%$ Resources: _Address, FormLabel_BillingAddress %>"
+                            <_user:CheckoutAddressPopup runat="server" ID="_UC_BillingAddress" Title="<%$ Resources: _Address, FormLabel_BillingAddress %>"
                                 ErrorMessagePrefix="Billing " EnableValidation="true" />
                         </div>
                         <!-- Shipping Address Selection/Input Control-->
                         <asp:Panel ID="pnlShippingAddress" runat="server" Visible="false">
                             <div class="checkoutaddress">
-                                <_user:NewOrderAddress ID="_UC_ShippingAddress" runat="server" ErrorMessagePrefix="Shipping "
+                                <_user:CheckoutAddressPopup ID="_UC_ShippingAddress" runat="server" ErrorMessagePrefix="Shipping "
                                     Title="<%$ Resources: _Address, FormLabel_ShippingAddress %>" />
                             </div>
                         </asp:Panel>
