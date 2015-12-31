@@ -21,6 +21,8 @@
 'instead
 
 strID = request.querystring("P_ID")
+strAF_ID = request.querystring("af")
+
 Response.Status="301 Moved Permanently"
-Response.AddHeader "Location","Product.aspx?ProductID=" & strID
+Response.AddHeader "Location","Product.aspx?ProductID=" & strID & "&af=" & strAF_ID
 %>
