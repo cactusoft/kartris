@@ -53,11 +53,31 @@ Partial Class UserControls_General_CheckoutAddress
         End Set
     End Property
 
+    Public Property CustomerID() As Long
+        Set(ByVal value As Long)
+            ViewState("CustomerID") = value
+        End Set
+        Get
+            Return ViewState("CustomerID")
+        End Get
+    End Property
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
 
+        InitializeControls(sender, e)
+
+        Dim strValidationGroup As String = _UC_CustomerAddress.DisplayType
+        _UC_CustomerAddress.ValidationGroup = strValidationGroup
+        If Not IsPostBack Then
+            btnAccept.OnClientClick = "Page_ClientValidate('" & strValidationGroup & "');"
+        End If
+
+    End Sub
+
+    Private Sub InitializeControls(ByVal sender As Object, ByVal e As EventArgs)
         If Not IsNothing(Addresses) Then
             If Addresses.Count > 0 Then
-                If Not Page.IsPostBack Then
+                If ddlAddresses.Items.FindByValue("NEW") Is Nothing Then
                     ddlAddresses.DataSource = Addresses
                     ddlAddresses.DataTextField = "Label"
                     ddlAddresses.DataValueField = "ID"
@@ -68,7 +88,7 @@ Partial Class UserControls_General_CheckoutAddress
 
                 If ddlAddresses.SelectedIndex = -1 And Trim(ddlAddresses.SelectedValue) <> "NEW" Then
                     ddlAddresses.SelectedIndex = 0
-                    UC_CustomerAddress.EnableValidation = False
+                    _UC_CustomerAddress.EnableValidation = False
                 End If
 
                 If ViewState("_SelectedAddress") Is Nothing Then
@@ -83,14 +103,18 @@ Partial Class UserControls_General_CheckoutAddress
                 phdAddressDetails.Visible = True
                 phdNoAddress.Visible = False
                 phdAddNewAddress.Visible = True
+                ddlAddresses.Visible = True
+                'lnkNew.Visible = False
             Else
                 'will need to put this in a sub
                 If SelectedAddress Is Nothing Then
                     phdAddressDetails.Visible = False
                     phdNoAddress.Visible = True
+                    phdAddNewAddress.Visible = False
                 Else
                     phdAddressDetails.Visible = True
                     phdNoAddress.Visible = False
+                    phdAddNewAddress.Visible = True
                 End If
                 ddlAddresses.Visible = False
             End If
@@ -108,12 +132,6 @@ Partial Class UserControls_General_CheckoutAddress
 
             ddlAddresses.Visible = False
         End If
-        Dim strValidationGroup As String = UC_CustomerAddress.DisplayType
-        UC_CustomerAddress.ValidationGroup = strValidationGroup
-        If Not IsPostBack Then
-            btnAccept.OnClientClick = "Page_ClientValidate('" & strValidationGroup & "');"
-        End If
-
     End Sub
 
     Public Property SelectedID() As Integer
@@ -153,6 +171,9 @@ Partial Class UserControls_General_CheckoutAddress
         End Get
         Set(ByVal value As List(Of Address))
             ViewState("_Addresses") = value
+            If value IsNot Nothing Then
+                InitializeControls(Nothing, Nothing)
+            End If
         End Set
     End Property
 
@@ -168,6 +189,7 @@ Partial Class UserControls_General_CheckoutAddress
             RaiseEvent CountryUpdated(sender, e)
         Else
             UC_CustomerAddress.Clear()
+            RunAddressLookupRoutine()
             popExtender.Show()
         End If
 
@@ -208,8 +230,13 @@ Partial Class UserControls_General_CheckoutAddress
     End Sub
 
     Public Sub Clear()
+        ddlAddresses.Items.Clear()
         ViewState("_SelectedAddress") = Nothing
         ViewState("_Addresses") = Nothing
+        ViewState("_SelectedID") = 0
+        phdAddressDetails.Visible = False
+        phdAddNewAddress.Visible = False
+        phdNoAddress.Visible = True
     End Sub
 
     Protected Sub btnEdit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnEdit.Click
@@ -222,6 +249,12 @@ Partial Class UserControls_General_CheckoutAddress
     Protected Sub btnAccept_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAccept.Click
         UC_CustomerAddress.ValidationGroup = UC_CustomerAddress.DisplayType
         UC_CustomerAddress.EnableValidation = True
+        Dim numCustomerID As Integer
+        Try
+            numCustomerID = DirectCast(Page, PageBaseClass).CurrentLoggedUser.ID
+        Catch ex As Exception
+            numCustomerID = CustomerID
+        End Try
 
         Page.Validate(UC_CustomerAddress.DisplayType)
 
@@ -230,7 +263,7 @@ Partial Class UserControls_General_CheckoutAddress
                 ddlAddresses.SelectedValue = "NEW"
                 lnkNew.Visible = False
             Else
-                Dim intGeneratedAddressID As Integer = Address.AddUpdate(UC_CustomerAddress.EnteredAddress, DirectCast(Page, PageBaseClass).CurrentLoggedUser.ID, , UC_CustomerAddress.EnteredAddress.ID)
+                Dim intGeneratedAddressID As Integer = Address.AddUpdate(UC_CustomerAddress.EnteredAddress, numCustomerID, , UC_CustomerAddress.EnteredAddress.ID)
                 If intGeneratedAddressID > 0 Then
                     'Refresh Addresses List if its an existing address
                     If UC_CustomerAddress.EnteredAddress.ID > 0 Then
@@ -304,21 +337,11 @@ Partial Class UserControls_General_CheckoutAddress
     ''' </summary>
     Protected Sub lnkLookup_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkLookup.Click
         Dim dtsAddresses As DataSet = PostcodeSearch(txtZipCode.Text)
-        Try
-            If dtsAddresses.Tables("Summary").Rows.Count = 0 Then
-                litNotValidError.Text = "<span class=""error"">Postcode is not valid!</span>"
-            Else
-                litNotValidError.Text = ""
-                lbxChooseAddress.DataSource = dtsAddresses.Tables("Summary")
-                lbxChooseAddress.DataValueField = "Id"
-                lbxChooseAddress.DataTextField = "StreetAddress"
-                lbxChooseAddress.DataBind()
-                phdChooseAddress.Visible = True
-            End If
-        Catch ex As Exception
-            'Probably got an error back
-            litNotValidError.Text = "<span class=""error"">Postcode is not valid!</span>"
-        End Try
+        lbxChooseAddress.DataSource = dtsAddresses.Tables("Summary")
+        lbxChooseAddress.DataValueField = "Id"
+        lbxChooseAddress.DataTextField = "StreetAddress"
+        lbxChooseAddress.DataBind()
+        phdChooseAddress.Visible = True
         popExtender.Show()
     End Sub
 
@@ -344,27 +367,24 @@ Partial Class UserControls_General_CheckoutAddress
         'Check for an error      
         If (dtsAddresses.Tables("Error") IsNot Nothing) AndAlso (dtsAddresses.Tables("Error").Columns("Description") IsNot Nothing) Then
             Dim exc As String = dtsAddresses.Tables("Error").Rows(0)("Description").ToString()
-            'Throw New Exception(exc)
-        Else
-            litNotValidError.Text = ""
-            If dtsAddresses.Tables("Summary") IsNot Nothing Then
-                dtsAddresses.Tables("Summary").Constraints.Clear()
-                If dtsAddresses.Tables("Summary").Rows.Count > 0 Then
-                    'We want to merge Street Address & Place together
-                    For i = 0 To dtsAddresses.Tables("Summary").Rows.Count - 1
-                        dtsAddresses.Tables("Summary").Rows(i)("StreetAddress") &= ", " & dtsAddresses.Tables("Summary").Rows(i)("Place")
-                    Next
-                End If
-
-            End If
-            dtsAddresses.Relations.Clear()
-            If dtsAddresses.Tables("Summaries") IsNot Nothing Then
-                dtsAddresses.Tables.Remove("Summaries")
-            End If
-            'Return the dataset  
-            Return dtsAddresses
+            Throw New Exception(exc)
         End If
+        If dtsAddresses.Tables("Summary") IsNot Nothing Then
+            dtsAddresses.Tables("Summary").Constraints.Clear()
+            If dtsAddresses.Tables("Summary").Rows.Count > 0 Then
+                'We want to merge Street Address & Place together
+                For i = 0 To dtsAddresses.Tables("Summary").Rows.Count - 1
+                    dtsAddresses.Tables("Summary").Rows(i)("StreetAddress") &= ", " & dtsAddresses.Tables("Summary").Rows(i)("Place")
+                Next
+            End If
 
+        End If
+        dtsAddresses.Relations.Clear()
+        If dtsAddresses.Tables("Summaries") IsNot Nothing Then
+            dtsAddresses.Tables.Remove("Summaries")
+        End If
+        'Return the dataset  
+        Return dtsAddresses
         'FYI: The dataset contains the following columns:     
         'Id        
         'StreetAddress      
@@ -393,9 +413,6 @@ Partial Class UserControls_General_CheckoutAddress
         If (dtsAddress.Tables("Error") IsNot Nothing) AndAlso (dtsAddress.Tables("Error").Columns("Description") IsNot Nothing) Then
             Dim exc As String = dtsAddress.Tables("Error").Rows(0)("Description").ToString()
             Throw New Exception(exc)
-            litNotValidError.Text = "<span class=""error"">" & exc & "</span>"
-        Else
-            litNotValidError.Text = """"
         End If
         If dtsAddress.Tables("Summary") IsNot Nothing Then
             dtsAddress.Tables("Summary").Constraints.Clear()
@@ -446,7 +463,6 @@ Partial Class UserControls_General_CheckoutAddress
         UC_CustomerAddress.City = dtsAddress.Tables("Address").Rows(0)("PostTown")
         UC_CustomerAddress.State = dtsAddress.Tables("Address").Rows(0)("County")
         UC_CustomerAddress.Postcode = dtsAddress.Tables("Address").Rows(0)("Postcode")
-        UC_CustomerAddress.ISOCountryFilter = "GB" 'Tell the address control to only show GB destination records
 
         'We also want to pre-select country. But some stores
         'in UK may have multiple UK destination records for
@@ -462,6 +478,7 @@ Partial Class UserControls_General_CheckoutAddress
         Catch ex As Exception
 
         End Try
+
 
         phdAddressEnterForm.Visible = True
         phdAddressLookup.Visible = False

@@ -53,11 +53,11 @@ Partial Class Templates_BasketView
 
     Public Shared Property BasketItems() As List(Of Kartris.BasketItem)
         Get
-            If HttpContext.Current.Session("_BasketItems") Is Nothing Then HttpContext.Current.Session("_BasketItems") = New List(Of Kartris.BasketItem)
-            Return HttpContext.Current.Session("_BasketItems")
+            If HttpContext.Current.Session("BasketItems") Is Nothing Then HttpContext.Current.Session("BasketItems") = New List(Of Kartris.BasketItem)
+            Return HttpContext.Current.Session("BasketItems")
         End Get
         Set(ByVal value As List(Of Kartris.BasketItem))
-            HttpContext.Current.Session("_BasketItems") = value
+            HttpContext.Current.Session("BasketItems") = value
         End Set
     End Property
 

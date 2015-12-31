@@ -24,8 +24,6 @@ Partial Public Class UserControls_Front_CustomerAddress
     Inherits ValidatableUserControl
     Public Event CountryUpdated(ByVal sender As Object, ByVal e As System.EventArgs)
 
-    Dim strISOCountryFilter As String = ""
-
     Public Property DisplayType() As String
         Get
             Return hidDisplayType.Value
@@ -65,16 +63,10 @@ Partial Public Class UserControls_Front_CustomerAddress
         End Set
     End Property
 
-    Public WriteOnly Property ISOCountryFilter() As String
-        Set(ByVal value As String)
-            strISOCountryFilter = value
-        End Set
-    End Property
-
     Public WriteOnly Property EnableValidation() As Boolean
         Set(ByVal value As Boolean)
             valLastNameRequired.Enabled = value
-            valStateRequired.Enabled = value
+            'valStateRequired.Enabled = value
             valTelePhoneRequired.Enabled = value
             valCityRequired.Enabled = value
             If KartSettingsManager.GetKartConfig("frontend.checkout.postcoderequired") = "y" AndAlso value = True Then
@@ -110,7 +102,7 @@ Partial Public Class UserControls_Front_CustomerAddress
             MyBase.ValidationGroup = value
             'FirstNameRequired.ValidationGroup = value
             valLastNameRequired.ValidationGroup = value
-            valStateRequired.ValidationGroup = value
+            'valStateRequired.ValidationGroup = value
             valTelePhoneRequired.ValidationGroup = value
             valCityRequired.ValidationGroup = value
             valZipCodeRequired.ValidationGroup = value
