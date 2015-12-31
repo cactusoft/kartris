@@ -88,7 +88,7 @@
                     -->
                     <asp:UpdatePanel runat="server" ID="updAddresses" UpdateMode="Conditional">
                         <ContentTemplate>
-                            <div class="row">
+                            <div class="row collapse">
                                 <!--
                                 -------------------------------
                                 BILLING ADDRESS
