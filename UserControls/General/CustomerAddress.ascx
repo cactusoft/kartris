@@ -50,7 +50,7 @@
                             <asp:TextBox runat="server" ID="txtState"></asp:TextBox>
                             <asp:RequiredFieldValidator ID="valStateRequired" ValidationGroup="Address" runat="server"
                                 ControlToValidate="txtState" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"
-                                CssClass="error" ForeColor=""></asp:RequiredFieldValidator></span></li>
+                                CssClass="error" ForeColor="" Enabled="false"></asp:RequiredFieldValidator></span></li>
                 <li><span class="Kartris-DetailsView-Name">
                     <asp:Label ID="lblPostcode" runat="server" Text="<%$ Resources: Address, FormLabel_PostCodeZip %>" EnableViewState="false"
                         AssociatedControlID="txtZipCode" /></span><span class="Kartris-DetailsView-Value">
