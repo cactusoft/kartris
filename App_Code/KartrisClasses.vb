@@ -539,6 +539,7 @@ Public Class KartrisClasses
                         If Not String.IsNullOrEmpty(CStr(FixNullFromDB(drShippingMethods("S_ShippingGateways")))) Then
                             Dim strGatewayName As String = CStr(FixNullFromDB(drShippingMethods("S_ShippingGateways")))
                             Dim clsPlugin As Interfaces.ShippingGateway = Nothing
+                            blnShippingGatewayUsed = True 'Thanks to Jcosmo for fix, see http://forum.kartris.com/Topic6296.aspx
 
                             clsPlugin = Payment.SPLoader(strGatewayName)
                             'Dim xmlShippingDetails As New Kartris.Interfaces.objShippingDetails
@@ -555,7 +556,6 @@ Public Class KartrisClasses
                                         objShippingOption.Code = clsPlugin.GatewayName & " - " & objShippingOption.Code
                                         results.Add(New ShippingMethod(ShippingCountry, objShippingOption, intTempID))
                                         intTempID += 1
-                                        blnShippingGatewayUsed = True
                                     Next
                                 Else
                                     CkartrisFormatErrors.LogError(clsPlugin.GatewayName & " - " & clsPlugin.CallMessage)
