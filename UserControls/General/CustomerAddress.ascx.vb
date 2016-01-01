@@ -71,8 +71,10 @@ Partial Public Class UserControls_Front_CustomerAddress
             valCityRequired.Enabled = value
             If KartSettingsManager.GetKartConfig("frontend.checkout.postcoderequired") = "y" AndAlso value = True Then
                 valZipCodeRequired.Enabled = True
+                lblPostcode.CssClass = "requiredfield"
             Else
                 valZipCodeRequired.Enabled = False
+                lblPostcode.CssClass = ""
             End If
             valAddressRequired.Enabled = value
 
