@@ -54,7 +54,7 @@ Partial Class Admin_PaymentGateways
         For Each strGatewayName In aryGateways
 
             strGatewayName = Left(strGatewayName, InStr(strGatewayName, "::") - 1)
-            strDLLPath = Server.MapPath("/Plugins/" & strGatewayName & "/" & strGatewayName & ".dll")
+            strDLLPath = Server.MapPath("~/Plugins/" & strGatewayName & "/" & strGatewayName & ".dll")
             'Response.Write(strDLLPath)
             If Not String.IsNullOrEmpty(strGatewayName) Then
 
