@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<List>
+  <Service>
+    <Name>Priority Overnight®</Name>
+    <Code>PRIORITY_OVERNIGHT</Code>
+  </Service>
+  <Service>
+    <Name>Priority Overnight® Saturday Delivery</Name>
+    <Code>PRIORITY_OVERNIGHT_SATURDAY_DELIVERY</Code>
+  </Service>
+  <Service>
+    <Name>2Day®</Name>
+    <Code>FEDEX_2_DAY</Code>
+  </Service>
+  <Service>
+    <Name>2Day® Saturday Delivery</Name>
+    <Code>FEDEX_2_DAY_SATURDAY_DELIVERY</Code>
+  </Service>
+  <Service>
+    <Name>Standard Overnight®</Name>
+    <Code>STANDARD_OVERNIGHT</Code>
+  </Service>
+  <Service>
+    <Name>First Overnight®</Name>
+    <Code>FIRST_OVERNIGHT</Code>
+  </Service>
+  <Service>
+    <Name>First Overnight® Saturday Delivery</Name>
+    <Code>FIRST_OVERNIGHT_SATURDAY_DELIVERY</Code>
+  </Service>
+  <Service>
+    <Name>Standard Overnight®</Name>
+    <Code>FEDEX_EXPRESS_SAVER</Code>
+  </Service>
+  <Service>
+    <Name>1Day® Freight</Name>
+    <Code>FEDEX_1_DAY_FREIGHT</Code>
+  </Service>
+  <Service>
+    <Name>1Day® Freight Saturday Delivery</Name>
+    <Code>FEDEX_1_DAY_FREIGHT_SATURDAY_DELIVERY</Code>
+  </Service>
+  <Service>
+    <Name>2Day® Freight</Name>
+    <Code>FEDEX_2_DAY_FREIGHT</Code>
+  </Service>
+  <Service>
+    <Name>2Day® Freight Saturday Delivery</Name>
+    <Code>FEDEX_2_DAY_FREIGHT_SATURDAY_DELIVERY</Code>
+  </Service>
+  <Service>
+    <Name>3Day® Freight</Name>
+    <Code>FEDEX_3_DAY_FREIGHT</Code>
+  </Service>
+  <Service>
+    <Name>3Day® Freight Saturday Delivery</Name>
+    <Code>FEDEX_3_DAY_FREIGHT_SATURDAY_DELIVERY</Code>
+  </Service>
+  <Service>
+    <Name>International Priority®</Name>
+    <Code>INTERNATIONAL_PRIORITY</Code>
+  </Service>
+  <Service>
+    <Name>International Priority® Saturday Delivery</Name>
+    <Code>INTERNATIONAL_PRIORITY_SATURDAY_DELIVERY</Code>
+  </Service>
+  <Service>
+    <Name>International Economy®</Name>
+    <Code>INTERNATIONAL_ECONOMY</Code>
+  </Service>
+  <Service>
+    <Name>International First®</Name>
+    <Code>INTERNATIONAL_FIRST</Code>
+  </Service>
+  <Service>
+    <Name>International Priority® Freight</Name>
+    <Code>INTERNATIONAL_PRIORITY_FREIGHT</Code>
+  </Service>
+  <Service>
+    <Name>International Economy® Freight</Name>
+    <Code>INTERNATIONAL_ECONOMY_FREIGHT</Code>
+  </Service>
+  <Service>
+    <Name>Home Delivery®</Name>
+    <Code>GROUND_HOME_DELIVERY</Code>
+  </Service>
+  <Service>
+    <Name>Ground®</Name>
+    <Code>FEDEX_GROUND</Code>
+  </Service>
+  <Service>
+    <Name>International Ground®</Name>
+    <Code>INTERNATIONAL_GROUND</Code>
+  </Service>
+</List>
