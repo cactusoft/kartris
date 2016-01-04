@@ -87,23 +87,15 @@ Partial Class UserControls_Back_EditOrder
                             Dim strOrderData As String = ""
                             litOrderID.Text = dtOrderRecord.Rows(0)("O_ID")
 
-                            'If the order string is HTML, that's fine. But if
-                            'it is text, we want to put HTML line breaks where
-                            'the vbcrlfs are. We can detect text simply, we just
-                            'see if there are fewer than 5 HTML <> angle brackets
-                            'in the text. Simple, but effective.
+                            'Process the order text
                             Dim strOrderText As String = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_Details"))
-                            strOrderText = Server.HtmlEncode(strOrderText)
-                            Try
-                                If strOrderText.Split("<").Length - 1 < 5 Then
-                                    strOrderText = Replace(strOrderText, vbCrLf, "<br/>" & vbCrLf)
-                                End If
-                                litOrderText.Text = strOrderText
-                            Catch ex As Exception
-                                strOrderText = Replace(strOrderText, vbCrLf, "<br/>" & vbCrLf)
-                            End Try
-
-
+                            If InStr(Server.HtmlDecode(strOrderText).ToLower, "</html>") > 0 Then
+                                strOrderText = CkartrisBLL.ExtractHTMLBodyContents(Server.HtmlDecode(strOrderText))
+                                strOrderText = strOrderText.Replace("[orderid]", dtOrderRecord.Rows(0)("O_ID"))
+                            Else
+                                strOrderText = Replace(strOrderText, vbCrLf, "<br/>").Replace(vbLf, "<br/>")
+                            End If
+                            litOrderText.Text = strOrderText
 
                             strOrderData = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_Data"))
                             Dim intOrderLanguageID As Int16 = CShort(dtOrderRecord.Rows(0)("O_LanguageID"))
@@ -201,19 +193,15 @@ Partial Class UserControls_Back_EditOrder
             objBasketTemp = Payment.Deserialize(ViewState("arrOrderData")(1), objBasketTemp.GetType)
             UC_BasketMain.EmptyBasket_Click(Nothing, Nothing)
 
-
             If objBasketTemp.BasketItems IsNot Nothing Then
-
                 Dim BasketItem As New BasketItem
                 'final check if basket items are still there
-
                 For Each item As BasketItem In objBasketTemp.BasketItems
                     With item
                         BasketBLL.AddNewBasketValue(objBasket.BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, .VersionID, .Quantity, .CustomText, .OptionText)
                     End With
                 Next
             End If
-
         End If
 
         'get the shipping destination id from the viewstate and assign it to the basket controls destination id property
@@ -229,8 +217,6 @@ Partial Class UserControls_Back_EditOrder
         'recalculate and refresh display
         UC_BasketMain.LoadBasket()
         UC_BasketMain.RefreshShippingMethods()
-        'If UC_BasketMain.GetBasketItems.Count > 0 Then btnCreateNewOrder.Visible = True Else btnCreateNewOrder.Visible = False
-
     End Sub
 
     ''' <summary>
@@ -345,7 +331,9 @@ Partial Class UserControls_Back_EditOrder
     '''' </summary>
     '''' <remarks></remarks>
     Protected Sub lnkBtnResetAndCopy_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        UC_BasketMain.EmptyBasket_Click(Nothing, Nothing)
         LoadBasket(True)
+        RaiseEvent ShowMasterUpdate()
     End Sub
 
     ''' <summary>
@@ -369,6 +357,7 @@ Partial Class UserControls_Back_EditOrder
                     _UC_AutoComplete_Item.SetText("")
                     LoadBasket()
             End Select
+            RaiseEvent ShowMasterUpdate()
         End If
     End Sub
 

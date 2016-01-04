@@ -98,16 +98,11 @@ Partial Class UserControls_Back_OrderDetails
         Dim dblOrderTotalPrice As Single = CSng(litOrderTotalPrice.Text)
         Dim srtOrderCurrencyID As Short = CShort(hidOrderCurrencyID.Value)
 
-
         'Hide edit button if order data is empty and if order is not flagged as replaced
         If Trim(hidOrderData.Value) <> "" And OrdersBLL._GetChildOrderID(ViewState("numOrderID")) = 0 Then
             DirectCast(fvwOrderDetails.FindControl("lnkBtnEdit"), LinkButton).Visible = True
-            'DirectCast(fvwOrderDetails.FindControl("btnOrderUpdate"), LinkButton).Visible = True
-            'DirectCast(fvwOrderDetails.FindControl("lnkBtnDelete"), LinkButton).Visible = True
         Else
             DirectCast(fvwOrderDetails.FindControl("lnkBtnEdit"), LinkButton).Visible = False
-            'DirectCast(fvwOrderDetails.FindControl("btnOrderUpdate"), LinkButton).Visible = False
-            'DirectCast(fvwOrderDetails.FindControl("lnkBtnDelete"), LinkButton).Visible = False
 
             'Show a clear message that this order was replaced
             DirectCast(fvwOrderDetails.FindControl("phdCancelledMessage"), PlaceHolder).Visible = True
@@ -125,14 +120,12 @@ Partial Class UserControls_Back_OrderDetails
         'Convert OrderLanguageID field to Front End Language Name
         litOrderLanguage.Text = LanguagesBLL.GetLanguageFrontName_s(CShort(litOrderLanguage.Text))
 
-
         'Format the Total Price base on the Currency
         Try
             litOrderTotalPrice.Text = CurrenciesBLL.FormatCurrencyPrice(srtOrderCurrencyID, dblOrderTotalPrice)
         Catch ex As Exception
             litOrderTotalPrice.Text = "? " & dblOrderTotalPrice
         End Try
-
 
         'Hide the Affiliate fields if there's no affiliate
         If hidAffiliatePaymentID.Value = "0" Then phdAffiliate.Visible = False
@@ -147,15 +140,6 @@ Partial Class UserControls_Back_OrderDetails
             strOrderText = strOrderText.Replace("[orderid]", ViewState("numOrderID"))
         Else
             strOrderText = Replace(strOrderText, vbCrLf, "<br/>").Replace(vbLf, "<br/>")
-        End If
-
-        'If the order string is HTML, that's fine. But if
-        'it is text, we want to put HTML line breaks where
-        'the vbcrlfs are. We can detect text simply, we just
-        'see if there are fewer than 5 HTML <> angle brackets
-        'in the text. Simple, but effective.
-        If strOrderText.Split("<").Length - 1 < 5 Then
-            strOrderText = Replace(strOrderText, vbCrLf, "<br/>" & vbCrLf)
         End If
 
         'Show the text
