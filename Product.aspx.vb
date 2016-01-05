@@ -1,6 +1,6 @@
 '========================================================================
 'Kartris - www.kartris.com
-'Copyright 2015 CACTUSOFT
+'Copyright 2016 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -29,7 +29,13 @@ Partial Class Product
             Try
                 Dim intProductID As Integer = Request.QueryString("ProductID")
 
-                Dim numLangID As Short = CShort(Session("LANG"))
+                Dim numLangID As Short = 1 'default to default language
+                Try
+                    numLangID = CShort(Session("LANG"))
+                Catch ex As Exception
+                    'numLangID = Request.QueryString("L")
+                End Try
+
                 UC_ProductView.LoadProduct(intProductID, numLangID)
 
                 If UC_ProductView.IsProductExist Then

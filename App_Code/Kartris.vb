@@ -1,6 +1,6 @@
 '========================================================================
 'Kartris - www.kartris.com
-'Copyright 2015 CACTUSOFT
+'Copyright 2016 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -30,7 +30,7 @@ Imports System.Xml
 Public NotInheritable Class CkartrisEnumerations
 
     Public Const KARTRIS_VERSION As Decimal = 2.9002
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #9/25/2015# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #1/4/2016# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1

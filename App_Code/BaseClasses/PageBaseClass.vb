@@ -1,6 +1,6 @@
 '========================================================================
 'Kartris - www.kartris.com
-'Copyright 2015 CACTUSOFT
+'Copyright 2016 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -486,7 +486,7 @@ Public MustInherit Class PageBaseClass
 
             'Copyright
             Dim litLicenceNo As New WebControls.Literal
-            litLicenceNo.Text = vbCrLf & vbCrLf & "<!-- Kartris - Copyright 2015 CACTUSOFT - www.kartris.com -->"
+            litLicenceNo.Text = vbCrLf & vbCrLf & "<!-- Kartris - Copyright 2016 CACTUSOFT - www.kartris.com -->"
             Page.Controls.Add(litLicenceNo)
 
             'Add the Canonical Tag if set
