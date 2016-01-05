@@ -1,6 +1,6 @@
 '========================================================================
 'KARTRIS by cactusoft
-'Copyright 2015 CACTUSOFT - www.kartris.com
+'Copyright 2016 CACTUSOFT - www.kartris.com
 'This skin is licensed under a
 'Creative Commons Attribution-ShareAlike 3.0 Unported License
 
