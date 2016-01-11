@@ -197,5 +197,98 @@
                     CssClass="button" ValidationGroup="PriceList" />
             </ContentTemplate>
         </asp:UpdatePanel>
+
+        <br />
+
+
+
+
+        <%--Import Customer Group Prices--%>
+        <div class="line">
+        </div>
+        <h2>
+            <asp:Literal ID="litImportCustomerGroupPricesTitle" runat="server" Text="<%$ Resources: _MarkupPrices, ContentText_ImportCustomerGroupPrices %>"></asp:Literal>
+        </h2>
+        <asp:Literal ID="litImportCustomerGroupPricesDescription" runat="server" Text="<%$ Resources: _MarkupPrices, ContentText_ImportCustomerGroupPricesInfo %>"></asp:Literal>
+        <div class="Kartris-DetailsView">
+            <div class="Kartris-DetailsView-Data">
+                <ul>
+                    <asp:UpdatePanel ID="updCustomerGroupPriceList" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <li><span class="Kartris-DetailsView-Name">
+                                <asp:Literal ID="litPriceListDetails2" runat="server" Text="<%$ Resources: _MarkupPrices, ContentText_PriceListDetails %>"></asp:Literal>
+                            </span><span class="Kartris-DetailsView-Value">
+                                <asp:TextBox ID="txtCustomerGroupPriceList" runat="server" TextMode="MultiLine"></asp:TextBox>
+                                <asp:RequiredFieldValidator ID="valCustomerGroupPriceList" runat="server" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
+                                    ControlToValidate="txtCustomerGroupPriceList" SetFocusOnError="true" ValidationGroup="CustomerGroupPriceList"
+                                    Display="Dynamic">
+                                </asp:RequiredFieldValidator>
+                            </span></li>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                    <li><span class="Kartris-DetailsView-Name">
+                        <asp:Literal ID="litUploadFile2" runat="server" Text="<%$ Resources: _MarkupPrices, ContentText_UploadFromFile %>"></asp:Literal>
+                    </span><span class="Kartris-DetailsView-Value">
+                        <asp:FileUpload ID="filUploader2" runat="server" />
+                        <asp:LinkButton ID="btnUploadCustomerGroupPriceList" runat="server" Text="<%$ Resources: _Kartris, ContentText_Upload %>"
+                            CssClass="linkbutton icon_upload icon_upload" />
+                    </span></li>
+                </ul>
+            </div>
+        </div>
+        <br />
+        <asp:UpdatePanel ID="updSubmitCustomerGroupPriceList" runat="server" UpdateMode="Conditional">
+            
+            <ContentTemplate>
+                <asp:Button ID="btnSubmitCustomerGroupPriceList" runat="server" Text="<%$ Resources: _Kartris, FormButton_Submit %>"
+                    CssClass="button" ValidationGroup="CustomerGroupPriceList" />
+            </ContentTemplate>
+        </asp:UpdatePanel>
+        <br />
+
+
+
+
+        <%--Import Quantity Discounts--%>
+        <div class="line">
+        </div>
+        <h2>
+            <asp:Literal ID="litImportQuantityDiscountsTitle" runat="server" Text="<%$ Resources: _MarkupPrices, ContentText_ImportQuantityDiscounts %>"></asp:Literal>
+        </h2>
+        <asp:Literal ID="litImportQuantityDiscountsDescription" runat="server" Text="<%$ Resources: _MarkupPrices, ContentText_ImportQuantityDiscountsInfo %>"></asp:Literal>
+        <div class="Kartris-DetailsView">
+            <div class="Kartris-DetailsView-Data">
+                <ul>
+                    <asp:UpdatePanel ID="updQuantityDiscounts" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <li><span class="Kartris-DetailsView-Name">
+                                <asp:Literal ID="litPriceListDetails3" runat="server" Text="<%$ Resources: _MarkupPrices, ContentText_PriceListDetails %>"></asp:Literal>
+                            </span><span class="Kartris-DetailsView-Value">
+                                <asp:TextBox ID="txtQuantityDiscounts" runat="server" TextMode="MultiLine"></asp:TextBox>
+                                <asp:RequiredFieldValidator ID="valQuantityDiscounts" runat="server" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
+                                    ControlToValidate="txtQuantityDiscounts" SetFocusOnError="true" ValidationGroup="QuantityDiscounts"
+                                    Display="Dynamic">
+                                </asp:RequiredFieldValidator>
+                            </span></li>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                    <li><span class="Kartris-DetailsView-Name">
+                        <asp:Literal ID="litUploadFile3" runat="server" Text="<%$ Resources: _MarkupPrices, ContentText_UploadFromFile %>"></asp:Literal>
+                    </span><span class="Kartris-DetailsView-Value">
+                        <asp:FileUpload ID="filUploader3" runat="server" />
+                        <asp:LinkButton ID="btnUploadQuantityDiscounts" runat="server" Text="<%$ Resources: _Kartris, ContentText_Upload %>"
+                            CssClass="linkbutton icon_upload icon_upload" />
+                    </span></li>
+                </ul>
+            </div>
+        </div>
+        <br />
+        <asp:UpdatePanel ID="updSubmitQuantityDiscounts" runat="server" UpdateMode="Conditional">
+            
+            <ContentTemplate>
+                <asp:Button ID="btnSubmitQuantityDiscounts" runat="server" Text="<%$ Resources: _Kartris, FormButton_Submit %>"
+                    CssClass="button" ValidationGroup="QuantityDiscounts" />
+            </ContentTemplate>
+        </asp:UpdatePanel>
     </div>
 </asp:Content>

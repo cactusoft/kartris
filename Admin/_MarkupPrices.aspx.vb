@@ -303,4 +303,115 @@ Partial Class Admin_MarkupPrices
             _UC_PopupMsg.ShowConfirmation(CkartrisEnumerations.MESSAGE_TYPE.ErrorMessage, strMessage & "<br/> Line " & numLines)
         End If
     End Sub
+
+    Protected Sub btnUploadCustomerGroupPriceList_Click(sender As Object, e As System.EventArgs) Handles btnUploadCustomerGroupPriceList.Click
+        If filUploader2.HasFile Then
+            Dim strFileExt As String = Path.GetExtension(filUploader2.PostedFile.FileName)
+            Dim arrExcludedFileTypes() As String = ConfigurationManager.AppSettings("ExcludedUploadFiles").ToString().Split(",")
+            For i As Integer = 0 To arrExcludedFileTypes.GetUpperBound(0)
+                If Replace(strFileExt.ToLower, ".", "") = arrExcludedFileTypes(i).ToLower Then
+                    'Banned file type, don't upload
+                    'Log error so attempts can be seen in logs
+                    CkartrisFormatErrors.LogError("Attempt to upload a file of type: " & arrExcludedFileTypes(i).ToLower)
+                    _UC_PopupMsg.ShowConfirmation(CkartrisEnumerations.MESSAGE_TYPE.ErrorMessage, "It is not permitted to upload files of this type. Change 'ExcludedUploadFiles' in the web.config if you need to upload this file.")
+                    Exit Sub
+                End If
+            Next
+            If Not Directory.Exists(Server.MapPath(KartSettingsManager.GetKartConfig("general.uploadfolder") & "temp/")) Then
+                Directory.CreateDirectory(Server.MapPath(KartSettingsManager.GetKartConfig("general.uploadfolder") & "temp/"))
+            End If
+            Dim strFileName As String = KartSettingsManager.GetKartConfig("general.uploadfolder") & "temp/" & Guid.NewGuid.ToString() & strFileExt
+            filUploader2.SaveAs(Server.MapPath(strFileName))
+            Dim f As New StreamReader(Server.MapPath(strFileName))
+            txtCustomerGroupPriceList.Text = f.ReadToEnd
+            f.Dispose()
+            Try
+                IO.File.Delete(Server.MapPath(strFileName))
+            Catch ex As Exception
+            End Try
+        Else
+            _UC_PopupMsg.ShowConfirmation(CkartrisEnumerations.MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_NoFile"))
+        End If
+    End Sub
+
+    Protected Sub btnSubmitCustomerGroupPriceList_Click(sender As Object, e As System.EventArgs) Handles btnSubmitCustomerGroupPriceList.Click
+        Dim numLines As Integer = 0, strMessage As String = String.Empty
+
+        If VersionsBLL._UpdateCustomerGroupPriceList(txtCustomerGroupPriceList.Text.Replace(Chr(10), "#"), numLines, strMessage) Then
+            txtCustomerGroupPriceList.Text = Nothing : updCustomerGroupPriceList.Update() '' clear the list for new entry
+            CType(Me.Master, Skins_Admin_Template).DataUpdated()
+        Else
+            _UC_PopupMsg.ShowConfirmation(CkartrisEnumerations.MESSAGE_TYPE.ErrorMessage, strMessage & "<br/> Line " & numLines)
+        End If
+    End Sub
+
+    Protected Sub btnUploadQuantityDiscounts_Click(sender As Object, e As System.EventArgs) Handles btnUploadQuantityDiscounts.Click
+        If filUploader3.HasFile Then
+            Dim strFileExt As String = Path.GetExtension(filUploader3.PostedFile.FileName)
+            Dim arrExcludedFileTypes() As String = ConfigurationManager.AppSettings("ExcludedUploadFiles").ToString().Split(",")
+            For i As Integer = 0 To arrExcludedFileTypes.GetUpperBound(0)
+                If Replace(strFileExt.ToLower, ".", "") = arrExcludedFileTypes(i).ToLower Then
+                    'Banned file type, don't upload
+                    'Log error so attempts can be seen in logs
+                    CkartrisFormatErrors.LogError("Attempt to upload a file of type: " & arrExcludedFileTypes(i).ToLower)
+                    _UC_PopupMsg.ShowConfirmation(CkartrisEnumerations.MESSAGE_TYPE.ErrorMessage, "It is not permitted to upload files of this type. Change 'ExcludedUploadFiles' in the web.config if you need to upload this file.")
+                    Exit Sub
+                End If
+            Next
+            If Not Directory.Exists(Server.MapPath(KartSettingsManager.GetKartConfig("general.uploadfolder") & "temp/")) Then
+                Directory.CreateDirectory(Server.MapPath(KartSettingsManager.GetKartConfig("general.uploadfolder") & "temp/"))
+            End If
+            Dim strFileName As String = KartSettingsManager.GetKartConfig("general.uploadfolder") & "temp/" & Guid.NewGuid.ToString() & strFileExt
+            filUploader3.SaveAs(Server.MapPath(strFileName))
+            Dim f As New StreamReader(Server.MapPath(strFileName))
+            txtQuantityDiscounts.Text = f.ReadToEnd
+            f.Dispose()
+            Try
+                IO.File.Delete(Server.MapPath(strFileName))
+            Catch ex As Exception
+            End Try
+        Else
+            _UC_PopupMsg.ShowConfirmation(CkartrisEnumerations.MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_NoFile"))
+        End If
+    End Sub
+
+    Protected Sub btnSubmitQuantityDiscounts_Click(sender As Object, e As System.EventArgs) Handles btnSubmitQuantityDiscounts.Click
+
+        'We want to parse the price list row here first, identify the parameters and 
+        'then send these to sproc, rather than try to do the parsing there which seems
+        'to be far more complicated.
+        ''QD_VersionID','QD_Quantity','QD_Price'
+        Dim numQD_VersionID As Integer = 0
+        Dim numQD_Quantity As Int64 = 0
+        Dim numQD_Price As Double = 0
+        Dim numCounter As Int64 = 0
+
+        Dim strMessage As String = String.Empty
+
+        Dim aryQuantityDiscountLines As String() = txtQuantityDiscounts.Text.Replace(Chr(10), "#").Split(New Char() {"#"c})
+
+        Dim tblQtyDiscount As New DataTable
+        tblQtyDiscount.Columns.Add(New DataColumn("QD_VersionID", Type.GetType("System.Int64")))
+        tblQtyDiscount.Columns.Add(New DataColumn("QD_Quantity", Type.GetType("System.Single")))
+        tblQtyDiscount.Columns.Add(New DataColumn("QD_Price", Type.GetType("System.Single")))
+
+        For numCounter = 0 To aryQuantityDiscountLines.Length - 1
+            Try
+                Dim aryThisLine As String() = aryQuantityDiscountLines(numCounter).Split(New Char() {","c})
+
+                numQD_VersionID = CInt(aryThisLine(0))
+                numQD_Quantity = CInt(aryThisLine(1))
+                numQD_Price = Convert.ToDouble(aryThisLine(2))
+
+                tblQtyDiscount.Rows.Add(numQD_VersionID, numQD_Quantity, HandleDecimalValues(numQD_Price))
+
+                VersionsBLL._UpdateQuantityDiscount(tblQtyDiscount, numQD_VersionID, strMessage)
+            Catch ex As Exception
+                'Fail softly
+            End Try
+        Next
+
+        CType(Me.Master, Skins_Admin_Template).DataUpdated()
+
+    End Sub
 End Class
