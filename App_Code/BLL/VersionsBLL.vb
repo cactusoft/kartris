@@ -963,6 +963,60 @@ Public Class VersionsBLL
         Adptr._ChangeSortValue(numVersionID, numProductID, chrDirection)
     End Sub
 
+    Public Shared Function _UpdateCustomerGroupPriceList(strPriceList As String, ByRef numLineNumber As Integer, ByRef strMsg As String) As Boolean
+
+        'We want to parse the price list row here first, identify the parameters and 
+        'then send these to sproc, rather than try to do the parsing there which seems
+        'to be far more complicated.
+        Dim numCG_ID As Integer = 0
+        Dim numCGP_VersionID As Int64 = 0
+        Dim numCGP_Price As Double = 0
+        Dim numCounter As Int64 = 0
+
+        Dim aryGroupPriceLines As String() = strPriceList.Split(New Char() {"#"c})
+
+        For numCounter = 0 To aryGroupPriceLines.Length - 1
+            Dim aryThisLine As String() = aryGroupPriceLines(numCounter).Split(New Char() {","c})
+            Try
+                numCG_ID = CInt(aryThisLine(1))
+                numCGP_VersionID = CInt(aryThisLine(2))
+                numCGP_Price = Convert.ToDouble(aryThisLine(3))
+
+                'CG_Name','CG_ID','CGP_VersionID','CGP_Price'
+                Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+                Using sqlConn As New SqlConnection(strConnString)
+                    Dim cmd As SqlCommand = sqlConn.CreateCommand
+                    cmd.CommandText = "_spKartrisVersions_UpdateCustomerGroupPriceList"
+                    Dim savePoint As SqlTransaction = Nothing
+                    cmd.CommandType = CommandType.StoredProcedure
+
+                    Try
+                        cmd.Parameters.AddWithValue("@CG_ID", numCG_ID)
+                        cmd.Parameters.AddWithValue("@CGP_VersionID", numCGP_VersionID)
+                        cmd.Parameters.AddWithValue("@CGP_Price", numCGP_Price)
+
+                        sqlConn.Open()
+                        savePoint = sqlConn.BeginTransaction()
+                        cmd.Transaction = savePoint
+
+                        cmd.ExecuteNonQuery()
+                        savePoint.Commit()
+                    Catch ex As Exception
+                        If Not savePoint Is Nothing Then savePoint.Rollback()
+                        ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod(), strMsg)
+                    Finally
+                        If sqlConn.State = ConnectionState.Open Then sqlConn.Close()
+                    End Try
+                End Using
+            Catch ex As Exception
+                'skip line, possibly first line which is strings, or errors
+            End Try
+
+        Next
+
+        Return True
+    End Function
+
     Public Shared Function _UpdatePriceList(strPriceList As String, ByRef numLineNumber As Integer, ByRef strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
