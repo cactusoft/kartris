@@ -293,15 +293,30 @@ Public NotInheritable Class CkartrisFormatErrors
                     Catch ex As Exception
 
                     End Try
+
+
+                    'Let's add some extra info for errors we 
+                    'see alot and recognize
+                    If strErrorDescription.Contains("The resource object with key 'AdminBar_ViewBackend' was not found") Or
+                        strErrorDescription.Contains("The resource object with key 'PageTitle_WelcomeToKartris' was not found") Then
+
+                        swtErrors.WriteLine(". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .")
+                        swtErrors.WriteLine("HINT: The error below suggests a problem connecting to your database and retrieving")
+                        swtErrors.WriteLine("data. It could be that your db connection string in the web.config is wrong, but")
+                        swtErrors.WriteLine("but more likely your db lacks the permissions for the user that the web site is")
+                        swtErrors.WriteLine("running as. Your site is running as " & System.Security.Principal.WindowsIdentity.GetCurrent().Name)
+                        swtErrors.WriteLine("so check this user has permissions on the database too.")
+                        swtErrors.WriteLine(". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .")
+                    End If
                     swtErrors.WriteLine(">>" & Space(5) & "DESCRIPTION:")
                     swtErrors.WriteLine(strErrorDescription)
                     swtErrors.WriteLine("")
-                    swtErrors.WriteLine("==================================================")
-                    swtErrors.WriteLine("")
-                    swtErrors.WriteLine("")
-                    swtErrors.Flush()
-                    swtErrors.Close()
-                End If
+                        swtErrors.WriteLine("==================================================")
+                        swtErrors.WriteLine("")
+                        swtErrors.WriteLine("")
+                        swtErrors.Flush()
+                        swtErrors.Close()
+                    End If
             Catch ex As Exception
             End Try
         End If
