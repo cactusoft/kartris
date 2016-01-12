@@ -154,11 +154,19 @@ Namespace Kartris
                         ElseIf Not [String].IsNullOrEmpty(menu.ToolTip) Then
                             writer.WriteAttribute("title", menu.ToolTip)
                         End If
+                        'Optionally, depending on the config settings, we
+                        'can write a unique ID to each menu link. This makes
+                        'it possible to write special CSS styles for any
+                        'particular link in the menu. Keep turned off if not
+                        'using this feature to keep page size down.
+                        If KartSettingsManager.GetKartConfig("frontend.navigationmenu.cssids") = "y" Then
+                            writer.WriteAttribute("id", ((item.Text).Replace(" ", "")).Replace("&", ""))
+                        End If
                         writer.Write(HtmlTextWriter.TagRightChar)
-                        writer.Indent += 1
-                        writer.WriteLine()
-                    Else
-                        writer.WriteBeginTag("span")
+                            writer.Indent += 1
+                            writer.WriteLine()
+                        Else
+                            writer.WriteBeginTag("span")
                         writer.WriteAttribute("class", GetItemClass(menu, item))
                         writer.Write(HtmlTextWriter.TagRightChar)
                         writer.Indent += 1
