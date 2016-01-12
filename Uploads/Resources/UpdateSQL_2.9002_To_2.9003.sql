@@ -4,6 +4,25 @@ INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value],
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ImportQuantityDiscounts', N'Import Quantity Discounts', NULL, 2.9003, N'Import Quantity Discounts', NULL, N'_MarkupPrices',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ImportQuantityDiscountsInfo', N'This is custom functionality, use the QuantityDiscounts data export to obtain a file in suitable format', NULL, 2.9003, N'', NULL, N'_MarkupPrices',1)
 --Insert Language Strings - Jóni Silva - 11/01/2016 END
+--Update Language Strings - Jóni Silva - 12/01/2016 BEGIN
+UPDATE kartrisSQL_GPL.dbo.tblKartrisLanguageStrings
+SET LS_Value = 'Here you can import price lists to update the database. Should be entered in this format:<br />
+versioncode1, price1, rrp1<br />
+versioncode2, price2, rrp2<br />
+versioncode3, price3, rrp3<br />
+etc...',
+	LS_DefaultValue = 'Here you can import price lists to update the database. Should be entered in this format:<br />
+versioncode1, price1, rrp1<br />
+versioncode2, price2, rrp2<br />
+versioncode3, price3, rrp3<br />
+etc...'
+WHERE LS_Name = 'ContentText_ImportPriceListInfo';
+--Update Language Strings - Jóni Silva - 12/01/2016 END
+--Added Exports - Jóni Silva - 12/01/2016 END
+INSERT INTO [dbo].[tblKartrisSavedExports] ([EXPORT_Name], [EXPORT_DateCreated], [EXPORT_LastModified], [EXPORT_Details], [EXPORT_FieldDelimiter], [EXPORT_StringDelimiter]) VALUES (N'CustomerGroupPrices', CAST('2016-01-08 15:51:17.577' AS DateTime), CAST('2016-01-08 15:51:17.577' AS DateTime), N'SELECT        vKartrisTypeCustomerGroups.CG_Name, vKartrisTypeCustomerGroups.CG_ID, tblKartrisCustomerGroupPrices.CGP_VersionID, tblKartrisCustomerGroupPrices.CGP_Price FROM            vKartrisTypeCustomerGroups INNER JOIN dbo.tblKartrisCustomerGroupPrices ON vKartrisTypeCustomerGroups.CG_ID = dbo.tblKartrisCustomerGroupPrices.CGP_CustomerGroupID ORDER BY CG_ID, CGP_VersionID, CGP_Price', 44, 39);
+INSERT INTO [dbo].[tblKartrisSavedExports] ([EXPORT_Name], [EXPORT_DateCreated], [EXPORT_LastModified], [EXPORT_Details], [EXPORT_FieldDelimiter], [EXPORT_StringDelimiter]) VALUES (N'QuantityDiscounts', CAST('2016-01-08 15:52:08.037' AS DateTime), CAST('2016-01-08 15:52:08.037' AS DateTime), N'SELECT QD_VersionID, QD_Quantity, QD_Price From tblKartrisQuantityDiscounts ORDER BY QD_VersionID', 44, 39);
+INSERT INTO [dbo].[tblKartrisSavedExports] ([EXPORT_Name], [EXPORT_DateCreated], [EXPORT_LastModified], [EXPORT_Details], [EXPORT_FieldDelimiter], [EXPORT_StringDelimiter]) VALUES (N'PriceList', CAST('2016-01-12 15:35:29.923' AS DateTime), CAST('2016-01-12 15:35:29.923' AS DateTime), N'SELECT vKartrisTypeVersions.V_CodeNumber, vKartrisTypeVersions.V_Price, vKartrisTypeVersions.V_RRP FROM vKartrisTypeVersions ORDER BY V_CodeNumber', 44, 39);
+--Added Exports - Jóni Silva - 12/01/2016 END
 
 /****** 
 v2.9003 
@@ -34,6 +53,78 @@ BEGIN
 
 	UPDATE dbo.tblKartrisCustomerGroupPrices
 	SET CGP_Price = @CGP_Price WHERE CGP_VersionID = @CGP_VersionID AND CGP_CustomerGroupID = @CG_ID;
+
+END
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_UpdatePriceList]    Script Date: 12-01-2016 12:18:25 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Joni
+-- Alter date: 12-01-2016
+-- Description:	Added RPP field to the Update
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisVersions_UpdatePriceList]
+(
+	@PriceList as nvarchar(max),
+	@LineNumber as bigint out
+)								
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+	SET @LineNumber = 0;
+	--SET @PriceList = REPLACE(@PriceList, char(13), '#');
+	SET @PriceList = REPLACE(@PriceList, char(10), '');
+
+	DECLARE @ParsedList as table(Line varchar(200))
+	DECLARE @Line varchar(200), @Pos int    
+	SET @PriceList = LTRIM(RTRIM(@PriceList))+ '#'    
+	SET @Pos = CHARINDEX('#', @PriceList, 1)    
+	IF REPLACE(@PriceList, '#', '') <> '' BEGIN        
+		WHILE @Pos > 0 BEGIN                
+			SET @Line = LTRIM(RTRIM(LEFT(@PriceList, @Pos - 1)))                
+			IF @Line <> '' BEGIN INSERT INTO @ParsedList (Line) VALUES (@Line);	END                
+			SET @PriceList = RIGHT(@PriceList, LEN(@PriceList) - @Pos)                
+			SET @Pos = CHARINDEX('#', @PriceList, 1)        
+		END    
+	END
+;
+	
+	DECLARE @NewValues as nvarchar(50);
+	DECLARE crsrPriceList CURSOR FOR
+	select * from @ParsedList;
+
+	OPEN crsrPriceList
+	FETCH NEXT FROM crsrPriceList
+	INTO @NewValues
+
+	DECLARE @VersionCode as nvarchar(25), @Price as real, @RRP as real;
+	DECLARE @CommaPosition as int, @RPPCommaPosition as int;
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		SET @LineNumber = @LineNumber + 1;
+		SET @CommaPosition = CHARINDEX(',', @NewValues, 1);
+
+		SET @RPPCommaPosition = CHARINDEX(',', @NewValues, @CommaPosition+1);
+		SET @VersionCode = LTRIM(RTRIM(LEFT(@NewValues, @CommaPosition - 1)))
+		SET @Price = CAST(LTRIM(RTRIM( SUBSTRING(@NewValues, @CommaPosition+1, LEN(@NewValues) - CHARINDEX(',', @NewValues, @CommaPosition+1)))) As real)
+		
+		SET @RRP = CAST(LTRIM(RTRIM( RIGHT(@NewValues, LEN(@NewValues) - @RPPCommaPosition))) as real);
+
+		UPDATE dbo.tblKartrisVersions
+		SET V_Price = @Price,
+			V_RRP = @RRP
+		WHERE V_CodeNumber = @VersionCode;
+
+		FETCH NEXT FROM crsrPriceList
+		INTO @NewValues
+	END
+	
+	CLOSE crsrPriceList
+	DEALLOCATE crsrPriceList;
 
 END
 GO
