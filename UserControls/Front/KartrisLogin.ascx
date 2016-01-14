@@ -14,6 +14,7 @@
                                 <asp:Literal ID="litContentTextCustomerAccount" runat="server" Text="<%$ Resources: ContentText_CustomerAccount %>" /></h2>
                         </Header>
                         <Content>
+                            <asp:Panel ID="pnlEnterEmail" runat="server" DefaultButton="btnSignIn">
                             <div class="Kartris-DetailsView inputform" style="overflow:hidden;">
                                 <div class="Kartris-DetailsView-Data">
                                     <ul>
@@ -59,6 +60,7 @@
                                     </ul>
                                 </div>
                             </div>
+                            </asp:Panel>
                             <ajaxToolkit:ModalPopupExtender ID="popLogin" runat="server" TargetControlID="lnkbtnNew"
                                 CancelControlID="btnCancel" PopupControlID="pnlLogin" BackgroundCssClass="popup_background" />
                             <asp:Panel ID="pnlLogin" runat="server" CssClass="popup inputform" Style="display: none" DefaultButton="btnContinue">
