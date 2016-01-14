@@ -7,7 +7,7 @@ CUSTOMIZE POPUP
 -->
 <asp:UpdatePanel ID="updPnlCustomText" runat="server" UpdateMode="Conditional">
     <ContentTemplate>
-        <asp:Panel ID="pnlCustomText" runat="server" Style="display: none" CssClass="popup popup_customization">
+        <asp:Panel ID="pnlCustomText" DefaultButton="btnSaveCustomText" runat="server" Style="display: none" CssClass="popup popup_customization">
             <!-- Customization Window Title and Close Button -->
             <h2>
                 <asp:Literal ID="litContentTextCustomization" runat="server" Text='<%$ Resources: Kartris, ContentText_Customization %>'
@@ -50,7 +50,7 @@ CUSTOMIZE POPUP
                 <!-- Customization Submit Button -->
                 <div class="submitbuttons">
                     <asp:Button ID="btnSaveCustomText" runat="server" CssClass="button" ValidationGroup="CustomForm"
-                        Text='<%$ Resources: Kartris, FormLabel_Save %>' />
+                        Text='<%$ Resources: Kartris, FormLabel_Save %>' UseSubmitBehavior="False" />
                 </div>
             </div>
             <asp:HiddenField ID="hidCustomType" runat="server" />

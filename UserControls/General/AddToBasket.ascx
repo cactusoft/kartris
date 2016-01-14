@@ -1,5 +1,6 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="AddToBasket.ascx.vb"
     Inherits="UserControls_General_AddToBasket" %>
+<asp:Panel runat="server" ID="pnlAdd" DefaultButton="btnAdd">
 <asp:UpdatePanel ID="updAddQuantity" runat="server" UpdateMode="Conditional" RenderMode="Inline">
     <ContentTemplate>
         <%
@@ -32,4 +33,4 @@
     </ContentTemplate>
 </asp:UpdatePanel>
 <asp:Literal ID="litVersionID" runat="server" Visible="False"></asp:Literal>
-
+</asp:Panel>
