@@ -259,9 +259,8 @@ Partial Class _Checkout
             'CUSTOMER OPTION TO SELECT
             'EMAIL UPDATES OF ORDER STATUS?
             '---------------------------------------
-            If GetKartConfig("frontend.checkout.ordertracking") <> "n" Then
+            If GetKartConfig("frontend.checkout.ordertracking") <> "n" And GetKartConfig("backend.orders.emailupdates") <> "n" Then
                 phdOrderEmails.Visible = True
-
             Else
                 phdOrderEmails.Visible = False
                 chkOrderEmails.Checked = False
