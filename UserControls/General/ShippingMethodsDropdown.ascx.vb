@@ -44,7 +44,10 @@ Partial Class UserControls_ShippingMethodsDropdown
             'error
             Me.Visible = False
         End Try
-
+        'Take notice of the frontend.checkout.shipping.showmethods setting if set to neveronone
+        If ddlShippingMethods.Items.Count = 1 And KartSettingsManager.GetKartConfig("frontend.checkout.shipping.showmethods") = "neveronone" Then
+            ddlShippingMethods.Visible = False
+        End If
     End Sub
 
     Public Sub Refresh()
