@@ -2,10 +2,10 @@
     Inherits="UserControls_General_CheckoutAddress" %>
 <%@ Register TagPrefix="user" TagName="CustomerAddress" Src="~/UserControls/General/CustomerAddress.ascx" %>
 <div class="address">
-
-        <asp:PlaceHolder ID="phdAddNewAddress" runat="server">
             <h2>
                 <asp:Literal ID="litAddressTitle" runat="server" /></h2>
+        <asp:PlaceHolder ID="phdAddNewAddress" runat="server">
+
             <div class="inputform row collapse">
                 <div class="small-9 large-10 columns">
                     <asp:DropDownList ID="ddlAddresses" runat="server" AutoPostBack="true" CssClass="fullwidth" />
