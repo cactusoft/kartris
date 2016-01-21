@@ -63,6 +63,21 @@ Public Class ProductsBLL
         Return _Adptr._GetFeaturedProducts(numLanguageID)
     End Function
 
+    'We can use this in the back end to check easily
+    'if an options product is a combinations product.
+    'We can also use it on the front end to nullify
+    'the UseCombinationPrices object config setting
+    'for a product that is not a combinations product.
+    Public Shared Function _NumberOfCombinations(ByVal _ProductID As Integer) As Integer
+        Dim dtbData As DataTable = _Adptr._NumberOfCombinations(_ProductID)
+        Dim intCombinations As Integer = 0
+        For Each drwData As DataRow In dtbData.Rows
+            intCombinations = drwData("Combinations")
+            Exit For
+        Next
+        Return intCombinations
+    End Function
+
     Public Shared Function _UpdateFeaturedProducts(ByVal tblFeaturedProducts As DataTable, ByVal strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()

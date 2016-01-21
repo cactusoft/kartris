@@ -36,6 +36,7 @@
                                                 CssClass="checkbox" />
                                             
                                         </li>
+                                        <asp:PlaceHolder ID="phdStockQuantity" runat="server">
                                         <li>
                                             <asp:Label ID="lblFormLabelStockQuantity" runat="server" Text="<%$ Resources:_Version,FormLabel_StockQuantity %>"
                                                 AssociatedControlID="txtBasicStockQuantity"></asp:Label>
@@ -52,6 +53,7 @@
                                             <ajaxToolkit:FilteredTextBoxExtender ID="filBasicStockQuantity" runat="server" FilterType="Numbers"
                                                 TargetControlID="txtBasicStockQuantity" />
                                         </li>
+                                        </asp:PlaceHolder>
                                         <li>
                                             <asp:Label ID="lblFormLabelWarningLevel" runat="server" Text="<%$ Resources:_Version,FormLabel_WarningLevel %>"
                                                 AssociatedControlID="txtBasicWarningLevel"></asp:Label>
@@ -443,7 +445,7 @@
                                                                             <!-- Warn Level -->
                                                                             <td>
                                                                                 <asp:TextBox ID="txtCombinationWarningLevel" CssClass="shorttext" runat="server"
-                                                                                    Text='<%# Eval("V_QuantityWarnLevel") %>' MaxLength="5" />
+                                                                                    Text='<%# Eval("V_QuantityWarnLevel") %>' MaxLength="5" Enabled="False" />
                                                                                 <asp:RequiredFieldValidator ID="valRequiredCombinationWarningLevel" runat="server"
                                                                                     ControlToValidate="txtCombinationWarningLevel" CssClass="error" ForeColor=""
                                                                                     ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>" ValidationGroup="CurrentCombinationsGrp"
@@ -575,7 +577,7 @@
                                                                             <!-- Warn Level -->
                                                                             <td>
                                                                                 <asp:TextBox ID="txtCombinationWarningLevel" runat="server" Text='<%# Eval("QuantityWarnLevel") %>'
-                                                                                    CssClass="shorttext" MaxLength="5" />
+                                                                                    CssClass="shorttext" MaxLength="5" Enabled="False" />
                                                                                 <asp:CompareValidator ID="valCompareCombinationWarningLevel" runat="server" ControlToValidate="txtCombinationWarningLevel"
                                                                                     Display="Dynamic" CssClass="error" ForeColor="" ErrorMessage="0-32767" Operator="LessThanEqual"
                                                                                     ToolTip="<%$ Resources: _Kartris, ContentText_MaxNoShort %>" ValueToCompare="32767"

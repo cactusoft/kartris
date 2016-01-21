@@ -354,8 +354,10 @@ Partial Class ProductVersions
 
         Dim blnIncTax As Boolean = IIf(KartSettingsManager.GetKartConfig("general.tax.pricesinctax") = "y", True, False)
         Dim blnShowTax As Boolean = IIf(KartSettingsManager.GetKartConfig("frontend.display.showtax") = "y", True, False)
-        Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", ProductID) = "1", True, False)
-        ''//
+        'Added check now for _NumberOfCombinations, so we don't
+        'use this setting if it's an options product, not a combinations
+        'product
+        Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", ProductID) = "1", True, False) And ProductsBLL._NumberOfCombinations(ProductID) > 0
         ptblVersions.Rows(0)("V_Price") = GetPriceWithGroupDiscount(ptblVersions.Rows(0)("V_ID"), ptblVersions.Rows(0)("V_Price"))
 
         ptblVersions.Rows(0)("V_Price") = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), _
@@ -961,6 +963,7 @@ Partial Class ProductVersions
             phdNotOutOfStock4.Visible = False
         End If
 
+        'Literal1.Text = "Combinations of this product: " & ProductsBLL._NumberOfCombinations(ProductID) & " Stock :  " & numQty & " | optionstring: " & strOptionString & "<br/>" & vbCrLf
         'Update display
         updOptions.Update()
     End Sub

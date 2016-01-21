@@ -146,3 +146,87 @@ UPDATE [dbo].[tblKartrisConfig] SET [CFG_DisplayType]='on|off|write|test' WHERE 
 GO
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.email.testaddress', N'', N's', N't', NULL, N'Test email address to send all mail to when general.email.method="test"', 2.9003, N'', 0)
 GO
+
+/* Fix and improve options /combinations */
+/****** Object:  View [dbo].[vKartrisCombinationPrices]    Script Date: 2016-01-21 21:11:13 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER VIEW [dbo].[vKartrisCombinationPrices]
+AS
+SELECT        V_ProductID, V_ID, V_CodeNumber, V_Price, dbo.fnKartrisVersions_GetSortedOptionsByVersion(V_ID) AS V_OptionsIDs, V_Quantity, V_QuantityWarnLevel
+FROM            dbo.tblKartrisVersions
+WHERE        (V_Type = 'c') AND (V_Live = 1)
+
+GO
+/****** Object:  StoredProcedure [dbo].[_spKartrisProducts_GetByProductID]    Script Date: 2016-01-21 16:10:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[_spKartrisProducts_NumberOfCombinations]
+(
+	@P_ID int
+)
+AS
+BEGIN
+	SELECT	Count(V_ID) as Combinations
+	FROM    tblKartrisVersions 
+	WHERE   (tblKartrisVersions.V_ProductID = @P_ID) 
+			AND (tblKartrisVersions.V_Type = 'c') 
+			AND (tblKartrisVersions.V_Live = 1)
+END
+GO
+/****** Object:  StoredProcedure [dbo].[spKartrisVersions_GetOptionsStockQuantity]    Script Date: 2016-01-21 13:03:01 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisVersions_GetOptionsStockQuantity]
+(
+	@P_ID as int,
+	@OptionList as nvarchar(500),
+	@Qty as real OUT
+)
+AS
+BEGIN
+	DECLARE @NoOfCombinations as int;
+	SELECT	@NoOfCombinations = Count(V_ID)
+	FROM    tblKartrisVersions 
+	WHERE   (tblKartrisVersions.V_ProductID = @P_ID) 
+			AND (tblKartrisVersions.V_Type = 'c') 
+			AND (tblKartrisVersions.V_Live = 1);
+	IF @NoOfCombinations = 0
+	BEGIN
+		-- Get stock quanity of the base version, should be only one
+		SELECT @Qty = V_Quantity FROM tblKartrisVersions WHERE V_ProductID = @P_ID AND V_Type='b'
+	END
+	ELSE
+	BEGIN
+		-- SET NOCOUNT ON added to prevent extra result sets from
+		-- interfering with SELECT statements.
+		SET NOCOUNT ON;
+
+		-- need to sort the options' list to match the already sorted options
+		--@OptionsList
+		DECLARE @SortedOptions as nvarchar(max);
+		SELECT @SortedOptions = COALESCE(@SortedOptions + ',', '') + CAST(T._ID as nvarchar(10))
+		FROM (	SELECT DISTINCT Top(5000) _ID
+				FROM dbo.fnTbl_SplitNumbers(@OptionList)
+				ORDER BY _ID) AS T;
+
+		SELECT @Qty = V_Quantity
+		FROM dbo.vKartrisCombinationPrices
+		WHERE V_ProductID = @P_ID AND V_OptionsIDs = @SortedOptions;
+	END
+END
+GO
