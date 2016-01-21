@@ -1164,7 +1164,7 @@ Partial Class Templates_BasketView
                 End If
             Next
             If tblVersion.Rows(0).Item("V_QuantityWarnLevel") > 0 And (numBasketQty + numQuantity) > tblVersion.Rows(0).Item("V_Quantity") And KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y" Then
-                Response.Redirect("~/Basket.aspx")
+                Response.Redirect("~/Basket.aspx?1") 'pass querystring value to make it easier to debug where this redirect happened
             End If
         End If
 
@@ -1182,7 +1182,7 @@ Partial Class Templates_BasketView
                 updPnlAddToBasket.Update()
             ElseIf strBasketBehavior = "y" Then
                 tmrAddToBasket.Enabled = False
-                Response.Redirect("~/Basket.aspx")
+                Response.Redirect("~/Basket.aspx?2") 'pass querystring value to make it easier to debug where this redirect happened
             Else
                 tmrAddToBasket.Enabled = False
             End If
@@ -1192,7 +1192,7 @@ Partial Class Templates_BasketView
             'code to speed up the 'add to basket'
             'dis
             If strBasketBehavior = "y" Then
-                Response.Redirect("~/Basket.aspx")
+                Response.Redirect("~/Basket.aspx?3") 'pass querystring value to make it easier to debug where this redirect happened
             End If
         End If
     End Sub

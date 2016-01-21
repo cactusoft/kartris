@@ -408,6 +408,7 @@
                             <div class="prices">
                                 <asp:UpdatePanel ID="updPricePanel" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
+                                        <asp:Literal ID="Literal1" runat="server"></asp:Literal>
                                         <%
                                             'Store base item price and tax rate
                                         %>

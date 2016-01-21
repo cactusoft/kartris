@@ -59,7 +59,6 @@ Partial Class _ProductOptionGroups
                 lnkJustSelected.CssClass = "filterselected"
             End If
         End If
-
     End Sub
 
     Protected Sub lnkShowAll_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkShowAll.Click
@@ -157,6 +156,16 @@ Partial Class _ProductOptionGroups
                 tabProductOptions.Enabled = True
                 tabOptionCombinations.Enabled = True
                 lnkBtnSaveBasicVersion.CommandName = "update"
+
+                'If is combinations product, the stock value is set at version/combination
+                'level, not for the base version
+                If ProductsBLL._NumberOfCombinations(CInt(litProductID.Text)) > 0 Then
+                    'Is combinations product
+                    'Hide the stock level on first tab
+                    phdStockQuantity.Visible = False
+                Else
+                    phdStockQuantity.Visible = True
+                End If
             Case Else 'More than one Basic Version "Error"
 
         End Select

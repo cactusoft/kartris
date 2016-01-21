@@ -500,12 +500,12 @@ Public Class BasketBLL
                     ElseIf objItem.ProductType = "o" Then
                         objItem.OptionLink = ""
 
-                        'We don't stock track plain old versions; it doesn't really make sense
-                        'since they're configurable items, and if stock tracking is needed you
-                        'really need to track individual combinations rather than the base
-                        'version
-                        objItem.QtyWarnLevel = 0
-                    End If
+                    'We don't stock track plain old versions; it doesn't really make sense
+                    'since they're configurable items, and if stock tracking is needed you
+                    'really need to track individual combinations rather than the base
+                    'version
+                    'objItem.QtyWarnLevel = 0
+                End If
 
                 objItem.OptionText = GetOptionText(LangaugeId, objItem.ID, objItem.OptionLink)
                     objItem.CustomText = drwBasketValues("CustomText") & ""
