@@ -101,16 +101,18 @@ BEGIN
 	FETCH NEXT FROM crsrPriceList
 	INTO @NewValues
 
-	DECLARE @VersionCode as nvarchar(25), @Price as real, @RRP as real;
-	DECLARE @CommaPosition as int, @RPPCommaPosition as int;
+	DECLARE @VersionCode as nvarchar(25), @PriceSubString as nvarchar(25), @Price as real, @RRP as real;
+	DECLARE @CommaPosition as int, @RPPCommaPosition as int, @SubstringLength as int;
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
 		SET @LineNumber = @LineNumber + 1;
 		SET @CommaPosition = CHARINDEX(',', @NewValues, 1);
-
 		SET @RPPCommaPosition = CHARINDEX(',', @NewValues, @CommaPosition+1);
-		SET @VersionCode = LTRIM(RTRIM(LEFT(@NewValues, @CommaPosition - 1)))
-		SET @Price = CAST(LTRIM(RTRIM( SUBSTRING(@NewValues, @CommaPosition+1, LEN(@NewValues) - CHARINDEX(',', @NewValues, @CommaPosition+1)))) As real)
+		SET @VersionCode = LTRIM(RTRIM(LEFT(@NewValues, @CommaPosition - 1)));
+		SET @VersionCode = REPLACE(@VersionCode,'''','');
+		SET @SubstringLength = (@RPPCommaPosition-@CommaPosition)-1;
+		SET @PriceSubString = SUBSTRING(@NewValues, @CommaPosition+1, @SubstringLength);
+		SET @Price = CAST(LTRIM(RTRIM(@PriceSubString)) As real);
 		
 		SET @RRP = CAST(LTRIM(RTRIM( RIGHT(@NewValues, LEN(@NewValues) - @RPPCommaPosition))) as real);
 
