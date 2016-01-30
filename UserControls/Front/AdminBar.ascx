@@ -2,7 +2,7 @@
 
 <style type="text/css">
 #adminbarmenu                           { position: fixed; top: 0; left: 0; display: block; min-height: 40px; }
-#adminbarmenu ul                        { position: relative; padding: 0; border: 0; margin: 0; width: 200px; }
+#adminbarmenu ul                        { position: relative; padding: 0; border: 0; margin: 0; }
 #adminbarmenu ul li                     { width: 100%; position: relative; list-style: none; float: left; margin: 0; }
 #adminbarmenu ul li a.KartrisMenu-Link  { position: fixed; display: block; top: 4px; left: 4px; background-image: url(Skins/Admin/Images/button_frontback.png); background-position: center center; background-repeat: no-repeat; width: 32px; height: 32px; overflow: hidden; color: transparent; padding: 0; line-height: 0px; font-size: 0px; float: left; margin-right: 2px; cursor: pointer; background-color: #666; border: solid 1px #333; z-index: 1000; }
 #adminbarmenu ul li a.KartrisMenu-Link:hover
@@ -11,7 +11,7 @@
 #adminbarmenu ul ul li:hover            { border-top: none }
 #adminbarmenu ul li:hover ul,
 #adminbarmenu ul li li:hover ul,
-#adminbarmenu ul li li li:hover ul      { visibility: visible }
+#adminbarmenu ul li li li:hover ul      { width: 200px; visibility: visible }
 #adminbarmenu ul li:hover ul li:hover a { color: #000; background-color: #eee; font-weight: bold; }
 #adminbarmenu ul li:hover ul li a       { display: block; width: auto; text-decoration: none; font-weight: normal; color: #000; padding: 2px 11px 3px 10px; background-color: #fff; }
 #adminbarmenu a:hover                   { cursor: pointer }
