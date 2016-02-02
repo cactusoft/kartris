@@ -12,6 +12,7 @@
 'overrides the GPL v2.
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
+Imports System.Reflection
 Imports CkartrisBLL
 Imports CkartrisDataManipulation
 Imports KartSettingsManager
@@ -68,6 +69,14 @@ Partial Class Callback
                 If LCase(strGatewayName) = "sagepaydirect" Then strGatewayName = "SagePayDirect"
                 If LCase(strGatewayName) = "sagepay" Then strGatewayName = "SagePay"
                 If LCase(strGatewayName) = "cp" Then strGatewayName = "Cactuspay"
+                If LCase(strGatewayName) = "easypay" Then
+                    strGatewayName = "EasypayCreditCard"
+                    CreateQueryStringParams("e", Request.QueryString.Get("?e"))
+                    RemoveQueryStringParams("?e")
+                    'Request.QueryString = 
+
+                End If
+
 
                 'Loop through incoming fields if form post to this page
                 For Each fldName In Request.Form
@@ -441,4 +450,28 @@ Partial Class Callback
         strInput = strInput.TrimStart(New [Char]() {"0"c})
         Return strInput
     End Function
+
+    Protected Sub RemoveQueryStringParams(rname As String)
+        ' reflect to readonly property
+        Dim isReadOnly As PropertyInfo = GetType(System.Collections.Specialized.NameValueCollection).GetProperty("IsReadOnly", BindingFlags.Instance Or BindingFlags.NonPublic)
+        ' make collection editable
+        isReadOnly.SetValue(Me.Request.QueryString, False, Nothing)
+        ' remove
+        Me.Request.QueryString.Remove(rname)
+        ' make collection readonly again
+        isReadOnly.SetValue(Me.Request.QueryString, True, Nothing)
+    End Sub
+
+
+    Protected Sub CreateQueryStringParams(pname As String, pvalue As String)
+        ' reflect to readonly property
+        Dim isReadOnly As PropertyInfo = GetType(System.Collections.Specialized.NameValueCollection).GetProperty("IsReadOnly", BindingFlags.Instance Or BindingFlags.NonPublic)
+        ' make collection editable
+        isReadOnly.SetValue(Me.Request.QueryString, False, Nothing)
+        ' modify
+        Me.Request.QueryString.[Set](pname, pvalue)
+        ' make collection readonly again
+        isReadOnly.SetValue(Me.Request.QueryString, True, Nothing)
+    End Sub
+
 End Class
