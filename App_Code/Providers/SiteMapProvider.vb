@@ -105,7 +105,7 @@ Public Class CategorySiteMapProvider
                 HttpContext.Current.Trace.Warn("Loading category site map from database")
 
                 ' Clear current Site Map
-                'Clear()
+                RefreshSiteMap()
 
                 ' Load the database data
                 Dim tblSiteMap As DataTable = GetSiteMapFromDB(numLANGID)
@@ -113,6 +113,8 @@ Public Class CategorySiteMapProvider
                 Dim strCategoryLabel As String = HttpContext.GetGlobalResourceObject("Kartris", "ContentText_Categories")
                 _rootNode = New SiteMapNode(Me, "0-" & numLANGID, "~/Category.aspx?L=" & numLANGID, strCategoryLabel, strCategoryLabel)
                 Dim HomeNode As SiteMapNode = New SiteMapNode(SiteMap.Providers.Item("BreadCrumbSiteMap"), "Home", "~/Default.aspx", HttpContext.GetGlobalResourceObject("Kartris", "ContentText_Home"))
+
+                'efreshSiteMap()
                 AddNode(_rootNode, HomeNode)
                 _htRootNodes.Add(numLANGID, _rootNode)
                 ' Build the child nodes 
