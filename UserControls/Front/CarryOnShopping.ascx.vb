@@ -131,8 +131,8 @@ Partial Class CarryOnShopping
 
         If intLinkedCategories > 0 Then
             '' Add the linked categories to a DataTable
-            Dim tblCategories As New DataTable
-            tblCategories = CategoriesBLL.GetCategoriesByProductID(_ProductID, _LanguageID)
+            Dim tblCategories As DataTable = CategoriesBLL.GetCategoriesByProductID(_ProductID, _LanguageID).Rows.Cast(Of System.Data.DataRow)().Take(intLinkedCategories).CopyToDataTable()
+            'dt.Rows.Cast<System.Data.DataRow>().Take(n)
 
             '' If there is no linked categories, then exit this section.
             If tblCategories.Rows.Count = 0 Then Exit Sub
