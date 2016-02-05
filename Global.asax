@@ -16,10 +16,10 @@
     'overrides the GPL v2.
     'www.kartris.com/t-Kartris-Commercial-License.aspx
     '========================================================================
-	
+
     Sub Application_Start(ByVal sender As Object, ByVal e As EventArgs)
         ' Code that runs on application startup
-		
+
         Try
             'detect application trust
             Dim p As System.Reflection.PropertyInfo = GetType(HttpRuntime).GetProperty("FileChangesMonitor", System.Reflection.BindingFlags.NonPublic Or _
@@ -37,7 +37,7 @@
         Catch
             Application("isMediumTrust") = True
         End Try
-		
+
         'check if we can connect to the database
         Dim strConnectionString As String = ConfigurationManager.ConnectionStrings("kartrisSQLConnection").ToString
         Dim sqlconKartris As New SqlConnection(strConnectionString)
@@ -49,7 +49,7 @@
         Finally
             If sqlconKartris.State = ConnectionState.Open Then sqlconKartris.Close()
         End Try
-		
+
         If Application("DBConnected") Then
             ' Register a handler for SiteMap.SiteMapResolve events so that SiteMapPath 
             ' will show the path to pages that don't appear in the site map. 
@@ -59,7 +59,7 @@
             TaxRegime.LoadTaxConfigXML()
         End If
     End Sub
-	
+
     Private Sub Application_BeginRequest(ByVal sender As Object, ByVal e As EventArgs)
         'This is for payment gateway callbacks. Typically we set the
         'callback URL to something like Callback.aspx?g=paypal. But some
@@ -76,13 +76,16 @@
             Dim strGateway As String = Replace(strFullOriginalPath.ToLower.Substring(strFullOriginalPath.ToLower.IndexOf("callback-") + 9), ".aspx", "")
             Context.RewritePath("~/Callback.aspx?g=" & strGateway)
         End If
-		
+
         'This is due to a breaking change in ASP.NET 4.0 that can stop
         'postbacks working on the default document if only folder URL
-        'given (e.g. site/ instead of site/default.aspx)
-        Dim objApp = DirectCast(sender, HttpApplication)
-        If objApp.Context.Request.Url.LocalPath.ToLower.EndsWith("/admin") Then
-            objApp.Context.RewritePath(String.Concat(objApp.Context.Request.Url.LocalPath, "Default.aspx"))
+        Dim strRawURL As String = Request.RawUrl.ToLower()
+        If strRawURL.EndsWith("/admin") Then
+            Response.Redirect(Replace(strRawURL, "/admin", "/Admin/_Default.aspx"))
+        ElseIf strRawURL.EndsWith("/admin/") Then
+            Response.Redirect(Replace(strRawURL, "/admin/", "/Admin/_Default.aspx"))
+        ElseIf strRawURL.EndsWith("/") Then
+            Response.Redirect(strRawURL & "Default.aspx")
         End If
 
     End Sub
@@ -99,7 +102,7 @@
             Response.Write("This looks like a bad or invalid URL.")
             Response.End()
         End If
-		
+
         'Log the un-handled error
         CkartrisFormatErrors.ReportUnHandledError()
     End Sub
@@ -113,14 +116,14 @@
             Session("SessionCode") = objSession.SessionCode
             Session("SessionID") = objSession.SessionID
             objSession = Nothing
-		
+
             'Create a cookie if it doesn’t exist yet (user visits the website for the first time).
             KartSettingsManager.CreateKartrisCookie()
-		
+
             If Request.Cookies(HttpSecureCookie.GetCookieName("Search")) IsNot Nothing Then
                 Response.Cookies.Remove(HttpSecureCookie.GetCookieName("Search"))
             End If
-		
+
             'Set the default currency - can no longer
             'assume is ID=1
             Dim tblCurrencies As DataTable = KartSettingsManager.GetCurrenciesFromCache() 'CurrenciesBLL.GetCurrencies()
