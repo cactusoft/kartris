@@ -57,7 +57,7 @@ Partial Class UserControls_Back_ShippingMethods
 
     Private Sub LoadShippingMethodInformation()
 
-        _UC_LangContainer.CreateLanguageStrings( _
+        _UC_LangContainer.CreateLanguageStrings(
                 LANG_ELEM_TABLE_TYPE.ShippingMethods, False, GetShippingMethodID())
         '' The following line .. read the value of "litOrderBy" which holds the value of the 
         ''      'SM_OrderByValue' field .. to reduce the db calls
@@ -72,11 +72,24 @@ Partial Class UserControls_Back_ShippingMethods
         PopulateTaxBandDropdowns()
         Try
             If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
-                ddlTaxBand.SelectedValue = _
+                ddlTaxBand.SelectedValue =
                     CInt(CType(gvwShippingMethods.SelectedRow.Cells(0).FindControl("hidTaxBand"), HiddenField).Value)
             Else
                 'For US, we just have a checkbox as to whether shipping method is taxable
-                'chkTax1.Checked = CInt(CType(gvwShippingMethods.SelectedRow.Cells(0).FindControl("hidTaxBand"), HiddenField).Value) = 2
+                'To check if this should be checked, we need to find the value hidTaxBand
+                'as a shippping method, and see if the tax rate on that is above zero
+                Dim bytTaxBand As Byte = CInt(CType(gvwShippingMethods.SelectedRow.Cells(0).FindControl("hidTaxBand"), HiddenField).Value)
+                Dim dtbTaxes As DataTable = GetTaxRateFromCache()
+                For Each drwTaxBand As DataRow In dtbTaxes.Rows
+                    If drwTaxBand("T_ID") = bytTaxBand Then
+                        'We've found the tax rate that matches
+                        If drwTaxBand("T_TaxRate") > 0 Then
+                            chkTax1.Checked = True
+                        Else
+                            chkTax1.Checked = False
+                        End If
+                    End If
+                Next
             End If
 
             If TaxRegime.VTax_Type2 = "rate" Then ddlTaxBand2.SelectedValue =
@@ -86,6 +99,7 @@ Partial Class UserControls_Back_ShippingMethods
         End Try
 
     End Sub
+
     Private Sub ClearRateInformation()
 
         litShippingMethodNameRates.Text = Nothing
@@ -93,6 +107,7 @@ Partial Class UserControls_Back_ShippingMethods
         rptShippingRateZones.DataBind()
 
     End Sub
+
     Private Sub LoadShippingMethodRates()
 
         ClearRateInformation()
@@ -233,14 +248,41 @@ Partial Class UserControls_Back_ShippingMethods
         If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then
             bytTaxBand = CByte(ddlTaxBand.SelectedValue)
         Else
-            'If CByte(chkTax1.Checked) Then
-            '    bytTaxBand = 2
-            'Else
-            '    bytTaxBand = 1
-            'End If
+            'For US and simple tax systems, we need to find which
+            'tax rate records correspond to either no tax, or with tax.
+            'We use the first zero value band for no tax, and the first 
+            'with a value above zero for tax.
+            Dim bytNoTaxBand As Byte = 0
+            Dim bytWithTaxBand As Byte = 0
+
+            Dim dtbTaxes As DataTable = GetTaxRateFromCache()
+            For Each drwTaxBand As DataRow In dtbTaxes.Rows
+                If bytNoTaxBand = 0 Then 'still looking
+                    If drwTaxBand("T_TaxRate") = 0 Then
+                        'This can be our no-tax band
+                        bytNoTaxBand = drwTaxBand("T_ID")
+                    End If
+                End If
+                If bytWithTaxBand = 0 Then 'still looking
+                    If drwTaxBand("T_TaxRate") > 0 Then
+                        'This can be our with-tax band
+                        bytWithTaxBand = drwTaxBand("T_ID")
+                    End If
+                End If
+            Next
+
+            'Based on the checkbox for tax, we can decide
+            'which tax band ID to store in the db for this
+            'shipping method. One band ID represents zero tax,
+            'another represents with tax.
+            If CByte(chkTax1.Checked) Then
+                bytTaxBand = bytWithTaxBand
+            Else
+                bytTaxBand = bytNoTaxBand
+            End If
         End If
 
-        If TaxRegime.VTax_Type2 = "rate" Then bytTaxBand2 = CByte(ddlTaxBand2.SelectedValue)
+            If TaxRegime.VTax_Type2 = "rate" Then bytTaxBand2 = CByte(ddlTaxBand2.SelectedValue)
 
         Dim strMessage As String = ""
         Select Case enumOperation
@@ -315,15 +357,15 @@ Partial Class UserControls_Back_ShippingMethods
         Dim strMessage As String = ""
         If ddlShippingZonesToCopy.SelectedValue = 0 Then
             '' Add New Zone
-            If Not ShippingBLL._AddNewShippingRate(GetShippingMethodID(), CByte(ddlShippingZonesToAdd.SelectedValue()), _
+            If Not ShippingBLL._AddNewShippingRate(GetShippingMethodID(), CByte(ddlShippingZonesToAdd.SelectedValue()),
                                                   999999, 0, "", strMessage) Then
                 _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                 Return False
             End If
         Else
             '' Copy Zone
-            If Not ShippingBLL._CopyRates(GetShippingMethodID(), CByte(ddlShippingZonesToCopy.SelectedValue()), _
-                                              CByte(ddlShippingZonesToAdd.SelectedValue()), _
+            If Not ShippingBLL._CopyRates(GetShippingMethodID(), CByte(ddlShippingZonesToCopy.SelectedValue()),
+                                              CByte(ddlShippingZonesToAdd.SelectedValue()),
                                                   strMessage) Then
                 _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                 Return False
@@ -333,6 +375,7 @@ Partial Class UserControls_Back_ShippingMethods
 
         Return True
     End Function
+
     Private Sub PopulateTaxBandDropdowns()
         If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" Then
             If ddlTaxBand.Items.Count <= 1 Then

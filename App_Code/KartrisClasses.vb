@@ -354,21 +354,18 @@ Public Class KartrisClasses
             Dim blnSimpletaxEnabled As Boolean = ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple"
             Dim blnNormalShippingTax As Boolean = False
             If numShippingTaxRate = -1 Then
-                If blnUStaxEnabled Or blnSimpletaxEnabled Then
-                    numShippingTaxRate = ShippingCountry.ComputedTaxRate
-                Else
-                    blnNormalShippingTax = True
-                End If
+                'If blnUStaxEnabled Or blnSimpletaxEnabled Then
+                'numShippingTaxRate = ShippingCountry.ComputedTaxRate
+                'Else
+                blnNormalShippingTax = True
+                'End If
             End If
 
-
-            'If blnNormalShippingTax Then
-            '    Dim T_ID1 As Byte = CInt(GetKartConfig("frontend.checkout.shipping.taxband"))
-            '    numShippingTaxRate = TaxBLL.GetTaxRate(T_ID1)
-
-            '    If numShippingTaxRate > 0 Then numShippingTaxRate = numShippingTaxRate / 100
-            'End If
-
+            'If the store is in an EU country and the customer is
+            'in another EU country, and has entered a VAT number
+            'which is successfully validated, we zero rate the order
+            'as the customer will declare and pay the VAT in their
+            'own country instead.
             Try
                 If Current.Session("blnEUVATValidated") IsNot Nothing Then
                     If CBool(Current.Session("blnEUVATValidated")) Then
@@ -382,10 +379,10 @@ Public Class KartrisClasses
 
             End Try
 
-            _ID = intTempID 'CType(reader("SM_ID"), Integer)
-            _name = objShippingOption.Code 'CType(reader("SM_Name"), String)
-            _desc = "" 'CType(reader("SM_Desc"), String)
-            _value = objShippingOption.Cost 'CType(reader("S_ShippingRate"), Double)
+            _ID = intTempID 'SM_ID
+            _name = objShippingOption.Code 'SM_Name
+            _desc = "" 'SM_Desc
+            _value = objShippingOption.Cost 'S_ShippingRate
 
             If LCase(objShippingOption.CurrencyISOCode) <> LCase(CurrenciesBLL.CurrencyCode(CurrenciesBLL.GetDefaultCurrency)) Then
                 _value = CurrenciesBLL.ConvertCurrency(CurrenciesBLL.GetDefaultCurrency, _value, CurrenciesBLL.CurrencyID(objShippingOption.CurrencyISOCode))
@@ -395,14 +392,12 @@ Public Class KartrisClasses
                 Dim ex As Exception = New Exception("badshiptaxband")
                 Throw ex
             Else
-                'If objBasket.D_Tax <> "" Then shippingPrice.TaxRate = (objRecordSetMisc("T_Taxrate") / 100) * objBasket.D_Tax Else shippingPrice.TaxRate = (objRecordSetMisc("T_Taxrate") / 100)
                 'Calculate shipping costs
-                Dim blnPricesIncTax As Boolean '= KartSettingsManager.GetKartConfig("general.tax.pricesinctax") = "y"
+                Dim blnPricesIncTax As Boolean
 
+                'In the US, and other general tax areas we show prices excluding tax, 
+                'else we use the config setting to decide.
                 If blnUStaxEnabled Or blnSimpletaxEnabled Then blnPricesIncTax = False Else blnPricesIncTax = GetKartConfig("general.tax.pricesinctax") = "y"
-
-                'Set shipping inc and ex tax values
-
 
                 'Tax rate for shipping
                 If Not ShippingCountry.D_Tax Then
@@ -422,22 +417,24 @@ Public Class KartrisClasses
             End If
 
         End Sub
+
         Public Sub New(ByVal Name As String, ByVal Description As String, ByVal ExTax As Double, ByVal IncTax As Double)
             _name = Name
             _desc = Description
             _exTax = ExTax
             _incTax = IncTax
         End Sub
+
         Public Sub New(ByVal reader As DataRow, ByVal ShippingCountry As Country)
             Dim blnUStaxEnabled As Boolean = ConfigurationManager.AppSettings("TaxRegime").ToLower = "us"
             Dim blnSimpletaxEnabled As Boolean = ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple"
             Dim blnNormalShippingTax As Boolean = False
             If numShippingTaxRate = -1 Then
-                If blnUStaxEnabled Or blnSimpletaxEnabled Then
-                    numShippingTaxRate = ShippingCountry.ComputedTaxRate
-                Else
-                    blnNormalShippingTax = True
-                End If
+                'If blnUStaxEnabled Or blnSimpletaxEnabled Then
+                '    numShippingTaxRate = ShippingCountry.ComputedTaxRate
+                'Else
+                blnNormalShippingTax = True
+                'End If
             End If
 
             If blnNormalShippingTax Then

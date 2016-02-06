@@ -30,16 +30,14 @@
                         <%-- Tax Band --%>
                         <asp:TemplateField>
                             <HeaderTemplate>
-                                <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then%>
                                 <asp:Literal ID="litContentTextTaxBand" runat="server" Text="<%$ Resources: _Version, ContentText_Tax %>"></asp:Literal>
-                                <% End If%>
                             </HeaderTemplate>
                             <ItemTemplate>
                                 <asp:HiddenField ID="hidTaxBand" runat="server" Value='<%# Eval("SM_Tax") %>' />
                                 <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then%>
                                 <asp:Literal ID="litTax1" runat="server" Text='<%# TaxBLL.GetTaxRate(FixNullFromDB(Eval("SM_Tax"))) & "%" %>'></asp:Literal>
                                 <% Else%>
-                                <%--<asp:CheckBox ID="litTax2" runat="server" Checked='<%# Eval("SM_Tax")=2 %>' CssClass="checkbox" Enabled="false"></asp:CheckBox>--%>
+                                <asp:CheckBox ID="litTax2" runat="server" Checked='<%# TaxBLL.GetTaxRate(FixNullFromDB(Eval("SM_Tax"))) > 0 %>' CssClass="checkbox" Enabled="false"></asp:CheckBox>
                                 <% End If%>
                             </ItemTemplate>
                         </asp:TemplateField>
@@ -118,11 +116,11 @@
                                         ValidationGroup="<%# LANG_ELEM_TABLE_TYPE.Versions %>" />
                                 </span></li>
                                 <% else %>
-<%--                                <li><span class="Kartris-DetailsView-Name">
+                               <li><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litFormLabelTax1" runat="server" Text="<%$ Resources: _Version, ContentText_Tax %>"></asp:Literal>
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:CheckBox ID="chkTax1" runat="server" CssClass="checkbox" />
-                                </span></li>--%>
+                                </span></li>
                                 <% End If%>
                                 <%-- Tax Band 2--%>
                                 <% If TaxRegime.VTax_Type2 = "rate" Then%>
