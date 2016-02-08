@@ -5,7 +5,7 @@ INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value],
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ImportQuantityDiscountsInfo', N'This is custom functionality, use the QuantityDiscounts data export to obtain a file in suitable format', NULL, 2.9003, N'', NULL, N'_MarkupPrices',1)
 --Insert Language Strings - Jóni Silva - 11/01/2016 END
 --Update Language Strings - Jóni Silva - 12/01/2016 BEGIN
-UPDATE kartrisSQL_GPL.dbo.tblKartrisLanguageStrings
+UPDATE tblKartrisLanguageStrings
 SET LS_Value = 'Here you can import price lists to update the database. Should be entered in this format:<br />
 versioncode1, price1, rrp1<br />
 versioncode2, price2, rrp2<br />
@@ -231,4 +231,15 @@ BEGIN
 		WHERE V_ProductID = @P_ID AND V_OptionsIDs = @SortedOptions;
 	END
 END
+GO
+
+/****** 
+Now have more language menu options. In addition to dropdown and image (flags) can
+also have short or full culture (for example, EN or en-GB, respectively)
+******/
+UPDATE [dbo].[tblKartrisConfig] SET [CFG_DisplayType]='dropdown|image|linkshort|linkfull' WHERE [CFG_Name]='frontend.languages.display'
+GO
+
+/****** Set this to tell Data tool which version of db we have ******/
+UPDATE tblKartrisConfig SET CFG_Value='2.9003', CFG_VersionAdded=2.9003 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
