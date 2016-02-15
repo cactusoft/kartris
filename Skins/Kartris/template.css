@@ -65,7 +65,7 @@ OTHER CONTROLS language, currency, etc.
 #languagemenu                           { margin: 10px 20px 0 0; float: right; text-align: left; display: block; max-width: 110px; border: none; }
 #languagemenu .language-link            { display: inline-block; border: none; padding: 1px 3px; color: #888; text-transform: uppercase; font-size: 90%; }
 #languagemenu .lang-selected            { background-color: #888; color: #fff; }
-#recentlyviewed                         { border-top: solid 1px #000; padding: 10px 0 20px 0; }
+#recentlyviewed                         { border-top: solid 3px #ddd; padding: 10px 0 20px 0; }
 /* 
 ========================================================================
 TEMPLATE HOVERMENU
