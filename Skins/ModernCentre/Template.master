@@ -1,0 +1,236 @@
+﻿<%@ Master Language="VB" CodeFile="Template.master.vb" Inherits="Skin_Kartris_Template" %>
+
+<%@ Register TagPrefix="user" TagName="AdminBar" Src="~/UserControls/Front/AdminBar.ascx" %>
+<%@ Register TagPrefix="user" TagName="NavigationMenu" Src="UserControls/NavigationMenu.ascx" %>
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" ><![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head id="Head1" runat="server" enableviewstate="true">
+	<base id="baseTag" runat="server" />
+	<!--
+	========================================================================
+	KARTRIS by cactusoft
+	Copyright 2016 CACTUSOFT - www.kartris.com
+	This skin is licensed under a
+	Creative Commons Attribution-ShareAlike 3.0 Unported License
+
+	http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
+	========================================================================
+	-->
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+
+	<link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
+	<link href="normalize.css" rel="stylesheet" type="text/css" />
+	<link href="foundation.css" rel="stylesheet" type="text/css" />
+	<link href="general.css" rel="stylesheet" type="text/css" />
+	<link href="sections.css" rel="stylesheet" type="text/css" />
+	<link href="template.css" rel="stylesheet" type="text/css" />
+	<link href="custom.css" rel="stylesheet" type="text/css" />
+	<link href="powerpack.css" rel="stylesheet" type="text/css" />
+	<title>Kartris v1</title>
+</head>
+<body class="main">
+	<form id="frmMain" runat="server" class="container">
+				<ajaxToolkit:ToolkitScriptManager ID="scrManager" runat="server" ScriptMode="Release"
+					EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"
+					CombineScripts="true" EnableViewState="True">
+					<Scripts>
+						<asp:ScriptReference Path="~/JavaScript/k29003/modernizr.js" />
+						<asp:ScriptReference Path="~/JavaScript/k29003/jquery.js" />
+						<asp:ScriptReference Path="~/JavaScript/k29003/foundation.min.js" />
+						<asp:ScriptReference Path="~/JavaScript/k29003/fastclick.js" />
+					</Scripts>
+				</ajaxToolkit:ToolkitScriptManager>
+				<script type="text/javascript">
+					$(document).ready(function () {
+						$(document).foundation();
+					});
+					$(document).foundation({
+						offcanvas: {
+							open_method: 'overlap_single'
+						}
+					});
+					$(window)
+					.load(function () {
+						SetOffCanvasHeight();
+					})
+					.resize(function () {
+						SetOffCanvasHeight();
+					});
+
+					function SetOffCanvasHeight() {
+						var height = $(window).height();
+						var contentHeight = $(".off-canvas-content").height();
+						if (contentHeight > height) { height = contentHeight; }
+						$(".inner-wrap").height(height);
+					}
+
+					// Opening and closing the off-canvas seems to fire
+					// the updateprogress spinner on product pages. The
+					// code below hides the updateprogress.
+					function openOffCanvas() {
+						$(".updateprogress").height(0);
+						return true;
+					}
+					function closeOffCanvas() {
+						$(".updateprogress").hide();
+						$(".updateprogress").height('100%');
+						return true;
+					}
+
+					// Reset canvas height when there are partial postbacks
+					// We need this because if a postback expands the page
+					// by unhiding a section, we don't want a secondary
+					// scrollbar down the side of the page
+					function pageLoad() { // this gets fired when the UpdatePanel completes
+						SetOffCanvasHeight();
+					}
+				</script>
+		<div class="off-canvas-wrap" data-offcanvas>
+			<div class="inner-wrap">
+				<!-- Off Canvas Menu -->
+				<aside class="left-off-canvas-menu offcanvas-overlap-left">
+					<a onclick="closeOffCanvas()" class="left-off-canvas-toggle off-canvas-close" href="#"><span>
+						<asp:Literal ID="litCloseButton"
+							runat="server" Text="×"
+							EnableViewState="False"></asp:Literal></span></a>
+					<user:CategoryMenuSimple ID="UC_CategoryMenuSimple" runat="server" EnableViewState="False"
+						Visible="True" MenuLevels="1" />
+				</aside>
+				<!-- Off Canvas Menu -->
+				<aside class="right-off-canvas-menu offcanvas-overlap-right">
+					<a onclick="closeOffCanvas()" class="right-off-canvas-toggle off-canvas-close" href="#"><span>
+						<asp:Literal ID="litCloseButton2"
+							runat="server" Text="×"
+							EnableViewState="False"></asp:Literal></span></a>
+					<user:NavigationMenu ID="UC_NavigationMenu" runat="server" />
+				</aside>
+				<!-- main content goes here -->
+
+
+
+				<div id="container">
+					<div id="centre_container">
+						<div id="header">
+							<div class="row collapse" id="header_top">
+								<div class="small-2 columns">
+									<a onclick="openOffCanvas()" class="left-off-canvas-toggle off-canvas-open" href="#"></a>
+								</div>
+								<div class="small-8 columns">
+									<asp:HyperLink ID="lnkHome" NavigateUrl="~/" runat="server">
+										<asp:Image ID="imgLogo" runat="server" ImageUrl="Images/logo.png"
+											CssClass="logo" AlternateText="logo" />
+									</asp:HyperLink>
+								</div>
+								<div class="small-2 columns">
+									<a onclick="openOffCanvas()" class="right-off-canvas-toggle off-canvas-open" href="#"></a>
+								</div>
+							 </div>
+						</div>
+						<div class="row collapse">
+								<div class="small-7 medium-3 columns">
+									<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
+									<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
+								</div>
+								<div class="small-5 medium-6 columns">
+									<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
+									<div id="minibasketholder">
+										<user:BasketView ID="UC_MiniBasket" runat="server" ViewType="MINI_BASKET" />
+									</div>
+
+								</div>
+								<div class="small-12 medium-3 columns">
+									<user:SearchBox runat="server" ID="UC_SearchBox" EnableViewState="False" />
+								</div>
+						</div>
+						<div class="row collapse" id="pagebody">
+							<div class="small-12 large-12 columns" id="pagecontent_pad">
+								<asp:ContentPlaceHolder ID="cntMain" runat="server">
+								</asp:ContentPlaceHolder>
+							</div>
+							<div class="small-12 large-12 columns">
+								<user:ViewedProducts ID="UC_RecentlyViewedProducts" runat="server" EnableViewState="False" />
+							</div>
+						</div>
+						<div class="spacer"></div>
+
+					</div>
+
+				</div>
+				<div id="footer">
+					<div id="footer_inside">
+						<div class="row">
+							<div class="small-12 large-3 columns">
+								<h2>Section</h2>
+								<ul>
+									<li>
+										<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									<li>
+										<asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									<li>
+										<asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+								</ul>
+							</div>
+							<div class="small-12 large-3 columns">
+								<h2>Section</h2>
+								<ul>
+									<li>
+										<asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									<li>
+										<asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									<li>
+										<asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+								</ul>
+							</div>
+							<div class="small-12 large-3 columns">
+								<h2>Section</h2>
+								<ul>
+									<li>
+										<asp:HyperLink ID="HyperLink10" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									<li>
+										<asp:HyperLink ID="HyperLink11" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									<li>
+										<asp:HyperLink ID="HyperLink12" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+								</ul>
+							</div>
+							<div class="small-12 large-3 columns">
+								<h2>Section</h2>
+								<ul>
+									<li>
+										<asp:HyperLink ID="HyperLink7" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									<li>
+										<asp:HyperLink ID="HyperLink8" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									<li>
+										<asp:HyperLink ID="HyperLink9" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+								</ul>
+							</div>
+							<div class="small-12 large-12 columns" id="copyright">
+								&copy;2016 CACTUSOFT
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<user:AdminBar ID="UC_AdminBar" runat="server" />
+
+
+				<!-- close the off-canvas menu -->
+				<a class="exit-off-canvas" onclick="closeOffCanvas()"></a>
+			</div>
+		</div>
+
+		<!-- Load up javascript -->
+
+		<script>
+			$(document).foundation();
+		</script>
+
+	</form>
+</body>
+</html>
