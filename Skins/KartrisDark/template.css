@@ -3,84 +3,88 @@
 MAIN LAYOUT
 ========================================================================
 */
-html                                    { background: #444; height:100%; overflow:scroll; overflow:-moz-scrollbars-vertical; overflow-x:hidden; overflow-y:hidden; }
-body									{ background-color: #111; min-height: 100%; overflow-y: hidden; }
-body.main                               { background: #444; height: 100%; overflow-y: scroll; }
-#container                              { background-color: #222; max-width: 900px; margin: 0 auto; min-height: 100%; }
-#centre_container                       { display:block; }
+html                                    { height:100%; overflow-y:scroll; overflow-x: hidden; overflow:-moz-scrollbars-vertical; }
+body									{ background-color: #222; }
+body.main                               { background: #111; padding: 0 0 232px 0; }
+#container                              { background-color: #222; max-width: 980px; margin: 0 auto; min-height: 100%;}
+#centre_container                       { display: block; }
 /* 
 ========================================================================
 SECTIONS
 ========================================================================
 */
-#header .logo                           { margin: 20px 0 10px 0; }
-#pagecontent_pad                        { min-height: 400px; padding-bottom: 15px; }
+#header .logo                           { margin: 20px 0 0 0; }
+#pagecontent_pad                        { min-height: 100px; padding-bottom: 15px; }
 /* 
 ========================================================================
 LOGIN STATUS
 ========================================================================
 */
-#loginstatus                            { padding: 5px 0 10px 0; }
+#loginstatus                            { text-transform: uppercase; font-size: 85%; font-weight: normal; color: #ccc; padding: 7px 0 3px 0; }
 #loginstatus .logout                    { display: inline-block; position: relative; height: 15px; }
-#loginstatus a.icon_logout:hover        { color: #fff }
-#loginstatus strong                     { color: #aaa; font-weight: normal; }
-#loginstatus #login_myaccountlink a     { text-transform: uppercase; font-size: 85%; font-weight: normal; color: #aaa; margin: 0 0 0 30px; }
+#loginstatus a.icon_logout:hover        { }
+#loginstatus strong                     { color: #eee; text-transform: none; font-size: 115%; }
+#loginstatus #login_myaccountlink a     { color: #ccc; margin: 0 0 0 30px; }
 /* 
 ========================================================================
 SEARCH BOX
 ========================================================================
 */
-#section_searchbox                      { padding: 10px 0 5px 0; }
-#section_searchbox input.button         { width: 100%; margin: 0 5px 0 0; }
-
+#section_searchbox                      { padding: 15px 0 5px 0; }
+#section_searchbox input.button         { background-position: right; background-image: url(Images/icon_search.png); background-repeat: no-repeat; background-color: #666; color: transparent; font-weight: bold; margin: 0; height: 30px; }
+#section_searchbox input[type="text"]   { color: #fff; box-shadow: none; height: 30px; background-color: #666; border: none; border-style: none; }
+#section_searchbox input[type="text"]:focus
+                                        { background-color: #777; }
 /* 
 ========================================================================
 OTHER CONTROLS language, currency, etc.
 ========================================================================
 */
-#currencymenu                           { margin: 5px 0 0 0; float: right; text-align: right; display: block; border: none; max-width: 90px; }
-#currencymenu select					{ border: none; }
-#languagemenu                           { float: right; text-align: right; display: block; max-width: 110px; border: none; margin: 5px 10px 0 0; }
-#recentlyviewed                         { border-top: solid 1px #888; padding: 10px 0 0 0; }
+#regionalsettings                       { margin: 30px 0 0 0; }
+#currencymenu                           { margin: 1px 0 0 0; float: right; text-align: right; display: block; border: none; max-width: 90px; }
+#currencymenu select					{ border: none; font-size: 90%; box-shadow: none; }
+#languagemenu                           { float: right; text-align: right; display: block; max-width: 110px; border: none; margin: 0 10px 0 0; }
+#languagemenu .language-link            { display: inline-block; border: none; padding: 1px 3px; color: #999; text-transform: uppercase; font-size: 90%; }
+#languagemenu .lang-selected            { background-color: #444; color: #eee; }
+#recentlyviewed                         { border-top: solid 3px #444; padding: 10px 0 20px 0; }
 /* 
 ========================================================================
 BASKET SUMMARY
 ========================================================================
 */
-#minibasketholder                       { padding: 0 10px 0 0; }
+#minibasketholder                       { }
 #minibasket                             { width: auto; padding: 5px 0 5px 0; }
-#minibasket #minibasket_header          { position: absolute; width: 100%; z-index: 2000; background-color: transparent; }
-#minibasket h4                          { white-space: nowrap; height: 21px; float: right; background: none; text-transform: uppercase; font-size: 85%; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0 10px 0 0; display: inline-block; color: #fff; text-align: right; z-index: 9992; padding: 3px 0 10px 2px; }
-#minibasket h4 strong                   { color: #ccc; font-weight: normal; }
-#minibasket h4 a                        { background-position: -2px -8px; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #fff; padding: 2px 0 1px 29px; font-weight: normal; }
+#minibasket #minibasket_header          { position: absolute; width: 100%; z-index: 99; background-color: transparent; }
+#minibasket h4                          { letter-spacing: 0; white-space: nowrap; height: 21px; float: right; background: none; text-transform: uppercase; font-size: 85%; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0 35px 0 0; display: inline-block; color: #fff; text-align: right; z-index: 9992; padding: 3px 0 10px 2px; }
+#minibasket h4 strong                   { color: #999; font-weight: bold; }
+#minibasket h4 a                        { background-position: -2px -8px; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #fff; padding: 2px 0 1px 29px; font-weight: bold; }
 #minibasket #minibasket_main            { display: none; height: 0px; width: 100%; }
-
-#minibasket:hover #minibasket_main      { display: block; z-index: 1999; text-align: left; height: auto; position: absolute; background-color: #777; padding: 40px 8px 8px 8px; margin: -10px 0 0 0; }
-#minibasket:hover                       { background-color: #777; z-index: 1999; max-height: 1px; }
-
+#minibasket:hover #minibasket_main      { background-color: #555; border-right: solid 1px #111; border-bottom: solid 1px #111; display: block; z-index: 9; text-align: left; height: auto; position: absolute; right: 15px; padding: 40px 8px 8px 8px; margin: -10px 0 0 0; }
+#minibasket:hover                       { background-color: #555; z-index: 9998; max-height: 1px; }
 #minibasket:hover h4 strong             { color: #fff; }
 #minibasket:hover h4 a                  { color: #fff; }
 #minibasket #content                    { width: 100%; }
 #minibasket #contents #orderinprogress,
-#minibasket #contents #basketisempty    { padding: 1px 5px 2px 5px; font-weight: normal; font-size: 95%; color: #fff; }
-#minibasket #contents ul                { margin: 0; padding: 0; }
+#minibasket #contents #basketisempty    { padding: 1px 5px 12px 5px; font-weight: normal; font-size: 95%; color: #eee; }
+#minibasket ul                          { margin: 0; padding: 0; }
 #minibasket ul li                       { list-style: none; float: none; clear: both; margin: 0 0 0 0; padding: 2px 0 0 0; }
-#minibasket #contents ul #totals        { border-top: solid 1px #aaa; text-align: right; padding: 4px 5px 6px 10px; font-weight: normal; text-transform: uppercase; color: #ccc; font-size: 90%; }
+#minibasket #contents ul #totals        { border-top: solid 1px #666; padding: 4px 5px 6px 10px; font-weight: normal; text-transform: uppercase; color: #999; font-size: 80%; text-align: right; }
 #minibasket #contents ul #totals span.price
-                                        { color: #6e4; font-weight: normal; font-size: 120%; }
+                                        { color: #5c4; font-weight: normal; font-size: 120%; }
 #minibasket #contents ul #totals span.total
-                                        { color: #6e4; font-weight: bold; font-size: 140%; }
+                                        { color: #5c4; font-weight: bold; font-size: 140%; }
 #minibasket #contents ul #totals #minibasket_whereapplicable
                                         { margin: 10px 0 0 0; font-size: 85%; letter-spacing: 1px; }
 #minibasket #contents ul #totals strong { font-weight: bold }
-#minibasket #contents ul li a           { display: block; color: #fff; border-top: solid 1px #aaa; font-weight: normal; padding: 2px 5px 2px 5px; }
-#minibasket #contents ul li a:hover     { color: #fc5; background-color: #777; }
-#minibasket .button                     { background-color: #999; color: #fff; width: 100%; }
+#minibasket #contents ul li a           { font-size: 100%; border-top: solid 1px #666; color: #ccc; padding: 1px 5px 1px 5px; margin: 0 0 1px 0; display: block; }
+#minibasket #contents ul li a:hover     { color: #fff; text-decoration: underline; }
+#minibasket .button                     { background-color: #999; color: #fff; font-size: 100%; width: 100%; }
 #minibasket .button:hover               { background-color: #ddd; color: #000; }
-
 .compactminibasket a                    { white-space: nowrap; background-position: 1px 1px; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #fff; width: auto; padding: 9px 0 5px 30px; float: right; text-transform: uppercase; font-size: 85%; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; }
-.compactminibasket #compactbasket_totalprice
-                                        { color: #090; margin-left: 5px; }
+#compactbasket_noofitems                { color: #bbb; }
+#minibasket #compactbasket_totalprice   { color: #5c4; margin: 1px 0 0 5px; font-weight: bold; font-size: 110%; }
+#minibasket:hover #compactbasket_totalprice
+                                        { color: #5c4; }
 .compactminibasket a:hover              { text-decoration: underline; }
 
 /* 
@@ -88,12 +92,13 @@ BASKET SUMMARY
 FOOTER
 ========================================================================
 */
-#footer                                 { margin: 0 auto; padding: 0 1px; min-height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; bottom: 0px; }
-#footer_inside                          { height: 100%; padding: 0; background-color: #222; border-top: solid 3px #555; margin: 0 auto; max-width: 900px; color: #aaa; padding: 10px 0 0 0; }
-#footer a                               { color: #666; font-weight: normal; }
+#footer                                 { margin: 0; padding: 0; min-height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; bottom: 0px; }
+#footer_inside                          { background-color: #444; height: 100%; min-height: 232px; max-width: 980px; margin: 0 auto; color: #777; padding: 10px 20px 0 20px; }
+#footer a                               { color: #ddd; font-weight: normal; }
 #footer #copyright                      { font-size: 90%; margin: 45px 0 20px 0; }
-#footer h2                              { color: #777 }
-#footer ul                              { text-transform: uppercase; font-size: 90%; padding: 0; list-style-type: none; }
+#footer h2                              { color: #fff }
+#footer ul                              { margin: 0; text-transform: uppercase; font-size: 90%; padding: 0; list-style-type: none; }
+#footer ul li                           { padding: 0; }
 #footer ul li a                         { padding: 2px; display: block; }
-#footer ul li a:hover                   { color: #eee; }
+#footer ul li a:hover                   { background-color: #aaa; color: #ddd; }
 

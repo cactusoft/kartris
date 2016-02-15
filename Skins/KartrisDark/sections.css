@@ -3,7 +3,7 @@
 SECTION
 ========================================================================
 */
-.section                                { border-top: solid 1px #888; margin: 15px 0 0 0; padding: 10px 0 10px 0; width: 100%; }
+.section                                { border-top: solid 3px #444; margin: 15px 0 0 0; padding: 10px 0 10px 0; width: 100%; }
 /* 
 ========================================================================
 PAGE - Home page and custom page (CMS)
@@ -12,18 +12,20 @@ PAGE - Home page and custom page (CMS)
 #custompagetext                         { margin: 10px 0 10px 0 }
 #homepage div.chunk ul                  { list-style: none; margin: 0; padding: 0; }
 #homepage div.chunk ul li               { padding: 0 0 5px 0 }
+#homepage .news ul li                   { width: 205px; margin: 0 20px 30px 0; float: left; }
 #homepage .news ul div.news_lastupdated,
-#homepage .news ul div.news_datecreated { display: block; margin: 5px 0 5px 0; color: #999; }
-#homepage .news ul div.news_link        { font-weight: bold; margin: 5px 0 5px 0; }
-#homepage .news ul div.news_text        {  }
+#homepage .news ul div.news_datecreated { display: block; margin: 5px 0 0 0; color: #5c4; font-size: 12px; }
+#homepage .news ul div.news_link a      { font-size: 14px; font-weight: bold; color: #fff; margin: 5px 0 5px 0; }
+#homepage .news ul div.news_text        { line-height: 15px; font-size: 13px; }
 /* 
 ========================================================================
 CATEGORY - Single page category
 ========================================================================
 */
 .category .main                         { display: block; padding: 2px 0 5px 0; border: 0; }
-.category .main .imageblock             { text-align: center; float: left; margin: 0 30px 20px 0; overflow: visible; width: 100px; }
+.category .main .imageviewer_holder     { text-align: center; float: left; margin: 0 30px 20px 0; overflow: visible; width: 150px; }
 .category .main .pad                    { margin: 0 0 0 0; zoom: 100%; /* To fix IE 'invisible text' rendering bug (http: //archivist.incutio.com/viewlist/css-discuss/57305) */; overflow: hidden; /* To fix image flow in extended view, mozz/opera */ }
+
 /* 
 ========================================================================
 SUBCATEGORIES - Multiple categories/subcategories per page listing
@@ -31,20 +33,20 @@ SUBCATEGORIES - Multiple categories/subcategories per page listing
 */
 .subcategories                          { padding: 0px 0px 10px 0px; overflow: hidden; }
 .subcategories .pad                     { margin-bottom: 8px; padding: 0px; zoom: 100%; /* To fix IE 'invisible text' rendering bug (http: //archivist.incutio.com/viewlist/css-discuss/57305) */; overflow: hidden; /* To fix image flow in extended view, mozz/opera */ }
-.subcategories h2 a                     { color: #fff; }
+.subcategories h2 a                     { color: #fff;}
 /* 
 ------------------------------------------------------------------------
 SUBCATEGORIES - NORMAL FORMAT
 ------------------------------------------------------------------------
 */
 .subcategories_normal                   { padding-top: 0 }
-.subcategories_normal .item             { padding: 3px 0; border-top: solid 1px #888; }
-.subcategories_normal .item .imageblock { text-align: center; float: left; width: 170px; overflow: visible; display: inline-block; margin: 10px 30px 0 0; }
+.subcategories_normal .item             { padding: 3px 0; border-top: solid 1px #666; }
+.subcategories_normal .item .imageblock { text-align: center; margin-top: 5px; }
 .subcategories_normal .item .details    { }
 .subcategories_normal .item h2          { font-size: 110%; margin: 10px 0 0 0; }
 .subcategories_normal .item h2 a        { margin-top: 0; font-weight: bold; }
 .subcategories_normal .item .minprice   { font-weight: bold; padding: 0 0 20px 0; }
-.subcategories_normal .item .strapline  { display: block; margin: 4px 0px 4px 0px; padding: 0; color: #111; font-weight: bold; font-style: normal; }
+.subcategories_normal .item .strapline  { display: block; margin: 4px 0px 4px 0px; padding: 0; color: #eee; font-weight: bold; font-style: normal; }
 .subcategories_normal .item p.description
                                         { padding: 0 0 10px 0 }
 .subcategories_normal .item a.link2     { display: inline-block; font-size: 90%; margin: 0 0 10px 0; }
@@ -54,14 +56,16 @@ SUBCATEGORIES - SHORTENED FORMAT
 ------------------------------------------------------------------------
 */
 .subcategories_shortened                    { }
-.subcategories_shortened .item              { text-align: center; width: 200px; height: 260px; border: solid 1px #888; background-color: #fff; display: inline-block; float: left; margin: 5px 6px 5px 4px; }
-.subcategories_shortened .item .box         { }
+.subcategories_shortened .item              { border: solid 1px #ccc; text-align: center; width: 215px; background-color: #555; display: inline-block; float: left; margin: 5px 10px 5px 0; }
+.subcategories_shortened .item .box         { border: solid 4px #555; height: 290px; }
+.subcategories_shortened .item:hover .box   { border: solid 4px #fff; }
+.subcategories_shortened .item:hover        { border: solid 1px #fc5; }
 .subcategories_shortened .item .box .pad    { overflow: hidden; padding: 10px; text-align: center; }
-.subcategories_shortened .item h2           { margin: 0; padding: 0; }
-.subcategories_shortened .item h2 a         { font-size: 80% }
+.subcategories_shortened .item .topsec      { height: 65px; }
+.subcategories_shortened .item h2           { margin: 0; padding: 0; line-height: 15px; font-weight: bold; }
+.subcategories_shortened .item h2 a         { font-size: 80%;  }
 .subcategories_shortened .item .imageholder { display: block; margin: 0 auto; padding-bottom: 10px; }
 .subcategories_shortened .imagelink         { display: block; float: left; margin: 0 0 10px 0; text-align: center; }
-
 /* 
 ------------------------------------------------------------------------
 SUBCATEGORIES - LINK FORMAT
@@ -83,24 +87,26 @@ SUBCATEGORIES - TEXT FORMAT
 PRODUCT - Single page product
 ========================================================================
 */
-.product #strapline                     { display: block; margin: 10px 0px 12px 0px; padding: 0; color: #888; font-weight: bold; font-size: 110%; font-style: italic; }
+.product #strapline                     { display: block; margin: 10px 0px 12px 0px; padding: 0; color: #ddd; font-weight: bold; font-size: 110%; font-style: italic; }
 .product #description                   { margin: 0 0 15px 0px }
 .product div.imagecolumn                { margin: 0 0 40px 0; padding: 10px 20px 0 0; }
 .product div.imagecolumn div.pad        { padding: 10px 0 10px 0 }
-.product div.imagecolumn .imageviewer   { width: 100% }
+.product div.imagecolumn .imageviewer   { width: 100%; }
 .product div.imagecolumn .singleimage   { }
 .product div.imagecolumn .largeview     { }
+.product div.imagecolumn .mainimage     { margin: 10px 30px 10px 0; }
 .product div.textcolumn #comparelink    { margin: 5px 0 0 0 }
 .product div.textcolumn                 { padding: 0 0 20px 10px; }
 .product div.versions-holder            { float: right; }
 .product .section_promotions            { }
+.product div.spectable                  { margin-top: 20px; color: #5c4; white-space: pre-line; font-family: 'Courier New' } /* Imported specs field from CactuShop */
 /* 
 ========================================================================
 PRODUCTS - Multiple products per page listing
 ========================================================================
 */
 .products                               { padding: 0px 0px 10px 0px; overflow: hidden; }
-.products .minprice                     { display: block; font-weight: bold; padding-top: 10px; color: #090; }
+.products .minprice                     { display: block; font-weight: bold; padding-top: 10px; color: #5c4; }
 .products .pad                          { margin-bottom: 8px; padding: 0px; zoom: 100%; /* To fix IE 'invisible text' rendering bug (http: //archivist.incutio.com/viewlist/css-discuss/57305) */; overflow: hidden; /* To fix image flow in extended view, mozz/opera */ }
 #popup .pad                             { padding: 10px }
 .products h2 a                          { color: #fff; }
@@ -110,8 +116,8 @@ PRODUCTS - NORMAL FORMAT
 ------------------------------------------------------------------------
 */
 .products_normal                        { padding-top: 0px }
-.products_normal .item					{ padding: 3px 0; border-top: solid 1px #888; }
-.products_normal .item .imageblock      { text-align: center; }
+.products_normal .item					{ padding: 3px 0; border-top: solid 1px #666; }
+.products_normal .item .imageblock      { text-align: center; margin-top: 5px; }
 .products_normal .item .details         { }
 .products_normal .item .details h2      { font-size: 110%; margin: 10px 0 0 0; }
 .products_normal .item h2 a,
@@ -126,34 +132,37 @@ PRODUCTS - SHORTENED FORMAT
 ------------------------------------------------------------------------
 */
 .products_shortened                     { }
-.products_shortened .item               { text-align: center; width: 200px; height: 260px; border: solid 1px #888; background-color: #333; display: inline-block; float: left; margin: 5px 6px 5px 4px;  }
-.products_shortened .item .box          { }
+.products_shortened .item               { border: solid 1px #444; text-align: center; width: 215px; background-color: #444; display: inline-block; float: left; margin: 5px 10px 5px 0;  }
+.products_shortened .item .box          { border: solid 4px #444; height: 290px;  }
 .products_shortened .item .box .pad     { overflow: hidden; padding: 10px; text-align: center; }
-.products_shortened .item h2            { margin: 0; padding: 0; line-height: 15px; }
-.products_shortened .item h2 a          { font-size: 80% }
-.products_shortened .item .strapline    { }
+.products_shortened .item .topsec       { height: 65px; }
+.products_shortened .item h2            { margin: 6px 0 0 0; padding: 0; line-height: 15px; font-weight: bold; }
+.products_shortened .item h2 a          { box-sizing: inherit; display: block; font-size: 80% }
+.products_shortened .item .strapline    { display: none; }
 .products_shortened .item .imageholder  { display: block; margin: 0 auto; padding-bottom: 10px; }
 .products_shortened .imagelink          { display: block; float: left; margin: 0 10px 10px 0; text-align: center; }
-.products_shortened .minprice           { font-weight: normal }
+.products_shortened .minprice           { }
 /* 
 ------------------------------------------------------------------------
 PRODUCTS - TABULAR FORMAT
 ------------------------------------------------------------------------
 */
-.products_tabular .item               { width: 200px; display: inline-block; float: left; padding: 0; margin: 5px 6px 5px 4px; }
-.products_tabular .item .imageblock   { margin: 0; }
-.products_tabular .item .box          { text-align: center; height: 230px; border: solid 1px #888; background-color: #333; }
-.products_tabular .item .box .pad     { overflow: hidden; padding: 10px; text-align: center; }
-.products_tabular .item h2            { margin: 0; padding: 0; line-height: 15px; font-weight: bold; font-size: 100%; }
-.products_tabular .item .imageholder  { display: block; margin: 0 auto; padding-bottom: 10px; }
+.products_tabular .item                 { border: solid 1px #444; text-align: center; width: 215px; float: left; padding: 0; margin: 5px 10px 5px 0; }
+.products_tabular .item .imageblock     { margin: 0; }
+.products_tabular .item .box            { text-align: center; border: solid 4px #444; height: 290px; background-color: #444; }
+.products_tabular .item .box .pad       { overflow: hidden; padding: 10px; text-align: center; }
+.products_tabular .item .topsec         { height: 65px; }
+.products_tabular .item h2              { margin: 6px 0 0 0; padding: 0; line-height: 15px; font-weight: bold; font-size: 110%; }
+.products_tabular .item .imageholder    { display: block; margin: 0 auto; padding-bottom: 10px; }
 /* 
 ------------------------------------------------------------------------
 PRODUCTS - IMAGE ONLY FORMAT
 ------------------------------------------------------------------------
 */
 .products_imageonly                     { padding-top: 0px; }
-.products_imageonly .item               { display: inline-block; width: 76px; float: left; border: solid 1px #888; margin: 3px 8px 3px 0; padding: 3px; background-color: #fff; text-align: center; }
-.products_imageonly .box                { background-color: #333; text-align: center; }
+.products_imageonly .item               { padding: 3px; display: inline-block; float: left; border: solid 1px #888; margin: 3px 8px 3px 0; text-align: center; }
+.products_imageonly .item:hover         { border: solid 1px #ccc; }
+.products_imageonly .box                { background-color: #fff; border: solid 3px #fff; text-align: center; }
 .products_imageonly img                 { margin: 0 auto; float: none; }
 /* 
 ------------------------------------------------------------------------
@@ -161,8 +170,8 @@ PRODUCTS - EXTENDED FORMAT
 ------------------------------------------------------------------------
 */
 .products_extended                      { padding-top: 0 }
-.products_extended .item                { padding: 10px 0; border-top: solid 1px #888; }
-.products_extended .item .imageblock    { text-align: center; float: left; width: 170px; overflow: visible; display: inline-block; margin: 0 30px 0 0; }
+.products_extended .item                { padding: 10px 0; border-top: solid 1px #666; }
+.products_extended .item .imageblock    { text-align: center; margin-top: 5px; }
 .products_extended .item .details       { }
 .products_extended .item h2             { font-size: 110%; margin: 10px 0 0 0; margin: 0; padding: 0; }
 .products_extended .item h2 a,
@@ -187,14 +196,14 @@ VERSIONS
 /* --- cells (td and th) --- */
 .versions .info,
 .versions .description                  { text-align: left }
-.versions .description                  { padding: 4px 0 15px 0; display: block; color: #ccc; }
+.versions .description                  { padding: 4px 0 15px 0; display: block; color: #ddd; }
 .versions .description .imageholder     { float: left; margin: 0 10px 10px 0; }
 /* --- cells (td only) --- */
 .versions th.price                      { white-space: nowrap; }
-.versions td.info                       { color: #777 }
+.versions td.info                       { color: #ccc }
 .versions td.info .name                 { font-weight: bold; color: #fff; }
-.versions td.rrp                        { font-weight: normal; color: #f55; width: 10%; white-space: nowrap; text-decoration: line-through; }
-.versions td.price                      { font-weight: bold; color: #090; width: 10%; white-space: nowrap; }
+.versions td.rrp                        { font-weight: normal; color: #f99; width: 10%; white-space: nowrap; text-decoration: line-through; }
+.versions td.price                      { font-weight: bold; color: #5c4; width: 10%; white-space: nowrap; }
 .versions td.addtobasket img            { float: none }
 .versions td.addtobasket                { white-space: nowrap; width: 10%; }
 .versions td.addtobasket div            { background-color: transparent; background-image: none; display: inline; }
@@ -203,12 +212,14 @@ VERSIONS
 .versions td.addtobasket div.cancustomizetag
                                         { vertical-align: middle; display: inline-block; width: 15px; height: 15px; background-image: url(Images/icon_customizable.png); background-position: top left; background-repeat: no-repeat; float: left; margin: 5px 5px 0 5px; }
 /* --- versions in dropdown format --- */
-.versions .prices                       { padding: 5px; text-align: right; color: #666; text-transform: uppercase; }
+.versions .prices                       { padding: 5px; text-align: right; color: #fff; text-transform: uppercase; }
 .versions span.inctax                   { margin-left: 5px }
-.versions span.figure                   { color: #090; font-weight: bold; font-size: 130%; }
+.versions span.figure                   { color: #5c4; font-weight: bold; font-size: 130%; }
 .versions .line                         { text-align: right; padding: 5px; }
+.versions .multipleversiondropdown      { background-color: #f5f5f5; border-top: solid 1px #999; border-bottom: solid 1px #666; }
 .versions .addtobasket                  { clear: both }
-.versions .addtobasket .dropdown        { width: 45px }
+.versions .addtobasket select           { width: 450px } /* version name and price */
+.versions .addtobasket .dropdown        { width: 45px } /* qty */
 .versions .addtobasket .textbox         { width: 45px }
 .versions .addtobasket div.selector     { white-space: nowrap; text-align: right; float: right; }
 .versions .addtobasket div.outofstock   { color: #f00; font-weight: bold; }
@@ -218,20 +229,22 @@ VERSIONS
 OPTIONS
 ------------------------------------------------------------------------
 */
-.options                                { margin-top: 5px; padding-bottom: 20px; }
-.options .pad                           { border-top: solid 2px #888 }
+.options                                { border-top: solid 1px #ccc; margin-top: 10px; padding-bottom: 20px; }
+.options .pad                           { }
 .options .addtobasket                   { text-align: right; padding: 5px; clear: both; }
 .outofstockmessage em                   { display: block; margin-top: 10px; }
-.options .option                        { clear: both; padding: 8px 5px 3px 5px; margin: 0; }
-.options .option label                  { display: block; width: 220px; float: left; margin-right: 5px; text-align: left; }
-.options .option label.optiontitle      { display: inline-block; color: #ddd; font-weight: bold; width: 180px; float: left; }
+.options .option                        { border-bottom: solid 1px #666; background-color: #333; clear: both; padding: 8px 5px 3px 7px; margin: 0; }
+.options .option label                  { text-transform: none; font-size: 100%; display: block;  }
+.options .option label.optiontitle      { display: inline-block; color: #fff; font-weight: bold; width: 180px; float: left; }
 .options .option label.optiontitle span.optiondesc
-                                        { display: block; font-weight: normal; color: #999; }
-.options .option div                    { display: inline-block; margin: 0px; float: left; }
+                                        { display: block; font-weight: normal; color: #aaa; }
+.options .option div                    { display: block; margin: 0px; }
+.options .option select                 { width: auto; }
 .options .option table.checkboxlist input,
 .options .option table.radiobuttonlist input
-                                        { display: block; float: left; margin-right: 5px; border-style: none; background-color: transparent; width: 20px; }
-.options .option ul.radiobuttonlist li  { }
+                                        { display: block; float: left; margin-right: 5px; border-style: none; background-color: transparent; width: 16px; }
+.options .option ul.radiobuttonlist li label
+                                        { text-transform: uppercase; color: #ccc; font-size: 85%; }
 .options .highlight_error               { padding: 0 5px 0 3px; display: inline-block; color: #fff; font-weight: bold; text-decoration: blink; background-color: #f00; border-radius: 3px; }
 .boxinset .addtobasket .prices			{ display: block; text-align: right; }
 .options div.addtobasket img            { float: none; text-align: right; }
@@ -239,7 +252,7 @@ div.addtobasket                         { width: auto; text-align: left; padding
 div.addtobasket div                     { display: inline }
 /* Individual options lines */
 .options table,
-.options table tr td                    { border: none; background-image: none; background-color: Transparent; }
+.options table tr td                    { text-align: left; border: none; background-image: none; background-color: Transparent; }
 /* 
 ========================================================================
 QUANTITY DISCOUNTS
@@ -251,7 +264,7 @@ QUANTITY DISCOUNTS
 #section_quantitydiscounts th.price,
 #section_quantitydiscounts td.quantity,
 #section_quantitydiscounts th.quantity  { text-align: right }
-#section_quantitydiscounts td.price     { color: #090; font-weight: bold; }
+#section_quantitydiscounts td.price     { color: #5c4; font-weight: bold; }
 #section_quantitydiscounts p            { margin: 0 0 20px 0 }
 /* 
 ========================================================================
@@ -263,8 +276,8 @@ SEARCH
 .search .inputform span                 { display: inline; float: none; margin: 0px 5px 0px 5px; }
 .search .inputform input                { display: inline;  }
 .search .inputform div.advanceline      { margin: 5px 0px 0px 5px; display: block; }
-.search .results                        { border-top: solid 1px #888; padding-top: 10px; margin-top: 5px; }
-.search .results #searchsummary         { padding: 0; margin: 0; color: #999; }
+.search .results                        { border-top: solid 1px #666; padding-top: 10px; margin-top: 5px; }
+.search .results #searchsummary         { padding: 0; margin: 0; color: #aaa; }
 .search .results #searchsummary strong  { color: #eee }
 .search .results .products_classicsearch
                                         { padding: 15px 0 17px 0 }
@@ -279,11 +292,11 @@ SEARCH
 .search .results .products_classicsearch .item h2
                                         { font-size: 110%; padding: 0; margin: 0 0 3px 0; }
 .search .results .products_classicsearch .item h2 a
-                                        { color: #59d; font-weight: normal; text-decoration: underline; }
+                                        { color: #79e; font-weight: normal; text-decoration: underline; }
 .search .results .products_classicsearch .item .highlight
-                                        { background-color: #d40; color: #fff; }
+                                        { background-color: #f50; color: #fff; }
 .search .results .products_classicsearch .item .minprice
-                                        { font-weight: normal; color: #090; padding: 5px 0 5px 0; }
+                                        { font-weight: normal; color: #5c4; padding: 5px 0 5px 0; }
 /* 
 ========================================================================
 KNOWLEDGEBASE
@@ -293,13 +306,13 @@ KNOWLEDGEBASE
 #knowledgebase .inputform .small        { width: 50px; text-align: right; }
 #knowledgebase .inputform label         { display: inline; width: auto; float: none; margin: 0px 5px 0px 5px; }
 #knowledgebase .results                 { padding: 13px 0 7px 0 }
-#knowledgebase .results #searchsummary  { padding: 0; margin: 0 0 0 0; color: #999; }
+#knowledgebase .results #searchsummary  { padding: 0; margin: 0 0 0 0; color: #aaa; }
 #knowledgebase .results #searchsummary strong
                                         { color: #eee }
 #knowledgebase .results .item           { padding: 5px 0 5px 0; max-width: 630px; }
-#knowledgebase .results .item h2 a      { font-size: 80%; color: #59d; font-weight: normal; text-decoration: underline; }
+#knowledgebase .results .item h2 a      { font-size: 80%; color: #79e; font-weight: normal; text-decoration: underline; }
 #knowledgebase .results .item .highlight
-                                        { background-color: #d40; color: #fff; }
+                                        { background-color: #f50; color: #fff; }
 #knowledgebase .summary                 { color: #aaa; font-weight: normal; padding: 0 0 10px 0; }
 #knowledgebase .updatedate              { color: #aaa; font-weight: normal; }
 #knowledgebase p.article                { padding: 10px 0 0 0 }
@@ -308,20 +321,21 @@ KNOWLEDGEBASE
 SUPPORT TICKETS
 ========================================================================
 */
+#supporttickets .section                { border: none; }
 #supporttickets td.idfield              { width: 45px }
 #supporttickets td.subject              { font-weight: bold }
 #supporttickets td.opened               { width: 100px }
 #supporttickets td.closed               { width: 100px }
 #supporttickets td.selectfield          { width: 55px; text-align: right; }
-#supporttickets div.userreply           { margin: 10px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #444; }
-#supporttickets div.ownerreply          { margin: 10px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #111; }
+#supporttickets div.userreply           { border-top: solid 1px #ccc; margin: 10px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #f5f5f5; }
+#supporttickets div.ownerreply          { border-top: solid 1px #666;margin: 10px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #fe9; }
 #supporttickets p.details               { color: #999; padding-bottom: 5px; }
 #supporttickets p.message               { white-space: pre-wrap }
 #supporttickets textarea                { width: 100%; height: 150px; }
 #supporttickets .expirywarning          { display: block; width: auto; border: dotted 1px #999; color: #999; background-color: #f6f6f6; padding: 3px 9px 3px 9px; margin: 2px 0 15px 0; }
 #supporttickets .expiredwarning         { display: block; width: auto; border: dotted 1px #f00; color: #f00; background-color: #f6e6e6; padding: 3px 9px 3px 9px; margin: 2px 0 15px 0; }
 #supporttickets .filled .sp_highlight_ticket td
-                                        { background-color: #f50 }
+                                        { background-color: #fd5 }
 /* 
 ========================================================================
 REVIEWS AND CROSS-SELLING
@@ -335,8 +349,8 @@ REVIEWS AND CROSS-SELLING
 .reviews .review .pad                   { padding: 0 0 10px 0 }
 .reviews .review .stars                 { display: block; margin-right: 2px; width: 100%; }
 .reviews .review .reviewer              { padding: 2px 0 5px 0; font-style: italic; color: #888; }
-.reviews .review .date                  { float: right; color: #090; }
-.reviews .review strong                 { font-size: 110%; font-style: italic; color: #fff; }
+.reviews .review .date                  { float: right; color: #5c4; }
+.reviews .review strong                 { font-size: 110%; font-style: italic; color: #333; }
 /* Review add page */
 .addreview                              { margin: -2px 0 10px 0 }
 .addreview form strong                  { display: block }
@@ -354,13 +368,13 @@ PRODUCT ATTRIBUTES
 PRODUCT PROMOTIONS
 ========================================================================
 */
-.section_promotions                     { border-top: solid 1px #888; padding: 10px 0 0 0; }
+.section_promotions                     { border-top: solid 1px #666; padding: 10px 0 0 0; }
 .section_promotions .promotion          { clear: both; vertical-align: middle; margin: 8px 0px 8px 0px; display: block; }
 .section_promotions .promotion .box     { width: 100%; margin: 0; }
 .section_promotions .promotion .box .pad
                                         { padding: 0; overflow: hidden; }
 .section_promotions .promotion .box .pad strong
-                                        { color: #fff }
+                                        { color: #000 }
 .section_promotions a                   { text-decoration: none; color: #777; border-bottom: dotted 1px #777; }
 .section_promotions .promotion .box .pad .imageblock
                                         { float: left; margin: 0 20px 0 0px; width: 70px; text-align: center; }
@@ -375,12 +389,12 @@ PRODUCT COMPARISON
 .comparison p                           { margin: 0 0 20px 0 }
 .comparison .items                      { }
 .comparison .item                       { text-align: center; }
-.comparison .item h2                    { font-size: 105%; margin: 0 0 0 0; padding: 0; height: 30px; }
-.comparison .item h2 a                  { color: #fff; }
+.comparison .item h2                    { height: 30px; }
+.comparison .item h2 a                  { color: #000; }
 .comparison .item .imageblock           { float: none; margin: 0 0 5px 0; }
-.comparison .item p.minprice            { font-weight: bold; color: #090; margin: 0 0 20px 0; }
-.comparison .item table                 { margin-bottom: 10px; text-align: left; }
-.comparison .item table tr td           { border-top: solid 1px #fff; background-color: #eee; background-image: none; padding: 3px 10px 2px 5px; }
+.comparison .item p.minprice            { font-weight: bold; color: #5c4; margin: 0 0 20px 0; }
+.comparison .item table                 { border-top: solid 1px #666; margin-bottom: 10px; text-align: left; }
+.comparison .item table tr td           { border-bottom: solid 1px #ddd; background-color: #f5f5f5; background-image: none; padding: 3px 10px 2px 5px; }
 .comparison .item .removelink           { text-align: left }
 /* 
 ========================================================================
@@ -388,7 +402,7 @@ LOGIN / MY ACCOUNT
 ========================================================================
 */
 #login .recoverpassword                 { margin-top: 30px; padding-top: 10px; }
-#login .radio strong                    { color: #eee }
+#login .radio strong                    { color: #000 }
 #login .Kartris-DetailsView-Data        { width: 100% }
 /* 
 ========================================================================
@@ -414,21 +428,28 @@ ADDRESSES
 */
 .address                                { padding: 0 0 10px 0 }
 .address .inputform div.Kartris-DetailsView-Value
-                                        { width: 260px; }
+                                        { width: 260px; max-width: 100%; }
 .address .inputform .bold               { font-weight: bold }
 .address div.phone                      { font-weight: bold; padding: 5px 0 5px 0; }
+.address input.shorttext                { width: 80px; }
+.address .inputform .lookupbutton       { float: left; }
+.address .popup .lookuppopup            { margin-top: -45px; }
+.address .lookuppopup h2                { position: relative; margin-left: -10px; }
+.address .addresslistbox                { width: 100%; display: block; }
 /* 
 ========================================================================
 BASKET (and ORDER DISPLAY in MY ACCOUNT)
 ========================================================================
 */
-.basket .basketwarning                  { display: block; width: auto; border: dotted 1px #f00; color: #f00; background-color: #f6e6e6; padding: 3px 9px 3px 9px; margin: 2px 0 15px 0; }
+.basket .basketwarning                  { display: block; width: auto; border: solid 1px #f00; color: #d00; font-weight: bold; background-color: #fcc; padding: 3px 9px 3px 9px; margin: 2px 0 15px 0; }
 .basket .baskettable                    { }
 .basket .baskettable tr th              { }
-.basket .baskettable tr th.name         {  }
-.basket table.baskettable tr td         { border-bottom: solid 1px #222; }
+.basket .baskettable tr th.name         { }
+.basket table.baskettable tr td         { }
 .basket .products_imageonly             { margin-top: 8px; }
-.basket td.image_cell                   { width: 70px; text-align: center; padding: 0 10px 5px 5px; }
+.basket td.image_cell                   { width: 90px; text-align: center; padding: 0 10px 5px 5px; }
+.basket .item                           { background-color: #fff; border: solid 1px #000; margin: 5px 0 0 0; padding: 4px; }
+.basket .item .box                      { margin: 0; padding: 2px; }
 .basket .extax,
 .basket .inctax,
 .basket .price,
@@ -457,15 +478,14 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket td.extax,
 .basket td.inctax,
 .basket td.tax,
-.basket td.price                        { font-weight: bold; color: #090; width: 10%; font-size: 100%; vertical-align: top; white-space: nowrap;}
-.basket td.total                        { font-weight: bold; color: #f00; width: 20%; font-size: 100%; white-space: nowrap; }
-.basket td.remove                       { }
+.basket td.price                        { font-weight: bold; color: #5c4; width: 10%; font-size: 100%; vertical-align: top; white-space: nowrap;}
+.basket td.total                        { font-weight: bold; color: #f99; width: 20%; font-size: 100%; white-space: nowrap; }
+.basket th.remove,
+.basket td.remove                       { width: 30px; }
 .basket td.remove a.basket_delete_button
                                         { margin-top: 2px; display: block; height: 24px; width: 24px; background-image: url(Images/trashcan.png); background-position: top left; background-repeat: no-repeat; }
-.basket .applycoupon td label           { color: #fff; font-size: 110%; font-weight: bold; }
-.basket .applycoupon .Kartris-DetailsView-Name
-                                        { background: none }
-.basket .applycoupon .couponbox         { width: 120px; margin-right: 5px; }
+.basket .applycoupon td label           { font-weight: bold; }
+.basket .applycoupon .couponbox         { width: 120px; margin: 0 0 5px 0; }
 .basket table tr.totals td              { }
 .basket table tr.totals #totaltaxrow,
 .basket table tr.totals #totallabel     { text-align: right }
@@ -483,7 +503,7 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
                                         { float: left; margin-top: -20px; }
 .basket tr.couponrow div.smallupdateprogress
                                         { }
-.basket table .totals                   { border-bottom: solid 1px #eee; }
+.basket table .totals                   { border-bottom: solid 1px #eee; background-color: #fff; }
 .basket table.baskettable tr.footerrow td
                                         { background: none; font-weight: bold; color: #f00; text-align: right; white-space: nowrap; border-top: dotted 1px #bbb; }
 .basket table.baskettable tr.footerrow td.subtotal
@@ -491,9 +511,9 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket table.baskettable tr.footerrow td.subtotal span.totallabel
                                         { color: #bbb }
 .basket table.baskettable tr.footerrow td.grandtotal
-                                        { border-top: dotted 1px #daa; border-bottom: dotted 1px #daa; }
+                                        { border-top: dotted 1px #daa; border-bottom: dotted 1px #daa; background-color: #fdd; }
 .basket table.baskettable tr.footerrow td span.totallabel
-                                        { float: left; width: 150px; color: #fff; text-align: left; }
+                                        { float: left; width: 150px; color: #000; text-align: left; }
 #shippingestimate                       { margin: 15px 0 30px 0; }
 #shippingestimate select                { }
 #shippingestimate table                 { margin: 10px 0 0 0 }
@@ -509,8 +529,8 @@ CHECKOUT
                                         { }
 #checkout span.ship_currency            { display: block; padding: 5px; text-align: left; color: #bbb; font-weight: bold; padding: 5px 0 5px 0; }
 #checkout span.ship_currency span.figure
-                                        { color: #090; font-weight: bold; padding: 0 0 0 5px; }
-#checkout span.free                     { color: #090; font-weight: bold; padding: 0; }
+                                        { color: #5c4; font-weight: bold; padding: 0 0 0 5px; }
+#checkout span.free                     { color: #5c4; font-weight: bold; padding: 0; }
 #checkout span.extax,
 #checkout span.inctax                   { padding-right: 10px }
 #checkout textarea                      { width: 100% }
@@ -523,8 +543,8 @@ CHECKOUT
 #checkout #checkoutbasket               { margin: 20px 0 20px 0 }
 #checkout .basket th.total,
 #checkout .basket td.total              { width: 10%; }
-#checkout .basket td.total              { width: 10%; }
 #checkout #euvatsection strong          { float: right; font-size: 130%; color: #999; }
+#checkout tr.totals span                { display: inline-block; margin-left: 10px; }
 /* 
 ========================================================================
 WISHLIST
@@ -585,23 +605,23 @@ AFFILIATES / MY ACCOUNT
 NEWS - News page and front page news items (summary)
 ========================================================================
 */
-#news div.news_strapline                { font-weight: bold; padding: 0 0 5px 0; color: #999; }
+#news div.news_strapline                { font-weight: bold; padding: 0 0 5px 0; color: #111; }
 #news div.news_lastupdated,
-#news div.news_datecreated              { margin: 5px 0; color: #999; }
+#news div.news_datecreated              { margin: 5px 0; color: #5c4; }
 #news div.news_text                     { margin: 5px 0 45px 0 }
-#news #summary ul li                    { background-color: #444; border-bottom: solid 2px #222; padding: 0 0 10px 0; }
-#news #summary ul                       { border-top: solid 1px #ccc; margin: 0 0 20px 0; list-style-type: none; padding: 0; }
+#news #summary ul li                    { background-color: #333; border-bottom: solid 1px #999; padding: 0 0 10px 0; }
+#news #summary ul                       { border-top: solid 1px #666; margin: 0 0 20px 0; list-style-type: none; padding: 0; }
 #news #summary ul div.news_lastupdated,
-#news #summary ul div.news_datecreated  { display: block; width: 90px; margin: 5px; color: #999; float: left; }
-#news #summary ul div.news_link         { font-weight: bold; margin: 5px 0 5px 0; float: left; font-size: 110%; }
-#news #summary ul div.news_text         { margin: 0 0 5px 100px }
+#news #summary ul div.news_datecreated  { font-size: 12px; display: block; width: 90px; margin: 5px; color: #5c4; float: left; }
+#news #summary ul div.news_link a       { font-weight: bold; margin: 5px 0 0 0; float: left; font-size: 13px; color: #fff; }
+#news #summary ul div.news_text         { font-size: 13px; margin: 0 0 5px 100px }
 /* 
 ========================================================================
 POPUPS - customization, add to basket, etc.
 ========================================================================
 */
 .popup_customization textarea           { width: 100% }
-.popup_customization .price             { font-weight: bold; color: #090; }
+.popup_customization .price             { font-weight: bold; color: #5c4; }
 .popup_addtobasket                      { width: 350px; height: 120px; max-width: 100%; }
 .popup_addtobasket p                    { margin: 0 0 15px 0 }
 /* 
@@ -612,7 +632,7 @@ so that email text displayed as order confirmation can be styled to
 match the same format as the email
 ========================================================================
 */
-#mail_container                         { border: solid 1px #999; padding: 20px; width: 600px; max-width: 100%; }
+#mail_container                         { border: solid 1px #999; padding: 20px;  width: 600px; max-width: 100%; }
 #mail_container p                       { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 13px; font-weight: normal; color: #555; padding: 5px 0; margin: 0; }
 #mail_container h1                      { font-family: "Segoe UI Light", Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: lighter; font-size: 180%; letter-spacing: 0px; color: #000; margin: 3px 0 10px 0; }
 #mail_container h2                      { font-family: "Segoe UI Light", Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: lighter; font-size: 140%; letter-spacing: 0px; color: #000; margin: 8px 0 3px 0; }
@@ -623,5 +643,5 @@ match the same format as the email
 #mail_container .col1                   { text-align: left; }
 #mail_container .col2                   { text-align: right; vertical-align: top; }
 #mail_container .row_totals strong      { color: #f00; }
-#mail_container .row_item .col2         { color: #090; }
+#mail_container .row_item .col2         { color: #5c4; }
 #mail_container a                       { font-weight: normal; color: #04d; }

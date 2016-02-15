@@ -20,7 +20,6 @@ Partial Class UserControls_Skin_LoginStatus
         'Show main login and status links
         If Page.User.Identity.IsAuthenticated Then
             phdLoggedIn.Visible = True
-
         Else
             phdLoggedOut.Visible = True
         End If

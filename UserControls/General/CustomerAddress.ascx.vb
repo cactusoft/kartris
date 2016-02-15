@@ -66,18 +66,9 @@ Partial Public Class UserControls_Front_CustomerAddress
     Public WriteOnly Property EnableValidation() As Boolean
         Set(ByVal value As Boolean)
             valLastNameRequired.Enabled = value
-            'valStateRequired.Enabled = value
             valTelePhoneRequired.Enabled = value
             valCityRequired.Enabled = value
-            If KartSettingsManager.GetKartConfig("frontend.checkout.postcoderequired") = "y" AndAlso value = True Then
-                valZipCodeRequired.Enabled = True
-                lblPostcode.CssClass = "requiredfield"
-            Else
-                valZipCodeRequired.Enabled = False
-                lblPostcode.CssClass = ""
-            End If
             valAddressRequired.Enabled = value
-
         End Set
     End Property
 
@@ -291,6 +282,13 @@ Partial Public Class UserControls_Front_CustomerAddress
     End Property
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs) Handles Me.Load
+        If KartSettingsManager.GetKartConfig("frontend.checkout.postcoderequired") = "y" Then
+            valZipCodeRequired.Enabled = True
+            lblPostcode.CssClass = "requiredfield"
+        Else
+            valZipCodeRequired.Enabled = False
+            lblPostcode.CssClass = ""
+        End If
         If m_addressChangedJavacriptCallBack IsNot Nothing Then
             ScriptManager.RegisterClientScriptBlock(Me, GetType(Page), "AddressChanged", String.Format(AddressChangedJavascriptBlockFormat, txtAddress.ClientID, txtCity.ClientID, txtState.ClientID, txtZipCode.ClientID, m_addressChangedJavacriptCallBack), True)
         End If

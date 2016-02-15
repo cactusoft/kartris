@@ -78,7 +78,7 @@
 						<div class="row">
 							<div class="small-12 large-8 columns">
 								<asp:HyperLink ID="lnkHome" NavigateUrl="~/" runat="server">
-									<asp:Image ID="imgLogo" runat="server" ImageUrl="~/Skins/KartrisAccordion/Images/logo.png"
+									<asp:Image ID="imgLogo" runat="server" ImageUrl="Images/logo.png"
 										CssClass="logo" AlternateText="logo" />
 								</asp:HyperLink>
 							</div>

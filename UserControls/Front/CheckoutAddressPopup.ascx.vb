@@ -283,7 +283,14 @@ Partial Class UserControls_General_CheckoutAddress
 
             ViewState("_SelectedAddress") = UC_CustomerAddress.EnteredAddress
             RefreshAddressDetails()
-            If Not blnSameCountry Then RaiseEvent CountryUpdated(sender, e)
+
+            'Previously we only triggered 'countryupdate' when the country
+            'was updated, however we should really do this whenever an 
+            'address is changed, as it's possible on some shipping setups
+            'that the postcode or maybe other details could affect the
+            'shipping price
+            'If Not blnSameCountry Then RaiseEvent CountryUpdated(sender, e)
+            RaiseEvent CountryUpdated(sender, e)
         Else
             popExtender.Show()
         End If

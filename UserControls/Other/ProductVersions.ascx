@@ -41,7 +41,7 @@
                                 <!-- ex tax / tax % prices -->
                                 <asp:Panel ID="pnlExTaxTax" runat="server" Visible="false" EnableViewState="false">
                                 <div class="prices">
-                                    <span class="extax">
+                                    <span class="price">
                                         <asp:Literal ID="litLS_ExTax2" runat="server" Text="<%$ Resources: Kartris, ContentText_ExTax %>" EnableViewState="false" />
                                         <asp:Literal ID="litExTax_Rows" runat="server" Text='<%# Eval("V_Price") %>' Visible="false" EnableViewState="false" />
                                         <span class="figure">
@@ -61,8 +61,8 @@
                                     <asp:Panel ID="pnlPrice" runat="server" Visible="false" EnableViewState="false">
                                         <div class="prices">
                                             <span class="price">
-                                                <asp:Literal EnableViewState="false" ID="litLS_Price" runat="server" Text="<%$ Resources: Kartris, ContentText_Price %>" />
-                                                <span class="figure">
+                                                <%--<asp:Literal EnableViewState="false" ID="litLS_Price" runat="server" Text="<%$ Resources: Kartris, ContentText_Price %>" />
+                                                --%><span class="figure">
                                                     <asp:Literal ID="litPrice_Rows" runat="server" Text='<%# Eval("V_Price") %>' Visible="false" EnableViewState="false" />
                                                     <asp:Literal ID="litResultedPrice_Rows" runat="server" EnableViewState="false" /></span></span>
                                         </div>
@@ -408,7 +408,6 @@
                             <div class="prices">
                                 <asp:UpdatePanel ID="updPricePanel" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
-                                        <asp:Literal ID="Literal1" runat="server"></asp:Literal>
                                         <%
                                             'Store base item price and tax rate
                                         %>
@@ -432,7 +431,7 @@
                                         <%
                                             'tax
                                         %>
-                                        <asp:PlaceHolder ID="phdTax" runat="server" Visible="false"><span class="inctax">
+                                        <asp:PlaceHolder ID="phdTax" runat="server" Visible="false"><span class="tax">
                                             <asp:Literal ID="litTaxRateLabel" runat="server" Text="<%$ Resources: Kartris, ContentText_Tax %>" />
                                             <span class="figure">
                                                 <asp:Literal ID="litTaxRate" runat="server" /></span></span></asp:PlaceHolder>
@@ -440,7 +439,7 @@
                                             'price
                                         %>
                                         <asp:PlaceHolder ID="phdPrice" runat="server" Visible="false"><span class="price">
-                                            <asp:Literal ID="litPriceLabel" runat="server" Text="<%$ Resources: Kartris, ContentText_Price %>" />
+                                            <%--<asp:Literal ID="litPriceLabel" runat="server" Text="<%$ Resources: Kartris, ContentText_Price %>" />--%>
                                             <span class="figure">
                                                 <asp:Literal ID="litPriceView" runat="server" /></span></span></asp:PlaceHolder>
 

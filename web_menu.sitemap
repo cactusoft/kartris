@@ -8,7 +8,9 @@
 		</siteMapNode>
 		
 		<siteMapNode url="~/News.aspx" title="$resources:News,PageTitle_SiteNews"  description="$resources:News,PageTitle_SiteNews" value="news" />
-				
+
+		<siteMapNode url="~/Knowledgebase.aspx" title="$resources:Knowledgebase,PageTitle_Knowledgebase"  description="$resources:Knowledgebase,PageTitle_Knowledgebase" value="knowledgebase" />
+		
 		<siteMapNode url="~/Contact.aspx" title="$resources:Kartris,PageTitle_ContactUs"  description="$resources:Kartris,PageTitle_ContactUs" />
 
 		</siteMapNode>

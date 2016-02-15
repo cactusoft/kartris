@@ -91,7 +91,11 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="section">
+                    <div class="row collapse">
+                        <div class="small-12 medium-6 columns">
+
                                 <h2>
                                     <asp:Literal ID="litDefaultBilling" runat="server" Text='<%$ Resources: Address, ContentText_DefaultBillingAddress %>' />
                                 </h2>
@@ -100,9 +104,9 @@
                                 <user:AddressDetails runat="server" ID="UC_DefaultBilling" ShowButtons="false" />
                                 <br />
                                 <asp:LinkButton ID="lnkEditBilling" CssClass="link2" runat="server" Text='<%$ Resources: Address, ContentText_ManageAddresses %>'
-                                    CausesValidation="false" />
-                            </div>
-                            <div class="section">
+                                    CausesValidation="false" /><br /><br />
+                                                      </div>
+                        <div class="small-12 medium-6 columns">
                                 <h2>
                                     <asp:Literal ID="litDefaultShipping" runat="server" Text='<%$ Resources: Address, ContentText_DefaultShippingAddress %>' />
                                 </h2>
@@ -111,12 +115,15 @@
                                 <user:AddressDetails runat="server" ID="UC_DefaultShipping" ShowButtons="false" />
                                 <br />
                                 <asp:LinkButton ID="lnkEditShipping" CssClass="link2" runat="server" Text='<%$ Resources: Address, ContentText_ManageAddresses %>'
-                                    CausesValidation="false" />
+                                    CausesValidation="false" /><br /><br />
+                        </div>
+                    </div>
                             </div>
                         </asp:PlaceHolder>
                     </asp:View>
+
                     <asp:View ID="viwBillingAddresses" runat="server">
-                        <div class="section">
+                        <div class="section manageaddresses">
                             <h2>
                                 <asp:Literal ID="litContentTextSavedAddresses" runat="server" Text='<%$ Resources: Address, ContentText_SavedAddresses %>' />:
                                 <span class="h2_light_extra">
@@ -129,8 +136,9 @@
                             </div>
                         </div>
                     </asp:View>
-                    <asp:View ID="viwShippingAddresses" runat="server">
-                        <div class="section">
+
+                      <asp:View ID="viwShippingAddresses" runat="server">
+                        <div class="section manageaddresses">
                             <h2>
                                 <asp:Literal ID="litContentTextSavedAddresses2" runat="server" Text='<%$ Resources: Address, ContentText_SavedAddresses %>' />:
                                 <span class="h2_light_extra">
@@ -143,6 +151,9 @@
                             </div>
                         </div>
                     </asp:View>
+
+
+
                 </asp:MultiView>
                 <p>
                     <asp:LinkButton ID="btnBack" CssClass="link2" runat="server" Text='<%$ Resources: Kartris, ContentText_GoBack  %>'

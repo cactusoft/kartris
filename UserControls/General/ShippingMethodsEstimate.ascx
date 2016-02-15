@@ -5,7 +5,7 @@
     <ContentTemplate>
     <h2><asp:Literal ID="litContentTextEstimatedShipping" runat="server" Text='<%$ Resources: Basket, ContentText_EstimateShipping %>'
                                                     EnableViewState="false" Visible="true"></asp:Literal></h2>
-        <div class="row">
+        <div class="row collapse">
             <div class="small-12 large-4 columns">
             <asp:ObjectDataSource ID="KartrisCountryList" runat="server" TypeName="KartrisClasses+Country"
                 SelectMethod="GetAll" EnableCaching="false" CacheDuration="30">
