@@ -215,32 +215,39 @@ VERSIONS
 /* --- cells (td and th) --- */
 .versions .info,
 .versions .description                  { text-align: left }
-.versions .description                  { padding: 4px 0 15px 0; display: block; color: #555; }
+.versions .description                  { padding: 4px 0 10px 0; display: block; color: #555; }
 .versions .description .imageholder     { float: left; margin: 0 10px 10px 0; }
 /* --- cells (td only) --- */
 .versions th.price                      { white-space: nowrap; }
 .versions td.info                       { color: #777 }
 .versions td.info .name                 { font-weight: bold; color: #000; }
 .versions td.rrp                        { font-weight: normal; color: #f00; width: 10%; white-space: nowrap; text-decoration: line-through; }
-.versions td.price                      { font-weight: bold; color: #090; width: 10%; white-space: nowrap; }
+.versions td.extax                      { font-weight: normal; color: #090; width: 10%; white-space: nowrap; }
+.versions td.inctax                     { font-weight: bold; color: #090; width: 10%; white-space: nowrap; }
 .versions td.addtobasket img            { float: none }
 .versions td.addtobasket                { white-space: nowrap; width: 10%; }
 .versions td.addtobasket div            { background-color: transparent; background-image: none; display: inline; }
 .versions .imageviewer_holder           { float: left; margin: 0 10px 0 0; }
 .versions .cancustomizetag,
 .versions td.addtobasket div.cancustomizetag
-                                        { vertical-align: middle; display: inline-block; width: 15px; height: 15px; background-image: url(Images/icon_customizable.png); background-position: top left; background-repeat: no-repeat; float: left; margin: 5px 5px 0 5px; }
+                                        { vertical-align: middle; display: inline-block; width: 15px; height: 15px; background-image: url(Images/icon_customizable.png); background-position: top left; background-repeat: no-repeat; float: left; margin: 5px 5px 0 0; }
 /* --- versions in dropdown format --- */
-.versions .prices                       { padding: 5px; text-align: right; color: #666; text-transform: uppercase; }
-.versions span.inctax                   { margin-left: 5px }
-.versions span.figure                   { color: #090; font-weight: bold; font-size: 130%; }
-.versions .line                         { text-align: right; padding: 5px; }
-.versions .multipleversiondropdown      { background-color: #f5f5f5; border-top: solid 1px #f90; border-bottom: solid 1px #ddd; }
+.versions .prices                       { min-width: 160px; padding: 20px 0 0 0; color: #999; text-transform: uppercase; font-size: 11px; }
+.versions span.tax,
+.versions span.price,
+.versions span.extax,
+.versions span.inctax                   { display: block; padding: 0 0 10px 0; }
+.versions span.tax span.figure          { color: #090; float: left; font-weight: normal; font-size: 180%; padding: 0 10px 10px 0; }
+.versions span.price span.figure        { color: #090; font-weight: bold; font-size: 260%; padding: 0 10px 10px 0; }
+.versions span.extax span.figure        { color: #090; float: left; font-weight: normal; font-size: 180%; padding: 0 10px 10px 0; }
+.versions span.inctax span.figure       { color: #090; float: left; font-weight: bold; font-size: 260%; padding: 0 10px 10px 0; }
+.versions .line                         { text-align: left; padding: 0 0 0 0; }
+.versions .multipleversiondropdown      { border-top: solid 1px #000; border-bottom: solid 2px #eee; }
 .versions .addtobasket                  { clear: both }
-.versions .addtobasket select           { width: 450px } /* version name and price */
+.versions .addtobasket select           { width: 450px; max-width: 100%; } /* version name and price */
 .versions .addtobasket .dropdown        { width: 45px } /* qty */
 .versions .addtobasket .textbox         { width: 45px }
-.versions .addtobasket div.selector     { white-space: nowrap; text-align: right; float: right; }
+.versions .addtobasket div.selector     { vertical-align: bottom; white-space: nowrap; padding: 0 0 0 0; }
 .versions .addtobasket div.outofstock   { color: #f00; font-weight: bold; }
 .versions .addtobasket span.outofstock  { color: #f00; font-weight: bold; }
 /* 
@@ -248,26 +255,27 @@ VERSIONS
 OPTIONS
 ------------------------------------------------------------------------
 */
-.options                                { border-top: solid 1px #f90; margin-top: 10px; padding-bottom: 20px; }
-.options .pad                           { }
+.options                                { border-top: solid 1px #000; margin-top: 20px; padding-bottom: 20px; }
+.options .pad                           { padding: 0 0 0 0; }
 .options .addtobasket                   { text-align: right; padding: 5px; clear: both; }
 .outofstockmessage em                   { display: block; margin-top: 10px; }
-.options .option                        { border-bottom: solid 1px #ddd; background-color: #f5f5f5; clear: both; padding: 8px 5px 3px 0; margin: 0; }
-.options .option label                  { text-transform: none; font-size: 100%; display: block;  }
-.options .option label.optiontitle      { display: inline-block; color: #000; font-weight: bold; width: 180px; float: left; }
+.options .option                        { border-bottom: solid 2px #fff; background-color: #eee; clear: both; padding: 8px 5px 3px 0; margin: 0; }
+.options .option label                  { font-size: 11px; display: block;  }
+.options .option label.optiontitle      { text-transform: uppercase; display: inline-block; padding: 0 10px 0 5px; color: #000; font-weight: bold; width: 180px; float: left; letter-spacing: 1px; }
 .options .option label.optiontitle span.optiondesc
-                                        { display: block; font-weight: normal; color: #666; }
+                                        { display: block; font-weight: normal; color: #666; line-height: 1em; text-transform: none; letter-spacing: 0px; font-size: 12px; }
+.options table tr td                    { text-align: left; }
 .options .option div                    { display: block; margin: 0px; }
 .options .option select                 { width: auto; }
 .options .option table.checkboxlist input,
 .options .option table.radiobuttonlist input
                                         { display: block; float: left; margin-right: 5px; border-style: none; background-color: transparent; width: 16px; }
 .options .option ul.radiobuttonlist li label
-                                        { text-transform: uppercase; color: #444; font-size: 85%; }
-.options .highlight_error               { padding: 0 5px 0 3px; display: inline-block; color: #fff; font-weight: bold; text-decoration: blink; background-color: #f00; border-radius: 3px; }
-.boxinset .addtobasket .prices			{ display: block; text-align: right; }
+                                        { text-transform: uppercase; color: #000; font-size: 85%; }
+.options .highlight_error               { text-transform: uppercase; font-size: 85%; padding: 0 5px 0 3px; display: inline-block; color: #fff; font-weight: bold; background-color: #000; }
+.boxinset .addtobasket .prices			{ display: block; text-align: left; }
 .options div.addtobasket img            { float: none; text-align: right; }
-div.addtobasket                         { width: auto; text-align: left; padding: 5px; }
+div.addtobasket                         { width: auto; text-align: left; }
 div.addtobasket div                     { display: inline }
 /* Individual options lines */
 .options table,
@@ -495,21 +503,25 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket td.quantity div.smallupdateprogress
                                         { position: relative; float: left; }
 .basket td.extax,
+.basket td.tax                          { font-weight: normal; color: #090; width: 10%; font-size: 100%; vertical-align: top; white-space: nowrap;}
 .basket td.inctax,
-.basket td.tax,
 .basket td.price                        { font-weight: bold; color: #090; width: 10%; font-size: 100%; vertical-align: top; white-space: nowrap;}
-.basket td.total                        { font-weight: bold; color: #f00; width: 20%; font-size: 100%; white-space: nowrap; }
+.basket td.total                        { font-weight: bold; color: #090; width: 20%; font-size: 140%; white-space: nowrap; }
 .basket th.remove,
 .basket td.remove                       { width: 30px; }
 .basket td.remove a.basket_delete_button
-                                        { margin-top: 2px; display: block; height: 16px; width: 16px; background-image: url(Images/trashcan.png); background-position: top left; background-repeat: no-repeat; }
+                                        { margin-top: 2px; display: block; height: 24px; width: 24px; background-image: url(Images/trashcan.png); background-position: top left; background-repeat: no-repeat; }
 .basket .applycoupon td label           { color: #000; font-weight: bold; }
 .basket .applycoupon .couponbox         { width: 120px; margin: 0 0 5px 0; }
-.basket table tr.totals td              { background-color: #fff; }
+.basket table tr.totals td              { }
 .basket table tr.totals #totaltaxrow,
 .basket table tr.totals #totallabel     { text-align: right }
+.basket table tr.totals .labeltext      { font-size: 85%; text-transform: uppercase; font-weight: normal; color: #999; }
 .basket table tr.totals .total			{ font-size: 120% }
-.basket .controls                       { text-align: right; margin: 8px 0 20px 0; }
+.basket table tr.totals .total .value   { font-size: 190% }
+.basket table tr.totals .extax .value   { font-size: 140% }
+
+.basket .controls                       { text-align: center; margin: 8px 0 20px 0; }
 .basket .promotions                     { margin: 10px 0 10px 0 }
 .basket .links                          { display: none; margin: 10px 0 20px 0; }
 .basket .links div                      { width: 30%; margin: 10px 20px 0 0; padding: 0; float: left; }
@@ -517,9 +529,7 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket .links img                      { margin-right: 4px }
 .basket .continueshopping               { margin-top: 8px; text-align: right; }
 .basket .continueshopping .submit       { float: left; text-align: left; }
-/* shipping select dropdown menu */
-.basket tr.shippingrow div.smallupdateprogress
-                                        { float: left; margin-top: -20px; }
+
 .basket tr.couponrow div.smallupdateprogress
                                         { }
 .basket table .totals                   { border-bottom: solid 1px #eee; background-color: #fff; }

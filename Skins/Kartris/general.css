@@ -245,7 +245,7 @@ TABS AJAX CONTROL
 .ajax__tab_default .ajax__tab_header .ajax__tab_inner,
 .ajax__tab_default .ajax__tab_hover .ajax__tab_inner
 										{ padding: 0; margin-left: 3px; /* offset the width of the left image */ }
-.ajax__tab_tab                          { margin: 2px 10px 1px 3px; padding: 1px 5px 0 5px; }
+.ajax__tab_tab                          { margin: 2px 5px 1px 2px; padding: 1px 3px 0 3px; }
 .ajax__tab_default .ajax__tab_header .ajax__tab_inner a
 										{ color: #000 }
 .ajax__tab_default .ajax__tab_hover .ajax__tab_inner a
