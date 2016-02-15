@@ -1,0 +1,140 @@
+/* 
+========================================================================
+MAIN LAYOUT
+========================================================================
+*/
+html                                    { min-height: 100%; overflow-y:scroll; overflow-x: hidden; overflow:-moz-scrollbars-vertical; }
+body                                    { min-height: 100%; background: #fff; }
+body.main                               { padding: 0 0 0 0; }
+form                                    { display: block; padding: 0; margin: 0; min-height: 100%; }
+.off-canvas-content                     { }
+.inner-wrap                             { display : table; min-height: 100%; }
+#container                              { max-width: 1080px; margin: 0 auto; min-height: 100%; }
+#centre_container                       { display: block; padding: 0 10px; }
+/* 
+========================================================================
+SECTIONS
+========================================================================
+*/
+#header                                 { }
+#header #header_top                     { text-align: center; }
+.logo                                   { margin: 10px 0; max-width: 180px; }
+#pagecontent_pad                        { border-top: solid 2px #000; min-height: 10px; padding-bottom: 15px; }
+#controlbox                             { width: 100%; margin: 0 auto; float: right; text-align: right; }
+/* 
+========================================================================
+-- OFF CANVAS MENU
+========================================================================
+*/
+a.off-canvas-open                       { width: 20px; color: #333; background: #fff; text-transform: uppercase; font-size: 13px; font-weight: bold; position: relative; display: block; padding: 0 0 0 0; height: 45px; margin-bottom: 5px; line-height: 45px; }
+a.off-canvas-open::before               { content: ""; position: absolute; left: 2px; display: block; width: 16px; top: 6px; height: 0; box-shadow: 0 10px 0 2px #333, 0 16px 0 2px #333, 0 22px 0 2px #333; }
+a.off-canvas-close                      { color: #000; font-size: 25px; font-weight: bold; display: block; padding: 1px 3px; position: absolute; top: 2px; right: 10px; }
+a.left-off-canvas-toggle                { float: left; display: inline-block; margin: 5px 0 0 0; }
+a.right-off-canvas-toggle               { float: right; display: inline-block; margin: 5px 0 0 0; }
+.left-off-canvas-menu,
+.right-off-canvas-menu                  { padding-top: 30px; background: none repeat scroll 0% 0% #ddd; }
+.left-off-canvas-menu ul li,
+.right-off-canvas-menu ul li            { list-style-type:none; }
+.left-off-canvas-menu ul li a,
+.right-off-canvas-menu ul li a          { display: block; height: auto; padding: 1px 15px 1px 3px; line-height: 20px; color: #000; }
+a.toggleswitch                          { display: inline-block; margin-top: 15px; }
+.move-left .exit-off-canvas,
+.move-right .exit-off-canvas            { box-shadow: none; }
+/* 
+========================================================================
+LOGIN STATUS
+========================================================================
+*/
+#loginstatus                            { float: right; display: inline-block; text-transform: uppercase; font-size: 11px; font-weight: normal; color: #888; padding: 0 15px 3px 0; }
+#loginstatus strong                     { font-size: 13px; text-transform: none; }
+#loginstatus .loginbutton               { float: left; display: block; width: 32px; height: 32px; border: none; background-position: 0; background-image: url(Images/icon_account.png); background-repeat: no-repeat; background-color: transparent; color: transparent; display: inline-block; width: 32px; height: 32px; }
+#loginstatus .loginbutton.loggedin      { background-image: url(Images/icon_account_in.png); }
+#loginstatus #username,
+#loginstatus #statuslabel               { display: none; }
+#loginstatus:hover #account_menu        { width: 190px; margin: 28px 0 0 -150px; }
+
+/* 
+========================================================================
+TEMPLATE HOVERMENU
+========================================================================
+*/
+.hovermenu                      { display: none; }
+.hovermenu ul                   { margin: 0; padding: 0; }
+.hovermenu ul li                { list-style: none; float: none; clear: both; margin: 0 0 0 0; padding: 2px 0 0 0; }
+.hovermenu_holder:hover .hovermenu
+                                { min-height: 50px; box-shadow: 1px 1px 10px #333; width: 230px; background-color: #eee; border: solid 1px #777; display: block; z-index: 9; text-align: left; height: auto; position: absolute; padding: 10px 8px 8px 8px; margin: 35px 0 0 -9px; }     
+.hovermenu ul li a              { line-height: 1em; font-size: 100%; color: #000; padding: 3px 5px 3px 5px; margin: 0 0 1px 0; display: block; }
+.hovermenu ul li a:hover        { background-color: #000; color: #fff; }
+.hovermenu .button              { border-color: transparent; border-top: solid 1px #000; background-color: transparent; color: #000; font-size: 90%; width: 100%; text-transform: uppercase; font-weight: normal; letter-spacing: 1px; }
+.hovermenu .button:hover        { background-color: #000; color: #fff; }
+    
+/* 
+========================================================================
+SEARCH BOX
+========================================================================
+*/
+#section_searchbox                      { margin: 3px 0 0 0; display: block; }
+#section_searchbox input.button         { background-position: right; background-image: url(Images/icon_search.png); background-repeat: no-repeat; background-color: #eee; color: transparent; font-weight: bold; margin: 0; height: 24px; }
+#section_searchbox input.button:hover   { border: none; }
+#section_searchbox input[type="text"]   { box-shadow: none; height: 24px; background-color: #eee; border: none; }
+#section_searchbox input[type="text"]:focus
+                                        { background-color: #fff; border: solid 1px #000; }
+/* 
+========================================================================
+OTHER CONTROLS language, currency, etc.
+========================================================================
+*/
+#currencymenu                           { margin: 5px 10px 0 0; width: 50px; overflow: hidden; float: left; }
+#currencymenu select					{ border: none; background-color: #fff; font-size: 90%; box-shadow: none; min-width: 70px; }
+#languagemenu                           { margin: 5px 20px 0 0; float: left; text-align: left; display: block; max-width: 110px; border: none; }
+#languagemenu .language-link            { display: inline-block; border: none; padding: 1px 3px; color: #000; text-transform: uppercase; font-size: 90%; }
+#languagemenu .lang-selected            { background-color: #000; color: #fff; }
+#recentlyviewed                         { border-top: solid 1px #000; padding: 10px 0 20px 0; }
+/* 
+========================================================================
+BASKET SUMMARY
+========================================================================
+*/
+#minibasketholder                       { float: right; margin: 0 10px 0 0; display: inline-block; min-width: 50px; height: 32px; }
+#minibasket                             { width: auto; max-width: 200px; padding: 0; }
+#minibasket #minibasket_header          { position: absolute; width: 32px; background-color: transparent; }
+#compactbasket_title                    { display: none; }
+#compactbasket_totalprice               { display: none; }
+#compactbasket_noofitems span.bracket   { display: none; }
+#minibasket h4                          { margin: 0; padding: 0; font-size: 12px; }
+#minibasket h4 strong                   { color: #999; font-weight: bold; }
+.compactminibasket a,
+#minibasket h4 a                        { height: 28px; display: inline-block; width: auto; background-position: 0; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #000; padding: 0 0 0 18px; font-weight: bold; }
+#compactbasket_noofitems                { display: inline-block; background-color: #000; color: #fff; font-size: 1.1em; font-weight: bold; margin: 11px 5px 0 0; padding: 0 4px 1px 3px; }
+#compactbasket_noofitems.basket-items-0 { visibility: hidden; }
+#minibasket:hover #minibasket_main      { margin: 27px 0 0 -170px; }
+#minibasket:hover                       {  }
+#minibasket:hover h4 strong             { color: #000; }
+#minibasket:hover h4 a                  { color: #000; }
+#minibasket #contents                   { width: 100%; }
+#minibasket #contents #orderinprogress,
+#minibasket #contents #basketisempty    { padding: 1px 5px 12px 5px; font-weight: normal; color: #000; }
+#minibasket #contents ul #totals        { margin-top: 10px; border-top: solid 1px #000; padding: 4px 5px 6px 10px; font-weight: normal; text-transform: uppercase; color: #000; font-size: 80%; text-align: right; }
+#minibasket #contents ul #totals span.price
+                                        { color: #000; font-weight: normal; font-size: 170%; }
+#minibasket #contents ul #totals span.total
+                                        { color: #000; font-weight: bold; font-size: 220%; }
+#minibasket #contents ul #totals #minibasket_whereapplicable
+                                        { margin: 10px 0 0 0; font-size: 85%; letter-spacing: 1px; }
+#minibasket #contents ul #totals strong { font-weight: bold }
+
+/* 
+========================================================================
+FOOTER
+========================================================================
+*/
+#footer                                 { display: table-row; background-color: #999; width: 100%; margin: 0; padding: 0; height: 1px; /*change this size depending on the height of the footer image you're using*/ width: 100%; bottom: 0px; }
+#footer_inside                          { height: 100%; min-height: 232px; max-width: 1080px; margin: 0 auto; color: #555; padding: 10px 7px 0 7px; }
+#footer a                               { color: #ddd; font-weight: normal; }
+#footer #copyright                      { font-size: 90%; margin: 45px 0 20px 0; }
+#footer h2                              { color: #fff }
+#footer ul                              { margin: 0; text-transform: uppercase; font-size: 90%; padding: 0; list-style-type: none; }
+#footer ul li                           { padding: 0; }
+#footer ul li a                         { padding: 2px; display: block; }
+#footer ul li a:hover                   { background-color: #aaa; color: #ddd; }
+
