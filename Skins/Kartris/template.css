@@ -14,7 +14,7 @@ SECTIONS
 ========================================================================
 */
 #header .logo                           { margin: 20px 0 0 0; }
-#pagecontent_pad                        { min-height: 100px; padding-bottom: 15px; }
+#pagecontent_pad                        { min-height: 300px; padding-bottom: 15px; }
 
 /* 
 ========================================================================
@@ -25,6 +25,7 @@ a.off-canvas-open                       { width: 20px; color: #333; background: 
 a.off-canvas-open::before               { content: ""; position: absolute; left: 2px; display: block; width: 16px; top: 0px; height: 0; box-shadow: 0 10px 0 2px #888, 0 16px 0 2px #888, 0 22px 0 2px #888; }
 a.off-canvas-close                      { color: #000; font-size: 25px; font-weight: bold; display: block; padding: 1px 3px; position: absolute; top: 2px; right: 20px; }
 a.left-off-canvas-toggle                { float: left; display: inline-block; margin: 5px 0 0 0; }
+.off-canvas-wrap                        { min-height: 100%; }
 .left-off-canvas-menu                   { padding: 0; background: none repeat scroll 0% 0% transparent; }
 .left-off-canvas-menu .content          { border-right: solid 1px #777; margin-right: 10px; padding: 30px 10px 10px 10px; background: #eee; height: 100%; box-shadow: 1px 1px 10px #333; }
 .left-off-canvas-menu ul li             { list-style-type:none; }
