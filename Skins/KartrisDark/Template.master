@@ -14,25 +14,24 @@
 	========================================================================
 	KARTRIS by cactusoft
 	Copyright 2016 CACTUSOFT - www.kartris.com
-	This work is licensed under a
+	This skin is licensed under a
 	Creative Commons Attribution-ShareAlike 3.0 Unported License
 
 	http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
 	========================================================================
 	-->
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
 
 	<link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
-	<link href="foundation.css" rel="stylesheet" type="text/css" />
 	<link href="normalize.css" rel="stylesheet" type="text/css" />
-
+	<link href="foundation.css" rel="stylesheet" type="text/css" />
 	<link href="general.css" rel="stylesheet" type="text/css" />
 	<link href="sections.css" rel="stylesheet" type="text/css" />
 	<link href="template.css" rel="stylesheet" type="text/css" />
 	<link href="custom.css" rel="stylesheet" type="text/css" />
-	<link href='//fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+	<link href="powerpack.css" rel="stylesheet" type="text/css" />
 	<title>Kartris v1</title>
 </head>
 <body class="main">
@@ -41,27 +40,36 @@
 			EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"
 			CombineScripts="true" EnableViewState="True">
 			<Scripts>
-				<asp:ScriptReference Path="~/JavaScript/webkit.js" />
-				<asp:ScriptReference Path="~/JavaScript/custom.modernizr.js" />
+				<asp:ScriptReference Path="~/JavaScript/k28000/modernizr.js" />
+				<asp:ScriptReference Path="~/JavaScript/k28000/jquery.js" />
+				<asp:ScriptReference Path="~/JavaScript/k28000/foundation.min.js" />
+				<asp:ScriptReference Path="~/JavaScript/k28000/fastclick.js" />
 			</Scripts>
 		</ajaxToolkit:ToolkitScriptManager>
+
 		<div id="container">
 			<div id="centre_container">
 				<div class="row" id="header">
-					<div class="small-12 large-6 columns">
+					<div class="large-5 small-12 columns">
 						<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
 					</div>
-					<div id="localization" class="small-12 large-3 columns">
-						<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
-						<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
+					<div class="small-12 large-4 columns">
+						<user:NavigationMenu ID="UC_NavigationMenu" runat="server" EnableViewState="False"
+							Visible="True" />
 					</div>
 					<div id="minibasketholder" class="small-12 large-3 columns">
 						<user:BasketView ID="UC_MiniBasket" runat="server" ViewType="MINI_BASKET" />
+						<div class="spacer"></div>
+						<div id="regionalsettings">
+							<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
+							<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
+						</div>
 					</div>
+				</div>
+				<div class="row">
 					<div class="small-12 large-8 columns">
-
 						<asp:HyperLink ID="lnkHome" NavigateUrl="~/" runat="server">
-							<asp:Image ID="imgLogo" runat="server" ImageUrl="~/Skins/KartrisDark/Images/logo.png"
+							<asp:Image ID="imgLogo" runat="server" ImageUrl="Images/logo.png"
 								CssClass="logo" AlternateText="logo" />
 						</asp:HyperLink>
 					</div>
@@ -70,11 +78,6 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="small-12 columns">
-						<user:NavigationMenu ID="UC_NavigationMenu" runat="server" EnableViewState="False"
-							Visible="True" />
-					</div>
-
 					<div class="small-12 columns">
 						<!--
 						MENU OPTIONS:
@@ -97,71 +100,68 @@
 				</div>
 				<div class="spacer"></div>
 			</div>
-
-
-			<div id="footer">
-				<div id="footer_inside">
-					<div class="row">
-						<div class="small-12 large-3 columns">
-							<h2>Section</h2>
-							<ul>
-								<li>
-									<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-								<li>
-									<asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-								<li>
-									<asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-							</ul>
-						</div>
-						<div class="small-12 large-3 columns">
-							<h2>Section</h2>
-							<ul>
-								<li>
-									<asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-								<li>
-									<asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-								<li>
-									<asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-							</ul>
-						</div>
-						<div class="small-12 large-3 columns">
-							<h2>Section</h2>
-							<ul>
-								<li>
-									<asp:HyperLink ID="HyperLink10" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-								<li>
-									<asp:HyperLink ID="HyperLink11" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-								<li>
-									<asp:HyperLink ID="HyperLink12" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-							</ul>
-						</div>
-						<div class="small-12 large-3 columns">
-							<h2>Section</h2>
-							<ul>
-								<li>
-									<asp:HyperLink ID="HyperLink7" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-								<li>
-									<asp:HyperLink ID="HyperLink8" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-								<li>
-									<asp:HyperLink ID="HyperLink9" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-							</ul>
-						</div>
-						<div class="small-12 large-12 columns" id="copyright">
-							&copy;2015 CACTUSOFT
-						</div>
+		</div>
+		<div id="footer">
+			<div id="footer_inside">
+				<div class="row">
+					<div class="small-12 large-3 columns">
+						<h2>Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="small-12 large-3 columns">
+						<h2>Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="small-12 large-3 columns">
+						<h2>Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink10" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink11" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink12" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="small-12 large-3 columns">
+						<h2>Section</h2>
+						<ul>
+							<li>
+								<asp:HyperLink ID="HyperLink7" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink8" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+							<li>
+								<asp:HyperLink ID="HyperLink9" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+						</ul>
+					</div>
+					<div class="small-12 large-12 columns" id="copyright">
+						&copy;2015 CACTUSOFT
 					</div>
 				</div>
 			</div>
 		</div>
 		<user:AdminBar ID="UC_AdminBar" runat="server" />
 	</form>
-	<!-- Check for Zepto support, load jQuery if necessary -->
-	<asp:Literal runat="server" ID="litZeptoJquery"></asp:Literal>
+	<!-- Load up javascript -->
+
 	<script>
-		$(function () {
-			$(document).foundation();
-		})
+		$(document).foundation();
 	</script>
+
 
 </body>
 </html>

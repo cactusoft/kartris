@@ -962,9 +962,6 @@ Partial Class ProductVersions
             UC_AddToBasketQty4.Visible = False
             phdNotOutOfStock4.Visible = False
         End If
-
-        'Literal1.Text = "Combinations of this product: " & ProductsBLL._NumberOfCombinations(ProductID) & " Stock :  " & numQty & " | optionstring: " & strOptionString & "<br/>" & vbCrLf
-        'Update display
         updOptions.Update()
     End Sub
 

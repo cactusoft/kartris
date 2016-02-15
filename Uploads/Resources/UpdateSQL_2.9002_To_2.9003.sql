@@ -146,8 +146,6 @@ general.email.testaddress
 ******/
 UPDATE [dbo].[tblKartrisConfig] SET [CFG_DisplayType]='on|off|write|test' WHERE [CFG_Name]='general.email.method'
 GO
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.email.testaddress', N'', N's', N't', NULL, N'Test email address to send all mail to when general.email.method="test"', 2.9003, N'', 0)
-GO
 
 /* Fix and improve options /combinations */
 /****** Object:  View [dbo].[vKartrisCombinationPrices]    Script Date: 2016-01-21 21:11:13 ******/

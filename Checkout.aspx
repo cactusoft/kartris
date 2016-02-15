@@ -199,27 +199,6 @@
                         </ContentTemplate>
                     </asp:UpdatePanel>
                 </div>
-
-                <!--
-                ===============================
-                SHOW/HIDE JAVASCRIPT
-                Used for Ts and Cs and comments
-                box.
-                ===============================
-                -->
-                <%  'keep this JS here rather than inside comments
-                    'placeholder, as it is used for Ts and Cs too %>
-                <script type="text/javascript">
-                <!--
-    function toggle_visibility(id) {
-        var e = document.getElementById(id);
-        if (e.style.display == 'block')
-            e.style.display = 'none';
-        else
-            e.style.display = 'block';
-    }
-    //-->
-                </script>
                 <!--
                 ===============================
                 CUSTOMER COMMENTS BOX
@@ -227,10 +206,9 @@
                 ===============================
                 -->
                 <asp:PlaceHolder ID="phdCustomerComments" runat="server">
-                    <a href="javascript:toggle_visibility('comments');" class="link2 icon_new">
-                        <asp:Literal ID="litComments" runat="server" Text="<%$ Resources: Checkout, SubTitle_Comments %>"
-                            EnableViewState="false" /></a>
-                    <div id="comments" style="display: none; margin-top: 10px;">
+                    <h2><asp:Literal ID="litComments" runat="server" Text="<%$ Resources: Checkout, SubTitle_Comments %>"
+                            EnableViewState="false" /></h2>
+                    <div id="comments" style="margin-top: 10px;">
                         <asp:TextBox ID="txtComments" runat="server" TextMode="MultiLine"></asp:TextBox>
                     </div>
                 </asp:PlaceHolder>
@@ -485,9 +463,9 @@
         <user:PopupMessage ID="UC_PopUpErrors" runat="server" />
 
         <%
-            'This function below disables the scrolling function so
-            'when the page is submitted, we should see any errors in
-            'Validators
+'This function below disables the scrolling function so
+'when the page is submitted, we should see any errors in
+'Validators
         %>
         <script type="text/javascript">
             window.scrollTo = function () { }

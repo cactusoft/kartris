@@ -101,6 +101,7 @@ Partial Class ProductView
         _IsProductExit = True
 
         _ProductName = FixNullFromDB(tblProducts.Rows(0)("P_Name"))
+        Dim strStrapline As String = FixNullFromDB(tblProducts.Rows(0)("P_Strapline"))
         _DisplayType = FixNullFromDB(tblProducts.Rows(0)("P_VersionDisplayType"))
 
         'Checking if the reviews are enabled for the Product.
@@ -116,6 +117,7 @@ Partial Class ProductView
 
         'Set H1 tag
         litProductName.Text = Server.HtmlEncode(_ProductName)
+        litProductStrapLine.Text = Server.HtmlEncode(strStrapline)
 
         'Bind the DataTable to the FormView that is used to view the Product's Info.
         fvwProduct.DataSource = tblProducts

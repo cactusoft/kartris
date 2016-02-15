@@ -44,6 +44,8 @@ OTHER CONTROLS language, currency, etc.
 #currencymenu                           { margin: 1px 0 0 0; float: right; text-align: right; display: block; border: none; max-width: 90px; }
 #currencymenu select					{ border: none; background-color: #fff; font-size: 90%; box-shadow: none; }
 #languagemenu                           { float: right; text-align: right; display: block; max-width: 110px; border: none; margin: 0 10px 0 0; }
+#languagemenu .language-link            { display: inline-block; border: none; padding: 1px 3px; color: #000; text-transform: uppercase; font-size: 90%; }
+#languagemenu .lang-selected            { background-color: #000; color: #fff; }
 #recentlyviewed                         { border-top: solid 3px #ddd; padding: 10px 0 20px 0; }
 /* 
 ========================================================================
@@ -52,13 +54,13 @@ BASKET SUMMARY
 */
 #minibasketholder                       { }
 #minibasket                             { width: auto; padding: 5px 0 5px 0; }
-#minibasket #minibasket_header          { position: absolute; width: 100%; z-index: 2000; background-color: transparent; }
+#minibasket #minibasket_header          { position: absolute; width: 100%; z-index: 99; background-color: transparent; }
 #minibasket h4                          { letter-spacing: 0; white-space: nowrap; height: 21px; float: right; background: none; text-transform: uppercase; font-size: 85%; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0 35px 0 0; display: inline-block; color: #fff; text-align: right; z-index: 9992; padding: 3px 0 10px 2px; }
 #minibasket h4 strong                   { color: #999; font-weight: bold; }
 #minibasket h4 a                        { background-position: -2px -8px; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #333; padding: 2px 0 1px 29px; font-weight: bold; }
 #minibasket #minibasket_main            { display: none; height: 0px; width: 100%; }
-#minibasket:hover #minibasket_main      { background-color: #ddd; border-right: solid 1px #bbb; border-bottom: solid 1px #bbb; display: block; z-index: 1999; text-align: left; height: auto; position: absolute; right: 15px; padding: 40px 8px 8px 8px; margin: -10px 0 0 0; }
-#minibasket:hover                       { background-color: #ddd; z-index: 1999; max-height: 1px; }
+#minibasket:hover #minibasket_main      { background-color: #ddd; border-right: solid 1px #bbb; border-bottom: solid 1px #bbb; display: block; z-index: 9; text-align: left; height: auto; position: absolute; right: 15px; padding: 40px 8px 8px 8px; margin: -10px 0 0 0; }
+#minibasket:hover                       { background-color: #ddd; z-index: 9998; max-height: 1px; }
 #minibasket:hover h4 strong             { color: #000; }
 #minibasket:hover h4 a                  { color: #000; }
 #minibasket #content                    { width: 100%; }

@@ -14,10 +14,10 @@
     //Function to set URL for iframe of media popup, size it, and show it
     function ShowMediaPopup(ML_ID, MT_Extension, intParentID, strParentType, intWidth, intHeight) {
         //Set some variables we use later
-        var objFrame = $find('cntMain_UC_ProductView_tbcProduct_tabMain_UC_PopUpMedia_popMessage');
+        var objFrame = $find('cntMain_UC_ProductView_UC_PopUpMedia_popMessage');
 
         var objMediaIframeBaseUrl = document.getElementById('media_iframe_base_url').value;
-        var objPopupWindow = document.getElementById('cntMain_UC_ProductView_tbcProduct_tabMain_UC_PopUpMedia_pnlMessage');
+        var objPopupWindow = document.getElementById('cntMain_UC_ProductView_UC_PopUpMedia_pnlMessage');
         var objMediaIframe = document.getElementById('media_iframe');
         //Set media ID
         objMediaIframe.src = objMediaIframeBaseUrl + "?ML_ID=" + ML_ID;
@@ -48,10 +48,10 @@
     //Function to set URL for iframe of media popup, size it, and show it
     function ShowURLPopup(ML_EmbedSource, intWidth, intHeight) {
         //Set some variables we use later
-        var objFrame = $find('cntMain_UC_ProductView_tbcProduct_tabMain_UC_PopUpMedia_popMessage');
+        var objFrame = $find('cntMain_UC_ProductView_UC_PopUpMedia_popMessage');
 
         var objMediaIframeBaseUrl = ML_EmbedSource;
-        var objPopupWindow = document.getElementById('cntMain_UC_ProductView_tbcProduct_tabMain_UC_PopUpMedia_pnlMessage');
+        var objPopupWindow = document.getElementById('cntMain_UC_ProductView_UC_PopUpMedia_pnlMessage');
         var objMediaIframe = document.getElementById('media_iframe');
 
         //Set target URL
@@ -70,52 +70,65 @@
     <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" SiteMapProvider="CategorySiteMapProvider" />
     <h1>
         <asp:Literal ID="litProductName" runat="server"></asp:Literal></h1>
+    <div id="strapline">
+        <asp:Literal ID="litProductStrapLine" runat="server" EnableViewState="false"></asp:Literal>
+    </div>
     <asp:UpdatePanel ID="updProduct" runat="server" UpdateMode="Conditional">
         <ContentTemplate>
-            <ajaxToolkit:TabContainer CssClass=".tab" ID="tbcProduct" runat="server" OnDemand="false" OnClientActiveTabChanged="" AutoPostBack="false" EnableTheming="False">
+            <div class="row collapse">
                 <%--
+                =====================================
+                IMAGE COLUMN
+                =====================================
+                --%>
+                <div class="<asp:Literal runat='server' id='litImageColumnClasses' text='imagecolumn small-12 medium-4 large-6 columns'/>">
+                    <div class="main_product_image">
+                    <asp:UpdatePanel ID="updImages" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <user:ImageViewer ID="UC_ImageView2" runat="server" LargeViewClickable="false" EnableViewState="false" />
+                            <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                    <asp:UpdatePanel ID="updMedia" runat="server" UpdateMode="Conditional">
+                        <ContentTemplate>
+                            <%--
+                            =====================================
+                            MEDIA GALLERY
+                            =====================================
+                            --%>
+                            <user:PopupMessage ID="UC_PopUpMedia" runat="server" EnableViewState="false" />
+                            <user:MediaGallery ID="UC_MediaGallery" ParentType="p" runat="server" EnableViewState="false" />
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                    </div>
+                    <div class="spacer"></div>
+                </div>
+                <%--
+                =====================================
+                TEXT/DETAILS COLUMN
+                =====================================
+                --%>
+                <div class="<asp:Literal runat='server' id='litTextColumnClasses' text='textcolumn small-12 medium-8 large-6 columns'/>">
+                    <ajaxToolkit:TabContainer CssClass=".tab" ID="tbcProduct" runat="server" OnDemand="false" OnClientActiveTabChanged="" AutoPostBack="false" EnableTheming="False">
+                        <%--
                 =====================================
                 TAB 1 - Main product details
                 =====================================
-                --%>
-                <ajaxToolkit:TabPanel ID="tabMain" runat="server" OnDemandMode="Once">
-                    <HeaderTemplate>
-                        <asp:Literal ID="litContentTextHome" runat="server" Text="<%$ Resources: Kartris, ContentText_Home %>" EnableViewState="false"></asp:Literal>
-                    </HeaderTemplate>
-                    <ContentTemplate>
-                        <div class="row">
-                                        <%--
-                    IMAGE COLUMN
-                                        --%>
-                            <div class="<asp:Literal runat='server' id='litImageColumnClasses' text='imagecolumn small-12 medium-5 large-4 columns'/>">
-                                <asp:UpdatePanel ID="updImages" runat="server" UpdateMode="Conditional">
-                                    <ContentTemplate>
-                                        <user:ImageViewer ID="UC_ImageView2" runat="server" LargeViewClickable="false" EnableViewState="false" />
-                                        <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />
-                                    </ContentTemplate>
-                                </asp:UpdatePanel>
-                                <asp:UpdatePanel ID="updMedia" runat="server" UpdateMode="Conditional">
-                                    <ContentTemplate>
-                                        <%--
-                    MEDIA GALLERY
-                                        --%>
-                                        <user:PopupMessage ID="UC_PopUpMedia" runat="server" EnableViewState="false" />
-                                        <user:MediaGallery ID="UC_MediaGallery" ParentType="p" runat="server" EnableViewState="false" />
-                                    </ContentTemplate>
-                                </asp:UpdatePanel>
-                            </div>
-                                        <%--
-                    TEXT COLUMN
-                                        --%>
-                            <div class="<asp:Literal runat='server' id='litTextColumnClasses' text='textcolumn small-12 medium-7 large-8 columns'/>">
+                        --%>
+                        <ajaxToolkit:TabPanel ID="tabMain" runat="server" OnDemandMode="Once">
+                            <HeaderTemplate>
+                                <asp:Literal ID="litContentTextHome" runat="server" Text="<%$ Resources: Kartris, ContentText_Home %>" EnableViewState="false"></asp:Literal>
+                            </HeaderTemplate>
+                            <ContentTemplate>
+
+
+
                                 <asp:FormView ID="fvwProduct" runat="server">
                                     <HeaderTemplate>
                                         <asp:Literal ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>
                                     </HeaderTemplate>
                                     <ItemTemplate>
-                                        <div id="strapline">
-                                            <asp:Literal ID="litProductStrapLine" runat="server" Text='<%# Eval("P_StrapLine") %>' EnableViewState="false"></asp:Literal>
-                                        </div>
+
                                         <div id="description" itemscope itemtype="http://data-vocabulary.org/Product">
                                             <span itemprop="name" style="display: none;"><%# Eval("P_Name") %></span>
                                             <user:RichSnippets ID="UC_RichSnippets" runat="server" ProductID='<%# Eval("P_ID") %>' />
@@ -137,60 +150,57 @@
                                 <user:ProductVersions ID="UC_ProductVersions"
                                     runat="server" EnableViewState="true" />
 
-                            </div>
-                        </div>
-                        <div class="spacer"></div>
+
+                            </ContentTemplate>
+                        </ajaxToolkit:TabPanel>
                         <%--
-                        VERSIONS/OPTIONS
-                        --%>
-                    </ContentTemplate>
-                </ajaxToolkit:TabPanel>
-                <%--
                 =====================================
                 TAB 2 - Attributes
                 =====================================
-                --%>
-                <ajaxToolkit:TabPanel runat="server" ID="tabAttributes" OnDemandMode="Once">
-                    <HeaderTemplate>
-                        <asp:Literal ID="litContentTextAttributes" runat="server" Text="<%$ Resources:Attributes, ContentText_Attributes %>" EnableViewState="false"></asp:Literal>
-                    </HeaderTemplate>
-                    <ContentTemplate>
-                        <user:ProductAttributes ID="UC_ProductAttributes" runat="server" EnableViewState="false" />
-                    </ContentTemplate>
-                </ajaxToolkit:TabPanel>
-                <%--
+                        --%>
+                        <ajaxToolkit:TabPanel runat="server" ID="tabAttributes" OnDemandMode="Once">
+                            <HeaderTemplate>
+                                <asp:Literal ID="litContentTextAttributes" runat="server" Text="<%$ Resources:Attributes, ContentText_Attributes %>" EnableViewState="false"></asp:Literal>
+                            </HeaderTemplate>
+                            <ContentTemplate>
+                                <user:ProductAttributes ID="UC_ProductAttributes" runat="server" EnableViewState="false" />
+                            </ContentTemplate>
+                        </ajaxToolkit:TabPanel>
+                        <%--
                 =====================================
                 TAB 3 - Quantity Discounts
                 =====================================
-                --%>
-                <ajaxToolkit:TabPanel runat="server" ID="tabQuantityDiscounts" OnDemandMode="Once">
-                    <HeaderTemplate>
-                        <asp:Literal ID="litContentTextViewQuantityDiscount" runat="server" Text="<%$ Resources: Versions, ContentText_ViewQuantityDiscount %>" EnableViewState="false"></asp:Literal>
-                    </HeaderTemplate>
-                    <ContentTemplate>
-                        <user:ProductQuantityDiscounts ID="UC_QuantityDiscounts" runat="server" EnableViewState="false" />
-                    </ContentTemplate>
-                </ajaxToolkit:TabPanel>
-                <%--
+                        --%>
+                        <ajaxToolkit:TabPanel runat="server" ID="tabQuantityDiscounts" OnDemandMode="Once">
+                            <HeaderTemplate>
+                                <asp:Literal ID="litContentTextViewQuantityDiscount" runat="server" Text="<%$ Resources: Versions, ContentText_ViewQuantityDiscount %>" EnableViewState="false"></asp:Literal>
+                            </HeaderTemplate>
+                            <ContentTemplate>
+                                <user:ProductQuantityDiscounts ID="UC_QuantityDiscounts" runat="server" EnableViewState="false" />
+                            </ContentTemplate>
+                        </ajaxToolkit:TabPanel>
+                        <%--
                 =====================================
                 TAB 4 - Reviews
                 =====================================
-                --%>
-                <ajaxToolkit:TabPanel runat="server" ID="tabReviews" OnDemandMode="Once">
-                    <HeaderTemplate>
-                        <asp:Literal ID="litContentTextCustomerReviews" runat="server" Text="<%$ Resources:Reviews, ContentText_CustomerReviews %>" EnableViewState="false"></asp:Literal>
-                    </HeaderTemplate>
-                    <ContentTemplate>
-                        <asp:UpdatePanel ID="updReviews" runat="server" UpdateMode="Conditional">
+                        --%>
+                        <ajaxToolkit:TabPanel runat="server" ID="tabReviews" OnDemandMode="Once">
+                            <HeaderTemplate>
+                                <asp:Literal ID="litContentTextCustomerReviews" runat="server" Text="<%$ Resources:Reviews, ContentText_CustomerReviews %>" EnableViewState="false"></asp:Literal>
+                            </HeaderTemplate>
                             <ContentTemplate>
-                                <user:ProductReviews ID="UC_Reviews" runat="server" />
+                                <asp:UpdatePanel ID="updReviews" runat="server" UpdateMode="Conditional">
+                                    <ContentTemplate>
+                                        <user:ProductReviews ID="UC_Reviews" runat="server" />
+                                    </ContentTemplate>
+                                </asp:UpdatePanel>
                             </ContentTemplate>
-                        </asp:UpdatePanel>
-                    </ContentTemplate>
-                </ajaxToolkit:TabPanel>
-            </ajaxToolkit:TabContainer>
-            <div class="spacer">
+                        </ajaxToolkit:TabPanel>
+                    </ajaxToolkit:TabContainer>
+                </div>
             </div>
+            <div class="spacer"></div>
+
             <%--
                 =====================================
                 PROMOTIONS

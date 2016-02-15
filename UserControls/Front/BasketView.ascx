@@ -245,7 +245,7 @@ MAIN BASKET
                                     <% End If%>
                                     <% Else%>
                                     <% If APP_ShowTaxDisplay Then%>
-                                    <td class="extax">
+                                    <td class="price">
                                         <asp:Literal ID="litExTax1" runat="server" />
                                         <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Eval("ExTax"))%>
                                     </td>
@@ -519,7 +519,6 @@ MAIN BASKET
                                                 <user:ShippingMethods ID="UC_ShippingMethodsDropdown" runat="server" />
                                                 <br />
                                             </asp:PlaceHolder>
-                                            <%="" %>
                                             <% If ViewOnly Then%>
                                             <strong>
                                                 <%=Basket.ShippingName%></strong> -
@@ -528,10 +527,9 @@ MAIN BASKET
                                     </div>
                                 </td>
                                 <asp:PlaceHolder ID="phdShippingTaxHide" runat="server" Visible="false">
-                                    <td colspan="4"></td>
+                                    <td colspan="5"></td>
                                 </asp:PlaceHolder>
                                 <asp:PlaceHolder ID="phdShippingTax" runat="server" Visible="false">
-                                    <%=""%>
                                     <% If APP_PricesIncTax Then%>
                                     <% If APP_ShowTaxDisplay Then%>
                                     <td class="extax">
@@ -882,14 +880,14 @@ MINI BASKET
                 <asp:Literal ID="litCompactShoppingBasket2" runat="server" EnableViewState="false" />
             </div>
 
-            <div id="minibasket" class="infoblock hide-for-touch">
+            <div id="minibasket" class="infoblock hide-for-touch hovermenu_holder">
                 <div id="minibasket_header">
                     <h4>
                         <asp:Literal ID="litShoppingBasketTitle" runat="server"
                             EnableViewState="false" />
                     </h4>
                 </div>
-                <div id="minibasket_main">
+                <div id="minibasket_main" class="hovermenu">
                     <div id="contents" class="hide-for-touch">
                         <div class="box">
                             <asp:PlaceHolder ID="phdOrderInProgress" runat="server" Visible="false">
@@ -959,7 +957,7 @@ MINI BASKET
                             </asp:PlaceHolder>
                         </div>
                     </div>
-                    <% If KartSettingsManager.GetKartConfig("frontend.minibasket.hidelinks") <> "y" Then%>
+                    <% If KartSettingsManager.GetKartConfig("frontend.minibasket.hidelinks") <> "y" And BasketItems.Count > 0 Then%>
                     <asp:PlaceHolder ID="phdMiniBasketLinks" runat="server" Visible="true">
                         <div id="links" class="hide-for-touch">
                             <ul id="basketlinks">
@@ -967,17 +965,14 @@ MINI BASKET
                                     <asp:Literal ID="litViewBasket" runat="server" Text="<%$ Resources:Kartris, ContentText_MinibasketViewBasket  %>"
                                         EnableViewState="false"></asp:Literal>
                                 </a></li>
-                                <% If BasketItems.Count > 0 Then%>
                                 <li><a class="button" href="<%=CkartrisBLL.WebShopURL%>Checkout.aspx" id="checkout_button">
                                     <asp:Literal ID="litCheckout" runat="server" Text="<%$ Resources:Kartris, ContentText_MinibasketCheckout  %>"
                                         EnableViewState="false"></asp:Literal>
                                 </a></li>
-                                <%End If%>
                                 <li><a class="button" href="<%=CkartrisBLL.WebShopURL%>Contact.aspx" id="enquiry_button">
                                     <asp:Literal ID="litEnquiry" runat="server" Text="<%$ Resources:Kartris, ContentText_MinibasketMakeEnquiry  %>"
                                         EnableViewState="false"></asp:Literal>
                                 </a></li>
-                                <% If BasketItems.Count > 0 Then%>
                                 <li><a class="button" href="<%=CkartrisBLL.WebShopURL%>Customer.aspx?action=savebasket" id="saverecoverbasket_button">
                                     <asp:Literal ID="litSaveRecoverBasket" runat="server" Text="<%$ Resources:Kartris, ContentText_MinibasketSaveBasket  %>"
                                         EnableViewState="false"></asp:Literal>
@@ -987,7 +982,6 @@ MINI BASKET
                                     <asp:Literal ID="litWishlist" runat="server" Text="<%$ Resources:Kartris, ContentText_MinibasketWishList  %>"
                                         EnableViewState="false"></asp:Literal>
                                 </a></li>
-                                <% End If%>
                                 <%End If%>
                             </ul>
                         </div>

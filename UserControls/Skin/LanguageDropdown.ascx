@@ -16,6 +16,18 @@
                     </asp:Repeater>
                 </div>
             </asp:PlaceHolder>
+            <asp:PlaceHolder ID="phdLanguageTextLinks" runat="server">
+                <div class="textlinks">
+                    <asp:Repeater ID="rptLanguages2" runat="server" DataSourceID="srcLanguage">
+                        <ItemTemplate>
+                            <span>
+                                <asp:LinkButton ID="lnkText" runat="server" CommandArgument='<%# Eval("Culture") %>'
+                                    CommandName="ChangeLanguage" ToolTip='<%# Eval("Name") %>' CausesValidation="false"
+                                    Text='<%# LongShortLanguageText(Eval("Culture")) %>'
+                                    CssClass="language-link"></asp:LinkButton></span></ItemTemplate>
+                    </asp:Repeater>
+                </div>
+            </asp:PlaceHolder>
         </div>
     </div>
 </div>
