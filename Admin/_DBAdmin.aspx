@@ -27,32 +27,6 @@
                         </div>
                     </ContentTemplate>
                 </ajaxToolkit:TabPanel>
-                <%-- DB Admin Log Tab --%>
-                <ajaxToolkit:TabPanel ID="tabAdminLog" runat="server" HeaderText="<%$ Resources: _DBAdmin, ContentText_AdminLogs %>">
-                    <ContentTemplate>
-                        <div class="subtabsection">
-                            <h2>
-                                <asp:Literal ID="litAdminLogs" runat="server"
-                                    Text='<%$ Resources: _DBAdmin, ContentText_AdminLogs %>' /></h2>
-                            <p>Admin logs has moved to the 'Reports' menu.<br />
-                                <br />
-                                This tab will be removed in a future version.</p>
-                        </div>
-                    </ContentTemplate>
-                </ajaxToolkit:TabPanel>
-                <%-- DB Admin Error Logs --%>
-                <ajaxToolkit:TabPanel ID="tabErrorLogs" runat="server" HeaderText="<%$ Resources: _DBAdmin, ContentText_ErrorLogs %>">
-                    <ContentTemplate>
-                        <div class="subtabsection">
-                            <h2>
-                                <asp:Literal ID="litErrorLogs" runat="server"
-                                    Text='<%$ Resources: _DBAdmin, ContentText_ErrorLogs %>' /></h2>
-                            <p>Error logs has moved to the 'Reports' menu.<br />
-                                <br />
-                                This tab will be removed in a future version.</p>
-                        </div>
-                    </ContentTemplate>
-                </ajaxToolkit:TabPanel>
                 <%-- DB Admin Data Removal --%>
                 <ajaxToolkit:TabPanel ID="tabDBRemoval" runat="server" HeaderText="<%$ Resources: _DBAdmin, ContentText_ClearData %>">
                     <ContentTemplate>
