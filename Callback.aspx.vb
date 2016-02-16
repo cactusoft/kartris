@@ -13,6 +13,7 @@
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
 Imports System.Reflection
+Imports System.Threading
 Imports CkartrisBLL
 Imports CkartrisDataManipulation
 Imports KartSettingsManager
@@ -26,6 +27,8 @@ Partial Class Callback
         If Not IsPostBack Then
             Dim strCallbackError As String = ""
             Dim strResult As String = ""
+            Dim strUpdateResult As String = ""
+            Dim multibancoData As String()
             Dim strBodyText As String = ""
             Dim blnFullDisplay As Boolean = True
             If Request.QueryString("d") = "off" Then blnFullDisplay = False
@@ -35,6 +38,7 @@ Partial Class Callback
             'Callback Step 0 - normal callback
             'Callback Step 1 - update order but don't display full HTML if d=off QS is passed, write gateway dll output to screen
             'Callback Step 2 - don't update order, just display result as usual
+            'Callback Step 3 - don't update order, write gateway dll output to screen
             Dim intCallbackStep As Integer
             Try
                 intCallbackStep = CInt(Request.QueryString("step"))
@@ -105,14 +109,43 @@ Partial Class Callback
                     strReferrerURL = Request.ServerVariables("HTTP_REFERER")
                 End Try
 
-                'Process the callback and append to the result
                 strResult = clsPlugin.ProcessCallback(strResult, strReferrerURL)
+
+
+                If strGatewayName.ToLower = "easypaycreditcard" And Request.QueryString("a") = "notify" Then
+                    blnFullDisplay = False
+
+                    ' Get And parse XML file
+                    Dim XMLreader As XmlDocument = New XmlDocument()
+                    Try
+                        XMLreader.Load(New StringReader(strResult))
+                        Dim strQs As String = ""
+                        RemoveQueryStringParams("a")
+                        CreateQueryStringParams("a", "update")
+                        CreateQueryStringParams("ep_key", "1078")
+                        'CreateQueryStringParams("ep_key", XMLreader.SelectSingleNode("//getautomb_key/ep_key").InnerText)
+                        CreateQueryStringParams("ep_doc", XMLreader.SelectSingleNode("//getautomb_key/ep_doc").InnerText)
+
+                        '   Loop through incoming fields if URL with 
+                        For Each fldName In Request.QueryString
+                            If Not String.IsNullOrEmpty(strQs) Then strQs += ":-:"
+                            strQs += "QS_" & fldName & ":*:" & Request.QueryString(fldName)
+                        Next
+
+                        strUpdateResult = clsPlugin.ProcessCallback(strQs, strReferrerURL)
+                        multibancoData = strUpdateResult.Split("&")
+                    Catch ex As Exception
+                        Response.Write("<br>Error: <br>" + ex.Message)
+                    End Try
+
+                End If
 
                 '-----------------------------------------------------
                 'CALLBACK SUCCESSFUL
                 'Lookup order to being processing it
                 '-----------------------------------------------------
                 If clsPlugin.CallbackSuccessful Then
+
                     Dim O_ID As Integer = clsPlugin.CallbackOrderID
                     Dim tblOrder As DataTable = OrdersBLL.GetOrderByID(O_ID)
 
@@ -149,11 +182,11 @@ Partial Class Callback
                     '-----------------------------------------------------
                     If String.IsNullOrEmpty(strCallbackError) Then
 
-                        If Math.Round(clsPlugin.CallbackOrderAmount, 2) = Math.Round(O_TotalPriceGateway, 2) OrElse _
+                        If Math.Round(clsPlugin.CallbackOrderAmount, 2) = Math.Round(O_TotalPriceGateway, 2) OrElse
                             NeutralizeCurrencyValue(Math.Round(clsPlugin.CallbackOrderAmount, 2).ToString) = NeutralizeCurrencyValue(Math.Round(O_TotalPriceGateway, 2).ToString) OrElse
-                            intCallbackStep = 2 Then
+                            intCallbackStep = 2 OrElse intCallbackStep = 3 Then
 
-                            If intCallbackStep <> 2 Then
+                            If intCallbackStep <> 2 And intCallbackStep <> 3 Then
                                 Dim blnCheckInvoicedOnPayment As Boolean = GetKartConfig("frontend.orders.checkinvoicedonpayment") = "y"
                                 Dim blnCheckReceivedOnPayment As Boolean = GetKartConfig("frontend.orders.checkreceivedonpayment") = "y"
 
@@ -162,11 +195,27 @@ Partial Class Callback
                                 'Set invoiced and received checkboxes, depending on
                                 'config settings
                                 '-----------------------------------------------------
-                                Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True, _
-                                                                                          blnCheckInvoicedOnPayment, _
-                                                                                          blnCheckReceivedOnPayment, _
-                                                                                          GetGlobalResourceObject("Email", "EmailText_OrderTime") & " " & CkartrisDisplayFunctions.NowOffset, _
+                                Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True,
+                                                                                          blnCheckInvoicedOnPayment,
+                                                                                          blnCheckReceivedOnPayment,
+                                                                                          GetGlobalResourceObject("Email", "EmailText_OrderTime") & " " & CkartrisDisplayFunctions.NowOffset,
                                                                                           O_CouponCode, O_WLID, O_CustomerID, O_CurrencyIDGateway, clsPlugin.GatewayName, O_TotalPriceGateway)
+                                If clsPlugin.GatewayName.ToLower = "easypaycreditcard" And Request.QueryString("a") = "update" Then
+                                    Try
+                                        Dim notes As String = "Multibanco order with Entity: " & multibancoData(2).Split(":")(1) &
+                                                           " and Reference:" & multibancoData(3).Split(":")(1)
+                                        OrdersBLL._UpdateStatus(O_ID,
+                                                                True,
+                                                                True,
+                                                                tblOrder.Rows(0)("O_Shipped"),
+                                                                True,
+                                                                tblOrder.Rows(0)("O_Status"),
+                                                                notes,
+                                                                tblOrder.Rows(0)("O_Cancelled"))
+                                    Catch ex As Exception
+                                    End Try
+                                End If
+
 
                                 '-----------------------------------------------------
                                 'FORMAT CONFIRMATION EMAIL
@@ -190,8 +239,8 @@ Partial Class Callback
 
                                 If Not blnUseHTMLOrderEmail Then
                                     'Add in email header above that
-                                    strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderReceived") & vbCrLf & vbCrLf & _
-                                        GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf & _
+                                    strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderReceived") & vbCrLf & vbCrLf &
+                                        GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf &
                                         strCustomerEmailText
                                 Else
                                     strCustomerEmailText = strCustomerEmailText.Replace("[storeowneremailheader]", "")
@@ -214,7 +263,7 @@ Partial Class Callback
                                 '-----------------------------------------------------
                                 If KartSettingsManager.GetKartConfig("frontend.orders.emailmerchant") <> "n" Then
                                     If Not blnUseHTMLOrderEmail Then
-                                        strStoreEmailText = GetGlobalResourceObject("Email", "EmailText_StoreEmailHeader") & vbCrLf & vbCrLf & _
+                                        strStoreEmailText = GetGlobalResourceObject("Email", "EmailText_StoreEmailHeader") & vbCrLf & vbCrLf &
                                    GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf & strBodyText
                                     Else
                                         strStoreEmailText = strBodyText.Replace("[storeowneremailheader]", GetGlobalResourceObject("Email", "EmailText_StoreEmailHeader"))
@@ -252,28 +301,28 @@ Partial Class Callback
                             'gateways have some kind of defence against this,
                             'but it is a good check to make if we can get the
                             'amount back from the gateway.
-                            strCallbackError = "Callback Failure: " & vbCrLf & "Order ID: " & O_ID & "- Order Amount doesn't match. " & vbCrLf & _
-                                        "Order Value in DB: " & Math.Round(O_TotalPriceGateway, 2) & vbCrLf & _
-                                        "  Order Value from Gateway: " & Math.Round(clsPlugin.CallbackOrderAmount, 2) & vbCrLf & _
-                                        "Order Value in DB (neutralized): " & NeutralizeCurrencyValue(Math.Round(O_TotalPriceGateway, 2)) & vbCrLf & _
-                                        "  Order Value from Gateway (neutralized): " & NeutralizeCurrencyValue(Math.Round(clsPlugin.CallbackOrderAmount, 2)) & vbCrLf & _
+                            strCallbackError = "Callback Failure: " & vbCrLf & "Order ID: " & O_ID & "- Order Amount doesn't match. " & vbCrLf &
+                                        "Order Value in DB: " & Math.Round(O_TotalPriceGateway, 2) & vbCrLf &
+                                        "  Order Value from Gateway: " & Math.Round(clsPlugin.CallbackOrderAmount, 2) & vbCrLf &
+                                        "Order Value in DB (neutralized): " & NeutralizeCurrencyValue(Math.Round(O_TotalPriceGateway, 2)) & vbCrLf &
+                                        "  Order Value from Gateway (neutralized): " & NeutralizeCurrencyValue(Math.Round(clsPlugin.CallbackOrderAmount, 2)) & vbCrLf &
                                         "  Ref: " & clsPlugin.CallbackReferenceCode
                         End If
                     End If
                 Else
                     'Record error
-                    strCallbackError = "Callback Failure: " & strResult & vbCrLf & clsPlugin.CallbackMessage & _
+                    strCallbackError = "Callback Failure: " & strResult & vbCrLf & clsPlugin.CallbackMessage &
                                         vbCrLf & "FF: " & Request.Form.ToString & vbCrLf & "QS: " & Request.QueryString.ToString
                 End If
             Else
                 'No gateway name passed with callback, log error
-                strCallbackError = "Callback Failure: Gateway name not specified. " & _
+                strCallbackError = "Callback Failure: Gateway name not specified. " &
                                         vbCrLf & "FF: " & Request.Form.ToString & vbCrLf & "QS: " & Request.QueryString.ToString
             End If
 
 
             'If there was no error then...
-            If String.IsNullOrEmpty(strCallbackError) Then
+            If String.IsNullOrEmpty(strCallbackError) Or strGatewayName.ToLower = "easypaycreditcard" And Request.QueryString("a") = "notify" Then
                 If GetKartConfig("frontend.payment.debugmode.enabled") = "y" Then
                     '-----------------------------------------------------
                     'LOG THE CALLBACK
@@ -288,7 +337,7 @@ Partial Class Callback
                     'the querystring so you can figure out why these
                     'are not triggering the completion procedure.
                     '-----------------------------------------------------
-                    CkartrisFormatErrors.LogError("Successful Callback Log (frontend.payment.debugmode.enabled=y): " & clsPlugin.CallbackMessage & vbCrLf & "FF: " & _
+                    CkartrisFormatErrors.LogError("Successful Callback Log (frontend.payment.debugmode.enabled=y): " & clsPlugin.CallbackMessage & vbCrLf & "FF: " &
                                                   Request.Form.ToString & vbCrLf & "QS: " & Request.QueryString.ToString)
                 End If
 
@@ -397,7 +446,7 @@ Partial Class Callback
                     End If
                 Else
                     Response.Clear()
-                    If intCallbackStep = 1 Then
+                    If intCallbackStep = 1 Or intCallbackStep = 3 Then
                         Response.Write(strResult)
                     Else
                         'First part of HTML template
@@ -472,6 +521,17 @@ Partial Class Callback
         Me.Request.QueryString.[Set](pname, pvalue)
         ' make collection readonly again
         isReadOnly.SetValue(Me.Request.QueryString, True, Nothing)
+    End Sub
+
+    Public Shared Sub Log(logMessage As String, w As TextWriter)
+
+        w.Write(vbCrLf + "Log Entry : ")
+        w.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(),
+            DateTime.Now.ToLongDateString())
+        w.WriteLine("  :")
+        w.WriteLine("  :{0}", logMessage)
+        w.WriteLine("-------------------------------")
+        w.Flush()
     End Sub
 
 End Class
