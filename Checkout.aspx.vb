@@ -877,7 +877,7 @@ Partial Class _Checkout
 
                 'Show Credit Card Input Usercontrol if payment gateway type is local
                 If LCase(clsPlugin.GatewayType) = "local" And
-                    Not (clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin") Then
+                    Not (clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin" Or clsPlugin.GatewayName.ToLower = "easypaymultibanco") Then
                     UC_CreditCardInput.AcceptsPaypal = clsPlugin.AcceptsPaypal
                     phdCreditCardInput.Visible = True
                 Else
@@ -927,7 +927,7 @@ Partial Class _Checkout
             'order) / offline payment method, where a
             'user can checkout without giving card
             'details and will pay offline.
-            If LCase(clsPlugin.GatewayType) <> "local" Or blnValid Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin" Then
+            If LCase(clsPlugin.GatewayType) <> "local" Or blnValid Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin" Or clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
 
                 'Setup variables to use later
                 Dim C_ID As Integer = 0
@@ -1056,7 +1056,7 @@ Partial Class _Checkout
                 'Order totals
                 If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
                     sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & vbCrLf)
-                    sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
+                    sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) &
                          IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & vbCrLf)
                 End If
                 sbdBodyText.Append(" " & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
@@ -1070,7 +1070,7 @@ Partial Class _Checkout
                     sbdHTMLOrderContents.Append("<tr class=""row_totals""><td colspan=""2"">")
                     If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
                         sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & "<br/>")
-                        sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
+                        sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) &
                              IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & "<br/>")
                     End If
                     sbdHTMLOrderContents.Append("(" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
@@ -1137,8 +1137,8 @@ Partial Class _Checkout
                     sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_PurchaseContactDetails") & vbCrLf)
 
                     If Not _blnAnonymousCheckout Then
-                        sbdBodyText.Append(" " & GetGlobalResourceObject("Address", "FormLabel_CardHolderName") & ": " & .FullName & vbCrLf & _
-                                             " " & GetGlobalResourceObject("Email", "EmailText_Company") & ": " & .Company & vbCrLf & _
+                        sbdBodyText.Append(" " & GetGlobalResourceObject("Address", "FormLabel_CardHolderName") & ": " & .FullName & vbCrLf &
+                                             " " & GetGlobalResourceObject("Email", "EmailText_Company") & ": " & .Company & vbCrLf &
                                              IIf(Not String.IsNullOrEmpty(txtEUVAT.Text), " " & GetGlobalResourceObject("Invoice", "FormLabel_CardholderEUVatNum") & ": " & txtEUVAT.Text & vbCrLf, ""))
                     End If
 
@@ -1151,10 +1151,10 @@ Partial Class _Checkout
                     sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_Address") & ":" & vbCrLf)
 
                     If Not _blnAnonymousCheckout Then
-                        sbdBodyText.Append(" " & .StreetAddress & vbCrLf & _
-                            " " & .TownCity & vbCrLf & _
-                            " " & .County & vbCrLf & _
-                            " " & .Postcode & vbCrLf & _
+                        sbdBodyText.Append(" " & .StreetAddress & vbCrLf &
+                            " " & .TownCity & vbCrLf &
+                            " " & .County & vbCrLf &
+                            " " & .Postcode & vbCrLf &
                             " " & .Country.Name)
                     Else
                         sbdBodyText.Append(GetGlobalResourceObject("Kartris", "ContentText_NotApplicable"))
@@ -1221,9 +1221,9 @@ Partial Class _Checkout
                 If Not blnBasketAllDigital Then
                     If chkSameShippingAsBilling.Checked Then
                         With UC_BillingAddress.SelectedAddress
-                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf & _
-                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf & _
-                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf & _
+                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf &
+                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf &
+                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf &
                                           " " & .Country.Name & vbCrLf & vbCrLf
                             sbdHTMLOrderEmail.Replace("[shippingname]", Server.HtmlEncode(.FullName))
                             sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", Server.HtmlEncode(.StreetAddress))
@@ -1241,9 +1241,9 @@ Partial Class _Checkout
                         End With
                     Else
                         With UC_ShippingAddress.SelectedAddress
-                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf & _
-                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf & _
-                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf & _
+                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf &
+                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf &
+                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf &
                                           " " & .Country.Name & vbCrLf & vbCrLf
                             sbdHTMLOrderEmail.Replace("[shippingname]", Server.HtmlEncode(.FullName))
                             sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", Server.HtmlEncode(.StreetAddress))
@@ -1330,9 +1330,9 @@ Partial Class _Checkout
                     Dim BasketItem As New BasketItem
                     'final check if basket items are still there
                     If arrBasketItems.Count = 0 Then
-                        CkartrisFormatErrors.LogError("Basket items were lost in the middle of Checkout! Customer redirected to main Basket page." & vbCrLf & _
-                                                      "Details: " & vbCrLf & "C_ID:" & IIf(User.Identity.IsAuthenticated, CurrentLoggedUser.ID, " New User") & vbCrLf & _
-                                                        "Payment Gateway: " & clsPlugin.GatewayName & vbCrLf & _
+                        CkartrisFormatErrors.LogError("Basket items were lost in the middle of Checkout! Customer redirected to main Basket page." & vbCrLf &
+                                                      "Details: " & vbCrLf & "C_ID:" & IIf(User.Identity.IsAuthenticated, CurrentLoggedUser.ID, " New User") & vbCrLf &
+                                                        "Payment Gateway: " & clsPlugin.GatewayName & vbCrLf &
                                                         "Generated Body Text: " & sbdBodyText.ToString)
                         Response.Redirect("~/Basket.aspx")
                     End If
@@ -1344,8 +1344,8 @@ Partial Class _Checkout
                             Dim sbdOptionText As New StringBuilder("")
                             If Not String.IsNullOrEmpty(.OptionText) Then sbdOptionText.Append(vbCrLf & " " & .OptionText().Replace("<br>", vbCrLf & " ").Replace("<br />", vbCrLf & " "))
 
-                            sbdBasketItems.AppendLine( _
-                                        GetItemEmailText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ")" & _
+                            sbdBasketItems.AppendLine(
+                                        GetItemEmailText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ")" &
                                                          sbdOptionText.ToString, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
 
 
@@ -1356,7 +1356,7 @@ Partial Class _Checkout
                             End If
                             If blnUseHTMLOrderEmail Then
                                 'this line builds up the individual rows of the order contents table in the HTML email
-                                sbdHTMLOrderBasket.AppendLine(GetHTMLEmailRowText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ") " & _
+                                sbdHTMLOrderBasket.AppendLine(GetHTMLEmailRowText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ") " &
                                                          sbdOptionText.ToString & strCustomText, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
                             End If
                         End With
@@ -1366,8 +1366,8 @@ Partial Class _Checkout
                 sbdBodyText.Insert(0, sbdBasketItems.ToString)
                 If blnUseHTMLOrderEmail Then
                     'build up the table and the header tags, insert basket contents
-                    sbdHTMLOrderContents.Insert(0, "<table id=""orderitems""><thead><tr>" & vbCrLf & _
-                                                "<th class=""col1"">" & GetGlobalResourceObject("Kartris", "ContentText_Item") & "</th>" & vbCrLf & _
+                    sbdHTMLOrderContents.Insert(0, "<table id=""orderitems""><thead><tr>" & vbCrLf &
+                                                "<th class=""col1"">" & GetGlobalResourceObject("Kartris", "ContentText_Item") & "</th>" & vbCrLf &
                                                 "<th class=""col2"">" & GetGlobalResourceObject("Kartris", "ContentText_Price") & "</th></thead><tbody>" & vbCrLf &
                                                 sbdHTMLOrderBasket.ToString)
                     'finally close the order contents HTML table
@@ -1379,8 +1379,8 @@ Partial Class _Checkout
                 'check if shippingdestinationid is initialized, if not then reload checkout page
                 If Not blnBasketAllDigital Then
                     If UC_BasketSummary.ShippingDestinationID = 0 Or UC_BasketView.ShippingDestinationID = 0 Then
-                        CkartrisFormatErrors.LogError("Basket was reset. Shipping info lost." & vbCrLf & "BasketView Shipping Destination ID: " & _
-                                                      UC_BasketView.ShippingDestinationID & vbCrLf & "BasketSummary Shipping Destination ID: " & _
+                        CkartrisFormatErrors.LogError("Basket was reset. Shipping info lost." & vbCrLf & "BasketView Shipping Destination ID: " &
+                                                      UC_BasketView.ShippingDestinationID & vbCrLf & "BasketSummary Shipping Destination ID: " &
                                                       UC_BasketSummary.ShippingDestinationID)
                         Response.Redirect("~/Checkout.aspx")
                     End If
@@ -1388,10 +1388,10 @@ Partial Class _Checkout
 
 
                 'Create the order record
-                O_ID = OrdersBLL.Add(C_ID, UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword, UC_BillingAddress.SelectedAddress, _
-                                     UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket, _
-                                      arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID, _
-                                     intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice, _
+                O_ID = OrdersBLL.Add(C_ID, UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword, UC_BillingAddress.SelectedAddress,
+                                     UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket,
+                                      arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID,
+                                     intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice,
                                      IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtPurchaseOrderNo.Text, Trim(txtComments.Text))
 
                 'Order Creation successful
@@ -1568,14 +1568,18 @@ Partial Class _Checkout
                         '---------------------------------------
                         Dim blnResult As Boolean
                         Dim strBitcoinPaymentAddress As String = ""
+                        Dim strEasypayPayment As String = ""
 
-
-                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" OrElse clsPlugin.GatewayName.ToLower = "bitcoin" Then
+                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" OrElse clsPlugin.GatewayName.ToLower = "bitcoin" OrElse clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
                             'PO orders don't need authorizing, they are
                             'effectively successful if placed as payment
                             'will come later
                             If clsPlugin.GatewayName.ToLower = "bitcoin" Then
                                 strBitcoinPaymentAddress = clsPlugin.ProcessOrder(Payment.Serialize(objOrder))
+                            ElseIf clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
+                                strEasypayPayment = clsPlugin.ProcessOrder(Payment.Serialize(objOrder))
+                                BasketBLL.DeleteBasket()
+                                Session("Basket") = Nothing
                             End If
 
                             blnResult = True
@@ -1604,8 +1608,8 @@ Partial Class _Checkout
                         '---------------------------------------
                         If blnResult Then
                             'The transaction was authorized so update the order
-                            If clsPlugin.CallbackSuccessful Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
-                                If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
+                            If clsPlugin.CallbackSuccessful Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
+                                If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
                                     O_ID = objOrder.ID
                                 Else
                                     'Get order ID that was passed back
@@ -1687,6 +1691,7 @@ Partial Class _Checkout
                                         '---------------------------------------
                                         Dim blnCheckInvoicedOnPayment As Boolean = KartSettingsManager.GetKartConfig("frontend.orders.checkinvoicedonpayment") = "y"
                                         Dim blnCheckReceivedOnPayment As Boolean = KartSettingsManager.GetKartConfig("frontend.orders.checkreceivedonpayment") = "y"
+                                        Dim blnCheckSent As Boolean = True
 
                                         '---------------------------------------
                                         'SET ORDER TIME
@@ -1695,18 +1700,22 @@ Partial Class _Checkout
                                         'not in your time zone
                                         '---------------------------------------
                                         Dim strOrderTimeText As String = GetGlobalResourceObject("Email", "EmailText_OrderTime") & " " & CkartrisDisplayFunctions.NowOffset
-                                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin" Then
+                                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin" Or clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
                                             blnCheckReceivedOnPayment = False
                                             blnCheckInvoicedOnPayment = False
+                                        End If
+
+                                        If clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
+                                            blnCheckSent = False
                                         End If
 
                                         '---------------------------------------
                                         'UPDATE THE ORDER RECORD
                                         '---------------------------------------
-                                        Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True, _
-                                                                                                  blnCheckInvoicedOnPayment, _
-                                                                                                  blnCheckReceivedOnPayment, _
-                                                                                                  strOrderTimeText, _
+                                        Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, blnCheckSent,
+                                                                                                  blnCheckInvoicedOnPayment,
+                                                                                                  blnCheckReceivedOnPayment,
+                                                                                                  strOrderTimeText,
                                                                                                   O_CouponCode, O_WishListID, 0, 0, "", 0)
                                         'If intUpdateResult = O_ID Then
                                         Dim strCustomerEmailText As String = ""
@@ -1728,8 +1737,8 @@ Partial Class _Checkout
 
                                         'Add in email header above that
                                         If Not blnUseHTMLOrderEmail Then
-                                            strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderReceived") & vbCrLf & vbCrLf & _
-                                                            GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf & _
+                                            strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderReceived") & vbCrLf & vbCrLf &
+                                                            GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf &
                                                             strCustomerEmailText
                                         Else
                                             strCustomerEmailText = strCustomerEmailText.Replace("[storeowneremailheader]", "")
@@ -1761,19 +1770,28 @@ Partial Class _Checkout
                                     End If
                                 End If
 
-                                '---------------------------------------
-                                'ORDER UPDATED
-                                'Clear object, transfer to the 
-                                'CheckoutComplete.aspx page
-                                '---------------------------------------
-                                'Dim BasketObject As Kartris.Basket = New Kartris.Basket
-                                BasketBLL.DeleteBasket()
-                                Session("Basket") = Nothing
-                                Session("OrderDetails") = strCallBodyText
-                                Session("OrderID") = O_ID
-                                Session("_NewPassword") = Nothing
-                                Session("objOrder") = Nothing
-                                Server.Transfer("CheckoutComplete.aspx")
+                                If clsPlugin.GatewayName.ToLower <> "easypaymultibanco" Then
+
+                                    '---------------------------------------
+                                    'ORDER UPDATED
+                                    'Clear object, transfer to the 
+                                    'CheckoutComplete.aspx page
+                                    '---------------------------------------
+                                    'Dim BasketObject As Kartris.Basket = New Kartris.Basket
+                                    BasketBLL.DeleteBasket()
+                                    Session("Basket") = Nothing
+                                    Session("OrderDetails") = strCallBodyText
+                                    Session("OrderID") = O_ID
+                                    Session("_NewPassword") = Nothing
+                                    Session("objOrder") = Nothing
+                                    Server.Transfer("CheckoutComplete.aspx")
+                                Else
+                                    Session("GateWayName") = clsPlugin.GatewayName
+                                    Session("_PostBackURL") = ""
+                                    Session("EasypayPayment") = strEasypayPayment
+                                    Server.Transfer("VisaDetail.aspx?g=easypay&a=mbrefer")
+
+                                End If
                             Else
                                 '---------------------------------------
                                 'REDIRECT TO PAYPAL OR 3D-SECURE
@@ -1822,7 +1840,7 @@ Partial Class _Checkout
             End If
 
 
-            End If
+        End If
 
     End Sub
 
