@@ -22,16 +22,23 @@ Partial Class Order_Invoice
 
         Page.Title = GetGlobalResourceObject("_Invoice", "PageTitle_Invoice") & " | " & GetGlobalResourceObject("_Kartris", "ContentText_KartrisName")
 
-        Dim numOrderID, numCustomerID As Integer
+        Dim numOrderIDQS, numCustomerIDQS As String()
+        Dim dataSource As New ArrayList()
+        Dim dataSourceTbl As DataTable = New DataTable
+        dataSourceTbl.Columns.Add("OrderID", GetType(Integer))
+        dataSourceTbl.Columns.Add("CustomerID", GetType(Integer))
 
         Authenticate()
 
-        numOrderID = Request.QueryString("OrderID")
-        numCustomerID = Request.QueryString("CustomerID")
+        numOrderIDQS = Request.QueryString("OrderID").Split("-")
+        numCustomerIDQS = Request.QueryString("CustomerID").Split("-")
 
-        UC_Invoice.CustomerID = numCustomerID
-        UC_Invoice.OrderID = numOrderID
-        UC_Invoice.FrontOrBack = "back" 'tell user control is on back end
+        For x As Integer = 0 To numOrderIDQS.Length - 1
+            dataSourceTbl.Rows.Add(Convert.ToInt32(numOrderIDQS(x)), Convert.ToInt32(numCustomerIDQS(x)))
+        Next
+
+        rptCompleteInvoice.DataSource = dataSourceTbl
+        rptCompleteInvoice.DataBind()
 
     End Sub
 
@@ -116,6 +123,19 @@ Partial Class Order_Invoice
                 Response.End()
             End If
         End If
+    End Sub
+
+    Protected Sub rptCompleteInvoice_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptCompleteInvoice.ItemDataBound
+        Dim orderId, customerId As Integer
+
+        orderId = e.Item.DataItem("OrderID")
+        customerId = e.Item.DataItem("CustomerID")
+        Dim ucInvoice As UserControls_General_Invoice = e.Item.FindControl("UC_Invoice")
+
+        ucInvoice.OrderID = orderId
+        ucInvoice.CustomerID = customerId
+        ucInvoice.FrontOrBack = "back" 'tell user control is on back end
+
     End Sub
 
     Protected Sub Page_Error(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Error
