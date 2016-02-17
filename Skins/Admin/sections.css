@@ -572,6 +572,9 @@ SECTION: DBADMIN: EXECUTE QUERY
 #section_executequery pre               { background-color: #fff; border: none; white-space: pre-wrap; font-size: 100%; padding: 5px; margin: 0 0 5px 0; overflow: hidden; width: 99%; color: #080; }
 #section_executequery h2                { border: none }
 #section_executequery table input       { width: auto; border: none; background-color: Transparent; }
+#section_executequery table             { border-top: solid 1px #666; border-left: solid 1px #666; background-color: #eee; }
+#section_executequery table tr th       { border-bottom: solid 1px #666; border-right: solid 1px #666; background-color: #ddd; font-weight: bold; font-size: 11px; padding: 2px 5px; }
+#section_executequery table tr td       { border-bottom: solid 1px #aaa; border-right: solid 1px #666; font-weight: normal; font-size: 11px; padding: 2px 5px; }
 /* 
 ========================================================================
 SECTION: ITEM INDICATOR
