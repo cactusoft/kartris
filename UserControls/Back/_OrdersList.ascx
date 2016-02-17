@@ -57,7 +57,7 @@
                         <asp:HiddenField runat="server" ID="hidOrderLanguageID" Value='<%#Eval("O_LanguageID")%>' />
                         <asp:HiddenField runat="server" ID="hidOrderCustomerID" Value='<%#Eval("O_CustomerID")%>' />
                         <div>
-                            <a class="linkbutton icon_orders" target="_blank" href="_OrderInvoice.aspx?OrderID=<%#Eval("O_ID") %>&CustomerID=<%#Eval("O_CustomerID") %>">
+                            <asp:CheckBox ID="chkSelectToInvoiceOrder" runat="server"/><a class="linkbutton icon_orders" target="_blank" href="_OrderInvoice.aspx?OrderID=<%#Eval("O_ID") %>&CustomerID=<%#Eval("O_CustomerID") %>">
                                 <asp:Literal ID="litClickOrderInvoice" runat="server" Text="<%$Resources: _Orders, ContentText_IssueInvoice%>"></asp:Literal></a>
                         </div>
                         <span class="checkbox">
@@ -102,6 +102,8 @@
         </span>
         <div class="submitbuttons">
             <asp:Button ID="btnUpdate" runat="server" Text="<%$ Resources:_Kartris, FormButton_Update %>"
+                CssClass="button" />
+            <asp:Button ID="btnGetInvoice" runat="server" Text="Get Invoices"
                 CssClass="button" />
         </div>
     </asp:PlaceHolder>

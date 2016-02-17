@@ -69,7 +69,6 @@ Partial Class UserControls_General_Invoice
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         Dim tblInvoice As Data.DataTable
-        'Dim numOrderID, numCustomerID As Integer
         Dim strPONumber As String = "", strVatNumber As String = ""
         Dim datInvoiceDate As DateTime
         Dim strDefaultAddress, strBillingAddress, strShippingAddress As String
