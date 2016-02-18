@@ -7,7 +7,12 @@
 since the output is for the customer --%>
     <asp:Repeater ID="rptCompleteInvoice" runat="server">
         <ItemTemplate>
+            <%-- Header --%>
+            <asp:Literal ID="litInvoiceHeader" runat="server" Text='<%$ Resources: Invoice, ContentText_InvoiceHeader %>' />
             <user:Invoice ID="UC_Invoice" runat="server" />
+            <%-- Footer --%>
+            <asp:Literal ID="litInvoiceFooter" runat="server" Text='<%$ Resources: Invoice, ContentText_InvoiceFooter %>' />
+            <div class="pagebreak"></div>
         </ItemTemplate>
     </asp:Repeater>
 </asp:Content>

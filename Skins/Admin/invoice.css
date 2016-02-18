@@ -37,5 +37,5 @@ table th            { padding: 5px 0 5px 0; border-top: solid 1px black; border-
 .bold               { font-weight: bold }
 
 @media print {
-    footer {page-break-after: always;}
+    .pagebreak {page-break-after: always;}
 }
