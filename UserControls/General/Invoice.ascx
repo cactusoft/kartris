@@ -361,7 +361,5 @@
                 <tbody></table>
             </FooterTemplate>
         </asp:Repeater>
-
     </div>
-    <footer></footer>
 </div>
