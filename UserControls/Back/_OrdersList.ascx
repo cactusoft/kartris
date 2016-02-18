@@ -25,6 +25,7 @@
     </asp:PlaceHolder>
     <div>
         <_user:DispatchLabels ID="DispatchLabels" runat="server" Visible="false" />
+        <asp:Button ID="btnGetAllOrderInvoices" runat="server" Text="Get All Order's Invoices" />
     </div>
     <asp:GridView CssClass="kartristable" ID="gvwOrders" runat="server" AutoGenerateColumns="False"
         DataKeyNames="O_ID" GridLines="None" EnableViewState="true">

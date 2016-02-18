@@ -396,8 +396,25 @@ Partial Class UserControls_Back_OrdersList
 
         linkStr = String.Format("_OrderInvoice.aspx?OrderID={0}&CustomerID={1}", orderIdQS.Substring(0, orderIdQS.Length - 1), customerIdQS.Substring(0, customerIdQS.Length - 1))
         Response.Redirect(linkStr)
+    End Sub
 
+    Protected Sub btnGetAllOrderInvoices_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnGetAllOrderInvoices.Click
+        tblOriginal = DirectCast(ViewState("originalValuesDataTable"), DataTable)
+        Dim linkStr As String = ""
+        Dim orderIdQS As String = ""
+        Dim customerIdQS As String = ""
+        Dim currentID As Integer
+        Dim rowOrders As DataRow
+        Dim chkOrderToInvoice As CheckBox
+        For Each r As GridViewRow In gvwOrders.Rows
+            currentID = Convert.ToInt32(gvwOrders.DataKeys(r.RowIndex).Value)
+            rowOrders = tblOriginal.Select(String.Format("O_ID = {0}", currentID))(0)
+            orderIdQS += rowOrders("O_ID") & "-"
+            customerIdQS += rowOrders("O_CustomerID") & "-"
+        Next
 
+        linkStr = String.Format("_OrderInvoice.aspx?OrderID={0}&CustomerID={1}", orderIdQS.Substring(0, orderIdQS.Length - 1), customerIdQS.Substring(0, customerIdQS.Length - 1))
+        Response.Redirect(linkStr)
     End Sub
 
     Protected Function IsRowModified(ByVal r As GridViewRow) As Boolean
