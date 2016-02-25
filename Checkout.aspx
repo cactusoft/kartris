@@ -303,6 +303,17 @@
                 frontend.checkout.termsandconditions
                 ===============================
                 -->
+                <script type="text/javascript">
+                <!--
+                function toggle_visibility(id) {
+                    var e = document.getElementById(id);
+                    if (e.style.display == 'block')
+                        e.style.display = 'none';
+                    else
+                        e.style.display = 'block';
+                }
+                //-->
+                </script>
                 <asp:PlaceHolder ID="phdTermsAndConditions" runat="server">
                     <div class="section">
                         <h2>
