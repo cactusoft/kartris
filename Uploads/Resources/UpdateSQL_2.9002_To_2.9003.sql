@@ -144,7 +144,7 @@ New test email address functionality. When email method is set
 to TEST, all email will be sent to the email address set in
 general.email.testaddress
 ******/
-UPDATE [dbo].[tblKartrisConfig] SET [CFG_DisplayType]='on|off|write|test' WHERE [CFG_Name]='general.email.method'
+UPDATE [dbo].[tblKartrisConfig] SET [CFG_DisplayInfo]='on|off|write|test' WHERE [CFG_Name]='general.email.method'
 GO
 
 /* Fix and improve options /combinations */
@@ -235,7 +235,7 @@ GO
 Now have more language menu options. In addition to dropdown and image (flags) can
 also have short or full culture (for example, EN or en-GB, respectively)
 ******/
-UPDATE [dbo].[tblKartrisConfig] SET [CFG_DisplayType]='dropdown|image|linkshort|linkfull' WHERE [CFG_Name]='frontend.languages.display'
+UPDATE [dbo].[tblKartrisConfig] SET [CFG_DisplayInfo]='dropdown|image|linkshort|linkfull' WHERE [CFG_Name]='frontend.languages.display'
 GO
 
 /****** Set this to tell Data tool which version of db we have ******/
