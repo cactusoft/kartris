@@ -859,7 +859,7 @@ BEGIN
 	--================ PRODUCTS/CATEGORIES ==================
 	IF @searchLocation = ''''products'''' OR @searchLocation = ''''categories''''
 	BEGIN
-			CREATE TABLE #_ProdCatSearchTbl(ItemID nvarchar(255), ItemValue nvarchar(MAX))
+			CREATE TABLE #_ProdCatSearchTbl(ItemID nvarchar(255) COLLATE DATABASE_DEFAULT, ItemValue nvarchar(MAX) COLLATE DATABASE_DEFAULT)
 			WHILE @SIndx <= LEN(@keyWordsList)
 			BEGIN
 				
@@ -884,7 +884,7 @@ BEGIN
 	--================ VERSIONS ==================
 	IF @searchLocation = ''''versions''''
 	BEGIN
-		CREATE TABLE #_VersionSearchTbl(VersionID nvarchar(255), VersionName nvarchar(MAX), VersionCode nvarchar(25), ProductID nvarchar(255))
+		CREATE TABLE #_VersionSearchTbl(VersionID nvarchar(255) COLLATE DATABASE_DEFAULT, VersionName nvarchar(MAX) COLLATE DATABASE_DEFAULT, VersionCode nvarchar(25) COLLATE DATABASE_DEFAULT, ProductID nvarchar(255) COLLATE DATABASE_DEFAULT)
 		WHILE @SIndx <= LEN(@keyWordsList)
 		BEGIN
 			
@@ -919,7 +919,7 @@ BEGIN
 	IF @searchLocation = ''''customers''''
 	BEGIN
 			
-			CREATE TABLE #_CustomerSearchTbl(CustomerID nvarchar(255), CustomerName nvarchar(50), CustomerEmail nvarchar(100))
+			CREATE TABLE #_CustomerSearchTbl(CustomerID nvarchar(255) COLLATE DATABASE_DEFAULT, CustomerName nvarchar(50) COLLATE DATABASE_DEFAULT, CustomerEmail nvarchar(100) COLLATE DATABASE_DEFAULT)
 			WHILE @SIndx <= LEN(@keyWordsList)
 			BEGIN
 				
@@ -948,7 +948,7 @@ BEGIN
 		--================ ORDERS ==================
 		IF @searchLocation = ''''orders''''
 		BEGIN
-			CREATE TABLE #_OrdersSearchTbl(OrderID int, PurchaseOrderNumber nvarchar(50))
+			CREATE TABLE #_OrdersSearchTbl(OrderID int, PurchaseOrderNumber nvarchar(50) COLLATE DATABASE_DEFAULT)
 			WHILE @SIndx <= LEN(@keyWordsList)
 			BEGIN
 				
@@ -986,7 +986,7 @@ BEGIN
 	IF @searchLocation = ''''config''''
 	BEGIN
 			
-		CREATE TABLE #_ConfigSearchTbl(ConfigName nvarchar(100), ConfigValue nvarchar(255))
+		CREATE TABLE #_ConfigSearchTbl(ConfigName nvarchar(100) COLLATE DATABASE_DEFAULT, ConfigValue nvarchar(255) COLLATE DATABASE_DEFAULT)
 		WHILE @SIndx <= LEN(@keyWordsList)
 		BEGIN
 			
@@ -1014,7 +1014,7 @@ BEGIN
 	IF @searchLocation = ''''site''''
 	BEGIN
 			
-		CREATE TABLE #_LSSearchTbl(LSFB char(1), LSLang tinyint, LSName nvarchar(255), LSValue nvarchar(MAX), LSClass nvarchar(50))
+		CREATE TABLE #_LSSearchTbl(LSFB char(1) COLLATE DATABASE_DEFAULT, LSLang tinyint, LSName nvarchar(255) COLLATE DATABASE_DEFAULT, LSValue nvarchar(MAX) COLLATE DATABASE_DEFAULT, LSClass nvarchar(50) COLLATE DATABASE_DEFAULT)
 		WHILE @SIndx <= LEN(@keyWordsList)
 		BEGIN
 			
@@ -1044,7 +1044,7 @@ BEGIN
 	--============== Custom Pages =======================
 	IF @searchLocation = ''''pages''''
 	BEGIN
-		CREATE TABLE #_CustomPagesSearchTbl(PageID smallint, PageName nvarchar(50))
+		CREATE TABLE #_CustomPagesSearchTbl(PageID smallint, PageName nvarchar(50) COLLATE DATABASE_DEFAULT)
 		WHILE @SIndx <= LEN(@keyWordsList)
 		BEGIN
 			
