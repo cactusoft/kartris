@@ -497,7 +497,7 @@ Partial Class ProductVersions
 
                 Case "litResultedCalculatedTax_Rows"
                     Dim numPrice As Single = CDbl(CType(e.Item.FindControl("litCalculatedTax_Rows"), Literal).Text)
-                    CType(e.Item.FindControl("litResultedCalculatedTax_Rows"), Literal).Text = _
+                    CType(e.Item.FindControl("litResultedCalculatedTax_Rows"), Literal).Text =
                       CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
 
                 Case "litResultedIncTax_Rows"
@@ -564,12 +564,12 @@ Partial Class ProductVersions
 
                     ''Set the extax price (alongside inctax)
                     Dim numExTax1 As Single = CDbl(CType(fvwPrice.FindControl("litCalculatedTax_Rows"), Literal).Text)
-                    CType(fvwPrice.FindControl("litResultedCalculatedTax_Rows"), Literal).Text = _
+                    CType(fvwPrice.FindControl("litResultedCalculatedTax_Rows"), Literal).Text =
                      CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numExTax1)
 
                     ''Set the inctax price
                     Dim numIncTax As Single = CDbl(CType(fvwPrice.FindControl("litIncTax_Rows"), Literal).Text)
-                    CType(fvwPrice.FindControl("litResultedIncTax_Rows"), Literal).Text = _
+                    CType(fvwPrice.FindControl("litResultedIncTax_Rows"), Literal).Text =
                      CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numIncTax)
 
                 Else
@@ -578,11 +578,11 @@ Partial Class ProductVersions
 
                     ''Set the extax price (alongside tax rate)
                     Dim numExTax2 As Single = CDbl(CType(fvwPrice.FindControl("litExTax_Rows"), Literal).Text)
-                    CType(fvwPrice.FindControl("litResultedExTax_Rows"), Literal).Text = _
+                    CType(fvwPrice.FindControl("litResultedExTax_Rows"), Literal).Text =
                      CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numExTax2)
 
                     ''Set the tax rate %
-                    CType(fvwPrice.FindControl("litResultedTaxRate_Rows"), Literal).Text = _
+                    CType(fvwPrice.FindControl("litResultedTaxRate_Rows"), Literal).Text =
                      CDbl(CType(fvwPrice.FindControl("litTaxRate_Rows"), Literal).Text) & " %"
 
                 End If
@@ -593,11 +593,20 @@ Partial Class ProductVersions
 
                     ''Set the single price
                     Dim numPrice As Single = CDbl(CType(fvwPrice.FindControl("litPrice_Rows"), Literal).Text)
-                    CType(fvwPrice.FindControl("litResultedPrice_Rows"), Literal).Text = _
+                    CType(fvwPrice.FindControl("litResultedPrice_Rows"), Literal).Text =
                      CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
                 End If
 
             End If
+            ''Set the RRP
+            Try
+                Dim numRRP As Single = CDbl(CType(fvwPrice.FindControl("litRRP"), Literal).Text)
+                CType(fvwPrice.FindControl("litRRP"), Literal).Text =
+                 CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numRRP)
+            Catch ex As Exception
+
+            End Try
+
         Catch ex As Exception
 
         End Try

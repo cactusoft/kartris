@@ -237,6 +237,9 @@ VERSIONS
 .versions span.price,
 .versions span.extax,
 .versions span.inctax                   { display: block; padding: 0 0 10px 0; }
+.versions span.weight                   { font-weight: normal; color: #89a; width: 10%; white-space: nowrap; }
+.versions span.rrp                      { font-weight: normal; color: #f00; width: 10%; white-space: nowrap; text-decoration: line-through; }
+.versions span.rrp span.figure          { font-size: 130%; }
 .versions span.tax span.figure          { color: #090; float: left; font-weight: normal; font-size: 180%; padding: 0 10px 10px 0; }
 .versions span.price span.figure        { color: #090; font-weight: bold; font-size: 260%; padding: 0 10px 10px 0; }
 .versions span.extax span.figure        { color: #090; float: left; font-weight: normal; font-size: 180%; padding: 0 10px 10px 0; }
