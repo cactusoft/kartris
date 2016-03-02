@@ -24,8 +24,12 @@
         </div>
     </asp:PlaceHolder>
     <div>
+        <asp:PlaceHolder ID="phdPrintAllItems" Visible="true" runat="server">
+            <div class="submitbuttons topsubmitbuttons">
+                <asp:LinkButton ID="btnGetAllOrderInvoices" runat="server" Text="<%$Resources: _Orders, ContentText_PrintInvoices %>" CssClass="button printbutton" />
+            </div>
+        </asp:PlaceHolder>
         <_user:DispatchLabels ID="DispatchLabels" runat="server" Visible="false" />
-        <asp:Button ID="btnGetAllOrderInvoices" runat="server" Text="Get All Order's Invoices" />
     </div>
     <asp:GridView CssClass="kartristable" ID="gvwOrders" runat="server" AutoGenerateColumns="False"
         DataKeyNames="O_ID" GridLines="None" EnableViewState="true">
@@ -57,11 +61,12 @@
                         <asp:HiddenField runat="server" ID="hidOrderStatus" Value='<%#Eval("O_Status")%>' />
                         <asp:HiddenField runat="server" ID="hidOrderLanguageID" Value='<%#Eval("O_LanguageID")%>' />
                         <asp:HiddenField runat="server" ID="hidOrderCustomerID" Value='<%#Eval("O_CustomerID")%>' />
+                        <span class="checkbox">
                         <div>
                             <asp:CheckBox ID="chkSelectToInvoiceOrder" runat="server"/><a class="linkbutton icon_orders" target="_blank" href="_OrderInvoice.aspx?OrderID=<%#Eval("O_ID") %>&CustomerID=<%#Eval("O_CustomerID") %>">
                                 <asp:Literal ID="litClickOrderInvoice" runat="server" Text="<%$Resources: _Orders, ContentText_IssueInvoice%>"></asp:Literal></a>
                         </div>
-                        <span class="checkbox">
+
                             <div>
                                 <asp:CheckBox runat="server" ID="chkOrderInvoiced" Checked='<%#Bind("O_Invoiced")%>' />
                                 <asp:Label ID="lblOrderInvoiced" runat="server" Text="<%$Resources: _Orders, ContentText_OrderStatusInvoiced%>"
@@ -101,11 +106,12 @@
             <asp:CheckBox runat="server" ID="chkInformCustomers" /><asp:Label ID="lblInformCustomers"
                 runat="server" Text="<%$Resources: ContentText_InformCustomers%>" AssociatedControlID="chkInformCustomers" />
         </span>
-        <div class="submitbuttons">
-            <asp:Button ID="btnUpdate" runat="server" Text="<%$ Resources:_Kartris, FormButton_Update %>"
-                CssClass="button" />
-            <asp:Button ID="btnGetInvoice" runat="server" Text="Get Invoices"
-                CssClass="button" />
+        <div class="submitbuttons topsubmitbuttons">
+            <asp:LinkButton ID="btnUpdate" runat="server" Text="<%$ Resources:_Kartris, FormButton_Update %>"
+                CssClass="button savebutton" />
+            <asp:LinkButton ID="btnGetInvoice" runat="server" Text="<%$Resources: _Orders, ContentText_PrintInvoices %>"
+                CssClass="button printbutton" />
+
         </div>
     </asp:PlaceHolder>
     <asp:PlaceHolder ID="phdPurgeOrder" Visible="false" runat="server">

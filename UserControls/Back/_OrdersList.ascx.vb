@@ -201,9 +201,11 @@ Partial Class UserControls_Back_OrdersList
             If tblOrdersList.Rows.Count > 0 Then
                 litOLIndicates.Visible = False
                 phdBatchProcessButtons.Visible = True
+                phdPrintAllItems.Visible = False
             Else
                 litOLIndicates.Visible = True
                 phdBatchProcessButtons.Visible = False
+                phdPrintAllItems.Visible = False
             End If
         End If
 

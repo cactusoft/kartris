@@ -1,5 +1,5 @@
 <%@ Page Language="VB" MasterPageFile="~/Skins/Admin/Invoice.master" AutoEventWireup="false"
-    CodeFile="_OrderInvoice.aspx.vb" Inherits="Order_Invoice" %>
+    CodeFile="_OrderInvoice.aspx.vb" Inherits="_OrderInvoice" %>
 
 <%@ Register TagPrefix="user" TagName="Invoice" Src="~/UserControls/General/Invoice.ascx" %>
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
