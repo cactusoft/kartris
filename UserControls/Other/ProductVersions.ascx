@@ -19,6 +19,13 @@
                                         <asp:Literal ID="litWeight_Rows" runat="server" Text='<%# Eval("V_Weight") %>' EnableViewState="false" />
                                         <%= KartSettingsManager.GetKartConfig("general.weightunit") %></span></span>
                             </asp:Panel>
+                            <%-- RRP --%>
+                            <asp:Panel EnableViewState="false" ID="pnlRRP" runat="server" Visible='<%# KartSettingsManager.GetKartConfig("frontend.versions.display.showrrp") = "y" And Eval("V_RRP") > 0 %>'>
+                                <span class="rrp">
+                                    <asp:Literal EnableViewState="false" ID="litContentText_RRP" runat="server" Text="<%$ Resources: Versions, ContentText_RRP %>" />
+                                    <span class="figure">
+                                        <asp:Literal ID="litRRP" runat="server" Text='<%# Eval("V_RRP") %>' EnableViewState="false" /></span></span>
+                            </asp:Panel>
                             <div id="divTax" EnableViewState="false" runat="server" visible='<%# Iif( ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) = 1, False, True) %>'>
                                 <!-- ex tax / inc tax prices -->
                                 <asp:Panel EnableViewState="false" ID="pnlExIncTax" runat="server" Visible="false">
@@ -61,8 +68,7 @@
                                     <asp:Panel ID="pnlPrice" runat="server" Visible="false" EnableViewState="false">
                                         <div class="prices">
                                             <span class="price">
-                                                <%--<asp:Literal EnableViewState="false" ID="litLS_Price" runat="server" Text="<%$ Resources: Kartris, ContentText_Price %>" />
-                                                --%><span class="figure">
+                                                <span class="figure">
                                                     <asp:Literal ID="litPrice_Rows" runat="server" Text='<%# Eval("V_Price") %>' Visible="false" EnableViewState="false" />
                                                     <asp:Literal ID="litResultedPrice_Rows" runat="server" EnableViewState="false" /></span></span>
                                         </div>
