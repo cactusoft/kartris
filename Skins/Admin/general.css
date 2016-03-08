@@ -316,6 +316,9 @@ input.cancelbutton:hover                { background-color: #888; border-color: 
 .topsubmitbuttons input.cancelbutton,
 .topsubmitbuttons a.cancelbutton:visited,
 .topsubmitbuttons a.cancelbutton:link   { background-image: url(Images/button_cancel.png); }
+.topsubmitbuttons input.clonebutton,
+.topsubmitbuttons a.clonebutton:visited,
+.topsubmitbuttons a.clonebutton:link   { background-image: url(Images/button_clone.png); }
 .topsubmitbuttons input.exportbutton,
 .topsubmitbuttons a.exportbutton:visited,
 .topsubmitbuttons a.exportbutton:link   { background-image: url(Images/button_export.png); }

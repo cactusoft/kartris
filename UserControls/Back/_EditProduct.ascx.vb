@@ -68,6 +68,16 @@ Partial Class _EditProduct
             ReloadProduct()
         End If
         CheckProductType()
+
+        'Should we show the clone product button? Only if
+        'this is a single version product, or a multiple one
+        'that just has a single version.
+        If ddlProductType.SelectedValue = "s" Or (ddlProductType.SelectedValue = "m") Then
+            btnCloneProduct.Visible = True
+        Else
+            btnCloneProduct.Visible = False
+        End If
+
     End Sub
 
     Public Sub ReloadProduct()
@@ -255,10 +265,11 @@ Partial Class _EditProduct
     ''' <remarks></remarks>
     Protected Sub ddlProductType_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlProductType.SelectedIndexChanged
         CheckProductType()
-        updProductType.Update()
-        updVersionDisplayType.Update()
-        updSortVersions.Update()
-        updSortDirection.Update()
+        'updProductType.Update()
+        'updVersionDisplayType.Update()
+        'updSortVersions.Update()
+        'updSortDirection.Update()
+        updMain.Update()
     End Sub
 
     ''' <summary>
@@ -431,9 +442,9 @@ Partial Class _EditProduct
                 If rowLanguageContents.Length > 0 Then RaiseEvent ProductUpdated(CStr(rowLanguageContents(0)("_LE_Value")))
                 RaiseEvent ProductSaved()
             Case DML_OPERATION.INSERT
-                If Not ProductsBLL._AddProduct( _
-                                tblLanguageContents, sbdParentsList.ToString, intProductID, blnLive, numFeatured, _
-                                 strOrderVersionsBy, chrVersionsSortDirection, chrReviews, chrVersionDisplayType, numSupplier, chrType, numCustomerGroup, strMessage) Then
+                If Not ProductsBLL._AddProduct(
+                                tblLanguageContents, sbdParentsList.ToString, intProductID, blnLive, numFeatured,
+                                 strOrderVersionsBy, chrVersionsSortDirection, chrReviews, chrVersionDisplayType, numSupplier, chrType, numCustomerGroup, strMessage) > 0 Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     Exit Sub
                 End If
@@ -451,6 +462,24 @@ Partial Class _EditProduct
                 Else
                     Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intProductID)
                 End If
+            Case DML_OPERATION.CLONE
+                Dim intNewProductID As Integer = ProductsBLL._AddProduct(
+                                tblLanguageContents, sbdParentsList.ToString, 0, blnLive, numFeatured,
+                                 strOrderVersionsBy, chrVersionsSortDirection, chrReviews, chrVersionDisplayType, numSupplier, chrType, numCustomerGroup, strMessage)
+                If Not intNewProductID > 0 Then
+                    _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
+                    Exit Sub
+                End If
+                RefreshNewestProductsCache()
+
+                'Now we need to create the associated records, versions,
+                'related products, attribute values, etc.
+                If Not ProductsBLL._CloneProductRecords(intProductID, intNewProductID) Then
+                    _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, "Error cloning product linked records")
+                    Exit Sub
+                End If
+
+                Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intNewProductID & "&CategoryID=" & Request.QueryString("CategoryID") & "&strParent=" & Request.QueryString("strParent"))
         End Select
         RefreshFeaturedProductsCache()
 
@@ -514,5 +543,26 @@ Partial Class _EditProduct
         Else
             txtFeaturedLevel.Enabled = True
         End If
+    End Sub
+
+    ''' <summary>
+    ''' Clone product button clicked
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    ''' <remarks></remarks>
+    Protected Sub btnCloneProduct_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCloneProduct.Click
+        Dim strMessage As String = GetGlobalResourceObject("_Kartris", "FormButton_Clone") & ": <strong>" & ProductsBLL._GetNameByProductID(_GetProductID(), Session("_LANG")) & "</strong> ?"
+        _UC_PopupMsg_Clone.ShowConfirmation(MESSAGE_TYPE.Confirmation, strMessage)
+    End Sub
+
+    ''' <summary>
+    ''' if the clone is confirmed, "Yes" is chosen
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub _UC_PopupMsg_Clone_Confirmed() Handles _UC_PopupMsg_Clone.Confirmed
+        Dim strMessage As String = ""
+        'Clone product
+        SaveProduct(DML_OPERATION.CLONE)
     End Sub
 End Class
