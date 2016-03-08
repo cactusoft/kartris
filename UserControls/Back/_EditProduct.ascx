@@ -32,10 +32,10 @@
                             <asp:UpdatePanel ID="updProductCategories" runat="server" UpdateMode="Conditional">
                                 <ContentTemplate>
                                     <asp:ListBox ID="lbxProductCategories" runat="server"></asp:ListBox>
-                                    <asp:LinkButton ID="lnkBtnRemoveProductCategory" class="linkbutton icon_delete" runat="server"
+                                    <asp:LinkButton ID="lnkBtnRemoveProductCategory" Cssclass="linkbutton icon_delete" runat="server"
                                         Text='<%$ Resources:_Kartris, ContentText_RemoveSelected %>' /><br />
                                     <_user:AutoComplete ID="_UC_AutoComplete" runat="server" MethodName="GetCategories" />
-                                    <asp:LinkButton ID="lnkBtnAddCategory" class="linkbutton icon_new" runat="server"
+                                    <asp:LinkButton ID="lnkBtnAddCategory" Cssclass="linkbutton icon_new" runat="server"
                                         Text='<%$ Resources:_Kartris, FormButton_Add %>' /><br />
                                 </ContentTemplate>
                             </asp:UpdatePanel>
@@ -179,6 +179,8 @@
                     <ContentTemplate>
                         <asp:LinkButton ID="btnSave" runat="server" CssClass="button savebutton" Text='<%$ Resources: _Kartris, FormButton_Save %>'
                             ToolTip='<%$ Resources: _Kartris, FormButton_Save %>' />
+                        <asp:LinkButton ID="btnCloneProduct" runat="server" CssClass="button clonebutton" Text='<%$ Resources: _Kartris, FormButton_Clone %>'
+                            ToolTip='<%$ Resources: _Kartris, FormButton_Clone %>' />
                         <asp:LinkButton ID="btnCancel" runat="server" CssClass="button cancelbutton" Text='<%$ Resources: _Kartris, FormButton_Cancel %>'
                             ToolTip='<%$ Resources: _Kartris, FormButton_Cancel %>' />
                         <asp:HyperLink ID="hlinkPreview" runat="server" CssClass="button previewbutton"
@@ -194,6 +196,7 @@
             </div>
             <asp:ListBox ID="lbxResult" runat="server" Visible="False"></asp:ListBox>
             <_user:PopupMessage ID="_UC_PopupMsg" runat="server" />
+            <_user:PopupMessage ID="_UC_PopupMsg_Clone" runat="server" />
         </asp:PlaceHolder>
     </ContentTemplate>
 </asp:UpdatePanel>

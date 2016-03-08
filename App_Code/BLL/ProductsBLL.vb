@@ -357,11 +357,11 @@ Public Class ProductsBLL
         Return False
     End Function
 
-    Public Shared Function _AddProduct(ByVal ptblElements As DataTable, ByVal pParentsList As String, _
-                                    ByRef pProductID As Integer, ByVal pLive As Boolean, ByVal pFeatured As Byte, _
-                                    ByVal pOrderVersionsBy As String, ByVal pVersionsSortDirection As Char, _
-                                    ByVal pReviews As Char, ByVal pVersionDisplayType As Char, ByVal pSupplier As Integer, _
-                                    ByVal pProductType As Char, ByVal pCustomerGroupID As Integer, ByRef strMsg As String) As Boolean
+    Public Shared Function _AddProduct(ByVal ptblElements As DataTable, ByVal pParentsList As String,
+                                    ByRef pProductID As Integer, ByVal pLive As Boolean, ByVal pFeatured As Byte,
+                                    ByVal pOrderVersionsBy As String, ByVal pVersionsSortDirection As Char,
+                                    ByVal pReviews As Char, ByVal pVersionDisplayType As Char, ByVal pSupplier As Integer,
+                                    ByVal pProductType As Char, ByVal pCustomerGroupID As Integer, ByRef strMsg As String, Optional ByRef blnIsClone As Boolean = False) As Integer
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -391,15 +391,15 @@ Public Class ProductsBLL
                 ' 1. Add The Main Info.
                 cmd.ExecuteNonQuery()
 
-                If cmd.Parameters("@NewP_ID").Value Is Nothing OrElse _
+                If cmd.Parameters("@NewP_ID").Value Is Nothing OrElse
                     cmd.Parameters("@NewP_ID").Value Is DBNull.Value Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
                 pProductID = cmd.Parameters("@NewP_ID").Value
 
                 ' 2. Add the Language Elements
-                If Not LanguageElementsBLL._AddLanguageElements( _
-                        ptblElements, LANG_ELEM_TABLE_TYPE.Products, _
+                If Not LanguageElementsBLL._AddLanguageElements(
+                        ptblElements, LANG_ELEM_TABLE_TYPE.Products,
                         pProductID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
@@ -409,13 +409,52 @@ Public Class ProductsBLL
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
 
-                If pProductType = "s" Then
-                    If Not VersionsBLL._AddNewVersionAsSingle( _
+                ' 4. Add single version, only if single version type product
+                ' and not cloning (clones we will run a separate procedure
+                ' to create the version[s])
+                If pProductType = "s" And Not blnIsClone Then
+                    If Not VersionsBLL._AddNewVersionAsSingle(
                             _GetVersionElements(ptblElements), "SKU_" & CStr(pProductID), pProductID, pCustomerGroupID, sqlConn, savePoint, strMsg) Then
                         Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                     End If
                 End If
 
+                savePoint.Commit()
+                sqlConn.Close()
+                strMsg = GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully")
+
+                Return pProductID
+            Catch ex As Exception
+                ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod(), strMsg)
+                If Not savePoint Is Nothing Then savePoint.Rollback()
+            Finally
+                If sqlConn.State = ConnectionState.Open Then sqlConn.Close() : savePoint.Dispose()
+            End Try
+
+        End Using
+
+        Return -1
+    End Function
+
+    'Creates records such as version(s), related product links, attribute values
+    'etc. that are linked to a product
+    Public Shared Function _CloneProductRecords(ByVal pProductID_OLD As Integer, ByVal pProductID_NEW As Integer) As Boolean
+        Dim strMsg As String = ""
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Using sqlConn As New SqlConnection(strConnString)
+            Dim cmd As SqlCommand = sqlConn.CreateCommand
+            cmd.CommandText = "_spKartrisProducts_CloneRecords"
+
+            Dim savePoint As SqlTransaction = Nothing
+            cmd.CommandType = CommandType.StoredProcedure
+            Try
+
+                cmd.Parameters.AddWithValue("@P_ID_OLD", pProductID_OLD)
+                cmd.Parameters.AddWithValue("@P_ID_NEW", pProductID_NEW)
+                sqlConn.Open()
+                savePoint = sqlConn.BeginTransaction()
+                cmd.Transaction = savePoint
+                cmd.ExecuteNonQuery()
                 savePoint.Commit()
                 sqlConn.Close()
                 strMsg = GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully")
@@ -427,9 +466,7 @@ Public Class ProductsBLL
             Finally
                 If sqlConn.State = ConnectionState.Open Then sqlConn.Close() : savePoint.Dispose()
             End Try
-
         End Using
-
         Return False
     End Function
 
