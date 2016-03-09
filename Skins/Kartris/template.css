@@ -76,7 +76,7 @@ TEMPLATE HOVERMENU
 .hovermenu ul                   { margin: 0; padding: 0; }
 .hovermenu ul li                { list-style: none; float: none; clear: both; margin: 0 0 0 0; padding: 2px 0 0 0; }
 .hovermenu_holder:hover .hovermenu
-                                { min-height: 50px; box-shadow: 1px 1px 10px #333; width: 230px; background-color: #eee; border: solid 1px #777; display: block; z-index: 9; text-align: left; height: auto; position: absolute; padding: 10px 8px 8px 8px; margin: 35px 0 0 -9px; }     
+                                { min-height: 50px; box-shadow: 1px 1px 10px #333; width: 230px; background-color: #eee; border: solid 1px #777; display: block; z-index: 999; text-align: left; height: auto; position: absolute; padding: 10px 8px 8px 8px; margin: 35px 0 0 -9px; }     
 .hovermenu ul li a              { line-height: 1.1em; font-size: 100%; color: #000; padding: 3px 5px 3px 5px; margin: 0 0 1px 0; display: block; }
 .hovermenu ul li a:hover        { background-color: #000; color: #fff; }
 .hovermenu .button              { text-align: left; border-color: transparent; background-color: transparent; color: #000; font-size: 90%; width: 100%; text-transform: uppercase; font-weight: normal; letter-spacing: 1px; }
@@ -87,7 +87,7 @@ BASKET SUMMARY
 ========================================================================
 */
 #minibasketholder                       { position: relative; }
-#minibasket                             { z-index: 99; float: right; width: auto; max-width: 200px; padding: 0; margin: 3px 0 0 0; }
+#minibasket                             { float: right; width: auto; max-width: 200px; padding: 0; margin: 3px 0 0 0; }
 #minibasket #minibasket_header          { min-width: 32px; background-color: transparent; }
 #compactbasket_title                    { display: none; }
 #compactbasket_totalprice               { display: inline-block; font-size: 120%; color: #888; font-weight: normal; }
