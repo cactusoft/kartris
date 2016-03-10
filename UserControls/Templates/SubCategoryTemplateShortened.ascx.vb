@@ -28,12 +28,11 @@ Partial Class SubCategoryTemplateShortened
         lnkCategoryName.NavigateUrl = SiteMapHelper.CreateURL(SiteMapHelper.Page.Category, _
                                         litCategoryID.Text, Request.QueryString("strParent") & "," & Request.QueryString("CategoryID"))
 
-        UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_CategoryImage, _
-            litCategoryID.Text, _
-            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.height"), _
-            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.width"), _
-            lnkCategoryName.NavigateUrl, _
-            "")
+        UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_CategoryImage,
+            litCategoryID.Text,
+            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.height"),
+            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.width"),
+            lnkCategoryName.NavigateUrl, , , lnkCategoryName.Text)
 
         '' Trancating the Description Text, depending on the related key in CONFIG Setting
         '' The Full Description Text is Held by a Hidden Literal Control.

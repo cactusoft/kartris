@@ -28,13 +28,11 @@ Partial Class Templates_ProductLinkTemplate
 
         lnkProductName.NavigateUrl = strNavigateURL
 
-        UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_ProductImage, _
-            litProductID.Text, _
-            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.height"), _
-            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.width"), _
-            strNavigateURL, _
-            "")
-
+        UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_ProductImage,
+            litProductID.Text,
+            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.height"),
+            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.width"),
+            strNavigateURL, , , lnkProductName.Text)
     End Sub
 
     'Do this with function as can use try catch,
