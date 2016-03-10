@@ -68,12 +68,12 @@ Partial Class CategoryTemplate
         litCategoryDesc.EnableViewState = False
 
         If KartSettingsManager.GetKartConfig("frontend.category.showimage") = "y" Then
-            UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_CategoryImage, _
-            _CategoryID.ToString(), _
-            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.height"), _
-            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.width"), _
-            "", _
-            "")
+            UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_CategoryImage,
+            _CategoryID.ToString(),
+            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.height"),
+            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.width"),
+            "",
+            "", , _CategoryName)
             phdCategoryImage.Visible = True
         Else
             phdCategoryImage.Visible = False

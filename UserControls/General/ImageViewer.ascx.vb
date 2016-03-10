@@ -27,6 +27,15 @@ Imports CkartrisImages
 Partial Class ImageViewer
     Inherits System.Web.UI.UserControl
 
+    Private _eImageType As IMAGE_TYPE
+    Private _strFolderPath As String
+    Private _strImagesDirName As String
+    Private _eViewType As SmallImagesType
+    Private _strItemType As String
+    Private _blnPlaceHolder As Boolean = False
+    Private _blnFoundImage As Boolean = True
+    Public _blnLargeViewClickable As Boolean = False
+
     'We can use this on pages with the image viewer
     'to switch off the large link when no image
     'found (even if placeholder shows)
@@ -53,15 +62,7 @@ Partial Class ImageViewer
         'enum_Link = 2
     End Enum
 
-    Private _eImageType As IMAGE_TYPE
-    Private _strFolderPath As String
-    Private _strImagesDirName As String
-    Private _eViewType As SmallImagesType
-    Private _strItemType As String
-    Private _blnPlaceHolder As Boolean = False
-    Private _blnFoundImage As Boolean = True
-    Public _blnLargeViewClickable As Boolean = False
-
+    'Folder path
     Public ReadOnly Property GetFolderPath() As String
         Get
             Return _strFolderPath
@@ -75,14 +76,14 @@ Partial Class ImageViewer
 
     'this is called from various pages that need to display
     'an image or gallery
-    Public Sub CreateImageViewer(ByVal eImageType As IMAGE_TYPE, _
-        ByVal strImagesDirName As String, _
-        ByVal numImageHeight As Integer, _
-        ByVal numImageWidth As Integer, _
-        ByVal strHyperlink As String, _
-        Optional ByVal strParentDirName As String = Nothing, _
-        Optional ByVal viewType As SmallImagesType = SmallImagesType.enum_ImageButton, _
-        Optional ByVal strAltText As String = "Image")
+    Public Sub CreateImageViewer(ByVal eImageType As IMAGE_TYPE,
+        ByVal strImagesDirName As String,
+        ByVal numImageHeight As Integer,
+        ByVal numImageWidth As Integer,
+        ByVal strHyperlink As String,
+        Optional ByVal strParentDirName As String = Nothing,
+        Optional ByVal viewType As SmallImagesType = SmallImagesType.enum_ImageButton,
+        Optional ByVal strAltText As String = "")
 
         'We need to be able to handle showing full size
         'images directly (not via Image.aspx script) if
@@ -92,10 +93,12 @@ Partial Class ImageViewer
         'set a boolean for convenience to use later.
         Dim blnFullSizeImage As Boolean = False
 
-
-        If (Not String.IsNullOrEmpty(strAltText)) And strAltText <> "Image" Then
+        'Set AltText to the property if nothing
+        'passed into this optional value
+        If (Not String.IsNullOrEmpty(strAltText)) And strAltText <> "" Then
             strAltText = CkartrisDisplayFunctions.RemoveXSS(strAltText)
         End If
+
         If numImageHeight = 0 And numImageWidth = 0 Then
             'Set boolean to use later
             blnFullSizeImage = True
@@ -205,19 +208,19 @@ Partial Class ImageViewer
                                 'Direct link to the image itself
                                 '---------------------------------------
                                 strImageMainView = Replace(_strFolderPath & objFile.Name, "~/", "")
-                                litSingleImage.Text &= "<!-- LARGE VIEW DISPLAY: IN 'NEW PAGE' LARGE VIEW MODE Direct link to the image itself --><img alt=""" & strAltText & """ src=""" & _
+                                litSingleImage.Text &= "<!-- LARGE VIEW DISPLAY: IN 'NEW PAGE' LARGE VIEW MODE Direct link to the image itself --><img alt=""" & strAltText & """ src=""" &
                                     strImageMainView & """ />"
                             Else
                                 '---------------------------------------
                                 'IN 'AJAX' LARGE VIEW MODE
                                 'Link to image.aspx resizer
                                 '---------------------------------------
-                                litSingleImage.Text &= "<!-- IMAGE DISPLAY: Image with no 'large view' click --><div class=""imageholder singleimage"" style=""width: " & _
-                                    numImageWidthMax & "px;" & _
+                                litSingleImage.Text &= "<!-- IMAGE DISPLAY: Image with no 'large view' click --><div class=""imageholder singleimage"" style=""width: " &
+                                    numImageWidthMax & "px;" &
                                     "height: " & numImageHeightMax & "px;"">"
 
                                 If strHyperlink <> "" Then litSingleImage.Text &= "<a href=""" & strHyperlink & """>"
-                                litSingleImage.Text &= "<img alt=""" & strAltText & """ src=""" & _
+                                litSingleImage.Text &= "<img alt=""" & strAltText & """ src=""" &
                                     strImageMainViewStart & """ />"
                                 If strHyperlink <> "" Then litSingleImage.Text &= "</a>"
                                 litSingleImage.Text &= "</div>" & vbCrLf
@@ -298,19 +301,19 @@ Partial Class ImageViewer
                     'Direct link to the image itself
                     '---------------------------------------
                     litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'NEW PAGE' LARGE VIEW MODE Direct link to the image itself --><div class=""imageholder hand"" >"
-                    litMainImage.Text &= "<a target=""_blank"" href=""" & _
+                    litMainImage.Text &= "<a target=""_blank"" href=""" &
                         "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>"
-                    litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" & _
+                    litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" &
                         strImageMainViewStart & """ /></a>"
                     litMainImage.Text &= "</div>" & vbCrLf
-                    litLargeViewLink.Text &= "<a target=""_blank"" href=""" & _
-                        "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>" & _
+                    litLargeViewLink.Text &= "<a target=""_blank"" href=""" &
+                        "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>" &
                         GetGlobalResourceObject("Product", "ContentText_LargeView") & "</a>"
                 Else
                     '---------------------------------------
                     'IN 'AJAX' LARGE VIEW MODE
                     '---------------------------------------
-                    litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div class=""imageholder hand"" onclick=""javascript:ShowLargeViewPopup()"" " & _
+                    litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div class=""imageholder hand"" onclick=""javascript:ShowLargeViewPopup()"" " &
                         "style=""height: " & numImageHeightMax & "px;"">"
                     litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" & strImageMainViewStart & """ />" & vbCrLf
                     litMainImage.Text &= "</div>"
@@ -322,12 +325,12 @@ Partial Class ImageViewer
 
 
         Else
-        '=======================================
-        'NO FOLDER FOUND
-        'No images, and even no folder for this
-        'item
-        '=======================================
-        NoImage(numImageHeight, numImageWidth, _blnPlaceHolder, strHyperlink)
+            '=======================================
+            'NO FOLDER FOUND
+            'No images, and even no folder for this
+            'item
+            '=======================================
+            NoImage(numImageHeight, numImageWidth, _blnPlaceHolder, strHyperlink)
 
         End If
 

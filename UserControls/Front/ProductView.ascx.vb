@@ -149,12 +149,12 @@ Partial Class ProductView
                 litTextColumnClasses.Text = "textcolumn small-12 columns"
 
                 'Set full size image visible
-                UC_ImageView2.CreateImageViewer(IMAGE_TYPE.enum_ProductImage, _
-                    _ProductID, _
-                    0, _
-                    0, _
-                    "", _
-                    "")
+                UC_ImageView2.CreateImageViewer(IMAGE_TYPE.enum_ProductImage,
+                    _ProductID,
+                    0,
+                    0,
+                    "",
+                    "rrr")
                 UC_ImageView2.Visible = True
             End If
 
