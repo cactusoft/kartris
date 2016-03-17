@@ -175,6 +175,7 @@ Public NotInheritable Class SSLHandler
         If IsSSLEnabled() Then
             'Start with assumption no SSL required
             Dim blnNeedSSL As Boolean = False
+            Dim blnRedirectPermanent As Boolean = False
 
             'If admin logged in, front end user logged in,
             'or we're on a login page, then we set the requirement
@@ -186,7 +187,10 @@ Public NotInheritable Class SSLHandler
             If Current.Request.Url.AbsoluteUri.ToLower.Contains("customertickets.aspx") Then blnNeedSSL = True
 
             'This handles SSL always on
-            If GetKartConfig("general.security.ssl") = "a" Then blnNeedSSL = True
+            If GetKartConfig("general.security.ssl") = "a" Then
+                blnNeedSSL = True
+                blnRedirectPermanent = True
+            End If
 
             'Added v2.6000 - don't redirect on callback.aspx
             'We get problems in some payment systems, because we cannot necessarily
@@ -196,7 +200,11 @@ Public NotInheritable Class SSLHandler
             If Not Current.Request.Url.AbsoluteUri.ToLower.Contains("callback") Then
                 'We need SSL, but current page doesn't have it
                 If blnNeedSSL = True And Not Current.Request.IsSecureConnection() Then
-                    Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
+                    If blnRedirectPermanent Then
+                        Current.Response.RedirectPermanent(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
+                    Else
+                        Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
+                    End If
                     'We have SSL but don't need it
                 ElseIf blnNeedSSL = False And Current.Request.IsSecureConnection() Then
                     Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("https://", "http://"))
@@ -207,6 +215,7 @@ Public NotInheritable Class SSLHandler
             Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("https://", "http://"))
         End If
     End Sub
+
 
     ''' <summary>
     ''' Force SSL redirect
