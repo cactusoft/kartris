@@ -108,7 +108,7 @@ Public Class CategoriesBLL
         If String.IsNullOrEmpty(strMetaDescription) Or strMetaDescription = "# -LE- #" Then _
             strMetaDescription = LanguageElementsBLL.GetElementValue(_LanguageID, LANG_ELEM_TABLE_TYPE.Categories, LANG_ELEM_FIELD_NAME.Description, _CategoryID)
         If strMetaDescription = "# -LE- #" Then strMetaDescription = ""
-        Return StripHTML(strMetaDescription)
+        Return Left(StripHTML(strMetaDescription), 160)
     End Function
 
     Public Shared Function GetMetaKeywordsByCategoryID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As String
