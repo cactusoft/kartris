@@ -1077,3 +1077,12 @@ GO
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.9004', CFG_VersionAdded=2.9004 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
+
+/****** Update file upload guidance for stock to include quotes around strings ******/
+UPDATE [dbo].[tblKartrisLanguageStrings]  SET  [LS_Value]='Browse an xls or csv file to import stock level.<br />
+IMPORTANT: Make sure to have at least the following field titles (SKU, Stock Quantity and Warning Level). For example:<br /><br />
+SKU,Name,Stock Quantity,Warning Level<br />
+"pcpc-5","PC Power Cable - 5m",500,80<br />
+"pcpc-10","PC Power Cable - 10m",500,80<br />
+"pcpc-15","PC Power Cable - 15m",500,80<br />' WHERE LS_Name = 'ContentText_BrowseStockLevelImportFile'
+GO
