@@ -730,6 +730,10 @@ MAIN BASKET
                 <asp:Literal ID="litShippingTotal" runat="server"></asp:Literal>
                 <asp:PlaceHolder ID="phdControls" runat="server" Visible="false"></asp:PlaceHolder>
             </div>
+            <% If ViewType = BasketBLL.VIEW_TYPE.MAIN_BASKET Then%>
+                <!-- shipping estimate -->
+                <user:ShippingMethodsEstimate ID="UC_ShippingMethodsEstimate" runat="server" />
+            <% End If %>
             <asp:PlaceHolder ID="phdBasketButtons" runat="server" Visible="false">
                 <div class="controls">
                     <div>
@@ -749,8 +753,6 @@ MAIN BASKET
             <!-- end of form -->
         </asp:PlaceHolder>
         <% If ViewType = BasketBLL.VIEW_TYPE.MAIN_BASKET Then%>
-        <!-- shipping estimate -->
-        <user:ShippingMethodsEstimate ID="UC_ShippingMethodsEstimate" runat="server" />
         <!-- basket links -->
         <div class="basket">
             <asp:PlaceHolder ID="phdSectionLinks" runat="server">
