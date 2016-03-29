@@ -58,6 +58,8 @@
                 <SelectedItemStyle CssClass="Kartris-DataList-SelectedItem" />
                 <HeaderStyle CssClass="header" />
                 <HeaderTemplate>
+                    <div class="column0">
+                        <asp:Literal ID="litID" runat="server" Text="ID" /></div>
                     <div class="column1">
                         <asp:Literal ID="litContentTextCountry" runat="server" Text="<%$ Resources: _Shipping, ContentText_Country %>" /></div>
                     <div class="column2">
@@ -86,8 +88,8 @@
                             </ContentTemplate>
                         </asp:UpdatePanel>
                     </div>
+                    <div class="column0"><asp:Literal ID="litID" runat="server" Text='<%# Eval("D_ID") %>' Visible="true" /></div>
                     <div class="column1">
-                        <asp:Literal ID="litID" runat="server" Text='<%# Eval("D_ID") %>' Visible="false" />
                         <asp:UpdatePanel ID="updEditDestination" runat="server" UpdateMode="Conditional">
                             <ContentTemplate>
                                 <asp:LinkButton ID="lnkButtonDestinationName" runat="server" Text='<%# Eval("D_Name") %>'

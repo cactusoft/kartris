@@ -414,6 +414,7 @@ SECTION: DESTINATIONS
 #section_destination_default .Kartris-DetailsView-Value
                                         { width: 400px }
 #section_shippingdestinations           { }
+#section_shippingdestinations div.column0,
 #section_shippingdestinations div.column1,
 #section_shippingdestinations div.column2,
 #section_shippingdestinations div.column3,
@@ -422,6 +423,8 @@ SECTION: DESTINATIONS
 #section_shippingdestinations div.column6,
 #section_shippingdestinations div.column7
                                         { display: inline-block; width: 60px; float: left; }
+#section_shippingdestinations div.column0
+                                        { width: 40px }
 #section_shippingdestinations div.column1
                                         { width: 160px }
 #section_shippingdestinations div.column5
