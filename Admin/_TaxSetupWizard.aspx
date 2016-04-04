@@ -202,7 +202,7 @@
 					</li>    
 				</ul>
 
-				<asp:Button runat="server" ID="btnConfirmSetup" Text="<%$ Resources: _Kartris, ContentText_Confirm %>" class="button" />
+				<asp:Button runat="server" ID="btnConfirmSetup" Text="<%$ Resources: _Kartris, ContentText_Confirm %>" CssClass="button" />
 				<br /><br />
 				<asp:Hyperlink runat="server" ID="lnkCurrencyLink" Text="<%$ Resources: _Kartris, BackMenu_LiveCurrencyRates %>" Visible="false"
 					NavigateURL="~/Admin/_LiveCurrencies.aspx"/>
@@ -213,4 +213,12 @@
 		</div>
 		</ContentTemplate>
 	</asp:UpdatePanel>
+	<asp:UpdateProgress ID="prgRegionalWizard" runat="server" AssociatedUpdatePanelID="updDefaultCountry">
+		<ProgressTemplate>
+			<div class="loadingimage">
+			</div>
+			<div class="updateprogress">
+			</div>
+		</ProgressTemplate>
+	</asp:UpdateProgress>
 </asp:Content>

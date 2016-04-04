@@ -121,7 +121,11 @@ Partial Class Admin_Destinations
             ddlEUCountries.Items.Clear()
             ddlEUCountries.Items.Add(New ListItem(GetGlobalResourceObject("_Kartris", "ContentText_DropDownSelect"), "noselection"))
             For Each objCountry In GetCountryListFromTaxConfig()
-                ddlEUCountries.Items.Add(New ListItem(objCountry.Name, objCountry.CountryId))
+                Try
+                    ddlEUCountries.Items.Add(New ListItem(objCountry.Name, objCountry.CountryId))
+                Catch ex As Exception
+
+                End Try
             Next
             phdEUBaseCountry.Visible = True
         ElseIf ddlEUVatRegistered.SelectedValue = "n" Then
@@ -252,20 +256,26 @@ Partial Class Admin_Destinations
                     'loop through all countries in the destination table
                     For Each drwCountry As DataRow In dtbAllCountries.Rows
                         Dim intCountryID As Integer = drwCountry("D_ID")
-                        If lstRegionCountries.FirstOrDefault(Function(item) item.CountryId = intCountryID) IsNot Nothing Then
-                            'country belongs to EU - charge tax and live
-                            ShippingBLL._UpdateDestinationForTaxWizard(intCountryID, drwCountry("D_ShippingZoneID"), 1, FixNullFromDB(drwCountry("D_Tax2")),
-                                                                       drwCountry("D_ISOCode"), drwCountry("D_ISOCode3Letter"), drwCountry("D_ISOCodeNumeric"),
-                                                                       FixNullFromDB(drwCountry("D_Region")), True, "", FixNullFromDB(drwCountry("D_TaxExtra")))
-                        Else
-                            'not EU - don't charge tax
-                            ShippingBLL._UpdateDestinationForTaxWizard(intCountryID, drwCountry("D_ShippingZoneID"), 0, FixNullFromDB(drwCountry("D_Tax2")),
-                                                                       drwCountry("D_ISOCode"), drwCountry("D_ISOCode3Letter"), drwCountry("D_ISOCodeNumeric"),
-                                                                       FixNullFromDB(drwCountry("D_Region")), drwCountry("D_Live"), "", FixNullFromDB(drwCountry("D_TaxExtra")))
-                        End If
-                        If ddlEUCountries.SelectedValue = intCountryID Then
-                            strSelectedEUCountryISO = drwCountry("D_ISOCode")
-                        End If
+
+                        'Set each country to non EU - don't charge tax
+                        ShippingBLL._UpdateDestinationForTaxWizard(intCountryID, drwCountry("D_ShippingZoneID"), 0, FixNullFromDB(drwCountry("D_Tax2")),
+                                                                               drwCountry("D_ISOCode"), drwCountry("D_ISOCode3Letter"), drwCountry("D_ISOCodeNumeric"),
+                                                                               FixNullFromDB(drwCountry("D_Region")), drwCountry("D_Live"), "", FixNullFromDB(drwCountry("D_TaxExtra")))
+                        'Loop through EU countries in XML, if match found with current country
+                        'set tax on
+                        For Each objCountry In GetCountryListFromTaxConfig()
+                            Try
+                                If objCountry.CountryId = intCountryID Then
+                                    'country belongs to EU - charge tax and live
+                                    ShippingBLL._UpdateDestinationForTaxWizard(intCountryID, drwCountry("D_ShippingZoneID"), 1, FixNullFromDB(drwCountry("D_Tax2")),
+                                                                               drwCountry("D_ISOCode"), drwCountry("D_ISOCode3Letter"), drwCountry("D_ISOCodeNumeric"),
+                                                                               FixNullFromDB(drwCountry("D_Region")), True, "", FixNullFromDB(drwCountry("D_TaxExtra")))
+                                    Exit For
+                                End If
+                            Catch ex As Exception
+                                'Hmmm
+                            End Try
+                        Next
                     Next
 
                     'Set general.tax.euvatcountry config to selected country
