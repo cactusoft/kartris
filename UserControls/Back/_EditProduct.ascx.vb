@@ -56,14 +56,24 @@ Partial Class _EditProduct
                 ddlCustomerGroup.DataTextField = "CG_Name"
                 ddlCustomerGroup.DataValueField = "CG_ID"
                 ddlCustomerGroup.DataSource = drwCGs
-                ddlCustomerGroup.DataBind()
+                Try
+                    ddlCustomerGroup.DataBind()
+                Catch ex As Exception
+                    'this can happen if a product was linked to a group that is no longer active
+                End Try
+
             End If
             If ddlSupplier.Items.Count <= 1 Then
                 Dim drwSuppliers As DataRow() = GetSuppliersFromCache.Select("SUP_Live = 1")
                 ddlSupplier.DataTextField = "SUP_Name"
                 ddlSupplier.DataValueField = "SUP_ID"
                 ddlSupplier.DataSource = drwSuppliers
-                ddlSupplier.DataBind()
+                Try
+                    ddlSupplier.DataBind()
+                Catch ex As Exception
+                    'this can happen if a product was linked to a supplier that is no longer active
+                End Try
+
             End If
             ReloadProduct()
         End If
