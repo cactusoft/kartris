@@ -565,7 +565,8 @@ Partial Class _Checkout
     ''' shipping methods
     ''' </summary>
     Protected Sub ShippingCountryUpdated(ByVal sender As Object, ByVal e As System.EventArgs) Handles UC_ShippingAddress.CountryUpdated
-        If Not chkSameShippingAsBilling.Checked And UC_ShippingAddress.SelectedAddress IsNot Nothing Then RefreshShippingMethods()
+        'If Not chkSameShippingAsBilling.Checked And UC_ShippingAddress.SelectedAddress IsNot Nothing Then RefreshShippingMethods()
+        RefreshShippingMethods()
     End Sub
 
     ''' <summary>
