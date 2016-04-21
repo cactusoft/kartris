@@ -17,6 +17,8 @@ ECHO DONE!
 ECHO **
 cd "\CleanKartris\Kartris"
 del "c:\CleanKartris\Kartris\_PrepareKartrisZip.bat"
+del "c:\CleanKartris\Kartris\vwd.webinfo"
+del "c:\CleanKartris\Kartris\website.publishproj"
 ECHO **
 ECHO CLEANING ERROR LOGS...
 IF EXIST "c:\CleanKartris\Kartris\Uploads\Logs\Errors" rd "c:\CleanKartris\Kartris\Uploads\Logs\Errors" /S /Q
@@ -25,6 +27,8 @@ ECHO **
 ECHO REMOVING TFS CACHE FILES...
 IF EXIST "c:\CleanKartris\Kartris\$tf" rd "c:\CleanKartris\Kartris\$tf" /S /Q
 IF EXIST "c:\CleanKartris\Kartris\$tf1" rd "c:\CleanKartris\Kartris\$tf1" /S /Q
+IF EXIST "c:\CleanKartris\Kartris\$tf2" rd "c:\CleanKartris\Kartris\$tf1" /S /Q
+IF EXIST "c:\CleanKartris\Kartris\$tf3" rd "c:\CleanKartris\Kartris\$tf1" /S /Q
 ECHO DONE!
 ECHO **
 ECHO REMOVING SAMPLE MEDIA FILES...

@@ -23,6 +23,7 @@ Partial Class UserControls_Back_StockWarning
 
     Public Event ShowMasterUpdate()
 
+    'Page load
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             'Set number of records per page
@@ -45,6 +46,7 @@ Partial Class UserControls_Back_StockWarning
         End If
     End Sub
 
+    'Load stock level
     Private Sub LoadStockLevel()
         Dim tblStockLevel As DataTable
         tblStockLevel = VersionsBLL._GetStockLevel(Session("_LANG"))
@@ -66,10 +68,12 @@ Partial Class UserControls_Back_StockWarning
         updStockLevelList.Update()
     End Sub
 
+    'Submit supplier selection
     Protected Sub btnSubmitSupplier_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmitSupplier.Click
         LoadStockLevel()
     End Sub
 
+    'Page stock level gridview
     Protected Sub gvwStockLevel_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvwStockLevel.PageIndexChanging
         gvwStockLevel.PageIndex = e.NewPageIndex
         LoadStockLevel()
@@ -91,11 +95,12 @@ Partial Class UserControls_Back_StockWarning
         End If
     End Sub
 
-
+    'Save changes
     Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSave.Click
         UpdateStockLevel()
     End Sub
 
+    'Update the stock level line by line
     Private Sub UpdateStockLevel()
         Dim tblVersionsToUpdate As New DataTable
         tblVersionsToUpdate.Columns.Add(New DataColumn("VersionID", Type.GetType("System.Int64")))
@@ -124,6 +129,9 @@ Partial Class UserControls_Back_StockWarning
 
     End Sub
 
+    'Export a CSV of stock levels, this makes it
+    'simple to modify in bulk in Excel or a spreadsheet
+    'program then upload and update by file
     Protected Sub btnExportCSV_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnExportCSV.Click
 
         Dim tblStockLevel As DataTable
@@ -150,6 +158,7 @@ Partial Class UserControls_Back_StockWarning
         CKartrisCSVExporter.WriteToCSV(tblExport, strFileName, 44, 0)
     End Sub
 
+    'Click the upload button, upload file
     Protected Sub btnUpload_Click(sender As Object, e As System.EventArgs) Handles btnUpload.Click
         If filUpload.HasFile Then
             Dim arrTemp = Split(filUpload.PostedFile.FileName, ".")
@@ -175,6 +184,7 @@ Partial Class UserControls_Back_StockWarning
         End If
     End Sub
 
+    'Import the stock level from file
     Sub ImportStockLevel(strFilePath As String)
         Dim connString As String
         Dim connFile As OleDbConnection
@@ -287,6 +297,8 @@ Partial Class UserControls_Back_StockWarning
 
     End Sub
 
+    'Check if a string is valid, i.e.
+    'not null or empty
     Function IsValidString(ByVal strText As String) As Boolean
         If strText IsNot Nothing Then
             If Not String.IsNullOrEmpty(strText) Then
@@ -296,6 +308,7 @@ Partial Class UserControls_Back_StockWarning
         Return False
     End Function
 
+    'Save the import
     Protected Sub btnSaveImport_Click(sender As Object, e As System.EventArgs) Handles btnSaveImport.Click
         If gvwImportStockLevel.Rows.Count = 0 Then Exit Sub
         Dim tblVersionsToUpdate As New DataTable

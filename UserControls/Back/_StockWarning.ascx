@@ -128,10 +128,10 @@
     </div>
     <div style="margin-top: 20px">
         <h1>
-            <asp:Literal ID="Literal1" runat="server" Text="<%$ Resources:_StockLevel, ContentText_ImportStockLevel %>"></asp:Literal></h1>
+            <asp:Literal ID="litImportStockLevel" runat="server" Text="<%$ Resources:_StockLevel, ContentText_ImportStockLevel %>"></asp:Literal></h1>
         <div class="section">
             <p>
-                <asp:Literal ID="Literal2" runat="server" Text="<%$ Resources:_StockLevel, ContentText_BrowseStockLevelImportFile %>"></asp:Literal></p>
+                <asp:Literal ID="litBrowseStockLevel" runat="server" Text="<%$ Resources:_StockLevel, ContentText_BrowseStockLevelImportFile %>"></asp:Literal></p>
         </div>
         <asp:FileUpload ID="filUpload" runat="server" />
         <asp:Button ID="btnUpload" runat="server" Text="<%$ Resources: _Kartris, ContentText_Upload %>" CssClass="button" />
