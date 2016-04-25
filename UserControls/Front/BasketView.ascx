@@ -287,7 +287,7 @@ MAIN BASKET
                                         <% End If%>
                                     </td>
                                     <td class="total hide-for-small">
-                                        <% If APP_USMultiStateTax Then%>
+                                        <% If APP_USMultiStateTax Or (APP_PricesIncTax = False And APP_ShowTaxDisplay = False) Then%>
                                         <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Eval("RowExTax"))%>
                                         <% Else%>
                                         <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Eval("RowIncTax"))%>
@@ -354,7 +354,7 @@ MAIN BASKET
                                             <%#Eval("Quantity")%>
                                         </td>
                                         <td class="total hide-for-small">
-                                            <% If APP_USMultiStateTax Then%>
+                                            <% If APP_USMultiStateTax Or (APP_PricesIncTax = False And APP_ShowTaxDisplay = False) Then%>
                                             <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, CDbl(Eval("TotalExTax")))%>
                                             <% Else%>
                                             <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, CDbl(Eval("TotalIncTax")))%>
@@ -421,7 +421,7 @@ MAIN BASKET
                             </td>
                             <td class="total hide-for-small">
                                 <% If Basket.CouponDiscount.IncTax > 0 Then%>
-                                <% If APP_USMultiStateTax Then%>
+                                <% If APP_USMultiStateTax Or (APP_PricesIncTax = False And APP_ShowTaxDisplay = False) Then%>
                                 <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CouponDiscount.ExTax)%>
                                 <% Else%>
                                 <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CouponDiscount.IncTax)%>
@@ -489,7 +489,7 @@ MAIN BASKET
                             <td class="quantity">1
                             </td>
                             <td class="total hide-for-small">
-                                <% If APP_USMultiStateTax Then%>
+                                <% If APP_USMultiStateTax Or (APP_PricesIncTax = False And APP_ShowTaxDisplay = False) Then%>
                                 <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CustomerDiscount.ExTax)%>
                                 <% Else%>
                                 <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.CustomerDiscount.IncTax)%>
@@ -560,7 +560,7 @@ MAIN BASKET
                                     <td class="quantity">1
                                     </td>
                                     <td class="total hide-for-small">
-                                        <% If APP_USMultiStateTax Then%>
+                                        <% If APP_USMultiStateTax Or (APP_PricesIncTax = False And APP_ShowTaxDisplay = False) Then%>
                                         <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.ShippingPrice.ExTax)%>
                                         <% Else%>
                                         <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.ShippingPrice.IncTax)%>
@@ -617,7 +617,7 @@ MAIN BASKET
                                 <td class="quantity">1
                                 </td>
                                 <td class="total hide-for-small">
-                                    <% If APP_USMultiStateTax Then%>
+                                    <% If APP_USMultiStateTax Or (APP_PricesIncTax = False And APP_ShowTaxDisplay = False) Then%>
                                     <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.OrderHandlingPrice.ExTax)%>
                                     <% Else%>
                                     <%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Basket.OrderHandlingPrice.IncTax)%>
@@ -721,7 +721,12 @@ MAIN BASKET
                             <span class="labeltext">
                                 <asp:Literal ID="litTotal2" runat="server" Text='<%$ Resources: Basket, ContentText_Total %>'
                                     EnableViewState="false"></asp:Literal></span>
-                            <span class="value"><%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceIncTax)%></span></td>
+                            <% If APP_PricesIncTax = False And APP_ShowTaxDisplay = False Then %>
+                                <span class="value"><%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceExTax)%></span>
+                            <% Else %>
+                                <span class="value"><%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceIncTax)%></span>
+                            <% End if %>
+                            </td>
                         <td class="hide-for-small">&nbsp;</td>
                     </tr>
                 </tbody></table>
