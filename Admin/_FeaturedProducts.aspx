@@ -120,10 +120,7 @@
                                 </div>
                             </asp:PlaceHolder>
                         </div>
-                        <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
-                            <asp:LinkButton ID="btnSaveChanges" runat="server" CssClass="button savebutton" Text="<%$ Resources:_Kartris, FormButton_Save %>"
-                            ToolTip="<%$ Resources:_Kartris, FormButton_Save %>" />
-                        </div>
+
                     </asp:View>
                     <asp:View ID="viwNoItems" runat="server">
                         <asp:Panel ID="pnlNoItems" runat="server" CssClass="noresults">
@@ -131,6 +128,10 @@
                         </asp:Panel>
                     </asp:View>
                 </asp:MultiView>
+                        <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
+                            <asp:LinkButton ID="btnSaveChanges" runat="server" CssClass="button savebutton" Text="<%$ Resources:_Kartris, FormButton_Save %>"
+                            ToolTip="<%$ Resources:_Kartris, FormButton_Save %>" />
+                        </div>
                 <div>
                     <div class="infomessage">
                         <asp:Literal ID="litContentTextFeaturedText" runat="server" Text="<%$ Resources: _Kartris, ContentText_FeaturedText %>" /></div>
