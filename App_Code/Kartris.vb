@@ -431,6 +431,13 @@ Public NotInheritable Class CkartrisDisplayFunctions
     End Function
 
     ''' <summary>
+    ''' Fix decimal values to remove trailing zeroes
+    ''' </summary>
+    Public Shared Function FixDecimal(ByVal numInput As Decimal) As Decimal
+        Return CInt(numInput * 10000) / 10000
+    End Function
+
+    ''' <summary>
     ''' Clean URL
     ''' </summary>
     Public Shared Function CleanURL(ByVal strInput As String) As String
@@ -675,6 +682,13 @@ Public NotInheritable Class CkartrisDataManipulation
                 Else
                     Return CSng(objInput)
                 End If
+            Case "z" 'decimal
+                If objInput Is Nothing OrElse objInput = 0.0 Then
+                    'If objInput = 0 OrElse objInput Is Nothing Then
+                    Return DBNull.Value
+                Else
+                    Return CDec(objInput)
+                End If
             Case Else
 
         End Select
@@ -697,7 +711,7 @@ Public NotInheritable Class CkartrisDataManipulation
     ''' <summary>
     ''' Handles the decimal point to be saved in the db as (dot)
     ''' </summary>
-    Public Shared Function HandleDecimalValues(ByVal strValue As String) As Single
+    Public Shared Function HandleDecimalValues(ByVal strValue As String) As Decimal
         Return Replace(strValue, ",", ".")
     End Function
 

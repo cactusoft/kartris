@@ -1094,7 +1094,7 @@ Public Class _CategorySiteMapProvider
         Else
             numLANGID = CInt(HttpContext.Current.Session.Item("_LANG"))
         End If
-        Return CategoriesBLL._GetHierarchyByLangaugeID(numLANGID)
+        Return CategoriesBLL._GetHierarchyByLanguageId(numLANGID)
     End Function
 
     ''' <summary>

@@ -200,7 +200,7 @@ Partial Class _EditVersion
         Dim strCodeNumber As String = txtCodeNumber.Text
         Dim blnLive As Boolean = chkLive.Checked
         Dim intGroupID As Integer = CInt(ddlCustomerGroup.SelectedValue())
-        Dim snglPrice As Single = HandleDecimalValues(txtPriceIncTax.Text)
+        Dim decPrice As Decimal = HandleDecimalValues(txtPriceIncTax.Text)
         Dim bytTaxBand As Byte = 0
         Dim bytTaxBand2 As Byte = 0
         If TaxRegime.VTax_Type = "rate" Then
@@ -228,7 +228,7 @@ Partial Class _EditVersion
             Next
         End If
         Dim snglWeight As Single = HandleDecimalValues(txtWeight.Text)
-        Dim snglRRP As Single = HandleDecimalValues(txtRRP.Text)
+        Dim decRRP As Decimal = HandleDecimalValues(txtRRP.Text)
         Dim bytDelivery As Byte = CByte(txtDeliveryTime.Text)
         Dim sngStockQty As Single = CSng(txtStockQuantity.Text)
         Dim sngWarnLevel As Single = CSng(txtWarningLevel.Text)
@@ -272,19 +272,19 @@ Partial Class _EditVersion
         Dim VersionID As Long = GetVersionID()
         Select Case enumOperation
             Case DML_OPERATION.UPDATE
-                If Not VersionsBLL._UpdateVersion( _
-                                tblLanguageContents, VersionID, strCodeNumber, _GetProductID(), snglPrice, bytTaxBand, bytTaxBand2, "", _
-                                snglWeight, bytDelivery, sngStockQty, sngWarnLevel, blnLive, strDownloadInfo, strDownloadType, _
-                                 snglRRP, chrVersionType, intCustomerGrp, chrCustomizationType, strCustomizationDesc, _
+                If Not VersionsBLL._UpdateVersion(
+                                tblLanguageContents, VersionID, strCodeNumber, _GetProductID(), decPrice, bytTaxBand, bytTaxBand2, "",
+                                snglWeight, bytDelivery, sngStockQty, sngWarnLevel, blnLive, strDownloadInfo, strDownloadType,
+                                 decRRP, chrVersionType, intCustomerGrp, chrCustomizationType, strCustomizationDesc,
                                 snglCustomizationCost, strMessage) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     Return False
                 End If
             Case DML_OPERATION.INSERT
-                If Not VersionsBLL._AddNewVersion( _
-                                tblLanguageContents, strCodeNumber, _GetProductID(), snglPrice, bytTaxBand, bytTaxBand2, "", _
-                                snglWeight, bytDelivery, sngStockQty, sngWarnLevel, blnLive, strDownloadInfo, strDownloadType, _
-                                 snglRRP, chrVersionType, intCustomerGrp, chrCustomizationType, strCustomizationDesc, _
+                If Not VersionsBLL._AddNewVersion(
+                                tblLanguageContents, strCodeNumber, _GetProductID(), decPrice, bytTaxBand, bytTaxBand2, "",
+                                snglWeight, bytDelivery, sngStockQty, sngWarnLevel, blnLive, strDownloadInfo, strDownloadType,
+                                 decRRP, chrVersionType, intCustomerGrp, chrCustomizationType, strCustomizationDesc,
                                 snglCustomizationCost, strMessage) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     Return False
@@ -343,7 +343,7 @@ Partial Class _EditVersion
         If TaxRegime.VTax_Type2 <> "" Then ddlTaxBand2.SelectedValue = FixNullFromDB(tblVersion.Rows(0)("V_Tax2"))
 
         txtWeight.Text = _HandleDecimalValues(CStr(tblVersion.Rows(0)("V_Weight")))
-        txtRRP.Text = _HandleDecimalValues(CStr(tblVersion.Rows(0)("V_RRP")))
+        txtRRP.Text = _HandleDecimalValues(CurrenciesBLL.FormatCurrencyPrice(HttpContext.Current.Session("CUR_ID"), CStr(FixNullFromDB(tblVersion.Rows(0)("V_RRP"))), False))
         txtDeliveryTime.Text = CStr(tblVersion.Rows(0)("V_DeliveryTime"))
 
         ddlDownloadType.SelectedValue = CChar(FixNullFromDB(tblVersion.Rows(0)("V_DownloadType")))

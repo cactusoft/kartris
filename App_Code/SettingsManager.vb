@@ -234,6 +234,10 @@ Public Class KartSettingsManager
 
         If Not HttpRuntime.Cache("KartrisTaxRatesCache") Is Nothing Then HttpRuntime.Cache.Remove("KartrisTaxRatesCache")
         Dim tblTaxRates As DataTable = TaxBLL._GetTaxRatesForCache()
+        For Each drwRate In tblTaxRates.Rows
+            'Get rid of trailing zeroes from decimal format
+            drwRate("T_TaxRate") = CkartrisDisplayFunctions.FixDecimal(drwRate("T_TaxRate"))
+        Next
         HttpRuntime.Cache.Add("KartrisTaxRatesCache", tblTaxRates, Nothing, Date.MaxValue, TimeSpan.Zero, _
                                CacheItemPriority.Low, Nothing)
     End Sub

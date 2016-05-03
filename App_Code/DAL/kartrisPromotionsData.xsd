@@ -216,7 +216,7 @@
   <xs:element name="kartrisPromotionsData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msdata:EnforceConstraints="False" msprop:Generator_DataSetName="kartrisPromotionsData" msprop:Generator_UserDSName="kartrisPromotionsData">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Promotions" msprop:Generator_UserTableName="Promotions" msprop:Generator_RowEvArgName="PromotionsRowChangeEvent" msprop:Generator_TableVarName="tablePromotions" msprop:Generator_TablePropName="Promotions" msprop:Generator_RowDeletingName="PromotionsRowDeleting" msprop:Generator_RowChangingName="PromotionsRowChanging" msprop:Generator_RowDeletedName="PromotionsRowDeleted" msprop:Generator_RowEvHandlerName="PromotionsRowChangeEventHandler" msprop:Generator_RowChangedName="PromotionsRowChanged" msprop:Generator_TableClassName="PromotionsDataTable" msprop:Generator_RowClassName="PromotionsRow">
+        <xs:element name="Promotions" msprop:Generator_UserTableName="Promotions" msprop:Generator_RowEvArgName="PromotionsRowChangeEvent" msprop:Generator_TableVarName="tablePromotions" msprop:Generator_TablePropName="Promotions" msprop:Generator_RowDeletingName="PromotionsRowDeleting" msprop:Generator_RowChangingName="PromotionsRowChanging" msprop:Generator_RowDeletedName="PromotionsRowDeleted" msprop:Generator_RowEvHandlerName="PromotionsRowChangeEventHandler" msprop:Generator_TableClassName="PromotionsDataTable" msprop:Generator_RowChangedName="PromotionsRowChanged" msprop:Generator_RowClassName="PromotionsRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="PROM_ID" msprop:Generator_ColumnVarNameInTable="columnPROM_ID" msprop:Generator_ColumnPropNameInRow="PROM_ID" msprop:Generator_ColumnPropNameInTable="PROM_IDColumn" msprop:Generator_UserColumnName="PROM_ID" type="xs:short" minOccurs="0" />
@@ -228,7 +228,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="PromotionStrings" msprop:Generator_UserTableName="PromotionStrings" msprop:Generator_RowEvArgName="PromotionStringsRowChangeEvent" msprop:Generator_TableVarName="tablePromotionStrings" msprop:Generator_TablePropName="PromotionStrings" msprop:Generator_RowDeletingName="PromotionStringsRowDeleting" msprop:Generator_RowChangingName="PromotionStringsRowChanging" msprop:Generator_RowDeletedName="PromotionStringsRowDeleted" msprop:Generator_RowEvHandlerName="PromotionStringsRowChangeEventHandler" msprop:Generator_RowChangedName="PromotionStringsRowChanged" msprop:Generator_TableClassName="PromotionStringsDataTable" msprop:Generator_RowClassName="PromotionStringsRow">
+        <xs:element name="PromotionStrings" msprop:Generator_UserTableName="PromotionStrings" msprop:Generator_RowEvArgName="PromotionStringsRowChangeEvent" msprop:Generator_TableVarName="tablePromotionStrings" msprop:Generator_TablePropName="PromotionStrings" msprop:Generator_RowDeletingName="PromotionStringsRowDeleting" msprop:Generator_RowChangingName="PromotionStringsRowChanging" msprop:Generator_RowDeletedName="PromotionStringsRowDeleted" msprop:Generator_RowEvHandlerName="PromotionStringsRowChangeEventHandler" msprop:Generator_TableClassName="PromotionStringsDataTable" msprop:Generator_RowChangedName="PromotionStringsRowChanged" msprop:Generator_RowClassName="PromotionStringsRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="PS_ID" msprop:Generator_ColumnVarNameInTable="columnPS_ID" msprop:Generator_ColumnPropNameInRow="PS_ID" msprop:Generator_ColumnPropNameInTable="PS_IDColumn" msprop:Generator_UserColumnName="PS_ID" type="xs:unsignedByte" />
@@ -264,7 +264,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="PromotionParts" msprop:Generator_UserTableName="PromotionParts" msprop:Generator_RowEvArgName="PromotionPartsRowChangeEvent" msprop:Generator_TableVarName="tablePromotionParts" msprop:Generator_TablePropName="PromotionParts" msprop:Generator_RowDeletingName="PromotionPartsRowDeleting" msprop:Generator_RowChangingName="PromotionPartsRowChanging" msprop:Generator_RowDeletedName="PromotionPartsRowDeleted" msprop:Generator_RowEvHandlerName="PromotionPartsRowChangeEventHandler" msprop:Generator_RowChangedName="PromotionPartsRowChanged" msprop:Generator_TableClassName="PromotionPartsDataTable" msprop:Generator_RowClassName="PromotionPartsRow">
+        <xs:element name="PromotionParts" msprop:Generator_UserTableName="PromotionParts" msprop:Generator_RowEvArgName="PromotionPartsRowChangeEvent" msprop:Generator_TableVarName="tablePromotionParts" msprop:Generator_TablePropName="PromotionParts" msprop:Generator_RowDeletingName="PromotionPartsRowDeleting" msprop:Generator_RowChangingName="PromotionPartsRowChanging" msprop:Generator_RowDeletedName="PromotionPartsRowDeleted" msprop:Generator_RowEvHandlerName="PromotionPartsRowChangeEventHandler" msprop:Generator_TableClassName="PromotionPartsDataTable" msprop:Generator_RowChangedName="PromotionPartsRowChanged" msprop:Generator_RowClassName="PromotionPartsRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="PROM_ID" msprop:Generator_ColumnVarNameInTable="columnPROM_ID" msprop:Generator_ColumnPropNameInRow="PROM_ID" msprop:Generator_ColumnPropNameInTable="PROM_IDColumn" msprop:Generator_UserColumnName="PROM_ID" type="xs:int" />
@@ -284,7 +284,7 @@
                 </xs:simpleType>
               </xs:element>
               <xs:element name="PP_ItemID" msprop:Generator_ColumnVarNameInTable="columnPP_ItemID" msprop:Generator_ColumnPropNameInRow="PP_ItemID" msprop:Generator_ColumnPropNameInTable="PP_ItemIDColumn" msprop:Generator_UserColumnName="PP_ItemID" type="xs:int" />
-              <xs:element name="PP_Value" msprop:Generator_ColumnVarNameInTable="columnPP_Value" msprop:Generator_ColumnPropNameInRow="PP_Value" msprop:Generator_ColumnPropNameInTable="PP_ValueColumn" msprop:Generator_UserColumnName="PP_Value" type="xs:float" minOccurs="0" />
+              <xs:element name="PP_Value" msprop:Generator_ColumnVarNameInTable="columnPP_Value" msprop:Generator_ColumnPropNameInRow="PP_Value" msprop:Generator_ColumnPropNameInTable="PP_ValueColumn" msprop:Generator_UserColumnName="PP_Value" type="xs:decimal" minOccurs="0" />
               <xs:element name="PS_Item" msprop:Generator_ColumnVarNameInTable="columnPS_Item" msprop:Generator_ColumnPropNameInRow="PS_Item" msprop:Generator_ColumnPropNameInTable="PS_ItemColumn" msprop:Generator_UserColumnName="PS_Item" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">

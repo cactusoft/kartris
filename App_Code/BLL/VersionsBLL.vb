@@ -587,13 +587,13 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Function _AddNewVersion(ByVal tblElements As DataTable, ByVal strCodeNumber As String, ByVal intProductID As Integer, _
-         ByVal snglPrice As Single, ByVal intTaxID As Byte, ByVal intTaxID2 As Byte, ByVal strTaxExtra As String, ByVal snglWeight As Single, _
-         ByVal intDeliveryTime As Byte, ByVal sngStockQty As Single, ByVal sngWarnLevel As Single, _
-         ByVal blnLive As Boolean, ByVal strDownloadInfo As String, ByVal chrDownloadType As Char, _
-         ByVal snglRRP As Single, ByVal chrType As Char, _
-         ByVal intCustomerGrp As Short, ByVal chrCustomizationType As Char, ByVal strCustomizationDesc As String, _
-         ByVal sngCustomizationCost As Single, ByRef strMsg As String) As Boolean
+    Public Shared Function _AddNewVersion(ByVal tblElements As DataTable, ByVal strCodeNumber As String, ByVal intProductID As Integer,
+         ByVal decPrice As Decimal, ByVal intTaxID As Byte, ByVal intTaxID2 As Byte, ByVal strTaxExtra As String, ByVal snglWeight As Single,
+         ByVal intDeliveryTime As Byte, ByVal sngStockQty As Single, ByVal sngWarnLevel As Single,
+         ByVal blnLive As Boolean, ByVal strDownloadInfo As String, ByVal chrDownloadType As Char,
+         ByVal decRRP As Decimal, ByVal chrType As Char,
+         ByVal intCustomerGrp As Short, ByVal chrCustomizationType As Char, ByVal strCustomizationDesc As String,
+         ByVal decCustomizationCost As Decimal, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -603,10 +603,10 @@ Public Class VersionsBLL
             cmdAddVersion.CommandType = CommandType.StoredProcedure
             Dim tblClone As DataTable = tblElements
             Try
-                
+
                 cmdAddVersion.Parameters.AddWithValue("@V_CodeNumber", FixNullToDB(strCodeNumber, "s"))
                 cmdAddVersion.Parameters.AddWithValue("@V_ProductID", FixNullToDB(intProductID, "i"))
-                cmdAddVersion.Parameters.AddWithValue("@V_Price", snglPrice)
+                cmdAddVersion.Parameters.AddWithValue("@V_Price", decPrice)
                 cmdAddVersion.Parameters.AddWithValue("@V_Tax", FixNullToDB(intTaxID, "i"))
                 cmdAddVersion.Parameters.AddWithValue("@V_Tax2", FixNullToDB(intTaxID2, "i"))
                 cmdAddVersion.Parameters.AddWithValue("@V_TaxExtra", FixNullToDB(strTaxExtra, "s"))
@@ -617,12 +617,12 @@ Public Class VersionsBLL
                 cmdAddVersion.Parameters.AddWithValue("@V_Live", blnLive)
                 cmdAddVersion.Parameters.AddWithValue("@V_DownLoadInfo", FixNullToDB(strDownloadInfo, "s"))
                 cmdAddVersion.Parameters.AddWithValue("@V_DownloadType", FixNullToDB(chrDownloadType, "c"))
-                cmdAddVersion.Parameters.AddWithValue("@V_RRP", snglRRP)
+                cmdAddVersion.Parameters.AddWithValue("@V_RRP", decRRP)
                 cmdAddVersion.Parameters.AddWithValue("@V_Type", FixNullToDB(chrType, "c"))
                 cmdAddVersion.Parameters.AddWithValue("@V_CustomerGroupID", FixNullToDB(intCustomerGrp, "i")) 'FixNullToDB(intCustomerGrp, "i"))
                 cmdAddVersion.Parameters.AddWithValue("@V_CustomizationType", chrCustomizationType)
                 cmdAddVersion.Parameters.AddWithValue("@V_CustomizationDesc", FixNullToDB(strCustomizationDesc, "s"))
-                cmdAddVersion.Parameters.AddWithValue("@V_CustomizationCost", FixNullToDB(sngCustomizationCost, "d"))
+                cmdAddVersion.Parameters.AddWithValue("@V_CustomizationCost", FixNullToDB(decCustomizationCost, "z")) 'z=decimal, double is d
                 cmdAddVersion.Parameters.AddWithValue("@V_NewID", 0).Direction = ParameterDirection.Output
 
                 sqlConn.Open()
@@ -632,7 +632,7 @@ Public Class VersionsBLL
                 cmdAddVersion.ExecuteNonQuery()
 
                 Dim intNewVersionID As Long = cmdAddVersion.Parameters("@V_NewID").Value
-                If Not LanguageElementsBLL._AddLanguageElements( _
+                If Not LanguageElementsBLL._AddLanguageElements(
                   tblClone, LANG_ELEM_TABLE_TYPE.Versions, intNewVersionID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
@@ -641,11 +641,11 @@ Public Class VersionsBLL
                     Dim strUploadFolder As String = GetKartConfig("general.uploadfolder")
                     If File.Exists(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo)) Then
                         If File.Exists(Current.Server.MapPath(strUploadFolder & strDownloadInfo)) Then
-                            File.Replace(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo), _
-                              Current.Server.MapPath(strUploadFolder & strDownloadInfo), _
+                            File.Replace(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo),
+                              Current.Server.MapPath(strUploadFolder & strDownloadInfo),
                               Current.Server.MapPath(strUploadFolder & "temp/backup_" & strDownloadInfo))
                         Else
-                            File.Move(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo), _
+                            File.Move(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo),
                                 Current.Server.MapPath(strUploadFolder & strDownloadInfo))
                         End If
                     End If
@@ -668,13 +668,13 @@ Public Class VersionsBLL
         End Using
         Return False
     End Function
-    Public Shared Function _UpdateVersion(ByVal tblElements As DataTable, ByVal lngVersionID As Long, ByVal strCodeNumber As String, ByVal intProductID As Integer, _
-         ByVal snglPrice As Single, ByVal intTaxID As Byte, ByVal intTaxID2 As Byte, ByVal strTaxExtra As String, ByVal snglWeight As Single, _
-         ByVal intDeliveryTime As Byte, ByVal sngStockQty As Single, ByVal sngWarnLevel As Single, _
-         ByVal blnLive As Boolean, ByVal strDownloadInfo As String, ByVal chrDownloadType As Char, _
-         ByVal snglRRP As Single, ByVal chrType As Char, _
-         ByVal intCustomerGrp As Short, ByVal chrCustomizationType As Char, ByVal strCustomizationDesc As String, _
-         ByVal sngCustomizationCost As Single, ByRef strMsg As String) As Boolean
+    Public Shared Function _UpdateVersion(ByVal tblElements As DataTable, ByVal lngVersionID As Long, ByVal strCodeNumber As String, ByVal intProductID As Integer,
+         ByVal decPrice As Decimal, ByVal intTaxID As Byte, ByVal intTaxID2 As Byte, ByVal strTaxExtra As String, ByVal snglWeight As Single,
+         ByVal intDeliveryTime As Byte, ByVal sngStockQty As Single, ByVal sngWarnLevel As Single,
+         ByVal blnLive As Boolean, ByVal strDownloadInfo As String, ByVal chrDownloadType As Char,
+         ByVal decRRP As Decimal, ByVal chrType As Char,
+         ByVal intCustomerGrp As Short, ByVal chrCustomizationType As Char, ByVal strCustomizationDesc As String,
+         ByVal decCustomizationCost As Decimal, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -688,7 +688,7 @@ Public Class VersionsBLL
                 cmdUpdateVersion.Parameters.AddWithValue("@V_ID", lngVersionID)
                 cmdUpdateVersion.Parameters.AddWithValue("@V_CodeNumber", FixNullToDB(strCodeNumber, "s"))
                 cmdUpdateVersion.Parameters.AddWithValue("@V_ProductID", FixNullToDB(intProductID, "i"))
-                cmdUpdateVersion.Parameters.AddWithValue("@V_Price", snglPrice)
+                cmdUpdateVersion.Parameters.AddWithValue("@V_Price", decPrice)
                 cmdUpdateVersion.Parameters.AddWithValue("@V_Tax", FixNullToDB(intTaxID, "i"))
                 cmdUpdateVersion.Parameters.AddWithValue("@V_Tax2", FixNullToDB(intTaxID2, "i"))
                 cmdUpdateVersion.Parameters.AddWithValue("@V_TaxExtra", FixNullToDB(strTaxExtra, "s"))
@@ -699,12 +699,12 @@ Public Class VersionsBLL
                 cmdUpdateVersion.Parameters.AddWithValue("@V_Live", blnLive)
                 cmdUpdateVersion.Parameters.AddWithValue("@V_DownLoadInfo", FixNullToDB(strDownloadInfo, "s"))
                 cmdUpdateVersion.Parameters.AddWithValue("@V_DownloadType", FixNullToDB(chrDownloadType, "c"))
-                cmdUpdateVersion.Parameters.AddWithValue("@V_RRP", snglRRP)
+                cmdUpdateVersion.Parameters.AddWithValue("@V_RRP", decRRP)
                 cmdUpdateVersion.Parameters.AddWithValue("@V_Type", FixNullToDB(chrType, "c"))
                 cmdUpdateVersion.Parameters.AddWithValue("@V_CustomerGroupID", FixNullToDB(intCustomerGrp, "i"))
                 cmdUpdateVersion.Parameters.AddWithValue("@V_CustomizationType", chrCustomizationType)
                 cmdUpdateVersion.Parameters.AddWithValue("@V_CustomizationDesc", FixNullToDB(strCustomizationDesc, "s"))
-                cmdUpdateVersion.Parameters.AddWithValue("@V_CustomizationCost", FixNullToDB(sngCustomizationCost, "d"))
+                cmdUpdateVersion.Parameters.AddWithValue("@V_CustomizationCost", FixNullToDB(decCustomizationCost, "z")) 'z=decimal, d is for double
 
                 sqlConn.Open()
                 savePoint = sqlConn.BeginTransaction()
@@ -714,13 +714,13 @@ Public Class VersionsBLL
 
                 If chrType = "b" Then
                     If ObjectConfigBLL.GetValue("K:product.usecombinationprice", intProductID) <> "1" Then
-                        If Not _UpdateCombinationsFromBasicInfo(intProductID, snglPrice, intTaxID, intTaxID2, strTaxExtra, snglWeight, snglRRP, sqlConn, savePoint) Then
+                        If Not _UpdateCombinationsFromBasicInfo(intProductID, decPrice, intTaxID, intTaxID2, strTaxExtra, snglWeight, decRRP, sqlConn, savePoint) Then
                             Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                         End If
                     End If
                 End If
 
-                If Not LanguageElementsBLL._UpdateLanguageElements( _
+                If Not LanguageElementsBLL._UpdateLanguageElements(
                     tblClone, LANG_ELEM_TABLE_TYPE.Versions, lngVersionID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
@@ -729,11 +729,11 @@ Public Class VersionsBLL
                     Dim strUploadFolder As String = GetKartConfig("general.uploadfolder")
                     If File.Exists(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo)) Then
                         If File.Exists(Current.Server.MapPath(strUploadFolder & strDownloadInfo)) Then
-                            File.Replace(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo), _
-                              Current.Server.MapPath(strUploadFolder & strDownloadInfo), _
+                            File.Replace(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo),
+                              Current.Server.MapPath(strUploadFolder & strDownloadInfo),
                               Current.Server.MapPath(strUploadFolder & "temp/backup_" & strDownloadInfo))
                         Else
-                            File.Move(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo), _
+                            File.Move(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo),
                                 Current.Server.MapPath(strUploadFolder & strDownloadInfo))
                         End If
                     End If
