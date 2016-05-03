@@ -9,7 +9,7 @@
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CouponsTblAdptr" GeneratorDataComponentClassName="CouponsTblAdptr" Name="Coupons" UserDataComponentName="CouponsTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL.dbo.[_spKartrisCoupons_GetByID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetByID" GetMethodModifier="Public" GetMethodName="_GetByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetByID" UserSourceName="_GetByID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL.dbo.[_spKartrisCoupons_GetByID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetByID" GetMethodModifier="Public" GetMethodName="_GetByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetByID" UserSourceName="_GetByID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCoupons_GetByID]</CommandText>
@@ -34,7 +34,7 @@
               <Mapping SourceColumn="CP_Enabled" DataSetColumn="CP_Enabled" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL.dbo.[_spKartrisCoupons_GetByCouponCode]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByCouponCode" GetMethodModifier="Public" GetMethodName="_GetByCouponCode" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByCouponCode" UserSourceName="_GetByCouponCode">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL.dbo.[_spKartrisCoupons_GetByCouponCode]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByCouponCode" GetMethodModifier="Public" GetMethodName="_GetByCouponCode" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByCouponCode" UserSourceName="_GetByCouponCode">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCoupons_GetByCouponCode]</CommandText>
@@ -45,7 +45,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL.dbo.[_spKartrisCoupons_GetByDateTime]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByDate" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="_GetByDate" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByDate" UserSourceName="_GetByDate">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL.dbo.[_spKartrisCoupons_GetByDateTime]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByDate" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="_GetByDate" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByDate" UserSourceName="_GetByDate">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCoupons_GetByDateTime]</CommandText>
@@ -58,7 +58,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL.dbo.[_spKartrisCoupons_GetSummary]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetCouponGroups" GetMethodModifier="Public" GetMethodName="_GetCouponGroups" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetCouponGroups" UserSourceName="_GetCouponGroups">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL.dbo.[_spKartrisCoupons_GetSummary]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetCouponGroups" GetMethodModifier="Public" GetMethodName="_GetCouponGroups" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetCouponGroups" UserSourceName="_GetCouponGroups">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="true">
                     <CommandText>_spKartrisCoupons_GetGroups</CommandText>
@@ -66,7 +66,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL.dbo.[_spKartrisCoupons_SearchByCode]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_SearchByCode" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="_SearchByCode" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_SearchByCode" UserSourceName="_SearchByCode">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL.dbo.[_spKartrisCoupons_SearchByCode]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_SearchByCode" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="_SearchByCode" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_SearchByCode" UserSourceName="_SearchByCode">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCoupons_SearchByCode]</CommandText>
@@ -84,34 +84,34 @@
       </DataSource>
     </xs:appinfo>
   </xs:annotation>
-  <xs:element name="kartrisCouponsData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msdata:EnforceConstraints="False" msprop:Generator_UserDSName="kartrisCouponsData" msprop:Generator_DataSetName="kartrisCouponsData">
+  <xs:element name="kartrisCouponsData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msdata:EnforceConstraints="False" msprop:Generator_DataSetName="kartrisCouponsData" msprop:Generator_UserDSName="kartrisCouponsData">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Coupons" msprop:Generator_UserTableName="Coupons" msprop:Generator_RowDeletedName="CouponsRowDeleted" msprop:Generator_RowChangedName="CouponsRowChanged" msprop:Generator_RowClassName="CouponsRow" msprop:Generator_RowChangingName="CouponsRowChanging" msprop:Generator_RowEvArgName="CouponsRowChangeEvent" msprop:Generator_RowEvHandlerName="CouponsRowChangeEventHandler" msprop:Generator_TableClassName="CouponsDataTable" msprop:Generator_TableVarName="tableCoupons" msprop:Generator_RowDeletingName="CouponsRowDeleting" msprop:Generator_TablePropName="Coupons">
+        <xs:element name="Coupons" msprop:Generator_UserTableName="Coupons" msprop:Generator_RowEvArgName="CouponsRowChangeEvent" msprop:Generator_TableVarName="tableCoupons" msprop:Generator_TablePropName="Coupons" msprop:Generator_RowDeletingName="CouponsRowDeleting" msprop:Generator_RowChangingName="CouponsRowChanging" msprop:Generator_RowDeletedName="CouponsRowDeleted" msprop:Generator_RowEvHandlerName="CouponsRowChangeEventHandler" msprop:Generator_TableClassName="CouponsDataTable" msprop:Generator_RowChangedName="CouponsRowChanged" msprop:Generator_RowClassName="CouponsRow">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="CP_ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_UserColumnName="CP_ID" msprop:Generator_ColumnVarNameInTable="columnCP_ID" msprop:Generator_ColumnPropNameInRow="CP_ID" msprop:Generator_ColumnPropNameInTable="CP_IDColumn" type="xs:short" />
-              <xs:element name="CP_CouponCode" msprop:Generator_UserColumnName="CP_CouponCode" msprop:Generator_ColumnVarNameInTable="columnCP_CouponCode" msprop:Generator_ColumnPropNameInRow="CP_CouponCode" msprop:Generator_ColumnPropNameInTable="CP_CouponCodeColumn" minOccurs="0">
+              <xs:element name="CP_ID" msdata:ReadOnly="true" msdata:AutoIncrement="true" msdata:AutoIncrementSeed="-1" msdata:AutoIncrementStep="-1" msprop:Generator_ColumnVarNameInTable="columnCP_ID" msprop:Generator_ColumnPropNameInRow="CP_ID" msprop:Generator_ColumnPropNameInTable="CP_IDColumn" msprop:Generator_UserColumnName="CP_ID" type="xs:short" />
+              <xs:element name="CP_CouponCode" msprop:Generator_ColumnVarNameInTable="columnCP_CouponCode" msprop:Generator_ColumnPropNameInRow="CP_CouponCode" msprop:Generator_ColumnPropNameInTable="CP_CouponCodeColumn" msprop:Generator_UserColumnName="CP_CouponCode" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="25" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="CP_Reusable" msprop:Generator_UserColumnName="CP_Reusable" msprop:Generator_ColumnVarNameInTable="columnCP_Reusable" msprop:Generator_ColumnPropNameInRow="CP_Reusable" msprop:Generator_ColumnPropNameInTable="CP_ReusableColumn" type="xs:boolean" minOccurs="0" />
-              <xs:element name="CP_Used" msprop:Generator_UserColumnName="CP_Used" msprop:Generator_ColumnVarNameInTable="columnCP_Used" msprop:Generator_ColumnPropNameInRow="CP_Used" msprop:Generator_ColumnPropNameInTable="CP_UsedColumn" type="xs:boolean" minOccurs="0" />
-              <xs:element name="CP_CreatedTime" msprop:Generator_UserColumnName="CP_CreatedTime" msprop:Generator_ColumnVarNameInTable="columnCP_CreatedTime" msprop:Generator_ColumnPropNameInRow="CP_CreatedTime" msprop:Generator_ColumnPropNameInTable="CP_CreatedTimeColumn" type="xs:dateTime" minOccurs="0" />
-              <xs:element name="CP_StartDate" msprop:Generator_UserColumnName="CP_StartDate" msprop:Generator_ColumnVarNameInTable="columnCP_StartDate" msprop:Generator_ColumnPropNameInRow="CP_StartDate" msprop:Generator_ColumnPropNameInTable="CP_StartDateColumn" type="xs:dateTime" minOccurs="0" />
-              <xs:element name="CP_EndDate" msprop:Generator_UserColumnName="CP_EndDate" msprop:Generator_ColumnVarNameInTable="columnCP_EndDate" msprop:Generator_ColumnPropNameInRow="CP_EndDate" msprop:Generator_ColumnPropNameInTable="CP_EndDateColumn" type="xs:dateTime" minOccurs="0" />
-              <xs:element name="CP_DiscountValue" msprop:Generator_UserColumnName="CP_DiscountValue" msprop:Generator_ColumnVarNameInTable="columnCP_DiscountValue" msprop:Generator_ColumnPropNameInRow="CP_DiscountValue" msprop:Generator_ColumnPropNameInTable="CP_DiscountValueColumn" type="xs:float" minOccurs="0" />
-              <xs:element name="CP_DiscountType" msprop:Generator_UserColumnName="CP_DiscountType" msprop:Generator_ColumnVarNameInTable="columnCP_DiscountType" msprop:Generator_ColumnPropNameInRow="CP_DiscountType" msprop:Generator_ColumnPropNameInTable="CP_DiscountTypeColumn" minOccurs="0">
+              <xs:element name="CP_Reusable" msprop:Generator_ColumnVarNameInTable="columnCP_Reusable" msprop:Generator_ColumnPropNameInRow="CP_Reusable" msprop:Generator_ColumnPropNameInTable="CP_ReusableColumn" msprop:Generator_UserColumnName="CP_Reusable" type="xs:boolean" minOccurs="0" />
+              <xs:element name="CP_Used" msprop:Generator_ColumnVarNameInTable="columnCP_Used" msprop:Generator_ColumnPropNameInRow="CP_Used" msprop:Generator_ColumnPropNameInTable="CP_UsedColumn" msprop:Generator_UserColumnName="CP_Used" type="xs:boolean" minOccurs="0" />
+              <xs:element name="CP_CreatedTime" msprop:Generator_ColumnVarNameInTable="columnCP_CreatedTime" msprop:Generator_ColumnPropNameInRow="CP_CreatedTime" msprop:Generator_ColumnPropNameInTable="CP_CreatedTimeColumn" msprop:Generator_UserColumnName="CP_CreatedTime" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="CP_StartDate" msprop:Generator_ColumnVarNameInTable="columnCP_StartDate" msprop:Generator_ColumnPropNameInRow="CP_StartDate" msprop:Generator_ColumnPropNameInTable="CP_StartDateColumn" msprop:Generator_UserColumnName="CP_StartDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="CP_EndDate" msprop:Generator_ColumnVarNameInTable="columnCP_EndDate" msprop:Generator_ColumnPropNameInRow="CP_EndDate" msprop:Generator_ColumnPropNameInTable="CP_EndDateColumn" msprop:Generator_UserColumnName="CP_EndDate" type="xs:dateTime" minOccurs="0" />
+              <xs:element name="CP_DiscountValue" msprop:Generator_ColumnVarNameInTable="columnCP_DiscountValue" msprop:Generator_ColumnPropNameInRow="CP_DiscountValue" msprop:Generator_ColumnPropNameInTable="CP_DiscountValueColumn" msprop:Generator_UserColumnName="CP_DiscountValue" type="xs:decimal" minOccurs="0" />
+              <xs:element name="CP_DiscountType" msprop:Generator_ColumnVarNameInTable="columnCP_DiscountType" msprop:Generator_ColumnPropNameInRow="CP_DiscountType" msprop:Generator_ColumnPropNameInTable="CP_DiscountTypeColumn" msprop:Generator_UserColumnName="CP_DiscountType" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="1" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="CP_Enabled" msprop:Generator_UserColumnName="CP_Enabled" msprop:Generator_ColumnVarNameInTable="columnCP_Enabled" msprop:Generator_ColumnPropNameInRow="CP_Enabled" msprop:Generator_ColumnPropNameInTable="CP_EnabledColumn" type="xs:boolean" minOccurs="0" />
+              <xs:element name="CP_Enabled" msprop:Generator_ColumnVarNameInTable="columnCP_Enabled" msprop:Generator_ColumnPropNameInRow="CP_Enabled" msprop:Generator_ColumnPropNameInTable="CP_EnabledColumn" msprop:Generator_UserColumnName="CP_Enabled" type="xs:boolean" minOccurs="0" />
             </xs:sequence>
           </xs:complexType>
         </xs:element>

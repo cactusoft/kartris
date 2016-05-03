@@ -198,7 +198,7 @@ Partial Class UserControls_Back_CurrencyRates
         Dim strSymbol As String = txtSymbol.Text
         Dim strIsoCode As String = txtISOCode.Text
         Dim strIsoCodeNumeric As String = txtIsoCodeNumeric.Text
-        Dim numExchangeRate As Single = txtExchangeRate.Text
+        Dim numExchangeRate As Decimal = txtExchangeRate.Text
         Dim blnUseDecimal As Boolean = chkUseDecimal.Checked
         Dim blnLive As Boolean = chkLive.Checked
         Dim strFormat As String = txtFormat.Text

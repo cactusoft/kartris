@@ -423,10 +423,10 @@ Public Class BasketBLL
     ''' Return a list of basket items retrieved from database
     ''' </summary>
     ''' <param name="SessionId">The session ID that the basket is associated with</param>
-    ''' <param name="LangaugeId">Language that the text should be in.</param>
+    ''' <param name="LanguageId">Language that the text should be in.</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Overloads Shared Function GetBasketItems(ByVal SessionId As Long, ByVal LangaugeId As String) As List(Of Kartris.BasketItem)
+    Public Overloads Shared Function GetBasketItems(ByVal SessionId As Long, ByVal LanguageId As String) As List(Of Kartris.BasketItem)
         GetBasketItems = New List(Of Kartris.BasketItem)        ' Initial value
         Dim objItem As Kartris.BasketItem
         Dim tblBasketValues As DataTable
@@ -444,61 +444,61 @@ Public Class BasketBLL
         'numSessionID = Current.Session("SessionID")
 
         ' Load datatable from database
-        tblBasketValues = _BasketValuesAdptr.GetItems(LangaugeId, SessionId)
+        tblBasketValues = _BasketValuesAdptr.GetItems(LanguageId, SessionId)
 
-            Try
-                For Each drwBasketValues As DataRow In tblBasketValues.Rows
-                    objItem = New Kartris.BasketItem
-                    objItem.ProductID = drwBasketValues("ProductID")
-                    objItem.ProductType = drwBasketValues("ProductType")
-                    objItem.TaxRate1 = FixNullFromDB(drwBasketValues("TaxRate"))
-                    objItem.TaxRate2 = FixNullFromDB(drwBasketValues("TaxRate2"))
-                    objItem.TaxRateItem = FixNullFromDB(drwBasketValues("TaxRate"))
-                    objItem.Weight = FixNullFromDB(drwBasketValues("Weight"))
-                    objItem.RRP = FixNullFromDB(drwBasketValues("RRP"))
-                    objItem.ProductName = drwBasketValues("ProductName") & ""
-                    objItem.ID = drwBasketValues("BV_ID")
-                    objItem.VersionBaseID = drwBasketValues("V_ID")
-                    objItem.VersionID = drwBasketValues("BV_VersionID")
-                    objItem.VersionName = drwBasketValues("VersionName") & ""
-                    objItem.VersionCode = drwBasketValues("CodeNumber") & ""
-                    objItem.CodeNumber = drwBasketValues("CodeNumber") & ""
-                    objItem.Price = FixNullFromDB(drwBasketValues("Price"))
-                    objItem.Quantity = FixNullFromDB(drwBasketValues("Quantity"))
-                    objItem.StockQty = FixNullFromDB(drwBasketValues("V_Quantity"))
-                    objItem.QtyWarnLevel = FixNullFromDB(drwBasketValues("QtyWarnLevel"))
-                    objItem.DownloadType = drwBasketValues("V_DownloadType") & ""
-                    objItem.OptionPrice = Math.Round(CDbl(FixNullFromDB(drwBasketValues("OptionsPrice"))), CurrencyRoundNumber)
-                    objItem.CategoryIDs = GetCategoryIDs(objItem.ProductID)
-                    objItem.PromoQty = objItem.Quantity
-                    objItem.VersionType = FixNullFromDB(drwBasketValues("VersionType"))
+        Try
+            For Each drwBasketValues As DataRow In tblBasketValues.Rows
+                objItem = New Kartris.BasketItem
+                objItem.ProductID = drwBasketValues("ProductID")
+                objItem.ProductType = drwBasketValues("ProductType")
+                objItem.TaxRate1 = FixNullFromDB(drwBasketValues("TaxRate"))
+                objItem.TaxRate2 = FixNullFromDB(drwBasketValues("TaxRate2"))
+                objItem.TaxRateItem = FixNullFromDB(drwBasketValues("TaxRate"))
+                objItem.Weight = FixNullFromDB(drwBasketValues("Weight"))
+                objItem.RRP = FixNullFromDB(drwBasketValues("RRP"))
+                objItem.ProductName = drwBasketValues("ProductName") & ""
+                objItem.ID = drwBasketValues("BV_ID")
+                objItem.VersionBaseID = drwBasketValues("V_ID")
+                objItem.VersionID = drwBasketValues("BV_VersionID")
+                objItem.VersionName = drwBasketValues("VersionName") & ""
+                objItem.VersionCode = drwBasketValues("CodeNumber") & ""
+                objItem.CodeNumber = drwBasketValues("CodeNumber") & ""
+                objItem.Price = FixNullFromDB(drwBasketValues("Price"))
+                objItem.Quantity = FixNullFromDB(drwBasketValues("Quantity"))
+                objItem.StockQty = FixNullFromDB(drwBasketValues("V_Quantity"))
+                objItem.QtyWarnLevel = FixNullFromDB(drwBasketValues("QtyWarnLevel"))
+                objItem.DownloadType = drwBasketValues("V_DownloadType") & ""
+                objItem.OptionPrice = Math.Round(CDbl(FixNullFromDB(drwBasketValues("OptionsPrice"))), CurrencyRoundNumber)
+                objItem.CategoryIDs = GetCategoryIDs(objItem.ProductID)
+                objItem.PromoQty = objItem.Quantity
+                objItem.VersionType = FixNullFromDB(drwBasketValues("VersionType"))
 
-                    'We can tell if this is an combinations product
-                    If objItem.VersionType = "c" Then
-                        objItem.HasCombinations = True
-                        objItem.DownloadType = FixNullFromDB(drwBasketValues("BaseVersion_DownloadType"))
+                'We can tell if this is an combinations product
+                If objItem.VersionType = "c" Then
+                    objItem.HasCombinations = True
+                    objItem.DownloadType = FixNullFromDB(drwBasketValues("BaseVersion_DownloadType"))
 
-                        'Normally, combinations products will use the price derived from the base version
-                        'and any options that are selected, just like a regular options product. However,
-                        'by setting the usecombination object config setting for the product to 'on', you
-                        'can specify pricing individually for each combination.
-                        If ObjectConfigBLL.GetValue("K:product.usecombinationprice", objItem.ProductID) = "1" Then
-                            objItem.Price = FixNullFromDB(drwBasketValues("CombinationPrice"))
-                            objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
-                            objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
-                        End If
+                    'Normally, combinations products will use the price derived from the base version
+                    'and any options that are selected, just like a regular options product. However,
+                    'by setting the usecombination object config setting for the product to 'on', you
+                    'can specify pricing individually for each combination.
+                    If ObjectConfigBLL.GetValue("K:product.usecombinationprice", objItem.ProductID) = "1" Then
+                        objItem.Price = FixNullFromDB(drwBasketValues("CombinationPrice"))
+                        objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
+                        objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
+                    End If
 
-                        'We determine whether stock tracking is on or not from the
-                        'base version rather than the actual combination in the
-                        'basket
-                        If VersionsBLL.IsStockTrackingInBase(objItem.ProductID) Then
-                            'Nowt
-                        Else
-                            objItem.QtyWarnLevel = 0
-                        End If
+                    'We determine whether stock tracking is on or not from the
+                    'base version rather than the actual combination in the
+                    'basket
+                    If VersionsBLL.IsStockTrackingInBase(objItem.ProductID) Then
+                        'Nowt
+                    Else
+                        objItem.QtyWarnLevel = 0
+                    End If
 
-                    ElseIf objItem.ProductType = "o" Then
-                        objItem.OptionLink = ""
+                ElseIf objItem.ProductType = "o" Then
+                    objItem.OptionLink = ""
 
                     'We don't stock track plain old versions; it doesn't really make sense
                     'since they're configurable items, and if stock tracking is needed you
@@ -507,8 +507,8 @@ Public Class BasketBLL
                     'objItem.QtyWarnLevel = 0
                 End If
 
-                objItem.OptionText = GetOptionText(LangaugeId, objItem.ID, objItem.OptionLink)
-                    objItem.CustomText = drwBasketValues("CustomText") & ""
+                objItem.OptionText = GetOptionText(LanguageId, objItem.ID, objItem.OptionLink)
+                objItem.CustomText = drwBasketValues("CustomText") & ""
                     objItem.CustomType = drwBasketValues("V_CustomizationType") & ""
                     objItem.CustomDesc = drwBasketValues("V_CustomizationDesc") & ""
                     objItem.CustomCost = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, FixNullFromDB(drwBasketValues("V_CustomizationCost")))), CurrencyRoundNumber)

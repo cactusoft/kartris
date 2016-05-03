@@ -132,7 +132,8 @@ Partial Class _ProductOptionGroups
                 chkBasicStockTracking_CheckedChanged(Me, New EventArgs)
                 txtBasicStockQuantity.Text = FixNullFromDB(drBasic("V_Quantity"))
                 txtBasicWarningLevel.Text = FixNullFromDB(drBasic("V_QuantityWarnLevel"))
-                txtBasicIncTax.Text = FixNullFromDB(drBasic("V_Price"))
+                txtBasicIncTax.Text = _HandleDecimalValues(CurrenciesBLL.FormatCurrencyPrice(HttpContext.Current.Session("CUR_ID"), CStr(FixNullFromDB(drBasic("V_Price"))), False))
+                'txtBasicIncTax.Text = FixNullFromDB(drBasic("V_Price"))
                 If TaxRegime.VTax_Type = "rate" Then
                     ddlBasicTaxBand.SelectedValue = CStr(FixNullFromDB(drBasic("V_Tax")))
                 ElseIf TaxRegime.VTax_Type = "boolean then" Then
@@ -152,7 +153,7 @@ Partial Class _ProductOptionGroups
                     End Try
                 End If
                 txtBasicWeight.Text = FixNullFromDB(drBasic("V_Weight"))
-                txtBasicRRP.Text = FixNullFromDB(drBasic("V_RRP"))
+                txtBasicRRP.Text = _HandleDecimalValues(CurrenciesBLL.FormatCurrencyPrice(HttpContext.Current.Session("CUR_ID"), CStr(FixNullFromDB(drBasic("V_RRP"))), False))
                 tabProductOptions.Enabled = True
                 tabOptionCombinations.Enabled = True
                 lnkBtnSaveBasicVersion.CommandName = "update"
@@ -188,7 +189,7 @@ Partial Class _ProductOptionGroups
         If txtBasicWeight.Text = "" Then txtBasicWeight.Text = "0"
 
         Dim strCodeNumber As String = txtBasicCodeNumber.Text
-        Dim numPrice As Single = HandleDecimalValues(txtBasicIncTax.Text)
+        Dim numPrice As Decimal = HandleDecimalValues(txtBasicIncTax.Text)
         Dim numTaxBand As Integer = 0
         Dim numTaxBand2 As Integer = 0
 
@@ -219,7 +220,7 @@ Partial Class _ProductOptionGroups
 
         Dim numStockQty As Integer = CInt(txtBasicStockQuantity.Text)
         Dim numQtyLevel As Integer = CInt(txtBasicWarningLevel.Text)
-        Dim numRRP As Single = HandleDecimalValues(txtBasicRRP.Text)
+        Dim numRRP As Decimal = HandleDecimalValues(txtBasicRRP.Text)
         Dim numWeight As Single = HandleDecimalValues(txtBasicWeight.Text)
         Dim chrType As Char = ""
 
@@ -572,7 +573,7 @@ Partial Class _ProductOptionGroups
             For Each drwNewCombination As DataRow In tblNewCombinations.Rows
                 numRowCount += 1
                 drwNewCombination("CodeNumber") = txtBasicCodeNumber.Text & "-" & numRowCount
-                drwNewCombination("Price") = CSng(txtBasicIncTax.Text)
+                drwNewCombination("Price") = CDec(txtBasicIncTax.Text)
                 drwNewCombination("Quantity") = CInt(txtBasicStockQuantity.Text)
                 drwNewCombination("QuantityWarnLevel") = CInt(txtBasicWarningLevel.Text)
                 drwNewCombination("IsExist") = False
@@ -736,7 +737,7 @@ Partial Class _ProductOptionGroups
         tblNewCombinations = VersionsBLL._GetSchema()
         tblNewCombinations.Columns.Add(New DataColumn("ID_List", Type.GetType("System.String")))
 
-        Dim vPrice As Single = FixNullToDB(HandleDecimalValues(txtBasicIncTax.Text), "d")
+        Dim vPrice As Decimal = FixNullToDB(HandleDecimalValues(txtBasicIncTax.Text), "z")
         Dim vTax As Byte, vTax2 As Byte
         If TaxRegime.VTax_Type = "rate" Then
             vTax = CByte(ddlBasicTaxBand.SelectedValue)
@@ -762,7 +763,7 @@ Partial Class _ProductOptionGroups
                 End If
             Next
         End If
-        Dim vRRP As Single = FixNullToDB(HandleDecimalValues(txtBasicRRP.Text), "d")
+        Dim vRRP As Decimal = FixNullToDB(HandleDecimalValues(txtBasicRRP.Text), "z")
         Dim vWeight As Single = FixNullToDB(HandleDecimalValues(txtBasicWeight.Text), "d")
         Dim vProductID As Integer = FixNullToDB(litProductID.Text, "i")
         Dim blnUseCombinationPrices As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", vProductID) = "1", True, False)

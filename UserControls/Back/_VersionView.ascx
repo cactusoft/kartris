@@ -56,7 +56,7 @@
                                             <%  If TaxRegime.VTax_Type = "boolean" Then %>
                                                     <span class="checkbox"><asp:CheckBox ID="chkTax" runat="server" Checked='<%# CkartrisDataManipulation.FixNullFromDB(Eval("T_TaxRate")) <>0 %>' Enabled="False"></asp:CheckBox></span>
                                                     <% Else%>
-                                                    <asp:Literal ID="T_TaxRate" runat="server" Text='<%# CkartrisDataManipulation.FixNullFromDB(Eval("T_TaxRate")) & "%"%>' />
+                                                    <asp:Literal ID="T_TaxRate" runat="server" Text='<%# CkartrisDisplayFunctions.FixDecimal(CkartrisDataManipulation.FixNullFromDB(Eval("T_TaxRate"))) & "%"%>' />
                                             <% End If%>
                                             </ItemTemplate>
                                         </asp:TemplateField>

@@ -57,8 +57,7 @@
                                             <asp:Literal ID="litCurrentRate" runat="server" Text='<%# Eval("CurrentRate") %>' />
                                         </td>
                                         <td>
-                                            <asp:TextBox ID="txtNewRate" runat="server" Text='<%# Eval("NewRate") %>' CssClass="midtext"
-                                                MaxLength="8" />
+                                            <asp:TextBox ID="txtNewRate" runat="server" Text='<%# Eval("NewRate") %>' CssClass="midtext" />
                                             <asp:RegularExpressionValidator ID="valRegexNewOld" runat="server" Display="Dynamic" SetFocusOnError="true"
                                                 ErrorMessage="<%$ Resources: _Kartris, ContentText_InvalidValue %>" CssClass="error" ForeColor="" ControlToValidate="txtNewRate" 
                                                 ValidationExpression="<%$ AppSettings:DecimalRegex %>" />
@@ -81,8 +80,7 @@
                                             <asp:Literal ID="litCurrentRate" runat="server" Text='<%# Eval("CurrentRate") %>' />
                                         </td>
                                         <td>
-                                            <asp:TextBox ID="txtNewRate" runat="server" Text='<%# Eval("NewRate") %>' CssClass="midtext"
-                                                MaxLength="8" />
+                                            <asp:TextBox ID="txtNewRate" runat="server" Text='<%# Eval("NewRate") %>' CssClass="midtext" />
                                             <asp:RegularExpressionValidator ID="valRegexNewOld" runat="server" Display="Dynamic" SetFocusOnError="true"
                                                 ErrorMessage="<%$ Resources: _Kartris, ContentText_InvalidValue %>" CssClass="error" ForeColor="" ControlToValidate="txtNewRate"
                                                 ValidationExpression="<%$ AppSettings:DecimalRegex %>" />
@@ -104,7 +102,7 @@
                             Text="International exchange rate information obtained from the <strong>European Central Bank</strong> - <a href='http://www.ecb.int'>www.ecb.int</a>"></asp:Literal></p>
 
                         <p><asp:Literal ID="litContentTextLiveCurrencyRateNote3" runat="server" 
-                            Text="Bitcoin price from <strong>BCChanger</strong> - <a href='http://www.bcchanger.com'>www.bcchanger.com</a>"></asp:Literal></p>
+                            Text="Bitcoin price from <strong>Bitpay</strong> - <a href='http://www.bitpay.com'>www.bitpay.com</a>"></asp:Literal></p>
 
                         <p>
                         <asp:Literal ID="litContentTextCurrencyHash" runat="server" Text="<%$ Resources: _Currency, ContentText_CurrencyHash %>" /></p>

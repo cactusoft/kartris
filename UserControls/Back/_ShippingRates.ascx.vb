@@ -63,7 +63,7 @@ Partial Class UserControls_Back_ShippingRates
         End Select
     End Sub
 
-    Private Sub UpdateShippingRate(ByVal numShippingRateID As Integer, ByVal numRate As Single, ByVal strShippingGateways As String)
+    Private Sub UpdateShippingRate(ByVal numShippingRateID As Integer, ByVal numRate As Decimal, ByVal strShippingGateways As String)
         Dim strMessage As String = ""
         If Not ShippingBLL._UpdateShippingRate(numShippingRateID, numRate, strShippingGateways, strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
@@ -72,7 +72,7 @@ Partial Class UserControls_Back_ShippingRates
         RaiseEvent _UCEvent_DataUpdated()
     End Sub
 
-    Private Sub AddNewShippingRate(ByVal numBoundary As Single, ByVal numRate As Single, ByVal strShippingGateways As String)
+    Private Sub AddNewShippingRate(ByVal numBoundary As Decimal, ByVal numRate As Decimal, ByVal strShippingGateways As String)
         Dim strMessage As String = ""
         If Not ShippingBLL._AddNewShippingRate(GetShippingMethodID(), GetShippingZoneID(), numBoundary, numRate, strShippingGateways, strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
@@ -108,7 +108,7 @@ Partial Class UserControls_Back_ShippingRates
 
     Protected Sub rptRates_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptRates.ItemDataBound
         If e.Item.ItemType = ListItemType.AlternatingItem OrElse e.Item.ItemType = ListItemType.Item Then
-            If CDbl(CType(e.Item.FindControl("litBoundary"), Literal).Text) >= 99999 Then
+            If CDbl(CType(e.Item.FindControl("litBoundary"), Literal).Text) >= 999999 Then
                 CType(e.Item.FindControl("phdHighRates"), PlaceHolder).Visible = True
             Else
                 CType(e.Item.FindControl("phdNormalRates"), PlaceHolder).Visible = True

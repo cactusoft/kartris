@@ -124,7 +124,7 @@ Partial Class Admin_LiveCurrencies
 
                     Dim strCurrencyID As String = CStr(CType(itm.FindControl("litCurrencyID"), Literal).Text)
                     Dim strNewCurrency As String = CStr(CType(itm.FindControl("txtNewRate"), TextBox).Text)
-                    If IsNumeric(strNewCurrency) AndAlso CSng(strNewCurrency) > 0 Then
+                    If IsNumeric(strNewCurrency) AndAlso CDec(strNewCurrency) > 0 Then
                         CurrenciesBLL._UpdateCurrencyRate(CByte(strCurrencyID), HandleDecimalValues(strNewCurrency))
                     End If
                 End If
@@ -136,10 +136,10 @@ Partial Class Admin_LiveCurrencies
         Return False
     End Function
 
-    Private Function GetBitCoinRate(ByVal strBaseIso As String) As Double
-        Dim url As String = "http://bcchanger.com/bitcoin_price_feed.php?feed_type=xml&currency=" & strBaseIso
+    Private Function GetBitCoinRate(ByVal strBaseIso As String) As Decimal
+        Dim url As String = "https://bitpay.com/api/rates/" & strBaseIso
         Dim xmlDoc As XDocument = Nothing
-        Dim numValue As Double = 0
+        Dim numValue As Decimal = 0
 
         'Put it in a try, in case a bad result is or some
         'other problem like an error
@@ -152,27 +152,18 @@ Partial Class Admin_LiveCurrencies
             reqFeed.Timeout = 1000 'milliseconds
             Dim resFeed As System.Net.WebResponse = reqFeed.GetResponse()
             Dim responseStream As Stream = resFeed.GetResponseStream()
-            Dim docXML As New XmlDocument()
-            docXML.Load(responseStream)
+            Dim reader As New StreamReader(responseStream)
+            Dim strResponse As String = reader.ReadToEnd()
             responseStream.Close()
 
-            'Set XDocument to the XML string we got back from feed
-            xmlDoc = XDocument.Parse(docXML.OuterXml)
-
-            'Define LINQ query to pull 1 record from XML
-            'Note the 'skip' second line from bottom - so we can jump to a record
-            'Note the 'take' at end, similar to 'top' in SQL
-            Dim xmlChannel = From xmlItem In xmlDoc.Descendants("BTC") _
-            Select strValue = xmlItem.Element("value").Value, _
-            strCurrency = xmlItem.Element("currency").Value _
-            Take 1
-            For Each xmlItem In xmlChannel
-                numValue = 1 / CDbl(xmlItem.strValue)
-            Next
-            'Add feed data to local cache for one hour
-
+            'Format of response as follows
+            '{"code":"GBP","name":"Pound Sterling","rate":302.481272}
+            strResponse = strResponse.Replace("{""code"":""GBP"",""name"":""Pound Sterling"",""rate"":", "")
+            strResponse = strResponse.Replace("}", "")
+            numValue = Math.Round(1 / CDec(strResponse), 8)
         Catch ex As Exception
             'Oh dear
+            numValue = 0
         End Try
         Return numValue
 
@@ -220,12 +211,12 @@ Partial Class Admin_LiveCurrencies
                 For Each result As Object In cubes
                     If row("ISOCode") = result.Currency Then
                         'rates needs to be divided to the GBP value as they are originally computed against 1 EUR
-                        row("NewRate") = Math.Round(result.Rate / decBaseISORate, 5)
+                        row("NewRate") = Math.Round(result.Rate / decBaseISORate, 8)
                         Exit For
                     ElseIf row("ISOCode") = "EUR" Then
                         'EUR is not in the returned XML so just always consider its value as 1 - its the XML's base currency 
                         'To get its actual rate, just divide it against the base iso rate
-                        row("NewRate") = Math.Round(1 / decBaseISORate, 5)
+                        row("NewRate") = Math.Round(1 / decBaseISORate, 8)
                         Exit For
                     ElseIf row("ISOCode") = "BTC" Then
                         row("NewRate") = GetBitCoinRate(strBaseIso)

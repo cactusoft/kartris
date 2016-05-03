@@ -206,7 +206,7 @@ Public Class ShippingBLL
         Return ShippingRatesAdptr._GetZonesByMethod(numShippingMethodID)
     End Function
 
-    Public Shared Function _UpdateShippingRate(ByVal numShippingRateID As Integer, ByVal numNewRate As Single, ByVal strShippingGateways As String, ByRef strMsg As String) As Boolean
+    Public Shared Function _UpdateShippingRate(ByVal numShippingRateID As Integer, ByVal numNewRate As Decimal, ByVal strShippingGateways As String, ByRef strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
             Dim cmdUpdateShippingRate As SqlCommand = sqlConn.CreateCommand
@@ -297,8 +297,8 @@ Public Class ShippingBLL
         End Using
         Return False
     End Function
-    Public Shared Function _AddNewShippingRate(ByVal numShippingMethodID As Byte, ByVal numShippingZoneID As Byte, _
-                              ByVal numBoundary As Single, ByVal numRate As Single, ByVal strShippingGateways As String, ByRef strMsg As String) As Boolean
+    Public Shared Function _AddNewShippingRate(ByVal numShippingMethodID As Byte, ByVal numShippingZoneID As Byte,
+                              ByVal numBoundary As Decimal, ByVal numRate As Decimal, ByVal strShippingGateways As String, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -510,8 +510,8 @@ Public Class ShippingBLL
         Return CInt(DestinationsAdptr._GetTotalDestinationsByZone(numZoneID).Rows(0)("TotalDestinations"))
     End Function
 
-    Public Shared Function _UpdateDestination(ByVal tblElements As DataTable, ByVal numDesinationID As Short, ByVal numZoneID As Byte, _
-                                       ByVal sngTax As Single, ByVal sngTax2 As Single, ByVal strISOCode As String, ByVal strISOCode3Letters As String, _
+    Public Shared Function _UpdateDestination(ByVal tblElements As DataTable, ByVal numDesinationID As Short, ByVal numZoneID As Byte,
+                                       ByVal decTax As Decimal, ByVal decTax2 As Decimal, ByVal strISOCode As String, ByVal strISOCode3Letters As String,
                                        ByVal strISONumeric As String, ByVal strRegion As String, ByVal blnLive As Boolean, ByRef strMsg As String, ByVal strTaxExtra As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -523,8 +523,8 @@ Public Class ShippingBLL
             Try
                 cmdUpdateDestination.Parameters.AddWithValue("@D_ID", numDesinationID)
                 cmdUpdateDestination.Parameters.AddWithValue("@D_ShippingZoneID", numZoneID)
-                cmdUpdateDestination.Parameters.AddWithValue("@D_Tax", sngTax)
-                cmdUpdateDestination.Parameters.AddWithValue("@D_Tax2", FixNullToDB(sngTax2, "d"))
+                cmdUpdateDestination.Parameters.AddWithValue("@D_Tax", decTax)
+                cmdUpdateDestination.Parameters.AddWithValue("@D_Tax2", FixNullToDB(decTax2, "z")) 'z=decimal because d already taken for double
                 cmdUpdateDestination.Parameters.AddWithValue("@D_ISOCode", FixNullToDB(strISOCode, "s"))
                 cmdUpdateDestination.Parameters.AddWithValue("@D_ISOCode3Letter", FixNullToDB(strISOCode3Letters, "s"))
                 cmdUpdateDestination.Parameters.AddWithValue("@D_ISOCodeNumeric", FixNullToDB(strISONumeric, "s"))
@@ -538,7 +538,7 @@ Public Class ShippingBLL
 
                 cmdUpdateDestination.ExecuteNonQuery()
 
-                If Not LanguageElementsBLL._UpdateLanguageElements( _
+                If Not LanguageElementsBLL._UpdateLanguageElements(
                                     tblElements, LANG_ELEM_TABLE_TYPE.Destination, numDesinationID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
@@ -555,8 +555,8 @@ Public Class ShippingBLL
         End Using
         Return False
     End Function
-    Public Shared Function _UpdateDestinationForTaxWizard(ByVal numDesinationID As Short, ByVal numZoneID As Byte, _
-                                       ByVal sngTax As Single, ByVal sngTax2 As Single, ByVal strISOCode As String, ByVal strISOCode3Letters As String, _
+    Public Shared Function _UpdateDestinationForTaxWizard(ByVal numDesinationID As Short, ByVal numZoneID As Byte,
+                                       ByVal decTax As Decimal, ByVal decTax2 As Decimal, ByVal strISOCode As String, ByVal strISOCode3Letters As String,
                                        ByVal strISONumeric As String, ByVal strRegion As String, ByVal blnLive As Boolean, ByRef strMsg As String, ByVal strTaxExtra As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -568,8 +568,8 @@ Public Class ShippingBLL
             Try
                 cmdUpdateDestination.Parameters.AddWithValue("@D_ID", numDesinationID)
                 cmdUpdateDestination.Parameters.AddWithValue("@D_ShippingZoneID", numZoneID)
-                cmdUpdateDestination.Parameters.AddWithValue("@D_Tax", sngTax)
-                cmdUpdateDestination.Parameters.AddWithValue("@D_Tax2", FixNullToDB(sngTax2, "d"))
+                cmdUpdateDestination.Parameters.AddWithValue("@D_Tax", decTax)
+                cmdUpdateDestination.Parameters.AddWithValue("@D_Tax2", FixNullToDB(decTax2, "z")) 'z=decimal because d already taken for double
                 cmdUpdateDestination.Parameters.AddWithValue("@D_ISOCode", FixNullToDB(strISOCode, "s"))
                 cmdUpdateDestination.Parameters.AddWithValue("@D_ISOCode3Letter", FixNullToDB(strISOCode3Letters, "s"))
                 cmdUpdateDestination.Parameters.AddWithValue("@D_ISOCodeNumeric", FixNullToDB(strISONumeric, "s"))

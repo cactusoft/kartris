@@ -418,7 +418,7 @@ Public Class OptionsBLL
                 cmd.Parameters.AddWithValue("@OptionID", CInt(row("P_OPT_OptionID")))
                 cmd.Parameters.AddWithValue("@ProductID", CInt(row("P_OPT_ProductID")))
                 cmd.Parameters.AddWithValue("@OrderBy", CInt(row("P_OPT_OrderByValue")))
-                cmd.Parameters.AddWithValue("@PriceChange", CDbl(row("P_OPT_PriceChange")))
+                cmd.Parameters.AddWithValue("@PriceChange", CDec(row("P_OPT_PriceChange")))
                 cmd.Parameters.AddWithValue("@WeightChange", CDbl(row("P_OPT_WeightChange")))
                 cmd.Parameters.AddWithValue("@Selected", CBool(row("P_OPT_Selected")))
                 cmd.ExecuteNonQuery()

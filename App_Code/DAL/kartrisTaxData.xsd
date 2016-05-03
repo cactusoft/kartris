@@ -10,7 +10,7 @@
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="TaxRatesTblAdptr" GeneratorDataComponentClassName="TaxRatesTblAdptr" Name="TaxRates" UserDataComponentName="TaxRatesTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="" DbObjectType="Unknown" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetTaxRates" GetMethodModifier="Public" GetMethodName="_GetTaxRates" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetTaxRates" UserSourceName="_GetTaxRates">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisTaxRates_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetTaxRates" GetMethodModifier="Public" GetMethodName="_GetTaxRates" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetTaxRates" UserSourceName="_GetTaxRates">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisTaxRates_Get]</CommandText>
@@ -28,7 +28,7 @@
               <Mapping SourceColumn="T_QBRefCode" DataSetColumn="T_QBRefCode" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="" DbObjectType="Unknown" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetTaxRatesForDisplay" GetMethodModifier="Public" GetMethodName="_GetTaxRatesForDisplay" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetTaxRatesForDisplay" UserSourceName="_GetTaxRatesForDisplay">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectType="Unknown" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetTaxRatesForDisplay" GetMethodModifier="Public" GetMethodName="_GetTaxRatesForDisplay" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetTaxRatesForDisplay" UserSourceName="_GetTaxRatesForDisplay">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisTaxRates_GetForDisplay]</CommandText>
@@ -39,7 +39,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="GetClosestRate" Modifier="Public" Name="GetClosestRate" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="GetClosestRate">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisTaxRates_GetClosestRate" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetClosestRate" Modifier="Public" Name="GetClosestRate" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="GetClosestRate">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisTaxRates_GetClosestRate</CommandText>
@@ -50,7 +50,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorGetMethodName="GetDataBy1" GeneratorSourceName="GetQBTaxRefCodeOfVerCode" Modifier="Public" Name="GetQBTaxRefCodeOfVerCode" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="GetQBTaxRefCodeOfVerCode">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisVersions_GetQBTaxRefCode" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorGetMethodName="GetDataBy1" GeneratorSourceName="GetQBTaxRefCodeOfVerCode" Modifier="Public" Name="GetQBTaxRefCodeOfVerCode" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="GetQBTaxRefCodeOfVerCode">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisVersions_GetQBTaxRefCode</CommandText>
@@ -61,7 +61,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="" DbObjectType="Unknown" GenerateShortCommands="true" GeneratorSourceName="GetTaxRatebyID" Modifier="Public" Name="GetTaxRatebyID" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="GetTaxRatebyID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisTaxRates_Get" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetTaxRatebyID" Modifier="Public" Name="GetTaxRatebyID" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="GetTaxRatebyID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisTaxRates_Get</CommandText>
@@ -79,22 +79,22 @@
       </DataSource>
     </xs:appinfo>
   </xs:annotation>
-  <xs:element name="kartrisTaxData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msdata:EnforceConstraints="False" msprop:Generator_UserDSName="kartrisTaxData" msprop:Generator_DataSetName="kartrisTaxData">
+  <xs:element name="kartrisTaxData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msdata:EnforceConstraints="False" msprop:Generator_DataSetName="kartrisTaxData" msprop:Generator_UserDSName="kartrisTaxData">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="TaxRates" msprop:Generator_UserTableName="TaxRates" msprop:Generator_RowDeletedName="TaxRatesRowDeleted" msprop:Generator_RowChangedName="TaxRatesRowChanged" msprop:Generator_RowClassName="TaxRatesRow" msprop:Generator_RowChangingName="TaxRatesRowChanging" msprop:Generator_RowEvArgName="TaxRatesRowChangeEvent" msprop:Generator_RowEvHandlerName="TaxRatesRowChangeEventHandler" msprop:Generator_TableClassName="TaxRatesDataTable" msprop:Generator_TableVarName="tableTaxRates" msprop:Generator_RowDeletingName="TaxRatesRowDeleting" msprop:Generator_TablePropName="TaxRates">
+        <xs:element name="TaxRates" msprop:Generator_UserTableName="TaxRates" msprop:Generator_RowEvArgName="TaxRatesRowChangeEvent" msprop:Generator_TableVarName="tableTaxRates" msprop:Generator_TablePropName="TaxRates" msprop:Generator_RowDeletingName="TaxRatesRowDeleting" msprop:Generator_RowChangingName="TaxRatesRowChanging" msprop:Generator_RowDeletedName="TaxRatesRowDeleted" msprop:Generator_RowEvHandlerName="TaxRatesRowChangeEventHandler" msprop:Generator_TableClassName="TaxRatesDataTable" msprop:Generator_RowChangedName="TaxRatesRowChanged" msprop:Generator_RowClassName="TaxRatesRow">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="T_ID" msdata:ReadOnly="true" msprop:Generator_UserColumnName="T_ID" msprop:Generator_ColumnPropNameInRow="T_ID" msprop:Generator_ColumnVarNameInTable="columnT_ID" msprop:Generator_ColumnPropNameInTable="T_IDColumn" type="xs:unsignedByte" />
-              <xs:element name="T_Taxrate" msprop:Generator_UserColumnName="T_Taxrate" msprop:Generator_ColumnPropNameInRow="T_Taxrate" msprop:Generator_ColumnVarNameInTable="columnT_Taxrate" msprop:Generator_ColumnPropNameInTable="T_TaxrateColumn" type="xs:float" />
-              <xs:element name="T_TaxRateString" msdata:ReadOnly="true" msprop:Generator_UserColumnName="T_TaxRateString" msprop:Generator_ColumnPropNameInRow="T_TaxRateString" msprop:Generator_ColumnVarNameInTable="columnT_TaxRateString" msprop:Generator_ColumnPropNameInTable="T_TaxRateStringColumn" minOccurs="0">
+              <xs:element name="T_ID" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnT_ID" msprop:Generator_ColumnPropNameInRow="T_ID" msprop:Generator_ColumnPropNameInTable="T_IDColumn" msprop:Generator_UserColumnName="T_ID" type="xs:unsignedByte" />
+              <xs:element name="T_Taxrate" msprop:Generator_ColumnVarNameInTable="columnT_Taxrate" msprop:Generator_ColumnPropNameInRow="T_Taxrate" msprop:Generator_ColumnPropNameInTable="T_TaxrateColumn" msprop:Generator_UserColumnName="T_Taxrate" type="xs:decimal" />
+              <xs:element name="T_TaxRateString" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnT_TaxRateString" msprop:Generator_ColumnPropNameInRow="T_TaxRateString" msprop:Generator_ColumnPropNameInTable="T_TaxRateStringColumn" msprop:Generator_UserColumnName="T_TaxRateString" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="19" />
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="T_QBRefCode" msprop:Generator_UserColumnName="T_QBRefCode" msprop:Generator_ColumnPropNameInRow="T_QBRefCode" msprop:Generator_ColumnVarNameInTable="columnT_QBRefCode" msprop:Generator_ColumnPropNameInTable="T_QBRefCodeColumn" minOccurs="0">
+              <xs:element name="T_QBRefCode" msprop:Generator_ColumnVarNameInTable="columnT_QBRefCode" msprop:Generator_ColumnPropNameInRow="T_QBRefCode" msprop:Generator_ColumnPropNameInTable="T_QBRefCodeColumn" msprop:Generator_UserColumnName="T_QBRefCode" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
                     <xs:maxLength value="50" />

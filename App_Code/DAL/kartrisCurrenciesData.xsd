@@ -70,7 +70,7 @@
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="CUR_ExchangeRate" msprop:Generator_ColumnVarNameInTable="columnCUR_ExchangeRate" msprop:Generator_ColumnPropNameInRow="CUR_ExchangeRate" msprop:Generator_ColumnPropNameInTable="CUR_ExchangeRateColumn" msprop:Generator_UserColumnName="CUR_ExchangeRate" type="xs:float" minOccurs="0" />
+              <xs:element name="CUR_ExchangeRate" msprop:Generator_ColumnVarNameInTable="columnCUR_ExchangeRate" msprop:Generator_ColumnPropNameInRow="CUR_ExchangeRate" msprop:Generator_ColumnPropNameInTable="CUR_ExchangeRateColumn" msprop:Generator_UserColumnName="CUR_ExchangeRate" type="xs:decimal" minOccurs="0" />
               <xs:element name="CUR_HasDecimals" msprop:Generator_ColumnVarNameInTable="columnCUR_HasDecimals" msprop:Generator_ColumnPropNameInRow="CUR_HasDecimals" msprop:Generator_ColumnPropNameInTable="CUR_HasDecimalsColumn" msprop:Generator_UserColumnName="CUR_HasDecimals" type="xs:boolean" minOccurs="0" />
               <xs:element name="CUR_Live" msprop:Generator_ColumnVarNameInTable="columnCUR_Live" msprop:Generator_ColumnPropNameInRow="CUR_Live" msprop:Generator_ColumnPropNameInTable="CUR_LiveColumn" msprop:Generator_UserColumnName="CUR_Live" type="xs:boolean" minOccurs="0" />
               <xs:element name="CUR_Format" msprop:Generator_ColumnVarNameInTable="columnCUR_Format" msprop:Generator_ColumnPropNameInRow="CUR_Format" msprop:Generator_ColumnPropNameInTable="CUR_FormatColumn" msprop:Generator_UserColumnName="CUR_Format" minOccurs="0">

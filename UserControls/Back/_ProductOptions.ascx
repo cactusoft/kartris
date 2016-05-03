@@ -51,7 +51,7 @@
                     </div>
                     <!-- Price Change -->
                     <div class="optionsfield">
-                        <asp:TextBox ID="txtOptPriceChange" runat="server" Text='<%# iif(CkartrisDataManipulation.FixNullFromDB(Eval("OPT_DefPriceChange")) IsNot Nothing, Eval("OPT_DefPriceChange"), "0") %>'
+                        <asp:TextBox ID="txtOptPriceChange" runat="server" Text='<%#IIf(CkartrisDataManipulation.FixNullFromDB(Eval("OPT_DefPriceChange")) IsNot Nothing, CurrenciesBLL.FormatCurrencyPrice(HttpContext.Current.Session("CUR_ID"), CStr(Eval("OPT_DefPriceChange")), False), "0") %>'
                             Enabled="true" MaxLength="8" />
                         <asp:RequiredFieldValidator ID="valRequiredOptPriceChange" runat="server" ControlToValidate="txtOptPriceChange"
                             CssClass="error" ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"

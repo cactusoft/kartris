@@ -254,7 +254,7 @@
   <xs:element name="kartrisShippingData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msdata:EnforceConstraints="False" msprop:Generator_DataSetName="kartrisShippingData" msprop:Generator_UserDSName="kartrisShippingData">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="ShippingMethods" msprop:Generator_UserTableName="ShippingMethods" msprop:Generator_RowEvArgName="ShippingMethodsRowChangeEvent" msprop:Generator_TableVarName="tableShippingMethods" msprop:Generator_TablePropName="ShippingMethods" msprop:Generator_RowDeletingName="ShippingMethodsRowDeleting" msprop:Generator_RowChangingName="ShippingMethodsRowChanging" msprop:Generator_RowDeletedName="ShippingMethodsRowDeleted" msprop:Generator_RowEvHandlerName="ShippingMethodsRowChangeEventHandler" msprop:Generator_RowChangedName="ShippingMethodsRowChanged" msprop:Generator_TableClassName="ShippingMethodsDataTable" msprop:Generator_RowClassName="ShippingMethodsRow">
+        <xs:element name="ShippingMethods" msprop:Generator_UserTableName="ShippingMethods" msprop:Generator_RowEvArgName="ShippingMethodsRowChangeEvent" msprop:Generator_TableVarName="tableShippingMethods" msprop:Generator_TablePropName="ShippingMethods" msprop:Generator_RowDeletingName="ShippingMethodsRowDeleting" msprop:Generator_RowChangingName="ShippingMethodsRowChanging" msprop:Generator_RowDeletedName="ShippingMethodsRowDeleted" msprop:Generator_RowEvHandlerName="ShippingMethodsRowChangeEventHandler" msprop:Generator_TableClassName="ShippingMethodsDataTable" msprop:Generator_RowChangedName="ShippingMethodsRowChanged" msprop:Generator_RowClassName="ShippingMethodsRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="SM_ID" msprop:Generator_ColumnVarNameInTable="columnSM_ID" msprop:Generator_ColumnPropNameInRow="SM_ID" msprop:Generator_ColumnPropNameInTable="SM_IDColumn" msprop:Generator_UserColumnName="SM_ID" type="xs:unsignedByte" />
@@ -279,14 +279,14 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="ShippingRates" msprop:Generator_UserTableName="ShippingRates" msprop:Generator_RowEvArgName="ShippingRatesRowChangeEvent" msprop:Generator_TableVarName="tableShippingRates" msprop:Generator_TablePropName="ShippingRates" msprop:Generator_RowDeletingName="ShippingRatesRowDeleting" msprop:Generator_RowChangingName="ShippingRatesRowChanging" msprop:Generator_RowDeletedName="ShippingRatesRowDeleted" msprop:Generator_RowEvHandlerName="ShippingRatesRowChangeEventHandler" msprop:Generator_RowChangedName="ShippingRatesRowChanged" msprop:Generator_TableClassName="ShippingRatesDataTable" msprop:Generator_RowClassName="ShippingRatesRow">
+        <xs:element name="ShippingRates" msprop:Generator_UserTableName="ShippingRates" msprop:Generator_RowEvArgName="ShippingRatesRowChangeEvent" msprop:Generator_TableVarName="tableShippingRates" msprop:Generator_TablePropName="ShippingRates" msprop:Generator_RowDeletingName="ShippingRatesRowDeleting" msprop:Generator_RowChangingName="ShippingRatesRowChanging" msprop:Generator_RowDeletedName="ShippingRatesRowDeleted" msprop:Generator_RowEvHandlerName="ShippingRatesRowChangeEventHandler" msprop:Generator_TableClassName="ShippingRatesDataTable" msprop:Generator_RowChangedName="ShippingRatesRowChanged" msprop:Generator_RowClassName="ShippingRatesRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="S_ID" msdata:ReadOnly="true" msprop:Generator_ColumnVarNameInTable="columnS_ID" msprop:Generator_ColumnPropNameInRow="S_ID" msprop:Generator_ColumnPropNameInTable="S_IDColumn" msprop:Generator_UserColumnName="S_ID" type="xs:short" minOccurs="0" />
               <xs:element name="S_ShippingMethodID" msprop:Generator_ColumnVarNameInTable="columnS_ShippingMethodID" msprop:Generator_ColumnPropNameInRow="S_ShippingMethodID" msprop:Generator_ColumnPropNameInTable="S_ShippingMethodIDColumn" msprop:Generator_UserColumnName="S_ShippingMethodID" type="xs:unsignedByte" minOccurs="0" />
               <xs:element name="S_ShippingZoneID" msprop:Generator_ColumnVarNameInTable="columnS_ShippingZoneID" msprop:Generator_ColumnPropNameInRow="S_ShippingZoneID" msprop:Generator_ColumnPropNameInTable="S_ShippingZoneIDColumn" msprop:Generator_UserColumnName="S_ShippingZoneID" type="xs:unsignedByte" minOccurs="0" />
-              <xs:element name="S_Boundary" msprop:Generator_ColumnVarNameInTable="columnS_Boundary" msprop:Generator_ColumnPropNameInRow="S_Boundary" msprop:Generator_ColumnPropNameInTable="S_BoundaryColumn" msprop:Generator_UserColumnName="S_Boundary" type="xs:float" minOccurs="0" />
-              <xs:element name="S_ShippingRate" msprop:Generator_ColumnVarNameInTable="columnS_ShippingRate" msprop:Generator_ColumnPropNameInRow="S_ShippingRate" msprop:Generator_ColumnPropNameInTable="S_ShippingRateColumn" msprop:Generator_UserColumnName="S_ShippingRate" type="xs:float" minOccurs="0" />
+              <xs:element name="S_Boundary" msprop:Generator_ColumnVarNameInTable="columnS_Boundary" msprop:Generator_ColumnPropNameInRow="S_Boundary" msprop:Generator_ColumnPropNameInTable="S_BoundaryColumn" msprop:Generator_UserColumnName="S_Boundary" type="xs:decimal" minOccurs="0" />
+              <xs:element name="S_ShippingRate" msprop:Generator_ColumnVarNameInTable="columnS_ShippingRate" msprop:Generator_ColumnPropNameInRow="S_ShippingRate" msprop:Generator_ColumnPropNameInTable="S_ShippingRateColumn" msprop:Generator_UserColumnName="S_ShippingRate" type="xs:decimal" minOccurs="0" />
               <xs:element name="S_ShippingGateways" msprop:Generator_ColumnVarNameInTable="columnS_ShippingGateways" msprop:Generator_ColumnPropNameInRow="S_ShippingGateways" msprop:Generator_ColumnPropNameInTable="S_ShippingGatewaysColumn" msprop:Generator_UserColumnName="S_ShippingGateways" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
@@ -297,7 +297,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="ShippingZones" msprop:Generator_UserTableName="ShippingZones" msprop:Generator_RowEvArgName="ShippingZonesRowChangeEvent" msprop:Generator_TableVarName="tableShippingZones" msprop:Generator_TablePropName="ShippingZones" msprop:Generator_RowDeletingName="ShippingZonesRowDeleting" msprop:Generator_RowChangingName="ShippingZonesRowChanging" msprop:Generator_RowDeletedName="ShippingZonesRowDeleted" msprop:Generator_RowEvHandlerName="ShippingZonesRowChangeEventHandler" msprop:Generator_RowChangedName="ShippingZonesRowChanged" msprop:Generator_TableClassName="ShippingZonesDataTable" msprop:Generator_RowClassName="ShippingZonesRow">
+        <xs:element name="ShippingZones" msprop:Generator_UserTableName="ShippingZones" msprop:Generator_RowEvArgName="ShippingZonesRowChangeEvent" msprop:Generator_TableVarName="tableShippingZones" msprop:Generator_TablePropName="ShippingZones" msprop:Generator_RowDeletingName="ShippingZonesRowDeleting" msprop:Generator_RowChangingName="ShippingZonesRowChanging" msprop:Generator_RowDeletedName="ShippingZonesRowDeleted" msprop:Generator_RowEvHandlerName="ShippingZonesRowChangeEventHandler" msprop:Generator_TableClassName="ShippingZonesDataTable" msprop:Generator_RowChangedName="ShippingZonesRowChanged" msprop:Generator_RowClassName="ShippingZonesRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="SZ_ID" msprop:Generator_ColumnVarNameInTable="columnSZ_ID" msprop:Generator_ColumnPropNameInRow="SZ_ID" msprop:Generator_ColumnPropNameInTable="SZ_IDColumn" msprop:Generator_UserColumnName="SZ_ID" type="xs:unsignedByte" minOccurs="0" />
@@ -314,7 +314,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="Destinations" msprop:Generator_UserTableName="Destinations" msprop:Generator_RowEvArgName="DestinationsRowChangeEvent" msprop:Generator_TableVarName="tableDestinations" msprop:Generator_TablePropName="Destinations" msprop:Generator_RowDeletingName="DestinationsRowDeleting" msprop:Generator_RowChangingName="DestinationsRowChanging" msprop:Generator_RowDeletedName="DestinationsRowDeleted" msprop:Generator_RowEvHandlerName="DestinationsRowChangeEventHandler" msprop:Generator_RowChangedName="DestinationsRowChanged" msprop:Generator_TableClassName="DestinationsDataTable" msprop:Generator_RowClassName="DestinationsRow">
+        <xs:element name="Destinations" msprop:Generator_UserTableName="Destinations" msprop:Generator_RowEvArgName="DestinationsRowChangeEvent" msprop:Generator_TableVarName="tableDestinations" msprop:Generator_TablePropName="Destinations" msprop:Generator_RowDeletingName="DestinationsRowDeleting" msprop:Generator_RowChangingName="DestinationsRowChanging" msprop:Generator_RowDeletedName="DestinationsRowDeleted" msprop:Generator_RowEvHandlerName="DestinationsRowChangeEventHandler" msprop:Generator_TableClassName="DestinationsDataTable" msprop:Generator_RowChangedName="DestinationsRowChanged" msprop:Generator_RowClassName="DestinationsRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="D_ID" msprop:Generator_ColumnVarNameInTable="columnD_ID" msprop:Generator_ColumnPropNameInRow="D_ID" msprop:Generator_ColumnPropNameInTable="D_IDColumn" msprop:Generator_UserColumnName="D_ID" type="xs:short" minOccurs="0" />
@@ -327,7 +327,7 @@
                 </xs:simpleType>
               </xs:element>
               <xs:element name="D_ShippingZoneID" msprop:Generator_ColumnVarNameInTable="columnD_ShippingZoneID" msprop:Generator_ColumnPropNameInRow="D_ShippingZoneID" msprop:Generator_ColumnPropNameInTable="D_ShippingZoneIDColumn" msprop:Generator_UserColumnName="D_ShippingZoneID" type="xs:unsignedByte" minOccurs="0" />
-              <xs:element name="D_Tax" msprop:Generator_ColumnVarNameInTable="columnD_Tax" msprop:Generator_ColumnPropNameInRow="D_Tax" msprop:Generator_ColumnPropNameInTable="D_TaxColumn" msprop:Generator_UserColumnName="D_Tax" type="xs:float" minOccurs="0" />
+              <xs:element name="D_Tax" msprop:Generator_ColumnVarNameInTable="columnD_Tax" msprop:Generator_ColumnPropNameInRow="D_Tax" msprop:Generator_ColumnPropNameInTable="D_TaxColumn" msprop:Generator_UserColumnName="D_Tax" type="xs:decimal" minOccurs="0" />
               <xs:element name="D_ISOCode" msprop:Generator_ColumnVarNameInTable="columnD_ISOCode" msprop:Generator_ColumnPropNameInRow="D_ISOCode" msprop:Generator_ColumnPropNameInTable="D_ISOCodeColumn" msprop:Generator_UserColumnName="D_ISOCode" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
@@ -357,7 +357,7 @@
                   </xs:restriction>
                 </xs:simpleType>
               </xs:element>
-              <xs:element name="D_Tax2" msprop:Generator_ColumnVarNameInTable="columnD_Tax2" msprop:Generator_ColumnPropNameInRow="D_Tax2" msprop:Generator_ColumnPropNameInTable="D_Tax2Column" msprop:Generator_UserColumnName="D_Tax2" type="xs:float" minOccurs="0" />
+              <xs:element name="D_Tax2" msprop:Generator_ColumnVarNameInTable="columnD_Tax2" msprop:Generator_ColumnPropNameInRow="D_Tax2" msprop:Generator_ColumnPropNameInTable="D_Tax2Column" msprop:Generator_UserColumnName="D_Tax2" type="xs:decimal" minOccurs="0" />
               <xs:element name="D_TaxExtra" msprop:Generator_ColumnVarNameInTable="columnD_TaxExtra" msprop:Generator_ColumnPropNameInRow="D_TaxExtra" msprop:Generator_ColumnPropNameInTable="D_TaxExtraColumn" msprop:Generator_UserColumnName="D_TaxExtra" minOccurs="0">
                 <xs:simpleType>
                   <xs:restriction base="xs:string">
@@ -368,7 +368,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="ShippingMethodsRates" msprop:Generator_UserTableName="ShippingMethodsRates" msprop:Generator_RowEvArgName="ShippingMethodsRatesRowChangeEvent" msprop:Generator_TableVarName="tableShippingMethodsRates" msprop:Generator_TablePropName="ShippingMethodsRates" msprop:Generator_RowDeletingName="ShippingMethodsRatesRowDeleting" msprop:Generator_RowChangingName="ShippingMethodsRatesRowChanging" msprop:Generator_RowDeletedName="ShippingMethodsRatesRowDeleted" msprop:Generator_RowEvHandlerName="ShippingMethodsRatesRowChangeEventHandler" msprop:Generator_RowChangedName="ShippingMethodsRatesRowChanged" msprop:Generator_TableClassName="ShippingMethodsRatesDataTable" msprop:Generator_RowClassName="ShippingMethodsRatesRow">
+        <xs:element name="ShippingMethodsRates" msprop:Generator_UserTableName="ShippingMethodsRates" msprop:Generator_RowEvArgName="ShippingMethodsRatesRowChangeEvent" msprop:Generator_TableVarName="tableShippingMethodsRates" msprop:Generator_TablePropName="ShippingMethodsRates" msprop:Generator_RowDeletingName="ShippingMethodsRatesRowDeleting" msprop:Generator_RowChangingName="ShippingMethodsRatesRowChanging" msprop:Generator_RowDeletedName="ShippingMethodsRatesRowDeleted" msprop:Generator_RowEvHandlerName="ShippingMethodsRatesRowChangeEventHandler" msprop:Generator_TableClassName="ShippingMethodsRatesDataTable" msprop:Generator_RowChangedName="ShippingMethodsRatesRowChanged" msprop:Generator_RowClassName="ShippingMethodsRatesRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="S_ShippingRate" msprop:Generator_ColumnVarNameInTable="columnS_ShippingRate" msprop:Generator_ColumnPropNameInRow="S_ShippingRate" msprop:Generator_ColumnPropNameInTable="S_ShippingRateColumn" msprop:Generator_UserColumnName="S_ShippingRate" type="xs:float" />

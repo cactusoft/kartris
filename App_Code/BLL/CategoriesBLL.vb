@@ -93,7 +93,7 @@ Public Class CategoriesBLL
         Return AdptrHierarchy.GetHierarchyByLanguage(_LanguageID, blnSortByName)
     End Function
 
-    Public Shared Function _GetHierarchyByLangaugeID(ByVal _LanguageID As Short) As DataTable
+    Public Shared Function _GetHierarchyByLanguageId(ByVal _LanguageID As Short) As DataTable
         Return AdptrHierarchy._GetHierarchyByLanguage(_LanguageID)
     End Function
 

@@ -150,10 +150,10 @@ Public Class CurrenciesBLL
         Return Adptr._GetData()
     End Function
 
-    Public Shared Function _AddNewCurrency(ByVal tblElements As DataTable, ByVal strSymbol As String, _
-              ByVal strIsoCode As String, ByVal strIsoCodeNumeric As String, ByVal snglExchangeRate As Single, _
-              ByVal blnHasDecimal As Boolean, ByVal blnLive As Boolean, ByVal strFormat As String, _
-              ByVal strIsoFormat As String, ByVal chrDecimalPoint As Char, ByVal numRoundNumbers As Byte, _
+    Public Shared Function _AddNewCurrency(ByVal tblElements As DataTable, ByVal strSymbol As String,
+              ByVal strIsoCode As String, ByVal strIsoCodeNumeric As String, ByVal numExchangeRate As Decimal,
+              ByVal blnHasDecimal As Boolean, ByVal blnLive As Boolean, ByVal strFormat As String,
+              ByVal strIsoFormat As String, ByVal chrDecimalPoint As Char, ByVal numRoundNumbers As Byte,
               ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -168,7 +168,7 @@ Public Class CurrenciesBLL
                 cmdAddCurrency.Parameters.AddWithValue("@CUR_Symbol", FixNullToDB(strSymbol))
                 cmdAddCurrency.Parameters.AddWithValue("@CUR_ISOCode", FixNullToDB(strIsoCode))
                 cmdAddCurrency.Parameters.AddWithValue("@CUR_ISOCodeNumeric", FixNullToDB(strIsoCodeNumeric))
-                cmdAddCurrency.Parameters.AddWithValue("@CUR_ExchangeRate", FixNullToDB(snglExchangeRate, "g"))
+                cmdAddCurrency.Parameters.AddWithValue("@CUR_ExchangeRate", FixNullToDB(numExchangeRate, "z"))
                 cmdAddCurrency.Parameters.AddWithValue("@CUR_HasDecimals", FixNullToDB(blnHasDecimal, "b"))
                 cmdAddCurrency.Parameters.AddWithValue("@CUR_Live", FixNullToDB(blnLive, "b"))
                 cmdAddCurrency.Parameters.AddWithValue("@CUR_Format", strFormat)
@@ -183,12 +183,12 @@ Public Class CurrenciesBLL
 
                 cmdAddCurrency.ExecuteNonQuery()
                 Dim intNewCurrencyID As Long = cmdAddCurrency.Parameters("@CUR_NewID").Value
-                If Not LanguageElementsBLL._AddLanguageElements( _
+                If Not LanguageElementsBLL._AddLanguageElements(
                   tblElements, LANG_ELEM_TABLE_TYPE.Currencies, intNewCurrencyID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
                 strMsg = GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully")
-                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Currency, _
+                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Currency,
                    strMsg, CreateQuery(cmdAddCurrency), intNewCurrencyID, sqlConn, savePoint)
 
                 savePoint.Commit()
@@ -204,10 +204,10 @@ Public Class CurrenciesBLL
 
     End Function
 
-    Public Shared Function _UpdateCurrency(ByVal tblElements As DataTable, ByVal numCurrencyID As Byte, ByVal strSymbol As String, _
-              ByVal strIsoCode As String, ByVal strIsoCodeNumeric As String, ByVal snglExchangeRate As Single, _
-              ByVal blnHasDecimal As Boolean, ByVal blnLive As Boolean, ByVal strFormat As String, _
-              ByVal strIsoFormat As String, ByVal chrDecimalPoint As Char, ByVal numRoundNumbers As Byte, _
+    Public Shared Function _UpdateCurrency(ByVal tblElements As DataTable, ByVal numCurrencyID As Byte, ByVal strSymbol As String,
+              ByVal strIsoCode As String, ByVal strIsoCodeNumeric As String, ByVal numExchangeRate As Decimal,
+              ByVal blnHasDecimal As Boolean, ByVal blnLive As Boolean, ByVal strFormat As String,
+              ByVal strIsoFormat As String, ByVal chrDecimalPoint As Char, ByVal numRoundNumbers As Byte,
               ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -222,7 +222,7 @@ Public Class CurrenciesBLL
                 cmdUpdateCurrency.Parameters.AddWithValue("@CUR_Symbol", FixNullToDB(strSymbol))
                 cmdUpdateCurrency.Parameters.AddWithValue("@CUR_ISOCode", FixNullToDB(strIsoCode))
                 cmdUpdateCurrency.Parameters.AddWithValue("@CUR_ISOCodeNumeric", FixNullToDB(strIsoCodeNumeric))
-                cmdUpdateCurrency.Parameters.AddWithValue("@CUR_ExchangeRate", FixNullToDB(snglExchangeRate, "g"))
+                cmdUpdateCurrency.Parameters.AddWithValue("@CUR_ExchangeRate", FixNullToDB(numExchangeRate, "z"))
                 cmdUpdateCurrency.Parameters.AddWithValue("@CUR_HasDecimals", FixNullToDB(blnHasDecimal, "b"))
                 cmdUpdateCurrency.Parameters.AddWithValue("@CUR_Live", FixNullToDB(blnLive, "b"))
                 cmdUpdateCurrency.Parameters.AddWithValue("@CUR_Format", strFormat)
@@ -236,12 +236,12 @@ Public Class CurrenciesBLL
                 cmdUpdateCurrency.Transaction = savePoint
 
                 cmdUpdateCurrency.ExecuteNonQuery()
-                If Not LanguageElementsBLL._UpdateLanguageElements( _
+                If Not LanguageElementsBLL._UpdateLanguageElements(
                   tblElements, LANG_ELEM_TABLE_TYPE.Currencies, numCurrencyID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
                 strMsg = GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully")
-                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Currency, _
+                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Currency,
                    strMsg, CreateQuery(cmdUpdateCurrency), numCurrencyID, sqlConn, savePoint)
 
                 savePoint.Commit()
@@ -289,7 +289,7 @@ Public Class CurrenciesBLL
 
     End Function
 
-    Public Shared Function _UpdateCurrencyRate(ByVal CurrencyID As Byte, ByVal NewRate As Single) As Boolean
+    Public Shared Function _UpdateCurrencyRate(ByVal CurrencyID As Byte, ByVal numNewRate As Decimal) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
 
@@ -299,7 +299,7 @@ Public Class CurrenciesBLL
             Dim savePoint As SqlTransaction = Nothing
             cmdUpdateCurrencyRates.CommandType = CommandType.StoredProcedure
             Try
-                cmdUpdateCurrencyRates.Parameters.AddWithValue("@CUR_ExchangeRate", NewRate)
+                cmdUpdateCurrencyRates.Parameters.AddWithValue("@CUR_ExchangeRate", numNewRate)
                 cmdUpdateCurrencyRates.Parameters.AddWithValue("@Original_CUR_ID", CurrencyID)
 
                 sqlConn.Open()
@@ -307,8 +307,8 @@ Public Class CurrenciesBLL
                 cmdUpdateCurrencyRates.Transaction = savePoint
 
                 cmdUpdateCurrencyRates.ExecuteNonQuery()
-                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Currency, _
-                     GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"), _
+                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Currency,
+                     GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"),
                      CreateQuery(cmdUpdateCurrencyRates), Nothing, sqlConn, savePoint)
 
                 savePoint.Commit()
