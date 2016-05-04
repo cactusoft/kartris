@@ -1074,9 +1074,6 @@ IF @numrows > 0
 	END
 END
 GO
-/****** Set this to tell Data tool which version of db we have ******/
-UPDATE tblKartrisConfig SET CFG_Value='2.9004', CFG_VersionAdded=2.9004 WHERE CFG_Name='general.kartrisinfo.versionadded';
-GO
 
 /****** Update file upload guidance for stock to include quotes around strings ******/
 UPDATE [dbo].[tblKartrisLanguageStrings]  SET  [LS_Value]='Browse an xls or csv file to import stock level.<br />
@@ -1188,7 +1185,7 @@ ALTER TABLE [dbo].[tblKartrisOrders] ALTER COLUMN O_TotalPriceGateway DECIMAL(18
 ALTER TABLE [dbo].[tblKartrisOrders] ALTER COLUMN O_AffiliateTotalPrice DECIMAL(18,4) NULL
 ALTER TABLE [dbo].[tblKartrisOrders] ALTER COLUMN O_OrderHandlingCharge DECIMAL(18,4) NULL
 ALTER TABLE [dbo].[tblKartrisOrders] ALTER COLUMN O_OrderHandlingChargeTax DECIMAL(18,4) NULL
-ALTER TABLE [dbo].[tblKartrisOrders] ALTER COLUMN O_CurrencyRate DECIMAL(18,4) NULL
+ALTER TABLE [dbo].[tblKartrisOrders] ALTER COLUMN O_CurrencyRate DECIMAL(18,8) NULL
 ALTER TABLE [dbo].[tblKartrisOrders] ALTER COLUMN O_PromotionDiscountTotal DECIMAL(18,4) NULL
 GO
 
@@ -1225,7 +1222,7 @@ GO
 
 /* payments */
 ALTER TABLE [dbo].[tblKartrisPayments] ALTER COLUMN Payment_Amount DECIMAL(18,4) NULL
-ALTER TABLE [dbo].[tblKartrisPayments] ALTER COLUMN Payment_CurrencyRate DECIMAL(18,4) NULL
+ALTER TABLE [dbo].[tblKartrisPayments] ALTER COLUMN Payment_CurrencyRate DECIMAL(18,8) NULL
 GO
 
 /* currencies */
@@ -1744,6 +1741,10 @@ BEGIN
 	SET CGP_Price = @CGP_Price WHERE CGP_VersionID = @CGP_VersionID AND CGP_CustomerGroupID = @CG_ID;
 
 END
+GO
+
+/****** Set this to tell Data tool which version of db we have ******/
+UPDATE tblKartrisConfig SET CFG_Value='2.9004', CFG_VersionAdded=2.9004 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
 
 
