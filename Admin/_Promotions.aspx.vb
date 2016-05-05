@@ -78,13 +78,13 @@ Partial Class Admin_Promotions
 
             Dim strText As String = row("PS_Text")
             Dim strStringID As String = row("PS_ID")
-            Dim strValue As String = FixNullFromDB(row("PP_Value"))
+            Dim strValue As String = CkartrisDisplayFunctions.FixDecimal(FixNullFromDB(row("PP_Value")))
             Dim strItemID As String = FixNullFromDB(row("PP_ItemID"))
             Dim strItemName As String = ""
             Dim strItemLink As String = ""
 
             If strText.Contains("[X]") Then
-                strText = strText.Replace("[X]", row("PP_Value"))
+                strText = strText.Replace("[X]", strValue)
             End If
 
             If strText.Contains("[C]") AndAlso strItemID <> "" Then

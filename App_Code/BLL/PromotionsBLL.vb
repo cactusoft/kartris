@@ -211,7 +211,7 @@ Public Class PromotionsBLL
 
             Dim strText As String = drwPromotionParts("PS_Text")
             Dim strStringID As String = drwPromotionParts("PS_ID")
-            Dim strValue As String = FixNullFromDB(drwPromotionParts("PP_Value"))
+            Dim strValue As String = CkartrisDisplayFunctions.FixDecimal(FixNullFromDB(drwPromotionParts("PP_Value")))
             Dim strItemID As String = FixNullFromDB(drwPromotionParts("PP_ItemID"))
             Dim intProductID As Integer = VersionsBLL.GetProductID_s(CLng(strItemID))
             Dim strItemName As String = ""
@@ -221,7 +221,7 @@ Public Class PromotionsBLL
                 If strText.Contains("[£]") Then
                     strText = strText.Replace("[X]", CurrenciesBLL.FormatCurrencyPrice(Current.Session("CUR_ID"), CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), drwPromotionParts("PP_Value"))))
                 Else
-                    strText = strText.Replace("[X]", drwPromotionParts("PP_Value"))
+                    strText = strText.Replace("[X]", strValue)
                 End If
             End If
 

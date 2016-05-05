@@ -26,7 +26,7 @@
                                     <span class="figure">
                                         <asp:Literal ID="litRRP" runat="server" Text='<%# Eval("V_RRP") %>' EnableViewState="false" /></span></span>
                             </asp:Panel>
-                            <div id="divTax" EnableViewState="false" runat="server" visible='<%# Iif( ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) = 1, False, True) %>'>
+                            <div id="divTax" EnableViewState="false" runat="server" visible='<%# IIf(ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) = 1, False, True) %>'>
                                 <!-- ex tax / inc tax prices -->
                                 <asp:Panel EnableViewState="false" ID="pnlExIncTax" runat="server" Visible="false">
                                 <div class="prices">
@@ -47,32 +47,33 @@
                             </asp:Panel>
                                 <!-- ex tax / tax % prices -->
                                 <asp:Panel ID="pnlExTaxTax" runat="server" Visible="false" EnableViewState="false">
-                                <div class="prices">
-                                    <span class="price">
-                                        <asp:Literal ID="litLS_ExTax2" runat="server" Text="<%$ Resources: Kartris, ContentText_ExTax %>" EnableViewState="false" />
-                                        <asp:Literal ID="litExTax_Rows" runat="server" Text='<%# Eval("V_Price") %>' Visible="false" EnableViewState="false" />
-                                        <span class="figure">
-                                            <asp:Literal ID="litResultedExTax_Rows" runat="server" EnableViewState="false" /></span></span>
-                                    <span class="tax">
-                                        <asp:Literal ID="litLS_Tax" runat="server" Text="<%$ Resources: Kartris, ContentText_Tax %>" EnableViewState="false" />
-                                        <span class="figure">
-                                            <asp:Literal ID="litTaxRate_Rows" runat="server" Text='<%# Eval("T_TaxRate") %>'
-                                                Visible="false" EnableViewState="false" />
-                                            <asp:Literal ID="litResultedTaxRate_Rows" runat="server" EnableViewState="false" /></span></span>
-                                </div>
-                            </asp:Panel>
+                                    <div class="prices">
+                                        <span class="price">
+                                            <asp:Literal ID="litLS_ExTax2" runat="server" Text="<%$ Resources: Kartris, ContentText_ExTax %>" EnableViewState="false" />
+                                            <span class="figure">
+                                                <asp:Literal ID="litExTax_Rows" runat="server" Text='<%# Eval("V_Price") %>' Visible="false" EnableViewState="false" />
+                                                <asp:Literal ID="litResultedExTax_Rows" runat="server" EnableViewState="false" /></span></span>
+                                        <span class="tax">
+                                            <asp:Literal ID="litLS_Tax" runat="server" Text="<%$ Resources: Kartris, ContentText_Tax %>" EnableViewState="false" />
+                                            <span class="figure">
+                                                <asp:Literal ID="litTaxRate_Rows" runat="server" Text='<%# Eval("T_TaxRate") %>'
+                                                    Visible="false" EnableViewState="false" />
+                                                <asp:Literal ID="litResultedTaxRate_Rows" runat="server" EnableViewState="false" /></span></span>
+                                    </div>
+                                </asp:Panel>
+                                <asp:Panel ID="pnlPrice" runat="server" Visible="false" EnableViewState="false">
+                                    <div class="prices">
+                                        <span class="price">
+                                            <span class="figure">
+                                                <asp:Literal ID="litPrice_Rows" runat="server" Text='<%# Eval("V_Price") %>' Visible="false" EnableViewState="false" />
+                                                <asp:Literal ID="litResultedPrice_Rows" runat="server" EnableViewState="false" /></span></span>
+                                    </div>
+                                </asp:Panel>
                             </div>
                             <!-- single price -->
                             <div class="boxinset line">
                                 <div class="addtobasket">
-                                    <asp:Panel ID="pnlPrice" runat="server" Visible="false" EnableViewState="false">
-                                        <div class="prices">
-                                            <span class="price">
-                                                <span class="figure">
-                                                    <asp:Literal ID="litPrice_Rows" runat="server" Text='<%# Eval("V_Price") %>' Visible="false" EnableViewState="false" />
-                                                    <asp:Literal ID="litResultedPrice_Rows" runat="server" EnableViewState="false" /></span></span>
-                                        </div>
-                                    </asp:Panel>
+  
                                     <asp:UpdatePanel ID="updVersionQty1" runat="server" UpdateMode="Conditional" RenderMode="Block">
                                         <ContentTemplate>
                                             <%  'Hide 'add' button and selector if in cataloguemode or for partial access
@@ -302,7 +303,7 @@
                                                     </td>
                                                                     <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" and ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then%>
                                                     <td class="price tax">
-                                                        <asp:Literal ID="litTaxRate_Rows" runat="server" Text='<%# Eval("T_TaxRate") %>'
+                                                        <asp:Literal ID="litTaxRate_Rows" runat="server" Text='<%# CkartrisDisplayFunctions.FixDecimal(Eval("T_TaxRate")) %>'
                                                             Visible="false" EnableViewState="false" />
                                                         <asp:Literal ID="litResultedTaxRate_Rows" runat="server" EnableViewState="false" />
                                                     </td>
@@ -358,7 +359,7 @@
                             <asp:UpdatePanel ID="updVersionDropdown" runat="server" UpdateMode="Conditional">
                                 <ContentTemplate>
                                     <div class="small-12 large-9 columns">
-                                        <asp:DropDownList ID="ddlName_DropDown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlName_DropDown_SelectedIndexChanged">
+                                        <asp:DropDownList CssClass="versiondropdown" ID="ddlName_DropDown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlName_DropDown_SelectedIndexChanged">
                                         </asp:DropDownList><asp:TextBox runat="server" ID="txtOutOfStockItems" Visible="false">
                                         </asp:TextBox>
                                     </div>

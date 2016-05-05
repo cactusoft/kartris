@@ -218,16 +218,16 @@ Partial Class ProductPromotions
 
             Dim strText As String = drwPromoParts("PS_Text")
             Dim strStringID As String = drwPromoParts("PS_ID")
-            Dim strValue As String = FixNullFromDB(drwPromoParts("PP_Value"))
+            Dim strValue As String = CkartrisDisplayFunctions.FixDecimal((drwPromoParts("PP_Value")))
             Dim strItemID As String = FixNullFromDB(drwPromoParts("PP_ItemID"))
             Dim strItemName As String = ""
             Dim strItemLink As String = ""
 
             If strText.Contains("[X]") Then
                 If strText.Contains("[£]") Then
-                    strText = strText.Replace("[X]", CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), drwPromoParts("PP_Value"))))
+                    strText = strText.Replace("[X]", CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), strValue)))
                 Else
-                    strText = strText.Replace("[X]", drwPromoParts("PP_Value"))
+                    strText = strText.Replace("[X]", strValue)
                 End If
             End If
 

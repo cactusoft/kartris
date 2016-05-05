@@ -250,7 +250,7 @@ MAIN BASKET
                                         <%#CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, Eval("ExTax"))%>
                                     </td>
                                     <td class="tax">
-                                        <%# Eval("ComputedTaxRate") * 100%>%
+                                        <%# CkartrisDisplayFunctions.FixDecimal(Eval("ComputedTaxRate") * 100) %>%
                                     </td>
                                     <% Else%>
                                     <td class="price" colspan="2">
