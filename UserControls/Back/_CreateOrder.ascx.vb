@@ -1017,6 +1017,17 @@ Partial Class UserControls_Back_CreateOrder
                     'serialize order object and store it as a session value
                     Session("objOrder") = Payment.Serialize(objOrder)
 
+                    'We have a serialization issue with the promotions
+                    'it seems. We don't really need these in the saved
+                    'basket XML, since when restoring an order in the
+                    'back end for editing, we just pull the products and
+                    'then apply promotions logic on those to determine
+                    'what promotion to apply. But this is a bit of a hack;
+                    'ideally we'll figure out what the serialization issue
+                    'is with promotions.
+                    objBasket.objPromotions.Clear()
+                    objBasket.objPromotionsDiscount.Clear()
+
                     'update data field with serialized order and basket objects and selected shipping method id - this allows us to edit this order later if needed
                     OrdersBLL.DataUpdate(O_ID, Session("objOrder") & "|||" & Payment.Serialize(objBasket) & "|||" & _UC_BasketMain.SelectedShippingID)
 
