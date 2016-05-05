@@ -14,7 +14,7 @@ Namespace Kartris
         Private _MaxQuantity As Double
         Private _PartNo As String
         Private _Type As String
-        Private _Value As Double
+        Private _Value As Decimal
         Private _ItemType As String
         Private _ItemID As Integer
         Private _ItemName As String
@@ -116,11 +116,11 @@ Namespace Kartris
             End Set
         End Property
 
-        Public Property Value() As Double
+        Public Property Value() As Decimal
             Get
                 Return _Value
             End Get
-            Set(ByVal value As Double)
+            Set(ByVal value As Decimal)
                 _Value = value
             End Set
         End Property

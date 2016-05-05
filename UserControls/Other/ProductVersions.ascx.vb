@@ -268,11 +268,11 @@ Partial Class ProductVersions
                         CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice, , False)
                     Else
                         'litExTax / Tax%
-                        strV_Price = " " & _
-                        GetGlobalResourceObject("Kartris", "ContentText_ExTax") & " " & _
-                        CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice, , False) & " -- " & _
-                        GetGlobalResourceObject("Kartris", "ContentText_Tax") & " " & _
-                        drwVersion("T_TaxRate") & "%"
+                        strV_Price = " " &
+                        GetGlobalResourceObject("Kartris", "ContentText_ExTax") & " " &
+                        CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice, , False) & " -- " &
+                        GetGlobalResourceObject("Kartris", "ContentText_Tax") & " " &
+                        CkartrisDisplayFunctions.FixDecimal(drwVersion("T_TaxRate")) & "%"
                     End If
                 Else
                     'Just show price
@@ -511,8 +511,8 @@ Partial Class ProductVersions
                       CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
 
                 Case "litResultedTaxRate_Rows"
-                    CType(e.Item.FindControl("litResultedTaxRate_Rows"), Literal).Text = _
-                      CType(e.Item.FindControl("litTaxRate_Rows"), Literal).Text & " %"
+                    CType(e.Item.FindControl("litResultedTaxRate_Rows"), Literal).Text =
+                      CType(e.Item.FindControl("litTaxRate_Rows"), Literal).Text & "%"
 
                 Case "updAddQty"
                     '' Adding the Quantity 1 To 10, for each row of the versions.

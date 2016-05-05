@@ -34,14 +34,35 @@ Public Class Payment
     End Function
 
     Public Shared Function Serialize(ByVal strObject As Object) As String
-        Dim oXS As XmlSerializer = New XmlSerializer(strObject.GetType)
-        Dim oStrW As New StringWriter()
+        Try
+            Dim oXS As XmlSerializer = New XmlSerializer(strObject.GetType)
+            Dim oStrW As New StringWriter()
 
-        'Serialize the object into an XML string
-        oXS.Serialize(oStrW, strObject)
-        Serialize = oStrW.ToString()
-        oStrW.Close()
+            'Serialize the object into an XML string
+            oXS.Serialize(oStrW, strObject)
+            Serialize = oStrW.ToString()
+            oStrW.Close()
+        Catch ex As Exception
+            DumpException(ex)
+        End Try
+
     End Function
+
+    Public Shared Sub DumpException(ex As Exception)
+        WriteExceptionInfo(ex)
+        ex = ex.InnerException
+        If ex IsNot Nothing Then
+            WriteExceptionInfo(ex.InnerException)
+            ex = ex.InnerException
+        End If
+    End Sub
+    Public Shared Sub WriteExceptionInfo(ex As Exception)
+        CkartrisFormatErrors.LogError("Message: " & ex.Message & vbCrLf &
+                                      "Exception Type: " & ex.[GetType]().FullName & vbCrLf &
+                                        "Source: " & ex.Source & vbCrLf &
+                                        "StrackTrace: " & ex.StackTrace & vbCrLf)
+        'CkartrisFormatErrors.LogError("TargetSite: " & ex.TargetSite)
+    End Sub
 
     Public Shared Function PPLoader(ByVal Path As String) As Interfaces.PaymentGateway
         Dim m_clsPlugins As New Hashtable

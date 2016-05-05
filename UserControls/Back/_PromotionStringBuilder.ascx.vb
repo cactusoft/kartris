@@ -417,12 +417,12 @@ Partial Class UserControls_Back_PromotionStringBuilder
         For Each rowParts As DataRow In tblPromotionParts.Rows
             Dim strText As String = rowParts("PS_Text")
             Dim strStringID As String = rowParts("PS_ID")
-            Dim strValue As String = FixNullFromDB(rowParts("PP_Value"))
+            Dim strValue As String = CkartrisDisplayFunctions.FixDecimal(FixNullFromDB(rowParts("PP_Value")))
             Dim strItemID As String = FixNullFromDB(rowParts("PP_ItemID"))
             Dim strItemName As String = ""
 
             If strText.Contains("[X]") Then
-                strText = strText.Replace("[X]", rowParts("PP_Value"))
+                strText = strText.Replace("[X]", strValue)
             End If
 
             If strText.Contains("[C]") AndAlso strItemID <> "" Then
@@ -482,7 +482,7 @@ Partial Class UserControls_Back_PromotionStringBuilder
         tblParts.Columns.Add(New DataColumn("PP_ItemType", Type.GetType("System.Char")))
         tblParts.Columns.Add(New DataColumn("PP_ItemID", Type.GetType("System.Int64")))
         tblParts.Columns.Add(New DataColumn("PP_Type", Type.GetType("System.Char")))
-        tblParts.Columns.Add(New DataColumn("PP_Value", Type.GetType("System.Single")))
+        tblParts.Columns.Add(New DataColumn("PP_Value", Type.GetType("System.Decimal")))
 
         Dim tblString As New DataTable
         For i As Integer = 0 To lbxStrings.Items.Count - 1

@@ -1743,6 +1743,32 @@ BEGIN
 END
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisPromotionParts_Add]    Script Date: 01/23/2013 21:59:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisPromotionParts_Add]
+(	@PROM_ID as int,
+	@PP_PartNo as char(1),
+	@PP_ItemType as char(1),
+	@PP_ItemID as bigint,
+	@PP_Type as char(1),
+	@PP_Value as DECIMAL(18,4)
+)
+AS
+	SET NOCOUNT ON;
+
+	
+	INSERT INTO tblKartrisPromotionParts
+	VALUES (@PROM_ID, @PP_PartNo, @PP_ItemType, @PP_ItemID, @PP_Type, @PP_Value);
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.9004', CFG_VersionAdded=2.9004 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

@@ -6,17 +6,17 @@ Namespace Kartris
     ''' <remarks>A promotion may define that all items over $100 are discounted by 10%, this modifier is responsible for actioning the details of the promotion upon the basket</remarks>
     <Serializable()> _
     Public Class PromotionBasketModifier
-        Private _ExTax As Double
-        Private _IncTax As Double
-        Private _TaxRate As Double
-        Private _TaxAmount As Double
-        Private _Quantity As Double
-        Private _TotalExTax As Double
-        Private _TotalIncTax As Double
         Private _PromotionID As Integer
         Private _Name As String
-        Private _ApplyTax As Boolean
+        Private _ExTax As Decimal
+        Private _IncTax As Decimal
+        Private _TaxAmount As Decimal
+        Private _TaxRate As Decimal
+        Private _Quantity As Double
+        Private _TotalExTax As Decimal
+        Private _TotalIncTax As Decimal
         Private _isFixedValuePromo As Boolean
+        Private _ApplyTax As Boolean
 
         ''' <summary>
         ''' The database identifier number for the promotion
@@ -57,29 +57,29 @@ Namespace Kartris
             End Set
         End Property
 
-        Public Property IncTax() As Double
+        Public Property IncTax() As Decimal
             Get
                 Return _IncTax
             End Get
-            Set(ByVal value As Double)
+            Set(ByVal value As Decimal)
                 _IncTax = (value)
             End Set
         End Property
 
-        Public Property TaxAmount() As Double
+        Public Property TaxAmount() As Decimal
             Get
                 Return IIf(Not (ApplyTax), 0, (ExTax * ComputedTaxRate))
             End Get
-            Set(ByVal value As Double)
+            Set(ByVal value As Decimal)
                 _TaxAmount = value
             End Set
         End Property
 
-        Public Property ComputedTaxRate() As Double
+        Public Property ComputedTaxRate() As Decimal
             Get
                 Return _TaxRate
             End Get
-            Set(ByVal value As Double)
+            Set(ByVal value As Decimal)
                 _TaxRate = value
             End Set
 
@@ -94,20 +94,20 @@ Namespace Kartris
             End Set
         End Property
 
-        Public Property TotalExTax() As Double
+        Public Property TotalExTax() As Decimal
             Get
                 Return _TotalExTax
             End Get
-            Set(ByVal value As Double)
+            Set(ByVal value As Decimal)
                 _TotalExTax = value
             End Set
         End Property
 
-        Public Property TotalIncTax() As Double
+        Public Property TotalIncTax() As Decimal
             Get
                 Return _TotalIncTax
             End Get
-            Set(ByVal value As Double)
+            Set(ByVal value As Decimal)
                 _TotalIncTax = value
             End Set
         End Property

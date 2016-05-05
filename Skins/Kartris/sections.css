@@ -222,8 +222,10 @@ VERSIONS
 .versions td.info                       { color: #777 }
 .versions td.info .name                 { font-weight: bold; color: #000; }
 .versions td.rrp                        { font-weight: normal; color: #f00; width: 10%; white-space: nowrap; text-decoration: line-through; }
+.versions td.price                      { font-weight: normal; color: #090; width: 10%; white-space: nowrap; }
 .versions td.extax                      { font-weight: normal; color: #090; width: 10%; white-space: nowrap; }
 .versions td.inctax                     { font-weight: bold; color: #090; width: 10%; white-space: nowrap; }
+.versions td.tax                        { font-weight: normal; color: #090; width: 10%; white-space: nowrap; }
 .versions td.addtobasket img            { float: none }
 .versions td.addtobasket                { white-space: nowrap; width: 10%; }
 .versions td.addtobasket div            { background-color: transparent; background-image: none; display: inline; }
@@ -241,13 +243,13 @@ VERSIONS
 .versions span.rrp                      { font-weight: normal; color: #f00; width: 10%; white-space: nowrap; text-decoration: line-through; }
 .versions span.rrp span.figure          { font-size: 130%; }
 .versions span.tax span.figure          { color: #090; float: left; font-weight: normal; font-size: 180%; padding: 0 10px 10px 0; }
-.versions span.price span.figure        { color: #090; font-weight: bold; font-size: 260%; padding: 0 10px 10px 0; }
+.versions span.price span.figure        { color: #090; float: left; font-weight: bold; font-size: 260%; padding: 0 10px 10px 0; }
 .versions span.extax span.figure        { color: #090; float: left; font-weight: normal; font-size: 180%; padding: 0 10px 10px 0; }
 .versions span.inctax span.figure       { color: #090; float: left; font-weight: bold; font-size: 260%; padding: 0 10px 10px 0; }
 .versions .line                         { text-align: left; padding: 0 0 0 0; }
 .versions .multipleversiondropdown      { border-top: solid 1px #000; border-bottom: solid 2px #eee; }
 .versions .addtobasket                  { clear: both }
-.versions .addtobasket select           { width: 450px; max-width: 100%; } /* version name and price */
+.versions .addtobasket select           { margin: 3px 0 0 0; width: 450px; max-width: 99%; } /* version name and price */
 .versions .addtobasket .dropdown        { width: 45px } /* qty */
 .versions .addtobasket .textbox         { width: 45px }
 .versions .addtobasket div.selector     { vertical-align: bottom; white-space: nowrap; padding: 0 0 0 0; }
