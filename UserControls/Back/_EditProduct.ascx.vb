@@ -475,7 +475,7 @@ Partial Class _EditProduct
             Case DML_OPERATION.CLONE
                 Dim intNewProductID As Integer = ProductsBLL._AddProduct(
                                 tblLanguageContents, sbdParentsList.ToString, 0, blnLive, numFeatured,
-                                 strOrderVersionsBy, chrVersionsSortDirection, chrReviews, chrVersionDisplayType, numSupplier, chrType, numCustomerGroup, strMessage)
+                                 strOrderVersionsBy, chrVersionsSortDirection, chrReviews, chrVersionDisplayType, numSupplier, chrType, numCustomerGroup, strMessage, True)
                 If Not intNewProductID > 0 Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     Exit Sub
@@ -486,7 +486,7 @@ Partial Class _EditProduct
                 'related products, attribute values, etc.
                 If Not ProductsBLL._CloneProductRecords(intProductID, intNewProductID) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, "Error cloning product linked records")
-                    Exit Sub
+                    'Exit Sub
                 End If
 
                 Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intNewProductID & "&CategoryID=" & Request.QueryString("CategoryID") & "&strParent=" & Request.QueryString("strParent"))
