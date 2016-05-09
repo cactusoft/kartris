@@ -610,17 +610,6 @@ Partial Class UserControls_Back_EditOrder
             objOrder.CustomerIPAddress = Request.ServerVariables("REMOTE_HOST")
             objOrder.CustomerEmail = txtOrderCustomerEmail.Text
 
-            'We have a serialization issue with the promotions
-            'it seems. We don't really need these in the saved
-            'basket XML, since when restoring an order in the
-            'back end for editing, we just pull the products and
-            'then apply promotions logic on those to determine
-            'what promotion to apply. But this is a bit of a hack;
-            'ideally we'll figure out what the serialization issue
-            'is with promotions.
-            objBasket.objPromotions.Clear()
-            objBasket.objPromotionsDiscount.Clear()
-
             'update data field with serialized order and basket objects and selected shipping method id - this allows us to edit this order later if needed
             OrdersBLL.DataUpdate(intNewOrderID, Payment.Serialize(objOrder) & "|||" & Payment.Serialize(objBasket) & "|||" & UC_BasketMain.SelectedShippingID)
 

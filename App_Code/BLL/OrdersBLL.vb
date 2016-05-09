@@ -709,17 +709,6 @@ Public Class OrdersBLL
                 Dim numTaxDue As Single
                 If objBasket.ApplyTax Then numTaxDue = 1 Else numTaxDue = 0
 
-                'We have a serialization issue with the promotions
-                'it seems. We don't really need these in the saved
-                'basket XML, since when restoring an order in the
-                'back end for editing, we just pull the products and
-                'then apply promotions logic on those to determine
-                'what promotion to apply. But this is a bit of a hack;
-                'ideally we'll figure out what the serialization issue
-                'is with promotions.
-                objBasket.objPromotions.Clear()
-                objBasket.objPromotionsDiscount.Clear()
-
                 'Create the actual order record
                 With cmd.Parameters
                     .AddWithValue("@O_CustomerID", C_ID)

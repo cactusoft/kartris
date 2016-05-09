@@ -29,13 +29,33 @@ Public Class Payment
 
     Public Shared Function Deserialize(ByVal strValue As String, ByVal strObjectType As Type) As Object
         Dim strStringReader As StringReader = New StringReader(strValue)
-        Dim oXS As XmlSerializer = New XmlSerializer(strObjectType)
+        Dim oXS As XmlSerializer '= New XmlSerializer(strObjectType)
+
+        If strObjectType = GetType(Kartris.Basket) Then
+            Dim extraTypes(1) As Type
+            extraTypes(0) = GetType(List(Of Kartris.Promotion))
+            extraTypes(1) = GetType(PromotionBasketModifier)
+            oXS = New XmlSerializer(GetType(Kartris.Basket), extraTypes)
+        Else
+            oXS = New XmlSerializer(strObjectType)
+        End If
+
         Deserialize = oXS.Deserialize(strStringReader)
     End Function
 
     Public Shared Function Serialize(ByVal strObject As Object) As String
         Try
-            Dim oXS As XmlSerializer = New XmlSerializer(strObject.GetType)
+            'Dim oXS As XmlSerializer = New XmlSerializer(strObject.GetType)
+            Dim oXS As XmlSerializer '= New XmlSerializer(strObject.GetType)
+
+            If strObject.GetType = GetType(Kartris.Basket) Then
+                Dim extraTypes(1) As Type
+                extraTypes(0) = GetType(List(Of Kartris.Promotion))
+                extraTypes(1) = GetType(PromotionBasketModifier)
+                oXS = New XmlSerializer(GetType(Kartris.Basket), extraTypes)
+            Else
+                oXS = New XmlSerializer(strObject.GetType)
+            End If
             Dim oStrW As New StringWriter()
 
             'Serialize the object into an XML string
