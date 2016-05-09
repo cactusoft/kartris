@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:g="http://base.google.com/ns/1.0">
+<channel>
+<title>Kartris</title>
+<link>http://localhost:54147/</link>
+<description>default meta description  (ContentText_DefaultMetaDescription)</description>
+<item>
+   <g:id>SKU-customizable-1</g:id>
+   <title>Customizable Product</title>
+   <description>Items can be text-customizable too. You can set whether this is optional or required for the item, and also what (if any...</description>
+   <g:price>2</g:price>
+   <link>http://localhost:54147/en-GB/Rewritten-name-of-product-here__p-7.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/7/p7_0.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-multiple-1</g:id>
+   <title>Multiple Version Product</title>
+   <description>This type of product is appropriate if you have an item that comes in several versions. For example, a book available in...</description>
+   <g:price>5</g:price>
+   <link>http://localhost:54147/en-GB/Multiple-Version-Product__p-3.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/3/p3_01.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-multiple-2</g:id>
+   <title>Multiple Version Product</title>
+   <description>A description here is optional.</description>
+   <g:price>6</g:price>
+   <link>http://localhost:54147/en-GB/Multiple-Version-Product__p-3.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/3/p3_01.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-multiple-3</g:id>
+   <title>Multiple Version Product</title>
+   <description>This type of product is appropriate if you have an item that comes in several versions. For example, a book available in...</description>
+   <g:price>7</g:price>
+   <link>http://localhost:54147/en-GB/Multiple-Version-Product__p-3.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/3/p3_01.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-multiple-4</g:id>
+   <title>Multiple Version Product</title>
+   <description>This type of product is appropriate if you have an item that comes in several versions. For example, a book available in...</description>
+   <g:price>8</g:price>
+   <link>http://localhost:54147/en-GB/Multiple-Version-Product__p-3.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/3/p3_01.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-multiple-10</g:id>
+   <title>Multiple Version Product with Images</title>
+   <description>You can optionally add individual images to the versions of a multiple version product.</description>
+   <g:price>1</g:price>
+   <link>http://localhost:54147/en-GB/Multiple-Version-Product-with-Images__p-9.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/9/p9_1.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-multiple-11</g:id>
+   <title>Multiple Version Product with Images</title>
+   <description>You can optionally add individual images to the versions of a multiple version product.</description>
+   <g:price>2</g:price>
+   <link>http://localhost:54147/en-GB/Multiple-Version-Product-with-Images__p-9.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/9/p9_1.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-multiple-12</g:id>
+   <title>Multiple Version Product with Images</title>
+   <description>You can optionally add individual images to the versions of a multiple version product.</description>
+   <g:price>3</g:price>
+   <link>http://localhost:54147/en-GB/Multiple-Version-Product-with-Images__p-9.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/9/p9_1.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-options-1-4</g:id>
+   <title>Options Product 1</title>
+   <description>An options product has a single base version. Options can then be mapped to this to enable variation. Option products ar...</description>
+   <g:price>1</g:price>
+   <link>http://localhost:54147/en-GB/Options-Product-1__p-4.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/4/p4_0.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-options-1-3</g:id>
+   <title>Options Product 1</title>
+   <description>An options product has a single base version. Options can then be mapped to this to enable variation. Option products ar...</description>
+   <g:price>1</g:price>
+   <link>http://localhost:54147/en-GB/Options-Product-1__p-4.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/4/p4_0.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-options-1-2</g:id>
+   <title>Options Product 1</title>
+   <description>An options product has a single base version. Options can then be mapped to this to enable variation. Option products ar...</description>
+   <g:price>1</g:price>
+   <link>http://localhost:54147/en-GB/Options-Product-1__p-4.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/4/p4_0.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-options-1-1</g:id>
+   <title>Options Product 1</title>
+   <description>An options product has a single base version. Options can then be mapped to this to enable variation. Option products ar...</description>
+   <g:price>1</g:price>
+   <link>http://localhost:54147/en-GB/Options-Product-1__p-4.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/4/p4_0.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-options-1</g:id>
+   <title>Options Product 1</title>
+   <description>An options product has a single base version. Options can then be mapped to this to enable variation. Option products ar...</description>
+   <g:price>1</g:price>
+   <link>http://localhost:54147/en-GB/Options-Product-1__p-4.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/4/p4_0.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-options-2</g:id>
+   <title>Options Product 2</title>
+   <description>This is another options product. Notice how here, we have some of the options adding extra to the price. Also, we have n...</description>
+   <g:price>1</g:price>
+   <link>http://localhost:54147/en-GB/Options-Product-2__p-5.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/5/p5_0.GIF</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-attribute-1</g:id>
+   <title>Product with Attributes</title>
+   <description>Attributes are categorized values associated with a product. For example, a book might have ISBN, author, publisher, for...</description>
+   <g:price>59</g:price>
+   <link>http://localhost:54147/en-GB/Product-with-Attributes__p-6.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/6/p6_0.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-single-1</g:id>
+   <title>Single Item Product</title>
+   <description>This is the simplest type of product.</description>
+   <g:price>19.99</g:price>
+   <link>http://localhost:54147/en-GB/Single-Item-Product__p-1.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/1/p1_0.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-single-2</g:id>
+   <title>Single Item Product 2</title>
+   <description>We need a few of these to fill the pages up a bit.</description>
+   <g:price>21.99</g:price>
+   <link>http://localhost:54147/en-GB/Single-Item-Product-2__p-2.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/2/p2_1.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+<item>
+   <g:id>SKU-mixed-1</g:id>
+   <title>Product in Category with Subcats</title>
+   <description>You can have any number of category levels in Kartris. You can also map a subcategory to any number of parent categories...</description>
+   <g:price>4</g:price>
+   <link>http://localhost:54147/en-GB/Product-in-Category-with-Subcats__p-8.aspx</link>
+   <g:image_link>http://localhost:54147/Images/Products/8/p8_1.jpg</g:image_link>
+   <g:condition>NEW</g:condition>
+</item>
+</channel>
+</rss>
