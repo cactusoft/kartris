@@ -29,7 +29,7 @@ Imports System.Xml
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 2.9004
+    Public Const KARTRIS_VERSION As Decimal = 2.9005
     Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #5/4/2016# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
@@ -683,7 +683,7 @@ Public NotInheritable Class CkartrisDataManipulation
                     Return CSng(objInput)
                 End If
             Case "z" 'decimal
-                If objInput Is Nothing OrElse objInput = 0.0 Then
+                If objInput Is Nothing Then
                     'If objInput = 0 OrElse objInput Is Nothing Then
                     Return DBNull.Value
                 Else
