@@ -277,7 +277,7 @@
                         <div class="column_misc">
                             <asp:Literal ID="litOPT_CheckBoxValue" runat="server" Text='<%# Eval("OPT_CheckBoxValue") %>' /></div>
                         <div class="column_misc">
-                            <asp:Literal ID="litOPT_DefPriceChange" runat="server" Text='<%# Eval("OPT_DefPriceChange") %>' /></div>
+                            <asp:Literal ID="litOPT_DefPriceChange" runat="server" Text='<%# CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency(), Eval("OPT_DefPriceChange")) %>' /></div>
                         <div class="column_misc">
                             <asp:Literal ID="litOPT_DefWeightChange" runat="server" Text='<%# Eval("OPT_DefWeightChange") %>' /></div>
                         <div class="column_misc">

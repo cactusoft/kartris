@@ -138,7 +138,7 @@ Partial Class _OptionGroups
         End If
         If e.Item.ItemType = ListItemType.SelectedItem OrElse e.Item.ItemType = ListItemType.Footer Then
             Dim txtPrice As TextBox = CType(e.Item.FindControl("txtPriceChange"), TextBox)
-            txtPrice.Text = _HandleDecimalValues(txtPrice.Text)
+            txtPrice.Text = _HandleDecimalValues(CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency(), txtPrice.Text))
             Dim txtWeight As TextBox = CType(e.Item.FindControl("txtWeightChange"), TextBox)
             txtWeight.Text = _HandleDecimalValues(txtWeight.Text)
 
