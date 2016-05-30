@@ -165,7 +165,7 @@ Public Class BasketBLL
     ''' <param name="numCouponValue">Value (return)</param>
     ''' <remarks></remarks>
     Public Shared Sub GetCouponDiscount(ByRef Basket As Kartris.Basket, ByVal strCouponCode As String, ByRef strCouponError As String,
-                                        ByRef strCouponType As String, ByRef numCouponValue As Double)
+                                        ByRef strCouponType As String, ByRef numCouponValue As Decimal)
         Dim tblCoupons As CouponsDataTable
         With Basket
             .SetCouponName("") : .SetCouponCode("")
@@ -187,9 +187,10 @@ Public Class BasketBLL
                     If strCouponType.ToLower = "p" Then
                         .SetCouponName(drwCoupon("CP_CouponCode") & " - " & numCouponValue & "%")
                     ElseIf strCouponType.ToLower = "t" Then
-                        .SetCouponName(drwCoupon("CP_CouponCode") & " - " & PromotionsBLL.GetPromotionText(drwCoupon("CP_DiscountValue"), True))
+                        numCouponValue = CInt(numCouponValue)
+                        .SetCouponName(drwCoupon("CP_CouponCode") & " - " & PromotionsBLL.GetPromotionText(numCouponValue, True))
                     Else
-                        .SetCouponName(drwCoupon("CP_CouponCode") & " - " & CurrenciesBLL.FormatCurrencyPrice(HttpContext.Current.Session("CUR_ID"), drwCoupon("CP_DiscountValue")))
+                        .SetCouponName(drwCoupon("CP_CouponCode") & " - " & CurrenciesBLL.FormatCurrencyPrice(HttpContext.Current.Session("CUR_ID"), numCouponValue))
                     End If
                     .SetCouponCode(drwCoupon("CP_CouponCode"))
                 End If
@@ -1448,8 +1449,8 @@ Public Class BasketBLL
     ''' <param name="numTaxRate"></param>
     ''' <param name="intExcessGetQty"></param>
     ''' <remarks></remarks>
-    Private Shared Sub SetPromotionValue(ByVal numMaxPromoQty As Integer, ByVal Item As Kartris.BasketItem, ByVal strType As String, ByVal numBuyQty As Double, ByVal numBuyValue As Double, ByVal numGetQty As Double, ByVal numGetValue As Double, _
-      ByRef numIncTax As Double, ByRef numExTax As Double, ByRef numQty As Double, ByRef numTaxRate As Double, Optional ByRef intExcessGetQty As Integer = 0)
+    Private Shared Sub SetPromotionValue(ByVal numMaxPromoQty As Integer, ByVal Item As Kartris.BasketItem, ByVal strType As String, ByVal numBuyQty As Double, ByVal numBuyValue As Decimal, ByVal numGetQty As Double, ByVal numGetValue As Decimal,
+      ByRef numIncTax As Decimal, ByRef numExTax As Decimal, ByRef numQty As Double, ByRef numTaxRate As Decimal, Optional ByRef intExcessGetQty As Integer = 0)
 
         If strType.ToLower = "q" Then   ''  for free
             numIncTax = -(Item.IncTax * numGetValue)
@@ -1558,8 +1559,8 @@ Public Class BasketBLL
     ''' <param name="blnIsFixedValuePromo"></param>
     ''' <param name="blnForceAdd"></param>
     ''' <remarks></remarks>
-    Private Shared Sub AddPromotion(ByRef Basket As Kartris.Basket, ByVal blnBasketPromo As Boolean, ByRef strPromoDiscountIDs As String, ByRef objPromotion As Kartris.Promotion, ByVal numPromoID As Integer, ByVal numIncTax As Double, ByVal numExTax As Double,
-                             ByVal numQty As Double, ByVal numTaxRate As Double, Optional ByVal blnIsFixedValuePromo As Boolean = False, Optional ByVal blnForceAdd As Boolean = False)
+    Private Shared Sub AddPromotion(ByRef Basket As Kartris.Basket, ByVal blnBasketPromo As Boolean, ByRef strPromoDiscountIDs As String, ByRef objPromotion As Kartris.Promotion, ByVal numPromoID As Integer, ByVal numIncTax As Decimal, ByVal numExTax As Decimal,
+                             ByVal numQty As Double, ByVal numTaxRate As Decimal, Optional ByVal blnIsFixedValuePromo As Boolean = False, Optional ByVal blnForceAdd As Boolean = False)
         Dim intMaxPromoOrder As Integer = 0
 
         intMaxPromoOrder = Val(GetKartConfig("frontend.promotions.maximum"))
@@ -1615,7 +1616,7 @@ Public Class BasketBLL
         Dim strItemType, strType As String
         Dim strItemVersionIDs, strItemProductIDs, strItemCategoryIDs As String
         Dim vIncTax, vExTax, vQuantity, vBuyQty, vValue, vTaxRate As Double
-        Dim numTotalBasketAmount As Double
+        Dim numTotalBasketAmount As Decimal
         If Basket.BasketItems.Count = 0 Then Exit Sub
 
         'Clear AppliedPromotion to all Basket Items
@@ -1640,7 +1641,7 @@ Public Class BasketBLL
         If Not String.IsNullOrEmpty(Basket.CouponCode) Then
             Dim strCouponType As String = ""
             Dim strCouponError As String = ""
-            Dim numCouponValue As Double
+            Dim numCouponValue As Decimal = 0
 
             Call GetCouponDiscount(Basket, Basket.CouponCode, strCouponError, strCouponType, numCouponValue)
             If strCouponType = "t" Then
@@ -1652,7 +1653,6 @@ Public Class BasketBLL
         '' get promotions from Basket version IDs (buy promotion parts)
         strList = "PP_PartNo='a' and PP_ItemType='v' and PP_Type='q' and PP_ItemID in (" & strItemVersionIDs & ")"
         drwBuys = tblPromotions.Select(strList)
-
         For Each drwBuy As DataRow In drwBuys
             vPromoID = drwBuy("PROM_ID")
             If InStr(strPromoIDs, vPromoID) = 0 Then
@@ -2114,7 +2114,7 @@ Public Class BasketBLL
         Next
 
         'get spend value from basket
-        Dim vSpend As Double
+        Dim vSpend As Decimal = 0
         strList = "PP_PartNo='a' and PP_ItemType='a'"
         drwSpends = tblPromotions.Select(strList)
         For Each drSpend As DataRow In drwSpends
@@ -2127,7 +2127,7 @@ Public Class BasketBLL
 
                 vSpend = drSpend("PP_Value")
 
-                vSpend = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), drSpend("PP_Value"))), 2)
+                vSpend = Math.Round(CDec(CurrenciesBLL.ConvertCurrency(Current.Session("CUR_ID"), drSpend("PP_Value"))), 4)
 
                 vIncTax = 0 : vExTax = 0 : vQuantity = 0 : vTaxRate = 0
 
@@ -2240,9 +2240,8 @@ Public Class BasketBLL
                         Case "a" 'Total spend promotion
                             If GetKartConfig("general.tax.pricesinctax") = "y" Then
                                 numTotalBasketAmount = Basket.TotalIncTax
-                                vQuantity = CInt(Basket.TotalIncTax / vSpend)
                             Else
-                                vQuantity = CInt(Basket.TotalExTax / vSpend)
+                                numTotalBasketAmount = Basket.TotalExTax
                             End If
 
                             'If total in basket (inc or ex, depending on settings)
