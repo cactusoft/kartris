@@ -13,6 +13,7 @@
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
 Imports KartSettingsManager
+Imports Microsoft.Web.Administration
 Imports System.Threading
 Imports System.Globalization
 Imports System.Net.Mail
@@ -30,7 +31,7 @@ Imports System.Xml
 Public NotInheritable Class CkartrisEnumerations
 
     Public Const KARTRIS_VERSION As Decimal = 2.9005
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #5/4/2016# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #5/26/2016# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
@@ -1345,6 +1346,25 @@ Public NotInheritable Class CkartrisBLL
         End Try
         Return True
     End Function
+
+    ''' <summary>
+    ''' Recycles the app pool for the application; we can try to trap issues where things go
+    ''' wrong such as where there are SQL timeouts which can result in the app pool crashing
+    ''' due to rapid fail protection, or issues like the currency cache code returning
+    ''' </summary>
+    Public Shared Function RecycleAppPool() As Boolean
+        Using iisManager As New ServerManager()
+            Dim colSites As SiteCollection = iisManager.Sites
+            For Each strSiteName As Site In colSites
+                If strSiteName.Name = System.Web.Hosting.HostingEnvironment.ApplicationHost.GetSiteName() Then
+                    iisManager.ApplicationPools(strSiteName.Applications("/").ApplicationPoolName).Recycle()
+                    Return True
+                End If
+            Next
+            Return False
+        End Using
+    End Function
+
 
     ''' <summary>
     ''' Get the WebShopURL from config settings
