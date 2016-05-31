@@ -80,6 +80,28 @@
                         </div>
                     </div>
                 </asp:PlaceHolder>
+
+
+                <!-- Stock Notifications -->
+                <asp:PlaceHolder ID="phdStockNotifications" runat="server" Visible="false">
+                    <div class="task_section">
+                        <div class="level_1">
+                            <a href="_StockNotifications.aspx">
+                                <asp:Literal ID="litStockNotifications" runat="server" Text="<%$ Resources: _StockNotification, ContentText_StockNotifications %>" />
+                                </a>
+                        </div>
+                        <div class="level_2">
+                            <div>
+                            <asp:Literal ID="litLastRun" runat="server" Text="<%$ Resources: _StockNotification, ContentText_LastRun %>" />&nbsp;<asp:Literal
+                                    ID="litLastRunTime" runat="server" /></div>
+                            <div><asp:Literal ID="litVersionsAwaitingCheck" runat="server" Text="<%$ Resources: _StockNotification, ContentText_VersionsAwaitingCheck %>" />&nbsp;<asp:Literal
+                                    ID="litVersionsAwaitingCheckQty" runat="server" /></div>
+                        </div>
+                    </div>
+                </asp:PlaceHolder>
+
+
+
                 <!-- Affiliates -->
                 <asp:PlaceHolder ID="phdAffiliates" runat="server" Visible="true">
                     <div class="task_section">

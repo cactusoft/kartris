@@ -61,7 +61,6 @@ Partial Class UserControls_Back_ProductAttributes
                     Exit For
                 End If
             Next
-
         Next
         'End If
 

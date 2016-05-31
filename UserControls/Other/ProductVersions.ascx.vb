@@ -329,6 +329,12 @@ Partial Class ProductVersions
         If txtOutOfStockItems.Text.Contains("," & ddlName_DropDown.SelectedIndex & ",") Then
             phdOutOfStock3.Visible = True
             phdNotOutOfStock3.Visible = False
+
+            'Set the command argument for this item based
+            'We use this for stock notifications popup
+            Dim strVersionName As String = ddlName_DropDown.SelectedItem.Text
+            strVersionName = strVersionName.Substring(0, Math.Max(strVersionName.IndexOf(" --"), 0))
+            btnNotifyMe3.CommandArgument = FormatStockNotificationDetails(ddlName_DropDown.SelectedItem.Value, _ProductID, strVersionName, Request.RawUrl.ToString.ToLower, Session("LANG"))
         Else
             phdOutOfStock3.Visible = False
             phdNotOutOfStock3.Visible = True
@@ -970,6 +976,12 @@ Partial Class ProductVersions
             phdOutOfStock4.Visible = True
             UC_AddToBasketQty4.Visible = False
             phdNotOutOfStock4.Visible = False
+
+            'Set the command argument for this item based
+            'We use this for stock notifications popup
+            Dim numVersionID As Int64 = GetCombinationVersionID_s(_ProductID, strOptionString) 'This will find version ID for combination
+            If numVersionID = 0 Then numVersionID = UC_AddToBasketQty4.VersionID 'Combination ID will be zero if options product, so just grab base Version ID
+            btnNotifyMe4.CommandArgument = FormatStockNotificationDetails(numVersionID, _ProductID, "", Request.RawUrl.ToString.ToLower, Session("LANG"))
         End If
         updOptions.Update()
     End Sub
@@ -1031,4 +1043,43 @@ Partial Class ProductVersions
         objMiniBasket.ShowPopupMini(strTitle, strMessage)
     End Sub
 
+    ''' <summary>
+    ''' Handles 'notify me' button clicks
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub StockNotificationHandler(ByVal sender As Object, ByVal e As CommandEventArgs)
+
+        Dim btnNotifyMe As Button = DirectCast(sender, Button)
+
+        Select Case btnNotifyMe.CommandName
+            Case "StockNotificationDetails"
+
+                'Break command argument string into four parts
+                Dim aryStockNotificationDetails As Array = Split(btnNotifyMe.CommandArgument, "|||")
+                UC_StockNotification.VersionID = CLng(aryStockNotificationDetails(0))
+                UC_StockNotification.ProductID = CInt(aryStockNotificationDetails(1))
+                UC_StockNotification.VersionName = Server.UrlDecode(aryStockNotificationDetails(2))
+                UC_StockNotification.PageLink = Server.UrlDecode(aryStockNotificationDetails(3))
+                UC_StockNotification.LanguageID = CByte(aryStockNotificationDetails(4))
+
+                UC_StockNotification.ShowStockNotificationsPopup()
+
+
+                Exit Select
+        End Select
+    End Sub
+
+    ''' <summary>
+    ''' Format the stock notification details into a triple-pipe
+    ''' separated string so it can be passed as single command
+    ''' argument
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Function FormatStockNotificationDetails(ByVal numVersionID As Int64,
+                                                    ByVal numProductID As Integer,
+                                                    ByVal strVersionName As String,
+                                                    ByVal strPageLink As String,
+                                                    ByVal numLanguageID As Byte) As String
+        Return (numVersionID.ToString & "|||" & numProductID.ToString & "|||" & Server.UrlEncode(strVersionName) & "|||" & Server.UrlEncode(strPageLink) & "|||" & numLanguageID.ToString)
+    End Function
 End Class

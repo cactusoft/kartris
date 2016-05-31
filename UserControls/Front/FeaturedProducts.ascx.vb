@@ -44,8 +44,8 @@ Partial Class UserControls_Skin_FeaturedProducts
             .Add(New DataColumn("P_Reviews", Type.GetType("System.String")))
             .Add(New DataColumn("P_Featured", Type.GetType("System.Int32")))
             .Add(New DataColumn("P_CustomerGroupID", Type.GetType("System.Int32")))
-            .Add(New DataColumn("MinPrice", Type.GetType("System.Single")))
-            .Add(New DataColumn("MinTaxRate", Type.GetType("System.Single")))
+            .Add(New DataColumn("MinPrice", Type.GetType("System.Decimal")))
+            .Add(New DataColumn("MinTaxRate", Type.GetType("System.Decimal")))
 
             .Add(New DataColumn("P_StrapLine", Type.GetType("System.String")))
             .Add(New DataColumn("LANG_ID", Type.GetType("System.Int32")))

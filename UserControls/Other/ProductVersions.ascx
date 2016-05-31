@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="ProductVersions.ascx.vb"
     Inherits="ProductVersions" %>
-
+<%@ Register TagPrefix="user" TagName="StockNotification" Src="~/UserControls/Front/StockNotification.ascx" %>
 <div class="versions">
     <asp:UpdatePanel ID="updMain" runat="server" UpdateMode="Conditional">
         <ContentTemplate>
@@ -89,9 +89,12 @@
                                                     <user:AddPane ID="UC_AddToBasketQty1" runat="server" HasAddButton="True" CanCustomize='<%# Eval("V_CustomizationType") <> "n" %>' OnWrongQuantity="AddWrongQuantity"
                                                         VersionID='<%# Eval("V_ID") %>' visible='<%# Iif( ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) = 1, False, True) %>' />
                                                 </asp:PlaceHolder>
-                                                <asp:PlaceHolder EnableViewState="false" ID="phdOutOfStock1" runat="server" Visible='<%# Iif((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) AND (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y"), True, False) %>'>
+                                                <asp:PlaceHolder EnableViewState="true" ID="phdOutOfStock1" runat="server" Visible='<%# Iif((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) AND (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y"), True, False) %>'>
                                                     <div class="outofstock">
                                                         <asp:Literal ID="litOutOfStockMessage1" runat="server" Text="<%$ Resources: Versions, ContentText_AltOutOfStock %>" /></div>
+                                                    <asp:PlaceHolder ID="phdStockNotification1" runat="server" Visible='<%# KartSettingsManager.GetKartConfig("general.stocknotification.enabled") = "y" %>'>
+                                                         <div class="stocknotification"><asp:Button ID="btnNotifyMe1" runat="server" Text="<%$ Resources: StockNotification, ContentText_NotifyMe %>" CssClass="button" CommandArgument='<%# FormatStockNotificationDetails(Eval("V_ID"), ProductID, Eval("V_Name"), Request.RawUrl.ToString.ToLower, Session("LANG")) %>' CommandName="StockNotificationDetails" OnCommand="StockNotificationHandler" CausesValidation="False" /></div>
+                                                    </asp:PlaceHolder>
                                                 </asp:PlaceHolder>
                                                 <asp:PlaceHolder EnableViewState="false" ID="phdCallForPrice1" runat="server" Visible='<%# Iif( NOT((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) AND (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y")) AND ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) = 1, True, False) %>'>
                                                     <asp:Literal ID="litContentTextCallForPrice" runat="server" Text="<%$ Resources: Versions, ContentText_CallForPrice %>" />
@@ -341,6 +344,9 @@
                                                         <asp:PlaceHolder ID="phdOutOfStock2" runat="server" Visible='<%# Iif((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) AND (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y"), True, False) %>'>
                                                             <div class="outofstock">
                                                                 <asp:Literal ID="litOutOfStockMessage2" runat="server" Text="<%$ Resources: Versions, ContentText_AltOutOfStock %>" /></div>
+                                                            <asp:PlaceHolder ID="phdStockNotification2" runat="server" Visible='<%# KartSettingsManager.GetKartConfig("general.stocknotification.enabled") = "y" %>'>
+                                                                 <div class="stocknotification"><asp:Button ID="btnNotifyMe2" runat="server" Text="<%$ Resources: StockNotification, ContentText_NotifyMe %>" CssClass="button" CommandArgument='<%# FormatStockNotificationDetails(Eval("V_ID"), ProductID, Eval("V_Name"), Request.RawUrl.ToString.ToLower, Session("LANG")) %>' CommandName="StockNotificationDetails" OnCommand="StockNotificationHandler" CausesValidation="False" /></div>
+                                                            </asp:PlaceHolder>
                                                         </asp:PlaceHolder>
                                                     </td>
                                                     <% End If%>
@@ -387,6 +393,9 @@
                                                     <div class="outofstock">
                                                         <asp:Literal ID="litOutOfStockMessage3" runat="server" Text="<%$ Resources: Versions, ContentText_AltOutOfStock %>" />
                                                     </div>
+                                                    <asp:PlaceHolder ID="phdStockNotification3" runat="server" Visible='<%# KartSettingsManager.GetKartConfig("general.stocknotification.enabled") = "y" %>'>
+                                                         <div class="stocknotification"><asp:Button ID="btnNotifyMe3" runat="server" Text="<%$ Resources: StockNotification, ContentText_NotifyMe %>" CssClass="button" CommandArgument='0' CommandName="StockNotificationDetails" OnCommand="StockNotificationHandler" CausesValidation="False" /></div>
+                                                    </asp:PlaceHolder>
                                                 </asp:PlaceHolder>
                                                 <asp:PlaceHolder ID="phdCalForPrice3" runat="server" Visible="false">
                                                     <asp:Literal ID="litCallForPrice3" runat="server" Text="<%$ Resources: Versions, ContentText_CallForPrice %>" />
@@ -478,6 +487,9 @@
                                         <asp:PlaceHolder ID="phdOutOfStock4" runat="server" Visible="false">
                                             <div class="outofstock">
                                                 <asp:Literal ID="litContentText_AltOutOfStock" runat="server" Text="<%$ Resources: Versions, ContentText_AltOutOfStock %>" /></div>
+                                                    <asp:PlaceHolder ID="phdStockNotification4" runat="server">
+                                                         <div class="stocknotification"><asp:Button ID="btnNotifyMe4" runat="server" Text="<%$ Resources: StockNotification, ContentText_NotifyMe %>" CssClass="button" CommandArgument='0' CommandName="StockNotificationDetails" OnCommand="StockNotificationHandler" CausesValidation="False" /></div>
+                                                    </asp:PlaceHolder>
                                         </asp:PlaceHolder>
                                         <% End If%>
                                     </ContentTemplate>
@@ -504,3 +516,4 @@
     </asp:UpdatePanel>
 </div>
 <user:PopupMessage ID="UC_PopupMessage" runat="server" />
+<user:StockNotification ID="UC_StockNotification" runat="server" />
