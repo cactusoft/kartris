@@ -45,24 +45,32 @@ Public Class CurrenciesBLL
         Return CStr(Trim(rowCurrencies(0)("CUR_ISOCode")))
     End Function
 
-    Public Shared Function CurrencyRate(ByVal _CurrencyID As Short) As Single
+    Public Shared Function CurrencyRate(ByVal _CurrencyID As Short) As Decimal
         Dim rowCurrencies As DataRow() = GetCurrenciesFromCache().Select("CUR_ID = " & _CurrencyID)
-        If rowCurrencies.Length > 0 Then Return CSng(rowCurrencies(0)("CUR_ExchangeRate"))
+        If rowCurrencies.Length > 0 Then Return CDec(rowCurrencies(0)("CUR_ExchangeRate"))
         Return 0
     End Function
 
-    Public Shared Function ConvertCurrency(ByVal _ToCurrencyID As Short, ByVal _FromValue As Single, Optional ByVal _FromCurrencyID As Short = 0) As Single
-        If _FromCurrencyID = 0 Then _FromCurrencyID = GetDefaultCurrency()
-        Dim sngFromRate As Single = 0, sngToRate As Single = 0
-        Dim rowCurrenciesFrom As DataRow() = GetCurrenciesFromCache().Select("CUR_ID = " & _FromCurrencyID)
-        sngFromRate = CSng(FixNullFromDB(rowCurrenciesFrom(0)("CUR_ExchangeRate")))
-        Dim rowCurrenciesTo As DataRow() = GetCurrenciesFromCache().Select("CUR_ID = " & _ToCurrencyID)
-        sngToRate = CSng(FixNullFromDB(rowCurrenciesTo(0)("CUR_ExchangeRate")))
-        Return (_FromValue / sngFromRate) * sngToRate
+    Public Shared Function ConvertCurrency(ByVal _ToCurrencyID As Short, ByVal _FromValue As Decimal, Optional ByVal _FromCurrencyID As Short = 0) As Decimal
+        Try
+            'Have seen situations where if a server restarts and the SQL is
+            'slow coming up, this can error out with an 'out of bounds' error.
+            'In that case, let's try to recycle app pool.
+            If _FromCurrencyID = 0 Then _FromCurrencyID = GetDefaultCurrency()
+            Dim decFromRate As Decimal = 0, decToRate As Decimal = 0
+            Dim rowCurrenciesFrom As DataRow() = GetCurrenciesFromCache().Select("CUR_ID = " & _FromCurrencyID)
+            decFromRate = CDec(FixNullFromDB(rowCurrenciesFrom(0)("CUR_ExchangeRate")))
+            Dim rowCurrenciesTo As DataRow() = GetCurrenciesFromCache().Select("CUR_ID = " & _ToCurrencyID)
+            decToRate = CDec(FixNullFromDB(rowCurrenciesTo(0)("CUR_ExchangeRate")))
+            Return (_FromValue / decFromRate) * decToRate
+        Catch ex As Exception
+            CkartrisBLL.RecycleAppPool()
+            Return 0
+        End Try
     End Function
 
-    Public Shared Function FormatCurrencyPrice( _
-        ByVal _CurrencyID As Short, ByVal _Price As Single, _
+    Public Shared Function FormatCurrencyPrice(
+        ByVal _CurrencyID As Short, ByVal _Price As Decimal,
         Optional ByVal blnShowSymbol As Boolean = True, Optional ByVal blnIncludeLeftDirectionTag As Boolean = True) As String
 
         If KartSettingsManager.GetKartConfig("frontend.users.access") = "partial" Then
@@ -103,7 +111,7 @@ Public Class CurrenciesBLL
 
         If blnShowSymbol Then
             'We're formatting the value as text, with a currencysymbol
-            If rowCurrencies(0)("CUR_Format").ToString.IndexOf("[symbol]") < _
+            If rowCurrencies(0)("CUR_Format").ToString.IndexOf("[symbol]") <
             rowCurrencies(0)("CUR_Format").ToString.IndexOf("[value]") Then
                 strResult = strSymbol
                 If rowCurrencies(0)("CUR_Format").ToString.IndexOf(" ") <> -1 Then

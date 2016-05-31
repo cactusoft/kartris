@@ -38,6 +38,7 @@
 			<siteMapNode title="$resources:_Kartris,BackMenu_Promotions" url="~/Admin/_Promotions.aspx" value="products"/>
 			<siteMapNode title="$resources:_Kartris,BackMenu_Attributes" url="~/Admin/_Attributes.aspx"  value="products"/>
 			<siteMapNode title="$resources:_Kartris,BackMenu_StockLevels" url="~/Admin/_StockWarning.aspx" value="products" />
+			<siteMapNode title="$resources:_StockNotification,ContentText_StockNotifications" url="~/Admin/_StockNotifications.aspx" value="products" />
 			<siteMapNode title="$resources:_Kartris,BackMenu_VersionDownloads" url="~/Admin/_Downloads.aspx" value="products" />
 			<siteMapNode title="$resources:_Kartris,BackMenu_MediaTypes" url="~/Admin/_MediaTypes.aspx" value="products" />
 			<siteMapNode title="$resources:_Kartris,BackMenu_MarkupPrices" url="~/Admin/_MarkupPrices.aspx" value="products" />

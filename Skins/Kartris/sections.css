@@ -252,9 +252,11 @@ VERSIONS
 .versions .addtobasket select           { margin: 3px 0 0 0; width: 450px; max-width: 99%; } /* version name and price */
 .versions .addtobasket .dropdown        { width: 45px } /* qty */
 .versions .addtobasket .textbox         { width: 45px }
-.versions .addtobasket div.selector     { vertical-align: bottom; white-space: nowrap; padding: 0 0 0 0; }
+.versions .addtobasket div.selector     { clear: both; display: block; vertical-align: bottom; padding: 0 0 0 0; }
 .versions .addtobasket div.outofstock   { color: #f00; font-weight: bold; }
 .versions .addtobasket span.outofstock  { color: #f00; font-weight: bold; }
+.versions .addtobasket div.stocknotification
+                                        { display: block; }
 /* 
 ------------------------------------------------------------------------
 OPTIONS

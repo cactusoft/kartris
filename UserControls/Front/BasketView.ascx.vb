@@ -623,6 +623,8 @@ Partial Class Templates_BasketView
 
         Call BasketBLL.CalculateOrderHandlingCharge(Basket, Session("numShippingCountryID"))
 
+        Call LoadBasket()
+
         updPnlMainBasket.Update()
 
     End Sub

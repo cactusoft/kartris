@@ -86,10 +86,17 @@ Partial Class UserControls_Back_EditCouponPopup
         chkReusable.Checked = FixNullFromDB(rowCoupon("CP_Reusable"))
         chkLive.Checked = FixNullFromDB(rowCoupon("CP_Enabled"))
 
-        If FixNullFromDB(rowCoupon("CP_DiscountType")) = "t" Then
-            ddlPromotions.SelectedValue = FixNullFromDB(rowCoupon("CP_DiscountValue"))
-            ddlDiscountType_SelectedIndexChanged(Nothing, Nothing)
-        End If
+        'Made this more robust, also put a Cint on the CP_DiscountValue
+        'because if this is a coupon-promotion, the value comes out as
+        'decimal so does not match up with db.
+        Try
+            If FixNullFromDB(rowCoupon("CP_DiscountType")) = "t" Then
+                ddlPromotions.SelectedValue = CInt(FixNullFromDB(rowCoupon("CP_DiscountValue")))
+                ddlDiscountType_SelectedIndexChanged(Nothing, Nothing)
+            End If
+        Catch ex As Exception
+            'oops
+        End Try
 
         If FixNullFromDB(rowCoupon("CP_Used")) = True Then LockControls()
 
