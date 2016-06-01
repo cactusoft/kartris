@@ -51,7 +51,7 @@ Partial Class UserControls_Back_TaskList
         End If
         If blnProducts Then
             phdStockNotifications.Visible = True
-            litLastRunTime.Text = CkartrisDisplayFunctions.FormatDate(CDate(KartSettingsManager.GetKartConfig("hidden.stocknotification.lastrun")), "t", Session("_LANG"))
+            LoadStockNotifications()
         Else
             phdCustomerOrders.Visible = False
         End If
@@ -157,8 +157,9 @@ Partial Class UserControls_Back_TaskList
     End Sub
 
     Sub LoadStockNotifications()
-        Dim numAwaitingCheck As Int64 = 0
-
+        Dim numAwaitingCheck As Int64 = StockNotificationsBLL._GetCountVersionsAwaitingChecks
+        litVersionsAwaitingCheckQty.Text = numAwaitingCheck
+        If numAwaitingCheck = 0 Then phdStockNotifications.Visible = False
     End Sub
 
 End Class

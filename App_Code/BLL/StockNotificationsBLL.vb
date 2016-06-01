@@ -21,11 +21,18 @@ Imports CkartrisDisplayFunctions
 Public Class StockNotificationsBLL
 
     Private Shared _Adptr As StockNotificationsTblAdptr = Nothing
-
     Protected Shared ReadOnly Property Adptr() As StockNotificationsTblAdptr
         Get
             _Adptr = New StockNotificationsTblAdptr
             Return _Adptr
+        End Get
+    End Property
+
+    Private Shared _Adptr2 As VersionsAwaitingTblAdptr = Nothing
+    Protected Shared ReadOnly Property Adptr2() As VersionsAwaitingTblAdptr
+        Get
+            _Adptr2 = New VersionsAwaitingTblAdptr
+            Return _Adptr2
         End Get
     End Property
 
@@ -126,6 +133,40 @@ Public Class StockNotificationsBLL
     End Sub
 
     ''' <summary>
+    ''' Update version to reset bulktimestamp date. This is used
+    ''' when processing bulk notifications in back end, so we
+    ''' know which versions were updated
+    ''' </summary>
+    ''' <param name="numV_ID">The version ID to update</param>
+    Public Shared Sub _UpdateVersionResetTimeStamp(ByVal numV_ID As Int64)
+
+        'Connection string
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+
+        'Connect to sproc and send over the info
+        Using sqlConn As New SqlConnection(strConnString)
+            Dim cmdUpdate As SqlCommand = sqlConn.CreateCommand
+            cmdUpdate.CommandText = "_spKartrisVersions_UpdateBulkTimeStamp"
+            Dim savePoint As SqlTransaction = Nothing
+            cmdUpdate.CommandType = CommandType.StoredProcedure
+            Try
+                cmdUpdate.Parameters.AddWithValue("@V_ID", numV_ID)
+                sqlConn.Open()
+                savePoint = sqlConn.BeginTransaction()
+                cmdUpdate.Transaction = savePoint
+
+                cmdUpdate.ExecuteNonQuery()
+                savePoint.Commit()
+            Catch ex As Exception
+                ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
+                If Not savePoint Is Nothing Then savePoint.Rollback()
+            Finally
+                If sqlConn.State = ConnectionState.Open Then sqlConn.Close() : savePoint.Dispose()
+            End Try
+        End Using
+    End Sub
+
+    ''' <summary>
     ''' This sub is called whenever a version is updated, stock
     ''' tracking is enabled and the current item is in
     ''' stock
@@ -188,5 +229,50 @@ Public Class StockNotificationsBLL
     ''' <param name="numVersionID">ID of the version they wish to be notified about</param>
     Public Shared Function _GetStockNotificationsByVersionID(ByVal numVersionID As Int64, ByVal strStatus As String) As DataTable
         Return Adptr._GetStockNotificationsByVersionID(numVersionID, strStatus)
+    End Function
+
+    ''' <summary>
+    ''' Returns datatable of versions which need
+    ''' to have notification checks run on them 
+    ''' (i.e. versions uploaded via data tool, etc.
+    ''' where stock notification check doesn't run)
+    ''' </summary>
+    Public Shared Function _GetVersions() As DataTable
+        Return Adptr2._GetVersions()
+    End Function
+
+    ''' <summary>
+    ''' Produces a count of versions that need to
+    ''' have stock notification checks run against
+    ''' them.
+    ''' </summary>
+    Public Shared Function _GetCountVersionsAwaitingChecks() As Int64
+        Dim dtbVersions As DataTable = _GetVersions()
+        Return dtbVersions.Rows.Count
+    End Function
+
+    ''' <summary>
+    ''' Returns table of unfulfilled stock notification
+    ''' requests, including name of product/version they're
+    ''' waiting for and P_ID, V_ID we can use to link to
+    ''' those items
+    ''' </summary>
+    Public Shared Function _GetStockNotificationsDetails(ByVal strStatus As String) As DataTable
+        Dim dtbDetails As DataTable = Adptr._GetStockNotificationsDetails(strStatus)
+        Return dtbDetails
+    End Function
+
+    ''' <summary>
+    ''' Loop through the versions that have been bulk
+    ''' updated and check for notifications
+    ''' </summary>
+    Public Shared Function _RunBulkCheck() As Boolean
+        'Let's get a datatable with versions that need to check
+        Dim dtbVersions As DataTable = _GetVersions()
+        For Each drwVersion In dtbVersions.Rows
+            _SearchSendStockNotifications(drwVersion("V_ID"))
+            _UpdateVersionResetTimeStamp(drwVersion("V_ID"))
+        Next
+        Return True
     End Function
 End Class

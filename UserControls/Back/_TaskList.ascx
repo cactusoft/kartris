@@ -91,9 +91,6 @@
                                 </a>
                         </div>
                         <div class="level_2">
-                            <div>
-                            <asp:Literal ID="litLastRun" runat="server" Text="<%$ Resources: _StockNotification, ContentText_LastRun %>" />&nbsp;<asp:Literal
-                                    ID="litLastRunTime" runat="server" /></div>
                             <div><asp:Literal ID="litVersionsAwaitingCheck" runat="server" Text="<%$ Resources: _StockNotification, ContentText_VersionsAwaitingCheck %>" />&nbsp;<asp:Literal
                                     ID="litVersionsAwaitingCheckQty" runat="server" /></div>
                         </div>

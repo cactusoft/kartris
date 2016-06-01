@@ -864,11 +864,11 @@ Public Class VersionsBLL
                     Dim strUploadFolder As String = GetKartConfig("general.uploadfolder")
                     If File.Exists(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo)) Then
                         If File.Exists(Current.Server.MapPath(strUploadFolder & strDownloadInfo)) Then
-                            File.Replace(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo), _
-                              Current.Server.MapPath(strUploadFolder & strDownloadInfo), _
+                            File.Replace(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo),
+                              Current.Server.MapPath(strUploadFolder & strDownloadInfo),
                               Current.Server.MapPath(strUploadFolder & "temp/backup_" & strDownloadInfo))
                         Else
-                            File.Move(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo), _
+                            File.Move(Current.Server.MapPath(strUploadFolder & "temp/" & strDownloadInfo),
                                 Current.Server.MapPath(strUploadFolder & strDownloadInfo))
                         End If
 
@@ -892,6 +892,7 @@ Public Class VersionsBLL
         End Using
         Return False
     End Function
+
     Public Shared Function _UpdateVersionStockLevel(ByVal tblVersionsToUpdate As DataTable, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -908,8 +909,31 @@ Public Class VersionsBLL
                     cmdUpdateVersionStock.Parameters.AddWithValue("@V_ID", row("VersionID"))
                     cmdUpdateVersionStock.Parameters.AddWithValue("@V_Quantity", row("StockQty"))
                     cmdUpdateVersionStock.Parameters.AddWithValue("@V_QuantityWarnLevel", row("WarnLevel"))
+
+                    'See the explanation above in _UpdateVersion
+                    'for this parameter. It's a clever way of tagging
+                    'versions updated by data tool with datetime stamp
+                    'so we can process stock notifications for them
+                    cmdUpdateVersionStock.Parameters.AddWithValue("@V_BulkUpdateTimeStamp", "1900/1/1")
+
                     cmdUpdateVersionStock.ExecuteNonQuery()
                     cmdUpdateVersionStock.Parameters.Clear()
+
+                    'Before we finish, note that a version has been
+                    'updated. It's possible that there might be some
+                    'people waiting on stock notifications. We can 
+                    'check first if this version is under stock
+                    'control, and is in stock. If so, we can run the
+                    'function to check for and send any stock
+                    'notifications.
+                    If GetKartConfig("general.stocknotification.enabled") = "y" And
+                        row("StockQty") > 0 And row("WarnLevel") > 0 Then
+
+                        'Stock notifications are enabled, this version is
+                        'being stock tracked and has items in stock so we should
+                        'run check to see if we should send stock notifications
+                        StockNotificationsBLL._SearchSendStockNotifications(row("VersionID"))
+                    End If
                 Next
                 savePoint.Commit()
                 strMsg = GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully")
@@ -923,6 +947,7 @@ Public Class VersionsBLL
         End Using
         Return False
     End Function
+
     Public Shared Function _UpdateVersionStockLevelByCode(ByVal tblVersionsToUpdate As DataTable, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -940,8 +965,31 @@ Public Class VersionsBLL
                     cmdUpdateVersionStock.Parameters.AddWithValue("@V_CodeNumber", row("VersionCode"))
                     cmdUpdateVersionStock.Parameters.AddWithValue("@V_Quantity", row("StockQty"))
                     cmdUpdateVersionStock.Parameters.AddWithValue("@V_QuantityWarnLevel", row("WarnLevel"))
+
+                    'See the explanation above in _UpdateVersion
+                    'for this parameter. It's a clever way of tagging
+                    'versions updated by data tool with datetime stamp
+                    'so we can process stock notifications for them
+                    cmdUpdateVersionStock.Parameters.AddWithValue("@V_BulkUpdateTimeStamp", "1900/1/1")
+
                     cmdUpdateVersionStock.ExecuteNonQuery()
                     cmdUpdateVersionStock.Parameters.Clear()
+
+                    'Before we finish, note that a version has been
+                    'updated. It's possible that there might be some
+                    'people waiting on stock notifications. We can 
+                    'check first if this version is under stock
+                    'control, and is in stock. If so, we can run the
+                    'function to check for and send any stock
+                    'notifications.
+                    If GetKartConfig("general.stocknotification.enabled") = "y" And
+                        row("StockQty") > 0 And row("WarnLevel") > 0 Then
+
+                        'Stock notifications are enabled, this version is
+                        'being stock tracked and has items in stock so we should
+                        'run check to see if we should send stock notifications
+                        StockNotificationsBLL._SearchSendStockNotifications(row("VersionID"))
+                    End If
                 Next
                 savePoint.Commit()
                 strMsg = GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully")
@@ -955,6 +1003,7 @@ Public Class VersionsBLL
         End Using
         Return False
     End Function
+
     Private Shared Function _UpdateCombinationsFromBasicInfo(ByVal intProductID As Integer, ByVal snglPrice As Single, ByVal intTax As Byte, _
               ByVal intTax2 As Byte, strTaxExtra As String, ByVal snglWeight As Single, ByVal snglRRP As Single, _
               ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean
@@ -1009,6 +1058,7 @@ Public Class VersionsBLL
         End Using
         Return False
     End Function
+
     Public Shared Function _DeleteProductVersions(ByVal ProductID As Integer, ByRef strFiles As String, ByVal strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
