@@ -136,6 +136,66 @@ BEGIN
 END
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_UpdateStockLevel]    Script Date: 01/06/2016 20:27:26 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisVersions_UpdateStockLevel]
+(
+	@V_ID as bigint,
+	@V_Quantity as real,
+	@V_QuantityWarnLevel as real,
+	@V_BulkUpdateTimeStamp as datetime = NULL
+)
+								
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	
+	UPDATE tblKartrisVersions
+	SET V_Quantity = @V_Quantity, V_QuantityWarnLevel = @V_QuantityWarnLevel,
+	V_BulkUpdateTimeStamp = Coalesce(@V_BulkUpdateTimeStamp, GetDate())
+	WHERE V_ID = @V_ID;
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_UpdateStockLevelByCode]    Script Date: 01/06/2016 20:28:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisVersions_UpdateStockLevelByCode]
+(
+	@V_CodeNumber as nvarchar(25),
+	@V_Quantity as real,
+	@V_QuantityWarnLevel as real = NULL,
+	@V_BulkUpdateTimeStamp as datetime = NULL
+)							
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	UPDATE tblKartrisVersions
+	SET V_Quantity = @V_Quantity, V_QuantityWarnLevel = ISNULL(@V_QuantityWarnLevel, V_QuantityWarnLevel),
+	V_BulkUpdateTimeStamp = Coalesce(@V_BulkUpdateTimeStamp, GetDate())
+	WHERE V_CodeNumber = @V_CodeNumber;
+END
+GO
+
 /****** Object:  Table [dbo].[tblKartrisStockNotifications]    Script Date: 30/05/2016 10:12:20 ******/
 SET ANSI_NULLS ON
 GO
@@ -263,14 +323,36 @@ BEGIN
 END
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisStockNotifications_GetDetails]    Script Date: 31/05/2016 21:24:26 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	Full list of waiting stock
+-- notification requests
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisStockNotifications_GetDetails]
+(
+	@strStatus as varchar(1)
+)
+AS
+BEGIN
+
+	If @strStatus='w'
+		SELECT *, dbo.fnKartrisVersions_GetProductID(SNR_VersionID) As P_ID FROM  tblKartrisStockNotifications
+		WHERE SNR_Status='w' ORDER BY SNR_DateCreated DESC
+	ELSE
+		SELECT *, dbo.fnKartrisVersions_GetProductID(SNR_VersionID) As P_ID FROM  tblKartrisStockNotifications
+		WHERE SNR_Status='s' ORDER BY SNR_DateSettled DESC
+	END
+GO
+
 /****** NEW CONFIG SETTING TO TURN ON STOCK NOTIFICATION FEATURES ******/
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES
  (N'general.stocknotification.enabled', N'y', N's', N't', N'y|n', N'Allow customers to request notifications when out of stock item is back in stock', 2.9005, N'y', 0)
-GO
-
-/****** NEW CONFIG SETTING: DATE THAT CHECK FOR STOCK NOTIFICATIONS LAST RUN ******/
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES
- (N'hidden.stocknotification.lastrun', N'1900/1/1', N's', N't', N'', N'The stores the time of last bulk check on stock notifications.', 2.9005, N'1900/1/1', 0)
 GO
 
 /* These haven't been used for ages, get rid of them */
@@ -299,15 +381,35 @@ CREATE PROCEDURE [dbo].[_spKartrisStockNotifications_GetVersions]
 
 AS
 BEGIN
-	SELECT V_ID,
-	Coalesce(V_BulkUpdateTimeStamp, '1900/1/1') As BulkUpdateTimeStamp,
-	V_Live,
-	V_Quantity,
-	V_QuantityWarnLevel
+	SELECT *,
+	Coalesce(V_BulkUpdateTimeStamp, '1900/1/1') As BulkUpdateTimeStamp
 	FROM tblKartrisVersions WHERE
 	Coalesce(V_BulkUpdateTimeStamp, '1900/1/1')>'1901/1/1' AND V_QuantityWarnLevel>0 AND V_Quantity>0 AND V_Live=1 
 END
 GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_UpdateBulkTimeStamp]    Script Date: 01/06/2016 17:23:40 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisVersions_UpdateBulkTimeStamp]
+(
+	@V_ID as bigint
+)							
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	UPDATE tblKartrisVersions SET V_BulkUpdateTimeStamp = NULL
+	WHERE V_ID = @V_ID;
+END
 
 /****** 2.9005 'Nofity me' and stock warnings ******/
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_NotifyMe', N'Notify me', NULL, 2.9005, N'Notify me', NULL, N'StockNotification',1);
@@ -317,8 +419,6 @@ GO
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_StockNotification', N'Back in stock', 'Subject line of stock notification emails', 2.9005, N'Back in stock', NULL, N'_StockNotification',1);
 GO
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_StockNotifications', N'Stock Notifications', 'Task list heading for stock notifications', 2.9005, N'Stock Notifications', NULL, N'_StockNotification',1);
-GO
-INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_LastRun', N'Last Run: ', 'Task list last run text for stock notifications', 2.9005, N'Last run: ', NULL, N'_StockNotification',1);
 GO
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_VersionsAwaitingCheck', N'Awaiting Check: ', '', 2.9005, N'Awaiting Check: ', NULL, N'_StockNotification',1);
 GO
