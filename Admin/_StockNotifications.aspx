@@ -48,7 +48,7 @@
                                 <asp:Literal ID="litDateCreatedHeader" runat="server" Text="<%$ Resources:_Kartris, ContentText_DateCreated %>" />
                             </HeaderTemplate>
                             <ItemTemplate>
-                                <asp:Literal ID="litDateCreatedName" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(Eval("SNR_DateCreated"), "t", Session("_LANG"))%>' />
+                                <asp:Literal ID="litDateCreatedName" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(CkartrisDataManipulation.FixNullFromDB(Eval("SNR_DateCreated")), "t", Session("_LANG"))%>' />
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField ItemStyle-CssClass="column5">
@@ -56,7 +56,7 @@
                                 <asp:Literal ID="litDateSettledHeader" runat="server" Text="<%$ Resources:_Tickets, ContentText_DateClosed %>" />
                             </HeaderTemplate>
                             <ItemTemplate>
-                                <asp:Literal ID="litDateSettled" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(Eval("SNR_DateSettled"), "t", Session("_LANG")) %>' />
+                                <asp:Literal ID="litDateSettled" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(CkartrisDataManipulation.FixNullFromDB(Eval("SNR_DateSettled")), "t", Session("_LANG")) %>' />
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
@@ -96,7 +96,7 @@
                                 <asp:Literal ID="litDateCreatedHeader" runat="server" Text="<%$ Resources:_Kartris, ContentText_DateCreated %>" />
                             </HeaderTemplate>
                             <ItemTemplate>
-                                <asp:Literal ID="litDateCreatedName" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(Eval("SNR_DateCreated"), "t", Session("_LANG"))%>' />
+                                <asp:Literal ID="litDateCreatedName" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(CkartrisDataManipulation.FixNullFromDB(Eval("SNR_DateCreated")), "t", Session("_LANG"))%>' />
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:TemplateField ItemStyle-CssClass="column5">
@@ -104,7 +104,7 @@
                                 <asp:Literal ID="litDateSettledHeader" runat="server" Text="<%$ Resources:_Tickets, ContentText_DateClosed %>" />
                             </HeaderTemplate>
                             <ItemTemplate>
-                                <asp:Literal ID="litDateSettled" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(Eval("SNR_DateSettled"), "t", Session("_LANG")) %>' />
+                                <asp:Literal ID="litDateSettled" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(CkartrisDataManipulation.FixNullFromDB(Eval("SNR_DateSettled")), "t", Session("_LANG")) %>' />
                             </ItemTemplate>
                         </asp:TemplateField>
                     </Columns>
