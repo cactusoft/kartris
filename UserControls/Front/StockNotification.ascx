@@ -19,18 +19,18 @@ STOCK NOTIFICATION
             <asp:Label ID="lblEmail" runat="server" AssociatedControlID="txtEmail" Text='<%$ Resources: ContactUs, ContentText_YourEmail %>'></asp:Label>
             <br />
             <!-- Customization Text Box & Validator -->
-            <asp:TextBox ID="txtEmail" runat="server" TextMode="SingleLine" CssClass="longtext" ValidationGroup="StockNotifications"></asp:TextBox>
+            <asp:TextBox ID="txtEmail" runat="server" TextMode="SingleLine" CssClass="longtext" ValidationGroup="<%# UniqueValidationGroup %>"></asp:TextBox>
             <asp:RequiredFieldValidator EnableClientScript="True" ID="valEmail" runat="server"
                 ControlToValidate="txtEmail" CssClass="error"
-                ForeColor="" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>" ValidationGroup="StockNotifications"></asp:RequiredFieldValidator>
+                ForeColor="" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>" ValidationGroup="<%# UniqueValidationGroup %>"></asp:RequiredFieldValidator>
             <asp:RegularExpressionValidator
                 EnableClientScript="True" ID="valEmail2" runat="server" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*"
                 ControlToValidate="txtEmail" CssClass="error" ForeColor="" Display="Dynamic"
-                Text="<%$ Resources: Kartris, ContentText_BadEmail %>" ValidationGroup="StockNotifications"></asp:RegularExpressionValidator>
+                Text="<%$ Resources: Kartris, ContentText_BadEmail %>" ValidationGroup="<%# UniqueValidationGroup %>"></asp:RegularExpressionValidator>
             <!-- Save Button -->
             <div class="submitbuttons">
                 <asp:Button ID="btnSave" runat="server" CssClass="button"
-                    Text='<%$ Resources: Kartris, FormLabel_Save %>' UseSubmitBehavior="False" ValidationGroup="StockNotifications" />
+                    Text='<%$ Resources: Kartris, FormLabel_Save %>' UseSubmitBehavior="True" ValidationGroup="<%# UniqueValidationGroup %>" />
                 <ajaxToolkit:NoBot ID="ajaxNoBotContact" runat="server"
                     ResponseMinimumDelaySeconds="2"
                     CutoffWindowSeconds="60"

@@ -27,6 +27,19 @@ Partial Class UserControls_Front_StockNotification
     ''' </summary>
     Private _VersionID As Int64
 
+    ''' <summary>
+    ''' There is a problem with using validation groups if
+    ''' we want to use this control more than once per page
+    ''' (which we do). To get around this, we need to set
+    ''' the validation group dynamically. This is part of that
+    ''' process.
+    ''' </summary>
+    Protected ReadOnly Property UniqueValidationGroup() As String
+        Get
+            Return ClientID + "StockTracking"
+        End Get
+    End Property
+
     Public Property VersionID() As Int64
         Get
             Return _VersionID
@@ -103,10 +116,6 @@ Partial Class UserControls_Front_StockNotification
         End Set
     End Property
 
-    'Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-    '    ShowStockNotificationsPopup()
-    'End Sub
-
     ''' <summary>
     ''' This sub can be called from the
     ''' ProductVersions.ascx.vb in response to
@@ -148,9 +157,15 @@ Partial Class UserControls_Front_StockNotification
     ''' <remarks></remarks>
     Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSave.Click
 
+        'We just want to validate the group for this
+        'particular item, that's why below we find the
+        'validation control of the button that was 
+        'clicked
+        Page.Validate(btnSave.ValidationGroup)
         If Page.IsValid Then
             StockNotificationsBLL.AddNewStockNotification(txtEmail.Text, hidVersionID.Value, hidPageLink.Value, hidProductName.Value, hidLanguageID.Value)
+        Else
+            CkartrisFormatErrors.LogError("Something not valid in group " & btnSave.ValidationGroup)
         End If
-
     End Sub
 End Class

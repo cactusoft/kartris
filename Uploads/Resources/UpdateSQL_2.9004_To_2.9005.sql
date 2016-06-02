@@ -33,8 +33,9 @@ GO
 
 
 
-
-
+/****** Add field to Versions table ******/
+ALTER TABLE tblKartrisVersions ADD [V_BulkUpdateTimeStamp] [datetime] NULL
+GO
 
 /****** Clarification needs updating due to recent options improvements ******/
 UPDATE tblKartrisLanguageStrings SET [LS_Value] = '*Applies to combinations, if combinations product.' WHERE [LS_Name] = 'ContentText_StockTrackingOptionsClarification' AND [LS_LangID] = 1
@@ -410,6 +411,7 @@ BEGIN
 	UPDATE tblKartrisVersions SET V_BulkUpdateTimeStamp = NULL
 	WHERE V_ID = @V_ID;
 END
+GO
 
 /****** 2.9005 'Nofity me' and stock warnings ******/
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_NotifyMe', N'Notify me', NULL, 2.9005, N'Notify me', NULL, N'StockNotification',1);
