@@ -41,6 +41,135 @@ GO
 UPDATE tblKartrisLanguageStrings SET [LS_Value] = '*Applies to combinations, if combinations product.' WHERE [LS_Name] = 'ContentText_StockTrackingOptionsClarification' AND [LS_LangID] = 1
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_Add]    Script Date: 03/06/2016 19:28:18 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisVersions_Add]
+(
+	@V_CodeNumber as nvarchar(25),
+	@V_ProductID as int,
+	@V_Price as DECIMAL(18,4),
+	@V_Tax as tinyint,
+	@V_Tax2 as tinyint,
+	@V_TaxExtra as nvarchar(255),
+	@V_Weight as real,
+	@V_DeliveryTime as tinyint,
+	@V_Quantity as real,
+	@V_QuantityWarnLevel as real,
+	@V_Live as bit,
+	@V_DownLoadInfo as nvarchar(255),
+	@V_DownloadType as nvarchar(50),
+	@V_RRP as DECIMAL(18,4),
+	@V_Type as char(1),
+	@V_CustomerGroupID as smallint,
+	@V_CustomizationType as char(1),
+	@V_CustomizationDesc as nvarchar(255),
+	@V_CustomizationCost as DECIMAL(18,4),
+	@V_NewID as bigint OUT
+)
+								
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	DECLARE @MaxOrder as int;
+	SELECT @MaxOrder = Max(V_OrderByValue) FROM dbo.tblKartrisVersions WHERE V_ProductID = @V_ProductID;
+	IF @MaxOrder is NULL BEGIN SET @MaxOrder = 0 END;
+
+	
+	INSERT INTO tblKartrisVersions
+	VALUES (@V_CodeNumber, @V_ProductID, @V_Price, @V_Tax, @V_Weight, @V_DeliveryTime, @V_Quantity, @V_QuantityWarnLevel, 
+			@V_Live, @V_DownLoadInfo, @V_DownloadType, @MaxOrder + 1, @V_RRP, @V_Type, @V_CustomerGroupID, @V_CustomizationType,
+			@V_CustomizationDesc, @V_CustomizationCost, @V_Tax2, @V_TaxExtra, NULL);
+			
+	SELECT @V_NewID = SCOPE_IDENTITY();
+
+END
+GO
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_AddAsSingle]    Script Date: 04/06/2016 10:53:00 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisVersions_AddAsSingle]
+(
+	@V_CodeNumber as nvarchar(25),
+	@V_ProductID as int,
+	@V_CustomerGroupID as smallint,
+	@V_NewID as bigint OUT
+)
+								
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	
+	INSERT INTO tblKartrisVersions
+	VALUES (@V_CodeNumber, @V_ProductID, NULL, NULL, 0, 0, 0, 0, 0, NULL, NULL, 10, 0, 'v', @V_CustomerGroupID, 'n', NULL, 0, NULL, NULL, NULL);
+			
+	SELECT @V_NewID = SCOPE_IDENTITY();
+	
+END
+GO
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_AddAsCombination]    Script Date: 04/06/2016 10:38:55 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisVersions_AddAsCombination]
+(
+	@V_CodeNumber as nvarchar(25),
+	@V_ProductID as int,
+	@V_Price as DECIMAL(18,4),
+	@V_Tax as tinyint,
+	@V_Tax2 as tinyint,
+	@V_TaxExtra as nvarchar(50),
+	@V_Weight as real,
+	@V_Quantity as real,
+	@V_QuantityWarnLevel as real,
+	@V_RRP as DECIMAL(18,4),
+	@V_Type as char(1),
+	@V_NewID as bigint OUT
+)
+								
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	
+	DECLARE @DownloadInfo as nvarchar(255), @DownloadType as nvarchar(50);
+	SELECT @DownloadInfo = [V_DownLoadInfo], @DownloadType = [V_DownloadType]
+	FROM [dbo].[tblKartrisVersions]
+	WHERE [V_ProductID] = @V_ProductID AND [V_Type] = 'b';
+
+	INSERT INTO tblKartrisVersions
+	VALUES (@V_CodeNumber, @V_ProductID, @V_Price, @V_Tax, @V_Weight, 0, @V_Quantity, @V_QuantityWarnLevel, 
+			1, @DownloadInfo, @DownloadType, 20, @V_RRP, @V_Type, NULL, 'n', NULL, 0, @V_Tax2, @V_TaxExtra, NULL);
+			
+	SELECT @V_NewID = SCOPE_IDENTITY();
+
+END
+GO
 /****** Object:  StoredProcedure [dbo].[_spKartrisVersions_Update]    Script Date: 31/05/2016 08:06:52 ******/
 SET ANSI_NULLS ON
 GO
@@ -130,7 +259,6 @@ BEGIN
 	V_BulkUpdateTimeStamp = Coalesce(@V_BulkUpdateTimeStamp, GetDate())
 	WHERE V_ID = @ID;
 
-	
 	UPDATE tblKartrisLanguageElements
 	SET LE_Value = @Name
 	WHERE LE_TypeID = 1 AND LE_FieldID = 1 AND LE_ParentID = @ID;

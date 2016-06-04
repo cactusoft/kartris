@@ -180,12 +180,13 @@ Partial Class UserControls_General_AddToBasket
         Dim strUnitSize As String = GetUnitSize()
         Dim numQuantity As Single = Me.ItemsQuantity
         Dim objMiniBasket As Object = Page.Master.FindControl("UC_MiniBasket")
-
         Dim numMod As Decimal = SafeModulus(numQuantity, strUnitSize)
+
+
         If numMod <> 0D Then
             '' wrong quantity - quantity should be a multiplies of unit size
-            objMiniBasket.ShowPopupMini(GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors"), _
-                    Replace(GetGlobalResourceObject("ObjectConfig", "ContentText_OrderMultiplesOfUnitsize"), "[unitsize]", strUnitSize))
+            objMiniBasket.ShowPopupMini(GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors"),
+                        Replace(GetGlobalResourceObject("ObjectConfig", "ContentText_OrderMultiplesOfUnitsize"), "[unitsize]", strUnitSize))
         Else
 
             'qty ok, matches unitsize allowed
@@ -207,6 +208,7 @@ Partial Class UserControls_General_AddToBasket
 
             Session("AddItemVersionID") = litVersionID.Text
         End If
+
     End Sub
 
     Private Sub LoadAddItemToBasket()

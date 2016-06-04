@@ -778,9 +778,12 @@ Partial Class _ProductOptionGroups
                 Dim vQtyLevel As String = CInt(CType(itm.FindControl("txtCombinationWarningLevel"), TextBox).Text)
                 If vQty = "" Then vQty = "0"
                 If vQtyLevel = "" Then vQtyLevel = "0"
-                tblNewCombinations.Rows.Add(Nothing, Nothing, vName, Nothing, vCode, vProductID, vPrice, _
-                                         FixNullToDB(vTax, "i"), vWeight, 0, CInt(vQty), CInt(vQtyLevel), 1, Nothing, Nothing, _
-                                            0, vRRP, "c", Nothing, "n", Nothing, 0, FixNullToDB(vTax2, "i"), Nothing, vIDList)
+
+                'In v2.9005 added a 'nothing' second from end; this is for the V_BulkUpdateTimeStamp field
+                'which was added to the versions schema that is used to create the datatable above
+                tblNewCombinations.Rows.Add(Nothing, Nothing, vName, Nothing, vCode, vProductID, vPrice,
+                                         FixNullToDB(vTax, "i"), vWeight, 0, CInt(vQty), CInt(vQtyLevel), 1, Nothing, Nothing,
+                                            0, vRRP, "c", Nothing, "n", Nothing, 0, FixNullToDB(vTax2, "i"), Nothing, Nothing, vIDList)
             End If
         Next
 

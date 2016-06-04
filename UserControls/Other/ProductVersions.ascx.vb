@@ -366,7 +366,7 @@ Partial Class ProductVersions
         Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", ProductID) = "1", True, False) And ProductsBLL._NumberOfCombinations(ProductID) > 0
         ptblVersions.Rows(0)("V_Price") = GetPriceWithGroupDiscount(ptblVersions.Rows(0)("V_ID"), ptblVersions.Rows(0)("V_Price"))
 
-        ptblVersions.Rows(0)("V_Price") = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), _
+        ptblVersions.Rows(0)("V_Price") = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"),
                CDbl(CStr(FixNullFromDB(ptblVersions.Rows(0)("V_Price")))))
         'base version price and tax rate
         Dim pPrice As Single = CDbl(CStr(FixNullFromDB(ptblVersions.Rows(0)("V_Price"))))
