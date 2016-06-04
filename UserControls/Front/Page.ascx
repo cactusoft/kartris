@@ -1,4 +1,4 @@
-﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="Page.ascx.vb" Inherits="UserControls_Front_Page" %>
+<%@ Control Language="VB" AutoEventWireup="false" CodeFile="Page.ascx.vb" Inherits="UserControls_Front_Page" %>
 <div id="custompagetext">
     <asp:Repeater ID="rptPage" runat="server">
         <ItemTemplate>

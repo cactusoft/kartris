@@ -480,7 +480,7 @@
                                         <asp:PlaceHolder ID="phdNotOutOfStock4" runat="server">
                                             <asp:UpdatePanel ID="updAddOptions" runat="server" UpdateMode="Conditional" RenderMode="Inline">
                                                 <ContentTemplate>
-                                                    <asp:Button ID="btnAdd_Options" runat="server" CssClass="button" Text="<%$ Resources: Products, FormButton_Add %>" />
+                                                    <asp:Button ID="btnAdd_Options" CausesValidation="false" runat="server" CssClass="button" Text="<%$ Resources: Products, FormButton_Add %>" />
                                                 </ContentTemplate>
                                             </asp:UpdatePanel>
                                         </asp:PlaceHolder>
@@ -507,7 +507,7 @@
                     <div class="boxinset line">
                         <div class="addtobasket">
                             <asp:DropDownList ID="ddlCustomVersionQuantity" runat="server" CssClass="dropdown"/>
-                            <asp:Button ID="btnAddCustomVersion" runat="server" CssClass="button" Text="<%$ Resources: Products, FormButton_Add %>" />
+                            <asp:Button ID="btnAddCustomVersion" CausesValidation="false" runat="server" CssClass="button" Text="<%$ Resources: Products, FormButton_Add %>" />
                         </div>
                     </div>
                 </asp:View>

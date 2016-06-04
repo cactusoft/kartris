@@ -416,6 +416,8 @@ Public Class VersionsBLL
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
 
+                CkartrisFormatErrors.LogError(CStr(row("V_CodeNumber")))
+
                 '' Options
                 Dim strIDList As String = CStr(row("ID_List"))
                 If strIDList.EndsWith(",") Then strIDList = strIDList.TrimEnd(",")
@@ -438,8 +440,8 @@ Public Class VersionsBLL
     End Function
 
     Public Shared Function _AddNewVersionAsCombination(ByVal tblElements As DataTable, ByVal strCodeNumber As String, ByVal intProductID As Integer,
-      ByVal snglPrice As Single, ByVal intTaxID As Byte, intTaxID2 As Byte, strExtraTax As String, ByVal snglWeight As Single, ByVal sngStockQty As Single,
-      ByVal sngWarnLevel As Single, ByVal snglRRP As Single, ByVal chrType As Char,
+      ByVal decPrice As Decimal, ByVal intTaxID As Byte, intTaxID2 As Byte, strExtraTax As String, ByVal snglWeight As Single, ByVal sngStockQty As Single,
+      ByVal sngWarnLevel As Single, ByVal decRRP As Decimal, ByVal chrType As Char,
       ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction, ByRef numNewVersionID As Long) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -448,14 +450,14 @@ Public Class VersionsBLL
         Try
             cmdAddVersion.Parameters.AddWithValue("@V_CodeNumber", FixNullToDB(strCodeNumber, "s"))
             cmdAddVersion.Parameters.AddWithValue("@V_ProductID", FixNullToDB(intProductID, "i"))
-            cmdAddVersion.Parameters.AddWithValue("@V_Price", snglPrice)
+            cmdAddVersion.Parameters.AddWithValue("@V_Price", FixNullToDB(decPrice, "z"))
             cmdAddVersion.Parameters.AddWithValue("@V_Tax", FixNullToDB(intTaxID, "i"))
             cmdAddVersion.Parameters.AddWithValue("@V_Tax2", FixNullToDB(intTaxID2, "i"))
             cmdAddVersion.Parameters.AddWithValue("@V_TaxExtra", FixNullToDB(strExtraTax))
             cmdAddVersion.Parameters.AddWithValue("@V_Weight", snglWeight)
             cmdAddVersion.Parameters.AddWithValue("@V_Quantity", sngStockQty)
             cmdAddVersion.Parameters.AddWithValue("@V_QuantityWarnLevel", sngWarnLevel)
-            cmdAddVersion.Parameters.AddWithValue("@V_RRP", snglRRP)
+            cmdAddVersion.Parameters.AddWithValue("@V_RRP", FixNullToDB(decRRP, "z"))
             cmdAddVersion.Parameters.AddWithValue("@V_Type", FixNullToDB(chrType, "c"))
             cmdAddVersion.Parameters.AddWithValue("@V_NewID", 0).Direction = ParameterDirection.Output
 
