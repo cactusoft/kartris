@@ -162,6 +162,15 @@
                 bmpImage.SetResolution(95, 95)
             End If
             Dim FInfo As New FileInfo(strImagePath)
+
+            'Here we can write some headers to stop the image
+            'being cached, if there is a cache=clear passed to the page
+            If Request.QueryString("cache") = "clear" Then
+                Response.AppendHeader("Cache-Control", "no-cache, no-store, must-revalidate") 'HTTP 1.1.
+                Response.AppendHeader("Pragma", "no-cache") 'HTTP 1.0.
+                Response.AppendHeader("Expires", "0") 'Proxies.
+            End If
+
             'In theory this lets us output thumbnails
             'in the original format, but PNGs don't
             'seem to work reliably
@@ -174,6 +183,7 @@
             '        bmpImage.Save(Response.OutputStream, ImageFormat.Jpeg)
             'End Select
             Response.ContentType = "image/jpeg"
+
             bmpImage.Save(Response.OutputStream, ImageFormat.Jpeg)
         Catch ex As Exception
             'Return nothing
