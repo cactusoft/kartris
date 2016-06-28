@@ -155,6 +155,7 @@ Public Class ExportBLL
             cmdExecuteQuery.Parameters.AddWithValue("@EndDate", FixNullToDB(strDateTo))
             cmdExecuteQuery.Parameters.AddWithValue("@IncludeDetails", blnIncludeDetails)
             cmdExecuteQuery.Parameters.AddWithValue("@IncludeIncomplete", blnIncompleteOrders)
+            cmdExecuteQuery.CommandTimeout = 3600
 
             Try
                 Dim tblExport As New DataTable()
@@ -179,6 +180,7 @@ Public Class ExportBLL
 
             cmdExecuteQuery.CommandType = CommandType.StoredProcedure
             cmdExecuteQuery.Parameters.AddWithValue("@QueryText", FixNullToDB(strQuery, "s"))
+            cmdExecuteQuery.CommandTimeout = 3600
 
             Try
                 Dim tblExport As New DataTable()
