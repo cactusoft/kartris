@@ -60,13 +60,13 @@ GO
 
 /****** FIX DATA TOOL EXPORT SO ATTRIBUTES FORMAT MATCHES DATA TOOL REQUIREMENT ******/
 
-/****** Object:  StoredProcedure [dbo].[_spKartrisDB_ExportProductRelatedData]    Script Date: 27/06/2016 13:37:32 ******/
+/****** Object:  StoredProcedure [dbo].[_spKartrisDB_ExportProductRelatedData]    Script Date: 30/06/2016 16:22:24 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Author:		Mohammad
+-- Author:		Paul
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
@@ -81,65 +81,64 @@ BEGIN
 	SET NOCOUNT ON;
 
 	-- Put products from View into temp table
-	SELECT * INTO #TempProducts FROM dbo.vKartrisTypeProducts;
+	SELECT * INTO #TempProducts FROM dbo.vKartrisTypeProducts WHERE LANG_ID = @LanguageID;
 	-- apply index
 	CREATE CLUSTERED INDEX IDX_P_ID ON #TempProducts(P_ID);
 	CREATE INDEX IDX_LANG_ID ON #TempProducts(LANG_ID);
 
 	-- Put versions from View into temp table
-	SELECT * INTO #TempVersions FROM dbo.vKartrisTypeVersions;
+	SELECT * INTO #TempVersions FROM dbo.vKartrisTypeVersions WHERE LANG_ID = @LanguageID;
 	-- apply indexes
 	CREATE CLUSTERED INDEX IDX_V_ID ON #TempVersions(V_ID);
 	CREATE INDEX IDX_V_ProductID ON #TempVersions(V_ProductID);
 	CREATE INDEX IDX_LANG_ID ON #TempVersions(LANG_ID);
 
 	-- Put categories from View into temp table
-	SELECT * INTO #TempCategories FROM dbo.vKartrisTypeCategories;
+	SELECT * INTO #TempCategories FROM dbo.vKartrisTypeCategories WHERE LANG_ID = @LanguageID;
 	-- apply indexes
 	CREATE CLUSTERED INDEX IDX_CAT_ID ON #TempCategories(CAT_ID);
 	CREATE INDEX IDX_LANG_ID ON #TempCategories(LANG_ID);
 
 	-- Put category hierarchy from View into temp table
-	SELECT * INTO #TempCategoryHierarchy FROM dbo.vKartrisCategoryHierarchy;
+	SELECT * INTO #TempCategoryHierarchy FROM dbo.vKartrisCategoryHierarchy WHERE LANG_ID = @LanguageID;
 	-- apply indexes
 	CREATE CLUSTERED INDEX IDX_CH_CAT_ID ON #TempCategoryHierarchy(CAT_ID);
 	CREATE INDEX IDX_CH_ChildID ON #TempCategoryHierarchy(CH_ChildID);
 	CREATE INDEX IDX_LANG_ID ON #TempCategoryHierarchy(LANG_ID);
 
 	-- Put attributes from View into temp table
-	SELECT * INTO #TempAttributes FROM dbo.vKartrisTypeAttributes;
+	SELECT * INTO #TempAttributes FROM dbo.vKartrisTypeAttributes WHERE LANG_ID = @LanguageID;
 	-- apply indexes
 	CREATE CLUSTERED INDEX IDX_ATTRIB_ID ON #TempAttributes(ATTRIB_ID);
 	CREATE INDEX IDX_LANG_ID ON #TempAttributes(LANG_ID);
 
 	-- Put attributes from View into temp table
-	SELECT * INTO #TempAttributeValues FROM dbo.vKartrisTypeAttributeValues;
+	SELECT * INTO #TempAttributeValues FROM dbo.vKartrisTypeAttributeValues WHERE LANG_ID = @LanguageID;
 	-- apply indexes
 	CREATE CLUSTERED INDEX IDX_ATTRIBV_ID ON #TempAttributeValues(ATTRIBV_ID);
 	CREATE INDEX IDX_ATTRIB_ID ON #TempAttributeValues(ATTRIBV_AttributeID);
 	CREATE INDEX IDX_LANG_ID ON #TempAttributeValues(LANG_ID);
 
-SELECT * 
+SELECT * INTO #TempProductData
 		FROM
-			((SELECT '###_DUMMYDATA_###' AS Cat5_Name1,	'DO NOT MODIFY OR DELETE THIS LINE. THIS SHOULD HELP ADDRESS THE ISSUES WITH THE OLEDB DRIVER LIMITATION. BY ADDING THIS LINE WE ARE LETTING THE DRIVER KNOW THE CORRECT DATA TYPE OF EACH FIELD.  THIS IS BETTER THAN MODIFYING THE REGISTRY TO SET A HIGHER ROWSCAN VALUE.' AS Cat5_Desc1,	'CAT5_IMAGEFIELD' AS cat5_Image,	'CAT4_NAME' AS Cat4_Name1,	'################################################################################################################################################################################################################################################################' AS Cat4_Desc1,	'CAT4_IMAGEFIELD' AS cat4_Image,	'CAT3_NAME' AS Cat3_Name1,	'################################################################################################################################################################################################################################################################' AS Cat3_Desc1,	'CAT3_IMAGEFIELD' AS cat3_Image,	'CAT2_NAME' AS Cat2_Name1,	'################################################################################################################################################################################################################################################################' AS Cat2_Desc1,	'CAT2_IMAGEFIELD' AS cat2_Image,	'CAT1_NAME' AS Cat1_Name1,	'################################################################################################################################################################################################################################################################' AS Cat1_Desc1,	'CAT1_IMAGEFIELD' AS cat1_Image,	'P_NAME1' AS P_Name1,	'################################################################################################################################################################################################################################################################' AS P_Desc1,	'P_IMAGEFIELD' AS P_Image,	'P_STRAPLINE1' AS P_StrapLine1,	'V_NAME1' AS V_Name1,	'################################################################################################################################################################################################################################################################' AS V_Desc1,	'V_IMAGEFIELD' AS V_Image,	'V_CODENUMBER' AS V_CodeNumber,	'V_TYPE' AS V_Type, '0' AS V_Price,	'0' AS V_Quantity,	'0' AS V_Weight,	'0' AS V_RRP,	'0' AS T_Taxrate, '0' AS T_Taxrate2, 'V_TAXEXTRA' As V_TaxExtra, 'SUPPLIER' AS Supplier, 'ATTRIBUTES' AS Attributes,	'OPTIONS' AS Options)
+			((SELECT 'CAT1_NAME' AS Cat5_Name1,	'DO NOT MODIFY OR DELETE THIS LINE. THIS SHOULD HELP ADDRESS THE ISSUES WITH THE OLEDB DRIVER LIMITATION. BY ADDING THIS LINE WE ARE LETTING THE DRIVER KNOW THE CORRECT DATA TYPE OF EACH FIELD.  THIS IS BETTER THAN MODIFYING THE REGISTRY TO SET A HIGHER ROWSCAN VALUE.' AS Cat5_Desc1, 'CAT1_IMAGE' AS Cat5_Image, 'CAT2_NAME' AS Cat4_Name1, '################################################################################################################################################################################################################################################################' AS Cat4_Desc1, 'CAT2_IMAGE' AS Cat4_Image, 'CAT3_NAME' AS Cat3_Name1, '################################################################################################################################################################################################################################################################' AS Cat3_Desc1, 'CAT3_IMAGE' AS Cat3_Image, 'CAT4_NAME' AS Cat2_Name1, '################################################################################################################################################################################################################################################################' AS Cat2_Desc1, 'CAT4_IMAGE' AS Cat2_Image,	'CAT5_NAME' AS Cat1_Name1, '################################################################################################################################################################################################################################################################' AS Cat1_Desc1, 'CAT5_IMAGE' AS Cat1_Image, 'P_NAME1' AS P_Name1, '################################################################################################################################################################################################################################################################' AS P_Desc1, 'P_IMAGEFIELD' AS P_Image, 'P_STRAPLINE1' AS P_StrapLine1, 'V_NAME1' AS V_Name1, '################################################################################################################################################################################################################################################################' AS V_Desc1, 'V_IMAGEFIELD' AS V_Image, 'V_CODENUMBER' AS V_CodeNumber, 'V_TYPE' AS V_Type, '0' AS V_Price, '0' AS V_Quantity, '0' AS V_Weight, '0' AS V_RRP, '0' AS T_Taxrate, '0' AS T_Taxrate2, 'V_TAXEXTRA' As V_TaxExtra, 'SUPPLIER' AS Supplier, 'ATTRIBUTES' AS Attributes, 'OPTIONS' AS Options)
 			UNION
 			(
-			SELECT  #TempCategories.CAT_Name AS Cat5_Name1, #TempCategories.CAT_Desc AS Cat5_Desc1, '' AS Cat5_Image, 
-				  #TempCategoryHierarchy.CAT_Name AS Cat4_Name1, #TempCategoryHierarchy.CAT_Desc AS Cat4_Desc1, '' AS Cat4_Image, 
-				  vKartrisCategoryHierarchy_1.CAT_Name AS Cat3_Name1, vKartrisCategoryHierarchy_1.CAT_Desc AS Cat3_Desc1, '' AS Cat3_Image, 
-				  vKartrisCategoryHierarchy_2.CAT_Name AS Cat2_Name1, vKartrisCategoryHierarchy_2.CAT_Desc AS Cat2_Desc1, '' AS Cat2_Image, 
-				  vKartrisCategoryHierarchy_3.CAT_Name AS Cat1_Name1, vKartrisCategoryHierarchy_3.CAT_Desc AS Cat1_Desc1, '' AS Cat1_Image, 
+			SELECT  COALESCE(#TempCategories.CAT_Name, '') AS Cat5_Name1, COALESCE(#TempCategories.CAT_Desc,'') AS Cat5_Desc1, '' AS Cat5_Image, 
+				  COALESCE(#TempCategoryHierarchy.CAT_Name, '') AS Cat4_Name1, COALESCE(#TempCategoryHierarchy.CAT_Desc, '') AS Cat4_Desc1, '' AS Cat4_Image, 
+				  COALESCE(vKartrisCategoryHierarchy_1.CAT_Name, '') AS Cat3_Name1, COALESCE(vKartrisCategoryHierarchy_1.CAT_Desc, '') AS Cat3_Desc1, '' AS Cat3_Image, 
+				  COALESCE(vKartrisCategoryHierarchy_2.CAT_Name, '') AS Cat2_Name1, COALESCE(vKartrisCategoryHierarchy_2.CAT_Desc, '') AS Cat2_Desc1, '' AS Cat2_Image, 
+				  COALESCE(vKartrisCategoryHierarchy_3.CAT_Name, '') AS Cat1_Name1, COALESCE(vKartrisCategoryHierarchy_3.CAT_Desc, '') AS Cat1_Desc1, '' AS Cat1_Image, 
 				  #TempProducts.P_Name AS P_Name1, #TempProducts.P_Desc AS P_Desc1, '' AS P_Image, 
 				  #TempProducts.P_StrapLine AS P_Strapline1, #TempVersions.V_Name AS V_Name1, #TempVersions.V_Desc AS V_Desc1, 
 				  '' AS V_Image, #TempVersions.V_CodeNumber, #TempVersions.V_Type, #TempVersions.V_Price, #TempVersions.V_Quantity, 
-				  #TempVersions.V_Weight, #TempVersions.V_RRP, dbo.tblKartrisTaxRates.T_Taxrate, ISNULL(#TempVersions.V_Tax2, 0), #TempVersions.V_TaxExtra, dbo.tblKartrisSuppliers.SUP_Name AS Supplier, 
+				  #TempVersions.V_Weight, #TempVersions.V_RRP, dbo.tblKartrisTaxRates.T_Taxrate, COALESCE(#TempVersions.V_Tax2, 0), #TempVersions.V_TaxExtra, dbo.tblKartrisSuppliers.SUP_Name AS Supplier, 
 				  COALESCE(STUFF((SELECT ' || ' +    CONVERT(NVARCHAR(max), #TempAttributes.ATTRIB_Name),
 						' {{' + CONVERT(NVARCHAR(max), #TempAttributeValues.ATTRIBV_Value) + '}}'
 FROM #TempAttributeValues INNER JOIN
 					  #TempAttributes ON #TempAttributeValues.ATTRIBV_AttributeID = #TempAttributes.ATTRIB_ID AND 
 					  #TempAttributeValues.LANG_ID = #TempAttributes.LANG_ID
-WHERE (#TempAttributes.ATTRIB_Live = 1) AND (#TempAttributes.ATTRIB_ShowFrontend = 1) AND (#TempAttributeValues.ATTRIBV_ProductID = #TempProducts.P_ID) AND
-					   (#TempAttributeValues.LANG_ID = @LanguageID)
+WHERE (#TempAttributes.ATTRIB_Live = 1) AND (#TempAttributes.ATTRIB_ShowFrontend = 1) AND (#TempAttributeValues.ATTRIBV_ProductID = #TempProducts.P_ID) 
 ORDER BY #TempAttributes.ATTRIB_OrderByValue
                             FOR xml path('')
                         )
@@ -164,9 +163,23 @@ ORDER BY #TempAttributes.ATTRIB_OrderByValue
 				  #TempCategories.LANG_ID = #TempCategoryHierarchy.LANG_ID AND 
 				  #TempCategories.CAT_ID = #TempCategoryHierarchy.CH_ChildID ON 
 				  #TempProducts.P_ID = dbo.tblKartrisProductCategoryLink.PCAT_ProductID
-			WHERE     (#TempProducts.LANG_ID = @LanguageID) AND (#TempProducts.P_Type <> 'o')
+			WHERE  (#TempProducts.P_Type <> 'o')
 			)) ProductData
 	ORDER BY Cat5_Name1, P_Name1
+--SELECT * FROM #TempProductData 
+
+SELECT * FROM (
+(SELECT Cat5_Name1, Cat5_Desc1, '' As Cat5_Image, '' As Cat4_Name1, '' As Cat4_Desc1, '' As Cat4_Image, '' As Cat3_Name1, '' As Cat3_Desc1, '' As Cat3_Image, '' As Cat2_Name1, '' As Cat2_Desc1, '' As Cat2_Image, '' As Cat1_Name1, '' As Cat1_Desc1, '' As Cat1_Image, P_Name1, P_Desc1, P_Image, P_StrapLine1, V_Name1, V_Desc1, V_Image, V_CodeNumber, V_Type, V_Price, V_Quantity, V_Weight, V_RRP, T_Taxrate, T_Taxrate2, V_TaxExtra, Supplier, Attributes, '' As Options FROM #TempProductData WHERE Coalesce(Cat5_Name1, '')<>'' AND Coalesce(Cat4_Name1, '')='' AND Coalesce(Cat3_Name1, '')='' AND Coalesce(Cat2_Name1, '')='' AND Coalesce(Cat1_Name1, '')='')
+UNION
+(SELECT Cat4_Name1, Cat4_Desc1, '', Cat5_Name1, Cat5_Desc1, '', '', '', '', '', '', '', '', '', '', P_Name1, P_Desc1, P_Image, P_StrapLine1, V_Name1, V_Desc1, V_Image, V_CodeNumber, V_Type, V_Price, V_Quantity, V_Weight, V_RRP, T_Taxrate, T_Taxrate2, V_TaxExtra, Supplier, Attributes, '' As Options FROM #TempProductData WHERE Coalesce(Cat5_Name1, '')<>'' AND Coalesce(Cat4_Name1, '')<>'' AND Coalesce(Cat3_Name1, '')='' AND Coalesce(Cat2_Name1, '')='' AND Coalesce(Cat1_Name1, '')='')
+UNION
+(SELECT Cat3_Name1, Cat3_Desc1, '', Cat4_Name1, Cat4_Desc1, '', Cat5_Name1, Cat5_Desc1, '', '', '', '', '', '', '', P_Name1, P_Desc1, P_Image, P_StrapLine1, V_Name1, V_Desc1, V_Image, V_CodeNumber, V_Type, V_Price, V_Quantity, V_Weight, V_RRP, T_Taxrate, T_Taxrate2, V_TaxExtra, Supplier, Attributes, '' As Options FROM #TempProductData WHERE Coalesce(Cat5_Name1, '')<>'' AND Coalesce(Cat4_Name1, '')<>'' AND Coalesce(Cat3_Name1, '')<>'' AND Coalesce(Cat2_Name1, '')='' AND Coalesce(Cat1_Name1, '')='')
+UNION
+(SELECT Cat2_Name1, Cat2_Desc1, '', Cat3_Name1, Cat3_Desc1, '', Cat4_Name1, Cat4_Desc1, '', Cat5_Name1, Cat5_Desc1, '', '', '', '', P_Name1, P_Desc1, P_Image, P_StrapLine1, V_Name1, V_Desc1, V_Image, V_CodeNumber, V_Type, V_Price, V_Quantity, V_Weight, V_RRP, T_Taxrate, T_Taxrate2, V_TaxExtra, Supplier, Attributes, '' As Options FROM #TempProductData WHERE Coalesce(Cat5_Name1, '')<>'' AND Coalesce(Cat4_Name1, '')<>'' AND Coalesce(Cat3_Name1, '')<>'' AND Coalesce(Cat2_Name1, '')<>'' AND Coalesce(Cat1_Name1, '')='')
+UNION
+(SELECT Cat1_Name1, Cat1_Desc1, Cat1_Image, Cat2_Name1, Cat2_Desc1, Cat2_Image, Cat3_Name1, Cat3_Desc1, Cat3_Image, Cat4_Name1, Cat4_Desc1, Cat4_Image, Cat5_Name1, Cat5_Desc1, Cat5_Image, P_Name1, P_Desc1, P_Image, P_StrapLine1, V_Name1, V_Desc1, V_Image, V_CodeNumber, V_Type, V_Price, V_Quantity, V_Weight, V_RRP, T_Taxrate, T_Taxrate2, V_TaxExtra, Supplier, Attributes, '' As Options FROM #TempProductData WHERE Coalesce(Cat5_Name1, '')<>'' AND Coalesce(Cat4_Name1, '')<>'' AND Coalesce(Cat3_Name1, '')<>'' AND Coalesce(Cat2_Name1, '')<>'' AND Coalesce(Cat1_Name1, '')<>'')
+) As OutputProducts
+
 END
 GO
 
