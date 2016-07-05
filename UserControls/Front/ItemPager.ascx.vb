@@ -185,6 +185,14 @@ Partial Class ItemPager
             If InStr(strScriptName, "&f=1&") > 0 Then strActualUrl += "?" & Mid(strScriptName, InStr(strScriptName, "&f=1&") + 1)
         End If
 
+        'Have a problem with filters if the powerpack is installed. The values passed end up
+        'not being URL encoded. So we need to get the value of 'filters', URL encode it, and
+        'then do a find replace
+        If strActualUrl.Contains("filters=") Then
+            strActualUrl = Left(strActualUrl, InStr(strActualUrl, "&filters=") - 1)
+            strActualUrl &= "&filters=" & HttpUtility.UrlEncode(Request.QueryString("filters"))
+        End If
+
         Return strActualUrl
     End Function
 
