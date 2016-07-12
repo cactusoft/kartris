@@ -180,11 +180,11 @@ Partial Class Callback
                     '-----------------------------------------------------
                     If String.IsNullOrEmpty(strCallbackError) Then
 
-                        If Math.Round(clsPlugin.CallbackOrderAmount, 2) = Math.Round(O_TotalPriceGateway, 2) OrElse
-                            NeutralizeCurrencyValue(Math.Round(clsPlugin.CallbackOrderAmount, 2).ToString) = NeutralizeCurrencyValue(Math.Round(O_TotalPriceGateway, 2).ToString) OrElse
-                            intCallbackStep = 2 OrElse intCallbackStep = 3 Then
+                        'If Math.Round(clsPlugin.CallbackOrderAmount, 2) = Math.Round(O_TotalPriceGateway, 2) OrElse
+                        '    NeutralizeCurrencyValue(Math.Round(clsPlugin.CallbackOrderAmount, 2).ToString) = NeutralizeCurrencyValue(Math.Round(O_TotalPriceGateway, 2).ToString) OrElse
+                        '    intCallbackStep = 2 OrElse intCallbackStep = 3 Then
 
-                            If intCallbackStep <> 2 And intCallbackStep <> 3 Then
+                        If intCallbackStep <> 2 And intCallbackStep <> 3 Then
                                 Dim blnCheckInvoicedOnPayment As Boolean = GetKartConfig("frontend.orders.checkinvoicedonpayment") = "y"
                                 Dim blnCheckReceivedOnPayment As Boolean = GetKartConfig("frontend.orders.checkreceivedonpayment") = "y"
 
@@ -289,22 +289,22 @@ Partial Class Callback
                                 UC_EcommerceTracking.Visible = False
                             End Try
 
-                        Else
-                            'The amount we recorded for the order, and the
-                            'confirmation of the amount paid at the gateway
-                            'do not match. This could indicate tampering, i.e.
-                            'someone pays an order but has edited the amount
-                            'down prior to going off to the gateway. Most
-                            'gateways have some kind of defence against this,
-                            'but it is a good check to make if we can get the
-                            'amount back from the gateway.
-                            strCallbackError = "Callback Failure: " & vbCrLf & "Order ID: " & O_ID & "- Order Amount doesn't match. " & vbCrLf &
-                                        "Order Value in DB: " & Math.Round(O_TotalPriceGateway, 2) & vbCrLf &
-                                        "  Order Value from Gateway: " & Math.Round(clsPlugin.CallbackOrderAmount, 2) & vbCrLf &
-                                        "Order Value in DB (neutralized): " & NeutralizeCurrencyValue(Math.Round(O_TotalPriceGateway, 2)) & vbCrLf &
-                                        "  Order Value from Gateway (neutralized): " & NeutralizeCurrencyValue(Math.Round(clsPlugin.CallbackOrderAmount, 2)) & vbCrLf &
-                                        "  Ref: " & clsPlugin.CallbackReferenceCode
-                        End If
+                        'Else
+                        '    'The amount we recorded for the order, and the
+                        '    'confirmation of the amount paid at the gateway
+                        '    'do not match. This could indicate tampering, i.e.
+                        '    'someone pays an order but has edited the amount
+                        '    'down prior to going off to the gateway. Most
+                        '    'gateways have some kind of defence against this,
+                        '    'but it is a good check to make if we can get the
+                        '    'amount back from the gateway.
+                        '    strCallbackError = "Callback Failure: " & vbCrLf & "Order ID: " & O_ID & "- Order Amount doesn't match. " & vbCrLf &
+                        '                "Order Value in DB: " & Math.Round(O_TotalPriceGateway, 2) & vbCrLf &
+                        '                "  Order Value from Gateway: " & Math.Round(clsPlugin.CallbackOrderAmount, 2) & vbCrLf &
+                        '                "Order Value in DB (neutralized): " & NeutralizeCurrencyValue(Math.Round(O_TotalPriceGateway, 2)) & vbCrLf &
+                        '                "  Order Value from Gateway (neutralized): " & NeutralizeCurrencyValue(Math.Round(clsPlugin.CallbackOrderAmount, 2)) & vbCrLf &
+                        '                "  Ref: " & clsPlugin.CallbackReferenceCode
+                        'End If
                     End If
                 Else
                     'Record error
