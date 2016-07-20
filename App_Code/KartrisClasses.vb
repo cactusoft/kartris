@@ -341,12 +341,12 @@ Public Class KartrisClasses
         End Property
         Public ReadOnly Property DropdownValue() As String
             Get
-                Return _ID & ":" & _value & ":" & _name
+                Return _ID & "|||||" & _value & "|||||" & _name
             End Get
         End Property
         Public ReadOnly Property DropdownText() As String
             Get
-                Return _name & ":" & _exTax & ":" & _incTax
+                Return _name & "|||||" & _exTax & "|||||" & _incTax
             End Get
         End Property
         Public Sub New(ByVal ShippingCountry As Country, ByVal objShippingOption As Interfaces.objShippingOption, ByVal intTempID As Integer)
