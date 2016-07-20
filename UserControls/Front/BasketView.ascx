@@ -688,7 +688,7 @@ MAIN BASKET
                         <td class="hide-for-small">&nbsp;</td>
                     </tr>
                     <% End If%>
-                    <%If APP_USMultiStateTax Then%>
+                    <%If APP_USMultiStateTax And ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then%>
                     <!-- Show just tax amount for EU, non US -->
                     <tr class="totals">
                         <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
@@ -721,7 +721,7 @@ MAIN BASKET
                             <span class="labeltext">
                                 <asp:Literal ID="litTotal2" runat="server" Text='<%$ Resources: Basket, ContentText_Total %>'
                                     EnableViewState="false"></asp:Literal></span>
-                            <% If APP_PricesIncTax = False And APP_ShowTaxDisplay = False Then %>
+                            <% If APP_PricesIncTax = False And APP_ShowTaxDisplay = False And ViewType <> BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then %>
                                 <span class="value"><%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceExTax)%></span>
                             <% Else %>
                                 <span class="value"><%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceIncTax)%></span>
