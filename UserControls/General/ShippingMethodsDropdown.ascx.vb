@@ -65,7 +65,7 @@ Partial Class UserControls_ShippingMethodsDropdown
         Dim objCurrency As New CurrenciesBLL
 
         For Each liShippingMethod In ddlShippingMethods.Items
-            Dim arrText As String() = Split(liShippingMethod.Text, ":")
+            Dim arrText As String() = Split(liShippingMethod.Text, "|||||")
 
             Dim strIncTax As String = CurrenciesBLL.FormatCurrencyPrice(CUR_ID, CurrenciesBLL.ConvertCurrency(CUR_ID, CDbl(arrText(2))))
             Dim strExTax As String = CurrenciesBLL.FormatCurrencyPrice(CUR_ID, CurrenciesBLL.ConvertCurrency(CUR_ID, CDbl(arrText(1))))
@@ -109,10 +109,10 @@ Partial Class UserControls_ShippingMethodsDropdown
                 End If
                 ddlShippingMethods.SelectedIndex = 0
 
-                Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, ":")
+                Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, "|||||")
                 Session("_selectedShippingID") = CInt(999)
                 Session("_selectedShippingAmount") = CDbl(0)
-                ViewState("PreviouslySelected") = 999 & "::" & GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
+                ViewState("PreviouslySelected") = 999 & "||||||" & GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
                 Dim lstSelected As ListItem = ddlShippingMethods.SelectedItem
                 lstSelected.Text = GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
                 RaiseEvent ShippingSelected(Nothing, Nothing)
@@ -138,10 +138,10 @@ Partial Class UserControls_ShippingMethodsDropdown
                 End If
                 ddlShippingMethods.SelectedIndex = 0
 
-                Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, ":")
+                Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, "|||||")
                 Session("_selectedShippingID") = CInt(arrSM(0))
                 Session("_selectedShippingAmount") = CDbl(arrSM(1))
-                ViewState("PreviouslySelected") = ddlShippingMethods.SelectedItem.Value & "::" & ddlShippingMethods.SelectedItem.Text
+                ViewState("PreviouslySelected") = ddlShippingMethods.SelectedItem.Value & "||||||" & ddlShippingMethods.SelectedItem.Text
                 Dim lstSelected As ListItem = ddlShippingMethods.SelectedItem
                 lstSelected.Text = CStr(arrSM(2))
                 RaiseEvent ShippingSelected(Nothing, Nothing)
@@ -165,10 +165,10 @@ Partial Class UserControls_ShippingMethodsDropdown
                 End If
                 ddlShippingMethods.SelectedIndex = 0
 
-                Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, ":")
+                Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, "|||||")
                 Session("_selectedShippingID") = CInt(999)
                 Session("_selectedShippingAmount") = CDbl(0)
-                ViewState("PreviouslySelected") = 999 & "::" & GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
+                ViewState("PreviouslySelected") = 999 & "||||||" & GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
                 Dim lstSelected As ListItem = ddlShippingMethods.SelectedItem
                 lstSelected.Text = GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
                 RaiseEvent ShippingSelected(Nothing, Nothing)
@@ -214,7 +214,7 @@ Partial Class UserControls_ShippingMethodsDropdown
 
     Protected Sub ddlShippingMethods_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlShippingMethods.SelectedIndexChanged
 
-        Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, ":")
+        Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, "|||||")
         If UBound(arrSM) = 2 Or ddlShippingMethods.SelectedValue = "999" Then
             If UBound(arrSM) = 2 Then
                 Session("_selectedShippingID") = CInt(arrSM(0))
@@ -225,12 +225,12 @@ Partial Class UserControls_ShippingMethodsDropdown
             End If
 
             If ViewState("PreviouslySelected") IsNot Nothing Then
-                Dim arrPrevious As String() = Split(ViewState("PreviouslySelected"), "::")
+                Dim arrPrevious As String() = Split(ViewState("PreviouslySelected"), "||||||")
                 Dim lstPreviouslySelected As ListItem = ddlShippingMethods.Items.FindByValue(arrPrevious(0))
                 lstPreviouslySelected.Text = arrPrevious(1)
             End If
 
-            ViewState("PreviouslySelected") = ddlShippingMethods.SelectedItem.Value & "::" & ddlShippingMethods.SelectedItem.Text
+            ViewState("PreviouslySelected") = ddlShippingMethods.SelectedItem.Value & "||||||" & ddlShippingMethods.SelectedItem.Text
 
             If ddlShippingMethods.SelectedValue <> "999" Then
                 Dim lstSelected As ListItem = ddlShippingMethods.SelectedItem
