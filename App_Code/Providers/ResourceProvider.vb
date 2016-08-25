@@ -56,7 +56,12 @@ Public NotInheritable Class SqlResourceProviderFactory
         Public Sub New(ByVal virtualPath As String, ByVal className As String)
             _virtualPath = virtualPath
             _className = className
-            LanguageStringProviders.LoadedProviders.Add(Me)
+            Try
+                LanguageStringProviders.LoadedProviders.Add(Me)
+            Catch ex As Exception
+                CkartrisBLL.RecycleAppPool()
+            End Try
+
         End Sub
 
         Public Sub ClearResourceCache()
