@@ -140,11 +140,11 @@ FROM #TempAttributeValues INNER JOIN
 					  #TempAttributeValues.LANG_ID = #TempAttributes.LANG_ID
 WHERE (#TempAttributes.ATTRIB_Live = 1) AND (#TempAttributes.ATTRIB_ShowFrontend = 1) AND (#TempAttributeValues.ATTRIBV_ProductID = #TempProducts.P_ID) 
 ORDER BY #TempAttributes.ATTRIB_OrderByValue
-                            FOR xml path('')
-                        )
-                        , 1
-                        , 4
-                        , ''), '') AS Attributes, '' AS Options
+							FOR xml path('')
+						)
+						, 1
+						, 4
+						, ''), '') AS Attributes, '' AS Options
 			FROM dbo.tblKartrisTaxRates RIGHT OUTER JOIN
 				  #TempVersions INNER JOIN
 				  #TempProducts ON #TempVersions.V_ProductID = #TempProducts.P_ID AND 
@@ -180,6 +180,39 @@ UNION
 (SELECT Cat1_Name1, Cat1_Desc1, Cat1_Image, Cat2_Name1, Cat2_Desc1, Cat2_Image, Cat3_Name1, Cat3_Desc1, Cat3_Image, Cat4_Name1, Cat4_Desc1, Cat4_Image, Cat5_Name1, Cat5_Desc1, Cat5_Image, P_Name1, P_Desc1, P_Image, P_StrapLine1, V_Name1, V_Desc1, V_Image, V_CodeNumber, V_Type, V_Price, V_Quantity, V_Weight, V_RRP, T_Taxrate, T_Taxrate2, V_TaxExtra, Supplier, Attributes, '' As Options FROM #TempProductData WHERE Coalesce(Cat5_Name1, '')<>'' AND Coalesce(Cat4_Name1, '')<>'' AND Coalesce(Cat3_Name1, '')<>'' AND Coalesce(Cat2_Name1, '')<>'' AND Coalesce(Cat1_Name1, '')<>'')
 ) As OutputProducts
 
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisDB_GetTaskList]    Script Date: 19/05/2016 16:27:51 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[_spKartrisDB_GetTaskList]
+(	
+	@NoOrdersToInvoice as int OUTPUT,
+	@NoOrdersNeedPayment as int OUTPUT,
+	@NoOrdersToDispatch as int OUTPUT,
+	@NoStockWarnings as int OUTPUT,
+	@NoOutOfStock as int OUTPUT,
+	@NoReviewsWaiting as int OUTPUT,
+	@NoAffiliatesWaiting as int OUTPUT,
+	@NoCustomersWaitingRefunds as int OUTPUT,
+	@NoCustomersInArrears as int OUTPUT
+)
+AS
+BEGIN
+
+	SELECT @NoOrdersToInvoice = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Invoiced = 'False' AND O_Paid = 'False' AND O_Sent = 'True' AND O_Cancelled = 'False';
+	SELECT @NoOrdersNeedPayment = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Paid = 'False' AND O_Invoiced = 'True' AND O_Sent = 'True' AND O_Cancelled = 'False';
+	SELECT @NoOrdersToDispatch = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Sent = 'True' AND O_Paid = 'True' AND O_Shipped = 'False' AND O_Cancelled = 'False';
+	SELECT @NoStockWarnings = Count(DISTINCT V_ID) FROM dbo.vKartrisVersionsStock WHERE V_QuantityWarnLevel >= V_Quantity AND V_QuantityWarnLevel <> 0 OPTION (FORCE ORDER);
+	SELECT @NoOutOfStock = Count(DISTINCT V_ID) FROM dbo.vKartrisVersionsStock WHERE V_Quantity <= 0 AND V_QuantityWarnLevel <> 0 OPTION (FORCE ORDER);
+	SELECT @NoReviewsWaiting = Count(REV_ID) FROM dbo.tblKartrisReviews WHERE REV_Live = 'a';
+	SELECT @NoAffiliatesWaiting  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_IsAffiliate = 'True' AND U_AffiliateCommission = 0;
+	SELECT @NoCustomersWaitingRefunds  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance > 0;
+	SELECT @NoCustomersInArrears  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance < 0;
 END
 GO
 
