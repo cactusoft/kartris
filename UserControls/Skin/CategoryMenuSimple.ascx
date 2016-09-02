@@ -20,7 +20,7 @@
 %>
 <!-- CategoryMenu - dropdown -->
 <div id="categorymenu">
-    <nav>
+    <nav data-topbar role="navigation">
         <section class="simplemenu">
             <asp:Menu ID="menCategory" DataSourceID="srcSiteMap" Orientation="Horizontal" runat="server">
                 <DataBindings>
