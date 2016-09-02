@@ -20,7 +20,7 @@
 %>
 <!-- CategoryMenu - fold out menus -->
 <div id="categorymenu">
-    <nav class="top-bar" data-topbar>
+    <nav class="top-bar" data-topbar role="navigation">
         <div class="box">
             <ul class="title-area show-for-small" style="display:none;">
                 <li class="name"><span><asp:Hyperlink ID="lnkCategories" runat="server" Text="<%$ Resources: Kartris, ContentText_Categories %>" EnableViewState="False" NavigateUrl="~/Category.aspx"></asp:Hyperlink></span></li>
