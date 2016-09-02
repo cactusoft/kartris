@@ -63,12 +63,12 @@ Partial Class UserControls_Back_AdminExportData
     End Sub
 
     Sub CustomExport()
-        If txtSqlQuery.Text.ToUpper.StartsWith("SELECT") Then
-            Dim FieldSeparator As Integer = ddlCustomFieldDelimiter.SelectedValue
+        'If txtSqlQuery.Text.ToUpper.StartsWith("SELECT") Then
+        Dim FieldSeparator As Integer = ddlCustomFieldDelimiter.SelectedValue
             Dim StringSeparator As Integer = ddlCustomStringDelimiter.SelectedValue
             Dim tblExportedData As DataTable = ExportBLL._CustomExecute(txtSqlQuery.Text)
             CKartrisCSVExporter.WriteToCSV(tblExportedData, txtExportName.Text, FieldSeparator, StringSeparator)
-        End If
+        'End If
     End Sub
 
     Protected Sub btnSaveExport_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSaveExport.Click
