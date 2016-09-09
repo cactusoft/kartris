@@ -216,6 +216,30 @@ BEGIN
 END
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisProductOptionLink_Update]    Script Date: 09/09/2016 17:04:48 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisProductOptionLink_Update]
+(
+	@OPT_OptionGroupID smallint,
+	@OPT_CheckBoxValue bit,
+	@OPT_DefPriceChange real,
+	@OPT_DefWeightChange real,
+	@OPT_DefOrderByValue smallint,
+	@Original_OPT_ID int
+)
+AS
+	SET NOCOUNT OFF;
+
+	UPDATE	[tblKartrisOptions] 
+	SET		[OPT_OptionGroupID] = @OPT_OptionGroupID, [OPT_CheckBoxValue] = @OPT_CheckBoxValue, 
+			[OPT_DefPriceChange] = @OPT_DefPriceChange, [OPT_DefWeightChange] = @OPT_DefWeightChange, 
+			[OPT_DefOrderByValue] = @OPT_DefOrderByValue 
+	WHERE	(([OPT_ID] = @Original_OPT_ID));
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.9006', CFG_VersionAdded=2.9006 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
