@@ -389,6 +389,9 @@ Partial Class _OptionGroups
         Dim numOrderByValue As Integer _
             = CInt(CType(itmSelected.FindControl("txtOrderByValue"), TextBox).Text)
 
+        Dim blnChkResetOptions As Boolean _
+            = CBool(CType(itmSelected.FindControl("chkResetOptions"), CheckBox).Checked)
+
         Dim strMessage As String = ""
         Try
             Dim tblContents As DataTable _
@@ -396,11 +399,19 @@ Partial Class _OptionGroups
                                             _LanguageContainer).ReadContent()
             Dim numOptionID As Integer = CInt(CType(itmSelected.FindControl("litOptionID"), Literal).Text)
             If tblContents.Rows.Count > 0 Then
-                If Not OptionsBLL._UpdateOption(numOptionID, numOptionGroupID, blnChkBoxValue, numPriceChange, _
+                If Not OptionsBLL._UpdateOption(numOptionID, numOptionGroupID, blnChkBoxValue, numPriceChange,
                                                         numWeightChange, numOrderByValue, tblContents, strMessage) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     Return
                 End If
+
+                'Update price/weight of option values in products
+                'using this option
+                If blnChkResetOptions Then
+                    'Need to find all tblKartrisProductOptionLink records that are
+                    'based on this tblKartrisOptions record
+                End If
+
                 ShowOptions()
                 RaiseEvent ShowMasterUpdate()
             End If

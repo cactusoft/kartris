@@ -345,7 +345,16 @@
                                             <ajaxToolkit:FilteredTextBoxExtender ID="filOrderByValue" runat="server" TargetControlID="txtOrderByValue"
                                                 FilterType="Numbers" />
                                         </span></li>
+                                    <li><span class="Kartris-DetailsView-Name">
+                                        <asp:Literal id="litResetOptions" runat="server" Text="Reset products using this option value?"></asp:Literal>
+                                        </span>
+                                        <span class="Kartris-DetailsView-Value"><asp:CheckBox ID="chkResetOptions" runat="server"
+                                            CssClass="checkbox" />
+                                        </span></li>
+
+                                    
                                 </ul>
+
                             </div>
                         </div>
                         <div class="spacer">
