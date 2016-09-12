@@ -410,6 +410,7 @@ Partial Class _OptionGroups
                 If blnChkResetOptions Then
                     'Need to find all tblKartrisProductOptionLink records that are
                     'based on this tblKartrisOptions record
+                    OptionsBLL._UpdateOptionValues(numOptionID, numPriceChange, numWeightChange)
                 End If
 
                 ShowOptions()

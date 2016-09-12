@@ -216,6 +216,10 @@ BEGIN
 END
 GO
 
+/****** Back end language string for update sproc below ******/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_OptionValuesReset', N'Update products using this option with above price and weight?', NULL, 2.9006, N'Update products using this option with above price and weight?', NULL, N'_Options',1);
+GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisProductOptionLink_Update]    Script Date: 09/09/2016 17:04:48 ******/
 SET ANSI_NULLS ON
 GO
@@ -223,21 +227,17 @@ SET QUOTED_IDENTIFIER ON
 GO
 CREATE PROCEDURE [dbo].[_spKartrisProductOptionLink_Update]
 (
-	@OPT_OptionGroupID smallint,
-	@OPT_CheckBoxValue bit,
-	@OPT_DefPriceChange real,
-	@OPT_DefWeightChange real,
-	@OPT_DefOrderByValue smallint,
-	@Original_OPT_ID int
+	@P_OPT_OptionID int,
+	@P_OPT_PriceChange decimal(18,4),
+	@P_OPT_WeightChange decimal(18,4)
 )
 AS
 	SET NOCOUNT OFF;
 
-	UPDATE	[tblKartrisOptions] 
-	SET		[OPT_OptionGroupID] = @OPT_OptionGroupID, [OPT_CheckBoxValue] = @OPT_CheckBoxValue, 
-			[OPT_DefPriceChange] = @OPT_DefPriceChange, [OPT_DefWeightChange] = @OPT_DefWeightChange, 
-			[OPT_DefOrderByValue] = @OPT_DefOrderByValue 
-	WHERE	(([OPT_ID] = @Original_OPT_ID));
+	UPDATE	tblKartrisProductOptionLink 
+	SET		P_OPT_PriceChange = @P_OPT_PriceChange, 
+			P_OPT_WeightChange = @P_OPT_WeightChange
+	WHERE	((P_OPT_OptionID = @P_OPT_OptionID));
 GO
 
 /****** Set this to tell Data tool which version of db we have ******/
