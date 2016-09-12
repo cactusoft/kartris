@@ -478,4 +478,41 @@ Public Class OptionsBLL
         Return False
     End Function
 
+    'In v2.9006 we add a new feature, that means when updating an option,
+    'you can choose to have all products that have option values for this
+    'option to have their price and weight change values reset from the
+    'change you make here.
+    Public Shared Function _UpdateOptionValues(ByVal pOptionID As Integer, ByVal decPriceChange As Decimal, ByVal decWeightChange As Decimal) As Boolean
+
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Using sqlConn As New SqlConnection(strConnString)
+            Dim cmdOption As SqlCommand = sqlConn.CreateCommand
+            cmdOption.CommandText = "_spKartrisProductOptionLink_Update"
+            Dim savePoint As SqlTransaction = Nothing
+            cmdOption.CommandType = CommandType.StoredProcedure
+            Try
+                cmdOption.Parameters.AddWithValue("@P_OPT_OptionID", pOptionID)
+                cmdOption.Parameters.AddWithValue("@P_OPT_PriceChange", decPriceChange)
+                cmdOption.Parameters.AddWithValue("@P_OPT_WeightChange", decWeightChange)
+                sqlConn.Open()
+                savePoint = sqlConn.BeginTransaction()
+                cmdOption.Transaction = savePoint
+
+                cmdOption.ExecuteNonQuery()
+
+
+                savePoint.Commit()
+                sqlConn.Close()
+                Return True
+
+            Catch ex As Exception
+                ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod(), "Error updating option values in bulk for existing products")
+                If Not savePoint Is Nothing Then savePoint.Rollback()
+            Finally
+                If sqlConn.State = ConnectionState.Open Then sqlConn.Close() : savePoint.Dispose()
+            End Try
+        End Using
+
+        Return False
+    End Function
 End Class
