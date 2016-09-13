@@ -87,6 +87,7 @@ BASKET SUMMARY
 ========================================================================
 */
 #minibasketholder                       { position: relative; }
+.compactminibasket,
 #minibasket                             { float: right; width: auto; max-width: 200px; padding: 0; margin: 3px 0 0 0; }
 #minibasket #minibasket_header          { min-width: 32px; background-color: transparent; }
 #compactbasket_title                    { display: none; }
@@ -94,6 +95,7 @@ BASKET SUMMARY
 #compactbasket_noofitems span.bracket   { display: none; }
 #minibasket h4                          { margin: 0; padding: 0; font-size: 12px; }
 #minibasket h4 strong                   { color: #999; font-weight: bold; }
+
 .compactminibasket a,
 #minibasket h4 a                        { height: 28px; display: inline-block; width: auto; background-position: 0; background-image: url(Images/icon_shopping_cart.png); background-repeat: no-repeat; color: #000; padding: 0 0 0 18px; font-weight: bold; }
 #compactbasket_noofitems                { display: inline-block; background-color: #888; color: #fff; font-size: 1.1em; font-weight: bold; margin: 11px 5px 0 0; padding: 0 4px 1px 3px; }
