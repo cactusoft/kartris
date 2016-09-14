@@ -85,9 +85,10 @@
         ElseIf strRawURL.EndsWith("/admin/") Then
             Response.Redirect(Replace(strRawURL, "/admin/", "/Admin/_Default.aspx"))
         ElseIf strRawURL.EndsWith("/") Then
-            Response.Redirect(strRawURL & "Default.aspx")
+            If Not strRawURL.ToLower.Contains("/p-") And Not strRawURL.ToLower.Contains("/c-") Then 'fixes issue where old CactuShop friendly URLs don't redirect right
+                Response.Redirect(strRawURL & "Default.aspx")
+            End If
         End If
-
     End Sub
 
     Sub Application_Error(ByVal sender As Object, ByVal e As EventArgs)
