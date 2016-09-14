@@ -52,7 +52,43 @@ Partial Class _404
         End If
 
         'Send a 404 code to browser
+        Response.Clear()
         Response.Status = "404 Not Found"
+        Response.TrySkipIisCustomErrors = True
+
+        'Ok, here's the thing. We server.execute to get here, and if we
+        'just put this HTML into the .aspx page, we seem to get both
+        'that, and the skin of the site mixed up. This seems to work
+        'better, so we're putting it here, then we can flush and end and
+        'all seems good.
+        Response.Write("<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">" & vbCrLf)
+        Response.Write("<html xmlns=""http://www.w3.org/1999/xhtml"" style=""border: none;"">" & vbCrLf)
+        Response.Write("<head id=""Head1"">" & vbCrLf)
+        Response.Write("<style type=""text/css"">" & vbCrLf)
+        Response.Write("/* we avoid external CSS files because if we're not careful" & vbCrLf)
+        Response.Write("those can also create 404s and so you get a cascade of" & vbCrLf)
+        Response.Write("404s when running in integrated app pool mode */" & vbCrLf)
+        Response.Write("body { font-family: ""Segoe UI"", Verdana, Arial, Helvetica; font-size: 13px; background-color: #fff; }" & vbCrLf)
+        Response.Write("div { position: absolute; top: 50%; left: 50%; width: 400px; height: 300px; margin-top: -200px; margin-left: -200px; }" & vbCrLf)
+        Response.Write("h1 { font-family: Georgia, Times New Roman, Times New Roman; font-weight: lighter; font-size: 690%; letter-spacing: -2px; color: #c05; padding: 0; margin: 0; }" & vbCrLf)
+        Response.Write("h2 { font-family: ""Segoe UI"", Verdana, Arial, Helvetica; font-size: 250%; color: #ccc; text-transform: uppercase; padding: 0; margin: 0; }" & vbCrLf)
+        Response.Write("a { color: #04d; }" & vbCrLf)
+        Response.Write("</style>" & vbCrLf)
+        Response.Write("    <title>404 - Page Not Found</title>" & vbCrLf)
+        Response.Write("</head>" & vbCrLf)
+        Response.Write("<body>" & vbCrLf)
+        Response.Write("    <div>" & vbCrLf)
+        Response.Write("        <h1>404!</h1>" & vbCrLf)
+        Response.Write("        <h2>Page Not Found</h2>" & vbCrLf)
+        Response.Write("        <p>The page you're looking for isn't here.</p>" & vbCrLf)
+        Response.Write("        <p><a href=""/Default.aspx"">Go to the home page...</a></p>" & vbCrLf)
+        Response.Write("    </div>" & vbCrLf)
+        Response.Write("</body>" & vbCrLf)
+        Response.Write("</html>" & vbCrLf)
+
+        'Flush and end
+        Response.Flush()
+        Response.End()
     End Sub
 
 End Class

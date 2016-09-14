@@ -72,7 +72,8 @@ Partial Class Category
                         'likely the item is no longer available.
                         strErrorThrown = "404"
                         Try
-                            HttpContext.Current.Server.Transfer("~/404.aspx")
+                            Server.ClearError()
+                            HttpContext.Current.Server.Execute("~/404.aspx")
                         Catch exError As Exception
 
                         End Try
@@ -81,8 +82,10 @@ Partial Class Category
                     'Some other error occurred - it seems the ID of the item
                     'exists, but loading or displaying the item caused some
                     'other error.
-                    CkartrisFormatErrors.ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
-                    If strErrorThrown = "" Then HttpContext.Current.Server.Execute("~/Error.aspx")
+                    If strErrorThrown = "" Then '404s won't get logged
+                        CkartrisFormatErrors.ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
+                        HttpContext.Current.Server.Execute("~/Error.aspx")
+                    End If
                 End Try
             End If
         End If
