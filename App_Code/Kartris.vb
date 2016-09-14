@@ -2353,6 +2353,7 @@ Public NotInheritable Class CKartrisCSVExporter
                     stbData.Append(value.Replace(FieldDelimiter, "/"))
                 Case "System.String"
                     value = Replace(Replace(value, Chr(10), " "), Chr(13), " ")
+                    value = Replace(value, """", """""")
                     If StringDelimiter = Nothing Then
                         stbData.Append(value.Replace(FieldDelimiter, "/"))
                     Else
