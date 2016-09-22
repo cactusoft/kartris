@@ -138,9 +138,18 @@ Partial Class _OptionGroups
         End If
         If e.Item.ItemType = ListItemType.SelectedItem OrElse e.Item.ItemType = ListItemType.Footer Then
             Dim txtPrice As TextBox = CType(e.Item.FindControl("txtPriceChange"), TextBox)
-            txtPrice.Text = _HandleDecimalValues(CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency(), txtPrice.Text))
+            Try
+                txtPrice.Text = _HandleDecimalValues(CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency(), txtPrice.Text))
+            Catch ex As Exception
+                txtPrice.Text = 0
+            End Try
             Dim txtWeight As TextBox = CType(e.Item.FindControl("txtWeightChange"), TextBox)
-            txtWeight.Text = _HandleDecimalValues(txtWeight.Text)
+            Try
+                txtWeight.Text = _HandleDecimalValues(txtWeight.Text)
+                If txtWeight.Text = "" Then txtWeight.Text = 0
+            Catch ex As Exception
+                txtWeight.Text = 0
+            End Try
 
             If litGroupDisplayType.Text = "c" Then
                 CType(e.Item.FindControl("chkSelected"), CheckBox).Enabled = True
@@ -217,7 +226,11 @@ Partial Class _OptionGroups
         '' TO SHOW A LABEL THAT SAYS NO OPTIONS YET.
         If tblOptions.Rows.Count = 0 Then
             Dim ctlFooter As Control = dtlOptions.Controls(dtlOptions.Controls.Count - 1)
-            CType(ctlFooter.FindControl("phdNoOption"), PlaceHolder).Visible = True
+            Try
+                CType(ctlFooter.FindControl("phdNoOption"), PlaceHolder).Visible = True
+            Catch ex As Exception
+
+            End Try
         End If
     End Sub
 

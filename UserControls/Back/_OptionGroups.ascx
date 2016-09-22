@@ -277,11 +277,11 @@
                         <div class="column_misc">
                             <asp:Literal ID="litOPT_CheckBoxValue" runat="server" Text='<%# Eval("OPT_CheckBoxValue") %>' /></div>
                         <div class="column_misc">
-                            <asp:Literal ID="litOPT_DefPriceChange" runat="server" Text='<%# CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency(), Eval("OPT_DefPriceChange")) %>' /></div>
+                            <asp:Literal ID="litOPT_DefPriceChange" runat="server" Text='<%# CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency(), CkartrisDataManipulation.FixNullFromDB(Eval("OPT_DefPriceChange"))) %>' /></div>
                         <div class="column_misc">
-                            <asp:Literal ID="litOPT_DefWeightChange" runat="server" Text='<%# Eval("OPT_DefWeightChange") %>' /></div>
+                            <asp:Literal ID="litOPT_DefWeightChange" runat="server" Text='<%# CkartrisDataManipulation.FixNullFromDB(Eval("OPT_DefWeightChange")) %>' /></div>
                         <div class="column_misc">
-                            <asp:Literal ID="litOPT_DefOrderByValue" runat="server" Text='<%# Eval("OPT_DefOrderByValue") %>' /></div>
+                            <asp:Literal ID="litOPT_DefOrderByValue" runat="server" Text='<%# CkartrisDataManipulation.FixNullFromDB(Eval("OPT_DefOrderByValue")) %>' /></div>
                     </ItemTemplate>
                     <%-- Selected Item --%>
                     <SelectedItemTemplate>
@@ -301,7 +301,7 @@
                                     <li><span class="Kartris-DetailsView-Name">
                                         <asp:Literal ID="litFormLabelPriceChange" runat="server" Text='<%$ Resources: _Options, FormLabel_PriceChange %>' /></span>
                                         <span class="Kartris-DetailsView-Value">
-                                            <asp:TextBox ID="txtPriceChange" runat="server" Text='<%# Eval("OPT_DefPriceChange") %>'
+                                            <asp:TextBox ID="txtPriceChange" runat="server" Text='<%# CkartrisDataManipulation.FixNullFromDB(Eval("OPT_DefPriceChange")) %>'
                                                 CssClass="shorttext" MaxLength="8" />
                                             <asp:Label ID="litNotNumericPrice" runat="server" Text="*" CssClass="error" Visible="false" />
                                             <asp:RequiredFieldValidator ID="valRequiredPriceChange" runat="server" CssClass="error"
@@ -316,7 +316,7 @@
                                     <li><span class="Kartris-DetailsView-Name">
                                         <asp:Literal ID="litFormLabelWeightChange" runat="server" Text='<%$ Resources: _Options, FormLabel_WeightChange %>' /></span>
                                         <span class="Kartris-DetailsView-Value">
-                                            <asp:TextBox ID="txtWeightChange" runat="server" Text='<%# Eval("OPT_DefWeightChange") %>'
+                                            <asp:TextBox ID="txtWeightChange" runat="server" Text='<%# CkartrisDataManipulation.FixNullFromDB(Eval("OPT_DefWeightChange")) %>'
                                                 CssClass="shorttext" MaxLength="8" />
                                             <asp:Label ID="litNotNumericWeight" runat="server" Text="*" CssClass="error" Visible="false" />
                                             <asp:RequiredFieldValidator ID="valRequiredWeightChange" runat="server" CssClass="error"
@@ -332,7 +332,7 @@
                                     <li><span class="Kartris-DetailsView-Name">
                                         <asp:Literal ID="litFormLabelOrderByValue" runat="server" Text='<%$ Resources: _Kartris, FormLabel_OrderByValue %>' /></span>
                                         <span class="Kartris-DetailsView-Value">
-                                            <asp:TextBox ID="txtOrderByValue" runat="server" Text='<%# Eval("OPT_DefOrderByValue") %>'
+                                            <asp:TextBox ID="txtOrderByValue" runat="server" Text='<%# CkartrisDataManipulation.FixNullFromDB(Eval("OPT_DefOrderByValue")) %>'
                                                 CssClass="shorttext" MaxLength="5" />
                                             <asp:RequiredFieldValidator ID="valRequiredOrderByValue" runat="server" CssClass="error"
                                                 ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"

@@ -344,11 +344,21 @@ Partial Class UserControls_General_CheckoutAddress
     ''' </summary>
     Protected Sub lnkLookup_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkLookup.Click
         Dim dtsAddresses As DataSet = PostcodeSearch(txtZipCode.Text)
-        lbxChooseAddress.DataSource = dtsAddresses.Tables("Summary")
-        lbxChooseAddress.DataValueField = "Id"
-        lbxChooseAddress.DataTextField = "StreetAddress"
-        lbxChooseAddress.DataBind()
-        phdChooseAddress.Visible = True
+        Try
+            If dtsAddresses.Tables("Summary").Rows.Count = 0 Then
+                litNotValidError.Text = "<span class=""error"">Postcode is not valid!</span>"
+            Else
+                litNotValidError.Text = ""
+                lbxChooseAddress.DataSource = dtsAddresses.Tables("Summary")
+                lbxChooseAddress.DataValueField = "Id"
+                lbxChooseAddress.DataTextField = "StreetAddress"
+                lbxChooseAddress.DataBind()
+                phdChooseAddress.Visible = True
+            End If
+        Catch ex As Exception
+            'Probably got an error back
+            litNotValidError.Text = "<span class=""error"">Postcode is not valid!</span>"
+        End Try
         popExtender.Show()
     End Sub
 
@@ -374,24 +384,27 @@ Partial Class UserControls_General_CheckoutAddress
         'Check for an error      
         If (dtsAddresses.Tables("Error") IsNot Nothing) AndAlso (dtsAddresses.Tables("Error").Columns("Description") IsNot Nothing) Then
             Dim exc As String = dtsAddresses.Tables("Error").Rows(0)("Description").ToString()
-            Throw New Exception(exc)
-        End If
-        If dtsAddresses.Tables("Summary") IsNot Nothing Then
-            dtsAddresses.Tables("Summary").Constraints.Clear()
-            If dtsAddresses.Tables("Summary").Rows.Count > 0 Then
-                'We want to merge Street Address & Place together
-                For i = 0 To dtsAddresses.Tables("Summary").Rows.Count - 1
-                    dtsAddresses.Tables("Summary").Rows(i)("StreetAddress") &= ", " & dtsAddresses.Tables("Summary").Rows(i)("Place")
-                Next
-            End If
+            'Throw New Exception(exc)
+        Else
+            litNotValidError.Text = ""
+            If dtsAddresses.Tables("Summary") IsNot Nothing Then
+                dtsAddresses.Tables("Summary").Constraints.Clear()
+                If dtsAddresses.Tables("Summary").Rows.Count > 0 Then
+                    'We want to merge Street Address & Place together
+                    For i = 0 To dtsAddresses.Tables("Summary").Rows.Count - 1
+                        dtsAddresses.Tables("Summary").Rows(i)("StreetAddress") &= ", " & dtsAddresses.Tables("Summary").Rows(i)("Place")
+                    Next
+                End If
 
+            End If
+            dtsAddresses.Relations.Clear()
+            If dtsAddresses.Tables("Summaries") IsNot Nothing Then
+                dtsAddresses.Tables.Remove("Summaries")
+            End If
+            'Return the dataset  
+            Return dtsAddresses
         End If
-        dtsAddresses.Relations.Clear()
-        If dtsAddresses.Tables("Summaries") IsNot Nothing Then
-            dtsAddresses.Tables.Remove("Summaries")
-        End If
-        'Return the dataset  
-        Return dtsAddresses
+
         'FYI: The dataset contains the following columns:     
         'Id        
         'StreetAddress      
