@@ -80,6 +80,7 @@
                                         <asp:RequiredFieldValidator ID="valZipCodeRequired" ValidationGroup="Address" runat="server"
                                             ControlToValidate="txtZipCode" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"
                                             CssClass="error" ForeColor="" EnableClientScript="true"></asp:RequiredFieldValidator>
+                                        <asp:Literal ID="litNotValidError" runat="server"></asp:Literal>
                                     </div>
                                     <div class="small-3 medium-9 columns" id="UKcolpostcodelookup">
                                         <br />
