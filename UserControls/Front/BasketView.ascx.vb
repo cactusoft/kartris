@@ -970,30 +970,30 @@ Partial Class Templates_BasketView
         End If
     End Sub
 
-    ''' <summary>
-    ''' Saves custom text for items that support it
-    ''' </summary>
-    ''' <param name="strCustomText"></param>
-    ''' <param name="numItemID"></param>
-    ''' <remarks></remarks>
-    Private Sub SaveCustomText(ByVal strCustomText As String, Optional ByVal numItemID As Integer = 0)
-        If numItemID = 0 Then
-            numItemID = btnSaveCustomText.CommandArgument
-        End If
+    '''' <summary>
+    '''' Saves custom text for items that support it
+    '''' </summary>
+    '''' <param name="strCustomText"></param>
+    '''' <param name="numItemID"></param>
+    '''' <remarks></remarks>
+    'Private Sub SaveCustomText(ByVal strCustomText As String, Optional ByVal numItemID As Integer = 0)
+    '    If numItemID = 0 Then
+    '        numItemID = btnSaveCustomText.CommandArgument
+    '    End If
 
-        BasketBLL.SaveCustomText(numItemID, strCustomText)
+    '    BasketBLL.SaveCustomText(numItemID, strCustomText)
 
-        For Each objItem As BasketItem In BasketItems
-            If numItemID = objItem.ID Then
-                objItem.CustomText = strCustomText
-            End If
-        Next
+    '    For Each objItem As BasketItem In BasketItems
+    '        If numItemID = objItem.ID Then
+    '            objItem.CustomText = strCustomText
+    '        End If
+    '    Next
 
-        rptBasket.DataSource = BasketItems
-        rptBasket.DataBind()
+    '    rptBasket.DataSource = BasketItems
+    '    rptBasket.DataBind()
 
-        updPnlMainBasket.Update()
-    End Sub
+    '    updPnlMainBasket.Update()
+    'End Sub
 
     ''' <summary>
     ''' Shows popup for errors or events on minibasket. This can
