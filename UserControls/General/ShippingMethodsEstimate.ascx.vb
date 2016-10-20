@@ -58,14 +58,15 @@ Partial Class UserControls_ShippingMethodsEstimate
                 If _destinationid = 0 Then
                     ddlCountry.SelectedValue = 0
                 Else
-                    Dim objCountry As KartrisClasses.Country = KartrisClasses.Country.Get(_destinationid)
-                    Dim strIso As String = objCountry.IsoCode
-                    Dim lstCountries As List(Of Country) = KartrisClasses.Country.GetAll()
-                    Dim varC = From c In lstCountries
-                              Where c.IsoCode = strIso
-                              Order By c.Name
-                            Select c.CountryId
                     Try
+                        Dim objCountry As KartrisClasses.Country = KartrisClasses.Country.Get(_destinationid)
+                        Dim strIso As String = objCountry.IsoCode
+                        Dim lstCountries As List(Of Country) = KartrisClasses.Country.GetAll()
+                        Dim varC = From c In lstCountries
+                                   Where c.IsoCode = strIso
+                                   Order By c.Name
+                                   Select c.CountryId
+
                         ddlCountry.SelectedValue = varC.First()
                     Catch ex As Exception
                     End Try
