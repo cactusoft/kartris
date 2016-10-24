@@ -104,6 +104,12 @@
             Response.End()
         End If
 
+        'This tries to recylce the app pool
+        If ex.InnerException.ToString.Contains("IndexOutOfRangeException") Then
+            CkartrisBLL.RecycleAppPool()
+            CkartrisFormatErrors.LogError("Recycled from global.asax")
+        End If
+
         'Log the un-handled error
         CkartrisFormatErrors.ReportUnHandledError()
     End Sub
