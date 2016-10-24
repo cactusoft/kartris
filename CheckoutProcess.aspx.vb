@@ -47,6 +47,11 @@ Partial Class checkout_process
                     GatewayBasketBLL = BasketObject
                 End If
 
+                'Hack, remove promotions as these cause issues 
+                'with serialization at gateways later
+                GatewayBasketBLL.objPromotions.Clear()
+                GatewayBasketBLL.objPromotionsDiscount.Clear()
+
                 BasketXML = Payment.Serialize(GatewayBasketBLL)
             Else
                 BasketXML = Nothing
