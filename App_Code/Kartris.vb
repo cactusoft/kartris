@@ -300,7 +300,17 @@ Public NotInheritable Class CkartrisFormatErrors
 
                     'Let's add some extra info for errors we 
                     'see alot and recognize
-                    If strErrorDescription.Contains("The resource object with key 'AdminBar_ViewBackend' was not found") Or
+                    If strErrorDescription.Contains("Format of the initialization string does not conform to specification starting at index 0") Then
+                        'This error can generally be cleared by a recycle
+                        CkartrisBLL.RecycleAppPool()
+                        swtErrors.WriteLine(". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .")
+                        swtErrors.WriteLine("We believe this happens due to app pool issues. Please see ")
+                        swtErrors.WriteLine("http://www.kartris.com/Knowledgebase/Error__k-55.aspx for help.")
+                        swtErrors.WriteLine(". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .")
+                    End If
+
+                    If strErrorDescription.Contains("The resource object with key 'BackMenu_Front' was not found") Or
+                        strErrorDescription.Contains("The resource object with key 'AdminBar_ViewBackend' was not found") Or
                         strErrorDescription.Contains("The resource object with key 'PageTitle_WelcomeToKartris' was not found") Then
 
                         swtErrors.WriteLine(". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .")
@@ -311,6 +321,8 @@ Public NotInheritable Class CkartrisFormatErrors
                         swtErrors.WriteLine("so check this user has permissions on the database too.")
                         swtErrors.WriteLine(". . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .")
                     End If
+
+                    'Now full error message
                     swtErrors.WriteLine(">>" & Space(5) & "DESCRIPTION:")
                     swtErrors.WriteLine(strErrorDescription)
                     swtErrors.WriteLine("")
