@@ -15,7 +15,9 @@
 Imports System.Collections.Generic
 Imports System.IO
 Imports CkartrisDataManipulation
+Imports CkartrisDisplayFunctions
 Imports KartSettingsManager
+Imports FeedsBLL
 
 Partial Class Admin_GenerateFeeds
 
@@ -28,6 +30,34 @@ Partial Class Admin_GenerateFeeds
     End Sub
 
     ''' <summary>
+    ''' Create full friendly URL
+    ''' </summary>
+    Public Function CreateFeedURL(ByVal strCulture As String, ByVal strTitle As String, ByVal strType As String, ByVal strItemID As String) As String
+        Dim strURL As String = ""
+
+        'Formats the text/name part of the URL, replaces spaces with a 
+        'dash and then strips or replaces disallowed URL chars
+        strTitle = CleanURL(Replace(strTitle, " ", "-"))
+
+        Select Case strType
+            Case "p"
+                'Product
+                strURL = CkartrisBLL.WebShopURL & strCulture & "/" & strTitle & "__p-" & strItemID & ".aspx"
+            Case "c"
+                'Category
+                strURL = CkartrisBLL.WebShopURL & strCulture & "/" & strTitle & "__c-p-0-0-" & strItemID & ".aspx"
+            Case "t"
+                'Custom page text
+                strURL = CkartrisBLL.WebShopURL & "t-" & strTitle & ".aspx"
+            Case "n"
+                'News
+                strURL = CkartrisBLL.WebShopURL & strCulture & "/" & strTitle & "__n-" & strItemID & ".aspx"
+        End Select
+
+        Return strURL
+    End Function
+
+    ''' <summary>
     ''' Generate the Sitemap file
     ''' </summary>
     Protected Sub btnGenerate_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSitemap.Click
@@ -38,6 +68,7 @@ Partial Class Admin_GenerateFeeds
         Dim lstAddedProducts As New List(Of String)()
         Dim intTotalURLs As Integer = 0
         Dim strLink As String = ""
+
 
         'Add nodes from the web.sitemap file
         For Each node As SiteMapNode In SiteMap.Providers("MenuSiteMap").RootNode.GetAllNodes
@@ -57,45 +88,65 @@ Partial Class Admin_GenerateFeeds
         Dim intSiteMapCounter As Integer = 0
         Dim tblProducts As DataTable = Nothing
 
-        'loop through all the nodes in the category sitemap provider 
-        For Each node As SiteMapNode In SiteMap.Providers("CategorySiteMapProvider").RootNode.GetAllNodes
+        Dim dtbFeedData As DataTable = _GetFeedData()
 
-            Dim intCategoryID As Integer = CInt(Mid(node.Key, InStrRev(node.Key, ",") + 1))
-            If Not lstAdded.Contains(intCategoryID) Then
-                strLink = FixURL(node.Url)
+        For Each drwFeedData In dtbFeedData.Rows
 
-                AddURLElement(CurrentXmlSiteMap, strLink)
-                lstAdded.Add(intCategoryID)
-                intTotalURLs += 1
-                'Maximum # of URLs per file = 50000 ||| Max file size = 10mb   - close and create another file if either of this is true
+            'Try/catch so one bad URL won't crash the whole thing
+            Try
+                AddURLElement(CurrentXmlSiteMap, CreateFeedURL(drwFeedData("LANG_Culture").ToString, drwFeedData("PAGE_Name").ToString, drwFeedData("RecordType").ToString, drwFeedData("ItemID").ToString))
+
                 If intTotalURLs >= 50000 Or CurrentXmlSiteMap.BaseStream.Length >= 100000000 Then
                     intTotalURLs = 0
                     intSiteMapCounter += 1
                     CloseXMLSitemap(CurrentXmlSiteMap)
                     CurrentXmlSiteMap = CreateXMLSiteMap("sitemap" & intSiteMapCounter & ".xml")
                 End If
+            Catch ex As Exception
+                'Oops, this shouldn't happen
+            End Try
 
-                'Load the products inside this specific node and add them all to the file
-                tblProducts = ProductsBLL.GetProductsPageByCategory(intCategoryID, 1, 0, Short.MaxValue, 0, Short.MaxValue)
-                For Each drwProduct As DataRow In tblProducts.Rows
-                    If Not lstAddedProducts.Contains(drwProduct("P_ID")) Then
-                        strLink = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, drwProduct("P_ID"), , , , , , drwProduct("P_Name"))
-
-                        AddURLElement(CurrentXmlSiteMap, FixURL(strLink))
-                        lstAddedProducts.Add(drwProduct("P_ID"))
-                        intTotalURLs += 1
-
-                        If intTotalURLs >= 50000 Or CurrentXmlSiteMap.BaseStream.Length >= 100000000 Then
-                            intTotalURLs = 0
-                            intSiteMapCounter += 1
-                            CloseXMLSitemap(CurrentXmlSiteMap)
-                            CurrentXmlSiteMap = CreateXMLSiteMap("sitemap" & intSiteMapCounter & ".xml")
-                        End If
-
-                    End If
-                Next
-            End If
         Next
+
+        'loop through all the nodes in the category sitemap provider 
+        'For Each node As SiteMapNode In SiteMap.Providers("CategorySiteMapProvider").RootNode.GetAllNodes
+
+        '    Dim intCategoryID As Integer = CInt(Mid(node.Key, InStrRev(node.Key, ",") + 1))
+        '    If Not lstAdded.Contains(intCategoryID) Then
+        '        strLink = FixURL(node.Url)
+
+        '        AddURLElement(CurrentXmlSiteMap, strLink)
+        '        lstAdded.Add(intCategoryID)
+        '        intTotalURLs += 1
+        '        'Maximum # of URLs per file = 50000 ||| Max file size = 10mb   - close and create another file if either of this is true
+        '        If intTotalURLs >= 50000 Or CurrentXmlSiteMap.BaseStream.Length >= 100000000 Then
+        '            intTotalURLs = 0
+        '            intSiteMapCounter += 1
+        '            CloseXMLSitemap(CurrentXmlSiteMap)
+        '            CurrentXmlSiteMap = CreateXMLSiteMap("sitemap" & intSiteMapCounter & ".xml")
+        '        End If
+
+        '        'Load the products inside this specific node and add them all to the file
+        '        tblProducts = ProductsBLL.GetProductsPageByCategory(intCategoryID, 1, 0, Short.MaxValue, 0, Short.MaxValue)
+        '        For Each drwProduct As DataRow In tblProducts.Rows
+        '            If Not lstAddedProducts.Contains(drwProduct("P_ID")) Then
+        '                strLink = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, drwProduct("P_ID"), , , , , , drwProduct("P_Name"))
+
+        '                AddURLElement(CurrentXmlSiteMap, FixURL(strLink))
+        '                lstAddedProducts.Add(drwProduct("P_ID"))
+        '                intTotalURLs += 1
+
+        '                If intTotalURLs >= 50000 Or CurrentXmlSiteMap.BaseStream.Length >= 100000000 Then
+        '                    intTotalURLs = 0
+        '                    intSiteMapCounter += 1
+        '                    CloseXMLSitemap(CurrentXmlSiteMap)
+        '                    CurrentXmlSiteMap = CreateXMLSiteMap("sitemap" & intSiteMapCounter & ".xml")
+        '                End If
+
+        '            End If
+        '        Next
+        '    End If
+        'Next
 
         CloseXMLSitemap(CurrentXmlSiteMap)
 
