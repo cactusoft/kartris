@@ -6,6 +6,33 @@ Docdata
 </name>
 </assembly>
 <members>
+<member name="M:Kartris.Docdata.CreateConnection">
+ <summary>
+ Creates the Local DB connection
+ </summary>
+ 
+ <returns>
+ DB connection
+ </returns>
+</member>
+<member name="M:Kartris.Docdata.InsertOrderData(System.Int32,System.String)">
+ <summary>
+ Inserts Order Data in the Local DB
+ </summary>
+ 
+ <returns>
+ The newly inserted ID or -1 if insert failed
+ </returns>
+</member>
+<member name="M:Kartris.Docdata.GetClusterKey(System.Int32)">
+ <summary>
+ Get cluster key from the Local DB
+ </summary>
+ 
+ <returns>
+ String containing cluster key format
+ </returns>
+</member>
 <member name="T:Kartris.My.Resources.Resources">
 <summary>
   A strongly-typed resource class, for looking up localized strings, etc.
