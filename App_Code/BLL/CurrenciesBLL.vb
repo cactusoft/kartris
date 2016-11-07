@@ -73,68 +73,77 @@ Public Class CurrenciesBLL
         ByVal _CurrencyID As Short, ByVal _Price As Decimal,
         Optional ByVal blnShowSymbol As Boolean = True, Optional ByVal blnIncludeLeftDirectionTag As Boolean = True) As String
 
-        If KartSettingsManager.GetKartConfig("frontend.users.access") = "partial" Then
-            'We check path of page, as we only want to obscure prices for front end 
-            'if 'partial'
-            Dim strFullOriginalPath As String = HttpContext.Current.Request.Url.ToString()
+        Try
+            'Have seen situations where if a server restarts and the SQL is
+            'slow coming up, this can error out with an 'out of bounds' error.
+            'In that case, let's try to recycle app pool.
+            If KartSettingsManager.GetKartConfig("frontend.users.access") = "partial" Then
+                'We check path of page, as we only want to obscure prices for front end 
+                'if 'partial'
+                Dim strFullOriginalPath As String = HttpContext.Current.Request.Url.ToString()
 
-            If Not HttpContext.Current.User.Identity.IsAuthenticated _
-            And Not strFullOriginalPath.ToLower.Contains("/admin") Then
-                'Change text to hidden message
-                Try
-                    Return GetGlobalResourceObject("Kartris", "ContentText_HiddenPriceText")
-                Catch
-                    Return "XXXX"
-                End Try
-                Exit Function
-            End If
-        End If
-
-        Dim rowCurrencies As DataRow()
-        rowCurrencies = GetCurrenciesFromCache().Select("CUR_ID=" & _CurrencyID)
-        Dim strSymbol As String = rowCurrencies(0)("CUR_Symbol")
-        Dim strResult As String = ""
-        Dim sbdZeros As New Text.StringBuilder("")
-        _Price = Decimal.Round(CDec(_Price), rowCurrencies(0)("CUR_RoundNumbers"))
-
-        If FixNullFromDB(rowCurrencies(0)("CUR_RoundNumbers")) > 0 Then
-            For i As Byte = 0 To FixNullFromDB(rowCurrencies(0)("CUR_RoundNumbers")) - 1
-                If sbdZeros.ToString = "" Then sbdZeros.Append(".")
-                sbdZeros.Append("0")
-            Next
-        End If
-
-        Dim strFormatedPrice As String
-        strFormatedPrice = Format(_Price, "##0" & sbdZeros.ToString)
-        strFormatedPrice = Replace(strFormatedPrice, ".", FixNullFromDB(rowCurrencies(0)("CUR_DecimalPoint")))
-
-
-        If blnShowSymbol Then
-            'We're formatting the value as text, with a currencysymbol
-            If rowCurrencies(0)("CUR_Format").ToString.IndexOf("[symbol]") <
-            rowCurrencies(0)("CUR_Format").ToString.IndexOf("[value]") Then
-                strResult = strSymbol
-                If rowCurrencies(0)("CUR_Format").ToString.IndexOf(" ") <> -1 Then
-                    strResult += " "
+                If Not HttpContext.Current.User.Identity.IsAuthenticated _
+                And Not strFullOriginalPath.ToLower.Contains("/admin") Then
+                    'Change text to hidden message
+                    Try
+                        Return GetGlobalResourceObject("Kartris", "ContentText_HiddenPriceText")
+                    Catch
+                        Return "XXXX"
+                    End Try
+                    Exit Function
                 End If
-                strResult += strFormatedPrice
+            End If
+
+            Dim rowCurrencies As DataRow()
+            rowCurrencies = GetCurrenciesFromCache().Select("CUR_ID=" & _CurrencyID)
+            Dim strSymbol As String = rowCurrencies(0)("CUR_Symbol")
+            Dim strResult As String = ""
+            Dim sbdZeros As New Text.StringBuilder("")
+            _Price = Decimal.Round(CDec(_Price), rowCurrencies(0)("CUR_RoundNumbers"))
+
+            If FixNullFromDB(rowCurrencies(0)("CUR_RoundNumbers")) > 0 Then
+                For i As Byte = 0 To FixNullFromDB(rowCurrencies(0)("CUR_RoundNumbers")) - 1
+                    If sbdZeros.ToString = "" Then sbdZeros.Append(".")
+                    sbdZeros.Append("0")
+                Next
+            End If
+
+            Dim strFormatedPrice As String
+            strFormatedPrice = Format(_Price, "##0" & sbdZeros.ToString)
+            strFormatedPrice = Replace(strFormatedPrice, ".", FixNullFromDB(rowCurrencies(0)("CUR_DecimalPoint")))
+
+
+            If blnShowSymbol Then
+                'We're formatting the value as text, with a currencysymbol
+                If rowCurrencies(0)("CUR_Format").ToString.IndexOf("[symbol]") <
+                rowCurrencies(0)("CUR_Format").ToString.IndexOf("[value]") Then
+                    strResult = strSymbol
+                    If rowCurrencies(0)("CUR_Format").ToString.IndexOf(" ") <> -1 Then
+                        strResult += " "
+                    End If
+                    strResult += strFormatedPrice
+                Else
+                    strResult = strFormatedPrice
+                    If rowCurrencies(0)("CUR_Format").ToString.IndexOf(" ") <> -1 Then
+                        strResult += " "
+                    End If
+                    strResult += strSymbol
+                End If
+
+                'RtL support is to ensure that currency formatting is correct for languages like Arabic
+                If GetKartConfig("general.prices.rtlsupport") = "y" AndAlso blnIncludeLeftDirectionTag Then strResult = "<span dir=""ltr"">" & strResult & "</span>"
             Else
-                strResult = strFormatedPrice
-                If rowCurrencies(0)("CUR_Format").ToString.IndexOf(" ") <> -1 Then
-                    strResult += " "
-                End If
-                strResult += strSymbol
+                'Returns a price without any non-numeric parts
+                '(spaces, currency symbol, etc.)
+                strResult += strFormatedPrice
             End If
 
-            'RtL support is to ensure that currency formatting is correct for languages like Arabic
-            If GetKartConfig("general.prices.rtlsupport") = "y" AndAlso blnIncludeLeftDirectionTag Then strResult = "<span dir=""ltr"">" & strResult & "</span>"
-        Else
-            'Returns a price without any non-numeric parts
-            '(spaces, currency symbol, etc.)
-            strResult += strFormatedPrice
-        End If
+            Return strResult
+        Catch ex As Exception
+            CkartrisBLL.RecycleAppPool()
+            Return 0
+        End Try
 
-        Return strResult
     End Function
 
     Public Shared Function _GetByCurrencyID(ByVal CurrencyID As Byte) As DataRow()
