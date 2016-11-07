@@ -206,16 +206,22 @@ Partial Class UserControls_General_CheckoutAddress
                 litAddress.Text = Server.HtmlEncode(.StreetAddress)
                 litTownCity.Text = Server.HtmlEncode(.TownCity)
                 litCounty.Text = Server.HtmlEncode(.County)
-                Dim objCountry As Country = Country.Get(.CountryID)
-                litCountry.Text = Server.HtmlEncode(objCountry.Name)
-                If Not objCountry.isLive Then
-                    phdCountryNotAvailable.Visible = True
-                    hidCountryID.Value = 0
-                    ViewState("_SelectedAddress") = Nothing
-                Else
-                    phdCountryNotAvailable.Visible = False
-                    hidCountryID.Value = .CountryID
-                End If
+
+                Try
+                    Dim objCountry As Country = Country.Get(.CountryID)
+                    litCountry.Text = Server.HtmlEncode(objCountry.Name)
+                    If Not objCountry.isLive Then
+                        phdCountryNotAvailable.Visible = True
+                        hidCountryID.Value = 0
+                        ViewState("_SelectedAddress") = Nothing
+                    Else
+                        phdCountryNotAvailable.Visible = False
+                        hidCountryID.Value = .CountryID
+                    End If
+                Catch ex As Exception
+                    'This can happen if switch language and the country of the address
+                    'doesn't have a suitable translation
+                End Try
 
                 litPostcode.Text = Server.HtmlEncode(.Postcode)
                 litPhone.Text = Server.HtmlEncode(.Phone)
