@@ -160,7 +160,7 @@ Namespace Kartris
                         'particular link in the menu. Keep turned off if not
                         'using this feature to keep page size down.
                         If KartSettingsManager.GetKartConfig("frontend.navigationmenu.cssids") = "y" Then
-                            writer.WriteAttribute("id", ((item.Text).Replace(" ", "")).Replace("&", ""))
+                            writer.WriteAttribute("id", (((((item.Text).Replace(" ", "")).Replace("&", "")).Replace(",", "")).Replace("ó", "o")).Replace("Ó", "O"))
                         End If
                         writer.Write(HtmlTextWriter.TagRightChar)
                             writer.Indent += 1
