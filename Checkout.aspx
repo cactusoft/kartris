@@ -53,6 +53,9 @@
 
                             </div>
                         </asp:PlaceHolder>
+                        <asp:PlaceHolder ID="phdCustomerChoicesInfo" runat="server" Visible="false">
+                            Some info
+                        </asp:PlaceHolder>
                     </ContentTemplate>
                 </asp:UpdatePanel>
 

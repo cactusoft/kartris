@@ -508,6 +508,7 @@ Partial Class _Checkout
             txtPurchaseOrderNo.Text = ""
             litPONumberText.Text = ""
         End If
+
     End Sub
 
     ''' <summary>
@@ -1090,7 +1091,7 @@ Partial Class _Checkout
                 'the payment gateway.
                 Dim numGatewayTotalPrice As Double
                 If blnDifferentGatewayCurrency Then
-                    numGatewayTotalPrice = CurrenciesBLL.ConvertCurrency(intGatewayCurrency, objBasket.FinalPriceIncTax, CUR_ID)
+                    numGatewayTotalPrice = CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, CurrenciesBLL.ConvertCurrency(intGatewayCurrency, objBasket.FinalPriceIncTax, CUR_ID), False, False)
                     If clsPlugin.GatewayName.ToLower = "bitcoin" Then numGatewayTotalPrice = Math.Round(numGatewayTotalPrice, 8)
 
                     sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & vbCrLf)
