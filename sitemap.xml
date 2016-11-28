@@ -31,6 +31,41 @@
    <changefreq>weekly</changefreq>
 </url>
 <url>
+   <loc>http://localhost:54147/de-DE/Cat1-German__c-p-0-0-1.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/en-GB/Category-1__c-p-0-0-1.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/de-DE/Cat2-German__c-p-0-0-2.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/en-GB/Category-2__c-p-0-0-2.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/de-DE/Cat-3-German-zzzz__c-p-0-0-3.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/en-GB/Category-3__c-p-0-0-3.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/en-GB/Category-4__c-p-0-0-4.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
    <loc>http://localhost:54147/en-GB/Category-5__c-p-0-0-5.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
@@ -46,22 +81,62 @@
    <changefreq>weekly</changefreq>
 </url>
 <url>
-   <loc>http://localhost:54147/en-GB/Category-2__c-p-0-0-2.aspx</loc>
+   <loc>http://localhost:54147/en-GB/Subcategory-1__c-p-0-0-8.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
 </url>
 <url>
-   <loc>http://localhost:54147/en-GB/Rewritten-name-of-product-here__p-7.aspx</loc>
+   <loc>http://localhost:54147/de-DE/zzzzzzzz-2__c-p-0-0-9.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/en-GB/Subcategory-2__c-p-0-0-9.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/en-GB/Sub-Subcategory-1__c-p-0-0-10.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/en-GB/Sub-Subcategory-2__c-p-0-0-11.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/en-GB/Sub-Subcategory-3__c-p-0-0-12.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/en-GB/Sub-Subcategory-4__c-p-0-0-13.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/en-GB/Kartris-Demo-Store-Opens__n-16.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/en-GB/Another-News-Story__n-17.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/en-GB/Single-Item-Product__p-1.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:54147/en-GB/Single-Item-Product-2__p-2.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
 </url>
 <url>
    <loc>http://localhost:54147/en-GB/Multiple-Version-Product__p-3.aspx</loc>
-   <priority>0.5</priority>
-   <changefreq>weekly</changefreq>
-</url>
-<url>
-   <loc>http://localhost:54147/en-GB/Multiple-Version-Product-with-Images__p-9.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
 </url>
@@ -81,22 +156,17 @@
    <changefreq>weekly</changefreq>
 </url>
 <url>
-   <loc>http://localhost:54147/en-GB/Single-Item-Product__p-1.aspx</loc>
+   <loc>http://localhost:54147/de-DE/Kustomizable-ProduKt__p-7.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
 </url>
 <url>
-   <loc>http://localhost:54147/en-GB/Single-Item-Product-2__p-2.aspx</loc>
+   <loc>http://localhost:54147/en-GB/Customizable-Product__p-7.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
 </url>
 <url>
-   <loc>http://localhost:54147/en-GB/Category-1__c-p-0-0-1.aspx</loc>
-   <priority>0.5</priority>
-   <changefreq>weekly</changefreq>
-</url>
-<url>
-   <loc>http://localhost:54147/en-GB/Category-3__c-p-0-0-3.aspx</loc>
+   <loc>http://localhost:54147/de-DE/Ze-Product-in-Category-with-Subcats__p-8.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
 </url>
@@ -106,37 +176,37 @@
    <changefreq>weekly</changefreq>
 </url>
 <url>
-   <loc>http://localhost:54147/en-GB/Category-7/Subcategory-1__c-p-0-0-7-8.aspx</loc>
+   <loc>http://localhost:54147/en-GB/Multiple-Version-Product-with-Images__p-9.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
 </url>
 <url>
-   <loc>http://localhost:54147/en-GB/Category-7/Subcategory-2__c-p-0-0-7-9.aspx</loc>
+   <loc>http://localhost:54147/en-GB/TEST__p-12.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
 </url>
 <url>
-   <loc>http://localhost:54147/en-GB/Category-7/Sub-Subcategory-1__c-p-0-0-7-10.aspx</loc>
+   <loc>http://localhost:54147/en-GB/Multiple-Version-Product-TEST__p-14.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
 </url>
 <url>
-   <loc>http://localhost:54147/en-GB/Category-7/Sub-Subcategory-2__c-p-0-0-7-11.aspx</loc>
+   <loc>http://localhost:54147/en-GB/Insulator-Left-Entry-Pos-or-Neg-for-Standard-Battery-Terminal-RS318__p-15.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
 </url>
 <url>
-   <loc>http://localhost:54147/en-GB/Category-7/Sub-Subcategory-4__c-p-0-0-7-13.aspx</loc>
+   <loc>http://localhost:54147/en-GB/Test-download__p-16.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
 </url>
 <url>
-   <loc>http://localhost:54147/en-GB/Category-7/Sub-Subcategory-3__c-p-0-0-7-12.aspx</loc>
+   <loc>http://localhost:54147/t-Terms.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
 </url>
 <url>
-   <loc>http://localhost:54147/en-GB/Category-7/Category-4__c-p-0-0-7-4.aspx</loc>
+   <loc>http://localhost:54147/t-Default.aspx</loc>
    <priority>0.5</priority>
    <changefreq>weekly</changefreq>
 </url>
