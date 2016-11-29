@@ -67,6 +67,7 @@ Partial Class Admin_GenerateFeeds
         Dim lstAdded As New List(Of String)()
         Dim lstAddedProducts As New List(Of String)()
         Dim intTotalURLs As Integer = 0
+        Dim intCurrentURLCounter As Integer = 0
         Dim strLink As String = ""
 
 
@@ -96,65 +97,27 @@ Partial Class Admin_GenerateFeeds
             Try
                 AddURLElement(CurrentXmlSiteMap, CreateFeedURL(drwFeedData("LANG_Culture").ToString, drwFeedData("PAGE_Name").ToString, drwFeedData("RecordType").ToString, drwFeedData("ItemID").ToString))
 
-                If intTotalURLs >= 50000 Or CurrentXmlSiteMap.BaseStream.Length >= 100000000 Then
-                    intTotalURLs = 0
+                If intCurrentURLCounter = 50000 Then
+                    intCurrentURLCounter = 0
                     intSiteMapCounter += 1
                     CloseXMLSitemap(CurrentXmlSiteMap)
                     CurrentXmlSiteMap = CreateXMLSiteMap("sitemap" & intSiteMapCounter & ".xml")
                 End If
+                intCurrentURLCounter += 1
             Catch ex As Exception
                 'Oops, this shouldn't happen
             End Try
 
         Next
 
-        'loop through all the nodes in the category sitemap provider 
-        'For Each node As SiteMapNode In SiteMap.Providers("CategorySiteMapProvider").RootNode.GetAllNodes
-
-        '    Dim intCategoryID As Integer = CInt(Mid(node.Key, InStrRev(node.Key, ",") + 1))
-        '    If Not lstAdded.Contains(intCategoryID) Then
-        '        strLink = FixURL(node.Url)
-
-        '        AddURLElement(CurrentXmlSiteMap, strLink)
-        '        lstAdded.Add(intCategoryID)
-        '        intTotalURLs += 1
-        '        'Maximum # of URLs per file = 50000 ||| Max file size = 10mb   - close and create another file if either of this is true
-        '        If intTotalURLs >= 50000 Or CurrentXmlSiteMap.BaseStream.Length >= 100000000 Then
-        '            intTotalURLs = 0
-        '            intSiteMapCounter += 1
-        '            CloseXMLSitemap(CurrentXmlSiteMap)
-        '            CurrentXmlSiteMap = CreateXMLSiteMap("sitemap" & intSiteMapCounter & ".xml")
-        '        End If
-
-        '        'Load the products inside this specific node and add them all to the file
-        '        tblProducts = ProductsBLL.GetProductsPageByCategory(intCategoryID, 1, 0, Short.MaxValue, 0, Short.MaxValue)
-        '        For Each drwProduct As DataRow In tblProducts.Rows
-        '            If Not lstAddedProducts.Contains(drwProduct("P_ID")) Then
-        '                strLink = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, drwProduct("P_ID"), , , , , , drwProduct("P_Name"))
-
-        '                AddURLElement(CurrentXmlSiteMap, FixURL(strLink))
-        '                lstAddedProducts.Add(drwProduct("P_ID"))
-        '                intTotalURLs += 1
-
-        '                If intTotalURLs >= 50000 Or CurrentXmlSiteMap.BaseStream.Length >= 100000000 Then
-        '                    intTotalURLs = 0
-        '                    intSiteMapCounter += 1
-        '                    CloseXMLSitemap(CurrentXmlSiteMap)
-        '                    CurrentXmlSiteMap = CreateXMLSiteMap("sitemap" & intSiteMapCounter & ".xml")
-        '                End If
-
-        '            End If
-        '        Next
-        '    End If
-        'Next
-
         CloseXMLSitemap(CurrentXmlSiteMap)
 
         'create a sitemap index if multiple files were generated
         If intSiteMapCounter > 0 Then
-            Dim xmlSiteMap As New XmlTextWriter(Path.Combine(Request.PhysicalApplicationPath, "xmlsitemapindex.xml"), _
+            Dim xmlSiteMap As New XmlTextWriter(Path.Combine(Request.PhysicalApplicationPath, "xmlsitemapindex.xml"),
                                                             System.Text.Encoding.UTF8)
             With xmlSiteMap
+
                 .WriteStartDocument()
                 .WriteWhitespace(vbCrLf)
                 .WriteStartElement("sitemapindex")
@@ -179,15 +142,22 @@ Partial Class Admin_GenerateFeeds
                     .WriteWhitespace(vbCrLf)
                     .WriteEndElement()
                 Next
+                .Flush()
+                .Close()
+
             End With
+
+            'We have a sitemap index file, so link to that
+            lnkGenerated.NavigateUrl = CkartrisBLL.WebShopURLhttp & "xmlsitemapindex.xml"
+            litFilePath.Text = CkartrisBLL.WebShopURLhttp & "xmlsitemapindex.xml"
+        Else
+            'Just one sitemap, link to that
+            lnkGenerated.NavigateUrl = CkartrisBLL.WebShopURLhttp & "sitemap.xml"
+            litFilePath.Text = CkartrisBLL.WebShopURLhttp & "sitemap.xml"
         End If
 
         'Show link to file
         lnkGenerated.Visible = True
-        lnkGenerated.NavigateUrl = CkartrisBLL.WebShopURLhttp & "sitemap.xml"
-
-        'Show full URL that needs to be given to Google
-        litFilePath.Text = CkartrisBLL.WebShopURLhttp & "sitemap.xml"
         litFilePath.Visible = True
 
         'Show update animation
