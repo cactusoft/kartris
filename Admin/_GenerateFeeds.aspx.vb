@@ -97,7 +97,7 @@ Partial Class Admin_GenerateFeeds
             Try
                 AddURLElement(CurrentXmlSiteMap, CreateFeedURL(drwFeedData("LANG_Culture").ToString, drwFeedData("PAGE_Name").ToString, drwFeedData("RecordType").ToString, drwFeedData("ItemID").ToString))
 
-                If intCurrentURLCounter = 50000 Then
+                If intCurrentURLCounter = 49999 Then
                     intCurrentURLCounter = 0
                     intSiteMapCounter += 1
                     CloseXMLSitemap(CurrentXmlSiteMap)
