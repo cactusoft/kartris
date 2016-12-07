@@ -1,4 +1,18 @@
-﻿Imports Microsoft.VisualBasic
+﻿'========================================================================
+'Kartris - www.kartris.com
+'Copyright 2016 CACTUSOFT
+
+'GNU GENERAL PUBLIC LICENSE v2
+'This program is free software distributed under the GPL without any
+'warranty.
+'www.gnu.org/licenses/gpl-2.0.html
+
+'KARTRIS COMMERCIAL LICENSE
+'If a valid license.config issued by Cactusoft is present, the KCL
+'overrides the GPL v2.
+'www.kartris.com/t-Kartris-Commercial-License.aspx
+'========================================================================
+Imports Microsoft.VisualBasic
 Imports kartrisBasketDataTableAdapters
 Imports System.Web.HttpContext
 Imports KartSettingsManager
@@ -909,23 +923,15 @@ Public Class BasketBLL
 
             Dim DestinationCountry As Country = Country.Get(numShippingCountryID)
 
+            Try
+                numOrderHandlingTaxBand1 = KartSettingsManager.GetKartConfig("frontend.checkout.orderhandlingchargetaxband")
+                numOrderHandlingTaxBand2 = KartSettingsManager.GetKartConfig("frontend.checkout.orderhandlingchargetaxband2")
+            Catch ex As Exception
+            End Try
+
             If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
                 .OrderHandlingPrice.TaxRate = DestinationCountry.ComputedTaxRate
                 .D_Tax = DestinationCountry.ComputedTaxRate
-
-                Try
-                    If Current.Session("blnEUVATValidated") IsNot Nothing Then
-                        If CBool(Current.Session("blnEUVATValidated")) Then
-                            DestinationCountry.D_Tax = False
-                            DestinationCountry.ComputedTaxRate = 0
-                            DestinationCountry.TaxRate1 = 0
-                            DestinationCountry.TaxRate2 = 0
-                            .D_Tax = 0
-                        End If
-                    End If
-                Catch ex As Exception
-
-                End Try
             Else
                 If DestinationCountry.D_Tax Then .D_Tax = 1 Else .D_Tax = 0
 
@@ -940,14 +946,7 @@ Public Class BasketBLL
 
                 End Try
 
-                Try
-                    numOrderHandlingTaxBand1 = KartSettingsManager.GetKartConfig("frontend.checkout.orderhandlingchargetaxband")
-                    numOrderHandlingTaxBand2 = KartSettingsManager.GetKartConfig("frontend.checkout.orderhandlingchargetaxband2")
-                Catch ex As Exception
-                End Try
-
-                .OrderHandlingPrice.TaxRate = TaxRegime.CalculateTaxRate(TaxBLL.GetTaxRate(numOrderHandlingTaxBand1), TaxBLL.GetTaxRate(numOrderHandlingTaxBand2), DestinationCountry.TaxRate1,
-                                                                DestinationCountry.TaxRate2, DestinationCountry.TaxExtra)
+                .OrderHandlingPrice.TaxRate = TaxRegime.CalculateTaxRate(TaxBLL.GetTaxRate(numOrderHandlingTaxBand1), TaxBLL.GetTaxRate(numOrderHandlingTaxBand2), DestinationCountry.TaxRate1, DestinationCountry.TaxRate2, DestinationCountry.TaxExtra)
 
             End If
 
@@ -969,7 +968,12 @@ Public Class BasketBLL
                 .OrderHandlingPrice.ExTax = numOrderHandlingPriceValue
 
                 'Tax rate for order handling
-                If DestinationCountry.D_Tax Then
+                'Modified to set order handling to zero if 
+                'frontend.checkout.orderhandlingchargetaxband is 1 or 0
+                '(should really be 1, as this is the likely db ID that
+                'corresponds to a zero rate, but support zero too because
+                'lots of people set it to that by mistake).
+                If DestinationCountry.D_Tax And (numOrderHandlingTaxBand1 > 1) Then
                     .OrderHandlingPrice.IncTax = Math.Round(.OrderHandlingPrice.ExTax * (1 + .OrderHandlingPrice.TaxRate), CurrencyRoundNumber)
                 Else
                     .OrderHandlingPrice.IncTax = numOrderHandlingPriceValue
