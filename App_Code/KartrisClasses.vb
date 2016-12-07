@@ -349,7 +349,7 @@ Public Class KartrisClasses
                 Return _name & "|||||" & _exTax & "|||||" & _incTax
             End Get
         End Property
-        Public Sub New(ByVal ShippingCountry As Country, ByVal objShippingOption As Interfaces.objShippingOption, ByVal intTempID As Integer)
+        Public Sub New(ByVal reader As DataRow, ByVal ShippingCountry As Country, ByVal objShippingOption As Interfaces.objShippingOption, ByVal intTempID As Integer)
             Dim blnUStaxEnabled As Boolean = ConfigurationManager.AppSettings("TaxRegime").ToLower = "us"
             Dim blnSimpletaxEnabled As Boolean = ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple"
             Dim blnNormalShippingTax As Boolean = False
@@ -357,11 +357,20 @@ Public Class KartrisClasses
 
                 'This US/simple 'if' selection was commented out prior to
                 'v2.9007, not sure why. Keep an eye on this.
-                If blnUStaxEnabled Or blnSimpletaxEnabled Then
-                    numShippingTaxRate = ShippingCountry.ComputedTaxRate
-                Else
-                    blnNormalShippingTax = True
-                End If
+                'If blnUStaxEnabled Or blnSimpletaxEnabled Then
+                '    numShippingTaxRate = ShippingCountry.ComputedTaxRate
+                'Else
+                blnNormalShippingTax = True
+                'End If
+            End If
+
+            If blnNormalShippingTax Then
+                Dim T_ID1, T_ID2 As Byte '= CInt(GetKartConfig("frontend.checkout.shipping.taxband"))
+                T_ID1 = CType(CkartrisDataManipulation.FixNullFromDB(reader("SM_Tax")), Byte)
+                T_ID2 = CType(CkartrisDataManipulation.FixNullFromDB(reader("SM_Tax2")), Byte)
+                numShippingTaxRate = TaxRegime.CalculateTaxRate(TaxBLL.GetTaxRate(T_ID1), TaxBLL.GetTaxRate(T_ID2), IIf(ShippingCountry.TaxRate1 > 0, ShippingCountry.TaxRate1, 1),
+                                                                IIf(ShippingCountry.TaxRate2 > 0, ShippingCountry.TaxRate2, 1), ShippingCountry.TaxExtra)
+                'If numShippingTaxRate > 0 Then numShippingTaxRate = numShippingTaxRate / 100
             End If
 
             'If the store is in an EU country and the customer is
@@ -436,11 +445,11 @@ Public Class KartrisClasses
 
                 'This US/simple 'if' selection was commented out prior to
                 'v2.9007, not sure why. Keep an eye on this.
-                If blnUStaxEnabled Or blnSimpletaxEnabled Then
-                    numShippingTaxRate = ShippingCountry.ComputedTaxRate
-                Else
-                    blnNormalShippingTax = True
-                End If
+                'If blnUStaxEnabled Or blnSimpletaxEnabled Then
+                '    numShippingTaxRate = ShippingCountry.ComputedTaxRate
+                'Else
+                blnNormalShippingTax = True
+                'End If
             End If
 
             If blnNormalShippingTax Then
@@ -557,7 +566,7 @@ Public Class KartrisClasses
                                 If clsPlugin.CallSuccessful And lstShippingOptions IsNot Nothing Then
                                     For Each objShippingOption As Interfaces.objShippingOption In lstShippingOptions
                                         objShippingOption.Code = clsPlugin.GatewayName & " - " & objShippingOption.Code
-                                        results.Add(New ShippingMethod(ShippingCountry, objShippingOption, intTempID))
+                                        results.Add(New ShippingMethod(drShippingMethods, ShippingCountry, objShippingOption, intTempID))
                                         intTempID += 1
                                     Next
                                 Else
@@ -622,7 +631,7 @@ Public Class KartrisClasses
                 Dim intLastID As Integer
                 Dim intTempID As Integer = 1000
 
-                Dim ShippingRow As DataRow = Nothing
+                Dim drShippingRow As DataRow = Nothing
                 For Each row As DataRow In dtShippingMethods.Rows
                     If ShippingID >= 1000 Then
                         If intLastID <> CType(row("SM_ID"), Integer) Then
@@ -636,7 +645,7 @@ Public Class KartrisClasses
                                 Dim lstShippingOptions As List(Of Interfaces.objShippingOption) = clsPlugin.GetRates(Payment.Serialize(objShippingDetails))
                                 For Each objShippingOption As Interfaces.objShippingOption In lstShippingOptions
                                     objShippingOption.Code = clsPlugin.GatewayName & " - " & objShippingOption.Code
-                                    If intTempID = ShippingID Then Return New ShippingMethod(ShippingCountry, objShippingOption, intTempID)
+                                    If intTempID = ShippingID Then Return New ShippingMethod(row, ShippingCountry, objShippingOption, intTempID)
                                     intTempID += 1
                                 Next
                                 clsPlugin = Nothing
@@ -644,12 +653,12 @@ Public Class KartrisClasses
                         End If
                     Else
                         If row("SM_ID") = ShippingID Then
-                            ShippingRow = row
+                            drShippingRow = row
                             Exit For
                         End If
                     End If
                 Next
-                result = New ShippingMethod(ShippingRow, ShippingCountry)
+                result = New ShippingMethod(drShippingRow, ShippingCountry)
             Catch e As Exception
                 result = Nothing
                 CkartrisFormatErrors.LogError(e.Message)
