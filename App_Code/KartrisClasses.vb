@@ -354,11 +354,14 @@ Public Class KartrisClasses
             Dim blnSimpletaxEnabled As Boolean = ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple"
             Dim blnNormalShippingTax As Boolean = False
             If numShippingTaxRate = -1 Then
-                'If blnUStaxEnabled Or blnSimpletaxEnabled Then
-                'numShippingTaxRate = ShippingCountry.ComputedTaxRate
-                'Else
-                blnNormalShippingTax = True
-                'End If
+
+                'This US/simple 'if' selection was commented out prior to
+                'v2.9007, not sure why. Keep an eye on this.
+                If blnUStaxEnabled Or blnSimpletaxEnabled Then
+                    numShippingTaxRate = ShippingCountry.ComputedTaxRate
+                Else
+                    blnNormalShippingTax = True
+                End If
             End If
 
             'If the store is in an EU country and the customer is
@@ -409,7 +412,7 @@ Public Class KartrisClasses
                 _exTax = _value
                 _incTax = Math.Round(_exTax * (1 + numShippingTaxRate), 2)
                 If numShippingTaxRate > 0 Then
-                    _taxamount = Math.Round(ExTax * numShippingTaxRate, 2)
+                    _taxamount = Math.Round(_exTax * numShippingTaxRate, 2)
                 End If
 
                 _computedtaxrate = numShippingTaxRate
@@ -430,11 +433,14 @@ Public Class KartrisClasses
             Dim blnSimpletaxEnabled As Boolean = ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple"
             Dim blnNormalShippingTax As Boolean = False
             If numShippingTaxRate = -1 Then
-                'If blnUStaxEnabled Or blnSimpletaxEnabled Then
-                '    numShippingTaxRate = ShippingCountry.ComputedTaxRate
-                'Else
-                blnNormalShippingTax = True
-                'End If
+
+                'This US/simple 'if' selection was commented out prior to
+                'v2.9007, not sure why. Keep an eye on this.
+                If blnUStaxEnabled Or blnSimpletaxEnabled Then
+                    numShippingTaxRate = ShippingCountry.ComputedTaxRate
+                Else
+                    blnNormalShippingTax = True
+                End If
             End If
 
             If blnNormalShippingTax Then

@@ -701,7 +701,6 @@ MAIN BASKET
                                 <asp:Literal ID="litContentTextTax2" runat="server" Text='<%$ Resources: Kartris, ContentText_Tax %>'
                                     EnableViewState="false"></asp:Literal></span>
                             <!-- show tax rate% for US -->
-
                             <span class="taxrate"><%=vFinalPriceTaxRate%>%</span>
 
                             <span class="value"><%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceTaxAmount)%></span></td>
