@@ -17,10 +17,11 @@
 
 'This is just a simple script to redirect product page links for 
 'upgraded CactuShop sites to the new Kartris product page URL.
-'Note that friendly style CactuShop links are handled in 04.aspx.vb
+'Note that friendly style CactuShop links are handled in 404.aspx.vb
 'instead
 
 strID = request.querystring("PT_ID")
+If strID = "" then strID = request.querystring("CAT_ID")
 Response.Status="301 Moved Permanently"
 Response.AddHeader "Location","Category.aspx?CategoryID=" & strID
 %>
