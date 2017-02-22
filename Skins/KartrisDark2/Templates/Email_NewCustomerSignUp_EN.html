@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<style type="text/css">
+#mail_container                         { border: solid 1px #999; padding: 20px;  width: 600px; }
+#mail_container p                       { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 13px; font-weight: normal; color: #555; padding: 5px 0; margin: 0; }
+#mail_container h1                      { font-family: "Segoe UI Light", Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: lighter; font-size: 180%; letter-spacing: 0px; color: #000; margin: 3px 0 10px 0; }
+#mail_container h2                      { font-family: "Segoe UI Light", Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: lighter; font-size: 140%; letter-spacing: 0px; color: #000; margin: 8px 0 3px 0; }
+#mail_container .line                   { margin-top: 10px; border-bottom: solid 1px #ccc; }
+#mail_container table                   { background-color: #eee; border-collapse: collapse; width: 100%; }
+#mail_container th                      { background-color: #fff; border-bottom: solid 1px #000; padding: 2px 5px; text-transform: uppercase; font-size: 85%; color: #999; }
+#mail_container td                      { border-bottom: solid 1px #ccc; padding: 2px 5px; text-align: right; }
+#mail_container .col1                   { text-align: left; }
+#mail_container .col2                   { text-align: right; vertical-align: top; }
+#mail_container .row_totals strong      { color: #f00; }
+#mail_container .row_item .col2         { color: #090; }
+#mail_container a                       { font-weight: normal; color: #04d; }
+		 </style>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>New Account On [websitename]</title>
+	</head>
+	<body>
+		<!--
+		HTML comments are stripped out when the templates are retrieved so
+		you can put a load in and it won't bulk up the size of the emails
+		-->
+		<div id="mail_container">
+			<h1 class="email_text"></h1>
+			<p class="email_text">
+                An account has been created for you on [websitename]. If you return to our shop, use the details below to log in: 
+			</p>
+
+			<br />
+
+            <p>Email Address: [customeremail]</p>
+            <p>Password: [customerpassword]</p>
+
+            <br />
+
+			<p class="email_text">To view your account, go to <a href="[webshopurl]customer.aspx">[webshopurl]customer.aspx</a>. 
+                Here you can view your orders, change your password, and see any saved shopping baskets.</p>
+
+			<br />
+			<h2 class="email_text">
+			</h2>
+			<p class="email_text">Hope to see you again soon!</p>
+		</div>
+	</body>
+</html>

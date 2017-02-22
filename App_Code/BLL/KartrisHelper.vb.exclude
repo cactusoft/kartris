@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2016 CACTUSOFT
+'Copyright 2017 CACTUSOFT
 'Copyright 2014 POLYCHROME (additions and changes related to Web API)
 
 'GNU GENERAL PUBLIC LICENSE v2

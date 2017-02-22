@@ -1,6 +1,6 @@
 '========================================================================
 'Kartris Web API VBScript Sample- www.kartris.com
-'Copyright 2016 CACTUSOFT
+'Copyright 2017 CACTUSOFT
 'www.cactusoft.com
 
 'GNU GENERAL PUBLIC LICENSE v2

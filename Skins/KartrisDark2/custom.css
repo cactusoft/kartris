@@ -1,0 +1,120 @@
+/* 
+========================================================================
+CATEGORY NAVIGATION MENU
+The primary styles are created by foundation.css. Rather than change
+styles there (which would be overwritten if we upgrade Foundation to
+a newer version), just just grab the bits we need to change here.
+========================================================================
+*/
+#categorymenu .top-bar                  { border-bottom: solid 1px #000; background-color: #a35; min-height: 51px; }
+#categorymenu .top-bar-section li       { border-right: solid 1px #000; }
+#categorymenu .top-bar-section li a:not(.button)
+                                        { color: #fff; background-color: #a35; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; padding: 3px 15px; height: 50px; line-height: 1.2em; font-weight: bold; width: 125px; font-size: 80%; }
+#categorymenu .top-bar-section li a:hover
+                                        { background-color: #666; color: #fff; }
+#categorymenu .top-bar-section li ul    { border-bottom: solid 1px #000; }
+#categorymenu .top-bar-section li li    { background-color: #a35; border-right: solid 1px #000; }
+
+#categorymenu .top-bar-section .has-dropdown > a:after
+                                        { border-style: solid; border-color: rgba(255, 255, 255, 0.9) transparent transparent transparent; top: 12.5px; }
+#categorymenu .top-bar-section .dropdown li a
+                                        { background-color: #666; color: #fff; width: auto; height: auto; font-weight: normal; padding: 2px 15px 4px 15px; font-size: 90%; text-transform: none; }
+#categorymenu .top-bar-section .dropdown li a:hover
+                                        { color: #000; background-color: #aaa; }
+#categorymenu .top-bar-section .has-dropdown .dropdown li.has-dropdown > a:after
+                                        { visibility: hidden; }
+#categorymenu .title-area li.name span  { display: none; }
+
+/* Mobile version */
+#categorymenu .top-bar.expanded         { border-bottom: solid 1px #fff; }
+#categorymenu .top-bar.expanded .title-area
+                                        { background-color: #a35; border-bottom: solid 1px #fff; }
+#categorymenu .top-bar.expanded .title-area a
+                                        { color: #fff; background-color: transparent; border-bottom: none; }
+#categorymenu .top-bar.expanded li a    { border-bottom: solid 1px #fff; }
+#categorymenu .top-bar.expanded li ul   { border: none; }
+#categorymenu .top-bar.expanded li li   { border-right: none; }
+#categorymenu .top-bar.expanded li li a { font-weight: bold; font-size: 13px; background-color: #f90; border-bottom: solid 1px #fff; }
+#categorymenu .top-bar.expanded .has-dropdown .dropdown li.has-dropdown > a:after
+                                        { visibility: visible; }
+/* Button to replace main nav menu in small devices */
+#categorymenu .mobile-link              { font-weight: bold; padding: 2px 15px; color: #ddd; display: block; }
+#categorymenu .mobile-link:hover        { color: #fff; background-color: #555; }
+
+/* 
+========================================================================
+BIG SCREENS
+========================================================================
+*/
+@media only screen and (min-width: 930px) {
+  .row { max-width: 100%; }
+  }
+
+/* 
+========================================================================
+MEDIUM SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 930px) {
+    .products_tabular .item,
+    .products_shortened .item,
+    .subcategories_shortened .item,
+    #homepage .products_tabular .item { display: block; float: none; width: 50%; margin: 0 0 5px 0; }
+    .Kartris-DetailsView-Value { width: 270px; }
+    ul { max-width: 100%; }
+    #pagecontent_pad { min-height: 200px; padding-bottom: 15px; }
+    .versions td.info { max-width: 200px; overflow: hidden; }
+    .basket td.quantity input { width: 32px; text-align: right; }
+    #centre_container { padding: 0; }
+    select,
+    input { width: 100%; }
+    #footer_inside { margin: 0; }
+
+    /* Menus */
+    #categorymenu .top-bar { min-height: 0px; }
+    #categorymenu .top-bar-section li a:not(.button) { width: auto; height: 100%; padding: 5px 10px; overflow: hidden; white-space: nowrap; }
+
+    /* Login status */
+    #loginstatus #username,
+    #loginstatus #statuslabel               { display: none; }
+
+    /* Basket */
+    #compactbasket_totalprice               { display: none; }
+  }
+
+/* 
+========================================================================
+SMALL SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 530px) {
+  .products_tabular .item,
+  .products_shortened .item,
+  .subcategories_shortened .item,
+  #homepage .products_tabular .item { display: block; float: none; width: 100%; margin: 0 0 5px 0; }
+  .Kartris-DetailsView-Value { width: 270px; }
+  ul { max-width: 100%; }
+  #pagecontent_pad { min-height: 200px; padding-bottom: 15px; }
+  .versions td.info { max-width: 200px; overflow: hidden; }
+  .basket td.quantity input { width: 32px; text-align: right; }
+  select,
+  input { width: 100%; }
+  #footer_inside { margin: 0; }
+  }
+
+/* 
+========================================================================
+ORBIT SLIDESHOW
+========================================================================
+*/
+#front-slideshow                        { background-color: #555; z-index: 0; }
+#front-slideshow li                     { padding: 10px 80px; min-height: 200px; }
+
+/* 
+========================================================================
+GENERAL 
+========================================================================
+*/
+table tr td                             { font-size: 100%; }
+table thead,
+table tfoot                             { background: #fff; }
