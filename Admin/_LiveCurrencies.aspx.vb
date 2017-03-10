@@ -158,9 +158,9 @@ Partial Class Admin_LiveCurrencies
 
             'Format of response as follows
             '{"code":"GBP","name":"Pound Sterling","rate":302.481272}
-            strResponse = strResponse.Replace("{""code"":""GBP"",""name"":""Pound Sterling"",""rate"":", "")
-            strResponse = strResponse.Replace("}", "")
-            numValue = Math.Round(1 / CDec(strResponse), 8)
+            Dim aryResponse As Array = Split(strResponse, """rate"":")
+            strResponse = aryResponse(1).Replace("}", "")
+            numValue = Math.Round(1 / CDec(strResponse), 12)
         Catch ex As Exception
             'Oh dear
             numValue = 0
