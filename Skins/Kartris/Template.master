@@ -33,7 +33,7 @@
 	<link href="template.css" rel="stylesheet" type="text/css" />
 	<link href="custom.css" rel="stylesheet" type="text/css" />
 	<link href="powerpack.css" rel="stylesheet" type="text/css" />
-    <link href='//fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+	<link href='//fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
 	<title>Kartris v1</title>
 </head>
 <body class="main">
@@ -71,12 +71,12 @@
 				var contentHeight = $(".inner-wrap").height();
 				//alert($(window).height() + ' - ' + $("#footer").height() + ' - ' + $(".inner-wrap").height())
 				if (contentHeight < height) {
-				    $(".off-canvas-wrap").height(height);
+					$(".off-canvas-wrap").height(height);
 					$(".inner-wrap").height(height - footerheight);
 					$(".left-off-canvas-menu").height(height - footerheight);
 				}
 			}
-            
+			
 
 			// Opening and closing the off-canvas seems to fire
 			// the updateprogress spinner on product pages. The
