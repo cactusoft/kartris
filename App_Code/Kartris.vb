@@ -1388,12 +1388,13 @@ Public NotInheritable Class CkartrisBLL
             'Make sure we lowercase the entered domain as
             'otherwise this check is case sensitive, which
             'we don't want.
-            If SSLHandler.IsSecuredForSEO() Or _
-            (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("/admin/")) Or _
-            (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("customeraccount.aspx")) Or _
-            (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("checkout.aspx")) Or _
-            (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("customertickets.aspx")) Or _
-            (GetKartConfig("general.security.ssl") = "a") Then _
+            If SSLHandler.IsSecuredForSEO() Or
+            (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("/admin/")) Or
+            (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("customeraccount.aspx")) Or
+            (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("checkout.aspx")) Or
+            (GetKartConfig("general.security.ssl") = "y" And HttpContext.Current.Request.Url.AbsoluteUri.ToLower.Contains("customertickets.aspx")) Or
+            (GetKartConfig("general.security.ssl") = "a") Or
+            (GetKartConfig("general.security.ssl") = "e") Then _
             Return Replace(GetKartConfig("general.webshopurl").ToLower, "http://", "https://")
         Catch ex As Exception
         End Try

@@ -424,7 +424,7 @@ Public MustInherit Class PageBaseClass
 
         '301 Redirect Code
         'This redirects to the official webshopURL domain, if another is used to access the site.
-        If Not Current.Request.IsSecureConnection() Then
+        If Not Current.Request.IsSecureConnection() And Not GetKartConfig("general.security.ssl") = "e" Then
             If InStr(Request.Url.ToString.ToLower, CkartrisBLL.WebShopURL.ToLower) = 0 Then
                 Dim strRedirectURL As String = CkartrisDisplayFunctions.CleanURL(Request.RawUrl.ToLower)
                 'remove the web shop folder if present - webshopurl already contains this
