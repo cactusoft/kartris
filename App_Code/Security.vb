@@ -142,7 +142,7 @@ Public NotInheritable Class SSLHandler
         Dim blnIsSSLEnabled As Boolean = False
 
         'SSL enabled in config settings
-        If GetKartConfig("general.security.ssl") = "y" Or GetKartConfig("general.security.ssl") = "a" Then blnIsSSLEnabled = True
+        If GetKartConfig("general.security.ssl") = "y" Or GetKartConfig("general.security.ssl") = "a" Or GetKartConfig("general.security.ssl") = "e" Then blnIsSSLEnabled = True
 
         Return blnIsSSLEnabled
     End Function
@@ -159,10 +159,17 @@ Public NotInheritable Class SSLHandler
             'for SSL to 'true'
             If IsBackEndLoggedIn() Then blnNeedSSL = True
 
-            'We need SSL, but current page doesn't have it
-            If blnNeedSSL = True And Not Current.Request.IsSecureConnection() Then
-                Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
+            'Handle external SSL such as Cloudflare.com, this means we cannot detect it
+            'from the website itself, as the SSL is applied by a proxy externally
+            If GetKartConfig("general.security.ssl") = "e" Then
+                'No redirection
+            Else
+                'We need SSL, but current page doesn't have it
+                If blnNeedSSL = True And Not Current.Request.IsSecureConnection() Then
+                    Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
+                End If
             End If
+
         ElseIf Current.Request.Url.AbsoluteUri.Contains("https://") Then
             Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("https://", "http://"))
         End If
@@ -199,16 +206,27 @@ Public NotInheritable Class SSLHandler
             'redirection.
             If Not Current.Request.Url.AbsoluteUri.ToLower.Contains("callback") Then
                 'We need SSL, but current page doesn't have it
-                If blnNeedSSL = True And Not Current.Request.IsSecureConnection() Then
-                    If blnRedirectPermanent Then
-                        Current.Response.RedirectPermanent(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
-                    Else
-                        Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
+
+                'Handle external SSL. In this case, something like Cloudflare.com is used
+                'to add SSL to the site by relaying the site via it's own servers and applying
+                'SSL
+                If GetKartConfig("general.security.ssl") = "e" Then
+                    'We cannot detect the SSL, so we just have to assume it's set
+                Else
+                    'convential SSL code
+                    If blnNeedSSL = True And Not Current.Request.IsSecureConnection() Then
+                        If blnRedirectPermanent Then
+                            Current.Response.RedirectPermanent(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
+                        Else
+                            Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
+                        End If
+                        'We have SSL but don't need it
+                    ElseIf blnNeedSSL = False And Current.Request.IsSecureConnection() Then
+                        Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("https://", "http://"))
                     End If
-                    'We have SSL but don't need it
-                ElseIf blnNeedSSL = False And Current.Request.IsSecureConnection() Then
-                    Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("https://", "http://"))
                 End If
+
+
             End If
 
         ElseIf Current.Request.Url.AbsoluteUri.Contains("https://") Then
@@ -221,7 +239,7 @@ Public NotInheritable Class SSLHandler
     ''' Force SSL redirect
     ''' </summary>
     Public Shared Sub RedirectToSecuredPage()
-        If IsSSLEnabled() Then
+        If IsSSLEnabled() And Not GetKartConfig("general.security.ssl") = "e" Then
             Current.Response.Redirect(Current.Request.Url.AbsoluteUri.Replace("http://", "https://"))
         End If
     End Sub
