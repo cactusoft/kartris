@@ -30,6 +30,10 @@ IF EXIST "c:\CleanKartris\Kartris\$tf1" rd "c:\CleanKartris\Kartris\$tf1" /S /Q
 IF EXIST "c:\CleanKartris\Kartris\$tf2" rd "c:\CleanKartris\Kartris\$tf1" /S /Q
 IF EXIST "c:\CleanKartris\Kartris\$tf3" rd "c:\CleanKartris\Kartris\$tf1" /S /Q
 ECHO DONE!
+ECHO REMOVING GIT AND VS FILES...
+IF EXIST "c:\CleanKartris\Kartris\.git" rd "c:\CleanKartris\Kartris\.git" /S /Q
+IF EXIST "c:\CleanKartris\Kartris\.vs" rd "c:\CleanKartris\Kartris\.vs" /S /Q
+ECHO DONE!
 ECHO **
 ECHO REMOVING SAMPLE MEDIA FILES...
 del "c:\CleanKartris\Kartris\Uploads\Media\*.*" /Q
