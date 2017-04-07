@@ -50,7 +50,7 @@ Partial Class UserControls_Back_FeedSoftwareUpdate
                 'if the kartris.com site where the feed is located
                 'is unreachable. We use the httpWebRequest so we can
                 'apply a timeout setting of 1 second.
-                Dim reqFeed As System.Net.HttpWebRequest = DirectCast(System.Net.WebRequest.Create("http://www.kartris.com/feed/revisions/?url=" & CkartrisBLL.WebShopURL), System.Net.HttpWebRequest)
+                Dim reqFeed As System.Net.HttpWebRequest = DirectCast(System.Net.WebRequest.Create("https://www.kartris.com/feed/revisions/?url=" & CkartrisBLL.WebShopURL), System.Net.HttpWebRequest)
                 reqFeed.Timeout = 1000 'milliseconds
                 Dim resFeed As System.Net.WebResponse = reqFeed.GetResponse()
                 Dim responseStream As Stream = resFeed.GetResponseStream()
