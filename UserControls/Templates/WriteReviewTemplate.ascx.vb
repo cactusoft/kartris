@@ -50,11 +50,11 @@ Partial Class WriteReviewTemplate
 
     '' INSERT TO DB, adding the new review to the Review Table.
     Protected Sub btnAddReview_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAddReview.Click
-        Page.Validate()
+        Page.Validate("ReviewForm")
         If Page.IsValid AndAlso ajaxNoBotReview.IsValid Then
             '' Calling the INSERT STATEMENT of the Review's Table
             '' Sets the result of the INSERT, by getting the value from the Cached Resources
-            If ReviewsBLL.AddNewReview(_ProductID, Session("LANG"), StripHTML(txtTitle.Text), StripHTML(txtReviewText.Text), _
+            If ReviewsBLL.AddNewReview(_ProductID, Session("LANG"), StripHTML(txtTitle.Text), StripHTML(txtReviewText.Text),
                                 CShort(ddlRating.SelectedValue), StripHTML(txtName.Text), StripHTML(txtEmail.Text), StripHTML(txtLocation.Text), 0, "") Then
                 litResult.Text = Replace(GetGlobalResourceObject("Reviews", "ContentText_ReviewAdded3"), "[itemname]", ProductName)
             Else
@@ -63,7 +63,6 @@ Partial Class WriteReviewTemplate
 
             ClearForm() '' Clear the form for new reviews.
             mvwWriting.SetActiveView(viwWritingResult)   '' Activates the Result View.
-
         End If
         updReviewMain.Update()
     End Sub
