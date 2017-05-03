@@ -29,17 +29,15 @@
         objMediaIframe.src = objMediaIframe.src + "&MT_Extension=" + MT_Extension;
         //Size popup dynamically based on file type
         //If 999 width, we make full screen
-        if (intWidth == '999')
-        {
+        if (intWidth == '999') {
             objPopupWindow.style.width = "100%";
             objPopupWindow.style.height = "100%";
             objPopupWindow.className += ' popup_media';
         }
-        else
-        {
-        objPopupWindow.style.width = (intWidth * 1 + 20) + "px";
-        objPopupWindow.style.height = (intHeight * 1 + 15) + "px";
-        objPopupWindow.className = 'popup';
+        else {
+            objPopupWindow.style.width = (intWidth * 1 + 20) + "px";
+            objPopupWindow.style.height = (intHeight * 1 + 15) + "px";
+            objPopupWindow.className = 'popup';
         }
         //Show the popup
         objFrame.show();
@@ -66,9 +64,9 @@
     //]]>
 </script>
 
-<div class="product">
+<div class="product" itemscope itemtype="http://schema.org/Product">
     <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" SiteMapProvider="CategorySiteMapProvider" />
-    <h1>
+    <h1 itemprop="name">
         <asp:Literal ID="litProductName" runat="server"></asp:Literal></h1>
     <div id="strapline">
         <asp:Literal ID="litProductStrapLine" runat="server" EnableViewState="false"></asp:Literal>
@@ -83,23 +81,23 @@
                 --%>
                 <div class="<asp:Literal runat='server' id='litImageColumnClasses' text='imagecolumn small-12 medium-4 large-6 columns'/>">
                     <div class="main_product_image">
-                    <asp:UpdatePanel ID="updImages" runat="server" UpdateMode="Conditional">
-                        <ContentTemplate>
-                            <user:ImageViewer ID="UC_ImageView2" runat="server" LargeViewClickable="false" EnableViewState="false" />
-                            <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
-                    <asp:UpdatePanel ID="updMedia" runat="server" UpdateMode="Conditional">
-                        <ContentTemplate>
-                            <%--
+                        <asp:UpdatePanel ID="updImages" runat="server" UpdateMode="Conditional">
+                            <ContentTemplate>
+                                <user:ImageViewer ID="UC_ImageView2" runat="server" LargeViewClickable="false" EnableViewState="false" />
+                                <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
+                        <asp:UpdatePanel ID="updMedia" runat="server" UpdateMode="Conditional">
+                            <ContentTemplate>
+                                <%--
                             =====================================
                             MEDIA GALLERY
                             =====================================
-                            --%>
-                            <user:PopupMessage ID="UC_PopUpMedia" runat="server" EnableViewState="false" />
-                            <user:MediaGallery ID="UC_MediaGallery" ParentType="p" runat="server" EnableViewState="false" />
-                        </ContentTemplate>
-                    </asp:UpdatePanel>
+                                --%>
+                                <user:PopupMessage ID="UC_PopUpMedia" runat="server" EnableViewState="false" />
+                                <user:MediaGallery ID="UC_MediaGallery" ParentType="p" runat="server" EnableViewState="false" />
+                            </ContentTemplate>
+                        </asp:UpdatePanel>
                     </div>
                     <div class="spacer"></div>
                 </div>
@@ -120,21 +118,14 @@
                                 <asp:Literal ID="litContentTextHome" runat="server" Text="<%$ Resources: Kartris, ContentText_Home %>" EnableViewState="false"></asp:Literal>
                             </HeaderTemplate>
                             <ContentTemplate>
-
-
-
                                 <asp:FormView ID="fvwProduct" runat="server">
                                     <HeaderTemplate>
                                         <asp:Literal ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>
                                     </HeaderTemplate>
                                     <ItemTemplate>
-
-                                        <div id="description" itemscope itemtype="http://data-vocabulary.org/Product">
-                                            <span itemprop="name" style="display: none;"><%# Eval("P_Name") %></span>
-                                            <user:RichSnippets ID="UC_RichSnippets" runat="server" ProductID='<%# Eval("P_ID") %>' />
-                                            <span itemprop="description">
-                                                <asp:Literal EnableViewState="False" ID="litProductDescription" runat="server" Text='<%# ShowLineBreaks(Eval("P_Desc")) %>'></asp:Literal>
-                                            </span>
+                                        <user:RichSnippets ID="UC_RichSnippets" runat="server" ProductID='<%# Eval("P_ID") %>' />
+                                        <div id="description">
+                                            <asp:Literal EnableViewState="False" ID="litProductDescription" runat="server" Text='<%# ShowLineBreaks(Eval("P_Desc")) %>'></asp:Literal>
                                         </div>
                                         <%--
                                         COMPARE LINK
