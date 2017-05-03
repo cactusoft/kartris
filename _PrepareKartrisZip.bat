@@ -43,18 +43,10 @@ ECHO **
 del "c:\CleanKartris\Kartris\uploads\resources\*.bak"
 del "c:\CleanKartris\Kartris\uploads\resources\*UpdateData*.sql"
 del "c:\CleanKartris\Kartris\uploads\resources\UpdateSQL.sql"
-REM ECHO Copying MainData SQL script to root...
-REM copy "c:\CleanKartris\Kartris\uploads\resources\kartrisSQL_MainData.sql" "c:\CleanKartris\InstallSQL.SQL"
-REM ECHO DONE!
-REM ECHO **
-ECHO Copying default web.config file...
-copy "c:\CleanKartris\Kartris\defaultbuildfiles\Kartris\*.default" "c:\CleanKartris\Kartris\*.config"
 ECHO DONE!
 ECHO **
-REM ECHO DONE!
-REM ECHO **
 ECHO Copying default WPI files...
-copy "c:\CleanKartris\Kartris\defaultbuildfiles\*.*" "c:\CleanKartris\*.*"
+xcopy "c:\CleanKartris\Kartris\DefaultBuildFiles\*.*" "c:\CleanKartris\*.*"	/S /Y 
 ECHO DONE!
 ECHO **
 ECHO Deleting DefaultBuildFiles folder...
