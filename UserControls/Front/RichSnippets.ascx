@@ -1,5 +1,5 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="RichSnippets.ascx.vb" Inherits="UserControls_Front_RichSnippets" %>
-
+<%@ OutputCache Duration="3600" VaryByParam="*" VaryByCustom="culture" Shared="true" %>
 <script type="application/ld+json">
 {
   <asp:Literal ID="litProductMain" runat="server">"@context": "http://schema.org/",
