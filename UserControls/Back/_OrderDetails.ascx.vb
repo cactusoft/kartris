@@ -17,7 +17,7 @@ Imports CkartrisEnumerations
 Imports CkartrisDisplayFunctions
 Imports CkartrisDataManipulation
 Imports KartSettingsManager
-
+Imports LanguageStringsBLL
 
 Partial Class UserControls_Back_OrderDetails
     Inherits System.Web.UI.UserControl
@@ -180,28 +180,28 @@ Partial Class UserControls_Back_OrderDetails
                 Dim strEmailFrom As String = LanguagesBLL.GetEmailFrom(CInt(hidOrderLanguageID.Value))
                 Dim strEmailTo As String = UsersBLL.GetEmailByID(CInt(hidCustomerID.Value))
                 Dim strEmailText As String
-                Dim strSubjectLine As String = GetGlobalResourceObject("Email", "EmailText_OrderUpdateFrom") & " " & Server.HtmlEncode(GetGlobalResourceObject("Kartris", "Config_Webshopname"))
-                strEmailText = GetGlobalResourceObject("Email", "EmailText_OrderStatusUpdated") & vbCrLf & WebShopURL() & "CustomerViewOrder.aspx?O_ID=" & litOrderID.Text
+                Dim strSubjectLine As String = _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "EmailText_OrderUpdateFrom") & " " & Server.HtmlEncode(_GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "f", "Config_Webshopname"))
+                strEmailText = _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "EmailText_OrderStatusUpdated") & vbCrLf & WebShopURL() & "CustomerViewOrder.aspx?O_ID=" & litOrderID.Text
 
                 'Add in what was changed
                 Dim strOrderStatus As String = ""
                 If ViewState("O_Sent") <> chkOrderSent.Checked And chkOrderSent.Checked Then
-                    strOrderStatus += vbCrLf & GetGlobalResourceObject("_Orders", "ContentText_OrderStatusSent")
+                    strOrderStatus += vbCrLf & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_OrderStatusSent")
                 End If
                 If ViewState("O_Invoiced") <> chkOrderInvoiced.Checked And chkOrderInvoiced.Checked Then
-                    strOrderStatus += vbCrLf & GetGlobalResourceObject("_Orders", "ContentText_OrderStatusInvoiced")
+                    strOrderStatus += vbCrLf & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_OrderStatusInvoiced")
                 End If
                 If ViewState("O_Paid") <> chkOrderPaid.Checked And chkOrderPaid.Checked Then
-                    strOrderStatus += vbCrLf & GetGlobalResourceObject("_Orders", "ContentText_OrderStatusPaid")
+                    strOrderStatus += vbCrLf & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_OrderStatusPaid")
                 End If
                 If ViewState("O_Shipped") <> chkOrderShipped.Checked And chkOrderShipped.Checked Then
-                    strOrderStatus += vbCrLf & GetGlobalResourceObject("_Orders", "ContentText_OrderStatusShipped")
+                    strOrderStatus += vbCrLf & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_OrderStatusShipped")
                 End If
                 If ViewState("O_Cancelled") <> chkOrderCancelled.Checked And chkOrderCancelled.Checked Then
-                    strOrderStatus += vbCrLf & GetGlobalResourceObject("_Orders", "ContentText_OrderStatusCancelled")
+                    strOrderStatus += vbCrLf & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_OrderStatusCancelled")
                 End If
                 If strOrderStatus <> "" Then
-                    strEmailText += vbCrLf & vbCrLf & GetGlobalResourceObject("_Orders", "ContentText_OrderStatus") & ":" & strOrderStatus
+                    strEmailText += vbCrLf & vbCrLf & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_OrderStatus") & ":" & strOrderStatus
                 End If
 
                 Dim strOrderText As String = ViewState("O_Details")
@@ -215,14 +215,14 @@ Partial Class UserControls_Back_OrderDetails
                 strEmailText += vbCrLf & vbCrLf & strOrderText.Replace("<br />", vbCrLf)
 
                 If ViewState("O_Notes") <> txtOrderNotes.Text And Trim(txtOrderNotes.Text) <> "" Then
-                    strEmailText += vbCrLf & GetGlobalResourceObject("_Kartris", "ContentText_Notes") & ":" & vbCrLf & txtOrderNotes.Text
+                    strEmailText += vbCrLf & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_Notes") & ":" & vbCrLf & txtOrderNotes.Text
                 End If
 
                 'Check if mail should be HTML, and if so, try to 
                 'read the HTML template
                 Dim blnHTMLEmail As Boolean = GetKartConfig("general.email.enableHTML") = "y"
                 Dim strHTMLEmailText As String = ""
-                If blnHTMLEmail Then strHTMLEmailText = RetrieveHTMLEmailTemplate("OrderUpdate")
+                If blnHTMLEmail Then strHTMLEmailText = RetrieveHTMLEmailTemplate("OrderUpdate", hidOrderLanguageID.Value)
 
                 'build up the HTML email if template is found
                 If Not String.IsNullOrEmpty(strHTMLEmailText) Then
@@ -231,7 +231,7 @@ Partial Class UserControls_Back_OrderDetails
                     strHTMLEmailText = strHTMLEmailText.Replace("[orderstatus]", strOrderStatus.Replace(vbCrLf, "<br />"))
                     strHTMLEmailText = strHTMLEmailText.Replace("[orderdetails]", strOrderText)
                     If ViewState("O_Notes") <> txtOrderNotes.Text And Trim(txtOrderNotes.Text) <> "" Then
-                        strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "<p>" & GetGlobalResourceObject("_Kartris", "ContentText_Notes") &
+                        strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "<p>" & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_Notes") &
                                                                 ": <br />" & txtOrderNotes.Text & "</p>")
                     Else
                         strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "")

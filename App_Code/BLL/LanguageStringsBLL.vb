@@ -43,17 +43,20 @@ Public Class LanguageStringsBLL
     Public Shared Function GetLanguageStringsByVirtualPath(ByVal _LanguageID As Short, ByVal _VirtualPath As String) As LanguageStringsDataTable
         Return Adptr.GetDataByVirtualPath(_LanguageID, _VirtualPath)
     End Function
+
     Public Shared Function _GetByID(ByVal pLanguageID As Byte, ByVal pFrontBack As Char, ByVal pLSName As String) As DataTable
         Return Adptr._GetByID(pFrontBack, pLanguageID, pLSName)
     End Function
+
     Public Shared Function _Search(ByVal pSearchBy As String, ByVal pSearchKey As String, ByVal pFrontBack As String, ByVal pLanguageID As Byte) As DataTable
         Return Adptr._Search(pSearchBy, pSearchKey, pLanguageID, pFrontBack)
     End Function
 
-    Public Shared Function _SearchForUpdate(ByVal pSearchBy As String, ByVal pSearchKey As String, _
+    Public Shared Function _SearchForUpdate(ByVal pSearchBy As String, ByVal pSearchKey As String,
                                         ByVal pFrontBack As String, ByVal pDefaultLanguageID As Byte, ByVal pLanguageID As Byte) As DataTable
         Return Adptr._SearchForUpdate(pSearchBy, pSearchKey, pFrontBack, pDefaultLanguageID, pLanguageID)
     End Function
+
     Public Shared Function _GetTotalsPerLanguage() As DataTable
         Return Adptr.GetTotalsPerLanguage()
     End Function
@@ -91,6 +94,7 @@ Public Class LanguageStringsBLL
 
         Return False
     End Function
+
     Public Shared Function _AddLanguageString(ByVal _LanguageID As Short, ByVal _FrontBack As String, ByVal _Name As String, _
          ByVal _Value As String, ByVal _Description As String, ByVal _DefaultValue As String, _
          ByVal _VirtualPath As String, ByVal _ClassName As String, ByRef strMsg As String) As Boolean
@@ -226,29 +230,21 @@ Public Class LanguageStringsBLL
         Return False
     End Function
 
-    ''=======================
-    '' TO BE DEPRECATED LATER
-    ''=======================
-    Public Shared Sub _UpdateLSUsage(ByVal strName As String, ByVal strIdentifier As String, ByVal chrClassOrPath As Char)
-        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
-        Dim sqlConn As New SqlClient.SqlConnection(strConnString)
-        Dim cmdUpdateUsage As New SqlClient.SqlCommand("_spKartrisLSUsage_SetUsed", sqlConn)
-        cmdUpdateUsage.CommandType = CommandType.StoredProcedure
-
-        cmdUpdateUsage.Parameters.AddWithValue("@LS_Name", strName)
-        cmdUpdateUsage.Parameters.AddWithValue("@LS_Identifier", strIdentifier)
-        cmdUpdateUsage.Parameters.AddWithValue("@LS_ClassOrPath", chrClassOrPath)
+    ''' <summary>
+    ''' Pull out a language string by specific language.
+    ''' We use this in the back end for order update mails, 
+    ''' for example, where the admin user might be working
+    ''' in English, but the order was made in German so we
+    ''' need to format order updates with German text.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Shared Function _GetLanguageStringByNameAndLanguageID(ByVal pLanguageID As Byte, ByVal pFrontBack As Char, ByVal pLSName As String) As String
+        Dim dtbLanguageStrings As DataTable = Adptr._GetByID(pFrontBack, pLanguageID, pLSName)
         Try
-            sqlConn.Open()
-            cmdUpdateUsage.ExecuteNonQuery()
-            sqlConn.Close()
-        Catch ex As SqlClient.SqlException
-            MsgBox("error" & ex.Message)
+            Return dtbLanguageStrings.Rows(0).Item("LS_Value")
         Catch ex As Exception
-            MsgBox("error" & ex.Message)
-        Finally
-            If sqlConn.State = ConnectionState.Open Then sqlConn.Close()
+            Return "string not found - check your code"
         End Try
 
-    End Sub
+    End Function
 End Class
