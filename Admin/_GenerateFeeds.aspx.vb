@@ -42,16 +42,16 @@ Partial Class Admin_GenerateFeeds
         Select Case strType
             Case "p"
                 'Product
-                strURL = CkartrisBLL.WebShopURL & strCulture & "/" & strTitle & "__p-" & strItemID & ".aspx"
+                strURL = CkartrisBLL.WebShopURL & strCulture & strTitle & "__p-" & strItemID & ".aspx"
             Case "c"
                 'Category
-                strURL = CkartrisBLL.WebShopURL & strCulture & "/" & strTitle & "__c-p-0-0-" & strItemID & ".aspx"
+                strURL = CkartrisBLL.WebShopURL & strCulture & strTitle & "__c-p-0-0-" & strItemID & ".aspx"
             Case "t"
                 'Custom page text
                 strURL = CkartrisBLL.WebShopURL & "t-" & strTitle & ".aspx"
             Case "n"
                 'News
-                strURL = CkartrisBLL.WebShopURL & strCulture & "/" & strTitle & "__n-" & strItemID & ".aspx"
+                strURL = CkartrisBLL.WebShopURL & strCulture & strTitle & "__n-" & strItemID & ".aspx"
         End Select
 
         Return strURL
@@ -93,9 +93,12 @@ Partial Class Admin_GenerateFeeds
 
         For Each drwFeedData In dtbFeedData.Rows
 
+            Dim strCulture As String = drwFeedData("LANG_Culture").ToString & "/"
+            If strCulture = "/" Then strCulture = ""
+
             'Try/catch so one bad URL won't crash the whole thing
             Try
-                AddURLElement(CurrentXmlSiteMap, CreateFeedURL(drwFeedData("LANG_Culture").ToString, drwFeedData("PAGE_Name").ToString, drwFeedData("RecordType").ToString, drwFeedData("ItemID").ToString))
+                AddURLElement(CurrentXmlSiteMap, CreateFeedURL(strCulture, drwFeedData("PAGE_Name").ToString, drwFeedData("RecordType").ToString, drwFeedData("ItemID").ToString))
 
                 If intCurrentURLCounter = 49999 Then
                     intCurrentURLCounter = 0
