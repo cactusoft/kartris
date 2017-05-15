@@ -41,7 +41,13 @@ Partial Class Skins_Hugofox_UserControls_HugoFoxContent
 
         'First, we need to know the customer's HugoFox
         'account ID number
-        Dim numHugoFoxID = KartSettingsManager.GetKartConfig("hugofox.account.id")
+        Dim strHugoFoxID As String = KartSettingsManager.GetKartConfig("hugofox.account.id")
+
+        ' Blank string management
+        Dim numHugoFoxID As Integer = 0
+        If IsNumeric(strHugoFoxID) Then
+            numHugoFoxID = CInt(strHugoFoxID)
+        End If
 
         'Account ID is not zero, proceed, otherwise, flag issue
         If numHugoFoxID > 0 Then
