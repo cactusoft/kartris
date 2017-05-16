@@ -24,7 +24,7 @@ ECHO CLEANING ERROR LOGS...
 IF EXIST "c:\CleanKartris\Kartris\Uploads\Logs\Errors" rd "c:\CleanKartris\Kartris\Uploads\Logs\Errors" /S /Q
 ECHO DONE!
 ECHO **
-ECHO REMOVING TFS CACHE FILES...
+ECHO REMOVING TFS CACHE FILES (now we're on github, probably no need, but whatever)...
 IF EXIST "c:\CleanKartris\Kartris\$tf" rd "c:\CleanKartris\Kartris\$tf" /S /Q
 IF EXIST "c:\CleanKartris\Kartris\$tf1" rd "c:\CleanKartris\Kartris\$tf1" /S /Q
 IF EXIST "c:\CleanKartris\Kartris\$tf2" rd "c:\CleanKartris\Kartris\$tf1" /S /Q
@@ -33,6 +33,7 @@ ECHO DONE!
 ECHO REMOVING GIT AND VS FILES...
 IF EXIST "c:\CleanKartris\Kartris\.git" rd "c:\CleanKartris\Kartris\.git" /S /Q
 IF EXIST "c:\CleanKartris\Kartris\.vs" rd "c:\CleanKartris\Kartris\.vs" /S /Q
+IF EXIST "c:\CleanKartris\Kartris\.gitignore" rd "c:\CleanKartris\Kartris\.gitignore" /S /Q
 ECHO DONE!
 ECHO **
 ECHO REMOVING SAMPLE MEDIA FILES...
