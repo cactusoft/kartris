@@ -32,6 +32,7 @@
                                     break;
                             }
                         }
+                        window.location = window.location.pathname;
                     }
                 </script>
                 <div class="small-12 medium-3 columns filterbar">
