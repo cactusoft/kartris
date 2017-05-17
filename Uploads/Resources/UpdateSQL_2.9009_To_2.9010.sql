@@ -48,3 +48,240 @@ BEGIN
 	END
 END
 GO
+
+/*** This improves the auto-SKU given to new versions created when cloning
+the parent product. Previously, we appended [clone-ID] (where ID was the db
+ID of the product. But this can result in SKUs that are too long, generate
+an SQL error (truncated data) and so the cloned product ends up without any
+versions. The new method uses a function to create a new name, bit like how
+DOS filenames used to work, e.g.
+
+mysku
+musku~1
+musku~1~1 etc.
+
+However, if the SKU is 25 chars long
+myskumyskumyskumyskumys~1
+myskumyskumyskumyskumys~2
+myskumyskumyskumyskumys~3
+etc.
+
+This should ensure SKUs longer than 25 chars are never created ***/
+
+/****** Object:  UserDefinedFunction [dbo].[fnKartrisVersions_CreateCloneName]    Script Date: 06/05/2017 07:34:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date, ,>
+-- Description:	<Description, ,>
+-- =============================================
+CREATE FUNCTION [dbo].[fnKartrisVersions_CreateCloneName] 
+(
+	-- Add the parameters for the function here
+	@V_CodeNumber as nvarchar(25)
+	
+)
+RETURNS nvarchar(25)
+AS
+BEGIN
+	-- Declare the return variable here
+	DECLARE @Result nvarchar(25);
+	DECLARE @Counter as int;
+	DECLARE @LengthOfSKU as tinyint;
+	DECLARE @LengthOfSuffix as tinyint;
+	DECLARE @Exists as bit;
+
+	-- We want to create a new V_CodeNumber that resembles
+	-- the original as closely as possible, but is unique.
+	-- We can add "~1" to the end, but need to make sure
+	-- (a) we don't exceed 25 chars and (b) that we check
+	-- the SKU does not already exist. If it does, we go
+	-- to ~2 and so on until we get a SKU that doesn't
+	-- already exist.
+	SET @LengthOfSKU = LEN(@V_CodeNumber);
+	SET @Exists = 1;
+	SET @Counter = 0;
+
+	-- Keep trying until we find an SKU that is not
+	-- yet used
+	WHILE @Exists = 1
+
+	BEGIN
+		SET @Counter = @Counter + 1;
+		SET @LengthOfSuffix = LEN('~' + CAST(@Counter AS nvarchar));
+		SET @Result = LEFT(@V_CodeNumber, 25 - @LengthOfSuffix) + '~' + CAST(@Counter AS nvarchar);
+		SET @Exists = (SELECT COUNT(V_CodeNumber) FROM tblKartrisVersions WHERE V_CodeNumber = @Result);
+	END
+	
+	-- Return the result of the function
+	RETURN @Result
+
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisProducts_CloneRecords]    Script Date: 06/05/2017 07:59:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	This is used when cloning
+-- products... it does not clone the actual
+-- product, it produces all the other associated
+-- records such as versions, related products,
+-- attributes, quantity discounts, customer
+-- group prices and object config settings for
+-- products and versions
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisProducts_CloneRecords](
+								@P_ID_OLD as int,
+								@P_ID_NEW as int
+								)
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+-- CREATE VERSIONS	
+INSERT INTO tblKartrisVersions
+	 (V_CodeNumber, V_ProductID, V_Price, V_Tax, V_Weight, V_DeliveryTime, V_Quantity, V_QuantityWarnLevel, V_Live, V_DownLoadInfo, V_DownloadType, V_OrderByValue, V_RRP, V_Type, 
+		V_CustomerGroupID, V_CustomizationType, V_CustomizationDesc, V_CustomizationCost, V_Tax2, V_TaxExtra)
+SELECT dbo.fnKartrisVersions_CreateCloneName(V_CodeNumber), @P_ID_NEW, V_Price, V_Tax, V_Weight, V_DeliveryTime, V_Quantity, V_QuantityWarnLevel, V_Live, V_DownLoadInfo, V_DownloadType, V_OrderByValue, V_RRP, V_Type, 
+		V_CustomerGroupID, V_CustomizationType, V_CustomizationDesc, V_CustomizationCost, V_Tax2, V_TaxExtra
+FROM tblKartrisVersions WHERE V_ProductID=@P_ID_OLD
+
+-- CREATE RELATED PRODUCTS
+INSERT INTO tblKartrisRelatedProducts(RP_ParentID, RP_ChildID)
+SELECT @P_ID_NEW, RP_ChildID
+FROM tblKartrisRelatedProducts
+WHERE (RP_ParentID = @P_ID_OLD)
+
+-- CREATE OBJECT CONFIG SETTINGS - PRODUCTS
+INSERT INTO tblKartrisObjectConfigValue(OCV_ObjectConfigID, OCV_ParentID, OCV_Value)
+SELECT OCV_ObjectConfigID, @P_ID_NEW, OCV_Value
+FROM tblKartrisObjectConfigValue INNER JOIN tblKartrisObjectConfig ON OCV_ObjectConfigID=OC_ID
+WHERE (OCV_ParentID = @P_ID_OLD) AND OC_ObjectType='Product'
+
+-- CREATE ATTRIBUTE VALUES
+INSERT INTO tblKartrisAttributeValues(ATTRIBV_ProductID, ATTRIBV_AttributeID)
+SELECT @P_ID_NEW, ATTRIBV_AttributeID
+FROM tblKartrisAttributeValues
+WHERE (ATTRIBV_ProductID = @P_ID_OLD)
+
+-- COUNT ATTRIBUTES CREATED, LOOP THROUGH THEM
+-- AND CREATE LANGUAGE ELEMENTS
+-- in-memory temp versions table to hold distinct ATTRIBV_ID
+DECLARE @i int
+DECLARE @ATTRIBV_ID_OLD int
+DECLARE @ATTRIBV_ID_NEW int
+
+-- create and populate table with original product's attributes
+DECLARE @tblKartrisAttributeValues_MEMORY_OLD TABLE (
+	idx smallint Primary Key IDENTITY(1,1), ATTRIBV_ID int)
+INSERT INTO @tblKartrisAttributeValues_MEMORY_OLD(ATTRIBV_ID)
+SELECT DISTINCT ATTRIBV_ID FROM tblKartrisAttributeValues WHERE ATTRIBV_ProductID=@P_ID_OLD
+
+-- create and populate table with new product's versions
+DECLARE @tblKartrisAttributeValues_MEMORY_NEW TABLE (
+	idx smallint Primary Key IDENTITY(1,1), ATTRIBV_ID int)
+INSERT INTO @tblKartrisAttributeValues_MEMORY_NEW(ATTRIBV_ID)
+SELECT DISTINCT ATTRIBV_ID FROM tblKartrisAttributeValues WHERE ATTRIBV_ProductID=@P_ID_NEW
+
+DECLARE @numrows int
+SET @i = 1
+
+-- number of attributes, should be same in both tables but we just check NEW
+SET @numrows = (SELECT COUNT(ATTRIBV_ProductID) FROM tblKartrisAttributeValues WHERE ATTRIBV_ProductID=@P_ID_NEW)
+IF @numrows > 0
+	WHILE (@i <= (SELECT MAX(idx) FROM @tblKartrisAttributeValues_MEMORY_NEW))
+	BEGIN
+		-- get the next version's ID, both old and new
+		SET @ATTRIBV_ID_OLD = (SELECT ATTRIBV_ID FROM @tblKartrisAttributeValues_MEMORY_OLD WHERE idx= @i)
+		SET @ATTRIBV_ID_NEW = (SELECT ATTRIBV_ID FROM @tblKartrisAttributeValues_MEMORY_NEW WHERE idx= @i)
+
+		-- insert new language elements for this version ID
+		INSERT INTO tblKartrisLanguageElements
+		(LE_LanguageID, LE_TypeID, LE_FieldID, LE_ParentID, LE_Value)
+		SELECT LE_LanguageID, LE_TypeID, LE_FieldID, @ATTRIBV_ID_NEW, LE_Value
+		FROM tblKartrisLanguageElements
+		WHERE (LE_ParentID = @ATTRIBV_ID_OLD) AND (LE_TypeID = 14)
+
+		-- increment counter for next version
+		SET @i = @i + 1
+	END
+
+	
+-- COUNT VERSIONS CREATED, LOOP THROUGH THEM
+-- AND CREATE LANGUAGE ELEMENTS
+-- in-memory temp versions table to hold distinct V_ID
+DECLARE @V_ID_OLD int
+DECLARE @V_ID_NEW int
+
+-- create and populate table with original product's versions
+DECLARE @tblKartrisVersions_MEMORY_OLD TABLE (
+	idx smallint Primary Key IDENTITY(1,1), V_ID int)
+INSERT INTO @tblKartrisVersions_MEMORY_OLD(V_ID)
+SELECT DISTINCT V_ID FROM tblKartrisVersions WHERE V_ProductID=@P_ID_OLD
+
+-- create and populate table with new product's versions
+DECLARE @tblKartrisVersions_MEMORY_NEW TABLE (
+	idx smallint Primary Key IDENTITY(1,1), V_ID int)
+INSERT INTO @tblKartrisVersions_MEMORY_NEW(V_ID)
+SELECT DISTINCT V_ID FROM tblKartrisVersions WHERE V_ProductID=@P_ID_NEW
+
+SET @i = 1
+
+-- number of versions, should be same in both tables but we just check NEW
+SET @numrows = (SELECT COUNT(V_ID) FROM tblKartrisVersions WHERE V_ProductID=@P_ID_NEW)
+IF @numrows > 0
+	WHILE (@i <= (SELECT MAX(idx) FROM @tblKartrisVersions_MEMORY_NEW))
+	BEGIN
+		-- get the next version's ID, both old and new
+		SET @V_ID_OLD = (SELECT V_ID FROM @tblKartrisVersions_MEMORY_OLD WHERE idx= @i)
+		SET @V_ID_NEW = (SELECT V_ID FROM @tblKartrisVersions_MEMORY_NEW WHERE idx= @i)
+
+		-- insert new language elements for this version ID
+		INSERT INTO tblKartrisLanguageElements
+		(LE_LanguageID, LE_TypeID, LE_FieldID, LE_ParentID, LE_Value)
+		SELECT LE_LanguageID, LE_TypeID, LE_FieldID, @V_ID_NEW, LE_Value
+		FROM tblKartrisLanguageElements
+		WHERE (LE_ParentID = @V_ID_OLD) AND (LE_TypeID = 1)
+
+		-- insert new object config settings for this version
+		INSERT INTO tblKartrisObjectConfigValue(OCV_ObjectConfigID, OCV_ParentID, OCV_Value)
+		SELECT OCV_ObjectConfigID, @V_ID_NEW, OCV_Value
+		FROM tblKartrisObjectConfigValue INNER JOIN tblKartrisObjectConfig ON OCV_ObjectConfigID=OC_ID
+		WHERE (OCV_ParentID = @V_ID_OLD) AND OC_ObjectType='Version'
+
+		-- insert customer group prices
+		INSERT INTO tblKartrisCustomerGroupPrices
+		(CGP_CustomerGroupID, CGP_VersionID, CGP_Price)
+		SELECT CGP_CustomerGroupID, @V_ID_NEW, CGP_Price
+		FROM tblKartrisCustomerGroupPrices
+		WHERE (CGP_VersionID = @V_ID_OLD)
+
+		-- insert quantity discounts
+		INSERT INTO tblKartrisQuantityDiscounts
+		(QD_VersionID, QD_Quantity, QD_Price)
+		SELECT @V_ID_NEW, QD_Quantity, QD_Price
+		FROM tblKartrisQuantityDiscounts
+		WHERE (QD_VersionID = @V_ID_OLD)
+
+		-- increment counter for next version
+		SET @i = @i + 1
+	END
+END
+GO
+
+/****** Object:  Index [V_CodeNumber_UNIQUE]    Script Date: 06/05/2017 09:01:43 ******/
+CREATE UNIQUE NONCLUSTERED INDEX [V_CodeNumber_UNIQUE] ON [dbo].[tblKartrisVersions]
+(
+	[V_CodeNumber] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+

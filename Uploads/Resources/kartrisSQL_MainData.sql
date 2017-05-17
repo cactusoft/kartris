@@ -17175,6 +17175,12 @@ GO
 EXEC sys.sp_addextendedproperty @name=N'MS_Description', @value=N'n:NONE, i:Image, t:Text' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'tblKartrisVersions', @level2type=N'COLUMN',@level2name=N'V_CustomizationType'
 GO
 
+/****** Object:  Index [V_CodeNumber_UNIQUE]    Script Date: 06/05/2017 09:01:43 ******/
+CREATE UNIQUE NONCLUSTERED INDEX [V_CodeNumber_UNIQUE] ON [dbo].[tblKartrisVersions]
+(
+	[V_CodeNumber] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
 
 /****** Object:  View [dbo].[vKartrisTypeKnowledgeBase]    Script Date: 01/23/2013 21:59:09 ******/
 SET ANSI_NULLS ON
@@ -19289,6 +19295,66 @@ BEGIN
 
 END
 GO
+
+/****** Object:  UserDefinedFunction [dbo].[fnKartrisProduct_GetMaxPrice]    Script Date: 03/05/2017 12:27:37 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date, ,>
+-- Description:	<Description, ,>
+-- =============================================
+CREATE FUNCTION [dbo].[fnKartrisProduct_GetMaxPrice] 
+(
+	-- Add the parameters for the function here
+	@V_ProductID as int
+	
+)
+RETURNS real
+AS
+BEGIN
+	-- Declare the return variable here
+	DECLARE @Result decimal(18,4);
+
+	-- Declare version and option parts of price
+	DECLARE @VersionPrice decimal(18,4);
+	DECLARE @OptionsPrice decimal(18,4);
+
+	-- Get version price
+	SELECT @VersionPrice = Max(V_Price) 
+	FROM tblKartrisVersions INNER JOIN [dbo].[tblKartrisTaxRates]
+			ON [V_Tax] = [T_ID]
+	WHERE V_ProductID = @V_ProductID AND V_Live = 1 AND tblKartrisVersions.V_CustomerGroupID IS NULL;
+
+	-- Get options price
+	SELECT @OptionsPrice = Sum(T.MaxPriceChange) FROM
+	(SELECT P_OPT_ProductID, OPTG_ID, Max(P_OPT_PriceChange) As MaxPriceChange FROM dbo.tblKartrisOptionGroups INNER JOIN
+						 dbo.tblKartrisOptions ON dbo.tblKartrisOptionGroups.OPTG_ID = dbo.tblKartrisOptions.OPT_OptionGroupID INNER JOIN
+						 dbo.tblKartrisProductOptionGroupLink ON dbo.tblKartrisOptionGroups.OPTG_ID = dbo.tblKartrisProductOptionGroupLink.P_OPTG_OptionGroupID INNER JOIN
+						 dbo.tblKartrisProductOptionLink ON dbo.tblKartrisOptions.OPT_ID = dbo.tblKartrisProductOptionLink.P_OPT_OptionID 
+	WHERE P_OPT_ProductID = @V_ProductID
+	GROUP BY P_OPT_ProductID, OPTG_ID) As T
+
+	IF @VersionPrice IS NULL
+	BEGIN
+		SET @VersionPrice = 0;
+	END
+	IF @OptionsPrice IS NULL
+	BEGIN
+		SET @OptionsPrice = 0;
+	END
+
+	SET @Result = @VersionPrice + @OptionsPrice
+
+	-- Return the result of the function
+	RETURN @Result
+
+END
+
+GO
+
 /****** Object:  UserDefinedFunction [dbo].[fnKartrisLanguageElement_GetProductID]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -27926,7 +27992,8 @@ CREATE PROCEDURE [dbo].[spKartrisProducts_GetRichSnippetProperties]
 )
 AS
 BEGIN
-	DECLARE @P_Category as nvarchar(max), @P_SKU as nvarchar(25), @P_Type as char(1),
+	DECLARE @P_Name as nvarchar(max), @P_Desc as nvarchar(max), 
+			@P_Category as nvarchar(max), @P_SKU as nvarchar(25), @P_Type as char(1),
 			@P_Price as real, @P_MinPrice as real, @P_MaxPrice as real, 
 			@P_StockQuantity as real, @P_WarnLevel as real,
 			@P_Rev as char(1), @Rev_Avg as real, @Rev_Total as int;
@@ -27936,8 +28003,8 @@ BEGIN
 			ON vKartrisTypeCategories.CAT_ID = tblKartrisProductCategoryLink.PCAT_CategoryID
 	WHERE (vKartrisTypeCategories.LANG_ID = @LANG_ID) AND (tblKartrisProductCategoryLink.PCAT_ProductID = @P_ID)
 
-	SELECT @P_Type = [P_Type], @P_Rev = [P_Reviews]
-	FROM [dbo].[tblKartrisProducts]
+	SELECT @P_Name = [P_Name], @P_Desc = [P_Desc], @P_Type = [P_Type], @P_Rev = [P_Reviews]
+	FROM [dbo].[vKartrisTypeProducts]
 	WHERE [P_ID] = @P_ID;
 
 	IF @P_Rev = 'y' BEGIN
@@ -27958,9 +28025,7 @@ BEGIN
 		FROM [dbo].[tblKartrisVersions]
 		WHERE [V_ProductID] = @P_ID AND [V_Live] = 1;
 		SELECT @P_MinPrice = [dbo].[fnKartrisProduct_GetMinPrice](@P_ID);
-		SELECT @P_MaxPrice = Max(V_Price)
-		FROM [dbo].[tblKartrisVersions]
-		WHERE [V_ProductID] = @P_ID AND [V_Live] = 1;
+		SELECT @P_MaxPrice = [dbo].[fnKartrisProduct_GetMaxPrice](@P_ID);
 	END 
 	IF @P_Type = 'o' BEGIN
 		SELECT Top(1) @P_SKU = [V_CodeNumber], 
@@ -27969,12 +28034,11 @@ BEGIN
 		WHERE [V_ProductID] = @P_ID AND [V_Type] = 'b' AND [V_Live] = 1;
 		
 		SELECT @P_MinPrice = [dbo].[fnKartrisProduct_GetMinPrice](@P_ID);
-		SELECT @P_MaxPrice = Max(V_Price)
-		FROM [dbo].[tblKartrisVersions]
-		WHERE [V_ProductID] = @P_ID AND [V_Type] <> 's' AND [V_Live] = 1;
+		SELECT @P_MaxPrice = [dbo].[fnKartrisProduct_GetMaxPrice](@P_ID);
 	END
 
-	SELECT @P_Category As P_Category, @P_SKU As P_SKU, @P_Type As P_Type,
+	SELECT @P_Name As P_Name, @P_Desc As P_Desc,
+			@P_Category As P_Category, @P_SKU As P_SKU, @P_Type As P_Type,
 			@P_Price As P_Price, @P_MinPrice As P_MinPrice, @P_MaxPrice As P_MaxPrice, 
 			@P_StockQuantity As P_Quanity, @P_WarnLevel As P_WarnLevel,
 			@P_Rev As P_Review, @Rev_Avg As P_AverageReview, @Rev_Total As P_TotalReview
@@ -29441,6 +29505,61 @@ BEGIN
 
 END
 GO
+
+/****** Object:  UserDefinedFunction [dbo].[fnKartrisVersions_CreateCloneName]    Script Date: 06/05/2017 07:34:50 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date, ,>
+-- Description:	<Description, ,>
+-- =============================================
+CREATE FUNCTION [dbo].[fnKartrisVersions_CreateCloneName] 
+(
+	-- Add the parameters for the function here
+	@V_CodeNumber as nvarchar(25)
+	
+)
+RETURNS nvarchar(25)
+AS
+BEGIN
+	-- Declare the return variable here
+	DECLARE @Result nvarchar(25);
+	DECLARE @Counter as int;
+	DECLARE @LengthOfSKU as tinyint;
+	DECLARE @LengthOfSuffix as tinyint;
+	DECLARE @Exists as bit;
+
+	-- We want to create a new V_CodeNumber that resembles
+	-- the original as closely as possible, but is unique.
+	-- We can add "~1" to the end, but need to make sure
+	-- (a) we don't exceed 25 chars and (b) that we check
+	-- the SKU does not already exist. If it does, we go
+	-- to ~2 and so on until we get a SKU that doesn't
+	-- already exist.
+	SET @LengthOfSKU = LEN(@V_CodeNumber);
+	SET @Exists = 1;
+	SET @Counter = 0;
+
+	-- Keep trying until we find an SKU that is not
+	-- yet used
+	WHILE @Exists = 1
+
+	BEGIN
+		SET @Counter = @Counter + 1;
+		SET @LengthOfSuffix = LEN('~' + CAST(@Counter AS nvarchar));
+		SET @Result = LEFT(@V_CodeNumber, 25 - @LengthOfSuffix) + '~' + CAST(@Counter AS nvarchar);
+		SET @Exists = (SELECT COUNT(V_CodeNumber) FROM tblKartrisVersions WHERE V_CodeNumber = @Result);
+	END
+	
+	-- Return the result of the function
+	RETURN @Result
+
+END
+GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisProducts_CloneRecords]    Script Date: 08/03/2016 14:10:36 ******/
 SET ANSI_NULLS ON
 GO
@@ -29470,7 +29589,7 @@ BEGIN
 INSERT INTO tblKartrisVersions
 	 (V_CodeNumber, V_ProductID, V_Price, V_Tax, V_Weight, V_DeliveryTime, V_Quantity, V_QuantityWarnLevel, V_Live, V_DownLoadInfo, V_DownloadType, V_OrderByValue, V_RRP, V_Type, 
 		V_CustomerGroupID, V_CustomizationType, V_CustomizationDesc, V_CustomizationCost, V_Tax2, V_TaxExtra)
-SELECT V_CodeNumber + '[clone-' + Cast(@P_ID_NEW as nvarchar(15)) + ']', @P_ID_NEW, V_Price, V_Tax, V_Weight, V_DeliveryTime, V_Quantity, V_QuantityWarnLevel, V_Live, V_DownLoadInfo, V_DownloadType, V_OrderByValue, V_RRP, V_Type, 
+SELECT dbo.fnKartrisVersions_CreateCloneName(V_CodeNumber), @P_ID_NEW, V_Price, V_Tax, V_Weight, V_DeliveryTime, V_Quantity, V_QuantityWarnLevel, V_Live, V_DownLoadInfo, V_DownloadType, V_OrderByValue, V_RRP, V_Type, 
 		V_CustomerGroupID, V_CustomizationType, V_CustomizationDesc, V_CustomizationCost, V_Tax2, V_TaxExtra
 FROM tblKartrisVersions WHERE V_ProductID=@P_ID_OLD
 
@@ -29866,6 +29985,12 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
+	-- Count number of live languages
+	DECLARE @LanguageCount as tinyint
+	SET @LanguageCount = (SELECT COUNT(LANG_ID) From tblKartrisLanguages WHERE LANG_LiveFront = 1) 
+
+	IF @LanguageCount > 1
+	BEGIN 
 		SELECT 't' as RecordType, PAGE_ID As ItemID, '' as LANG_Culture, PAGE_Name FROM vKartrisTypePages WHERE PAGE_Live=1
 		UNION
 		SELECT 'c' as RecordType, CAT_ID As ItemID, LANG_Culture, CAT_Name FROM vKartrisTypeCategories INNER JOIN tblKartrisLanguages ON vKartrisTypeCategories.LANG_ID=tblKartrisLanguages.LANG_ID WHERE CAT_Live=1 AND LANG_LiveFront=1
@@ -29873,6 +29998,17 @@ BEGIN
 		SELECT 'p' as RecordType, P_ID As ItemID, LANG_Culture, P_Name FROM vKartrisTypeProducts  INNER JOIN tblKartrisLanguages ON vKartrisTypeProducts.LANG_ID=tblKartrisLanguages.LANG_ID WHERE P_Live=1 AND LANG_LiveFront=1
 		UNION
 		SELECT 'n' as RecordType, N_ID As ItemID, (SELECT LANG_Culture FROM tblKartrisLanguages WHERE tblKartrisLanguages.LANG_ID=vKartrisTypeNews.LANG_ID) AS LANG_Culture, N_Name FROM vKartrisTypeNews
+	END
+	ELSE
+	BEGIN 
+		SELECT 't' as RecordType, PAGE_ID As ItemID, '' as LANG_Culture, PAGE_Name FROM vKartrisTypePages WHERE PAGE_Live=1
+		UNION
+		SELECT 'c' as RecordType, CAT_ID As ItemID, '' as LANG_Culture, CAT_Name FROM vKartrisTypeCategories INNER JOIN tblKartrisLanguages ON vKartrisTypeCategories.LANG_ID=tblKartrisLanguages.LANG_ID WHERE CAT_Live=1 AND LANG_LiveFront=1
+		UNION
+		SELECT 'p' as RecordType, P_ID As ItemID, '' as LANG_Culture, P_Name FROM vKartrisTypeProducts  INNER JOIN tblKartrisLanguages ON vKartrisTypeProducts.LANG_ID=tblKartrisLanguages.LANG_ID WHERE P_Live=1 AND LANG_LiveFront=1
+		UNION
+		SELECT 'n' as RecordType, N_ID As ItemID, '' AS LANG_Culture, N_Name FROM vKartrisTypeNews
+	END
 END
 GO
 /****** Object:  Index [ADR_UserID]    Script Date: 23/10/2016 16:02:53 ******/
