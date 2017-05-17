@@ -215,7 +215,7 @@ SET NOCOUNT ON;
 		 SELECT @OrderBy = CFG_Value FROM tblKartrisConfig WHERE CFG_Name = 'frontend.versions.display.sortdefault';
 	END
 
-	IF @OrderDirection IS NULL OR @OrderDirection = ''
+	IF @OrderDirection IS NULL OR @OrderDirection = '' OR @OrderDirection = '-'
 	BEGIN
 		 SELECT @OrderDirection = CFG_Value FROM tblKartrisConfig WHERE CFG_Name = 'frontend.versions.display.sortdirection';
 	END

@@ -169,6 +169,7 @@ SET NOCOUNT ON;
 					END
 	END			
 END
+GO
 
 /****** Object:  StoredProcedure [dbo].[_spKartrisDB_GetTaskList]    Script Date: 04/30/2014 14:11:03 ******/
 -- out of stock should show items with negative stock as well as zero
@@ -203,7 +204,7 @@ BEGIN
 	SELECT @NoCustomersWaitingRefunds  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance > 0;
 	SELECT @NoCustomersInArrears  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance < 0;
 END
-
+GO
 
 -- Remove deprecated us state tax config setting
 -- This is now handled by the taxregime setting in the 
