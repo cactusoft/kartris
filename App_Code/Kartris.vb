@@ -30,8 +30,8 @@ Imports System.Xml
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 2.9009
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #05/03/2017# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION As Decimal = 2.901
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #05/17/2017# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
@@ -1366,16 +1366,21 @@ Public NotInheritable Class CkartrisBLL
     ''' due to rapid fail protection, or issues like the currency cache code returning
     ''' </summary>
     Public Shared Function RecycleAppPool() As Boolean
-        Using iisManager As New ServerManager()
-            Dim colSites As SiteCollection = iisManager.Sites
-            For Each strSiteName As Site In colSites
-                If strSiteName.Name = System.Web.Hosting.HostingEnvironment.ApplicationHost.GetSiteName() Then
-                    iisManager.ApplicationPools(strSiteName.Applications("/").ApplicationPoolName).Recycle()
-                    Return True
-                End If
-            Next
+        Try
+            Using iisManager As New ServerManager()
+                Dim colSites As SiteCollection = iisManager.Sites
+                For Each strSiteName As Site In colSites
+                    If strSiteName.Name = System.Web.Hosting.HostingEnvironment.ApplicationHost.GetSiteName() Then
+                        iisManager.ApplicationPools(strSiteName.Applications("/").ApplicationPoolName).Recycle()
+                        Return True
+                    End If
+                Next
+                Return False
+            End Using
+        Catch ex As Exception
+            'maybe don't have right permissions
             Return False
-        End Using
+        End Try
     End Function
 
 
