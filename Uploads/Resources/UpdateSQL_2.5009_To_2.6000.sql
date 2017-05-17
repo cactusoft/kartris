@@ -96,6 +96,7 @@ BEGIN
 	WHERE V_ProductID = @ProductID AND V_ID = @SwitchVersionID;
 		
 END
+GO
 
 /****** Make Payment References Unique ******/
 -- On occasion we have seen payments logged
