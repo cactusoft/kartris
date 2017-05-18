@@ -1,0 +1,458 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<url>
+   <loc>http://localhost:51665/Customer.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/News.aspx</loc>
+   <priority>1.0</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/Knowledgebase.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/Contact.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/Wishlist.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/CustomerTickets.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/de-DE/Cat1-German__c-p-0-0-1.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Category-1__c-p-0-0-1.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/de-DE/Cat2-German__c-p-0-0-2.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Category-2__c-p-0-0-2.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/de-DE/Cat-3-German__c-p-0-0-3.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Category-3__c-p-0-0-3.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Category-4__c-p-0-0-4.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Category-5__c-p-0-0-5.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Category-6__c-p-0-0-6.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Category-7__c-p-0-0-7.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Subcategory-1__c-p-0-0-8.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Subcategory-2__c-p-0-0-9.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Sub-Subcategory-1__c-p-0-0-10.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Sub-Subcategory-2__c-p-0-0-11.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Sub-Subcategory-3__c-p-0-0-12.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Sub-Subcategory-4__c-p-0-0-13.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Meat__c-p-0-0-14.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Sausages__c-p-0-0-15.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Miscellaneous__c-p-0-0-16.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Sauces__c-p-0-0-17.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Equipment__c-p-0-0-18.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Clothing__c-p-0-0-19.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Snacks__c-p-0-0-20.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Buns__c-p-0-0-21.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Books__c-p-0-0-22.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Burgers__c-p-0-0-23.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Fowl__c-p-0-0-24.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Beef__c-p-0-0-25.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Barbeque-Basics__c-p-0-0-26.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Kartris-Demo-Store-Opens__n-16.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/de-DE/German-News-Name__n-17.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Another-News-Story__n-17.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/de-DE/Einzelstück-Produkt__p-1.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Single-Item-Product__p-1.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Single-Item-Product-2__p-2.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Multiple-Version-Product__p-3.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Options-Product-1__p-4.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Options-Product-2__p-5.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Product-with-Attributes__p-6.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Customizable-Product__p-7.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Product-in-Category-with-Subcats__p-8.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Multiple-Version-Product-with-Images__p-9.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Frankfurters-Beef__p-10.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/The-Luncheon-Truncheon__p-11.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Basingstokefurter__p-12.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/The-Chubby-Chili__p-13.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/The-Teenie-Weenie__p-14.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Vindaloo-Surprise__p-15.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Seaside-Special-Self-Cooking-Sausage__p-16.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Genuine-Mexican-Chili-Sauce__p-17.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Uncle-Bills-Special-Barbecue-Sauce__p-18.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Exodus-Cajun-Ketchup__p-19.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Grillmaster-Barbecues__p-20.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/UltraBrown-Barbecues__p-21.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/TongMaster-Accessory-Set__p-22.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/The-Trouser-Douser__p-23.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/The-Barbecuers-Cookbook__p-24.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Fire-Extinguisher-Notice__p-25.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Nearest-Safe-Refuge__p-26.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Hot-Food-Warning__p-27.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Car-B-Q__p-28.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Portabarby-Nitro__p-29.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Anti-backdraft-Sunglasses__p-30.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Fire-Resistant-Cammo-Boxers__p-31.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Firewalker-Socks__p-32.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/T-Shirt---Barbecuers-do-it-with-their-tongs__p-33.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/T-Shirt---Suburban-Griller__p-34.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Cheese-Sweepings__p-35.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Custard-Balls__p-36.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Pork-Scratchings__p-37.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Granary-Buns__p-38.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Pre-Cut-Buns__p-39.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Big,-Bad-Book-of-BBQ,-by-Charles-Dickens__p-40.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Castigianos-Computational-Rotisserie-Dynamics__p-41.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/BBQ-Monthly__p-42.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Quarter-Pound-Chicken-Burger__p-43.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Pigeon-Patties__p-44.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Quarter-Pound-Beef-Burger__p-45.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Single-Item-Product-2__p-58.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/NEW-OPTIONS__p-59.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/Multiple-Version-Product-2__p-60.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/YYYY__p-61.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/en-GB/pyramid-test__p-62.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/t-Terms.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+<url>
+   <loc>http://localhost:51665/t-Default.aspx</loc>
+   <priority>0.5</priority>
+   <changefreq>weekly</changefreq>
+</url>
+</urlset>

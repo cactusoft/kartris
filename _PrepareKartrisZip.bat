@@ -48,6 +48,7 @@ ECHO DONE!
 ECHO **
 ECHO Copying default WPI files...
 xcopy "c:\CleanKartris\Kartris\DefaultBuildFiles\*.*" "c:\CleanKartris\*.*"	/S /Y 
+xcopy /f /y "c:\CleanKartris\Kartris\DefaultBuildFiles\Kartris\web.config.default" "c:\CleanKartris\Kartris\web.config"
 ECHO DONE!
 ECHO **
 ECHO Deleting DefaultBuildFiles folder...

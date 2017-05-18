@@ -57,6 +57,7 @@ INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (4, N'K:product.usecombinationprice', N'Product', N'b', N'0', N'use combination price instead of options prices.', 0, 1.4)
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (6, N'K:version.extrasku', N'Version', N's', NULL, N'Extra code number for versions (store specific).', 0, 2)
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (7, N'K:product.showlargeimageinline', N'Product', N'b', N'0', N'Change products images to large view mode instead of being displayed in the image gallery.', 0, 2.5006)
+INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (8, N'K:product.excustomerdiscount', N'Product', N'b', N'0', N'Exclude designated products from customer discount.', 0, 2.9010)
 SET IDENTITY_INSERT [dbo].[tblKartrisObjectConfig] OFF
 /****** Object:  Table [dbo].[tblKartrisAffiliatePayments]    Script Date: 01/23/2013 21:59:08 ******/
 SET ANSI_NULLS ON
@@ -24006,8 +24007,8 @@ GO
 -- Author:		Mohammad
 -- Create date: 
 -- Description:	
--- Remarks: Optimization (Medz) - Modified to use product views instead and to lessen use of GetName function - 14-07-2010
--- Remarks2: Further Optimization (Mohammad) - Remove usage of product versions view and use the Language Elements directly - 15-11-2013
+-- Remarks: Updated by Paul, 2017/05/25
+-- include MinPrice
 -- =============================================
 CREATE PROCEDURE [dbo].[spKartrisProducts_GetNewestProducts]
 	(
@@ -24019,13 +24020,13 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 	
-	SELECT DISTINCT TOP (10) tblKartrisProducts.P_ID, tblKartrisLanguageElements.LE_Value AS P_Name, tblKartrisProducts.P_DateCreated, @LANG_ID LANG_ID
+	SELECT DISTINCT TOP (10) tblKartrisProducts.P_ID, tblKartrisLanguageElements.LE_Value AS P_Name, dbo.fnKartrisProduct_GetMinPrice(P_ID) As MinPrice, tblKartrisProducts.P_DateCreated, @LANG_ID LANG_ID
 	FROM    tblKartrisProducts INNER JOIN
 			  tblKartrisVersions ON tblKartrisProducts.P_ID = tblKartrisVersions.V_ProductID INNER JOIN
 			  tblKartrisProductCategoryLink ON tblKartrisProducts.P_ID = tblKartrisProductCategoryLink.PCAT_ProductID INNER JOIN
 			  tblKartrisCategories ON tblKartrisProductCategoryLink.PCAT_CategoryID = tblKartrisCategories.CAT_ID INNER JOIN
 			  tblKartrisLanguageElements ON tblKartrisProducts.P_ID = tblKartrisLanguageElements.LE_ParentID
-	WHERE   (tblKartrisProducts.P_CustomerGroupID IS NULL) AND (tblKartrisCategories.CAT_CustomerGroupID IS NULL) AND (tblKartrisVersions.V_CustomerGroupID IS NULL) AND
+	WHERE   (tblKartrisProducts.P_Live=1) AND (tblKartrisProducts.P_CustomerGroupID IS NULL) AND (tblKartrisCategories.CAT_CustomerGroupID IS NULL) AND (tblKartrisVersions.V_CustomerGroupID IS NULL) AND
 		   (tblKartrisLanguageElements.LE_LanguageID = @LANG_ID) AND (tblKartrisLanguageElements.LE_TypeID = 2) AND (tblKartrisLanguageElements.LE_FieldID = 1) AND 
 		  (NOT (tblKartrisLanguageElements.LE_Value IS NULL))
 	ORDER BY tblKartrisProducts.P_DateCreated DESC, tblKartrisProducts.P_ID DESC
@@ -30017,4 +30018,10 @@ CREATE NONCLUSTERED INDEX [ADR_UserID] ON [dbo].[tblKartrisAddresses]
 	[ADR_UserID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
+
+/****** 2.9010 Exclude some items from customer discount, text to indicate this by customer discount ******/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_SomeItemsExcludedFromDiscount', N'Items marked with ** are excluded from the customer discount', NULL, 2.9010, N'Items marked with ** are excluded from the customer discount', NULL, N'Basket',1);
+GO
+
+
 

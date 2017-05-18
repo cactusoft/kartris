@@ -187,7 +187,7 @@ MAIN BASKET
                                     <tbody>
                             </HeaderTemplate>
                             <ItemTemplate>
-                                <tr class="product_row">
+                                <tr class="product_row <%# AddClassToBasketRow(Eval("ExcludeFromCustomerDiscount"), BSKT_CustomerDiscount, "excustomerdiscount") %>">
                                     <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
                                     <td class="image_cell hide-for-small">
                                         <user:ProductTemplateImageOnly ID="UC_ProductTemplateImageOnly" runat="server" />
@@ -198,7 +198,7 @@ MAIN BASKET
                                         <% End If%>
                                         <div class="name" style="cursor: pointer;">
                                             <strong>
-                                                <asp:HyperLink ID="lnkProduct" runat="server" Text='<%# Server.HTMLEncode(Eval("Quantity") & " x " &  Eval("ProductName")) %>'></asp:HyperLink></strong>
+                                                <asp:HyperLink ID="lnkProduct" runat="server" Text='<%# AddMarkToBasketItemName(Eval("ExcludeFromCustomerDiscount"), BSKT_CustomerDiscount, Server.HtmlEncode(Eval("Quantity") & " x " & Eval("ProductName")), " **") %>'></asp:HyperLink></strong>
                                             <asp:UpdatePanel ID="updCustomize" runat="server" UpdateMode="Conditional">
                                                 <ContentTemplate>
                                                     <asp:LinkButton ID="lnkCustomize" CssClass="link2 icon_new" runat="server" CommandName="Customize"
@@ -454,6 +454,11 @@ MAIN BASKET
                                 <div class="details">
                                     <div class="info">
                                         <%=BSKT_CustomerDiscount%>%
+                       <% If Basket.HasCustomerDiscountExemption Then %>
+                                        -
+<asp:Literal ID="litContentTextNameDetails" runat="server" Text='<%$ Resources: Basket, ContentText_SomeItemsExcludedFromDiscount %>'
+                                                    EnableViewState="false"></asp:Literal>
+                       <% End If %>
                                     </div>
                                 </div>
                             </td>

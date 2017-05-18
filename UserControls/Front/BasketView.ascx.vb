@@ -18,6 +18,7 @@ Imports System.Globalization
 Imports CkartrisBLL
 Imports KartSettingsManager
 Imports KartrisClasses
+Imports System.Linq
 
 ''' <summary>
 ''' This control runs the baskets on the site, including the basket
@@ -227,7 +228,10 @@ Partial Class Templates_BasketView
         Else
             Call Basket.Validate(False)
 
-            rptBasket.DataSource = BasketItems
+            'v2.9010 - we can now sort the basket so items that are excluded from
+            'the customer discount appear towards the bottom. This line below, or
+            'more specifically, the OrderBy, is where the magic happens.
+            rptBasket.DataSource = BasketItems.OrderBy(Function(objItem) objItem.ExcludeFromCustomerDiscount)
             rptBasket.DataBind()
 
             Call Basket.CalculateTotals()
@@ -350,7 +354,8 @@ Partial Class Templates_BasketView
         End If
 
         If ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET And ViewOnly Then
-            rptBasket.DataSource = BasketItems
+            'OrderBy sorts items that are excluded from customer discount to bottom
+            rptBasket.DataSource = BasketItems.OrderBy(Function(objItem) objItem.ExcludeFromCustomerDiscount)
             rptBasket.DataBind()
         End If
 
@@ -425,7 +430,9 @@ Partial Class Templates_BasketView
     Sub DisplayMiniBasket()
         Dim vFinalPriceExTax, vFinalPriceIncTax, vFinalPriceTaxAmount As Double
 
-        rptMiniBasket.DataSource = BasketItems
+        'v2.9010 - The OrderBy below sorts items that are excluded from customer
+        'discount towards bottom of basket
+        rptMiniBasket.DataSource = BasketItems.OrderBy(Function(objItem) objItem.ExcludeFromCustomerDiscount)
         rptMiniBasket.DataBind()
 
         Dim numTotalItems As Int32 = 0
@@ -812,7 +819,7 @@ Partial Class Templates_BasketView
 
         BasketItems = Basket.BasketItems
 
-        rptBasket.DataSource = BasketItems
+        rptBasket.DataSource = BasketItems.OrderBy(Function(objItem) objItem.ExcludeFromCustomerDiscount)
         rptBasket.DataBind()
         Session("Basket") = Basket
     End Sub
@@ -949,7 +956,7 @@ Partial Class Templates_BasketView
                 End If
             Next
 
-            rptBasket.DataSource = BasketItems
+            rptBasket.DataSource = BasketItems.OrderBy(Function(objItem) objItem.ExcludeFromCustomerDiscount)
             rptBasket.DataBind()
 
             Call LoadBasket()
@@ -969,31 +976,6 @@ Partial Class Templates_BasketView
             ShowAddItemToBasket(numVersionID, numQuantity, True)
         End If
     End Sub
-
-    '''' <summary>
-    '''' Saves custom text for items that support it
-    '''' </summary>
-    '''' <param name="strCustomText"></param>
-    '''' <param name="numItemID"></param>
-    '''' <remarks></remarks>
-    'Private Sub SaveCustomText(ByVal strCustomText As String, Optional ByVal numItemID As Integer = 0)
-    '    If numItemID = 0 Then
-    '        numItemID = btnSaveCustomText.CommandArgument
-    '    End If
-
-    '    BasketBLL.SaveCustomText(numItemID, strCustomText)
-
-    '    For Each objItem As BasketItem In BasketItems
-    '        If numItemID = objItem.ID Then
-    '            objItem.CustomText = strCustomText
-    '        End If
-    '    Next
-
-    '    rptBasket.DataSource = BasketItems
-    '    rptBasket.DataBind()
-
-    '    updPnlMainBasket.Update()
-    'End Sub
 
     ''' <summary>
     ''' Shows popup for errors or events on minibasket. This can
@@ -1242,4 +1224,31 @@ Partial Class Templates_BasketView
         updPnlMainBasket.Update()
     End Sub
 
+    ''' <summary>
+    ''' Use this to add style/colour to basket rows. This
+    ''' was introduced in v2.9010 in order to highlight
+    ''' items that are excluded from customer discount
+    ''' </summary>
+    ''' <remarks></remarks>
+    Function AddClassToBasketRow(ByVal blnAddClass As Boolean, ByVal blnCustomerHasDiscount As Boolean, ByVal strClassName As String) As String
+        If blnAddClass And blnCustomerHasDiscount Then
+            Return strClassName
+        Else
+            Return ""
+        End If
+    End Function
+
+    ''' <summary>
+    ''' Use this to mark particular items (add ** after name).
+    ''' This was introduced in v2.9010 in order to highlight
+    ''' items that are excluded from customer discount
+    ''' </summary>
+    ''' <remarks></remarks>
+    Function AddMarkToBasketItemName(ByVal blnAddMark As Boolean, ByVal blnCustomerHasDiscount As Boolean, ByVal strInputText As String, ByVal strMark As String) As String
+        If blnAddMark And blnCustomerHasDiscount Then
+            Return strInputText & strMark
+        Else
+            Return strInputText
+        End If
+    End Function
 End Class

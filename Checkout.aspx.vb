@@ -948,9 +948,10 @@ Partial Class _Checkout
                 Dim sbdNewCustomerEmailText As StringBuilder = New StringBuilder
                 Dim sbdBodyText As StringBuilder = New StringBuilder
                 Dim sbdBasketItems As StringBuilder = New StringBuilder
-
                 Dim arrBasketItems As List(Of Kartris.BasketItem)
+
                 Dim objBasket As Kartris.Basket = Session("Basket")
+
                 Dim objOrder As Kartris.Interfaces.objOrder = Nothing
 
                 Dim blnNewUser As Boolean = True
@@ -1033,9 +1034,9 @@ Partial Class _Checkout
 
                 'Customer discount
                 If objBasket.CustomerDiscount.IncTax < 0 Then
-                    sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount"), ""))
+                    sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount") & "[customerdiscountexempttext]", ""))
                     If blnUseHTMLOrderEmail Then
-                        sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount"), ""))
+                        sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount") & "[customerdiscountexempttext]", ""))
                     End If
                 End If
 
@@ -1332,12 +1333,22 @@ Partial Class _Checkout
                     Dim BasketItem As New BasketItem
                     'final check if basket items are still there
                     If arrBasketItems.Count = 0 Then
-                        CkartrisFormatErrors.LogError("Basket items were lost in the middle of Checkout! Customer redirected to main Basket page." & vbCrLf & _
-                                                      "Details: " & vbCrLf & "C_ID:" & IIf(User.Identity.IsAuthenticated, CurrentLoggedUser.ID, " New User") & vbCrLf & _
-                                                        "Payment Gateway: " & clsPlugin.GatewayName & vbCrLf & _
+                        CkartrisFormatErrors.LogError("Basket items were lost in the middle of Checkout! Customer redirected to main Basket page." & vbCrLf &
+                                                      "Details: " & vbCrLf & "C_ID:" & IIf(User.Identity.IsAuthenticated, CurrentLoggedUser.ID, " New User") & vbCrLf &
+                                                        "Payment Gateway: " & clsPlugin.GatewayName & vbCrLf &
                                                         "Generated Body Text: " & sbdBodyText.ToString)
                         Response.Redirect("~/Basket.aspx")
                     End If
+
+                    'Get customer discount, we need this to decide whether to mark items
+                    'exempt from it
+                    Dim BSKT_CustomerDiscount As Double = BasketBLL.GetCustomerDiscount(CurrentLoggedUser.ID)
+
+                    'We need to mark items that are exempt from customer discounts
+                    Dim strMark As String = ""
+                    Dim blnHasExemptCustomerDiscountItems As Boolean = False
+
+                    'Loop through basket items
                     For Each Item As Kartris.BasketItem In arrBasketItems
                         With Item
                             Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", Item.ProductID)
@@ -1346,10 +1357,18 @@ Partial Class _Checkout
                             Dim sbdOptionText As New StringBuilder("")
                             If Not String.IsNullOrEmpty(.OptionText) Then sbdOptionText.Append(vbCrLf & " " & .OptionText().Replace("<br>", vbCrLf & " ").Replace("<br />", vbCrLf & " "))
 
-                            sbdBasketItems.AppendLine( _
-                                        GetItemEmailText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ")" & _
-                                                         sbdOptionText.ToString, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
+                            'Set string to blank or **, to mark items exempt from customer discount
+                            If .ExcludeFromCustomerDiscount And BSKT_CustomerDiscount > 0 Then
+                                strMark = " **"
+                                blnHasExemptCustomerDiscountItems = True
+                            Else
+                                strMark = ""
+                            End If
 
+                            'Append line for this item
+                            sbdBasketItems.AppendLine(
+                                        GetItemEmailText(.Quantity & " x " & .ProductName & strMark, .VersionName & " (" & .CodeNumber & ")" &
+                                                         sbdOptionText.ToString, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
 
                             If .CustomText <> "" AndAlso String.IsNullOrEmpty(strCustomControlName) Then
                                 'Add custom text to mail
@@ -1358,14 +1377,25 @@ Partial Class _Checkout
                             End If
                             If blnUseHTMLOrderEmail Then
                                 'this line builds up the individual rows of the order contents table in the HTML email
-                                sbdHTMLOrderBasket.AppendLine(GetHTMLEmailRowText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ") " & _
+                                sbdHTMLOrderBasket.AppendLine(GetHTMLEmailRowText(.Quantity & " x " & .ProductName & strMark, .VersionName & " (" & .CodeNumber & ") " &
                                                          sbdOptionText.ToString & strCustomText, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
                             End If
                         End With
                     Next
+
+                    'Now we know if there are customer discount exempt items, can replace
+                    '[customerdiscountexempttext] which was inserted with the customer discount
+                    'line further above.
+                    If blnHasExemptCustomerDiscountItems Then
+                        sbdBodyText.Replace("[customerdiscountexempttext]", " - " & GetGlobalResourceObject("Basket", "ContentText_SomeItemsExcludedFromDiscount"))
+                        sbdHTMLOrderContents.Replace("[customerdiscountexempttext]", " - " & GetGlobalResourceObject("Basket", "ContentText_SomeItemsExcludedFromDiscount"))
+                    Else
+                        sbdBodyText.Replace("[customerdiscountexempttext]", "")
+                        sbdHTMLOrderContents.Replace("[customerdiscountexempttext]", "")
+                    End If
                 End If
 
-                sbdBodyText.Insert(0, sbdBasketItems.ToString)
+                    sbdBodyText.Insert(0, sbdBasketItems.ToString)
                 If blnUseHTMLOrderEmail Then
                     'build up the table and the header tags, insert basket contents
                     sbdHTMLOrderContents.Insert(0, "<table id=""orderitems""><thead><tr>" & vbCrLf & _

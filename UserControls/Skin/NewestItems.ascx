@@ -7,7 +7,7 @@
     <div class="products products_tabular">
         <asp:Repeater ID="rptNewestItems" runat="server">
             <ItemTemplate>
-                <user:ProductLinkTemplate ID="UC_ProductLinkTemplate" runat="server" />
+                <user:ProductTemplateShortened ID="UC_ProductShortened" runat="server" />
             </ItemTemplate>
             <SeparatorTemplate>
             </SeparatorTemplate>

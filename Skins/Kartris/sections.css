@@ -480,6 +480,8 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket .baskettable tr th              { }
 .basket .baskettable tr th.name         { }
 .basket table.baskettable tr td         { background-color: #fff; }
+.basket table.baskettable tr.excustomerdiscount td
+                                        { background-color: #eee; }
 .basket .products_imageonly             { margin-top: 8px; }
 .basket td.image_cell                   { width: 90px; text-align: center; padding: 0 10px 5px 5px; }
 .basket .item                           { background-color: #fff; border: solid 1px #ccc; margin: 5px 0 0 0; padding: 4px; }
@@ -549,7 +551,8 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket table.baskettable tr.footerrow td.grandtotal
                                         { border-top: dotted 1px #daa; border-bottom: dotted 1px #daa; background-color: #fdd; }
 .basket table.baskettable tr.footerrow td span.totallabel
-                                        { float: left; width: 150px; color: #000; text-align: left; }
+ 
+
 #shippingestimate                       { margin: 15px 0 30px 0; }
 #shippingestimate select                { }
 #shippingestimate table                 { margin: 10px 0 0 0 }

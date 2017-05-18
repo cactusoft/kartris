@@ -9,7 +9,6 @@ Namespace Kartris
     <Serializable()> _
     Public Class Basket
 
-        'Public DB_C_CustomerDiscount As Double      ' Customer discount as a percentage (now use CustomerDiscountPercentage)
         Public DB_C_CustomerID As Integer           ' Customer ID (User ID) that owns this basket
 
         ' Basket modifiers. These affect the entire basket in one hit.
@@ -27,13 +26,21 @@ Namespace Kartris
         ''' <remarks></remarks>
         Private _BasketItems As List(Of Kartris.BasketItem)
 
-        Private _AllFreeShipping, _HasFreeShipping, _PricesIncTax, _AllDigital As Boolean
+        Private _AllFreeShipping, _HasFreeShipping, _PricesIncTax, _AllDigital, _HasCustomerDiscountExemption As Boolean
         Private _TotalWeight, _TotalExTax, _TotalTaxAmount, _TotalAmountSaved As Double
         Private _TotalItems As Single
         Private _ShippingTotalWeight, _ShippingTotalExTax, _ShippingTotalTaxAmount As Double
 
         Private _TotalDiscountPriceIncTax, _TotalDiscountPriceExTax As Double
         Private _TotalDiscountPriceTaxAmount, _TotalDiscountPriceTaxRate As Double
+
+        'v2.9010 added way to exclude items from customer discount
+        'Often we have mods which require calculating a subtotal of 
+        'cart items. We'll create variables here for this, but these
+        'could be used for other custom mods in future requiring
+        'similar.
+        Private _SubTotalExTax, _SubTotalTaxAmount As Double
+
         Private _TotalIncTax, _TotalTaxRate, _DTax, _DTax2 As Double
         Private _DTaxExtra As String
 
@@ -279,6 +286,54 @@ Namespace Kartris
         Public ReadOnly Property TotalIncTax() As Double
             Get
                 Return Math.Round(TotalExTax + TotalTaxAmount, BasketBLL.CurrencyRoundNumber)
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' **Total value of items in basket within subtotal (i.e. by default items set not to be included in customer discount)
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public ReadOnly Property SubTotalExTax() As Double
+            Get
+                Return Math.Round(_SubTotalExTax, BasketBLL.CurrencyRoundNumber)
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' **Total amount of tax subtotal items in basket (i.e. by default items set not to be included in customer discount)
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public ReadOnly Property SubTotalTaxAmount() As Double
+            Get
+                Return Math.Round(_SubTotalTaxAmount, BasketBLL.CurrencyRoundNumber)
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' **Total value of items inc tax in basket within subtotal (i.e. by default items set not to be included in customer discount)
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public ReadOnly Property SubTotalIncTax() As Double
+            Get
+                Return Math.Round(SubTotalExTax + SubTotalTaxAmount, BasketBLL.CurrencyRoundNumber)
+            End Get
+        End Property
+
+        ''' <summary>
+        ''' **If basket has at least one item with customer discount exemption
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public ReadOnly Property HasCustomerDiscountExemption() As Boolean
+            Get
+                Return _HasCustomerDiscountExemption
             End Get
         End Property
 
@@ -622,6 +677,9 @@ Namespace Kartris
             _TotalExTax = 0
             _TotalTaxAmount = 0
             _TotalAmountSaved = 0
+            _SubTotalExTax = 0
+            _SubTotalTaxAmount = 0
+            _HasCustomerDiscountExemption = False
             _ShippingTotalWeight = 0
             _ShippingTotalExTax = 0
             _ShippingTotalTaxAmount = 0
@@ -657,6 +715,15 @@ Namespace Kartris
                     _TotalTaxAmount = _TotalTaxAmount + .RowTaxAmount
                     _TotalAmountSaved = _TotalAmountSaved + .RowAmountSaved
 
+                    'Subtotals
+                    If .ExcludeFromCustomerDiscount Then
+                        _SubTotalExTax = _SubTotalExTax + .RowExTax
+                        If ApplyTax Then
+                            _SubTotalTaxAmount = _SubTotalTaxAmount + .RowTaxAmount
+                        End If
+                        _HasCustomerDiscountExemption = True
+                    End If
+
                     'Shipping Totals
                     If Not .FreeShipping Then
                         _ShippingTotalWeight = _ShippingTotalWeight + .RowWeight
@@ -665,9 +732,11 @@ Namespace Kartris
                             _ShippingTotalTaxAmount = _ShippingTotalTaxAmount + .RowTaxAmount
                         End If
                     End If
-                End With
-            Next
 
+                End With
+
+            Next
+            'BasketItems.Sort()
         End Sub
 
         Public Sub SetCouponName(ByVal value As String)

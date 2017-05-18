@@ -197,7 +197,7 @@ v2.9 This replaces the popup we used to use
 .clearing-assembled .clearing-container .carousel           { background: #fff; }
 .clearing-assembled .clearing-container .carousel > ul      { width: auto !important; } /* centre the thumbs */
 .carousel > ul li                                           { height: 70px; width: 70px; border: solid 1px #aaa; margin-right: 2px; overflow: hidden; }
-.clearing-assembled .clearing-container .carousel > ul li   { border: solid 1px #444; display: block; height: 100%; margin-right: 4px; overflow: hidden; }
+.clearing-assembled .clearing-container .carousel > ul li   { border: solid 1px #444; display: block; height: 70px; width: 70px; margin-right: 4px; overflow: hidden; }
 .clearing-assembled .clearing-container .carousel > ul li:hover { border: solid 1px #fc5; }
 a.clearing-close                                            { font-size: 27pt; font-weight: bold; color: #000; }
 .clearing-main-prev > span                                  { border-right-color: #444; }

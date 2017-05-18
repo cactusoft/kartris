@@ -220,10 +220,9 @@ Public Class BasketBLL
     Public Overloads Shared Sub CalculateCustomerDiscount(ByRef Basket As Kartris.Basket, ByVal numCustomerDiscount As Double)
         With Basket
             .CustomerDiscount = New Kartris.BasketModifier
-
             .CustomerDiscount.TaxRate = .TotalDiscountPriceTaxRate
-            .CustomerDiscount.IncTax = -Math.Round(.TotalDiscountPriceIncTax * (numCustomerDiscount / 100), CurrencyRoundNumber)
-            .CustomerDiscount.ExTax = -Math.Round(.TotalDiscountPriceExTax * (numCustomerDiscount / 100), CurrencyRoundNumber)
+            .CustomerDiscount.IncTax = -Math.Round((.TotalDiscountPriceIncTax - (.SubTotalExTax + .SubTotalTaxAmount)) * (numCustomerDiscount / 100), CurrencyRoundNumber)
+            .CustomerDiscount.ExTax = -Math.Round((.TotalDiscountPriceExTax - .SubTotalExTax) * (numCustomerDiscount / 100), CurrencyRoundNumber)
 
             If Not (.ApplyTax) Then
                 .CustomerDiscount.IncTax = .CustomerDiscount.ExTax
@@ -487,6 +486,10 @@ Public Class BasketBLL
                 objItem.CategoryIDs = GetCategoryIDs(objItem.ProductID)
                 objItem.PromoQty = objItem.Quantity
                 objItem.VersionType = FixNullFromDB(drwBasketValues("VersionType"))
+
+                'Added v2.9010 - lets us exclude particular products
+                'from the customer discount
+                objItem.ExcludeFromCustomerDiscount = CBool(ObjectConfigBLL.GetValue("K:product.excustomerdiscount", drwBasketValues("ProductID")))
 
                 'We can tell if this is an combinations product
                 If objItem.VersionType = "c" Then

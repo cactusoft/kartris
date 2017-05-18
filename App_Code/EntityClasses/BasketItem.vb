@@ -58,6 +58,8 @@ Namespace Kartris
         Private _VersionBaseID As Long      ' Where a product has multiple versions this is the base / genesis version that has all of the text, images etc. that may be missing from the child versions
         Private _PromoQty As Long
 
+        Private _ExcludeFromCustomerDiscount As Boolean 'v2.9010 addition, allows items to be excluded from the % customer discount available to customer
+
         ''' <summary>
         ''' Some products can have custom text assigned to them when they are added to the basket.
         ''' </summary>
@@ -85,6 +87,21 @@ Namespace Kartris
             End Get
             Set(ByVal value As String)
                 _CodeNumber = value
+            End Set
+        End Property
+
+        ''' <summary>
+        ''' Exclude this item from customer discount
+        ''' </summary>
+        ''' <value></value>
+        ''' <returns></returns>
+        ''' <remarks></remarks>
+        Public Property ExcludeFromCustomerDiscount() As String
+            Get
+                Return _ExcludeFromCustomerDiscount
+            End Get
+            Set(ByVal value As String)
+                _ExcludeFromCustomerDiscount = value
             End Set
         End Property
 
@@ -453,7 +470,7 @@ Namespace Kartris
         End Property
 
         ''' <summary>
-        ''' Where a product has multiple versions this is the base / genesis version that has all of the text, images etc. that may be missing from the child versions
+        ''' This is the ID of the base version of an options product
         ''' </summary>
         ''' <value></value>
         ''' <returns></returns>

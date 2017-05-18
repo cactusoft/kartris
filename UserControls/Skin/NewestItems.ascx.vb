@@ -25,6 +25,7 @@ Partial Class UserControls_Skin_NewestItems
         Dim tblNewestProducts As New DataTable
         tblNewestProducts.Columns.Add(New DataColumn("P_ID", Type.GetType("System.Int32")))
         tblNewestProducts.Columns.Add(New DataColumn("P_Name", Type.GetType("System.String")))
+        tblNewestProducts.Columns.Add(New DataColumn("MinPrice", Type.GetType("System.Decimal")))
 
         Dim drwNewProducts As DataRow() = ProductsBLL.GetNewestProducts(Session("LANG"))
 
@@ -32,7 +33,7 @@ Partial Class UserControls_Skin_NewestItems
 
         If numItemCount > drwNewProducts.Length Then numItemCount = drwNewProducts.Length
         For i As Integer = 0 To numItemCount - 1
-            tblNewestProducts.Rows.Add(drwNewProducts(i)("P_ID"), drwNewProducts(i)("P_Name"))
+            tblNewestProducts.Rows.Add(drwNewProducts(i)("P_ID"), drwNewProducts(i)("P_Name"), drwNewProducts(i)("MinPrice"))
         Next
 
         rptNewestItems.DataSource = tblNewestProducts
