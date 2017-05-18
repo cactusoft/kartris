@@ -34,8 +34,8 @@ Partial Class UserControls_Front_RichSnippets
         Dim dr As DataRow = ProductsBLL.GetRichSnippetProperties(_ProductID, Session("LANG"))(0)
 
         '' Name, SKU and Category
-        litProductMain.Text = litProductMain.Text.Replace("[product_name]", FixNullFromDB(dr("P_Name")))
-        litProductMain.Text = litProductMain.Text.Replace("[product_desc]", FixNullFromDB(dr("P_Desc")))
+        litProductMain.Text = litProductMain.Text.Replace("[product_name]", Replace(CkartrisDisplayFunctions.StripHTML(FixNullFromDB(dr("P_Name"))), """", """"""))
+        litProductMain.Text = litProductMain.Text.Replace("[product_desc]", Replace(CkartrisDisplayFunctions.StripHTML(FixNullFromDB(dr("P_Desc"))), """", """"""))
         litProductMain.Text = litProductMain.Text.Replace("[sku]", FixNullFromDB(dr("P_SKU")))
         litProductMain.Text = litProductMain.Text.Replace("[category]", FixNullFromDB(dr("P_Category")))
 
