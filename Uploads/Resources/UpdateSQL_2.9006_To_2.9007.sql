@@ -68,6 +68,11 @@ BEGIN
 	ORDER BY tblKartrisProducts.P_DateCreated DESC, tblKartrisProducts.P_ID DESC
 
 END
+GO
+
+/****** Set this to tell Data tool which version of db we have ******/
+UPDATE tblKartrisConfig SET CFG_Value='2.9007', CFG_VersionAdded=2.9007 WHERE CFG_Name='general.kartrisinfo.versionadded';
+GO
 
 
 

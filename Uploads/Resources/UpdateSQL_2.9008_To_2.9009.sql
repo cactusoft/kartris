@@ -139,3 +139,7 @@ BEGIN
 END
 GO
 
+/****** Set this to tell Data tool which version of db we have ******/
+UPDATE tblKartrisConfig SET CFG_Value='2.9009', CFG_VersionAdded=2.9009 WHERE CFG_Name='general.kartrisinfo.versionadded';
+GO
+
