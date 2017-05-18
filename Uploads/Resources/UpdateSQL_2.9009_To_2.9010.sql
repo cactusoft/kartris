@@ -285,3 +285,70 @@ CREATE UNIQUE NONCLUSTERED INDEX [V_CodeNumber_UNIQUE] ON [dbo].[tblKartrisVersi
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 
+/* Fixes issue where product data name and desc pulled in wrong language if there are multiple languages */
+/****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetRichSnippetProperties]    Script Date: 18/05/2017 11:30:52 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER PROCEDURE [dbo].[spKartrisProducts_GetRichSnippetProperties]
+(
+	@P_ID as integer,
+	@LANG_ID as tinyint
+)
+AS
+BEGIN
+	DECLARE @P_Name as nvarchar(max), @P_Desc as nvarchar(max), 
+			@P_Category as nvarchar(max), @P_SKU as nvarchar(25), @P_Type as char(1),
+			@P_Price as real, @P_MinPrice as real, @P_MaxPrice as real, 
+			@P_StockQuantity as real, @P_WarnLevel as real,
+			@P_Rev as char(1), @Rev_Avg as real, @Rev_Total as int;
+
+	SELECT Top(1) @P_Category = vKartrisTypeCategories.CAT_Name
+	FROM  vKartrisTypeCategories INNER JOIN tblKartrisProductCategoryLink 
+			ON vKartrisTypeCategories.CAT_ID = tblKartrisProductCategoryLink.PCAT_CategoryID
+	WHERE (vKartrisTypeCategories.LANG_ID = @LANG_ID) AND (tblKartrisProductCategoryLink.PCAT_ProductID = @P_ID)
+
+	SELECT @P_Name = [P_Name], @P_Desc = [P_Desc], @P_Type = [P_Type], @P_Rev = [P_Reviews]
+	FROM [dbo].[vKartrisTypeProducts]
+	WHERE [P_ID] = @P_ID AND [LANG_ID] = @LANG_ID;
+
+	IF @P_Rev = 'y' BEGIN
+		SELECT @Rev_Total = Count(1), @Rev_Avg = AVG([REV_Rating])
+		FROM [dbo].[tblKartrisReviews]
+		WHERE [REV_ProductID] = @P_ID AND [REV_Live] = 'y'
+	END
+
+	IF @P_Type = 's' BEGIN
+		SELECT Top(1) @P_SKU = [V_CodeNumber], @P_Price = [V_Price], 
+			@P_StockQuantity = [V_Quantity], @P_WarnLevel = [V_QuantityWarnLevel]
+		FROM [dbo].[tblKartrisVersions]
+		WHERE [V_ProductID] = @P_ID AND [V_Live] = 1;
+	END 
+	IF @P_Type = 'm' BEGIN
+		SELECT Top(1) @P_SKU = [V_CodeNumber], 
+			@P_StockQuantity = [V_Quantity], @P_WarnLevel = [V_QuantityWarnLevel]
+		FROM [dbo].[tblKartrisVersions]
+		WHERE [V_ProductID] = @P_ID AND [V_Live] = 1;
+		SELECT @P_MinPrice = [dbo].[fnKartrisProduct_GetMinPrice](@P_ID);
+		SELECT @P_MaxPrice = [dbo].[fnKartrisProduct_GetMaxPrice](@P_ID);
+	END 
+	IF @P_Type = 'o' BEGIN
+		SELECT Top(1) @P_SKU = [V_CodeNumber], 
+			@P_StockQuantity = [V_Quantity], @P_WarnLevel = [V_QuantityWarnLevel]
+		FROM [dbo].[tblKartrisVersions]
+		WHERE [V_ProductID] = @P_ID AND [V_Type] = 'b' AND [V_Live] = 1;
+		
+		SELECT @P_MinPrice = [dbo].[fnKartrisProduct_GetMinPrice](@P_ID);
+		SELECT @P_MaxPrice = [dbo].[fnKartrisProduct_GetMaxPrice](@P_ID);
+	END
+
+	SELECT @P_Name As P_Name, @P_Desc As P_Desc,
+			@P_Category As P_Category, @P_SKU As P_SKU, @P_Type As P_Type,
+			@P_Price As P_Price, @P_MinPrice As P_MinPrice, @P_MaxPrice As P_MaxPrice, 
+			@P_StockQuantity As P_Quanity, @P_WarnLevel As P_WarnLevel,
+			@P_Rev As P_Review, @Rev_Avg As P_AverageReview, @Rev_Total As P_TotalReview
+END
+GO
+

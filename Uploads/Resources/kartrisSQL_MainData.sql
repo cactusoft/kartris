@@ -28005,7 +28005,7 @@ BEGIN
 
 	SELECT @P_Name = [P_Name], @P_Desc = [P_Desc], @P_Type = [P_Type], @P_Rev = [P_Reviews]
 	FROM [dbo].[vKartrisTypeProducts]
-	WHERE [P_ID] = @P_ID;
+	WHERE [P_ID] = @P_ID AND [LANG_ID] = @LANG_ID;
 
 	IF @P_Rev = 'y' BEGIN
 		SELECT @Rev_Total = Count(1), @Rev_Avg = AVG([REV_Rating])
