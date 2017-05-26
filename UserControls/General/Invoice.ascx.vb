@@ -20,26 +20,34 @@ Imports KartSettingsManager
 Partial Class UserControls_General_Invoice
     Inherits System.Web.UI.UserControl
 
-    Protected APP_ShowTaxDisplay As Boolean
+    Protected APP_ShowTaxDisplay, blnHasCustomerDiscountExemption As Boolean
     Protected numColumns As Single
-    Private numTotalExTax, numTotalTaxAmount, numTotal As Double
-    Private numTotalPriceExTax, numTotalPriceIncTax, numRowTaxAmount As Double
-    Private numPromoDiscountTotal, numCouponDiscountTotal As Double
+    Private numTotalExTax, numTotalTaxAmount, numTotal As Decimal
+    Private numTotalPriceExTax, numTotalPriceIncTax, numRowTaxAmount As Decimal
+    Private numPromoDiscountTotal, numCouponDiscountTotal As Decimal
     Private blnTaxDue As Boolean
-    Private CP_DiscountValue As Double
+    Private CP_DiscountValue As Decimal
     Private strPromoDesc, strCouponCode, CP_CouponCode, CP_DiscountType As String
     Private numDiscountPercentage As Double
     Private strShippingMethod As String
-    Private numShippingPriceExTax, numShippingPriceIncTax, numShippingTaxTotal As Double
-    Private numOrderHandlingPriceExTax, numOrderHandlingPriceIncTax, numOrderHandlingTaxTotal As Double
-    Private numFinalTotalPriceInTaxGateway As Double
+    Private numShippingPriceExTax, numShippingPriceIncTax, numShippingTaxTotal As Decimal
+    Private numOrderHandlingPriceExTax, numOrderHandlingPriceIncTax, numOrderHandlingTaxTotal As Decimal
+    Private numFinalTotalPriceInTaxGateway As Decimal
     Private numOrderCurrency, numGatewayCurrency As Short
     Private numCurrencyRoundNumber As Short
+
+    'v2.9010 added way to exclude items from customer discount
+    'Often we have mods which require calculating a subtotal of 
+    'cart items. We'll create variables here for this, but these
+    'could be used for other custom mods in future requiring
+    'similar.
+    Private _SubTotalExTax, _SubTotalIncTax As Decimal
 
     Private _OrderLanguageID As Integer
     Private _CustomerID As Integer
     Private _OrderID As Integer
     Private _FrontOrBack As String
+
 
     Public WriteOnly Property CustomerID() As Integer
         Set(ByVal value As Integer)
@@ -178,6 +186,8 @@ Partial Class UserControls_General_Invoice
         Dim strVersionCode, strItemPriceTax As String
         Dim strCustomizationOptionText As String
         Dim numItemPriceIncTax, numItemPriceExTax, numItemPriceTax, numRowPriceExTax, numRowPriceIncTax As Double
+        Dim blnExcludeFromCustomerDiscount As Boolean 'v2.9010 addition, allows items to be excluded from the % customer discount available to customer
+        Dim strMark As String = ""
 
         'show tax if config says so
         APP_ShowTaxDisplay = (LCase(GetKartConfig("frontend.display.showtax")) = "y") Or (LCase(GetKartConfig("frontend.display.showtax")) = "c")
@@ -190,7 +200,6 @@ Partial Class UserControls_General_Invoice
             strVersionCode = e.Item.DataItem("IR_VersionCode")
             strCustomizationOptionText = e.Item.DataItem("IR_OptionsText")
             numTotal = e.Item.DataItem("O_TotalPrice")
-
             blnTaxDue = e.Item.DataItem("O_TaxDue")
 
             'get data for promotion discount
@@ -220,11 +229,18 @@ Partial Class UserControls_General_Invoice
             numOrderHandlingTaxTotal = e.Item.DataItem("O_OrderHandlingChargeTax")
 
             'set product/version name and customization text
-            CType(e.Item.FindControl("litVersionName"), Literal).Text = e.Item.DataItem("IR_VersionName")
+            CType(e.Item.FindControl("litVersionName"), Literal).Text = e.Item.DataItem("IR_VersionName") & strMark
             CType(e.Item.FindControl("litVersionCode"), Literal).Text = strVersionCode
             If strCustomizationOptionText <> "" Then
                 CType(e.Item.FindControl("litCustomizationOptionText"), Literal).Text = "<div>" & strCustomizationOptionText & "</div>"
             End If
+
+            'Handle items that are exempt from customer discount
+            blnExcludeFromCustomerDiscount = e.Item.DataItem("IR_ExcludeFromCustomerDiscount")
+
+
+
+            'Totals
             If e.Item.DataItem("O_PricesIncTax") Then
                 'PRICES INCLUDING TAX
                 numItemPriceExTax = Math.Round(e.Item.DataItem("IR_PricePerItem") - e.Item.DataItem("IR_TaxPerItem"), numCurrencyRoundNumber)
@@ -241,6 +257,16 @@ Partial Class UserControls_General_Invoice
                 numRowPriceExTax = Math.Round(e.Item.DataItem("IR_PricePerItem") * e.Item.DataItem("IR_Quantity"), numCurrencyRoundNumber)
                 'In following line, the 0.0000000001 is there to ensure tax is rounded up rather than down, if is 0.5
                 numRowPriceIncTax = Math.Round(e.Item.DataItem("IR_PricePerItem") * e.Item.DataItem("IR_Quantity") * ((1 + e.Item.DataItem("IR_TaxPerItem")) + 0.0000000001), numCurrencyRoundNumber)
+            End If
+
+            'Set marker for items that are excluded from customer discount
+            If blnExcludeFromCustomerDiscount Then
+                blnHasCustomerDiscountExemption = True
+                strMark = " **"
+                _SubTotalExTax = _SubTotalExTax + numRowPriceExTax
+                _SubTotalIncTax = _SubTotalIncTax + numRowPriceIncTax
+            Else
+                strMark = ""
             End If
 
             numTotalPriceExTax = numTotalPriceExTax + numRowPriceExTax
@@ -323,14 +349,15 @@ Partial Class UserControls_General_Invoice
 
             'customer discount
             If numDiscountPercentage <> 0 Then
-                numCustomerDiscountExTax = -Math.Round((((numTotalPriceExTax + numPromotionDiscountExTax + numCouponDiscountExTax) * (numDiscountPercentage / 100))), numCurrencyRoundNumber)
-                numCustomerDiscountIncTax = -Math.Round(((numTotalPriceIncTax + numPromotionDiscountIncTax + numCouponDiscountIncTax) * (numDiscountPercentage / 100)), numCurrencyRoundNumber)
+                numCustomerDiscountExTax = -Math.Round(((((numTotalPriceExTax - _SubTotalExTax) + numPromotionDiscountExTax + numCouponDiscountExTax) * (numDiscountPercentage / 100))), numCurrencyRoundNumber)
+                numCustomerDiscountIncTax = -Math.Round((((numTotalPriceIncTax - _SubTotalIncTax) + numPromotionDiscountIncTax + numCouponDiscountIncTax) * (numDiscountPercentage / 100)), numCurrencyRoundNumber)
                 numCustomerDiscountTaxAmount = numCustomerDiscountIncTax - numCustomerDiscountExTax
             End If
 
             numCustomerDiscountValue = IIf(blnTaxDue, numCustomerDiscountIncTax, numCustomerDiscountExTax)
-            If numCustomerDiscountValue <> 0 Then
+            If numCustomerDiscountValue <> 0 Or blnHasCustomerDiscountExemption = True Then
                 CType(e.Item.FindControl("phdCustomerDiscount"), PlaceHolder).Visible = True
+                CType(e.Item.FindControl("litContentTextExcludedItems"), Literal).Text = " (" & GetGlobalResourceObject("Basket", "ContentText_SomeItemsExcludedFromDiscount") & ")"
                 CType(e.Item.FindControl("litDiscountPercentage"), Literal).Text = GetGlobalResourceObject("Basket", "ContentText_Discount") & " = " & numDiscountPercentage & "%<br />"
                 CType(e.Item.FindControl("litCustomerDiscountExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCustomerDiscountExTax)
                 CType(e.Item.FindControl("litCustomerDiscountTaxPerItem"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numCustomerDiscountTaxAmount)

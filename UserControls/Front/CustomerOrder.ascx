@@ -106,7 +106,9 @@
             <tr class="invoicerow">
                 <td class="name" <% If HttpSecureCookie.IsBackendAuthenticated Then%>colspan="1"<%else %>colspan="2"<%end if %>>
                     <strong>
-                        <asp:Literal ID="litVersionName" runat="server" Text='<%#Eval("IR_VersionName")%>' /></strong>
+                        <asp:Literal ID="litVersionName" runat="server" Text='<%#Eval("IR_VersionName")%>' />
+                        <asp:Literal ID="litMarkItemsExcludedFromCustomerDiscount" runat="server" visible='<%#Eval("IR_ExcludeFromCustomerDiscount")%>' Text=" **"/>
+                    </strong><br />
                     <asp:Literal ID="litVersionCode" runat="server" Text='' />
                     <br /><div class="optionstext" style="padding-left: 10px; padding-top: 3px;">
                         <asp:Literal ID="litOptionsText" runat="server" Text='<%#Eval("IR_OptionsText")%>' />
@@ -190,7 +192,8 @@
                 <tr class="footerrow">
                     <td colspan="6">
                         <span class="totallabel">
-                            <asp:Literal ID="litContentTextCouponDiscount" runat="server" Text='<%$ Resources: Kartris, ContentText_CouponDiscount %>' /></span>
+                            <asp:Literal ID="litContentTextCouponDiscount" runat="server" Text='<%$ Resources: Kartris, ContentText_CouponDiscount %>' />
+                        </span>
                         <span class="total"><asp:Literal ID="litCouponDiscount" runat="server" Text='' /></span>
                     </td>
                 </tr>
@@ -200,8 +203,16 @@
                 <tr class="footerrow">
                     <td colspan="6">
                         <span class="totallabel">
-                            <asp:Literal ID="litContentTextDiscount" runat="server" Text='<%$ Resources: Basket, ContentText_Discount %>' /></span>
-                            <span class="total"><asp:Literal ID="litCustomerDiscount" runat="server" Text='' /></span>
+                            <asp:Literal ID="litContentTextDiscount" runat="server" Text='<%$ Resources: Basket, ContentText_Discount %>' />
+                            <asp:PlaceHolder ID="phdSomeItemsExcluded" runat="server" Visible="false">
+                                (<asp:Literal ID="litContentTextSomeItemsExcluded" runat="server"
+                                    Text='<%$ Resources: Basket, ContentText_SomeItemsExcludedFromDiscount %>'
+                                    EnableViewState="false"></asp:Literal>)
+                            </asp:PlaceHolder>
+                        </span>
+
+                        <span class="total">
+                            <asp:Literal ID="litCustomerDiscount" runat="server" Text='' /></span>
                 </tr>
             </asp:PlaceHolder>
             <!-- shipping -->

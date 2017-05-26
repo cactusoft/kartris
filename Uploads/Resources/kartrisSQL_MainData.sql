@@ -2053,6 +2053,7 @@ CREATE TABLE [dbo].[tblKartrisInvoiceRows](
 	[IR_PricePerItem] DECIMAL(18,4) NULL,
 	[IR_TaxPerItem] DECIMAL(18,4) NULL,
 	[IR_OptionsText] [nvarchar](4000) NULL,
+	[IR_ExcludeFromCustomerDiscount] [bit] NOT NULL DEFAULT ((0)),
  CONSTRAINT [aaaaatblKartrisInvoiceRows_PK] PRIMARY KEY NONCLUSTERED 
 (
 	[IR_ID] ASC
@@ -9277,7 +9278,9 @@ BEGIN
 	  ,[IR_Quantity]
 	  ,[IR_PricePerItem]
 	  ,[IR_TaxPerItem]
-	  ,[IR_OptionsText] FROM tblKartrisInvoiceRows WHERE IR_OrderNumberID = @OrderID;
+	  ,[IR_OptionsText]
+	  ,[IR_ExcludeFromCustomerDiscount] FROM tblKartrisInvoiceRows WHERE IR_OrderNumberID = @OrderID
+	  ORDER BY [IR_ExcludeFromCustomerDiscount];
 END
 GO
 /****** Object:  StoredProcedure [dbo].[_spKartrisOrders_GetGateways]    Script Date: 01/23/2013 21:59:10 ******/
@@ -12359,7 +12362,8 @@ CREATE PROCEDURE [dbo].[spKartrisOrders_InvoiceRowsAdd]
 		   @IR_Quantity float,
 		   @IR_PricePerItem real,
 		   @IR_TaxPerItem real,
-		   @IR_OptionsText nvarchar(MAX)
+		   @IR_OptionsText nvarchar(MAX),
+		   @IR_ExcludeFromCustomerDiscount bit
 )
 AS
 BEGIN
@@ -12377,7 +12381,8 @@ BEGIN
 		   ,[IR_Quantity]
 		   ,[IR_PricePerItem]
 		   ,[IR_TaxPerItem]
-		   ,[IR_OptionsText])
+		   ,[IR_OptionsText]
+		   ,[IR_ExcludeFromCustomerDiscount])
 	 VALUES
 		   (@IR_OrderNumberID,
 		   @IR_VersionCode,
@@ -12385,11 +12390,10 @@ BEGIN
 		   @IR_Quantity,
 		   @IR_PricePerItem,
 		   @IR_TaxPerItem,
-		   @IR_OptionsText);
+		   @IR_OptionsText,
+		   @IR_ExcludeFromCustomerDiscount);
 	SET @IR_ID = SCOPE_IDENTITY();
 	SELECT @IR_ID;
-
-	
 END
 GO
 /****** Object:  StoredProcedure [dbo].[spKartrisOrders_GetQBQueue]    Script Date: 01/23/2013 21:59:11 ******/
@@ -12716,25 +12720,25 @@ BEGIN
 	SET NOCOUNT ON;
 
 	If @intType=0 -- summary/address only
-	Begin	
-		SELECT     O.O_BillingAddress, O.O_ShippingAddress, O.O_PurchaseOrderNo, U.U_CardholderEUVATNum, O.O_Date, O.O_CurrencyID, O.O_CurrencyIDGateway, 
-					  O.O_TotalPriceGateway, O.O_LanguageID, O.O_Comments
-FROM         tblKartrisUsers AS U INNER JOIN
-					  tblKartrisOrders AS O ON O.O_CustomerID = U.U_ID INNER JOIN
-					  tblKartrisLanguages AS L ON O.O_LanguageID = L.LANG_ID
-WHERE     (O.O_ID = @O_ID) AND (U.U_ID = @U_ID)
-	End
+		Begin	
+			SELECT     O.O_BillingAddress, O.O_ShippingAddress, O.O_PurchaseOrderNo, U.U_CardholderEUVATNum, O.O_Date, O.O_CurrencyID, O.O_CurrencyIDGateway, 
+								  O.O_TotalPriceGateway, O.O_LanguageID, O.O_Comments
+			FROM         tblKartrisUsers AS U INNER JOIN
+								  tblKartrisOrders AS O ON O.O_CustomerID = U.U_ID INNER JOIN
+								  tblKartrisLanguages AS L ON O.O_LanguageID = L.LANG_ID
+			WHERE     (O.O_ID = @O_ID) AND (U.U_ID = @U_ID)
+		End
 
 	Else
-	Begin -- invoice rows
-		SELECT    *
-FROM         tblKartrisInvoiceRows AS IR INNER JOIN
-					  tblKartrisOrders AS O ON IR.IR_OrderNumberID = O.O_ID INNER JOIN
-					  tblKartrisUsers AS U ON O.O_CustomerID = U.U_ID LEFT OUTER JOIN
-					  tblKartrisCoupons AS C ON C.CP_CouponCode = O.O_CouponCode
-WHERE     (O.O_ID = @O_ID) AND (U.U_ID = @U_ID)
-	End
-
+		Begin -- invoice rows
+			SELECT    *
+			FROM         tblKartrisInvoiceRows AS IR INNER JOIN
+								  tblKartrisOrders AS O ON IR.IR_OrderNumberID = O.O_ID INNER JOIN
+								  tblKartrisUsers AS U ON O.O_CustomerID = U.U_ID LEFT OUTER JOIN
+								  tblKartrisCoupons AS C ON C.CP_CouponCode = O.O_CouponCode
+			WHERE     (O.O_ID = @O_ID) AND (U.U_ID = @U_ID)
+			ORDER BY IR_ExcludeFromCustomerDiscount;
+		End
 END
 GO
 /****** Object:  StoredProcedure [dbo].[spKartrisOrders_UpdateQBSent]    Script Date: 01/23/2013 21:59:11 ******/

@@ -361,6 +361,136 @@ GO
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_SomeItemsExcludedFromDiscount', N'Items marked with ** are excluded from the customer discount', NULL, 2.9010, N'Items marked with ** are excluded from the customer discount', NULL, N'Basket',1);
 GO
 
+ALTER TABLE [dbo].[tblKartrisInvoiceRows]
+ADD [IR_ExcludeFromCustomerDiscount] bit NOT NULL DEFAULT(0)
+GO
+
+/****** Object:  StoredProcedure [dbo].[spKartrisOrders_InvoiceRowsAdd]    Script Date: 25/05/2017 16:57:37 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Medz
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisOrders_InvoiceRowsAdd]
+(
+		   @IR_OrderNumberID int,
+		   @IR_VersionCode nvarchar(50),
+		   @IR_VersionName nvarchar(1000),
+		   @IR_Quantity float,
+		   @IR_PricePerItem real,
+		   @IR_TaxPerItem real,
+		   @IR_OptionsText nvarchar(MAX),
+		   @IR_ExcludeFromCustomerDiscount bit
+)
+AS
+BEGIN
+	DECLARE @IR_ID INT
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT OFF;
+
+	
+
+	INSERT INTO [tblKartrisInvoiceRows]
+		   ([IR_OrderNumberID]
+		   ,[IR_VersionCode]
+		   ,[IR_VersionName]
+		   ,[IR_Quantity]
+		   ,[IR_PricePerItem]
+		   ,[IR_TaxPerItem]
+		   ,[IR_OptionsText]
+		   ,[IR_ExcludeFromCustomerDiscount])
+	 VALUES
+		   (@IR_OrderNumberID,
+		   @IR_VersionCode,
+		   @IR_VersionName,
+		   @IR_Quantity,
+		   @IR_PricePerItem,
+		   @IR_TaxPerItem,
+		   @IR_OptionsText,
+		   @IR_ExcludeFromCustomerDiscount);
+	SET @IR_ID = SCOPE_IDENTITY();
+	SELECT @IR_ID;
+
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisOrders_GetInvoiceRows]    Script Date: 01/23/2013 21:59:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Medz
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisOrders_GetInvoiceRows]
+(
+		   @OrderID int
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	SELECT [IR_VersionCode]
+	  ,[IR_VersionName]
+	  ,[IR_Quantity]
+	  ,[IR_PricePerItem]
+	  ,[IR_TaxPerItem]
+	  ,[IR_OptionsText]
+	  ,[IR_ExcludeFromCustomerDiscount] FROM tblKartrisInvoiceRows WHERE IR_OrderNumberID = @OrderID
+	  ORDER BY [IR_ExcludeFromCustomerDiscount];
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[spKartrisCustomer_GetInvoice]    Script Date: 26/05/2017 14:40:03 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		<Joseph>
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisCustomer_GetInvoice] ( 
+	@O_ID integer,
+	@U_ID integer,
+	@intType integer=0
+) AS
+BEGIN
+	SET NOCOUNT ON;
+
+	If @intType=0 -- summary/address only
+		Begin	
+			SELECT     O.O_BillingAddress, O.O_ShippingAddress, O.O_PurchaseOrderNo, U.U_CardholderEUVATNum, O.O_Date, O.O_CurrencyID, O.O_CurrencyIDGateway, 
+								  O.O_TotalPriceGateway, O.O_LanguageID, O.O_Comments
+			FROM         tblKartrisUsers AS U INNER JOIN
+								  tblKartrisOrders AS O ON O.O_CustomerID = U.U_ID INNER JOIN
+								  tblKartrisLanguages AS L ON O.O_LanguageID = L.LANG_ID
+			WHERE     (O.O_ID = @O_ID) AND (U.U_ID = @U_ID)
+		End
+
+	Else
+		Begin -- invoice rows
+			SELECT    *
+			FROM         tblKartrisInvoiceRows AS IR INNER JOIN
+								  tblKartrisOrders AS O ON IR.IR_OrderNumberID = O.O_ID INNER JOIN
+								  tblKartrisUsers AS U ON O.O_CustomerID = U.U_ID LEFT OUTER JOIN
+								  tblKartrisCoupons AS C ON C.CP_CouponCode = O.O_CouponCode
+			WHERE     (O.O_ID = @O_ID) AND (U.U_ID = @U_ID)
+			ORDER BY IR_ExcludeFromCustomerDiscount;
+		End
+END
+GO
+
 /****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetNewestProducts]    Script Date: 25/05/2017 15:09:48 ******/
 SET ANSI_NULLS ON
 GO

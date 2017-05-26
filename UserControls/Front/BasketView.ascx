@@ -454,11 +454,11 @@ MAIN BASKET
                                 <div class="details">
                                     <div class="info">
                                         <%=BSKT_CustomerDiscount%>%
-                       <% If Basket.HasCustomerDiscountExemption Then %>
+                                        <% If Basket.HasCustomerDiscountExemption Then %>
                                         -
-<asp:Literal ID="litContentTextNameDetails" runat="server" Text='<%$ Resources: Basket, ContentText_SomeItemsExcludedFromDiscount %>'
-                                                    EnableViewState="false"></asp:Literal>
-                       <% End If %>
+                                        <asp:Literal ID="litContentTextSomeItemsExcluded" runat="server" Text='<%$ Resources: Basket, ContentText_SomeItemsExcludedFromDiscount %>'
+                                            EnableViewState="false"></asp:Literal>
+                                        <% End If %>
                                     </div>
                                 </div>
                             </td>

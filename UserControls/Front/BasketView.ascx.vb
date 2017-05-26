@@ -354,7 +354,7 @@ Partial Class Templates_BasketView
         End If
 
         If ViewType = BasketBLL.VIEW_TYPE.CHECKOUT_BASKET And ViewOnly Then
-            'OrderBy sorts items that are excluded from customer discount to bottom
+            'OrderBy sorts items that are excluded from customer discount to bottom 
             rptBasket.DataSource = BasketItems.OrderBy(Function(objItem) objItem.ExcludeFromCustomerDiscount)
             rptBasket.DataBind()
         End If

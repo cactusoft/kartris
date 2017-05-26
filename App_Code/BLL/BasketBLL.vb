@@ -488,7 +488,7 @@ Public Class BasketBLL
                 objItem.VersionType = FixNullFromDB(drwBasketValues("VersionType"))
 
                 'Added v2.9010 - lets us exclude particular products
-                'from the customer discount
+                'from the customer discount 
                 objItem.ExcludeFromCustomerDiscount = CBool(ObjectConfigBLL.GetValue("K:product.excustomerdiscount", drwBasketValues("ProductID")))
 
                 'We can tell if this is an combinations product

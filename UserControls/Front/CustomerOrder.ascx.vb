@@ -18,7 +18,7 @@ Imports KartSettingsManager
 Partial Class UserControls_Front_CustomerOrder
     Inherits System.Web.UI.UserControl
 
-    Protected APP_PricesIncTax, APP_ShowTaxDisplay As Boolean
+    Protected APP_PricesIncTax, APP_ShowTaxDisplay, blnHasExemptCustomerDiscountItems As Boolean
     Private objBasket As New kartris.Basket
     Private numTaxDue, numTotalPriceExTax, numTotalPriceIncTax, numCouponDiscount, numCustomerDiscount, numShipping, numOrderHandlingCharge, numTotal As Double
     Private numDiscountPercentage, numPromotionDiscountTotal, numCouponDiscountTotal, CP_DiscountValue As Double
@@ -123,10 +123,17 @@ Partial Class UserControls_Front_CustomerOrder
                 phdStatus.Visible = True
             End If
 
-            rptBasket.DataSource = tblBasket
-            rptBasket.DataBind()
+            'Sort the basket items so items excluded from customer
+            'discount are at the bottom
+            Dim dvwSorting As DataView = tblBasket.DefaultView
+            dvwSorting.Sort = "IR_ExcludeFromCustomerDiscount ASC"
+            Dim tblBasketSorted As DataTable = dvwSorting.ToTable()
 
-        End If
+            'Bind the repeater to the new sorted datatable
+            rptBasket.DataSource = tblBasketSorted
+                rptBasket.DataBind()
+
+            End If
 
 
     End Sub
@@ -185,6 +192,10 @@ Partial Class UserControls_Front_CustomerOrder
                 numTotalPriceIncTax = numTotalPriceIncTax + numRowPriceIncTax
             End If
 
+            If e.Item.DataItem("IR_ExcludeFromCustomerDiscount") Then
+                blnHasExemptCustomerDiscountItems = True
+            End If
+
         ElseIf e.Item.ItemType = ListItemType.Footer Then
 
             If numTaxDue > 0 Then
@@ -215,8 +226,14 @@ Partial Class UserControls_Front_CustomerOrder
 
             'Discount percentage line
             If numDiscountPercentage <> 0 Then
+                'check last item, if it is excluded from customer discount
+                'then we need to show explanation for customer discount
                 CType(e.Item.FindControl("phdCustomer"), PlaceHolder).Visible = True
                 CType(e.Item.FindControl("litCustomerDiscount"), Literal).Text = numDiscountPercentage & "%"
+
+                If blnHasExemptCustomerDiscountItems Then
+                    CType(e.Item.FindControl("phdSomeItemsExcluded"), PlaceHolder).Visible = True
+                End If
             End If
 
             CType(e.Item.FindControl("litTotal"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numTotal)

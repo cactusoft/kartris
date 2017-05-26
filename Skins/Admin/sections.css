@@ -660,7 +660,7 @@ BACKEND BASKET
 a.link2,
 span.link2 a                            { background-position: left top; background-repeat: no-repeat; border: medium none; color: #0044DD; font-size: 90%; font-weight: bold; min-height: 17px; padding: 2px 5px 2px 18px; text-decoration: none; }
 .basket .basketwarning                  { display: block; width: auto; border: dotted 1px #f00; color: #f00; background-color: #f6e6e6; padding: 3px 9px 3px 9px; margin: 2px 0 15px 0; }
-.basket .baskettable td.name strong     { display: block; padding: 0; }
+.basket .baskettable td.name strong     { padding: 0; }
 .basket .extax,
 .basket .inctax,
 .basket .price,

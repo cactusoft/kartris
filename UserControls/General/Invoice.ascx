@@ -211,6 +211,7 @@
                     <tr>
                         <td colspan='<% =numColumns%>' class="fullline section">
                             <asp:Literal ID="litContentTextDiscount" runat="server" Text='<%$ Resources: Basket, ContentText_Discount %>' />
+                            <asp:Literal ID="litContentTextExcludedItems" runat="server"></asp:Literal>
                         </td>
                     </tr>
                     <tr>

@@ -854,45 +854,50 @@ Partial Class _Checkout
 
                 'Set various variables for use later
                 Dim CUR_ID As Integer = CInt(Session("CUR_ID"))
-                Dim objBasket As kartris.Basket = Session("Basket")
+                Dim objBasket As Kartris.Basket = Session("Basket")
+
+                'Some items might be excluded from customer discount
+                If objBasket.HasCustomerDiscountExemption Then
+
+                End If
                 Dim intGatewayCurrency As Int16
 
-                'Set payment gateway
-                If Interfaces.Utils.TrimWhiteSpace(clsPlugin.Currency) <> "" Then
-                    intGatewayCurrency = CurrenciesBLL.CurrencyID(clsPlugin.Currency)
-                Else
-                    intGatewayCurrency = CUR_ID
-                End If
+                    'Set payment gateway
+                    If Interfaces.Utils.TrimWhiteSpace(clsPlugin.Currency) <> "" Then
+                        intGatewayCurrency = CurrenciesBLL.CurrencyID(clsPlugin.Currency)
+                    Else
+                        intGatewayCurrency = CUR_ID
+                    End If
 
-                'If payment system can only process a particular currency
-                'we show a message that the order was converted from user
-                'selected currency to this for processing
-                If intGatewayCurrency <> CUR_ID Then
-                    pnlProcessCurrency.Visible = True
-                    lblProcessCurrency.Text = CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, CurrenciesBLL.ConvertCurrency(intGatewayCurrency, objBasket.FinalPriceIncTax, CUR_ID), , False)
-                Else
-                    pnlProcessCurrency.Visible = False
-                End If
+                    'If payment system can only process a particular currency
+                    'we show a message that the order was converted from user
+                    'selected currency to this for processing
+                    If intGatewayCurrency <> CUR_ID Then
+                        pnlProcessCurrency.Visible = True
+                        lblProcessCurrency.Text = CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, CurrenciesBLL.ConvertCurrency(intGatewayCurrency, objBasket.FinalPriceIncTax, CUR_ID), , False)
+                    Else
+                        pnlProcessCurrency.Visible = False
+                    End If
 
-                'Back button, in case customers need to change anything
-                btnBack.Visible = True
+                    'Back button, in case customers need to change anything
+                    btnBack.Visible = True
 
-                'Show Credit Card Input Usercontrol if payment gateway type is local
-                If LCase(clsPlugin.GatewayType) = "local" And
+                    'Show Credit Card Input Usercontrol if payment gateway type is local
+                    If LCase(clsPlugin.GatewayType) = "local" And
                     Not (clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin") Then
-                    UC_CreditCardInput.AcceptsPaypal = clsPlugin.AcceptsPaypal
-                    phdCreditCardInput.Visible = True
-                Else
-                    phdCreditCardInput.Visible = False
-                End If
+                        UC_CreditCardInput.AcceptsPaypal = clsPlugin.AcceptsPaypal
+                        phdCreditCardInput.Visible = True
+                    Else
+                        phdCreditCardInput.Visible = False
+                    End If
 
-                'Move to next step
-                mvwCheckout.ActiveViewIndex = "2"
-                btnProceed.OnClientClick = ""
-            Else
-                'Show any errors not handled by
-                'client side validation
-                popExtender.Show()
+                    'Move to next step
+                    mvwCheckout.ActiveViewIndex = "2"
+                    btnProceed.OnClientClick = ""
+                Else
+                    'Show any errors not handled by
+                    'client side validation
+                    popExtender.Show()
             End If
 
 
@@ -1033,10 +1038,13 @@ Partial Class _Checkout
                 End If
 
                 'Customer discount
-                If objBasket.CustomerDiscount.IncTax < 0 Then
-                    sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount") & "[customerdiscountexempttext]", ""))
+                'We need to show this line if the discount exists (i.e. not zero) but
+                'also if zero but there are items that are exempt from the discount, so
+                'it's clear why the discount is zero.
+                If objBasket.CustomerDiscount.IncTax < 0 Or objBasket.HasCustomerDiscountExemption Then
+                    sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount"), "[customerdiscountexempttext]"))
                     If blnUseHTMLOrderEmail Then
-                        sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount") & "[customerdiscountexempttext]", ""))
+                        sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount"), "[customerdiscountexempttext]"))
                     End If
                 End If
 
@@ -1387,15 +1395,16 @@ Partial Class _Checkout
                     '[customerdiscountexempttext] which was inserted with the customer discount
                     'line further above.
                     If blnHasExemptCustomerDiscountItems Then
-                        sbdBodyText.Replace("[customerdiscountexempttext]", " - " & GetGlobalResourceObject("Basket", "ContentText_SomeItemsExcludedFromDiscount"))
-                        sbdHTMLOrderContents.Replace("[customerdiscountexempttext]", " - " & GetGlobalResourceObject("Basket", "ContentText_SomeItemsExcludedFromDiscount"))
+                        sbdBodyText.Replace("[customerdiscountexempttext]", GetGlobalResourceObject("Basket", "ContentText_SomeItemsExcludedFromDiscount"))
+                        sbdHTMLOrderContents.Replace("[customerdiscountexempttext]", GetGlobalResourceObject("Basket", "ContentText_SomeItemsExcludedFromDiscount"))
                     Else
                         sbdBodyText.Replace("[customerdiscountexempttext]", "")
                         sbdHTMLOrderContents.Replace("[customerdiscountexempttext]", "")
                     End If
                 End If
 
-                    sbdBodyText.Insert(0, sbdBasketItems.ToString)
+                sbdBodyText.Insert(0, sbdBasketItems.ToString)
+
                 If blnUseHTMLOrderEmail Then
                     'build up the table and the header tags, insert basket contents
                     sbdHTMLOrderContents.Insert(0, "<table id=""orderitems""><thead><tr>" & vbCrLf & _

@@ -901,8 +901,12 @@ Namespace Kartris
 
                         If .Quantity = 0 Then
                             BasketItems.Remove(Item)
-                            BasketBLL.UpdateQuantity(.ID, 0)
+                            'v2.9010 fix, need to delete item rather than update qty to zero,
+                            'that doesn't seem to work now
+                            'BasketBLL.UpdateQuantity(.ID, 0)
+                            BasketBLL.DeleteBasketItems(.ID)
                             Current.Response.Redirect("~/Basket.aspx")
+
                         End If
                     End With
                     i = i + 1
