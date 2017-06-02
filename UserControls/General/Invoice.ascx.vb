@@ -229,7 +229,6 @@ Partial Class UserControls_General_Invoice
             numOrderHandlingTaxTotal = e.Item.DataItem("O_OrderHandlingChargeTax")
 
             'set product/version name and customization text
-            CType(e.Item.FindControl("litVersionName"), Literal).Text = e.Item.DataItem("IR_VersionName") & strMark
             CType(e.Item.FindControl("litVersionCode"), Literal).Text = strVersionCode
             If strCustomizationOptionText <> "" Then
                 CType(e.Item.FindControl("litCustomizationOptionText"), Literal).Text = "<div>" & strCustomizationOptionText & "</div>"
@@ -275,6 +274,7 @@ Partial Class UserControls_General_Invoice
             numTotalTaxAmount = numTotalTaxAmount + numRowTaxAmount
 
             'Set the various controls to appropriate value
+            CType(e.Item.FindControl("litVersionName"), Literal).Text = e.Item.DataItem("IR_VersionName") & strMark
             CType(e.Item.FindControl("litItemPriceExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numItemPriceExTax)
             CType(e.Item.FindControl("litTaxPerItem"), Literal).Text = strItemPriceTax
             If e.Item.DataItem("O_PricesIncTax") Then 'Price is either inc or ex tax
