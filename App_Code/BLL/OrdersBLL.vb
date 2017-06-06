@@ -239,11 +239,17 @@ Public Class OrdersBLL
                     Dim objPromotionsDiscount As New ArrayList
                     BasketBLL.CalculatePromotions(objBasket, objPromotions, objPromotionsDiscount, False)
                     For Each objPromotion As PromotionBasketModifier In objPromotionsDiscount
-                        Dim cmdAddPromotionLinks As New SqlCommand("spKartrisOrdersPromotions_Add", sqlConn, savePoint)
-                        cmdAddPromotionLinks.CommandType = CommandType.StoredProcedure
-                        cmdAddPromotionLinks.Parameters.AddWithValue("@OrderID", intNewOrderID)
-                        cmdAddPromotionLinks.Parameters.AddWithValue("@PromotionID", objPromotion.PromotionID)
-                        cmdAddPromotionLinks.ExecuteNonQuery()
+                        Try
+                            Dim cmdAddPromotionLinks As New SqlCommand("spKartrisOrdersPromotions_Add", sqlConn, savePoint)
+                            With cmdAddPromotionLinks
+                                .CommandType = CommandType.StoredProcedure
+                                .Parameters.AddWithValue("@OrderID", intNewOrderID)
+                                .Parameters.AddWithValue("@PromotionID", objPromotion.PromotionID)
+                                .ExecuteNonQuery()
+                            End With
+                        Catch ex As Exception
+                            'skip
+                        End Try
                     Next
                 End If
 
@@ -793,13 +799,17 @@ Public Class OrdersBLL
                     Dim objPromotionsDiscount As New ArrayList
                     BasketBLL.CalculatePromotions(objBasket, objPromotions, objPromotionsDiscount, False)
                     For Each objPromotion As PromotionBasketModifier In objPromotionsDiscount
-                        Dim cmdAddPromotionLinks As New SqlCommand("spKartrisOrdersPromotions_Add", sqlConn, savePoint)
-                        With cmdAddPromotionLinks
-                            .CommandType = CommandType.StoredProcedure
-                            .Parameters.AddWithValue("@OrderID", O_ID)
-                            .Parameters.AddWithValue("@PromotionID", objPromotion.PromotionID)
-                            .ExecuteNonQuery()
-                        End With
+                        Try
+                            Dim cmdAddPromotionLinks As New SqlCommand("spKartrisOrdersPromotions_Add", sqlConn, savePoint)
+                            With cmdAddPromotionLinks
+                                .CommandType = CommandType.StoredProcedure
+                                .Parameters.AddWithValue("@OrderID", O_ID)
+                                .Parameters.AddWithValue("@PromotionID", objPromotion.PromotionID)
+                                .ExecuteNonQuery()
+                            End With
+                        Catch ex As Exception
+                            'skip
+                        End Try
                     Next
                 End If
 
