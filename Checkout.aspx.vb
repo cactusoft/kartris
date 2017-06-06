@@ -1350,7 +1350,13 @@ Partial Class _Checkout
 
                     'Get customer discount, we need this to decide whether to mark items
                     'exempt from it
-                    Dim BSKT_CustomerDiscount As Double = BasketBLL.GetCustomerDiscount(CurrentLoggedUser.ID)
+                    Dim BSKT_CustomerDiscount As Double = 0
+                    Try
+                        BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(CurrentLoggedUser.ID)
+                    Catch ex As Exception
+                        'New user, just defaults to zero as no customer discount in this case
+                    End Try
+
 
                     'We need to mark items that are exempt from customer discounts
                     Dim strMark As String = ""
