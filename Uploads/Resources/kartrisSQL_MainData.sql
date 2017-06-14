@@ -29969,9 +29969,7 @@ AS
 	WHERE	((P_OPT_OptionID = @P_OPT_OptionID));
 GO
 
-/****** Set this to tell Data tool which version of db we have ******/
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9005', N's', N's', N'kartris version', N'', 2.9005, N'2.9005', 0)
-GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisFeeds_GetItems]    Script Date: 20/10/2016 16:18:29 ******/
 SET ANSI_NULLS ON
 GO
@@ -30026,6 +30024,22 @@ GO
 /****** 2.9010 Exclude some items from customer discount, text to indicate this by customer discount ******/
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_SomeItemsExcludedFromDiscount', N'Items marked with ** are excluded from the customer discount', NULL, 2.9010, N'Items marked with ** are excluded from the customer discount', NULL, N'Basket',1);
 GO
+
+/****** New Mailchimp config settings ******/
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES
+ (N'general.mailchimp.apiurl', N'https://XXX.api.mailchimp.com/3.0/', N's', N't', N'', N'MailChimp API URL. Note that XXX should be replaced with the datacentre of your MailChimp account, e.g. us4', 2.9010, N'https://XXX.api.mailchimp.com/3.0/', 0);
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES
+ (N'general.mailchimp.apikey', N'xxxxxxxxxxxxxxxxxxxx', N's', N't', N'', N'The API key you created in your MailChimp account', 2.9010, N'', 0);
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES
+ (N'general.mailchimp.enabled', N'n', N's', N'b', N'y|n', N'Whether MailChimp ecommerce integration is enabled or not', 2.9010, N'n', 0);
+
+GO
+
+/****** Set this to tell Data tool which version of db we have ******/
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9010', N's', N's', N'kartris version', N'', 2.9010, N'2.9010', 0)
+GO
+
+
 
 
 
