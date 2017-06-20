@@ -68,6 +68,7 @@ Public Class MailChimpBLL
 
     Public Async Function MailChimpStuff() As Task(Of Boolean)
 
+        'Dim storeName As String = "kartrisstore"
         Dim storeName As String = "kartrisstoreNew"
         Try
             mcStore = Await manager.ECommerceStores.GetAsync(storeName).ConfigureAwait(False)
@@ -183,8 +184,8 @@ Public Class MailChimpBLL
             Dim timestamp = CLng(DateTime.UtcNow.Subtract(New DateTime(1970, 1, 1)).TotalMilliseconds)
 
             Dim cart As Cart = New Cart With {.Id = customer.Id & "_" & timestamp,
-                                            .Customer = New Customer With {.Id = customer.Id},
-                                          .CurrencyCode = CurrencyCode.GBP,
+                                            .Customer = New Customer With {.Id = customer.Id, .OptInStatus = True},
+                                            .CurrencyCode = CurrencyCode.GBP,
                                           .OrderTotal = kartrisBasket.TotalIncTax,
                                           .CheckoutUrl = "http://localhost:54147/Checkout.aspx",
                                           .Lines = New Collection(Of Line)
