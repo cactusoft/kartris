@@ -33,7 +33,7 @@ Imports System.Collections.ObjectModel
 '========================================================================
 Public Class MailChimpBLL
     'Dim listId As String = "07891e3377"
-    Dim listId As String = "5d5ad03475"     ' Kartris Store List
+    Dim listId As String = KartSettingsManager.GetKartConfig("general.mailchimp.listid") '"5d5ad03475"     ' Kartris Store List
     Dim apiKey As String
     Dim apiUrl As String
     Dim manager As IMailChimpManager
@@ -69,7 +69,7 @@ Public Class MailChimpBLL
     Public Async Function MailChimpStuff() As Task(Of Boolean)
 
         'Dim storeName As String = "kartrisstore"
-        Dim storeName As String = "kartrisstoreNew"
+        Dim storeName As String = KartSettingsManager.GetKartConfig("general.mailchimp.storeid")
         Try
             mcStore = Await manager.ECommerceStores.GetAsync(storeName).ConfigureAwait(False)
         Catch ex As Exception
