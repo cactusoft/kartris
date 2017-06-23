@@ -182,6 +182,17 @@ Partial Class Callback
 
 
                         If intCallbackStep <> 2 And intCallbackStep <> 3 Then
+
+                            Try
+                                Dim kartrisBasket As Basket = Session("Basket")
+                                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, kartrisBasket, CurrenciesBLL.CurrencyCode(O_CurrencyIDGateway))
+                                Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(CurrentLoggedUser.ID).Result
+                                Dim mcOrder As MailChimp.Net.Models.Order = mailChimpLib.AddOrder(mcCustomer, O_ID).Result
+                                Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart(O_ID).Result
+                            Catch ex As Exception
+                                Debug.Print(ex.Message)
+                            End Try
+
                             Dim blnCheckInvoicedOnPayment As Boolean = GetKartConfig("frontend.orders.checkinvoicedonpayment") = "y"
                             Dim blnCheckReceivedOnPayment As Boolean = GetKartConfig("frontend.orders.checkreceivedonpayment") = "y"
 

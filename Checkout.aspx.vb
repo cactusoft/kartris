@@ -41,15 +41,6 @@ Partial Class _Checkout
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
 
-            Dim objBasket As Kartris.Basket = Session("Basket")
-
-
-            If CurrentLoggedUser IsNot Nothing Then
-                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, "GBP")
-                mailChimpLib.MailChimpStuff()
-            End If
-
-
             '---------------------------------------
             'SET PAGE TITLE
             '---------------------------------------
@@ -89,7 +80,7 @@ Partial Class _Checkout
             'to bill the customer. Instead we activate the PO method, even if
             'this user is not authorized to use it. We hide the other payment
             'methods.
-            'Dim objBasket As Kartris.Basket = Session("Basket")        ' Declared above MailChimp update
+            Dim objBasket As Kartris.Basket = Session("Basket")
             Dim blnOrderIsFree As Boolean = False 'Disable, suspect this might misfire (objBasket.FinalPriceIncTax = 0)
             If blnOrderIsFree Then
                 'Add the PO option with name 'FREE' and hide payment selection
@@ -924,6 +915,13 @@ Partial Class _Checkout
                     End Try
 
                     If Not clientToken.Equals("") Then
+                        'MAILCHIMP Adding Cart
+                        Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(intGatewayCurrency))
+                        'If the User is Logged
+                        If CurrentLoggedUser IsNot Nothing Then
+                            Session("BraintreeCartId") = mailChimpLib.AddCartToCustomerToStore().Result
+                        End If
+
                         phdBrainTree.Visible = True
                         phdCreditCardInput.Visible = False
                         phdPONumber.Visible = False
@@ -948,12 +946,13 @@ Partial Class _Checkout
                     btnProceed.OnClientClick = ""
                 End If
             Else
-                    'Show any errors not handled by
-                    'client side validation
-                    popExtender.Show()
-                End If
+                'Show any errors not handled by
+                'client side validation
+                popExtender.Show()
+            End If
 
-            ElseIf mvwCheckout.ActiveViewIndex = "2" Then
+        ElseIf mvwCheckout.ActiveViewIndex = "2" Then
+
             '=======================================
             'PROCEED CLICKED ON ORDER REVIEW PAGE
             '=======================================
@@ -1011,9 +1010,9 @@ Partial Class _Checkout
                     Dim sbdBasketItems As StringBuilder = New StringBuilder
                     Dim arrBasketItems As List(Of Kartris.BasketItem)
 
-                    Dim objBasket As Kartris.Basket = Session("Basket")
+                Dim objBasket As Kartris.Basket = Session("Basket")
 
-                    Dim objOrder As Kartris.Interfaces.objOrder = Nothing
+                Dim objOrder As Kartris.Interfaces.objOrder = Nothing
 
                     Dim blnNewUser As Boolean = True
                     Dim blnAppPricesIncTax As Boolean
@@ -1490,15 +1489,22 @@ Partial Class _Checkout
                     End If
 
 
-                    'Create the order record
-                    O_ID = OrdersBLL.Add(C_ID, UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword, UC_BillingAddress.SelectedAddress,
+                'Create the order record
+                O_ID = OrdersBLL.Add(C_ID, UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword, UC_BillingAddress.SelectedAddress,
                                          UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket,
                                           arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID,
                                          intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice,
                                          IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtPurchaseOrderNo.Text, Trim(txtComments.Text))
+                'MAILCHIMP Adding Cart
+                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(intGatewayCurrency))
+                'If the User is Logged
+                If CurrentLoggedUser IsNot Nothing And Session("BraintreeCartId") Is Nothing Then
+                    Dim addCartResult As String = mailChimpLib.AddCartToCustomerToStore(O_ID).Result
+                End If
 
-                    'Order Creation successful
-                    If O_ID > 0 Then
+
+                'Order Creation successful
+                If O_ID > 0 Then
                         objOrder = New Kartris.Interfaces.objOrder
                         'Create the Order object and fill in the property values.
                         objOrder.ID = O_ID
@@ -1711,12 +1717,25 @@ Partial Class _Checkout
                                         End Try
 
 
-                                        If transactionId <> "" Then
-                                            blnResult = True
-                                            BasketBLL.DeleteBasket()
-                                            Session("Basket") = Nothing
-                                        End If
-                                    Catch ex As Exception
+                                    If transactionId <> "" Then
+                                        blnResult = True
+                                        Try
+                                            Dim cartId As String = Session("BraintreeCartId")
+                                            If cartId IsNot Nothing Then
+                                                Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(CurrentLoggedUser.ID).Result
+                                                Dim mcOrder As Order = mailChimpLib.AddOrder(mcCustomer, cartId).Result
+                                                Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart(cartId).Result
+                                                Session("BraintreeCartId") = Nothing
+
+                                            End If
+                                        Catch ex As Exception
+                                            Debug.Print(ex.Message)
+                                        End Try
+                                        BasketBLL.DeleteBasket()
+                                        Session("Basket") = Nothing
+
+                                    End If
+                                Catch ex As Exception
                                         output = "Error: 81503: Amount is an invalid format."
                                     End Try
                                 End If

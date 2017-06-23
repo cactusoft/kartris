@@ -11,6 +11,7 @@ Namespace Kartris
 
         Public DB_C_CustomerID As Integer           ' Customer ID (User ID) that owns this basket
 
+        Public MailChimpCartId As String
         ' Basket modifiers. These affect the entire basket in one hit.
         Public ShippingPrice As BasketModifier
         Public OrderHandlingPrice As BasketModifier

@@ -34,11 +34,11 @@ Imports System.Collections.ObjectModel
 Public Class MailChimpBLL
     'Dim listId As String = "07891e3377"
     Dim listId As String = KartSettingsManager.GetKartConfig("general.mailchimp.listid") '"5d5ad03475"     ' Kartris Store List
-    Dim apiKey As String
-    Dim apiUrl As String
+    Dim apiKey As String = KartSettingsManager.GetKartConfig("general.mailchimp.apikey")
+    Dim apiUrl As String = KartSettingsManager.GetKartConfig("general.mailchimp.apiurl")
+    Dim mcStoreId As String = KartSettingsManager.GetKartConfig("general.mailchimp.storeid")
     Dim manager As IMailChimpManager
     Dim currentLoggedUser As KartrisMemberShipUser
-    Dim mcStore As Store
     Dim kartrisBasket As Basket
     Dim kartrisCurrencyCode As String
 
@@ -47,16 +47,20 @@ Public Class MailChimpBLL
         apiUrl = KartSettingsManager.GetKartConfig("general.mailchimp.apiurl")
         manager = New MailChimpManager(apiKey)
         CurrentLoggedUser = Nothing
-        mcStore = New Store()
         kartrisBasket = New Basket()
     End Sub
 
-    Sub New(ByVal user As KartrisMemberShipUser, ByVal basket As Basket, ByVal currencyCode As String)
+    Sub New(ByVal user As KartrisMemberShipUser, ByVal currencyCode As String)
         apiKey = KartSettingsManager.GetKartConfig("general.mailchimp.apikey")
         apiUrl = KartSettingsManager.GetKartConfig("general.mailchimp.apiurl")
         manager = New MailChimpManager(apiKey)
-        CurrentLoggedUser = user
-        mcStore = New Store()
+        currentLoggedUser = user
+        Me.kartrisCurrencyCode = currencyCode
+    End Sub
+
+    Sub New(ByVal user As KartrisMemberShipUser, ByVal basket As Basket, ByVal currencyCode As String)
+        manager = New MailChimpManager(apiKey)
+        currentLoggedUser = user
         kartrisBasket = basket
         Me.kartrisCurrencyCode = currencyCode
     End Sub
@@ -66,9 +70,19 @@ Public Class MailChimpBLL
     'objWriter.WriteLine("begin")
     'objWriter.Close()
 
-    Public Async Function MailChimpStuff() As Task(Of Boolean)
+    Public Async Function GetCustomer(ByVal kartrisUserId As Integer) As Task(Of Customer)
+        Dim customer As Customer = Nothing
+        Try
+            customer = Await manager.ECommerceStores.Customers(mcStoreId).GetAsync(kartrisUserId)
+        Catch ex As Exception
+            Debug.Print(ex.Message)
+        End Try
+        Return customer
+    End Function
 
-        'Dim storeName As String = "kartrisstore"
+    Public Async Function AddCartToCustomerToStore(Optional ByVal orderId As Integer = 0) As Task(Of String)
+        Dim mcStore As Store = New Store()
+        Dim toReturn As String = ""
         Dim storeName As String = KartSettingsManager.GetKartConfig("general.mailchimp.storeid")
         Try
             mcStore = Await manager.ECommerceStores.GetAsync(storeName).ConfigureAwait(False)
@@ -86,7 +100,7 @@ Public Class MailChimpBLL
 
             Dim customer As Customer
             Try
-                customer = Await manager.ECommerceStores.Customers(mcStore.Id).GetAsync(CurrentLoggedUser.ID)
+                customer = Await manager.ECommerceStores.Customers(mcStore.Id).GetAsync(currentLoggedUser.ID)
             Catch ex As Exception
                 customer = Nothing
             End Try
@@ -95,13 +109,16 @@ Public Class MailChimpBLL
             End If
 
             If customer IsNot Nothing Then
-                Dim cart As Cart = Await AddCart(customer).ConfigureAwait(False)
+                Dim cart As Cart = Await AddCart(customer, orderId).ConfigureAwait(False)
+                If cart IsNot Nothing Then
+                    toReturn = cart.Id
+                End If
                 'Dim order As Order = Await AddOrder(customer).ConfigureAwait(False)
             End If
         Catch ex As Exception
             Debug.Print(ex.Message)
         End Try
-        Return True
+        Return toReturn
     End Function
 
     'Public Async Function AddUpdateMember() As Task(Of Member)
@@ -140,7 +157,7 @@ Public Class MailChimpBLL
                 customer.LastName = userNamesArray(1)
             End If
 
-            Dim taskResult As Customer = Await manager.ECommerceStores.Customers(mcStore.Id).AddAsync(customer).ConfigureAwait(False)
+            Dim taskResult As Customer = Await manager.ECommerceStores.Customers(mcStoreId).AddAsync(customer).ConfigureAwait(False)
             Return taskResult
         Catch ex As Exception
             Debug.Print(ex.Message)
@@ -153,7 +170,7 @@ Public Class MailChimpBLL
             Dim productVariant As [Variant]
             Dim listVariants As List(Of [Variant]) = New List(Of [Variant])
             Try
-                product = Await manager.ECommerceStores.Products(mcStore.Id).GetAsync(basketItem.ID).ConfigureAwait(False)
+                product = Await manager.ECommerceStores.Products(mcStoreId).GetAsync(basketItem.ID).ConfigureAwait(False)
             Catch ex As Exception
                 If ex.Message.Contains("A product with the provided ID already") Then
                     product = Nothing
@@ -170,7 +187,7 @@ Public Class MailChimpBLL
                                             .Variants = listVariants
                                             }
 
-                Dim taskResult As Product = Await manager.ECommerceStores.Products(mcStore.Id).AddAsync(product).ConfigureAwait(False)
+                Dim taskResult As Product = Await manager.ECommerceStores.Products(mcStoreId).AddAsync(product).ConfigureAwait(False)
                 Return taskResult
             End If
             Return Nothing
@@ -179,11 +196,16 @@ Public Class MailChimpBLL
         End Try
     End Function
 
-    Public Async Function AddCart(ByVal customer As Customer) As Task(Of Cart)
+    Public Async Function AddCart(ByVal customer As Customer, ByVal orderId As Integer) As Task(Of Cart)
         Try
-            Dim timestamp = CLng(DateTime.UtcNow.Subtract(New DateTime(1970, 1, 1)).TotalMilliseconds)
+            Dim idSufix As String = orderId
+            If orderId = 0 Then
+                Dim timestamp = CLng(DateTime.UtcNow.Subtract(New DateTime(1970, 1, 1)).TotalMilliseconds)
+                idSufix = customer.Id & "_" & timestamp
+            End If
 
-            Dim cart As Cart = New Cart With {.Id = customer.Id & "_" & timestamp,
+
+            Dim cart As Cart = New Cart With {.Id = "cart_" & idSufix,
                                             .Customer = New Customer With {.Id = customer.Id, .OptInStatus = True},
                                             .CurrencyCode = CurrencyCode.GBP,
                                           .OrderTotal = kartrisBasket.TotalIncTax,
@@ -194,7 +216,7 @@ Public Class MailChimpBLL
             For counter As Integer = 0 To kartrisBasket.BasketItems.Count - 1
                 product = Await AddProduct(kartrisBasket.BasketItems(counter))
 
-                cart.Lines.Add(New Line With {.Id = customer.Id & "_" & timestamp & "_" & counter,
+                cart.Lines.Add(New Line With {.Id = "cart_" & idSufix & "_l" & counter,
                                             .ProductId = kartrisBasket.BasketItems(counter).ID,
                                             .ProductTitle = kartrisBasket.BasketItems(counter).Name,
                                             .ProductVariantId = kartrisBasket.BasketItems(counter).ID,
@@ -203,7 +225,7 @@ Public Class MailChimpBLL
                                             .Price = kartrisBasket.BasketItems(counter).Price
                 })
             Next
-            Dim taskResult As Cart = Await manager.ECommerceStores.Carts(mcStore.Id).AddAsync(cart).ConfigureAwait(False)
+            Dim taskResult As Cart = Await manager.ECommerceStores.Carts(mcStoreId).AddAsync(cart).ConfigureAwait(False)
 
 
             Return taskResult
@@ -212,11 +234,22 @@ Public Class MailChimpBLL
         End Try
     End Function
 
-    Public Async Function AddOrder(ByVal customer As Customer) As Task(Of Order)
+    Public Async Function DeleteCart(ByVal cartId As String) As Task(Of Boolean)
+        Dim result As Boolean = False
+        Try
+            Await manager.ECommerceStores.Carts(mcStoreId).DeleteAsync(cartId).ConfigureAwait(False)
+            result = True
+        Catch ex As Exception
+            Debug.Print(ex.Message)
+        End Try
+        Return result
+    End Function
+
+    Public Async Function AddOrder(ByVal customer As Customer, ByVal cartId As String) As Task(Of Order)
         Try
             Dim timestamp = CLng(DateTime.UtcNow.Subtract(New DateTime(1970, 1, 1)).TotalMilliseconds)
 
-            Dim order As Order = New Order With {.Id = customer.Id & "_" & timestamp,
+            Dim order As Order = New Order With {.Id = "order_" & cartId,
                                             .Customer = New Customer With {.Id = customer.Id},
                                           .CurrencyCode = CurrencyCode.GBP,
                                           .OrderTotal = kartrisBasket.TotalIncTax,
@@ -226,7 +259,7 @@ Public Class MailChimpBLL
             For counter As Integer = 0 To kartrisBasket.BasketItems.Count - 1
                 product = Await AddProduct(kartrisBasket.BasketItems(counter))
 
-                order.Lines.Add(New Line With {.Id = customer.Id & "_" & timestamp & "_" & counter,
+                order.Lines.Add(New Line With {.Id = "order_" & cartId & "_l" & counter,
                                             .ProductId = kartrisBasket.BasketItems(counter).ID,
                                             .ProductTitle = kartrisBasket.BasketItems(counter).Name,
                                             .ProductVariantId = kartrisBasket.BasketItems(counter).ID,
@@ -235,12 +268,12 @@ Public Class MailChimpBLL
                                             .Price = kartrisBasket.BasketItems(counter).Price
                 })
             Next
-            Dim taskResult As Order = Await manager.ECommerceStores.Orders(mcStore.Id).AddAsync(order).ConfigureAwait(False)
+            Dim taskResult As Order = Await manager.ECommerceStores.Orders(mcStoreId).AddAsync(order).ConfigureAwait(False)
 
             If taskResult IsNot Nothing Then
                 customer.OrdersCount = customer.OrdersCount + 1
                 customer.OptInStatus = True
-                Dim updateCustomer As Customer = Await manager.ECommerceStores.Customers(mcStore.Id).UpdateAsync(customer.Id, customer).ConfigureAwait(False)
+                Dim updateCustomer As Customer = Await manager.ECommerceStores.Customers(mcStoreId).UpdateAsync(customer.Id, customer).ConfigureAwait(False)
             End If
 
             Return taskResult
