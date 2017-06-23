@@ -37,7 +37,7 @@ Public Class MailChimpBLL
     Dim apiKey As String = KartSettingsManager.GetKartConfig("general.mailchimp.apikey")
     Dim apiUrl As String = KartSettingsManager.GetKartConfig("general.mailchimp.apiurl")
     Dim mcStoreId As String = KartSettingsManager.GetKartConfig("general.mailchimp.storeid")
-    Dim manager As IMailChimpManager
+    Public manager As IMailChimpManager
     Dim currentLoggedUser As KartrisMemberShipUser
     Dim kartrisBasket As Basket
     Dim kartrisCurrencyCode As String
@@ -240,6 +240,27 @@ Public Class MailChimpBLL
             Await manager.ECommerceStores.Carts(mcStoreId).DeleteAsync(cartId).ConfigureAwait(False)
             result = True
         Catch ex As Exception
+            If ex.Message.Contains("Unable to find") Then
+                result = True
+            Else
+                result = False
+            End If
+            Debug.Print(ex.Message)
+        End Try
+        Return result
+    End Function
+
+    Public Async Function DeleteOrder(ByVal orderId As String) As Task(Of Boolean)
+        Dim result As Boolean = False
+        Try
+            Await manager.ECommerceStores.Orders(mcStoreId).DeleteAsync(orderId).ConfigureAwait(False)
+            result = True
+        Catch ex As Exception
+            If ex.Message.Contains("Unable to find") Then
+                result = True
+            Else
+                result = False
+            End If
             Debug.Print(ex.Message)
         End Try
         Return result
