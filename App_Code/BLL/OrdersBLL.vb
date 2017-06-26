@@ -220,6 +220,8 @@ Public Class OrdersBLL
                             cmdAddInvoiceRows.Parameters.AddWithValue("@IR_PricePerItem", .IR_PricePerItem)
                             cmdAddInvoiceRows.Parameters.AddWithValue("@IR_TaxPerItem", .IR_TaxPerItem)
 
+                            cmdAddInvoiceRows.Parameters.AddWithValue("@IR_ExcludeFromCustomerDiscount", .ExcludeFromCustomerDiscount)
+
                             Dim sbdExtraText As New StringBuilder(.OptionText)
                             If Not String.IsNullOrEmpty(.CustomText) Then
                                 If Not String.IsNullOrEmpty(.OptionText) Then sbdExtraText.Append("<br/>")
