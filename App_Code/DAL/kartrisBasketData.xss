@@ -9,7 +9,7 @@
     <Shape ID="DesignTable:BasketValues" ZOrder="2" X="38" Y="92" Height="324" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="197" />
     <Shape ID="DesignTable:BasketOptionValues" ZOrder="4" X="364" Y="99" Height="172" Width="460" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="83" />
     <Shape ID="DesignTable:Coupons" ZOrder="3" X="41" Y="451" Height="267" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="216" SplitterPosition="216" />
-    <Shape ID="DesignTable:Customers" ZOrder="1" X="370" Y="290" Height="382" Width="843" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="46" />
+    <Shape ID="DesignTable:Customers" ZOrder="1" X="370" Y="290" Height="382" Width="777" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="46" />
   </Shapes>
   <Connectors />
 </DiagramLayout>

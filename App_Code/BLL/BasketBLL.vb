@@ -782,6 +782,16 @@ Public Class BasketBLL
     End Sub
 
     ''' <summary>
+    ''' Load a saved AUTOSAVE basket
+    ''' </summary>
+    ''' <param name="numCustomerID">The saved basket ID to load</param>
+    ''' <param name="numBasketID">The target active basket to put the items into</param>
+    ''' <remarks></remarks>
+    Public Shared Sub LoadAutosaveBasket(ByVal numCustomerID As Long, ByVal numBasketID As Long)
+        _CustomersAdptr.LoadAutosaveBasket(numCustomerID, numBasketID, CkartrisDisplayFunctions.NowOffset)
+    End Sub
+
+    ''' <summary>
     ''' Save a basket to a wishlist 
     ''' </summary>
     ''' <param name="numWishlistsID">The wishlist to be updated. Leave as zero to create a new wishlist</param>
@@ -1691,7 +1701,7 @@ Public Class BasketBLL
                                     objItem = GetBasketItemByVersionID(Basket.BasketItems, vItemID)
                                     If objItem.AppliedPromo = 1 Then Exit Select
                                     If objPromotion.ItemID = vItemID Then 'buy item is equal to get item
-                                        If (vBuyQty > vValue AndAlso strType = "q") OrElse _
+                                        If (vBuyQty > vValue AndAlso strType = "q") OrElse
                                            (vBuyQty >= drwBuy("PP_Value") AndAlso strType = "p") Then
                                             blnGetFound = True
                                             Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, vValue, vValue, vIncTax, vExTax, vQuantity, vTaxRate)
@@ -2326,6 +2336,56 @@ Public Class BasketBLL
 
         aryPromotions = Basket.objPromotions
         aryPromotionsDiscount = Basket.objPromotionsDiscount
+
+    End Sub
+
+    ''' <summary>
+    ''' Autosave basket
+    ''' We trigger this when adding items to the basket, or removing them.
+    ''' It creates a saved basket for the user called AUTOSAVE. We can
+    ''' recover this automatically when they next login.
+    ''' </summary>
+    ''' <param name="numCustomerID">The db ID of the customer</param>
+    ''' <remarks></remarks>
+    Public Shared Sub AutosaveBasket(ByRef numCustomerID As Int32)
+        If numCustomerID > 0 Then
+            BasketBLL.SaveBasket(numCustomerID, "AUTOSAVE", Current.Session("SessionID"))
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Restore Autosaved basket
+    ''' When a user logs in, we can recover an autosaved basket. We
+    ''' only want to do this if the user's basket is blank, otherwise
+    ''' they might add items on a subsequent visit, but we'd then
+    ''' wipe these when they login or come to checkout.
+    ''' </summary>
+    ''' <param name="numCustomerID">The db ID of the customer</param>
+    ''' <remarks></remarks>
+    Public Shared Sub RecoverAutosaveBasket(ByRef numCustomerID As Int32)
+
+        'First we want to check if there are items in the basket already
+        Dim TestBasket As New Kartris.Basket
+        Dim TestBasketItems As List(Of Kartris.BasketItem)
+
+        'Load up basket from session
+        TestBasket.LoadBasketItems()
+        TestBasketItems = TestBasket.BasketItems
+
+        'Check number of items
+        If TestBasketItems.Count > 0 Then
+            'This means the user has items in basket already.
+            'In this case, we don't want to load items over the
+            'top. In fact, we can save their current items as
+            'an AUTOSAVE record!
+            BasketBLL.AutosaveBasket(numCustomerID)
+        Else
+            'No existing basket, let's recover the AUTOSAVE one
+            'if it exists
+            If numCustomerID > 0 Then
+                BasketBLL.LoadAutosaveBasket(numCustomerID, Current.Session("SessionID"))
+            End If
+        End If
 
     End Sub
 

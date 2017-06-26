@@ -188,9 +188,8 @@ Partial Class UserControls_General_AddToBasket
             objMiniBasket.ShowPopupMini(GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors"),
                         Replace(GetGlobalResourceObject("ObjectConfig", "ContentText_OrderMultiplesOfUnitsize"), "[unitsize]", strUnitSize))
         Else
-
             'qty ok, matches unitsize allowed
-            Trace.Warn("Quantity: " & numQuantity)
+            'Trace.Warn("Quantity: " & numQuantity)
 
             Dim numBasketItemID As Long = 0, numEditVersionID As Long = 0
             Dim strAddToBasketQtyCFG As String = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID)))
@@ -203,11 +202,17 @@ Partial Class UserControls_General_AddToBasket
 
             If CLng(litVersionID.Text) <> numEditVersionID Then numBasketItemID = 0
 
-            'numVersionID = CLng(litVersionID.Text)
             objMiniBasket.ShowCustomText(CLng(litVersionID.Text), numQuantity, "", numBasketItemID)
 
             Session("AddItemVersionID") = litVersionID.Text
         End If
+
+        'v2.9010 Autosave basket
+        Try
+            BasketBLL.AutosaveBasket(DirectCast(Page, PageBaseClass).CurrentLoggedUser.ID)
+        Catch ex As Exception
+            'User not logged in
+        End Try
 
     End Sub
 

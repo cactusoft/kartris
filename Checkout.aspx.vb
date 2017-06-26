@@ -1595,6 +1595,15 @@ Partial Class _Checkout
                         Call BasketBLL.SaveBasket(objOrder.CustomerID, "Order #" & O_ID & ", " & CkartrisDisplayFunctions.NowOffset, Session("SessionID"))
                     End If
 
+                    'v2.9010 Autosave basket
+                    'This is in addition to the normal saving process, which lets a 
+                    'customer save a named basket
+                    Try
+                        BasketBLL.AutosaveBasket(objOrder.CustomerID)
+                    Catch ex As Exception
+                        'User not logged in
+                    End Try
+
                     objOrder.WebShopURL = Page.Request.Url.ToString.Replace("?new=y", "")
 
                     'serialize order object and store it as a session value

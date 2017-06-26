@@ -23,6 +23,7 @@ Imports CkartrisEnumerations
 
 Public Class LoginsBLL
     Private Shared _Adptr As LoginsTblAdptr = Nothing
+
     Protected Shared ReadOnly Property Adptr() As LoginsTblAdptr
         Get
             _Adptr = New LoginsTblAdptr
@@ -30,7 +31,14 @@ Public Class LoginsBLL
         End Get
     End Property
 
-
+    ''' <summary>
+    ''' Validate admin login
+    ''' Check username and password against db
+    ''' </summary>
+    ''' <param name="UserName">The UserName (login)</param>
+    ''' <param name="Password">The password</param>
+    ''' <param name="blnDirect">If true, ID and pw are run directly against the db (i.e. assumed password supplied is hashed already)</param>
+    ''' <remarks></remarks>
     Public Shared Function Validate(ByVal UserName As String, ByVal Password As String, Optional ByVal blnDirect As Boolean = False) As Integer
         If blnDirect Then
             Return Adptr._Validate(UserName, Password)
@@ -66,7 +74,7 @@ Public Class LoginsBLL
                             Throw New Exception("Login ID and the Updated ID don't match")
                         End If
 
-                        KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins, _
+                        KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins,
                          GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"), CreateQuery(cmdUpdateLogin), UserName, sqlConn, savePoint)
 
                         savePoint.Commit()
@@ -83,9 +91,21 @@ Public Class LoginsBLL
             Return blnUserValidated
         End If
     End Function
+
+    ''' <summary>
+    ''' Get login details
+    ''' </summary>
+    ''' <param name="UserName">The UserName (login)</param>
+    ''' <remarks></remarks>
     Public Shared Function GetDetails(ByVal UserName As String) As DataTable
         Return Adptr.GetData(UserName)
     End Function
+
+    ''' <summary>
+    ''' Delete login
+    ''' </summary>
+    ''' <param name="LOGIN_ID">The db ID of the login record</param>
+    ''' <remarks></remarks>
     Public Shared Function Delete(ByVal LOGIN_ID As Integer) As Integer
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -111,7 +131,7 @@ Public Class LoginsBLL
                     Throw New Exception("Login ID and the Deleted ID don't match")
                 End If
 
-                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins, _
+                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins,
                  GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"), CreateQuery(cmdDeleteLogin), LOGIN_ID, sqlConn, savePoint)
 
                 savePoint.Commit()
@@ -128,8 +148,25 @@ Public Class LoginsBLL
         End Using
 
     End Function
-    Public Shared Sub Update(ByVal LOGIN_ID As Integer, ByVal LOGIN_UserName As String, ByVal LOGIN_Password As String, ByVal LOGIN_Live As Boolean, _
-                                  ByVal LOGIN_Orders As Boolean, ByVal LOGIN_Products As Boolean, ByVal LOGIN_Config As Boolean, ByVal LOGIN_Protected As Boolean, _
+
+    ''' <summary>
+    ''' Update login
+    ''' </summary>
+    ''' <param name="LOGIN_ID">The db ID of the login record</param>
+    ''' <param name="LOGIN_UserName">The UserName (login)</param>
+    ''' <param name="LOGIN_Password">Password (raw)</param>
+    ''' <param name="LOGIN_Live">Whether login is activated/live</param>
+    ''' <param name="LOGIN_Orders">Whether login can admin orders and customer data</param>
+    ''' <param name="LOGIN_Products">Whether login can admin product data</param>
+    ''' <param name="LOGIN_Config">Whether login can change config settings and other administration tasks</param>
+    ''' <param name="LOGIN_Protected">Default logins are protected, so you cannot delete all logins from a site</param>
+    ''' <param name="LOGIN_LanguageID">Language ID for interface for this login</param>
+    ''' <param name="LOGIN_EmailAddress">Email address</param>
+    ''' <param name="LOGIN_Tickets">Whether login can deal with support tickets</param>
+    ''' <param name="LOGIN_Pushnotifications">Key for push notifications on Android or Windows apps</param>
+    ''' <remarks></remarks>
+    Public Shared Sub Update(ByVal LOGIN_ID As Integer, ByVal LOGIN_UserName As String, ByVal LOGIN_Password As String, ByVal LOGIN_Live As Boolean,
+                                  ByVal LOGIN_Orders As Boolean, ByVal LOGIN_Products As Boolean, ByVal LOGIN_Config As Boolean, ByVal LOGIN_Protected As Boolean,
                                   ByVal LOGIN_LanguageID As Integer, ByVal LOGIN_EmailAddress As String, ByVal LOGIN_Tickets As Boolean, ByVal LOGIN_Pushnotifications As String)
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -168,7 +205,7 @@ Public Class LoginsBLL
                     Throw New Exception("Login ID and the Updated ID don't match")
                 End If
 
-                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins, _
+                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins,
                  GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"), CreateQuery(cmdUpdateLogin), LOGIN_UserName, sqlConn, savePoint)
 
                 savePoint.Commit()
@@ -182,8 +219,24 @@ Public Class LoginsBLL
 
         End Using
     End Sub
-    Public Shared Sub Add(ByVal LOGIN_UserName As String, ByVal LOGIN_Password As String, ByVal LOGIN_Live As Boolean, _
-                                  ByVal LOGIN_Orders As Boolean, ByVal LOGIN_Products As Boolean, ByVal LOGIN_Config As Boolean, ByVal LOGIN_Protected As Boolean, _
+
+    ''' <summary>
+    ''' Add login
+    ''' </summary>
+    ''' <param name="LOGIN_UserName">The UserName (login)</param>
+    ''' <param name="LOGIN_Password">Password (raw)</param>
+    ''' <param name="LOGIN_Live">Whether login is activated/live</param>
+    ''' <param name="LOGIN_Orders">Whether login can admin orders and customer data</param>
+    ''' <param name="LOGIN_Products">Whether login can admin product data</param>
+    ''' <param name="LOGIN_Config">Whether login can change config settings and other administration tasks</param>
+    ''' <param name="LOGIN_Protected">Default logins are protected, so you cannot delete all logins from a site</param>
+    ''' <param name="LOGIN_LanguageID">Language ID for interface for this login</param>
+    ''' <param name="LOGIN_EmailAddress">Email address</param>
+    ''' <param name="LOGIN_Tickets">Whether login can deal with support tickets</param>
+    ''' <param name="LOGIN_Pushnotifications">Key for push notifications on Android or Windows apps</param>
+    ''' <remarks></remarks>
+    Public Shared Sub Add(ByVal LOGIN_UserName As String, ByVal LOGIN_Password As String, ByVal LOGIN_Live As Boolean,
+                                  ByVal LOGIN_Orders As Boolean, ByVal LOGIN_Products As Boolean, ByVal LOGIN_Config As Boolean, ByVal LOGIN_Protected As Boolean,
                                   ByVal LOGIN_LanguageID As Integer, ByVal LOGIN_EmailAddress As String, ByVal LOGIN_Tickets As Boolean, ByVal LOGIN_Pushnotifications As String)
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -221,7 +274,7 @@ Public Class LoginsBLL
                     Throw New Exception("ID is 0? Something's not right")
                 End If
 
-                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins, _
+                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins,
                  GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"), CreateQuery(cmdAddLogin), LOGIN_UserName, sqlConn, savePoint)
 
                 savePoint.Commit()
@@ -235,18 +288,45 @@ Public Class LoginsBLL
 
         End Using
     End Sub
+
+    ''' <summary>
+    ''' Find login ID from UserName
+    ''' </summary>
+    ''' <param name="UserName">The UserName (login)</param>
+    ''' <remarks></remarks>
     Public Shared Function _GetIDbyName(ByVal UserName As String) As String
         Return Adptr._GetIDbyName(UserName)
     End Function
+
+    ''' <summary>
+    ''' Find logins with support ticket access
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Shared Function _GetSupportUsers() As DataTable
         Return Adptr._GetSupportTicketsUsers()
     End Function
+
+    ''' <summary>
+    ''' Find logins with support ticket access (front end version)
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Shared Function GetSupportUsers() As DataTable
         Return Adptr.GetSupportTicketsUsers()
     End Function
+
+    ''' <summary>
+    ''' Find a login's salt value (random string used for hashing password)
+    ''' </summary>
+    ''' <param name="UserName">The UserName (login)</param>
+    ''' <remarks></remarks>
     Public Shared Function _GetSaltByUserName(ByVal UserName As String) As String
         Return Adptr._GetSaltByUserName(UserName)
     End Function
+
+    ''' <summary>
+    ''' List of all logins
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Shared Function GetLoginsList() As DataTable
         Return Adptr._GetList()
     End Function
