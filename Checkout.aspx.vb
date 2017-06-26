@@ -915,7 +915,7 @@ Partial Class _Checkout
                     End Try
 
                     If Not clientToken.Equals("") Then
-                        'MAILCHIMP Adding Cart
+                        'MAILCHIMP Adding Cart to BrainTree Payments
                         Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(intGatewayCurrency))
                         'If the User is Logged
                         If CurrentLoggedUser IsNot Nothing Then
@@ -1722,6 +1722,7 @@ Partial Class _Checkout
                                         Try
                                             Dim cartId As String = Session("BraintreeCartId")
                                             If cartId IsNot Nothing Then
+                                                ' Removing Cart and adding Order to successful payment made with Braintree
                                                 Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(CurrentLoggedUser.ID).Result
                                                 Dim mcOrder As Order = mailChimpLib.AddOrder(mcCustomer, cartId).Result
                                                 Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart(cartId).Result
