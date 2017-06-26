@@ -445,6 +445,79 @@
                             <user:CreditCardInput runat="server" ID="UC_CreditCardInput" />
                         </div>
                     </asp:PlaceHolder>
+                    
+                    <!--
+                    -------------------------------
+                    BrainTree Module Section
+                    This field appears dynamically
+                    if 'BrainTree' is
+                    selected.
+                    -------------------------------
+                    -->
+
+                    <asp:UpdatePanel ID="upBrainTree" runat="server" >
+                        <ContentTemplate>
+                            <asp:PlaceHolder ID="phdBrainTree" runat="server" Visible="false">
+                                    <div class="section">
+                                        <asp:HiddenField ID="tbClientToken" runat="server" ClientIDMode="Static"/>
+                                        <asp:HiddenField ID="tbPaymentMethodNonce" runat="server" ClientIDMode="Static"/>
+                                        <asp:HiddenField ID="tbAmount" runat="server" ClientIDMode="Static"/>
+                                        <div class="bt-drop-in-wrapper">
+                                            <div id="bt-dropin"></div>
+                                        </div>
+                                    </div>
+                            </asp:PlaceHolder>
+                        </ContentTemplate>
+                    </asp:UpdatePanel>
+                    <script type="text/javascript" src="https://js.braintreegateway.com/js/braintree-2.28.0.min.js"></script>
+                    <script type="text/javascript">
+                        var checkoutBT;
+                        var active = false;
+
+                        $(document).ready(function () {
+                            $("#checkout .submitbuttons").on("click", "input[name*='btnBack']", function () {
+                                console.log("btnback");
+                                runTearDown();
+                                __doPostBack('ctl00$cntMain$btnBack', 'OnClick');
+                            });
+                        });
+                        
+                        function clientTokenChanged() {
+                            var client_token = $("input[name*='tbClientToken']")[0].value;
+                            braintree.setup(client_token, "dropin", {
+                                container: "bt-dropin",
+                                form: "frmMain",
+                                onReady: function(integration){
+                                    checkoutBT = integration;
+                                },
+                                onError: function (payload) {
+                                    console.log(payload);
+                                },
+                                paymentMethodNonceReceived: function (event, nonce) {
+                                    console.log(event);
+                                    $("input[name*='tbPaymentMethodNonce']")[0].value = nonce;
+                                },
+                                onPaymentMethodReceived: function (obj) {
+                                    //$("input[name*='tbClientToken']")[0].value = "Card finishing with: ";
+                                    __doPostBack('ctl00$cntMain$btnProceed', 'OnClick');
+
+                                }
+                            });
+                        }
+
+                        function runTearDown() {
+                            if (typeof checkoutBT != 'undefined') {
+                                if (checkoutBT !== null) {
+                                    // When you are ready to tear down your integration
+                                    checkoutBT.teardown(function () {
+                                        checkoutBT = null;
+                                        // braintree.setup can safely be run again!
+                                    });
+                                }
+                            }
+                        }
+                    
+                    </script>
                 </div>
             </asp:View>
         </asp:MultiView>
