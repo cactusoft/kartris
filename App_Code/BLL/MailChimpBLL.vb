@@ -304,15 +304,15 @@ Public Class MailChimpBLL
         End Try
     End Function
 
-    Public Async Function AddStore(ByVal storeName As String) As Task(Of Store)
+    Public Async Function AddStore(ByVal storeId As String, Optional ByVal storeName As String = "Kartris Store", Optional ByVal storeDomain As String = "www.kartris.com", Optional ByVal EmailAddress As String = "someemail@cactusoft.com") As Task(Of Store)
         Try
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
 
-            Dim storeObj = New Store With {.Id = storeName,
+            Dim storeObj = New Store With {.Id = storeId,
                                         .ListId = listId,
-                                        .Name = "Kartris Store",
-                                        .Domain = "www.kartris.com",
-                                        .EmailAddress = "joni@cactusoft.com",
+                                        .Name = storeName,
+                                        .Domain = storeDomain,
+                                        .EmailAddress = EmailAddress,
                                         .CurrencyCode = currencyCodeEnum}
             Dim taskResult As Store = Await manager.ECommerceStores.AddAsync(storeObj).ConfigureAwait(False)
 

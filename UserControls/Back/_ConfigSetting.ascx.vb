@@ -130,11 +130,13 @@ Partial Class _ConfigSetting
         Return itmReturn
     End Function
 
-
     Protected Sub lnkCreateStore_Click() Handles lnkCreateStore.Click
         Dim manager As MailChimpBLL = New MailChimpBLL()
         Try
-            Dim store As Store = manager.AddStore(txtCFG_Value.Text).Result()
+            Dim storeEmail As String = If((txtStoreEmail.Text.Equals("")), Nothing, txtStoreEmail.Text)
+            Dim storeDomain As String = If((txtStoreDomain.Text.Equals("")), Nothing, txtStoreDomain.Text)
+            Dim storeName As String = If((txtStoreName.Text.Equals("")), Nothing, txtStoreName.Text)
+            Dim store As Store = manager.AddStore(txtCFG_Value.Text, storeName, storeDomain, storeEmail).Result()
         Catch ex As Exception
             If ex.InnerException IsNot Nothing Then
                 Dim exceptionType As Type = ex.InnerException.GetType()
@@ -283,6 +285,19 @@ Partial Class _ConfigSetting
         txtCFG_DisplayInfo.Text = FixNullFromDB(drConfig("CFG_DisplayInfo"))
         txtCFG_VersionAdded.Text = FixNullFromDB(drConfig("CFG_VersionAdded"))
         chkCFG_Important.Checked = FixNullFromDB(drConfig("CFG_Important"))
+
+        ' Fill Up MailChimp Extra Fields
+        If litCFG_Name.Text.Equals("general.mailchimp.storeid") Then
+            If Not txtCFG_Value.Text.Equals("") Then
+                Dim manager As MailChimpBLL = New MailChimpBLL()
+                Dim store As Store = manager.manager.ECommerceStores.GetAsync(txtCFG_Value.Text).Result
+                If store IsNot Nothing Then
+                    txtStoreName.Text = store.Name
+                    txtStoreDomain.Text = store.Domain
+                    txtStoreEmail.Text = store.EmailAddress
+                End If
+            End If
+        End If
 
         'Prepare value dropdown if required
         Dim blnShowValuesInDropDownList = BuildDisplayInfoDropDownList(txtCFG_DisplayInfo.Text, txtCFG_Value.Text)
