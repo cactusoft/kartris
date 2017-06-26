@@ -46,7 +46,8 @@ Public Class MailChimpBLL
         apiKey = KartSettingsManager.GetKartConfig("general.mailchimp.apikey")
         apiUrl = KartSettingsManager.GetKartConfig("general.mailchimp.apiurl")
         manager = New MailChimpManager(apiKey)
-        CurrentLoggedUser = Nothing
+        kartrisCurrencyCode = CurrenciesBLL.CurrencyCode(CurrenciesBLL.GetDefaultCurrency())
+        currentLoggedUser = Nothing
         kartrisBasket = New Basket()
     End Sub
 
@@ -318,6 +319,7 @@ Public Class MailChimpBLL
             Return taskResult
         Catch ex As Exception
             Debug.Print(ex.Message)
+            Throw ex
         End Try
     End Function
 

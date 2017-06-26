@@ -14,6 +14,8 @@
 '========================================================================
 Imports CkartrisEnumerations
 Imports CkartrisDataManipulation
+Imports MailChimp.Net.Models
+Imports MailChimp.Net.Core
 
 Partial Class _ConfigSetting
     Inherits System.Web.UI.UserControl
@@ -127,6 +129,23 @@ Partial Class _ConfigSetting
         Next
         Return itmReturn
     End Function
+
+
+    Protected Sub lnkCreateStore_Click() Handles lnkCreateStore.Click
+        Dim manager As MailChimpBLL = New MailChimpBLL()
+        Try
+            Dim store As Store = manager.AddStore(txtCFG_Value.Text).Result()
+        Catch ex As Exception
+            If ex.InnerException IsNot Nothing Then
+                Dim exceptionType As Type = ex.InnerException.GetType()
+                If exceptionType.Name.Equals("MailChimpException") Then
+                    Dim mcException As MailChimpException = DirectCast(ex.InnerException, MailChimpException)
+                    _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, mcException.Detail)
+                End If
+            End If
+
+        End Try
+    End Sub
 
     Protected Sub lnkBtnBack_Click() Handles lnkBtnBack.Click
         ClearTextControls()
