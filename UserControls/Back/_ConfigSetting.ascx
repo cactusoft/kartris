@@ -119,13 +119,33 @@
                                         ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                         ControlToValidate="txtCFG_Value" SetFocusOnError="True" ValidationGroup="CFG">
                                     </asp:RequiredFieldValidator>--%>
-                                </span></li>
+                                </span>
+                                <% If litCFG_Name.Text.Equals("general.mailchimp.storeid") Then %>
+                                    <asp:LinkButton ID="lnkCreateStore" runat="server" Text='Create Store MailChimp Call' CssClass="linkbutton floatright" CausesValidation="false"></asp:LinkButton>
+                                    </li>
+                                    <li>
+                                        <span class="Kartris-DetailsView-Name"><asp:Literal ID="Literal1" runat="server" Text='Store Name'></asp:Literal></span>
+                                        <span class="Kartris-DetailsView-Value"><asp:TextBox ID="txtStoreName" runat="server" Text='' MaxLength="255" /></span>
+                                    </li>
+                                    <li>
+                                        <span class="Kartris-DetailsView-Name"><asp:Literal ID="Literal2" runat="server" Text='Store Domain'></asp:Literal></span>      
+                                        <span class="Kartris-DetailsView-Value"><asp:TextBox ID="txtStoreDomain" runat="server" Text='' MaxLength="255" /></span>
+                                    </li>
+                                    <li>
+                                        <span class="Kartris-DetailsView-Name"><asp:Literal ID="Literal3" runat="server" Text='Store Email'></asp:Literal></span>
+                                        <span class="Kartris-DetailsView-Value"><asp:TextBox ID="txtStoreEmail" runat="server" Text='' MaxLength="255" /></span>
+                                    </li>
+                                <% Else %>
+                                    </li>
+                                <% End If%>
+                                
                                 <%--CFG_Description--%>
                                 <li><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litHDesc" runat="server" Text='<%$ Resources: _Kartris, ContentText_Description %>'></asp:Literal>
                                 </span><span class="Kartris-DetailsView-Value">
                                     <asp:TextBox ID="txtCFG_Desc" runat="server" TextMode="MultiLine" Wrap="true" MaxLength="255" />
-                                </span></li>
+                                </span>
+                                </li>
 
                                 <asp:PlaceHolder runat="server" ID="phdDetails" Visible="false">
                                 <%--CFG_DataType--%>

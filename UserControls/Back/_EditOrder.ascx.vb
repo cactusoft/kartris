@@ -564,7 +564,6 @@ Partial Class UserControls_Back_EditOrder
         'then try to append the updated basket and order total lines from the new basket
         strOrderDetails = sbdBodyText.ToString & strOrderDetails
 
-
         Dim intNewOrderID As Integer = OrdersBLL._CloneAndCancel(intO_ID, strOrderDetails, UC_BillingAddress.SelectedAddress, UC_ShippingAddress.SelectedAddress, _
                                                                  chkSameShippingAsBilling.Checked, chkOrderSent.Checked, chkOrderInvoiced.Checked, chkOrderPaid.Checked, _
                                                                  chkOrderShipped.Checked, objBasket, arrBasketItems, _
@@ -572,6 +571,21 @@ Partial Class UserControls_Back_EditOrder
                                                                 strPromotionDescription, CUR_ID, chkSendOrderUpdateEmail.Checked)
         'if we got a new order id then that means the order was successfully cloned and cancelled - lets now redirect the user to the new order details page
         If intNewOrderID > 0 Then
+            If chkOrderPaid.Checked Then
+                Try
+                    Dim kartrisUser As KartrisMemberShipUser = Membership.GetUser(UsersBLL.GetEmailByID(litOrderCustomerID.Text))
+                    Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(kartrisUser, objBasket, CUR_ID)
+                    Dim result As Boolean = mailChimpLib.DeleteOrder("order_" & intO_ID).Result
+                    If result Then
+                        Dim mcOrder As MailChimp.Net.Models.Order = mailChimpLib.AddOrder(mailChimpLib.GetCustomer(kartrisUser.ID).Result, intNewOrderID).Result
+                        ' Not creating the order, it's missing Basket
+                        mailChimpLib.DeleteCart("cart_" & intO_ID)
+                    End If
+                Catch ex As Exception
+
+                End Try
+            End If
+
             objOrder = New Kartris.Interfaces.objOrder
             'Create the Order object and fill in the property values.
             objOrder.ID = intNewOrderID
