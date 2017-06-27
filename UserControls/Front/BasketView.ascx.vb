@@ -580,6 +580,13 @@ Partial Class Templates_BasketView
 
             'refresh updatepanel
             updPnlMainBasket.Update()
+
+            'v2.9010 Autosave basket
+            Try
+                BasketBLL.AutosaveBasket(DirectCast(Page, PageBaseClass).CurrentLoggedUser.ID)
+            Catch ex As Exception
+                'User not logged in
+            End Try
         End If
     End Sub
 
@@ -606,6 +613,13 @@ Partial Class Templates_BasketView
         Call LoadBasket()
 
         updPnlMainBasket.Update()
+
+        'v2.9010 Autosave basket
+        Try
+            BasketBLL.AutosaveBasket(DirectCast(Page, PageBaseClass).CurrentLoggedUser.ID)
+        Catch ex As Exception
+            'User not logged in
+        End Try
     End Sub
 
     ''' <summary>
@@ -725,6 +739,13 @@ Partial Class Templates_BasketView
         BasketBLL.DeleteBasket()
         Call LoadBasket()
         updPnlMainBasket.Update()
+
+        'v2.9010 Autosave basket
+        Try
+            BasketBLL.AutosaveBasket(DirectCast(Page, PageBaseClass).CurrentLoggedUser.ID)
+        Catch ex As Exception
+            'User not logged in
+        End Try
     End Sub
 
     ''' <summary>
@@ -975,6 +996,13 @@ Partial Class Templates_BasketView
 
             ShowAddItemToBasket(numVersionID, numQuantity, True)
         End If
+
+        'v2.9010 Autosave basket
+        Try
+            BasketBLL.AutosaveBasket(DirectCast(Page, PageBaseClass).CurrentLoggedUser.ID)
+        Catch ex As Exception
+            'User not logged in
+        End Try
     End Sub
 
     ''' <summary>
@@ -1023,6 +1051,13 @@ Partial Class Templates_BasketView
         sessionID = Session("SessionID")
         BasketBLL.AddNewBasketValue(Basket.BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, numVersionID, numQuantity, strParameterValues, "", 0)
         ShowAddItemToBasket(numVersionID, numQuantity, True)
+
+        'v2.9010 Autosave basket
+        Try
+            BasketBLL.AutosaveBasket(DirectCast(Page, PageBaseClass).CurrentLoggedUser.ID)
+        Catch ex As Exception
+            'User not logged in
+        End Try
     End Sub
 
     ''' <summary>
@@ -1223,6 +1258,15 @@ Partial Class Templates_BasketView
 
         updPnlMainBasket.Update()
     End Sub
+
+    ''' <summary>
+    ''' Formats the OnClick URL for the save basket button
+    ''' on the main basket display.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Function FormatSaveBasketLink(ByRef strWebShopURL As String, ByRef strPageDetails As String) As String
+        Return "location.replace(""" & strWebShopURL & strPageDetails & """)"
+    End Function
 
     ''' <summary>
     ''' Use this to add style/colour to basket rows. This

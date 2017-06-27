@@ -182,10 +182,25 @@ Partial Class KartrisLogin
 
                         strEmail = strFldEmailAddress
 
+                        'Let's look up customer ID so we can recover
+                        'AUTOSAVE basket for this user
+                        'Try
+                        Dim dtbUser As DataTable = UsersBLL.GetDetails(strEmail)
+                        Dim numCustomerID As Integer = dtbUser.Rows(0).Item("U_ID").ToString()
+
+
+                        'Try to recover AUTOSAVE basket
+                        BasketBLL.RecoverAutosaveBasket(numCustomerID)
+                        'Catch ex As Exception
+                        'something went wrong, don't sweat it, 
+                        'just means the saved basket won't get recovered, we
+                        'can live with that.
+                        'End Try
+
                         Response.Redirect(RedirectTo())
 
-                    Else
-                        popLogin.OkControlID = "btnOk"
+                        Else
+                            popLogin.OkControlID = "btnOk"
                         mvwLoginPopup.ActiveViewIndex = "1"
                         litTitle.Text = GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors")
                         litErrorDetails.Text = GetGlobalResourceObject("Login", "ContentText_NoMatch")

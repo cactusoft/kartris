@@ -538,6 +538,169 @@ INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_D
 
 GO
 
+/****** Updating save basket so autosaves and recovers if logged in, logging in ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Joseph / Paul
+-- Create date: 12/May/2008
+-- Update date: 21/Jun/2017
+-- Description:	
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisBasket_SaveBasket] ( 
+	@CustomerID INT,
+	@BasketName NVARCHAR(200),
+	@BasketID BIGINT,
+	@NowOffset datetime
+) AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+	DECLARE @SavedBasketID BIGINT;
+	DECLARE @newBV_ID BIGINT;
+
+	
+	-- 2017/06/21 Update to allow basket to be saved in
+	-- background when a user is logged in, or has just
+	-- ordered and a new account was created. This way,
+	-- the user will see their basket contents later if
+	-- they login on another device.	
+	-- We will give such baskets the name "AUTOSAVE",
+	-- so we know what to look for and can filter it out
+	-- of saved basket display if we want to.
+
+	-- Because there might be an AUTOSAVE basket for this
+	-- user already, we're going to first try to delete
+	-- any baskets of that name for this user.
+
+	BEGIN TRY  
+		-- Lookup basket ID
+		SELECT @SavedBasketID = SBSKT_ID FROM tblKartrisSavedBaskets WHERE SBSKT_Name='AUTOSAVE' AND SBSKT_UserID=@CustomerID;
+
+		-- Delete this basket
+		EXEC dbo.spKartrisBasket_DeleteSavedBasket @SavedBasketID;
+	END TRY  
+	BEGIN CATCH  
+		 -- NEVER MIND, no basket exists, no problem
+	END CATCH  
+
+	INSERT INTO tblKartrisSavedBaskets (SBSKT_UserID,SBSKT_Name,SBSKT_DateTimeAdded)
+	VALUES (@CustomerID,@BasketName,@NowOffset);
+	
+	SET @SavedBasketID=SCOPE_IDENTITY() ;
+
+	DECLARE @BV_ID INT
+	DECLARE @BV_VersionID INT
+	DECLARE @BV_Quantity FLOAT
+	DECLARE @BV_CustomText nvarchar(2000)
+
+	DECLARE Basket_cursor CURSOR FOR 
+	SELECT BV_ID,BV_VersionID,BV_Quantity,BV_CustomText FROM tblKartrisBasketValues WHERE BV_ParentID=@BasketID AND BV_ParentType='b';
+
+	OPEN Basket_cursor
+	FETCH NEXT FROM Basket_cursor INTO @BV_ID,@BV_VersionID,@BV_Quantity,@BV_CustomText
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		INSERT INTO tblKartrisBasketValues(BV_ParentType,BV_ParentID,BV_VersionID,BV_Quantity,BV_CustomText,BV_DateTimeAdded)
+		VALUES ('s',@SavedBasketID,@BV_VersionID,@BV_Quantity,@BV_CustomText,@NowOffset)
+
+		SET @newBV_ID=SCOPE_IDENTITY() 
+
+		IF EXISTS (SELECT * FROM tblKartrisBasketOptionValues WHERE BSKTOPT_BasketValueID=@BV_ID) 
+		BEGIN
+			INSERT INTO tblKartrisBasketOptionValues
+			SELECT @newBV_ID,BSKTOPT_OptionID FROM tblKartrisBasketOptionValues WHERE BSKTOPT_BasketValueID=@BV_ID
+		END
+
+		FETCH NEXT FROM Basket_cursor INTO @BV_ID,@BV_VersionID,@BV_Quantity,@BV_CustomText
+	End
+
+	CLOSE Basket_cursor
+	DEALLOCATE Basket_cursor;
+
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[spKartrisBasket_LoadAutosaveBasket]    Script Date: 26/06/2017 13:08:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: 23/Jun/2017
+-- Description:	Loads AUTOSAVE basket for
+-- specified customer
+-- =============================================
+CREATE PROCEDURE [dbo].[spKartrisBasket_LoadAutosaveBasket] ( 
+	@CustomerID BIGINT,
+	@BasketID BIGINT,
+	@NowOffset datetime
+) AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @BV_ID BIGINT
+	DECLARE @BV_VersionID BIGINT
+	DECLARe @BV_Quantity FLOAT
+	DECLARE @newBV_ID BIGINT
+	DECLARE @BV_CustomText nvarchar(2000);
+
+	DECLARE @BasketSavedID BIGINT = -1;
+
+	BEGIN TRY  
+		-- Find the @BasketSavedID value, then rest can work the same
+		SELECT @BasketSavedID = SBSKT_ID FROM tblKartrisSavedBaskets WHERE SBSKT_Name='AUTOSAVE' AND SBSKT_UserID=@CustomerID;
+
+		DECLARE Basket_cursor CURSOR FOR 
+		SELECT BV_ID,BV_VersionID,BV_Quantity,BV_CustomText FROM tblKartrisBasketValues WHERE BV_ParentID=@BasketSavedID and BV_ParentType='s'
+
+		OPEN Basket_cursor
+		FETCH NEXT FROM Basket_cursor INTO @BV_ID,@BV_VersionID,@BV_Quantity,@BV_CustomText
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+		
+			INSERT INTO tblKartrisBasketValues (BV_ParentType,BV_ParentID,BV_VersionID,BV_Quantity,BV_CustomText,BV_DateTimeAdded)
+				SELECT 'b' as BV_ParentType,@BasketID as BV_ParentID,@BV_VersionID,@BV_Quantity,@BV_CustomText,@NowOffset FROM tblKartrisBasketValues 
+				WHERE BV_ID=@BV_ID
+
+			SET @newBV_ID=SCOPE_IDENTITY() 
+
+			IF EXISTS (SELECT * FROM tblKartrisBasketOptionValues WHERE BSKTOPT_BasketValueID=@BV_ID) 
+			BEGIN
+				--PRINT cast(@BV_ID as varchar(20)) + ' exist'
+				INSERT INTO tblKartrisBasketOptionValues (BSKTOPT_BasketValueID,BSKTOPT_OptionID)
+					SELECT @newBV_ID,BSKTOPT_OptionID FROM tblKartrisBasketOptionValues WHERE BSKTOPT_BasketValueID=@BV_ID
+			END
+
+			FETCH NEXT FROM Basket_cursor INTO @BV_ID,@BV_VersionID,@BV_Quantity,@BV_CustomText
+		END
+
+		CLOSE Basket_cursor
+		DEALLOCATE Basket_cursor; 
+	END TRY  
+	BEGIN CATCH  
+		 -- we really don't need to do anything if this fails 
+	END CATCH  
+END
+GO 
+
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+('general.mailchimp.storeid', '', 's', 't',	'','MailChimp ECommerce Store ID.','2.9011', 'store', 0)
+
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+('general.mailchimp.listid', '', 's', 't',	'','MailChimp Subscribers List ID. This list is created in the MailChimp website. MailChimp>Lists>Select Your List>Settings>List name and defaults>ListID should appear in the screen','2.9011', '', 0)
+
+
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.9010', CFG_VersionAdded=2.9010 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

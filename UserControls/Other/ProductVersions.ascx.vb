@@ -664,6 +664,13 @@ Partial Class ProductVersions
             Else
                 Dim sessionID As Long = Session("SessionID")
                 AddItemsToBasket(numVersionID, numQuantity)
+
+                'v2.9010 Autosave basket
+                Try
+                    BasketBLL.AutosaveBasket(DirectCast(Page, PageBaseClass).CurrentLoggedUser.ID)
+                Catch ex As Exception
+                    'User not logged in
+                End Try
             End If
         Else
             phdOutOfStock3.Visible = True
@@ -728,6 +735,13 @@ Partial Class ProductVersions
                 End If
 
                 AddItemsToBasket(numVersionID, numQuantity, strOptionString)
+
+                'v2.9010 Autosave basket
+                Try
+                    BasketBLL.AutosaveBasket(DirectCast(Page, PageBaseClass).CurrentLoggedUser.ID)
+                Catch ex As Exception
+                    'User not logged in
+                End Try
             End If
 
         Else
