@@ -19,6 +19,10 @@ Imports System.Web.Configuration
 Imports KartSettingsManager
 Imports CkartrisBLL
 Imports CkartrisDataManipulation
+Imports MailChimp.Net.Models
+Imports System.Threading.Tasks
+Imports Braintree
+Imports PaymentsBLL
 
 ''' <summary>
 ''' Checkout - this page handles users checking out,
@@ -36,6 +40,7 @@ Partial Class _Checkout
     ''' </summary>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
+
             '---------------------------------------
             'SET PAGE TITLE
             '---------------------------------------
@@ -75,7 +80,7 @@ Partial Class _Checkout
             'to bill the customer. Instead we activate the PO method, even if
             'this user is not authorized to use it. We hide the other payment
             'methods.
-            Dim objBasket As kartris.Basket = Session("Basket")
+            Dim objBasket As Kartris.Basket = Session("Basket")
             Dim blnOrderIsFree As Boolean = False 'Disable, suspect this might misfire (objBasket.FinalPriceIncTax = 0)
             If blnOrderIsFree Then
                 'Add the PO option with name 'FREE' and hide payment selection
@@ -247,7 +252,7 @@ Partial Class _Checkout
                     Throw New Exception("Error loading payment gateway list")
                 End Try
             End If
-            
+
 
             '---------------------------------------
             'CLEAR ADDRESS CONTROLS
@@ -344,110 +349,110 @@ Partial Class _Checkout
 
         End If
 
-            '=======================================
-            'SHOW LOGIN BOX
-            'If the user is not logged in, or has
-            'not proceeded through first steps of
-            'creating new user, then we show the
-            'login / new user options.
-            'The 'proceed' button is hidden.
-            '=======================================
-            If Not (UC_KartrisLogin.Cleared Or User.Identity.IsAuthenticated) Then
+        '=======================================
+        'SHOW LOGIN BOX
+        'If the user is not logged in, or has
+        'not proceeded through first steps of
+        'creating new user, then we show the
+        'login / new user options.
+        'The 'proceed' button is hidden.
+        '=======================================
+        If Not (UC_KartrisLogin.Cleared Or User.Identity.IsAuthenticated) Then
 
-                'Show login box
-                mvwCheckout.ActiveViewIndex = 0
-                btnProceed.Visible = False
-            Else
+            'Show login box
+            mvwCheckout.ActiveViewIndex = 0
+            btnProceed.Visible = False
+        Else
 
-                'Show checkout form if not already set to
-                'go to confirmation page
-                If mvwCheckout.ActiveViewIndex <> 2 Then mvwCheckout.ActiveViewIndex = 1 Else valSummary.Enabled = False
-                btnProceed.Visible = True
-            End If
+            'Show checkout form if not already set to
+            'go to confirmation page
+            If mvwCheckout.ActiveViewIndex <> 2 Then mvwCheckout.ActiveViewIndex = 1 Else valSummary.Enabled = False
+            btnProceed.Visible = True
+        End If
 
-            '=======================================
-            'SETUP CHECKOUT FORM
-            'Runs if user is logged in already
-            '=======================================
-            If Not IsNothing(CurrentLoggedUser) Then
+        '=======================================
+        'SETUP CHECKOUT FORM
+        'Runs if user is logged in already
+        '=======================================
+        If Not IsNothing(CurrentLoggedUser) Then
 
-                'Show checkout form if not already set to
-                'go to confirmation page
-                If mvwCheckout.ActiveViewIndex <> 2 Then mvwCheckout.ActiveViewIndex = 1 Else valSummary.Enabled = False
+            'Show checkout form if not already set to
+            'go to confirmation page
+            If mvwCheckout.ActiveViewIndex <> 2 Then mvwCheckout.ActiveViewIndex = 1 Else valSummary.Enabled = False
 
-                'Fresh form arrival
-                If Not Page.IsPostBack Then
+            'Fresh form arrival
+            If Not Page.IsPostBack Then
 
-                    'Set up first user address (billing)
-                    Dim lstUsrAddresses As Collections.Generic.List(Of KartrisClasses.Address) = Nothing
+                'Set up first user address (billing)
+                Dim lstUsrAddresses As Collections.Generic.List(Of KartrisClasses.Address) = Nothing
 
-                    '---------------------------------------
-                    'BILLING ADDRESS
-                    '---------------------------------------
-                    If UC_BillingAddress.Addresses Is Nothing Then
+                '---------------------------------------
+                'BILLING ADDRESS
+                '---------------------------------------
+                If UC_BillingAddress.Addresses Is Nothing Then
 
-                        'Find all addresses in this user's account
-                        lstUsrAddresses = KartrisClasses.Address.GetAll(CurrentLoggedUser.ID)
+                    'Find all addresses in this user's account
+                    lstUsrAddresses = KartrisClasses.Address.GetAll(CurrentLoggedUser.ID)
 
-                        'Populate dropdown by filtering billing/universal addresses
-                        UC_BillingAddress.Addresses = lstUsrAddresses.FindAll(Function(p) p.Type = "b" Or p.Type = "u")
-                    End If
+                    'Populate dropdown by filtering billing/universal addresses
+                    UC_BillingAddress.Addresses = lstUsrAddresses.FindAll(Function(p) p.Type = "b" Or p.Type = "u")
+                End If
 
-                    '---------------------------------------
-                    'SHIPPING ADDRESS
-                    '---------------------------------------
-                    If UC_ShippingAddress.Addresses Is Nothing Then
+                '---------------------------------------
+                'SHIPPING ADDRESS
+                '---------------------------------------
+                If UC_ShippingAddress.Addresses Is Nothing Then
 
-                        'Find all addresses in this user's account
-                        If lstUsrAddresses Is Nothing Then lstUsrAddresses = KartrisClasses.Address.GetAll(CurrentLoggedUser.ID)
+                    'Find all addresses in this user's account
+                    If lstUsrAddresses Is Nothing Then lstUsrAddresses = KartrisClasses.Address.GetAll(CurrentLoggedUser.ID)
 
-                        'Populate dropdown by filtering shipping/universal addresses
-                        UC_ShippingAddress.Addresses = lstUsrAddresses.FindAll(Function(ShippingAdd) ShippingAdd.Type = "s" Or ShippingAdd.Type = "u")
-                    End If
+                    'Populate dropdown by filtering shipping/universal addresses
+                    UC_ShippingAddress.Addresses = lstUsrAddresses.FindAll(Function(ShippingAdd) ShippingAdd.Type = "s" Or ShippingAdd.Type = "u")
+                End If
 
-                    '---------------------------------------
-                    'SHIPPING/BILLING ADDRESS NOT SAME
-                    '---------------------------------------
+                '---------------------------------------
+                'SHIPPING/BILLING ADDRESS NOT SAME
+                '---------------------------------------
 
-                    If (Not CurrentLoggedUser.DefaultBillingAddressID = CurrentLoggedUser.DefaultShippingAddressID) Then
-                        If Not _blnAnonymousCheckout Then
-                            chkSameShippingAsBilling.Checked = False
-                        Else
-                            chkSameShippingAsBilling.Checked = True
-                        End If
-                    Else
+                If (Not CurrentLoggedUser.DefaultBillingAddressID = CurrentLoggedUser.DefaultShippingAddressID) Then
+                    If Not _blnAnonymousCheckout Then
                         chkSameShippingAsBilling.Checked = False
+                    Else
+                        chkSameShippingAsBilling.Checked = True
                     End If
+                Else
+                    chkSameShippingAsBilling.Checked = False
+                End If
 
-                    If UC_BasketSummary.GetBasket.AllDigital Then
+                If UC_BasketSummary.GetBasket.AllDigital Then
+                    pnlShippingAddress.Visible = False
+                    UC_ShippingAddress.Visible = False
+                Else
+                    If Not chkSameShippingAsBilling.Checked Then
+                        'Show shipping address block
+                        pnlShippingAddress.Visible = True
+                        UC_ShippingAddress.Visible = True
+                    Else
                         pnlShippingAddress.Visible = False
                         UC_ShippingAddress.Visible = False
-                    Else
-                        If Not chkSameShippingAsBilling.Checked Then
-                            'Show shipping address block
-                            pnlShippingAddress.Visible = True
-                            UC_ShippingAddress.Visible = True
-                        Else
-                            pnlShippingAddress.Visible = False
-                            UC_ShippingAddress.Visible = False
-                        End If
-                    End If
-
-
-
-
-
-                    '---------------------------------------
-                    'SELECT DEFAULT ADDRESSES
-                    '---------------------------------------
-                    If UC_BillingAddress.SelectedID = 0 Then
-                        UC_BillingAddress.SelectedID = CurrentLoggedUser.DefaultBillingAddressID
-                    End If
-                    If UC_ShippingAddress.SelectedID = 0 Then
-                        UC_ShippingAddress.SelectedID = CurrentLoggedUser.DefaultShippingAddressID
                     End If
                 End If
+
+
+
+
+
+                '---------------------------------------
+                'SELECT DEFAULT ADDRESSES
+                '---------------------------------------
+                If UC_BillingAddress.SelectedID = 0 Then
+                    UC_BillingAddress.SelectedID = CurrentLoggedUser.DefaultBillingAddressID
+                End If
+                If UC_ShippingAddress.SelectedID = 0 Then
+                    UC_ShippingAddress.SelectedID = CurrentLoggedUser.DefaultShippingAddressID
+                End If
             End If
+        End If
 
     End Sub
 
@@ -777,6 +782,8 @@ Partial Class _Checkout
             '=======================================
             If Page.IsValid And (UC_BasketView.SelectedShippingID <> 0 Or UC_BasketView.GetBasket.AllFreeShipping) And blnValidEUVAT Then
 
+                Dim isOk As Boolean = True
+
                 'Set billing address to one selected by user
                 'Set shipping address to this, or to selected shipping one, depending on same-shipping checkbox
                 If Not blnBasketAllDigital Then
@@ -862,46 +869,90 @@ Partial Class _Checkout
                 End If
                 Dim intGatewayCurrency As Int16
 
-                    'Set payment gateway
-                    If Interfaces.Utils.TrimWhiteSpace(clsPlugin.Currency) <> "" Then
-                        intGatewayCurrency = CurrenciesBLL.CurrencyID(clsPlugin.Currency)
-                    Else
-                        intGatewayCurrency = CUR_ID
-                    End If
+                'Set payment gateway
+                If Interfaces.Utils.TrimWhiteSpace(clsPlugin.Currency) <> "" Then
+                    intGatewayCurrency = CurrenciesBLL.CurrencyID(clsPlugin.Currency)
+                Else
+                    intGatewayCurrency = CUR_ID
+                End If
 
-                    'If payment system can only process a particular currency
-                    'we show a message that the order was converted from user
-                    'selected currency to this for processing
-                    If intGatewayCurrency <> CUR_ID Then
-                        pnlProcessCurrency.Visible = True
-                        lblProcessCurrency.Text = CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, CurrenciesBLL.ConvertCurrency(intGatewayCurrency, objBasket.FinalPriceIncTax, CUR_ID), , False)
-                    Else
-                        pnlProcessCurrency.Visible = False
-                    End If
+                'If payment system can only process a particular currency
+                'we show a message that the order was converted from user
+                'selected currency to this for processing
+                If intGatewayCurrency <> CUR_ID Then
+                    pnlProcessCurrency.Visible = True
+                    lblProcessCurrency.Text = CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, CurrenciesBLL.ConvertCurrency(intGatewayCurrency, objBasket.FinalPriceIncTax, CUR_ID), , False)
+                Else
+                    pnlProcessCurrency.Visible = False
+                End If
 
-                    'Back button, in case customers need to change anything
-                    btnBack.Visible = True
+                'Back button, in case customers need to change anything
+                btnBack.Visible = True
 
-                    'Show Credit Card Input Usercontrol if payment gateway type is local
-                    If LCase(clsPlugin.GatewayType) = "local" And
-                    Not (clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin") Then
-                        UC_CreditCardInput.AcceptsPaypal = clsPlugin.AcceptsPaypal
-                        phdCreditCardInput.Visible = True
-                    Else
+                'Show Credit Card Input Usercontrol if payment gateway type is local
+                If LCase(clsPlugin.GatewayType) = "local" And
+                    Not (clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
+                    clsPlugin.GatewayName.ToLower = "bitcoin" Or
+                    clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
+                    clsPlugin.GatewayName.ToLower = "braintreepayment") Then
+                    UC_CreditCardInput.AcceptsPaypal = clsPlugin.AcceptsPaypal
+                    phdCreditCardInput.Visible = True
+                ElseIf clsPlugin.GatewayName.ToLower = "braintreepayment" Then  ' show BrainTree input form
+                    Dim clientToken As String = ""
+                    Try
+                        clientToken = PaymentsBLL.GenerateClientToken()
+                    Catch ex As Exception
+                        Try
+                            clientToken = ""
+                            Throw New BrainTreeException("Something went wrong, please contact an Administrator.", "")
+                        Catch bEx As BrainTreeException
+                            UC_PopUpErrors.SetTextMessage = If(bEx.CustomMessage IsNot Nothing, bEx.CustomMessage, bEx.Message)
+                            UC_PopUpErrors.SetTitle = GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors")
+                            UC_PopUpErrors.ShowPopup()
+                            mvwCheckout.ActiveViewIndex = 1
+                            isOk = False
+                        End Try
+                    End Try
+
+                    If Not clientToken.Equals("") Then
+                        'MAILCHIMP Adding Cart to BrainTree Payments
+                        Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(intGatewayCurrency))
+                        'If the User is Logged
+                        If CurrentLoggedUser IsNot Nothing Then
+                            Session("BraintreeCartId") = mailChimpLib.AddCartToCustomerToStore().Result
+                        End If
+
+                        phdBrainTree.Visible = True
                         phdCreditCardInput.Visible = False
+                        phdPONumber.Visible = False
+                        txtPurchaseOrderNo.Text = ""
+                        litPONumberText.Text = ""
+                        tbClientToken.Value = clientToken
+                        tbAmount.Value = objBasket.FinalPriceIncTax
+                        ScriptManager.RegisterStartupScript(
+                        Me,
+                        GetType(Page),
+                        "BrainTreeSelected",
+                        "var clientToken = $(""input[name*='tbClientToken']"")[0]; $(clientToken).on('input', function () {clientTokenChanged();});$(clientToken).trigger(""input"");",
+                        True)
                     End If
+                Else
+                    phdCreditCardInput.Visible = False
+                End If
 
+                If isOk Then
                     'Move to next step
                     mvwCheckout.ActiveViewIndex = "2"
                     btnProceed.OnClientClick = ""
-                Else
-                    'Show any errors not handled by
-                    'client side validation
-                    popExtender.Show()
+                End If
+            Else
+                'Show any errors not handled by
+                'client side validation
+                popExtender.Show()
             End If
 
-
         ElseIf mvwCheckout.ActiveViewIndex = "2" Then
+
             '=======================================
             'PROCEED CLICKED ON ORDER REVIEW PAGE
             '=======================================
@@ -934,7 +985,11 @@ Partial Class _Checkout
             'order) / offline payment method, where a
             'user can checkout without giving card
             'details and will pay offline.
-            If LCase(clsPlugin.GatewayType) <> "local" Or blnValid Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin" Then
+            If LCase(clsPlugin.GatewayType) <> "local" Or
+                blnValid Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
+                clsPlugin.GatewayName.ToLower = "bitcoin" Or
+                clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
+                clsPlugin.GatewayName.ToLower = "braintreepayment" Then
 
                 'Setup variables to use later
                 Dim C_ID As Integer = 0
@@ -1067,7 +1122,7 @@ Partial Class _Checkout
                 'Order totals
                 If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
                     sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & vbCrLf)
-                    sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
+                    sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) &
                          IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & vbCrLf)
                 End If
                 sbdBodyText.Append(" " & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
@@ -1081,7 +1136,7 @@ Partial Class _Checkout
                     sbdHTMLOrderContents.Append("<tr class=""row_totals""><td colspan=""2"">")
                     If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
                         sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & "<br/>")
-                        sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
+                        sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) &
                              IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & "<br/>")
                     End If
                     sbdHTMLOrderContents.Append("(" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
@@ -1148,8 +1203,8 @@ Partial Class _Checkout
                     sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_PurchaseContactDetails") & vbCrLf)
 
                     If Not _blnAnonymousCheckout Then
-                        sbdBodyText.Append(" " & GetGlobalResourceObject("Address", "FormLabel_CardHolderName") & ": " & .FullName & vbCrLf & _
-                                             " " & GetGlobalResourceObject("Email", "EmailText_Company") & ": " & .Company & vbCrLf & _
+                        sbdBodyText.Append(" " & GetGlobalResourceObject("Address", "FormLabel_CardHolderName") & ": " & .FullName & vbCrLf &
+                                             " " & GetGlobalResourceObject("Email", "EmailText_Company") & ": " & .Company & vbCrLf &
                                              IIf(Not String.IsNullOrEmpty(txtEUVAT.Text), " " & GetGlobalResourceObject("Invoice", "FormLabel_CardholderEUVatNum") & ": " & txtEUVAT.Text & vbCrLf, ""))
                     End If
 
@@ -1162,10 +1217,10 @@ Partial Class _Checkout
                     sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_Address") & ":" & vbCrLf)
 
                     If Not _blnAnonymousCheckout Then
-                        sbdBodyText.Append(" " & .StreetAddress & vbCrLf & _
-                            " " & .TownCity & vbCrLf & _
-                            " " & .County & vbCrLf & _
-                            " " & .Postcode & vbCrLf & _
+                        sbdBodyText.Append(" " & .StreetAddress & vbCrLf &
+                            " " & .TownCity & vbCrLf &
+                            " " & .County & vbCrLf &
+                            " " & .Postcode & vbCrLf &
                             " " & .Country.Name)
                     Else
                         sbdBodyText.Append(GetGlobalResourceObject("Kartris", "ContentText_NotApplicable"))
@@ -1232,9 +1287,9 @@ Partial Class _Checkout
                 If Not blnBasketAllDigital Then
                     If chkSameShippingAsBilling.Checked Then
                         With UC_BillingAddress.SelectedAddress
-                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf & _
-                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf & _
-                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf & _
+                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf &
+                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf &
+                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf &
                                           " " & .Country.Name & vbCrLf & vbCrLf
                             sbdHTMLOrderEmail.Replace("[shippingname]", Server.HtmlEncode(.FullName))
                             sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", Server.HtmlEncode(.StreetAddress))
@@ -1252,9 +1307,9 @@ Partial Class _Checkout
                         End With
                     Else
                         With UC_ShippingAddress.SelectedAddress
-                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf & _
-                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf & _
-                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf & _
+                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf &
+                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf &
+                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf &
                                           " " & .Country.Name & vbCrLf & vbCrLf
                             sbdHTMLOrderEmail.Replace("[shippingname]", Server.HtmlEncode(.FullName))
                             sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", Server.HtmlEncode(.StreetAddress))
@@ -1413,8 +1468,8 @@ Partial Class _Checkout
 
                 If blnUseHTMLOrderEmail Then
                     'build up the table and the header tags, insert basket contents
-                    sbdHTMLOrderContents.Insert(0, "<table id=""orderitems""><thead><tr>" & vbCrLf & _
-                                                "<th class=""col1"">" & GetGlobalResourceObject("Kartris", "ContentText_Item") & "</th>" & vbCrLf & _
+                    sbdHTMLOrderContents.Insert(0, "<table id=""orderitems""><thead><tr>" & vbCrLf &
+                                                "<th class=""col1"">" & GetGlobalResourceObject("Kartris", "ContentText_Item") & "</th>" & vbCrLf &
                                                 "<th class=""col2"">" & GetGlobalResourceObject("Kartris", "ContentText_Price") & "</th></thead><tbody>" & vbCrLf &
                                                 sbdHTMLOrderBasket.ToString)
                     'finally close the order contents HTML table
@@ -1426,8 +1481,8 @@ Partial Class _Checkout
                 'check if shippingdestinationid is initialized, if not then reload checkout page
                 If Not blnBasketAllDigital Then
                     If UC_BasketSummary.ShippingDestinationID = 0 Or UC_BasketView.ShippingDestinationID = 0 Then
-                        CkartrisFormatErrors.LogError("Basket was reset. Shipping info lost." & vbCrLf & "BasketView Shipping Destination ID: " & _
-                                                      UC_BasketView.ShippingDestinationID & vbCrLf & "BasketSummary Shipping Destination ID: " & _
+                        CkartrisFormatErrors.LogError("Basket was reset. Shipping info lost." & vbCrLf & "BasketView Shipping Destination ID: " &
+                                                      UC_BasketView.ShippingDestinationID & vbCrLf & "BasketSummary Shipping Destination ID: " &
                                                       UC_BasketSummary.ShippingDestinationID)
                         Response.Redirect("~/Checkout.aspx")
                     End If
@@ -1435,11 +1490,18 @@ Partial Class _Checkout
 
 
                 'Create the order record
-                O_ID = OrdersBLL.Add(C_ID, UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword, UC_BillingAddress.SelectedAddress, _
-                                     UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket, _
-                                      arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID, _
-                                     intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice, _
-                                     IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtPurchaseOrderNo.Text, Trim(txtComments.Text))
+                O_ID = OrdersBLL.Add(C_ID, UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword, UC_BillingAddress.SelectedAddress,
+                                         UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket,
+                                          arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID,
+                                         intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice,
+                                         IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtPurchaseOrderNo.Text, Trim(txtComments.Text))
+                'MAILCHIMP Adding Cart
+                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(intGatewayCurrency))
+                'If the User is Logged
+                If CurrentLoggedUser IsNot Nothing And Session("BraintreeCartId") Is Nothing Then
+                    Dim addCartResult As String = mailChimpLib.AddCartToCustomerToStore(O_ID).Result
+                End If
+
 
                 'Order Creation successful
                 If O_ID > 0 Then
@@ -1612,6 +1674,7 @@ Partial Class _Checkout
                     'update data field with serialized order and basket objects and selected shipping method id - this allows us to edit this order later if needed
                     OrdersBLL.DataUpdate(O_ID, Session("objOrder") & "|||" & Payment.Serialize(objBasket) & "|||" & UC_BasketView.SelectedShippingID)
 
+                    Dim transactionId As String = ""
                     If LCase(clsPlugin.GatewayType) = "local" Then
                         '---------------------------------------
                         'LOCAL PROCESS
@@ -1625,13 +1688,66 @@ Partial Class _Checkout
                         Dim blnResult As Boolean
                         Dim strBitcoinPaymentAddress As String = ""
 
+                        Dim strEasypayPayment As String = ""
+                        Dim strBraintreePayment As String = ""
 
-                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" OrElse clsPlugin.GatewayName.ToLower = "bitcoin" Then
+                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" OrElse
+                        clsPlugin.GatewayName.ToLower = "bitcoin" OrElse
+                        clsPlugin.GatewayName.ToLower = "easypaymultibanco" OrElse
+                        clsPlugin.GatewayName.ToLower = "braintreepayment" Then
                             'PO orders don't need authorizing, they are
                             'effectively successful if placed as payment
                             'will come later
                             If clsPlugin.GatewayName.ToLower = "bitcoin" Then
                                 strBitcoinPaymentAddress = clsPlugin.ProcessOrder(Payment.Serialize(objOrder))
+                                blnResult = True
+                            ElseIf clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
+                                strEasypayPayment = clsPlugin.ProcessOrder(Payment.Serialize(objOrder))
+                                blnResult = True
+                                BasketBLL.DeleteBasket()
+                                Session("Basket") = Nothing
+                            ElseIf clsPlugin.GatewayName.ToLower = "braintreepayment" Then      ' if the user selected BrainTree as a paying method, retrieves some data from the form and calls PaymentsBLL to perform the transaction
+                                Dim paymentMethodNonce, output As String
+                                Dim amount As Decimal
+                                Dim CurrencyID As Short
+                                CurrencyID = Session("CUR_ID")
+                                Try
+                                    paymentMethodNonce = Request.Form("ctl00$cntMain$tbPaymentMethodNonce")
+                                    amount = Request.Form("ctl00$cntMain$tbAmount")
+                                    Try
+                                        transactionId = PaymentsBLL.BrainTreePayment(paymentMethodNonce, amount, CurrencyID)
+                                    Catch bEx As BrainTreeException
+                                        transactionId = ""
+                                        UC_PopUpErrors.SetTextMessage = If(bEx.CustomMessage IsNot Nothing, bEx.CustomMessage, bEx.Message)
+                                        UC_PopUpErrors.SetTitle = GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors")
+                                        UC_PopUpErrors.ShowPopup()
+                                        mvwCheckout.ActiveViewIndex = 1
+                                        blnResult = False
+                                    End Try
+
+
+                                    If transactionId <> "" Then
+                                        blnResult = True
+                                        Try
+                                            Dim cartId As String = Session("BraintreeCartId")
+                                            If cartId IsNot Nothing Then
+                                                ' Removing Cart and adding Order to successful payment made with Braintree
+                                                Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(CurrentLoggedUser.ID).Result
+                                                Dim mcOrder As Order = mailChimpLib.AddOrder(mcCustomer, cartId).Result
+                                                Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart(cartId).Result
+                                                Session("BraintreeCartId") = Nothing
+
+                                            End If
+                                        Catch ex As Exception
+                                            Debug.Print(ex.Message)
+                                        End Try
+                                        BasketBLL.DeleteBasket()
+                                        Session("Basket") = Nothing
+
+                                    End If
+                                Catch ex As Exception
+                                    output = "Error: 81503: Amount is an invalid format."
+                                End Try
                             End If
 
                             blnResult = True
@@ -1660,12 +1776,16 @@ Partial Class _Checkout
                         '---------------------------------------
                         If blnResult Then
                             'The transaction was authorized so update the order
-                            If clsPlugin.CallbackSuccessful Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
-                                If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
+                            If clsPlugin.CallbackSuccessful Or
+                            clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
+                            clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
+                            clsPlugin.GatewayName.ToLower = "braintreepayment" Then
+                                If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
+                                clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
+                                clsPlugin.GatewayName.ToLower = "braintreepayment" Then
                                     O_ID = objOrder.ID
                                 Else
-                                    'Get order ID that was passed back
-                                    'with callback
+                                    'Get order ID that was passed back with callback
                                     O_ID = clsPlugin.CallbackOrderID
                                 End If
 
@@ -1743,6 +1863,7 @@ Partial Class _Checkout
                                         '---------------------------------------
                                         Dim blnCheckInvoicedOnPayment As Boolean = KartSettingsManager.GetKartConfig("frontend.orders.checkinvoicedonpayment") = "y"
                                         Dim blnCheckReceivedOnPayment As Boolean = KartSettingsManager.GetKartConfig("frontend.orders.checkreceivedonpayment") = "y"
+                                        Dim blnCheckSent As Boolean = True
 
                                         '---------------------------------------
                                         'SET ORDER TIME
@@ -1751,18 +1872,29 @@ Partial Class _Checkout
                                         'not in your time zone
                                         '---------------------------------------
                                         Dim strOrderTimeText As String = GetGlobalResourceObject("Email", "EmailText_OrderTime") & " " & CkartrisDisplayFunctions.NowOffset
-                                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin" Then
+                                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin" Or clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
                                             blnCheckReceivedOnPayment = False
                                             blnCheckInvoicedOnPayment = False
+                                        End If
+
+                                        If clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
+                                            blnCheckSent = False
                                         End If
 
                                         '---------------------------------------
                                         'UPDATE THE ORDER RECORD
                                         '---------------------------------------
-                                        Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True, _
-                                                                                                  blnCheckInvoicedOnPayment, _
-                                                                                                  blnCheckReceivedOnPayment, _
-                                                                                                  strOrderTimeText, _
+                                        Dim referenceCode As String = ""
+                                        If clsPlugin.GatewayName.ToLower = "braintreepayment" Then
+                                            referenceCode = transactionId
+                                        Else
+                                            referenceCode = clsPlugin.CallbackReferenceCode
+                                        End If
+
+                                        Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, referenceCode, CkartrisDisplayFunctions.NowOffset, blnCheckSent,
+                                                                                                  blnCheckInvoicedOnPayment,
+                                                                                                  blnCheckReceivedOnPayment,
+                                                                                                  strOrderTimeText,
                                                                                                   O_CouponCode, O_WishListID, 0, 0, "", 0)
                                         'If intUpdateResult = O_ID Then
                                         Dim strCustomerEmailText As String = ""
@@ -1784,8 +1916,8 @@ Partial Class _Checkout
 
                                         'Add in email header above that
                                         If Not blnUseHTMLOrderEmail Then
-                                            strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderReceived") & vbCrLf & vbCrLf & _
-                                                            GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf & _
+                                            strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderReceived") & vbCrLf & vbCrLf &
+                                                            GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf &
                                                             strCustomerEmailText
                                         Else
                                             strCustomerEmailText = strCustomerEmailText.Replace("[storeowneremailheader]", "")
@@ -1817,19 +1949,31 @@ Partial Class _Checkout
                                     End If
                                 End If
 
-                                '---------------------------------------
-                                'ORDER UPDATED
-                                'Clear object, transfer to the 
-                                'CheckoutComplete.aspx page
-                                '---------------------------------------
-                                'Dim BasketObject As Kartris.Basket = New Kartris.Basket
-                                BasketBLL.DeleteBasket()
-                                Session("Basket") = Nothing
-                                Session("OrderDetails") = strCallBodyText
-                                Session("OrderID") = O_ID
-                                Session("_NewPassword") = Nothing
-                                Session("objOrder") = Nothing
-                                Server.Transfer("CheckoutComplete.aspx")
+                                If clsPlugin.GatewayName.ToLower <> "easypaymultibanco" Then
+
+                                    '---------------------------------------
+
+                                    'ORDER UPDATED
+                                    'Clear object, transfer to the 
+                                    'CheckoutComplete.aspx page
+                                    '---------------------------------------
+                                    'Dim BasketObject As Kartris.Basket = New Kartris.Basket
+
+
+                                    BasketBLL.DeleteBasket()
+                                    Session("Basket") = Nothing
+                                    Session("OrderDetails") = strCallBodyText
+                                    Session("OrderID") = O_ID
+                                    Session("_NewPassword") = Nothing
+                                    Session("objOrder") = Nothing
+                                    Server.Transfer("CheckoutComplete.aspx")
+                                Else
+                                    Session("GateWayName") = clsPlugin.GatewayName
+                                    Session("_PostBackURL") = ""
+                                    Session("EasypayPayment") = strEasypayPayment
+                                    Server.Transfer("VisaDetail.aspx?g=easypay&a=mbrefer")
+
+                                End If
                             Else
                                 '---------------------------------------
                                 'REDIRECT TO PAYPAL OR 3D-SECURE
@@ -1853,7 +1997,9 @@ Partial Class _Checkout
                             'ERROR BACK FROM CREDIT CARD GATEWAY
                             'Show error in popup
                             '---------------------------------------
-                            UC_PopUpErrors.SetTextMessage = clsPlugin.CallbackMessage
+                            If clsPlugin.GatewayName.ToLower <> "braintreepayment" Then
+                                UC_PopUpErrors.SetTextMessage = clsPlugin.CallbackMessage
+                            End If
                             UC_PopUpErrors.SetTitle = GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors")
                             UC_PopUpErrors.ShowPopup()
                             mvwCheckout.ActiveViewIndex = 1
@@ -1878,7 +2024,7 @@ Partial Class _Checkout
             End If
 
 
-            End If
+        End If
 
     End Sub
 
@@ -1911,74 +2057,74 @@ Partial Class _Checkout
         Dim blnPassed As Boolean = False
         Select Case strISOCode
             Case "AT" 'Austria
-                blnPassed = numVatNumberLength = 9 And _
-                      UCase(Mid(strVatNumber, 3, 1)) = "U" And _
-                   IsNumeric(Right(strVatNumber, 8)) And _
+                blnPassed = numVatNumberLength = 9 And
+                      UCase(Mid(strVatNumber, 3, 1)) = "U" And
+                   IsNumeric(Right(strVatNumber, 8)) And
                    strCountryCodeFromVatNumber = strISOCode
 
             Case "BE", "BG" 'Belgium, Bulgaria
-                blnPassed = (numVatNumberLength = 9 Or numVatNumberLength = 10) And _
-                   IsNumeric(Right(strVatNumber, 9)) And _
+                blnPassed = (numVatNumberLength = 9 Or numVatNumberLength = 10) And
+                   IsNumeric(Right(strVatNumber, 9)) And
                    strCountryCodeFromVatNumber = strISOCode
 
             Case "PT", "DE", "EE" 'Portugal, Germany, Estonia
-                blnPassed = numVatNumberLength = 9 And _
-                   IsNumeric(Right(strVatNumber, 9)) And _
+                blnPassed = numVatNumberLength = 9 And
+                   IsNumeric(Right(strVatNumber, 9)) And
                    strCountryCodeFromVatNumber = strISOCode
 
             Case "DK", "FI", "LU", "MT", "HU", "SI" 'Denmark, Finland, Luxembourg, Malta, Hungary, Slovenia
-                blnPassed = numVatNumberLength = 8 And _
-                   IsNumeric(Right(strVatNumber, 8)) And _
+                blnPassed = numVatNumberLength = 8 And
+                   IsNumeric(Right(strVatNumber, 8)) And
                    strCountryCodeFromVatNumber = strISOCode
 
             Case "FR" 'France
-                blnPassed = numVatNumberLength = 11 And _
-                   IsNumeric(Right(strVatNumber, 9)) And _
-                   InStr(strVatNumber, "O") = 0 And _
-                   InStr(strVatNumber, "I") = 0 And _
+                blnPassed = numVatNumberLength = 11 And
+                   IsNumeric(Right(strVatNumber, 9)) And
+                   InStr(strVatNumber, "O") = 0 And
+                   InStr(strVatNumber, "I") = 0 And
                    strCountryCodeFromVatNumber = strISOCode
 
             Case "GR" 'Greece
-                blnPassed = numVatNumberLength = 9 And _
-                   IsNumeric(Right(strVatNumber, 9)) And _
+                blnPassed = numVatNumberLength = 9 And
+                   IsNumeric(Right(strVatNumber, 9)) And
                    strCountryCodeFromVatNumber = "EL"
 
             Case "IE" 'Ireland
-                blnPassed = numVatNumberLength = 8 And _
-                   IsNumeric(Mid(strVatNumber, 5, 4)) And _
-                   Not IsNumeric(Right(strVatNumber, 1)) And _
+                blnPassed = numVatNumberLength = 8 And
+                   IsNumeric(Mid(strVatNumber, 5, 4)) And
+                   Not IsNumeric(Right(strVatNumber, 1)) And
                    strCountryCodeFromVatNumber = strISOCode
 
             Case "IT", "LV", "HR" 'Italy, Latvia, Croatia
-                blnPassed = numVatNumberLength = 11 And _
-                   IsNumeric(Right(strVatNumber, 11)) And _
+                blnPassed = numVatNumberLength = 11 And
+                   IsNumeric(Right(strVatNumber, 11)) And
                    strCountryCodeFromVatNumber = strISOCode
 
             Case "NL" 'Netherlands
-                blnPassed = numVatNumberLength = 12 And _
-                   IsNumeric(Right(strVatNumber, 2)) And _
-                   IsNumeric(Mid(strVatNumber, 3, 8)) And _
-                   Mid(strVatNumber, 12, 1) = "B" And _
+                blnPassed = numVatNumberLength = 12 And
+                   IsNumeric(Right(strVatNumber, 2)) And
+                   IsNumeric(Mid(strVatNumber, 3, 8)) And
+                   Mid(strVatNumber, 12, 1) = "B" And
                    strCountryCodeFromVatNumber = strISOCode
 
             Case "ES" 'Spain
-                blnPassed = numVatNumberLength = 9 And _
-                   IsNumeric(Mid(strVatNumber, 4, 7)) And _
+                blnPassed = numVatNumberLength = 9 And
+                   IsNumeric(Mid(strVatNumber, 4, 7)) And
                    strCountryCodeFromVatNumber = strISOCode
 
             Case "SE" 'Sweden
-                blnPassed = numVatNumberLength = 12 And _
-                   IsNumeric(Right(strVatNumber, 12)) And _
+                blnPassed = numVatNumberLength = 12 And
+                   IsNumeric(Right(strVatNumber, 12)) And
                    strCountryCodeFromVatNumber = strISOCode
 
             Case "GB", "UK", "LT" 'United Kingdom, Lithuania
-                blnPassed = (numVatNumberLength = 12 Or numVatNumberLength = 9) And _
-                   IsNumeric(Right(strVatNumber, 9)) And _
+                blnPassed = (numVatNumberLength = 12 Or numVatNumberLength = 9) And
+                   IsNumeric(Right(strVatNumber, 9)) And
                    (strCountryCodeFromVatNumber = "GB" Or strCountryCodeFromVatNumber = "LT")
 
             Case "CY" 'Cyprus
-                blnPassed = numVatNumberLength = 9 And _
-                   Not IsNumeric(Right(strVatNumber, 1)) And _
+                blnPassed = numVatNumberLength = 9 And
+                   Not IsNumeric(Right(strVatNumber, 1)) And
                    strCountryCodeFromVatNumber = strISOCode
 
             Case "CZ" 'Czech Republic
@@ -1986,14 +2132,14 @@ Partial Class _Checkout
                     strVatNumber = Mid(strVatNumber, 4)
                     numVatNumberLength = Len(strVatNumber)
                 End If
-                blnPassed = numVatNumberLength >= 8 And _
-                   numVatNumberLength <= 10 And _
-                   IsNumeric(Right(strVatNumber, 8)) And _
+                blnPassed = numVatNumberLength >= 8 And
+                   numVatNumberLength <= 10 And
+                   IsNumeric(Right(strVatNumber, 8)) And
                    (strCountryCodeFromVatNumber = "CS" Or strCountryCodeFromVatNumber = "CZ")
 
             Case "PL", "SK" 'Poland, Slovak Republic
-                blnPassed = numVatNumberLength = 10 And _
-                   IsNumeric(Right(strVatNumber, 10)) And _
+                blnPassed = numVatNumberLength = 10 And
+                   IsNumeric(Right(strVatNumber, 10)) And
                    strCountryCodeFromVatNumber = strISOCode
 
             Case Else       'ISO not recognised as in the EU - fail

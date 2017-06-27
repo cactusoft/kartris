@@ -249,12 +249,52 @@ Partial Class UserControls_Back_OrderDetails
         'This line is actually the one that updates the order - not the built-in FormView update. Gives us more flexibility - needs to catch some thingies. =)
         If OrdersBLL._UpdateStatus(ViewState("numOrderID"), chkOrderSent.Checked, chkOrderPaid.Checked, chkOrderShipped.Checked,
                                 chkOrderInvoiced.Checked, txtOrderStatus.Text, txtOrderNotes.Text, chkOrderCancelled.Checked) > 0 Then
+            If chkOrderPaid.Checked Then
+                Dim hidOrderCurrencyID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidOrderCurrencyID"), HiddenField)
+                Dim intOrderCurrencyID As Integer = CInt(hidOrderCurrencyID.Value)
+                Dim hidCustomerID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidCustomerID"), HiddenField)
+                Dim kartrisUser As KartrisMemberShipUser = Membership.GetUser(UsersBLL.GetEmailByID(CInt(hidCustomerID.Value)))
+                Dim basketObj As Basket = GetBasket(ViewState("numOrderID"))
+                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(kartrisUser, basketObj, intOrderCurrencyID)
+
+                Try
+
+                    Dim result As Boolean = mailChimpLib.DeleteOrder("order_" & ViewState("numOrderID")).Result
+                    If result Then
+                        Dim mcOrder As MailChimp.Net.Models.Order = mailChimpLib.AddOrder(mailChimpLib.GetCustomer(hidCustomerID.Value).Result, ViewState("numOrderID")).Result
+                        ' Not creating the order, it's missing Basket
+                        mailChimpLib.DeleteCart("cart_" & ViewState("numOrderID"))
+                    End If
+                Catch ex As Exception
+
+                End Try
+            End If
             RaiseEvent ShowMasterUpdate()
         Else
             'error
         End If
 
     End Sub
+
+    Function GetBasket(ByVal NumOrderId As Integer) As Basket
+        Dim Basket As Basket = New Basket()
+        Dim BasketItems As List(Of Kartris.BasketItem)
+        Dim blnIsInCheckout As Boolean = True
+
+        Dim sessionID As Long = Session("SessionID")
+
+        Dim objBasket As Kartris.Basket = New Basket
+        Dim dtOrderRecord As DataTable = OrdersBLL.GetOrderByID(NumOrderId)
+        If dtOrderRecord IsNot Nothing Then
+            Dim strOrderData As String = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_Data"))
+            ViewState("arrOrderData") = Split(strOrderData, "|||")
+            'Dim objOrder As New Kartris.Interfaces.objOrder
+            objBasket = Payment.Deserialize(ViewState("arrOrderData")(1), objBasket.GetType)
+
+        End If
+
+        Return objBasket
+    End Function
 
     ''' <summary>
     ''' handles the delete linkbutton being clicked
