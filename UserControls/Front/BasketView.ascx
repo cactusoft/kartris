@@ -751,16 +751,10 @@ MAIN BASKET
                         <asp:Button Text='<%$ Resources: Basket, FormButton_Recalculate %>' CssClass="button"
                             ID="btnRecalculate" runat="server" UseSubmitBehavior="True" CausesValidation="True" />
                         <asp:Button Text='<%$ Resources: Basket, FormButton_EmptyBasket %>' CssClass="button"
-                            ID="btnEmptyBasket" runat="server" />
-
-                        <input value="<asp:Literal Text='<%$ Resources: Kartris, ContentText_MinibasketSaveBasket %>' ID='litSaveBasket' runat='server' />" type="button"
-                            class="button"
-                            onClick='<%= FormatSaveBasketLink(CkartrisBLL.WebShopURL, "Customer.aspx?action=savebasket") %>' />
-
-                        
-
-                        <asp:Button Text='<%$ Resources: Basket, FormButton_MakeEnquiry %>' CssClass="button"
-                            ID="btnEnquire" runat="server" PostBackUrl="~/Contact.aspx" />
+                            ID="btnEmptyBasket" runat="server" /><input value="<asp:Literal Text='<%$ Resources: Kartris, ContentText_MinibasketSaveBasket %>' ID='litSaveBasket' runat='server' />" type="button"
+                                class="button"
+                                onclick='<%= FormatSaveBasketLink(CkartrisBLL.WebShopURL, "Customer.aspx?action=savebasket") %>' /><asp:Button Text='<%$ Resources: Basket, FormButton_MakeEnquiry %>' CssClass="button"
+                                    ID="btnEnquire" runat="server" PostBackUrl="~/Contact.aspx" />
                         <asp:Button Text='<%$ Resources: Basket, FormButton_Checkout %>' CssClass="button highpriority"
                             ID="btnCheckout" runat="server" PostBackUrl="~/Checkout.aspx" />
                     </div>

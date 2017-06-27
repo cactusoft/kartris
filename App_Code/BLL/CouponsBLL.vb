@@ -41,7 +41,7 @@ Public Class CouponsBLL
     Public Shared Function _GetCouponsByDate(ByVal datCreationDate As DateTime) As DataTable
         Return Adptr._GetByDate(Year(datCreationDate), Month(datCreationDate), Day(datCreationDate))
     End Function
-    Private Shared Function _GenerateNewCouponCode() As String
+    Public Shared Function _GenerateNewCouponCode() As String
         Dim numRandomElement1 As Short, numRandomElement2 As Short, numRandomElement3 As Short
         Dim numRandomElement4 As Short, numRandomElement5 As Short
         Dim strCouponCode As String = ""
@@ -58,7 +58,7 @@ Public Class CouponsBLL
             Randomize()
             numRandomElement5 = Int(Rnd() * 26)
 
-            strCouponCode = Chr(numRandomElement1 + 65) & Chr(numRandomElement2 + 65) & _
+            strCouponCode = Chr(numRandomElement1 + 65) & Chr(numRandomElement2 + 65) &
                         Chr(numRandomElement3 + 65) & Chr(numRandomElement4 + 65) & Chr(numRandomElement5 + 65)
 
         Loop While _IsCouponCodeExist(strCouponCode)

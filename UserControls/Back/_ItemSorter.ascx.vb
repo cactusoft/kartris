@@ -37,16 +37,29 @@ Partial Class _ItemSorter
         Page.ClientScript.GetPostBackEventReference(Me, String.Empty)
     End Sub
 
+    ''' <summary>
+    ''' Clear items
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub ClearItems()
         lbxImagesOrder.Items.Clear()
 
         ReorderImages()
     End Sub
 
+    ''' <summary>
+    ''' Return number of items
+    ''' </summary>
+    ''' <returns>No of items count</returns>
+    ''' <remarks></remarks>
     Public Function NoOfItems() As Integer
         Return ajxReorder.Items.Count
     End Function
 
+    ''' <summary>
+    ''' Loads items into sorter
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub LoadItemsInSorter()
         If Not Page.IsPostBack Or lbxImagesOrder.Items.Count = 0 Then
             c_tblImages.Clear()
@@ -80,6 +93,10 @@ Partial Class _ItemSorter
         End If
     End Sub
 
+    ''' <summary>
+    ''' Handles change of sort order
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub ajxReorder_ItemReorder(ByVal sender As Object, ByVal e As AjaxControlToolkit.ReorderListItemReorderEventArgs) Handles ajxReorder.ItemReorder
         Dim strOldText As String = lbxImagesOrder.Items(e.OldIndex).Text
 
@@ -99,8 +116,13 @@ Partial Class _ItemSorter
         ReorderImages()
     End Sub
 
+    ''' <summary>
+    ''' Renames items which is used to sort them
+    ''' </summary>
+    ''' <remarks></remarks>
     Private Sub RenameItems()
-        
+        'Use the coupon code generator to create random string part to include in file names
+        Dim strRandomString As String = CouponsBLL._GenerateNewCouponCode()
         Dim strBaseName As String = ""
         Dim strName As String = ""
         For i As Byte = 0 To lbxImagesOrder.Items.Count - 1
@@ -118,8 +140,8 @@ Partial Class _ItemSorter
             End If
             strName = strBaseName
             If i < 9 Then strName += "0"
-            strName += (i + 1) & Right(lbxImagesOrder.Items(i).Text, 4)
-            File.Copy(Server.MapPath(c_FolderPath & lbxImagesOrder.Items(i).Text), _
+            strName += (i + 1) & "_" & strRandomString & Right(lbxImagesOrder.Items(i).Text, 4)
+            File.Copy(Server.MapPath(c_FolderPath & lbxImagesOrder.Items(i).Text),
                       Server.MapPath(c_FolderPath & strName))
         Next
 
@@ -140,14 +162,22 @@ Partial Class _ItemSorter
                 lbxImagesOrder.Items.Add(fleImage(i).Name.Replace("temp-", ""))
             End If
         Next
-       
+
     End Sub
 
+    ''' <summary>
+    ''' Add a new item to sorter
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub AddNewItem(ByVal pImgName As String)
         lbxImagesOrder.Items.Add(pImgName)
         ReorderImages()
     End Sub
 
+    ''' <summary>
+    ''' Change sort order
+    ''' </summary>
+    ''' <remarks></remarks>
     Private Sub ReorderImages()
 
         If Not Directory.Exists(Server.MapPath(c_FolderPath)) Then Return
@@ -186,6 +216,10 @@ Partial Class _ItemSorter
        
     End Sub
 
+    ''' <summary>
+    ''' Handles commands on sort buttons (Remove, MoveUp, MoveDown)
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub rptImages_ItemCommand(ByVal source As Object, ByVal e As System.Web.UI.WebControls.RepeaterCommandEventArgs) Handles rptImages.ItemCommand
 
         If e.CommandName = "Remove" Then
@@ -212,6 +246,10 @@ Partial Class _ItemSorter
         RaiseEvent NeedCategoryRefresh()
     End Sub
 
+    ''' <summary>
+    ''' Click YES to confirm delete
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub lnkYes_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkYes.Click
         Try
             Dim strFileName As String = ""
@@ -229,6 +267,10 @@ Partial Class _ItemSorter
         End Try
     End Sub
 
+    ''' <summary>
+    ''' Activate/deactivate UP/DOWN arrows by items
+    ''' </summary>
+    ''' <remarks>Top item has up button disabled, etc.</remarks>
     Private Sub ShowHideUpDownArrows()
         Try
             CType(rptImages.Items(0).FindControl("lnkBtnMoveUp"), LinkButton).Enabled = False

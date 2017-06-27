@@ -194,22 +194,22 @@ Partial Class _FileUploader
         Try
             Dim existingFiles() As String = Nothing
             Dim numTotalFiles = 0
-            ' --------------------------
             Dim strTempName As String = String.Empty
+            Dim lstFileNames As List(Of String) = _UC_UploaderPopup.GetFileNames
 
-            Dim FileNames As List(Of String) = _UC_UploaderPopup.GetFileNames
+            'Error. Too many files.
+            If c_blnOneFileOnly And lstFileNames.Count > 1 Then
 
-            If c_blnOneFileOnly And FileNames.Count > 1 Then
-                ' Error. Too many files. 
-                CkartrisFormatErrors.LogError("Attempt to upload too many files. OneFileOnly set as true while uploaded file count is " & FileNames.Count.ToString)
+                CkartrisFormatErrors.LogError("Attempt to upload too many files. OneFileOnly set as true while uploaded file count is " & lstFileNames.Count.ToString)
                 litStatus.Text = "An attempt was made to upload more than one file. This is not permitted in the current context."
                 popExtender.Show()
                 Exit Sub
             End If
 
-            For I = 0 To FileNames.Count - 1
-                ' Cycle through all of the file names in order and save each one individually.
-                ' Get list of existing files.
+            'Cycle through all of the file names in order and save each one individually.
+            For i = 0 To lstFileNames.Count - 1
+
+                'Get list of existing files.
                 existingFiles = Directory.GetFiles(Server.MapPath(c_strUploadPath))
                 numTotalFiles = existingFiles.Length()
 
@@ -218,19 +218,23 @@ generateNewName:
 
                 If c_blnOneFileOnly Then
                     ' Used if the target folder will only ever have one file in it. 
-                    strTempName = c_numItemID & Path.GetExtension(FileNames(I))
+                    strTempName = c_numItemID & Path.GetExtension(lstFileNames(i))
                 Else
-                    strTempName = c_strFileName & CStr(Int(2 * Rnd() + (numTotalFiles * Rnd() + numTotalFiles / 2))) & Path.GetExtension(_UC_UploaderPopup.GetFileName())
+                    Dim numFileNumber As Int16 = numTotalFiles + 20
+                    Dim strFileBaseName As String = ""
+                    Dim strRandomString As String = CouponsBLL._GenerateNewCouponCode()
+
+                    If numFileNumber < 10 Then strFileBaseName += "0"
+                    strFileBaseName &= CStr(numFileNumber)
+                    strTempName = c_strFileName & strFileBaseName & "_" & strRandomString & Path.GetExtension(_UC_UploaderPopup.GetFileName())
                 End If
 
                 If Not File.Exists(Server.MapPath(c_strUploadPath & strTempName)) Then
-                    _UC_UploaderPopup.SaveFile(Server.MapPath(c_strUploadPath & strTempName), I, I < (FileNames.Count - 1))
+                    _UC_UploaderPopup.SaveFile(Server.MapPath(c_strUploadPath & strTempName), i, i < (lstFileNames.Count - 1))
                     Dim strCompressQuality As String = KartSettingsManager.GetKartConfig("general.imagequality")
                     If IsNumeric(strCompressQuality) AndAlso strCompressQuality > 0 AndAlso strCompressQuality < 100 Then CompressImage(Server.MapPath(c_strUploadPath & strTempName), CLng(strCompressQuality))
-                    ' Method below REM'd out as pointless. It is supersceded by the later call to LoadImages()
-                    '_UC_ItemSorter.AddNewItem(strTempName)
                 ElseIf c_blnOneFileOnly Then
-                    ' Prevent infinite loop.
+                    'Prevent infinite loop.
                     CkartrisFormatErrors.LogError("Existing file found when c_blnOneFileOnly = True")
                     litStatus.Text = "A file already exists where we are trying to put a new file. Internal Error."
                     popExtender.Show()
