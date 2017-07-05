@@ -206,22 +206,52 @@ Public Class MailChimpBLL
                 itemprice = (basketItem.IR_PricePerItem + basketItem.IR_TaxPerItem)
             End If
 
-            Dim imageUrl As String = CkartrisBLL.WebShopURL & "Image.aspx?strItemType=p&numMaxHeight=100&numMaxWidth=100&numItem="
+            Dim imageUrl As String = CkartrisBLL.WebShopURL & "Image.aspx?strItemType=p&numMaxHeight=100&numMaxWidth=100&numItem=" & basketItem.ProductID
             If product Is Nothing Then
                 productVariant = New [Variant] With {.Id = basketItem.ProductID,
                                                  .Title = basketItem.Name,
                                                  .Price = itemprice,
-                                                 .ImageUrl = imageUrl & basketItem.ProductID
-            }
+                                                 .ImageUrl = imageUrl
+                                                }
 
                 listVariants.Add(productVariant)
                 product = New Product With {.Id = basketItem.ProductID,
                                             .Title = basketItem.Name,
-                                            .Variants = listVariants
+                                            .Variants = listVariants,
+                                            .ImageUrl = imageUrl
                                             }
 
                 Dim taskResult As Product = Await manager.ECommerceStores.Products(mcStoreId).AddAsync(product).ConfigureAwait(False)
                 Return taskResult
+            Else
+                Dim modified As Boolean = False
+                If product.Title <> basketItem.Name Then
+                    product.Title = basketItem.Name
+                    product.Variants.First().Title = basketItem.Name
+                    modified = True
+                End If
+                If product.ImageUrl <> imageUrl Then
+                    product.ImageUrl = imageUrl
+                    product.Variants.First().ImageUrl = imageUrl
+                    modified = True
+                End If
+                If basketItem.PricesIncTax = True Then
+                    If product.Variants.First().Price <> basketItem.IR_PricePerItem Then
+                        product.Variants.First().Price = basketItem.IR_PricePerItem
+                        modified = True
+                    End If
+                Else
+                    itemprice = (basketItem.IR_PricePerItem + basketItem.IR_TaxPerItem)
+                    If product.Variants.First().Price <> itemprice Then
+                        product.Variants.First().Price = itemprice
+                        modified = True
+                    End If
+                End If
+
+                If modified Then
+                    Dim taskResult As Product = Await manager.ECommerceStores.Products(mcStoreId).UpdateAsync(basketItem.ProductID, product).ConfigureAwait(False)
+                    Return taskResult
+                End If
             End If
             Return Nothing
         Catch ex As Exception
@@ -239,8 +269,6 @@ Public Class MailChimpBLL
                 Dim timestamp = CLng(DateTime.UtcNow.Subtract(New DateTime(1970, 1, 1)).TotalMilliseconds)
                 idSufix = customer.Id & "_" & timestamp
             End If
-
-            Dim strCurrencyIsoCode As String = "GBP"
 
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
             Dim cart As Cart = New Cart With {.Id = "cart_" & idSufix,
