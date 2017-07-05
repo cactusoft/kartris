@@ -34,8 +34,8 @@
                                             </HeaderTemplate>
                                             <ItemTemplate>
                                                 <asp:Literal ID="litSupportLevel" runat="server" Text='<%# Eval("STT_Level") %>' Visible="false"  />
-                                                <asp:Literal ID="litStandardSupport" runat="server" Text="<%$ Resources: _Tickets, ContentText_StandardSupport %>" Visible='<%# Eval("STT_Level") = "s" %>' />
-                                                <asp:Literal ID="litPremiumSupport" runat="server" Text="<%$ Resources: _Tickets, ContentText_PremiumSupport %>" Visible='<%# Eval("STT_Level") = "p" %>' />
+                                                <asp:Literal ID="litStandardSupport" runat="server" Text="<%$ Resources: _Tickets, ContentText_StandardSupport %>" Visible='<%# CkartrisDataManipulation.FixNullFromDB(Eval("STT_Level")) = "s" %>' />
+                                                <asp:Literal ID="litPremiumSupport" runat="server" Text="<%$ Resources: _Tickets, ContentText_PremiumSupport %>" Visible='<%# CkartrisDataManipulation.FixNullFromDB(Eval("STT_Level")) = "p" %>' />
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField ItemStyle-CssClass="selectfield">
