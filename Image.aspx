@@ -74,12 +74,19 @@
 
             'if whole directory, scan for suitable image
             If strFileName = "" Then
-                For i = 0 To UBound(aryFileTypes)
-                    strImagePathToTry = Server.MapPath("images") & strFolderPath & numItem & Trim(aryFileTypes(i))
-                    If System.IO.File.Exists(strImagePathToTry) Then
-                        strImagePath = strImagePathToTry
-                    End If
-                Next
+
+                Try
+                    'Ok, let's find the folder where we expect to find images,#
+                    'then just pull the first one that lists here
+                    Dim dirImages As New DirectoryInfo(Server.MapPath("images") & strFolderPath)
+                    Dim fleImage() As FileInfo
+
+                    fleImage = dirImages.GetFiles()
+                    strImagePath = Server.MapPath("images") & strFolderPath & fleImage(0).Name
+                Catch ex As Exception
+                    'Nice script, shame if anything happened to it
+                End Try
+
             Else
                 strImagePath = Server.MapPath("images") & strFolderPath & strFileName
             End If
