@@ -696,6 +696,12 @@ BEGIN
 END
 GO 
 
+/* clean up some unused config settings */
+DELETE FROM [dbo].[tblKartrisConfig] WHERE [CFG_Name]=N'general.useURLname';
+DELETE FROM [dbo].[tblKartrisConfig] WHERE [CFG_Name]=N'general.linnworks.token';
+
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.9010', CFG_VersionAdded=2.9010 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
