@@ -299,20 +299,6 @@ Public Class MailChimpBLL
                                })
             Next
 
-            Dim serializer As New JavaScriptSerializer
-            Dim cartJson As String = serializer.Serialize(cart)
-            Dim file As System.IO.StreamWriter
-            file = My.Computer.FileSystem.OpenTextFileWriter("c:\test.txt", True)
-            file.WriteLine("start")
-            file.WriteLine("")
-            file.WriteLine(cart.ToString())
-            file.WriteLine("")
-            file.WriteLine(cartJson)
-            file.WriteLine("")
-            file.WriteLine("end")
-            file.Close()
-
-
             Dim taskResult As Cart = Await manager.ECommerceStores.Carts(mcStoreId).AddAsync(cart).ConfigureAwait(False)
 
 
