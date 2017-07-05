@@ -22,6 +22,7 @@ Imports MailChimp.Net.Interfaces
 Imports MailChimp.Net.Models
 Imports Newtonsoft.Json.Linq
 Imports System.Collections.ObjectModel
+Imports System.Web.Script.Serialization
 
 
 '========================================================================
@@ -191,19 +192,30 @@ Public Class MailChimpBLL
             Dim productVariant As [Variant]
             Dim listVariants As List(Of [Variant]) = New List(Of [Variant])
             Try
-                product = Await manager.ECommerceStores.Products(mcStoreId).GetAsync(basketItem.ID).ConfigureAwait(False)
+                product = Await manager.ECommerceStores.Products(mcStoreId).GetAsync(basketItem.ProductID).ConfigureAwait(False)
             Catch ex As Exception
                 If ex.Message.Contains("A product with the provided ID already") Then
                     product = Nothing
                 End If
             End Try
 
+            Dim itemprice As Double
+            If basketItem.PricesIncTax = True Then
+                itemprice = basketItem.IR_PricePerItem
+            Else
+                itemprice = (basketItem.IR_PricePerItem + basketItem.IR_TaxPerItem)
+            End If
+
+            Dim imageUrl As String = CkartrisBLL.WebShopURL & "Image.aspx?strItemType=p&numMaxHeight=100&numMaxWidth=100&numItem="
             If product Is Nothing Then
-                productVariant = New [Variant] With {.Id = basketItem.ID,
-                                                 .Title = basketItem.Name
+                productVariant = New [Variant] With {.Id = basketItem.ProductID,
+                                                 .Title = basketItem.Name,
+                                                 .Price = itemprice,
+                                                 .ImageUrl = imageUrl & basketItem.ProductID
             }
+
                 listVariants.Add(productVariant)
-                product = New Product With {.Id = basketItem.ID,
+                product = New Product With {.Id = basketItem.ProductID,
                                             .Title = basketItem.Name,
                                             .Variants = listVariants
                                             }
@@ -250,14 +262,29 @@ Public Class MailChimpBLL
                 End If
 
                 cart.Lines.Add(New Line With {.Id = "cart_" & idSufix & "_l" & counter,
-                                            .ProductId = kartrisBasket.BasketItems(counter).ID,
+                                            .ProductId = kartrisBasket.BasketItems(counter).ProductID,
                                             .ProductTitle = kartrisBasket.BasketItems(counter).Name,
-                                            .ProductVariantId = kartrisBasket.BasketItems(counter).ID,
+                                            .ProductVariantId = kartrisBasket.BasketItems(counter).ProductID,
                                             .ProductVariantTitle = kartrisBasket.BasketItems(counter).Name,
                                             .Quantity = kartrisBasket.BasketItems(counter).Quantity,
                                             .Price = itemprice
                                })
             Next
+
+            Dim serializer As New JavaScriptSerializer
+            Dim cartJson As String = serializer.Serialize(cart)
+            Dim file As System.IO.StreamWriter
+            file = My.Computer.FileSystem.OpenTextFileWriter("c:\test.txt", True)
+            file.WriteLine("start")
+            file.WriteLine("")
+            file.WriteLine(cart.ToString())
+            file.WriteLine("")
+            file.WriteLine(cartJson)
+            file.WriteLine("")
+            file.WriteLine("end")
+            file.Close()
+
+
             Dim taskResult As Cart = Await manager.ECommerceStores.Carts(mcStoreId).AddAsync(cart).ConfigureAwait(False)
 
 
