@@ -255,7 +255,7 @@ Partial Class UserControls_Back_OrderDetails
                 Dim hidCustomerID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidCustomerID"), HiddenField)
                 Dim kartrisUser As KartrisMemberShipUser = Membership.GetUser(UsersBLL.GetEmailByID(CInt(hidCustomerID.Value)))
                 Dim basketObj As Basket = GetBasket(ViewState("numOrderID"))
-                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(kartrisUser, basketObj, intOrderCurrencyID)
+                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(kartrisUser, basketObj, CurrenciesBLL.CurrencyCode(intOrderCurrencyID))
 
                 Try
 

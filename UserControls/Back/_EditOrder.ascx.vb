@@ -574,7 +574,7 @@ Partial Class UserControls_Back_EditOrder
             If chkOrderPaid.Checked Then
                 Try
                     Dim kartrisUser As KartrisMemberShipUser = Membership.GetUser(UsersBLL.GetEmailByID(litOrderCustomerID.Text))
-                    Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(kartrisUser, objBasket, CUR_ID)
+                    Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(kartrisUser, objBasket, CurrenciesBLL.CurrencyCode(CUR_ID))
                     Dim result As Boolean = mailChimpLib.DeleteOrder("order_" & intO_ID).Result
                     If result Then
                         Dim mcOrder As MailChimp.Net.Models.Order = mailChimpLib.AddOrder(mailChimpLib.GetCustomer(kartrisUser.ID).Result, intNewOrderID).Result
