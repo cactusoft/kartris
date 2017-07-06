@@ -356,7 +356,7 @@ Public Class MailChimpBLL
             Dim order As Order = New Order With {.Id = "order_" & cartId,
                                             .Customer = New Customer With {.Id = customer.Id},
                                           .CurrencyCode = CurrencyCode.GBP,
-                                          .OrderTotal = kartrisBasket.TotalIncTax,
+                                          .OrderTotal = kartrisBasket.FinalPriceIncTax,
                                           .Lines = New Collection(Of Line)
                                         }
             Dim product As Product
