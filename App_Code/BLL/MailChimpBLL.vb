@@ -75,7 +75,7 @@ Public Class MailChimpBLL
         manager = New MailChimpManager(apiKey)
         currentLoggedUser = user
         kartrisBasket = basket
-        Me.kartrisCurrencyCode = CurrenciesBLL.CurrencyCode(basket.CurrencyID)
+        Me.kartrisCurrencyCode = currencyCode
     End Sub
 
     ''' <summary>

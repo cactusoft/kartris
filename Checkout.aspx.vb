@@ -916,7 +916,7 @@ Partial Class _Checkout
 
                     If Not clientToken.Equals("") Then
                         'MAILCHIMP Adding Cart to BrainTree Payments
-                        Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(intGatewayCurrency))
+                        Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
                         'If the User is Logged
                         If CurrentLoggedUser IsNot Nothing Then
                             Session("BraintreeCartId") = mailChimpLib.AddCartToCustomerToStore().Result
@@ -1496,7 +1496,7 @@ Partial Class _Checkout
                                          intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice,
                                          IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtPurchaseOrderNo.Text, Trim(txtComments.Text))
                 'MAILCHIMP Adding Cart
-                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(intGatewayCurrency))
+                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
                 'If the User is Logged
                 If CurrentLoggedUser IsNot Nothing And Session("BraintreeCartId") Is Nothing Then
                     Dim addCartResult As String = mailChimpLib.AddCartToCustomerToStore(O_ID).Result
