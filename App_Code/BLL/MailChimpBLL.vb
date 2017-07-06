@@ -351,13 +351,15 @@ Public Class MailChimpBLL
     ''' </summary>
     Public Async Function AddOrder(ByVal customer As Customer, ByVal cartId As String) As Task(Of Order)
         Try
-            Dim timestamp = CLng(DateTime.UtcNow.Subtract(New DateTime(1970, 1, 1)).TotalMilliseconds)
+            Dim timestamp As String = CkartrisDisplayFunctions.NowOffset().ToString("yyyy-MM-dd HH:mm")
 
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
             Dim order As Order = New Order With {.Id = "order_" & cartId,
                                             .Customer = New Customer With {.Id = customer.Id},
                                           .CurrencyCode = currencyCodeEnum,
                                           .OrderTotal = kartrisBasket.FinalPriceIncTax,
+                                          .ProcessedAtForeign = timestamp,
+                                          .UpdatedAtForeign = timestamp,
                                           .Lines = New Collection(Of Line)
                                         }
             Dim product As Product
