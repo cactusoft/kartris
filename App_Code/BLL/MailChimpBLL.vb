@@ -203,7 +203,7 @@ Public Class MailChimpBLL
             If basketItem.PricesIncTax = True Then
                 itemprice = basketItem.IR_PricePerItem
             Else
-                itemprice = (basketItem.IR_PricePerItem + basketItem.IR_TaxPerItem)
+                itemprice = Math.Round((basketItem.IR_PricePerItem * (1 + basketItem.IR_TaxPerItem)), 2)
             End If
 
             Dim imageUrl As String = CkartrisBLL.WebShopURL & "Image.aspx?strItemType=p&numMaxHeight=100&numMaxWidth=100&numItem=" & basketItem.ProductID
@@ -241,7 +241,7 @@ Public Class MailChimpBLL
                         modified = True
                     End If
                 Else
-                    itemprice = (basketItem.IR_PricePerItem + basketItem.IR_TaxPerItem)
+                    itemprice = Math.Round((basketItem.IR_PricePerItem * (1 + basketItem.IR_TaxPerItem)), 2)
                     If product.Variants.First().Price <> itemprice Then
                         product.Variants.First().Price = itemprice
                         modified = True
@@ -286,7 +286,7 @@ Public Class MailChimpBLL
                 If kartrisBasket.BasketItems(counter).PricesIncTax = True Then
                     itemprice = (kartrisBasket.BasketItems(counter).IR_PricePerItem)
                 Else
-                    itemprice = (kartrisBasket.BasketItems(counter).IR_PricePerItem + kartrisBasket.BasketItems(counter).IR_TaxPerItem)
+                    itemprice = Math.Round((kartrisBasket.BasketItems(counter).IR_PricePerItem * (1 + kartrisBasket.BasketItems(counter).IR_TaxPerItem)), 2)
                 End If
 
                 cart.Lines.Add(New Line With {.Id = "cart_" & idSufix & "_l" & counter,
@@ -370,7 +370,7 @@ Public Class MailChimpBLL
                 If kartrisBasket.BasketItems(counter).PricesIncTax = True Then
                     itemprice = (kartrisBasket.BasketItems(counter).IR_PricePerItem)
                 Else
-                    itemprice = (kartrisBasket.BasketItems(counter).IR_PricePerItem + kartrisBasket.BasketItems(counter).IR_TaxPerItem)
+                    itemprice = Math.Round((kartrisBasket.BasketItems(counter).IR_PricePerItem * (1 + kartrisBasket.BasketItems(counter).IR_TaxPerItem)), 2)
                 End If
 
                 order.Lines.Add(New Line With {.Id = "order_" & cartId & "_l" & counter,
