@@ -573,6 +573,12 @@ Partial Class UserControls_Back_EditOrder
         If intNewOrderID > 0 Then
             If chkOrderPaid.Checked Then
                 Try
+
+                    UC_BasketMain.EmptyBasket_Click(Nothing, Nothing)
+                    LoadBasket(True)
+
+                    objBasket = Session("Basket")
+
                     Dim kartrisUser As KartrisMemberShipUser = Membership.GetUser(UsersBLL.GetEmailByID(litOrderCustomerID.Text))
                     Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(kartrisUser, objBasket, CurrenciesBLL.CurrencyCode(CUR_ID))
                     Dim result As Boolean = mailChimpLib.DeleteOrder("order_" & intO_ID).Result
@@ -581,6 +587,8 @@ Partial Class UserControls_Back_EditOrder
                         ' Not creating the order, it's missing Basket
                         mailChimpLib.DeleteCart("cart_" & intO_ID)
                     End If
+
+                    UC_BasketMain.EmptyBasket_Click(Nothing, Nothing)
                 Catch ex As Exception
 
                 End Try

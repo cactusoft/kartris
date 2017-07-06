@@ -277,23 +277,24 @@ Partial Class UserControls_Back_OrderDetails
     End Sub
 
     Function GetBasket(ByVal NumOrderId As Integer) As Basket
-        Dim Basket As Basket = New Basket()
-        Dim BasketItems As List(Of Kartris.BasketItem)
-        Dim blnIsInCheckout As Boolean = True
 
-        Dim sessionID As Long = Session("SessionID")
+        BasketBLL.DeleteBasket()
 
-        Dim objBasket As Kartris.Basket = New Basket
+        Dim objBasketTemp As Basket = New Basket
+        Dim objBasket As Basket = New Basket
+
+        'Load first basket from order XML, deserialized
         Dim dtOrderRecord As DataTable = OrdersBLL.GetOrderByID(NumOrderId)
         If dtOrderRecord IsNot Nothing Then
             Dim strOrderData As String = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_Data"))
-            ViewState("arrOrderData") = Split(strOrderData, "|||")
-            'Dim objOrder As New Kartris.Interfaces.objOrder
-            objBasket = Payment.Deserialize(ViewState("arrOrderData")(1), objBasket.GetType)
-
+            Dim arrOrder As Array = Split(strOrderData, "|||")
+            objBasketTemp = Payment.Deserialize(arrOrder(1), objBasket.GetType)
+            objBasketTemp.CalculateTotals()
         End If
 
-        Return objBasket
+        'Dim strO As String = Payment.Serialize(objBasketTemp)
+
+        Return objBasketTemp
     End Function
 
     ''' <summary>

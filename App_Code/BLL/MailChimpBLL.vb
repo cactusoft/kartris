@@ -71,7 +71,7 @@ Public Class MailChimpBLL
     ''' Create a new action
     ''' logged in user with basket
     ''' </summary>
-    Sub New(ByVal user As KartrisMemberShipUser, ByVal basket As Basket, ByVal currencyCode As String)
+    Sub New(ByRef user As KartrisMemberShipUser, ByRef basket As Basket, ByRef currencyCode As String)
         manager = New MailChimpManager(apiKey)
         currentLoggedUser = user
         kartrisBasket = basket
