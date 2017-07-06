@@ -75,7 +75,7 @@ Public Class MailChimpBLL
         manager = New MailChimpManager(apiKey)
         currentLoggedUser = user
         kartrisBasket = basket
-        Me.kartrisCurrencyCode = currencyCode
+        Me.kartrisCurrencyCode = CurrenciesBLL.CurrencyCode(basket.CurrencyID)
     End Sub
 
     ''' <summary>
@@ -353,23 +353,31 @@ Public Class MailChimpBLL
         Try
             Dim timestamp = CLng(DateTime.UtcNow.Subtract(New DateTime(1970, 1, 1)).TotalMilliseconds)
 
+            Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
             Dim order As Order = New Order With {.Id = "order_" & cartId,
                                             .Customer = New Customer With {.Id = customer.Id},
-                                          .CurrencyCode = CurrencyCode.GBP,
+                                          .CurrencyCode = currencyCodeEnum,
                                           .OrderTotal = kartrisBasket.FinalPriceIncTax,
                                           .Lines = New Collection(Of Line)
                                         }
             Dim product As Product
+            Dim itemprice As Double
             For counter As Integer = 0 To kartrisBasket.BasketItems.Count - 1
                 product = Await AddProduct(kartrisBasket.BasketItems(counter))
 
+                If kartrisBasket.BasketItems(counter).PricesIncTax = True Then
+                    itemprice = (kartrisBasket.BasketItems(counter).IR_PricePerItem)
+                Else
+                    itemprice = (kartrisBasket.BasketItems(counter).IR_PricePerItem + kartrisBasket.BasketItems(counter).IR_TaxPerItem)
+                End If
+
                 order.Lines.Add(New Line With {.Id = "order_" & cartId & "_l" & counter,
-                                            .ProductId = kartrisBasket.BasketItems(counter).ID,
+                                            .ProductId = kartrisBasket.BasketItems(counter).ProductID,
                                             .ProductTitle = kartrisBasket.BasketItems(counter).Name,
-                                            .ProductVariantId = kartrisBasket.BasketItems(counter).ID,
+                                            .ProductVariantId = kartrisBasket.BasketItems(counter).ProductID,
                                             .ProductVariantTitle = kartrisBasket.BasketItems(counter).Name,
                                             .Quantity = kartrisBasket.BasketItems(counter).Quantity,
-                                            .Price = kartrisBasket.BasketItems(counter).Price
+                                            .Price = itemprice
                 })
             Next
             Dim taskResult As Order = Await manager.ECommerceStores.Orders(mcStoreId).AddAsync(order).ConfigureAwait(False)
@@ -392,7 +400,6 @@ Public Class MailChimpBLL
     Public Async Function AddStore(ByVal storeId As String, Optional ByVal storeName As String = "Kartris Store", Optional ByVal storeDomain As String = "www.kartris.com", Optional ByVal EmailAddress As String = "someemail@cactusoft.com") As Task(Of Store)
         Try
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
-
             Dim storeObj = New Store With {.Id = storeId,
                                         .ListId = listId,
                                         .Name = storeName,
