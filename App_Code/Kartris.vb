@@ -1998,6 +1998,8 @@ Public NotInheritable Class CkartrisImages
         enum_VersionImage = 3
         enum_PromotionImage = 4
         enum_OtherImage = 5
+		enum_OptionSwatch = 6
+        enum_AttributeSwatch = 7
     End Enum
 
     Public Enum IMAGE_SIZE
@@ -2024,6 +2026,10 @@ Public NotInheritable Class CkartrisImages
                 strFolderURL &= "Images/Products/" & pParentID & "/" & pItemID & "/"
             Case IMAGE_TYPE.enum_PromotionImage
                 strFolderURL &= "Images/Promotions/" & pItemID & "/"
+			Case IMAGE_TYPE.enum_OptionSwatch
+                strFolderURL &= "Images/OptionGroups/" & pItemID & "/"
+            Case IMAGE_TYPE.enum_AttributeSwatch
+                strFolderURL &= "Images/Attributes/" & pItemID & "/"
             Case Else
 
         End Select

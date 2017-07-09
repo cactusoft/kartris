@@ -77,6 +77,7 @@ Partial Class UserControls_Back_EditAttributes
         ddlCompare.SelectedValue = CStr(tblAttribute.Rows(0)("ATTRIB_Compare"))
         txtSortByValue.Text = CStr(FixNullFromDB(tblAttribute.Rows(0)("ATTRIB_OrderByValue")))
         chkGoogleSpecial.Checked = CBool(tblAttribute.Rows(0)("ATTRIB_Special"))
+        ddlAttributeType.SelectedValue = CStr(FixNullFromDB(tblAttribute.Rows(0)("ATTRIB_Type")))
 
         _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.Attributes, False, CLng(litAttributeID.Text))
 
