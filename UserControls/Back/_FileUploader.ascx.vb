@@ -286,6 +286,19 @@ Partial Class _FileUploader
 generateNewName:
 Randomize()
 
+                If c_blnOneFileOnly Then
+                    ' Used if the target folder will only ever have one file in it. 
+                    strTempName = c_numItemID & Path.GetExtension(lstFileNames(i))
+                Else
+                    Dim numFileNumber As Int16 = numTotalFiles + 20
+                    Dim strFileBaseName As String = ""
+                    Dim strRandomString As String = CouponsBLL._GenerateNewCouponCode()
+
+                    If numFileNumber < 10 Then strFileBaseName += "0"
+                    strFileBaseName &= CStr(numFileNumber)
+                    strTempName = c_strFileName & strFileBaseName & "_" & strRandomString & Path.GetExtension(_UC_UploaderPopup.GetFileName())
+                End If
+
                 Dim numNumberofNonXMLFiles As Integer
                 Dim dirInfo As New DirectoryInfo(Server.MapPath(litInfo.Text))
                 numNumberofNonXMLFiles = dirInfo.GetFiles.Count - dirInfo.GetFiles("*.xml").Count
@@ -297,11 +310,13 @@ Randomize()
                     Exit Sub
                 Else
                     '_UC_UploaderPopup.SaveFile(Server.MapPath(c_strUploadPath & strTempName), I, I < (FileNames.Count - 1))
-                    _UC_UploaderPopup.SaveFile(Server.MapPath(litInfo.Text & lstFileNames(i)), i, i < (lstFileNames.Count - 1))
+                    '_UC_UploaderPopup.SaveFile(Server.MapPath(litInfo.Text & lstFileNames(i)), i, i < (lstFileNames.Count - 1))
+                    _UC_UploaderPopup.SaveFile(Server.MapPath(litInfo.Text & strTempName), i, i < (lstFileNames.Count - 1))
                     Dim strCompressQuality As String = KartSettingsManager.GetKartConfig("general.imagequality")
                     ' Changed so that we are trying to map to a folder which is persisted in a ViewState managed control.
                     'If IsNumeric(strCompressQuality) AndAlso strCompressQuality > 0 AndAlso strCompressQuality < 100 Then CompressImage(Server.MapPath(c_strUploadPath & strTempName), CLng(strCompressQuality))
-                    If IsNumeric(strCompressQuality) AndAlso strCompressQuality > 0 AndAlso strCompressQuality < 100 Then CompressImage(Server.MapPath(litInfo.Text & lstFileNames(i)), CLng(strCompressQuality))
+                    'If IsNumeric(strCompressQuality) AndAlso strCompressQuality > 0 AndAlso strCompressQuality < 100 Then CompressImage(Server.MapPath(litInfo.Text & lstFileNames(i)), CLng(strCompressQuality))
+                    If IsNumeric(strCompressQuality) AndAlso strCompressQuality > 0 AndAlso strCompressQuality < 100 Then CompressImage(Server.MapPath(litInfo.Text & strTempName), CLng(strCompressQuality))
                     ' Method below REM'd out as pointless. It is supersceded by the later call to LoadImages()
                     ' Method placed back in by Craig Moore as it now handles a push to the FileOrder list (XML document)
                     _UC_ItemSorter.AddNewItem(lstFileNames(i))
