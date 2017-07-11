@@ -26,14 +26,11 @@
                     <li><span class="Kartris-DetailsView-Name">
                         <asp:Literal ID="litFormLabelAttributeType" runat="server" Text='<%$ Resources: _Attributes, FormLabel_AttributeType %>' /></span><span
                             class="Kartris-DetailsView-Value">
-                            <asp:DropDownList ID="ddlAttributeType" runat="server" Enabled="false">
+                            <asp:DropDownList ID="ddlAttributeType" runat="server" Enabled="true">
                                 <asp:ListItem Text='<%$ Resources: _Kartris, ContentText_DropDownSelect %>' Value="0" />
-                                <asp:ListItem Text='<%$ Resources: _Attributes, FormLabel_AttributeTypeText %>' Value="t"
-                                    Selected="True" />
-                                <asp:ListItem Text='<%$ Resources: _Attributes, FormLabel_AttributeTypeDropdown %>'
-                                    Value="d" />
-                                <asp:ListItem Text='<%$ Resources: _Attributes, FormLabel_AttributeTypeCheckbox %>'
-                                    Value="c" />
+                                <asp:ListItem Text='<%$ Resources: _Attributes, FormLabel_AttributeTypeText %>' Value="t" Selected="True" />
+                                <asp:ListItem Text='<%$ Resources: _Attributes, FormLabel_AttributeTypeDropdown %>'  Value="d" Enabled="false" />
+                                <asp:ListItem Text='<%$ Resources: _Attributes, FormLabel_AttributeTypeCheckbox %>'  Value="c" />
                             </asp:DropDownList>
                             <asp:CompareValidator ID="valCompareAttributeType" runat="server" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                 CssClass="error" ForeColor="" ControlToValidate="ddlAttributeType" Operator="NotEqual"

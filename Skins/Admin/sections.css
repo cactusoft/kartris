@@ -354,6 +354,14 @@ PAGE: OPTION GROUPS
 #optionfilters { padding: 10px 0; }
 #optionfilters a { text-transform: uppercase; font-size: 11px; font-weight: normal; color: #000; display: inline-block; padding: 2px 5px; border: solid 1px #fff; }
 #optionfilters a.filterselected { border: solid 1px #000; }
+/*
+========================================================================
+PAGE: ATTRIBUTES
+========================================================================
+*/
+#page_attributes div.column_optionname,
+#page_attributes div.column_misc
+                                        { width: 150px; display: block; float: left; padding-top: 4px; }
 
 /* 
 ========================================================================
@@ -660,7 +668,7 @@ BACKEND BASKET
 a.link2,
 span.link2 a                            { background-position: left top; background-repeat: no-repeat; border: medium none; color: #0044DD; font-size: 90%; font-weight: bold; min-height: 17px; padding: 2px 5px 2px 18px; text-decoration: none; }
 .basket .basketwarning                  { display: block; width: auto; border: dotted 1px #f00; color: #f00; background-color: #f6e6e6; padding: 3px 9px 3px 9px; margin: 2px 0 15px 0; }
-.basket .baskettable td.name strong     { padding: 0; }
+.basket .baskettable td.name strong     { display: block; padding: 0; }
 .basket .extax,
 .basket .inctax,
 .basket .price,
