@@ -436,7 +436,9 @@ LOGIN / MY ACCOUNT
 ========================================================================
 */
 #login .recoverpassword                 { margin-top: 30px; padding-top: 10px; }
-#login .radio strong                    { color: #000 }
+#login .radio                           { min-height: 120px; }
+#login .radio label                     { max-width: 80vw; white-space: normal; }
+#login .radio strong                    { color: #000; }
 #login .Kartris-DetailsView-Data        { width: 100% }
 /* 
 ========================================================================
