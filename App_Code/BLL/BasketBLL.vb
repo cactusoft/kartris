@@ -1510,7 +1510,7 @@ Public Class BasketBLL
 
         For Each drwPromotionParts As DataRow In tblPromotionParts.Rows
 
-            Dim strText As String = drwPromotionParts("PS_Text")
+            Dim strText As String = FixNullFromDB(drwPromotionParts("PS_Text"))
             Dim strStringID As String = drwPromotionParts("PS_ID")
             Dim strValue As String = CkartrisDisplayFunctions.FixDecimal(FixNullFromDB(drwPromotionParts("PP_Value")))
             Dim strItemID As String = FixNullFromDB(drwPromotionParts("PP_ItemID"))
@@ -2171,6 +2171,8 @@ Public Class BasketBLL
                                 vBuyQty = vValue * (CInt(Basket.TotalExTax / vSpend))
                                 objPromotion.Value = vValue
                                 Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate)
+                                Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+
                             End If
 
                         Case "p" 'spend a certain amount and get item from product
@@ -2185,18 +2187,18 @@ Public Class BasketBLL
                                 Dim intExcessGetQty As Integer = 0
                                 Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
                                 Dim strVersionIDArray As String = ""
-                                Do While intExcessGetQty > 0
-                                    If strVersionIDArray <> "" Then strVersionIDArray += ","
+                                'Do While intExcessGetQty > 0
+                                If strVersionIDArray <> "" Then strVersionIDArray += ","
                                     blnIsFixedValuePromo = True
 
                                     vMaxPromoQty = vMaxPromoQty - vQuantity
                                     If intExcessGetQty < objPromotion.Value Or vMaxPromoQty < 1 Then
                                         intExcessGetQty = 0
-                                        Exit Do
-                                    End If
+                                    'Exit Do
+                                End If
 
-                                    strVersionIDArray = strVersionIDArray & objItem.VersionID
-                                    index = GetItemMinProductValue(Basket.BasketItems, vItemID, strVersionIDArray)
+                                strVersionIDArray = "" 'strVersionIDArray & objItem.VersionID
+                                index = GetItemMinProductValue(Basket.BasketItems, vItemID, strVersionIDArray)
                                     If index <> -1 Then
                                         If objItem.AppliedPromo = 0 Then
                                             Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
@@ -2209,7 +2211,7 @@ Public Class BasketBLL
                                     Else
                                         intExcessGetQty = 0
                                     End If
-                                Loop
+                                'Loop
 
                             End If
 
@@ -2226,32 +2228,42 @@ Public Class BasketBLL
                                 Dim intExcessGetQty As Integer = 0
                                 Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
                                 Dim strVersionIDArray As String = ""
-                                Do While intExcessGetQty > 0
-                                    If strVersionIDArray <> "" Then strVersionIDArray += ","
+
+                                'Comment out loop below as this seems to prevent a promo triggering if
+                                'we have more items in the selected row than the promotion covers. With
+                                'this commented out, the promo just applies to the number allowed.
+
+                                'Do While intExcessGetQty > 0
+                                If strVersionIDArray <> "" Then strVersionIDArray += ","
                                     blnIsFixedValuePromo = True
                                     vMaxPromoQty = vMaxPromoQty - vQuantity
                                     If intExcessGetQty < objPromotion.Value Or vMaxPromoQty < 1 Then
                                         intExcessGetQty = 0
-                                        Exit Do
+                                    'Exit Do
+                                End If
+
+                                'comment out the string below as I think this blocks applying
+                                'the discount to item that triggers the discount which in the
+                                'case of spend/get promotions doesn't make sense
+
+                                strVersionIDArray = "" 'strVersionIDArray & objItem.VersionID
+
+                                index = GetItemMinCategoryValue(Basket.BasketItems, vItemID, strVersionIDArray)
+                                If index <> -1 Then
+
+                                    If objItem.AppliedPromo = 0 Then
+                                        Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                                        objItem.AppliedPromo = 1
                                     End If
 
-                                    strVersionIDArray = strVersionIDArray & objItem.VersionID
-                                    index = GetItemMinCategoryValue(Basket.BasketItems, vItemID, strVersionIDArray)
-                                    If index <> -1 Then
-
-                                        If objItem.AppliedPromo = 0 Then
-                                            Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
-                                            objItem.AppliedPromo = 1
-                                        End If
-
-                                        objItem = Basket.BasketItems(index)
-                                        If objItem.AppliedPromo = 1 Then Continue For
-                                        Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
-                                        blnForceAdd = True
-                                    Else
-                                        intExcessGetQty = 0
-                                    End If
-                                Loop
+                                    objItem = Basket.BasketItems(index)
+                                    If objItem.AppliedPromo = 1 Then Continue For
+                                    Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
+                                    blnForceAdd = True
+                                Else
+                                    intExcessGetQty = 0
+                                End If
+                                'Loop
 
                             End If
                         Case "a" 'Total spend promotion
