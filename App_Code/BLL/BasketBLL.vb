@@ -2134,6 +2134,8 @@ Public Class BasketBLL
         Dim vSpend As Decimal = 0
         strList = "PP_PartNo='a' and PP_ItemType='a'"
         drwSpends = tblPromotions.Select(strList)
+
+
         For Each drSpend As DataRow In drwSpends
             vPromoID = drSpend("PROM_ID")
             If InStr(strPromoIDs, vPromoID) = 0 Then
@@ -2155,6 +2157,12 @@ Public Class BasketBLL
                 Dim blnIsFixedValuePromo As Boolean = False
                 Dim blnForceAdd As Boolean = False
 
+                If GetKartConfig("general.tax.pricesinctax") = "y" Then
+                    numTotalBasketAmount = Basket.TotalIncTax
+                Else
+                    numTotalBasketAmount = Basket.TotalExTax
+                End If
+
                 For Each drGet As DataRow In drwGets     '' loop the get items
                     strItemType = drGet("PP_ItemType") & ""
                     strType = drGet("PP_Type") & ""
@@ -2168,11 +2176,9 @@ Public Class BasketBLL
                                 objItem = GetBasketItemByVersionID(Basket.BasketItems, vItemID)
                                 If objItem.AppliedPromo = 1 Then Exit Select
                                 blnGetFound = True
-                                vBuyQty = vValue * (CInt(Basket.TotalExTax / vSpend))
+                                vBuyQty = vValue * (Int(Basket.TotalIncTax / vSpend))
                                 objPromotion.Value = vValue
                                 Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate)
-                                Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
-
                             End If
 
                         Case "p" 'spend a certain amount and get item from product
@@ -2182,23 +2188,24 @@ Public Class BasketBLL
                                 objItem = Basket.BasketItems(index)
                                 If objItem.AppliedPromo = 1 Then Exit Select
                                 blnGetFound = True
-                                vBuyQty = vValue * (CInt(Basket.TotalExTax / vSpend))
+                                vBuyQty = vValue * (Int(Basket.TotalIncTax / vSpend))
                                 objPromotion.Value = vValue
                                 Dim intExcessGetQty As Integer = 0
                                 Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
                                 Dim strVersionIDArray As String = ""
-                                'Do While intExcessGetQty > 0
-                                If strVersionIDArray <> "" Then strVersionIDArray += ","
+
+                                Do While intExcessGetQty > 0
+                                    If strVersionIDArray <> "" Then strVersionIDArray += ","
                                     blnIsFixedValuePromo = True
 
                                     vMaxPromoQty = vMaxPromoQty - vQuantity
                                     If intExcessGetQty < objPromotion.Value Or vMaxPromoQty < 1 Then
                                         intExcessGetQty = 0
-                                    'Exit Do
-                                End If
+                                        Exit Do
+                                    End If
 
-                                strVersionIDArray = "" 'strVersionIDArray & objItem.VersionID
-                                index = GetItemMinProductValue(Basket.BasketItems, vItemID, strVersionIDArray)
+                                    strVersionIDArray = strVersionIDArray & objItem.VersionID
+                                    index = GetItemMinProductValue(Basket.BasketItems, vItemID, strVersionIDArray)
                                     If index <> -1 Then
                                         If objItem.AppliedPromo = 0 Then
                                             Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
@@ -2211,7 +2218,7 @@ Public Class BasketBLL
                                     Else
                                         intExcessGetQty = 0
                                     End If
-                                'Loop
+                                Loop
 
                             End If
 
@@ -2222,60 +2229,51 @@ Public Class BasketBLL
                                 objItem = Basket.BasketItems(index)
                                 If objItem.AppliedPromo = 1 Then Exit Select
                                 blnGetFound = True
-                                vBuyQty = vValue * (CInt(Basket.TotalExTax / vSpend))
+                                vBuyQty = vValue * (Int(Basket.TotalIncTax / vSpend))
                                 objPromotion.Value = vValue
 
                                 Dim intExcessGetQty As Integer = 0
                                 Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
                                 Dim strVersionIDArray As String = ""
 
-                                'Comment out loop below as this seems to prevent a promo triggering if
-                                'we have more items in the selected row than the promotion covers. With
-                                'this commented out, the promo just applies to the number allowed.
-
-                                'Do While intExcessGetQty > 0
-                                If strVersionIDArray <> "" Then strVersionIDArray += ","
+                                Do While intExcessGetQty > 0
+                                    If strVersionIDArray <> "" Then strVersionIDArray += ","
                                     blnIsFixedValuePromo = True
                                     vMaxPromoQty = vMaxPromoQty - vQuantity
                                     If intExcessGetQty < objPromotion.Value Or vMaxPromoQty < 1 Then
                                         intExcessGetQty = 0
-                                    'Exit Do
-                                End If
-
-                                'comment out the string below as I think this blocks applying
-                                'the discount to item that triggers the discount which in the
-                                'case of spend/get promotions doesn't make sense
-
-                                strVersionIDArray = "" 'strVersionIDArray & objItem.VersionID
-
-                                index = GetItemMinCategoryValue(Basket.BasketItems, vItemID, strVersionIDArray)
-                                If index <> -1 Then
-
-                                    If objItem.AppliedPromo = 0 Then
-                                        Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
-                                        objItem.AppliedPromo = 1
+                                        Exit Do
                                     End If
 
-                                    objItem = Basket.BasketItems(index)
-                                    If objItem.AppliedPromo = 1 Then Continue For
-                                    Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
-                                    blnForceAdd = True
-                                Else
-                                    intExcessGetQty = 0
-                                End If
-                                'Loop
+                                    'comment out the string below as I think this blocks applying
+                                    'the discount to item that triggers the discount which in the
+                                    'case of spend/get promotions doesn't make sense
+
+                                    strVersionIDArray = strVersionIDArray & objItem.VersionID
+
+                                    index = GetItemMinCategoryValue(Basket.BasketItems, vItemID, strVersionIDArray)
+                                    If index <> -1 Then
+
+                                        If objItem.AppliedPromo = 0 Then
+                                            Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                                            objItem.AppliedPromo = 1
+                                        End If
+
+                                        objItem = Basket.BasketItems(index)
+                                        If objItem.AppliedPromo = 1 Then Continue For
+                                        Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
+                                        blnForceAdd = True
+                                    Else
+                                        intExcessGetQty = 0
+                                    End If
+                                Loop
 
                             End If
                         Case "a" 'Total spend promotion
-                            If GetKartConfig("general.tax.pricesinctax") = "y" Then
-                                numTotalBasketAmount = Basket.TotalIncTax
-                            Else
-                                numTotalBasketAmount = Basket.TotalExTax
-                            End If
 
                             'If total in basket (inc or ex, depending on settings)
                             'is more than the vSpend required, Qty will be above zero
-                            vQuantity = CInt(numTotalBasketAmount / vSpend)
+                            vQuantity = Int(numTotalBasketAmount / vSpend)
 
                             'If Qty above zero (i.e. promotion is triggered) then set
                             'as zero so we don't apply multiple times
