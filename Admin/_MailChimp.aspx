@@ -49,6 +49,13 @@
                                 <span class="Kartris-DetailsView-Value">
                                     <asp:TextBox ID="txtCFG_Value4" runat="server" Text='' MaxLength="255" Enabled="False" /></span>
                             </li>
+                            <li>&nbsp;</li>
+                            <li>
+                                <span class="Kartris-DetailsView-Name">
+                                    <asp:Literal ID="litMailingListID" runat="server" Text='general.mailchimp.mailinglistid'></asp:Literal></span>
+                                <span class="Kartris-DetailsView-Value">
+                                    <asp:TextBox ID="txtCFG_Value5" runat="server" Text='' MaxLength="255" Enabled="False" /></span>
+                            </li>
                         </ul>
                     </div>
                     <asp:HyperLink ID="lnkChange2" CssClass="linkbutton icon_edit"

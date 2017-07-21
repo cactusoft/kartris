@@ -30,6 +30,8 @@ Partial Class Admin_MailChimp
         txtCFG_Value3.Text = KartSettingsManager.GetKartConfig("general.mailchimp.listid")
         txtCFG_Value4.Text = KartSettingsManager.GetKartConfig("general.mailchimp.storeid")
 
+        txtCFG_Value5.Text = KartSettingsManager.GetKartConfig("general.mailchimp.mailinglistid")
+
         'Show status
         If KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y" Then
             litStatus.Text = "enabled"

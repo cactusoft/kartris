@@ -99,21 +99,6 @@ Public MustInherit Class PageBaseClass
         Dim strReplacement As String = ""
         Dim sbdLink As New StringBuilder
 
-        'Old Google Analytics code
-        'If you have any problems with what is below, use this instead
-        'sbdLink.Append("<script type=""text/javascript"">" & vbCrLf)
-        'If InStr(Request.RawUrl.ToLower, "/callback.aspx") = 0 AndAlso InStr(Request.RawUrl.ToLower, "/checkout.aspx") = 0 Then
-        '    sbdLink.Append("var _gaq = _gaq || [];" & vbCrLf)
-        '    sbdLink.Append("_gaq.push(['_setAccount', '" & strGoogleWebPropertyID & "']);" & vbCrLf)
-        '    sbdLink.Append("_gaq.push(['_trackPageview']);" & vbCrLf)
-        'End If
-        'sbdLink.Append("(function() {" & vbCrLf)
-        'sbdLink.Append("var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;" & vbCrLf)
-        'sbdLink.Append("ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';" & vbCrLf)
-        'sbdLink.Append("var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);" & vbCrLf)
-        'sbdLink.Append("})();" & vbCrLf)
-        'sbdLink.Append("</script>" & vbCrLf)
-
         'Newest code as of 2014-05-14
         If InStr(Request.RawUrl.ToLower, "/callback.aspx") = 0 AndAlso InStr(Request.RawUrl.ToLower, "/checkout.aspx") = 0 Then
             sbdLink.Append("<script>" & vbCrLf)

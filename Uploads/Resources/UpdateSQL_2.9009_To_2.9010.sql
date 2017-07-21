@@ -542,7 +542,12 @@ VALUES
 INSERT INTO [tblKartrisConfig]
 (CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
 VALUES
-(N'general.mailchimp.listid', N'', N's', N't',	'',N'MailChimp Subscribers List ID. This list is created in the MailChimp website. MailChimp>Lists>Select Your List>Settings>List name and defaults>ListID should appear in the screen',2.9010, N'', 0);
+(N'general.mailchimp.listid', N'', N's', N't',	'',N'MailChimp Ecommerce Customers List ID. This list is created in the MailChimp website. MailChimp>Lists>Select Your List>Settings>List name and defaults>ListID should appear in the screen',2.9010, N'', 0);
+
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.mailchimp.mailinglistid', N'', N's', N't',	'',N'MailChimp Mailing List Subscribers List ID. This list is created in the MailChimp website. MailChimp>Lists>Select Your List>Settings>List name and defaults>ListID should appear in the screen',2.9010, N'', 0);
 
 GO
 

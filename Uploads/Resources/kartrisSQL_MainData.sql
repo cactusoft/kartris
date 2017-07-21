@@ -3275,7 +3275,7 @@ INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value],
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_PaidCommission', N'Paid Commission', NULL, 1, N'Paid Commission', NULL, N'_Kartris',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ParentPage', N'Parent Page', N'', 1, N'Parent Page', N'', N'_Pages',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_PartACannotBeEmpty', N'Part ''A'' cannot be empty', N'', 1, N'Part ''A'' cannot be empty', N'', N'_Promotions',1)
-INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_PartBCannotBeEmpty', N'ContentText_PartACannotBeEmpty', N'Part ''B'' cannot be empty', 1, N'Part ''B'' cannot be empty', N'', N'_Promotions',1)
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_PartBCannotBeEmpty', N'Part ''B'' cannot be empty', N'', 1, N'Part ''B'' cannot be empty', N'', N'_Promotions',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_PaymentDate', N'Payment Date', NULL, 1.3, N'Payment Date', NULL, N'_Payments',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_PaymentDetails', N'Payment Details', NULL, 1.4, N'Payment Details', NULL, N'_Payments',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_PaymentGateWay', N'Payment Gateway', N'', 1, N'Payment Gateway', N'', N'_Orders',1)
@@ -30123,6 +30123,15 @@ INSERT INTO [tblKartrisConfig]
 VALUES
 (N'general.mailchimp.listid', N'', N's', N't',	'',N'MailChimp Subscribers List ID. This list is created in the MailChimp website. MailChimp>Lists>Select Your List>Settings>List name and defaults>ListID should appear in the screen',2.9010, N'', 0);
 
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.mailchimp.mailinglistid', N'', N's', N't',	'',N'MailChimp Mailing List Subscribers List ID. This list is created in the MailChimp website. MailChimp>Lists>Select Your List>Settings>List name and defaults>ListID should appear in the screen',2.9010, N'', 0);
+
+GO
+
+/* Bug fix, string is wrong */
+UPDATE [dbo].[tblKartrisLanguageStrings] SET LS_Value=N'Part ''B'' cannot be empty' WHERE LS_Name=N'ContentText_PartBCannotBeEmpty' AND LS_LangID=1; 
 GO
 
 /****** Set this to tell Data tool which version of db we have ******/

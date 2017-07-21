@@ -51,6 +51,7 @@ Public NotInheritable Class CkartrisEnumerations
         PromotionStrings = 15
         News = 16
         KnowledgeBase = 17
+        AttributeOption = 18
     End Enum
 
     Public Enum LANG_ELEM_FIELD_NAME
@@ -326,12 +327,12 @@ Public NotInheritable Class CkartrisFormatErrors
                     swtErrors.WriteLine(">>" & Space(5) & "DESCRIPTION:")
                     swtErrors.WriteLine(strErrorDescription)
                     swtErrors.WriteLine("")
-                        swtErrors.WriteLine("==================================================")
-                        swtErrors.WriteLine("")
-                        swtErrors.WriteLine("")
-                        swtErrors.Flush()
-                        swtErrors.Close()
-                    End If
+                    swtErrors.WriteLine("==================================================")
+                    swtErrors.WriteLine("")
+                    swtErrors.WriteLine("")
+                    swtErrors.Flush()
+                    swtErrors.Close()
+                End If
             Catch ex As Exception
             End Try
         End If
@@ -535,7 +536,7 @@ Public NotInheritable Class CkartrisDisplayFunctions
         Else
             Dim strFormat As String = LanguagesBLL.GetDateFormat(numLanguageID, chrType)
             Try
-                strOutput = CDate(CkartrisDataManipulation.FixNullFromDB(datDate)).ToString(strFormat, _
+                strOutput = CDate(CkartrisDataManipulation.FixNullFromDB(datDate)).ToString(strFormat,
                                                                                         CultureInfo.CreateSpecificCulture(CultureInfo.CurrentUICulture.TwoLetterISOLanguageName))
             Catch ex As Exception
                 strOutput = Format(CkartrisDataManipulation.FixNullFromDB(datDate), strFormat)
@@ -922,10 +923,10 @@ Public NotInheritable Class CkartrisDataManipulation
     ''' <summary>
     ''' Send email
     ''' </summary>
-    Public Shared Function SendEmail(ByVal strFrom As String, ByVal strTo As String, ByVal strSubject As String, ByVal strBody As String, _
-        Optional ByVal strReplyTo As String = "", Optional ByVal strFromName As String = "", _
-        Optional ByVal sendEncoding As Encoding = Nothing, Optional ByVal strAttachment As String = "", _
-        Optional ByVal blnSendAsHTML As Boolean = False, _
+    Public Shared Function SendEmail(ByVal strFrom As String, ByVal strTo As String, ByVal strSubject As String, ByVal strBody As String,
+        Optional ByVal strReplyTo As String = "", Optional ByVal strFromName As String = "",
+        Optional ByVal sendEncoding As Encoding = Nothing, Optional ByVal strAttachment As String = "",
+        Optional ByVal blnSendAsHTML As Boolean = False,
         Optional ByVal sendPriority As MailPriority = MailPriority.Normal, Optional ByVal objBCCAddress As MailAddressCollection = Nothing,
         Optional ByVal objAdditionalToAddresses As MailAddressCollection = Nothing) As Boolean
         Try
@@ -958,7 +959,7 @@ Public NotInheritable Class CkartrisDataManipulation
                     strBody = strBody.Replace("&", "\&")
                     strBody = strBody.Replace(vbCrLf, "\n")
                     strBody = strBody.Replace(vbLf, "\n")
-                    Dim strBodyText As String = (String.Format("alert('FROM: " & strFrom & "\nTO: " & strTo & "\n" & strBCCString & _
+                    Dim strBodyText As String = (String.Format("alert('FROM: " & strFrom & "\nTO: " & strTo & "\n" & strBCCString &
                     "SUBJECT: " & strSubject & "\n\nBODY:\n {0}');", strBody))
                     ScriptManager.RegisterStartupScript(pagCurrentPage, pagCurrentPage.GetType, "WriteEmail", strBodyText, True)
                     'CurrentPage.ClientScript.RegisterStartupScript(CurrentPage.GetType, "WriteEmail", strBodyText, True)
@@ -1090,7 +1091,7 @@ Public NotInheritable Class CKartrisSearchManager
     ''' <summary>
     ''' Rewrite search cookie
     ''' </summary>
-    Public Shared Function UpdateSearchCookie(ByVal strSearchedText As String, ByVal enumType As CkartrisEnumerations.SEARCH_TYPE, _
+    Public Shared Function UpdateSearchCookie(ByVal strSearchedText As String, ByVal enumType As CkartrisEnumerations.SEARCH_TYPE,
                               Optional ByVal strSearchMethod As String = Nothing, Optional ByVal sngMinPrice As Single = -1, Optional ByVal sngMaxPrice As Single = -1) As String
         Dim strKeywords As String = strSearchedText + ","
         strKeywords = ValidateSearchKeywords(strKeywords)
@@ -1235,7 +1236,7 @@ Public NotInheritable Class CKartrisSearchManager
         Return sbdToPrint.ToString
     End Function
 
-    Public Shared Function HighLightResultText(ByVal strContent As String, _
+    Public Shared Function HighLightResultText(ByVal strContent As String,
                             ByVal strKeywords As String) As String
         strContent = CkartrisDisplayFunctions.StripHTML(strContent)
         If String.IsNullOrEmpty(strContent) Then Return strContent
@@ -1268,7 +1269,7 @@ Public NotInheritable Class CKartrisSearchManager
                     sdbTextHighlight.Append(strTempPrefix)
                     sdbTextHighlight.Append(strContent.Substring(numStartingIndex, numKeywordLength))
                     sdbTextHighlight.Append(strTempSuffix)
-                    strContent = Left(strContent, numStartingIndex) & sdbTextHighlight.ToString() & _
+                    strContent = Left(strContent, numStartingIndex) & sdbTextHighlight.ToString() &
                         Mid(strContent, numStartingIndex + numKeywordLength + 1)
                     numStartingIndex += sdbTextHighlight.Length
                     sdbTextHighlight.Length = 0 : sdbTextHighlight.Capacity = 0 'Clear the content of the string builder to be used again
@@ -1472,7 +1473,7 @@ Public NotInheritable Class CkartrisBLL
     ''' (moved here from pagebaseclass as useful in places,
     ''' especially for linking to images such as 'not available')
     ''' </summary>
-    Public Shared Function SkinMasterConfig(ByVal objPage As System.Web.UI.Page, ByVal intProductID As Integer, ByVal intCategoryID As Integer, _
+    Public Shared Function SkinMasterConfig(ByVal objPage As System.Web.UI.Page, ByVal intProductID As Integer, ByVal intCategoryID As Integer,
                                             ByVal intCustomerID As Integer, ByVal intCustomerGroupID As Integer, ByVal strScriptName As String) As String
         Dim strSkinFolder As String = ""
 
@@ -1550,8 +1551,8 @@ Public NotInheritable Class CkartrisBLL
 
                 If HttpRuntime.Cache("tblSkinRules") IsNot Nothing Then HttpRuntime.Cache.Remove("tblSkinRules")
 
-                HttpRuntime.Cache.Add("tblSkinRules", _
-                         tblSkinRules, Nothing, Date.MaxValue, TimeSpan.Zero, _
+                HttpRuntime.Cache.Add("tblSkinRules",
+                         tblSkinRules, Nothing, Date.MaxValue, TimeSpan.Zero,
                          Caching.CacheItemPriority.High, Nothing)
             End If
         Catch ex As Exception
@@ -1736,8 +1737,8 @@ Public NotInheritable Class CkartrisBLL
             Return strHTML
         Catch ex As Exception
             'Error occurred, most likely missing template
-            CkartrisFormatErrors.LogError("An error occurred processsing the email template. This can happen if you do not have the required " & _
-                                          "mail templates in your Skin's template folder. Each template should have the appropriate language " & _
+            CkartrisFormatErrors.LogError("An error occurred processsing the email template. This can happen if you do not have the required " &
+                                          "mail templates in your Skin's template folder. Each template should have the appropriate language " &
                                           "culture. See http://www.kartris.com/Knowledgebase/HTML-email-templates__k-52.aspx for more information.")
             Return "An error occured - most likely the required template is missing. See http://www.kartris.com/Knowledgebase/HTML-email-templates__k-52.aspx for more information."
         End Try
@@ -1908,7 +1909,7 @@ Public NotInheritable Class CkartrisCombinations
         Next
         For i As Integer = 0 To arrTblProductOptionalOptions.GetUpperBound(0) - 1
             If Not _
-                RecursiveOptionalCombinations(tblOptionalCombinations, i, _
+                RecursiveOptionalCombinations(tblOptionalCombinations, i,
                                               arrTblProductOptionalOptions(i), arrTblProductOptionalOptions) Then
                 Return False
             End If
@@ -1962,8 +1963,8 @@ Public NotInheritable Class CkartrisCombinations
         tblTemp = tblResult.Copy()
 
         '' CROSS JOIN by Language
-        Dim tblJoinedResults = From a In tblNewData, b In tblTemp _
-                    Select a, b
+        Dim tblJoinedResults = From a In tblNewData, b In tblTemp
+                               Select a, b
 
         tblResult.Rows.Clear()
 
@@ -1971,8 +1972,8 @@ Public NotInheritable Class CkartrisCombinations
         For Each itmRow In tblJoinedResults
             Dim strID_List As String = itmRow.b("ID_List") & "," & itmRow.a("OPT_ID")
             If useIDListForBoth Then strID_List = itmRow.b("ID_List") & "," & itmRow.a("ID_List")
-            tblResult.Rows.Add(Nothing, _
-                            itmRow.b("OPT_Name") & "," & itmRow.a("OPT_Name"), _
+            tblResult.Rows.Add(Nothing,
+                            itmRow.b("OPT_Name") & "," & itmRow.a("OPT_Name"),
                             itmRow.a("LANG_ID"), strID_List)
         Next
 
@@ -1998,7 +1999,7 @@ Public NotInheritable Class CkartrisImages
         enum_VersionImage = 3
         enum_PromotionImage = 4
         enum_OtherImage = 5
-		enum_OptionSwatch = 6
+        enum_OptionSwatch = 6
         enum_AttributeSwatch = 7
     End Enum
 
@@ -2026,7 +2027,7 @@ Public NotInheritable Class CkartrisImages
                 strFolderURL &= "Images/Products/" & pParentID & "/" & pItemID & "/"
             Case IMAGE_TYPE.enum_PromotionImage
                 strFolderURL &= "Images/Promotions/" & pItemID & "/"
-			Case IMAGE_TYPE.enum_OptionSwatch
+            Case IMAGE_TYPE.enum_OptionSwatch
                 strFolderURL &= "Images/OptionGroups/" & pItemID & "/"
             Case IMAGE_TYPE.enum_AttributeSwatch
                 strFolderURL &= "Images/Attributes/" & pItemID & "/"
@@ -2040,10 +2041,10 @@ Public NotInheritable Class CkartrisImages
     ''' <summary>
     ''' Set image
     ''' </summary>
-    Public Shared Sub SetImage(ByRef objImg As Object, _
-                               ByVal eImgType As IMAGE_TYPE, _
-                               ByVal strImageName As String, _
-                               Optional ByVal eImgSize As IMAGE_SIZE = IMAGE_SIZE.enum_Auto, _
+    Public Shared Sub SetImage(ByRef objImg As Object,
+                               ByVal eImgType As IMAGE_TYPE,
+                               ByVal strImageName As String,
+                               Optional ByVal eImgSize As IMAGE_SIZE = IMAGE_SIZE.enum_Auto,
                                Optional ByVal blnSizeFromConfig As Boolean = False)
 
         Dim strImgPath As String = strImagesPath
@@ -2315,7 +2316,7 @@ Public NotInheritable Class CKartrisCSVExporter
     ''' <summary>
     ''' Write to CSV
     ''' </summary>
-    Public Shared Sub WriteToCSV(ByVal tblToExport As DataTable, ByVal strFileName As String, _
+    Public Shared Sub WriteToCSV(ByVal tblToExport As DataTable, ByVal strFileName As String,
                                  ByVal intFieldDelimiter As Integer, ByVal intStringDelimiter As Integer)
         FieldDelimiter = IIf(intFieldDelimiter = 0, " ", Chr(intFieldDelimiter))
         StringDelimiter = IIf(intStringDelimiter = 0, "", Chr(intStringDelimiter))
@@ -2373,7 +2374,7 @@ Public NotInheritable Class CKartrisCSVExporter
     Private Shared Sub AddDelimiter(ByVal value As String, ByVal stbData As StringBuilder, ByVal colType As Type)
         If value IsNot Nothing AndAlso Not String.IsNullOrEmpty(value) Then
             Select Case colType.FullName
-                Case "System.Int16", "System.Int32", "System.Int64", _
+                Case "System.Int16", "System.Int32", "System.Int64",
                  "System.Double", "System.Byte", "System.Single", "System.Boolean"
                     stbData.Append(value.Replace(FieldDelimiter, "/"))
                 Case "System.String"

@@ -417,4 +417,21 @@ Public Class MailChimpBLL
         End Try
     End Function
 
+    ''' <summary>
+    ''' Add mailinglist signup to mailchimp
+    ''' </summary>
+    Public Async Function AddListSubscriber(ByVal strEmail As String) As Task(Of Member)
+        Try
+            Dim member As Member = New Member With {.EmailAddress = strEmail,
+                .Status = Status.Subscribed
+                }
+            Dim strListID As String = KartSettingsManager.GetKartConfig("general.mailchimp.mailinglistid")
+            Dim taskResult As Member = Await manager.Members.AddOrUpdateAsync(strListID, member).ConfigureAwait(False)
+            Return taskResult
+        Catch ex As Exception
+            Debug.Print(ex.Message)
+            Throw ex
+        End Try
+    End Function
+
 End Class

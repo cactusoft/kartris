@@ -20,6 +20,8 @@ Imports kartrisBasketData
 Imports CkartrisDataManipulation
 Imports KartrisClasses
 Imports SiteMapHelper
+Imports MailChimp.Net.Models
+Imports MailChimp.Net.Core
 
 ''' <summary>
 ''' Basket business logic layer
@@ -2444,9 +2446,21 @@ Public Class BasketBLL
             UserID = Val(tblConfirmMail.Rows(0).Item("UserID") & "")
         End If
 
+        'If mailchimp is active, we want to add the user to the mailing list
+        If KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y" Then
+            'Lookup user email
+            Dim strEmail As String = UsersBLL.GetEmailByID(UserID)
+            Dim manager As MailChimpBLL = New MailChimpBLL()
+            Dim member As Member = manager.AddListSubscriber(strEmail).Result()
+        End If
+
         Return UserID
+
     End Function
 
+    Public Shared Sub AddListSubscriber()
+
+    End Sub
 #End Region
 
 End Class
