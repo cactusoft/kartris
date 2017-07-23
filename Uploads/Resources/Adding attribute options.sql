@@ -218,3 +218,74 @@ on pcl.PCAT_ProductID = av.ATTRIBV_ProductID
 WHERE pcl.PCAT_CategoryID = @CategoryId
 END 
 GO
+
+/* Retrieve both written attributes and checkbox attributes if the attribute is marked as 'special'. 
+	These attributes are used for Google services. */
+IF  OBJECT_ID('_spKartrisAttributes_GetSpecialByProductID','P') IS NOT NULL
+	DROP PROCEDURE _spKartrisAttributes_GetSpecialByProductID
+GO
+CREATE PROCEDURE [dbo].[_spKartrisAttributes_GetSpecialByProductID]
+	(
+		@P_ID int,
+		@LANG_ID tinyint
+	)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	SELECT     vKartrisTypeAttributes.ATTRIB_Name, vKartrisTypeAttributeValues.ATTRIBV_Value, vKartrisTypeAttributes.ATTRIB_OrderByValue OrderValue
+	FROM         vKartrisTypeAttributeValues INNER JOIN
+						  vKartrisTypeAttributes ON vKartrisTypeAttributeValues.ATTRIBV_AttributeID = vKartrisTypeAttributes.ATTRIB_ID AND 
+						  vKartrisTypeAttributeValues.LANG_ID = vKartrisTypeAttributes.LANG_ID
+	WHERE     (vKartrisTypeAttributes.ATTRIB_Live = 1) AND (vKartrisTypeAttributeValues.ATTRIBV_ProductID = @P_ID) AND (vKartrisTypeAttributeValues.LANG_ID = @LANG_ID) 
+						  AND (vKartrisTypeAttributes.ATTRIB_Special = 1)
+	UNION ALL
+	SELECT kta.ATTRIB_Name, kle.LE_Value, kao.ATTRIBO_OrderBYValue OrderValue
+	FROM tblKartrisAttributeOptions kao INNER JOIN dbo.tblKartrisLanguageElements kle
+ON kle.LE_ParentID = kao.ATTRIBO_ID INNER JOIN vKartrisTypeAttributes kta
+ON kta.ATTRIB_ID = kao.ATTRIBO_AttributeID INNER JOIN tblKartrisAttributeProductOptions kapo
+ON kapo.ATTRIBPO_AttributeOptionID = kao.ATTRIBO_ID AND kapo.ATTRIBPO_ProductId = @P_ID
+WHERE  (kle.LE_TypeID = 18) AND (kle.LE_FieldID = 1) AND 
+					  (kle.LE_Value IS NOT NULL)
+	ORDER BY OrderValue
+END
+GO
+
+/* Retrieve product summary for both written attributes and checkbox attributes. */ 
+IF  OBJECT_ID('spKartrisAttributes_GetSummaryByProductID','P') IS NOT NULL
+	DROP PROCEDURE spKartrisAttributes_GetSummaryByProductID
+GO
+CREATE PROCEDURE spKartrisAttributes_GetSummaryByProductID
+	(
+		@P_ID int,
+		@LANG_ID tinyint
+	)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+ SELECT     vKartrisTypeAttributes.ATTRIB_ID, vKartrisTypeAttributes.ATTRIB_Name, vKartrisTypeAttributeValues.ATTRIBV_Value,
+			vKartrisTypeAttributeValues.ATTRIBV_ProductID, vKartrisTypeAttributes.ATTRIB_Compare, 
+			vKartrisTypeAttributes.ATTRIB_OrderByValue OrderValue
+FROM         vKartrisTypeAttributeValues INNER JOIN
+					  vKartrisTypeAttributes ON vKartrisTypeAttributeValues.ATTRIBV_AttributeID = vKartrisTypeAttributes.ATTRIB_ID AND 
+					  vKartrisTypeAttributeValues.LANG_ID = vKartrisTypeAttributes.LANG_ID
+WHERE     (vKartrisTypeAttributes.ATTRIB_Live = 1) AND (vKartrisTypeAttributes.ATTRIB_ShowFrontend = 1) AND (vKartrisTypeAttributeValues.ATTRIBV_ProductID = @P_ID) AND
+					   (vKartrisTypeAttributeValues.LANG_ID = @LANG_ID)
+
+UNION ALL
+SELECT kta.ATTRIB_ID, kta.ATTRIB_Name, kle.LE_Value, kapo.ATTRIBPO_ProductId, kta.ATTRIB_Compare, kao.ATTRIBO_OrderBYValue OrderValue
+	FROM tblKartrisAttributeOptions kao INNER JOIN dbo.tblKartrisLanguageElements kle
+ON kle.LE_ParentID = kao.ATTRIBO_ID INNER JOIN vKartrisTypeAttributes kta
+ON kta.ATTRIB_ID = kao.ATTRIBO_AttributeID INNER JOIN tblKartrisAttributeProductOptions kapo
+ON kapo.ATTRIBPO_AttributeOptionID = kao.ATTRIBO_ID 
+WHERE  (kle.LE_TypeID = 18) AND (kle.LE_FieldID = 1) AND 
+					  (kle.LE_Value IS NOT NULL) AND kapo.ATTRIBPO_ProductId=@P_ID 
+					  AND kle.LE_LanguageID=@Lang_ID
+ORDER BY OrderValue
+END
+GO
