@@ -1620,35 +1620,44 @@ Partial Class _Checkout
 
                             BasketBLL.UpdateCustomerMailingList(UC_KartrisLogin.UserEmailAddress, strRandomString, ddlMailingList.SelectedValue, objOrder.CustomerIPAddress)
 
-                            Dim sbdMLBodyText As StringBuilder = New StringBuilder()
-                            Dim strBodyText As String
-                            Dim strMailingListSignUpLink As String = WebShopURL() & "Default.aspx?id=" & objOrder.CustomerID & "&r=" & strRandomString
 
-                            sbdMLBodyText.Append(GetGlobalResourceObject("Kartris", "EmailText_NewsletterSignup") & vbCrLf & vbCrLf)
-                            sbdMLBodyText.Append(strMailingListSignUpLink & vbCrLf & vbCrLf)
-                            sbdMLBodyText.Append(GetGlobalResourceObject("Kartris", "EmailText_NewsletterAuthorizeFooter"))
+                            'If mailchimp is active, we want to add the user to the mailing list
+                            If KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y" Then
+                                'Add user direct to MailChimp
+                                BasketBLL.AddListSubscriber(UC_KartrisLogin.UserEmailAddress)
+                            Else
+                                'Use the built in mailing list
+                                Dim sbdMLBodyText As StringBuilder = New StringBuilder()
+                                Dim strBodyText As String
+                                Dim strMailingListSignUpLink As String = WebShopURL() & "Default.aspx?id=" & objOrder.CustomerID & "&r=" & strRandomString
 
-                            strBodyText = sbdMLBodyText.ToString
-                            strBodyText = Replace(strBodyText, "[IPADDRESS]", objOrder.CustomerIPAddress)
-                            strBodyText = Replace(strBodyText, "[WEBSHOPNAME]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
-                            strBodyText = Replace(strBodyText, "[WEBSHOPURL]", WebShopURL)
-                            strBodyText = strBodyText & GetGlobalResourceObject("Kartris", "ContentText_NewsletterSignup")
+                                sbdMLBodyText.Append(GetGlobalResourceObject("Kartris", "EmailText_NewsletterSignup") & vbCrLf & vbCrLf)
+                                sbdMLBodyText.Append(strMailingListSignUpLink & vbCrLf & vbCrLf)
+                                sbdMLBodyText.Append(GetGlobalResourceObject("Kartris", "EmailText_NewsletterAuthorizeFooter"))
 
-                            Dim blnHTMLEmail As Boolean = KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y"
-                            If blnHTMLEmail Then
-                                Dim strHTMLEmailText As String = RetrieveHTMLEmailTemplate("MailingListSignUp")
-                                'build up the HTML email if template is found
-                                If Not String.IsNullOrEmpty(strHTMLEmailText) Then
-                                    strHTMLEmailText = strHTMLEmailText.Replace("[mailinglistconfirmationlink]", strMailingListSignUpLink)
-                                    strHTMLEmailText = strHTMLEmailText.Replace("[websitename]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
-                                    strHTMLEmailText = strHTMLEmailText.Replace("[customerip]", objOrder.CustomerIPAddress)
-                                    strBodyText = strHTMLEmailText
-                                Else
-                                    blnHTMLEmail = False
+                                strBodyText = sbdMLBodyText.ToString
+                                strBodyText = Replace(strBodyText, "[IPADDRESS]", objOrder.CustomerIPAddress)
+                                strBodyText = Replace(strBodyText, "[WEBSHOPNAME]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
+                                strBodyText = Replace(strBodyText, "[WEBSHOPURL]", WebShopURL)
+                                strBodyText = strBodyText & GetGlobalResourceObject("Kartris", "ContentText_NewsletterSignup")
+
+                                Dim blnHTMLEmail As Boolean = KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y"
+                                If blnHTMLEmail Then
+                                    Dim strHTMLEmailText As String = RetrieveHTMLEmailTemplate("MailingListSignUp")
+                                    'build up the HTML email if template is found
+                                    If Not String.IsNullOrEmpty(strHTMLEmailText) Then
+                                        strHTMLEmailText = strHTMLEmailText.Replace("[mailinglistconfirmationlink]", strMailingListSignUpLink)
+                                        strHTMLEmailText = strHTMLEmailText.Replace("[websitename]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
+                                        strHTMLEmailText = strHTMLEmailText.Replace("[customerip]", objOrder.CustomerIPAddress)
+                                        strBodyText = strHTMLEmailText
+                                    Else
+                                        blnHTMLEmail = False
+                                    End If
                                 End If
+
+                                SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, GetGlobalResourceObject("Kartris", "PageTitle_MailingList"), strBodyText, , , , , blnHTMLEmail)
                             End If
 
-                            SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, GetGlobalResourceObject("Kartris", "PageTitle_MailingList"), strBodyText, , , , , blnHTMLEmail)
                         End If
                     End If
 

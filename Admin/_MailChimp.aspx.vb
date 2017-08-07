@@ -46,15 +46,20 @@ Partial Class Admin_MailChimp
             phdMailChimpAPI.Visible = True
 
             ' Fill Up MailChimp Extra Fields
-            If Not txtCFG_Value4.Text.Equals("") Then
-                Dim manager As MailChimpBLL = New MailChimpBLL()
-                Dim store As Store = manager.manager.ECommerceStores.GetAsync(txtCFG_Value4.Text).Result
-                If store IsNot Nothing Then
-                    txtStoreName.Text = store.Name
-                    txtStoreDomain.Text = store.Domain
-                    txtStoreEmail.Text = store.EmailAddress
+            Try
+                If Not txtCFG_Value4.Text.Equals("") Then
+                    Dim manager As MailChimpBLL = New MailChimpBLL()
+                    Dim store As Store = manager.manager.ECommerceStores.GetAsync(txtCFG_Value4.Text).Result
+                    If store IsNot Nothing Then
+                        txtStoreName.Text = store.Name
+                        txtStoreDomain.Text = store.Domain
+                        txtStoreEmail.Text = store.EmailAddress
+                    End If
                 End If
-            End If
+            Catch ex As Exception
+                'probably no mailchimp store created yet
+            End Try
+
         End If
 
 

@@ -1294,16 +1294,16 @@ Public Class BasketBLL
     ''' <summary>
     ''' Find the ordinal position of the highest value item in the basket that belongs to a given product category
     ''' </summary>
-    ''' <param name="numProductID">Category that we are searching within (not Product ID strangely)</param>
+    ''' <param name="numCategoryID">Category that we are searching within</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Private Shared Function GetItemMaxCategoryValue(ByRef BasketItems As List(Of Kartris.BasketItem), ByVal numProductID As Integer) As Integer
+    Private Shared Function GetItemMaxCategoryValue(ByRef BasketItems As List(Of Kartris.BasketItem), ByVal numCategoryID As Integer) As Integer
         Dim objItem, tmpItem As New Kartris.BasketItem
         Dim index As Integer = -1
 
         For i As Integer = 0 To BasketItems.Count - 1
             objItem = BasketItems(i)
-            If InStr(objItem.CategoryIDs, numProductID.ToString) > 0 Then
+            If InStr("," & objItem.CategoryIDs & ",", "," & numCategoryID.ToString & ",") > 0 Then
                 index = IIf(index = -1, i, index)
                 tmpItem = BasketItems(index)
                 If objItem.IncTax > tmpItem.IncTax Then
@@ -1318,11 +1318,11 @@ Public Class BasketBLL
     ''' <summary>
     ''' Find the ordinal position of the lowest value item in the basket that belongs to a given product category
     ''' </summary>
-    ''' <param name="numProductID">The category to search within (not the product ID)</param>
+    ''' <param name="numCategoryID">The category to search within</param>
     ''' <param name="strVersionIDArray">comma delimited string of product versions to exclude from this search</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Private Shared Function GetItemMinCategoryValue(ByRef BasketItems As List(Of Kartris.BasketItem), ByVal numProductID As Integer, Optional ByVal strVersionIDArray As String = "") As Integer
+    Private Shared Function GetItemMinCategoryValue(ByRef BasketItems As List(Of Kartris.BasketItem), ByVal numCategoryID As Integer, Optional ByVal strVersionIDArray As String = "") As Integer
         Dim objItem, tmpItem As New Kartris.BasketItem
         Dim index As Integer = -1
         Dim arrVersionIDsToExclude As String() = Nothing
@@ -1344,7 +1344,7 @@ Public Class BasketBLL
                 Next
                 If blnSkipVersion Then Continue For
             End If
-            If InStr(objItem.CategoryIDs, numProductID.ToString) > 0 Then
+            If InStr("," & objItem.CategoryIDs & ",", "," & numCategoryID.ToString & ",") > 0 Then
                 index = IIf(index = -1, i, index)
                 tmpItem = BasketItems(index)
                 If objItem.IncTax < tmpItem.IncTax Then
@@ -1631,7 +1631,7 @@ Public Class BasketBLL
         Dim drwGets() As Data.DataRow
         Dim drwSpends() As Data.DataRow
         Dim strPromoIDs, strPromoDiscountIDs, strList As String
-        Dim vPromoID, vMaxPromoQty, vItemID As Integer
+        Dim vPromoID, vMaxPromoQty, vItemID, cnt As Integer
         Dim strItemType, strType As String
         Dim strItemVersionIDs, strItemProductIDs, strItemCategoryIDs As String
         Dim vIncTax, vExTax, vQuantity, vBuyQty, vValue, vTaxRate As Double
@@ -1669,7 +1669,7 @@ Public Class BasketBLL
         End If
         tblPromotions = PromotionsBLL.GetAllPromotions(numLanguageID, intCouponPromotionID)
 
-        '' get promotions from Basket version IDs (buy promotion parts)
+        'get promotions from Basket version IDs (buy promotion parts)
         strList = "PP_PartNo='a' and PP_ItemType='v' and PP_Type='q' and PP_ItemID in (" & strItemVersionIDs & ")"
         drwBuys = tblPromotions.Select(strList)
         For Each drwBuy As DataRow In drwBuys
@@ -1813,164 +1813,190 @@ Public Class BasketBLL
         'get promotions from basket product IDs
         strList = "PP_PartNo='a' and PP_ItemType='p' and PP_Type='q' and PP_ItemID in (" & strItemProductIDs & ")"
         drwBuys = tblPromotions.Select(strList)
+
+
+        Dim vThisItemID As Int64 = 0
         For Each drwBuy As DataRow In drwBuys
             vPromoID = drwBuy("PROM_ID")
+            vThisItemID = drwBuy("PP_ItemID")
+
             If InStr(strPromoIDs, vPromoID) = 0 Then
-                strPromoIDs = strPromoIDs & vPromoID & ";"
+            strPromoIDs = strPromoIDs & vPromoID & ";"
 
-                Dim objPromotion As New Promotion
-                Call SetPromotionData(objPromotion, drwBuy)
+            Dim objPromotion As New Promotion
+            Call SetPromotionData(objPromotion, drwBuy)
 
-                Dim cnt As Integer = 0
-                For i As Integer = 0 To Basket.BasketItems.Count - 1
-                    objItem = Basket.BasketItems(i)
+            'We need some new code to find out if the B side of the promotion
+            'gives a value, if so, all items in the basket should contribute.
+            strList = "PP_PartNo='b' and PROM_ID=" & vPromoID
+            drwGets = tblPromotions.Select(strList)
+            Dim vPromoGetType As String = ""
+            Dim vPromoItemID As Int64 = 0
+            For Each drwGet As DataRow In drwGets
+                vPromoGetType = drwGet("PP_ItemType")
+                vPromoItemID = drwGet("PP_ItemID")
+            Next
+
+            'Figure out which rows on basket to run this on
+            For i As Integer = 0 To Basket.BasketItems.Count - 1
+                objItem = Basket.BasketItems(i)
+                If vPromoGetType = "a" Then 'this gives user a value of all items
+                    cnt = cnt + objItem.Quantity
+                Else
                     If objItem.ProductID = objPromotion.ItemID And objItem.AppliedPromo = 0 Then cnt = cnt + objItem.Quantity
-                Next
+                    'cnt = cnt + objItem.Quantity
+                End If
+            Next
 
-                If cnt >= objPromotion.Value Then
-                    vIncTax = 0 : vExTax = 0 : vQuantity = 0 : vTaxRate = 0
-                    vBuyQty = cnt
 
-                    Dim blnGetFound As Boolean = False
 
-                    strList = "PP_PartNo='b' and PROM_ID=" & objPromotion.ID
-                    drwGets = tblPromotions.Select(strList)
-                    Dim blnIsFixedValuePromo As Boolean = False
-                    Dim blnForceAdd As Boolean = False
-                    For Each drGet As DataRow In drwGets '' loop the get items
-                        strItemType = drGet("PP_ItemType")
-                        strType = drGet("PP_Type") & ""
-                        vItemID = drGet("PP_ItemID")
-                        vValue = drGet("PP_Value")
-                        vMaxPromoQty = IIf(drGet("PROM_MaxQuantity") = 0, 1000000, drGet("PROM_MaxQuantity"))
-                        blnIsFixedValuePromo = False
+            If cnt >= objPromotion.Value Then
 
-                        Select Case strItemType.ToLower
-                            Case "v"                    '' buy product and get item from version
-                                If InStr("," & strItemVersionIDs & ",", "," & vItemID & ",") > 0 Then
-                                    objItem = GetBasketItemByVersionID(Basket.BasketItems, vItemID)
-                                    If objItem.AppliedPromo = 1 Then Continue For
-                                    blnGetFound = True
-                                    Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate)
-                                End If
 
-                            Case "p"                    '' buy product and get item from product
-                                If InStr("," & strItemProductIDs & ",", "," & vItemID & ",") > 0 Then
-                                    Dim index As Integer
-                                    index = GetItemMinProductValue(Basket.BasketItems, vItemID)
-                                    objItem = Basket.BasketItems(index)
-                                    If objItem.AppliedPromo = 1 Then Continue For
-                                    blnGetFound = True
-                                    Dim intExcessGetQty As Integer
-                                    Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
-                                    Dim strVersionIDArray As String = ""
-                                    Do While intExcessGetQty > 0
-                                        If strVersionIDArray <> "" Then strVersionIDArray += ","
-                                        blnIsFixedValuePromo = True
-                                        objItem.AppliedPromo = 1
-                                        vMaxPromoQty = vMaxPromoQty - vQuantity
-                                        If intExcessGetQty < objPromotion.Value Or vMaxPromoQty < 1 Then
-                                            intExcessGetQty = 0
-                                            Exit Do
-                                        End If
-                                        Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
-                                        If blnGetFound Then objItem.AppliedPromo = 1
-                                        strVersionIDArray = strVersionIDArray & objItem.VersionID
-                                        'Dim numExcessItemsInPromo As Double = vBuyQty - (objPromotion.Value * objItem.Quantity)
-                                        index = GetItemMinProductValue(Basket.BasketItems, vItemID, strVersionIDArray)
-                                        If index <> -1 Then
-                                            objItem = Basket.BasketItems(index)
-                                            If objItem.AppliedPromo = 1 Then Continue For
-                                            Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
-                                            blnForceAdd = True
+                vIncTax = 0 : vExTax = 0 : vQuantity = 0 : vTaxRate = 0
+                vBuyQty = cnt
+
+                Dim blnGetFound As Boolean = False
+
+                strList = "PP_PartNo='b' and PROM_ID=" & objPromotion.ID
+                drwGets = tblPromotions.Select(strList)
+                Dim blnIsFixedValuePromo As Boolean = False
+                Dim blnForceAdd As Boolean = False
+                For Each drGet As DataRow In drwGets '' loop the get items
+                    strItemType = drGet("PP_ItemType")
+                    strType = drGet("PP_Type") & ""
+                    vItemID = drGet("PP_ItemID")
+                    vValue = drGet("PP_Value")
+                    vMaxPromoQty = IIf(drGet("PROM_MaxQuantity") = 0, 1000000, drGet("PROM_MaxQuantity"))
+                    blnIsFixedValuePromo = False
+
+                    Select Case strItemType.ToLower
+                        Case "v" 'buy product and get item from version
+                            If InStr("," & strItemVersionIDs & ",", "," & vItemID & ",") > 0 Then
+                                objItem = GetBasketItemByVersionID(Basket.BasketItems, vItemID)
+                                If objItem.AppliedPromo = 1 Then Continue For
+                                blnGetFound = True
+                                Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate)
+                            End If
+
+                        Case "p" 'buy product and get item from product
+                            If InStr("," & strItemProductIDs & ",", "," & vItemID & ",") > 0 Then
+                                Dim index As Integer
+                                index = GetItemMinProductValue(Basket.BasketItems, vItemID)
+                                objItem = Basket.BasketItems(index)
+                                If objItem.AppliedPromo = 1 Then Continue For
+                                blnGetFound = True
+                                Dim intExcessGetQty As Integer
+                                Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
+                                Dim strVersionIDArray As String = ""
+                                Do While intExcessGetQty > 0
+                                    If strVersionIDArray <> "" Then strVersionIDArray += ","
+                                    blnIsFixedValuePromo = True
+                                    objItem.AppliedPromo = 1
+                                    vMaxPromoQty = vMaxPromoQty - vQuantity
+                                    If intExcessGetQty < objPromotion.Value Or vMaxPromoQty < 1 Then
+                                        intExcessGetQty = 0
+                                        Exit Do
+                                    End If
+                                    Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                                    If blnGetFound Then objItem.AppliedPromo = 1
+                                    strVersionIDArray = strVersionIDArray & objItem.VersionID
+                                    'Dim numExcessItemsInPromo As Double = vBuyQty - (objPromotion.Value * objItem.Quantity)
+                                    index = GetItemMinProductValue(Basket.BasketItems, vItemID, strVersionIDArray)
+                                    If index <> -1 Then
+                                        objItem = Basket.BasketItems(index)
+                                        If objItem.AppliedPromo = 1 Then Continue For
+                                        Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
+                                        blnForceAdd = True
+                                    Else
+                                        intExcessGetQty = 0
+                                    End If
+                                Loop
+                            End If
+
+                        Case "c" 'buy product and get item from category
+                            If InStr("," & strItemCategoryIDs & ",", "," & vItemID & ",") > 0 Then
+                                Dim index As Integer
+                                index = GetItemMinCategoryValue(Basket.BasketItems, vItemID)
+                                objItem = Basket.BasketItems(index)
+
+                                If objItem.AppliedPromo = 1 Then Continue For
+                                blnGetFound = True
+                                Dim intExcessGetQty As Integer = 0
+                                Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
+                                Dim strVersionIDArray As String = ""
+                                Do While intExcessGetQty > 0
+                                    If strVersionIDArray <> "" Then strVersionIDArray += ","
+                                    blnIsFixedValuePromo = True
+                                    'objItem.AppliedPromo = 1
+                                    vMaxPromoQty = vMaxPromoQty - vQuantity
+                                    If intExcessGetQty < objPromotion.Value Or vMaxPromoQty < 1 Then
+                                        intExcessGetQty = 0
+                                        Exit Do
+                                    End If
+                                    Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                                    If blnGetFound Then objItem.AppliedPromo = 1
+                                    strVersionIDArray = strVersionIDArray & objItem.VersionID
+                                    Dim numExcessItemsInPromo As Double = vBuyQty - (objPromotion.Value * objItem.Quantity)
+                                    index = GetItemMinCategoryValue(Basket.BasketItems, vItemID, strVersionIDArray)
+                                    If index <> -1 Then
+                                        objItem = Basket.BasketItems(index)
+                                        If objItem.AppliedPromo = 1 Then Continue For
+                                        Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
+                                        blnForceAdd = True
+                                    Else
+                                        intExcessGetQty = 0
+                                    End If
+                                Loop
+                            End If
+                        Case "a" 'buy product, get discount on total
+                            vQuantity = Math.Floor(Math.Min((vBuyQty / objPromotion.Value), (cnt / objPromotion.Value)))
+                            vQuantity = Math.Min(vQuantity, vMaxPromoQty) '' Make sure it didn't exceed the MaxQty / promotion
+                            If vQuantity <= 0 Then blnGetFound = False Else blnGetFound = True
+
+                            vTaxRate = Basket.TotalDiscountPriceTaxRate
+
+                            If vValue > Basket.TotalDiscountPriceExTax Then
+                                vExTax = -Basket.TotalDiscountPriceExTax
+                                vIncTax = -Basket.TotalDiscountPriceIncTax
+                            Else
+                                Dim blnPricesExtax As Boolean = False
+
+                                If Not blnZeroTotalTaxRate Then
+                                    If GetKartConfig("general.tax.pricesinctax") = "y" Then
+                                        vExTax = -Math.Round(vValue * (1 / (1 + vTaxRate)), CurrencyRoundNumber)
+                                        If Basket.D_Tax = 1 Then
+                                            vIncTax = -Math.Round(vValue, CurrencyRoundNumber)
                                         Else
-                                            intExcessGetQty = 0
-                                        End If
-                                    Loop
-                                End If
-
-                            Case "c"                    '' buy product and get item from category
-                                If InStr("," & strItemCategoryIDs & ",", "," & vItemID & ",") > 0 Then
-                                    Dim index As Integer
-                                    index = GetItemMinCategoryValue(Basket.BasketItems, vItemID)
-                                    objItem = Basket.BasketItems(index)
-                                    'If objItem.AppliedPromo = 1 Then Continue For
-                                    blnGetFound = True
-                                    Dim intExcessGetQty As Integer = 0
-                                    Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
-                                    Dim strVersionIDArray As String = ""
-                                    Do While intExcessGetQty > 0
-                                        If strVersionIDArray <> "" Then strVersionIDArray += ","
-                                        blnIsFixedValuePromo = True
-                                        objItem.AppliedPromo = 1
-                                        vMaxPromoQty = vMaxPromoQty - vQuantity
-                                        If intExcessGetQty < objPromotion.Value Or vMaxPromoQty < 1 Then
-                                            intExcessGetQty = 0
-                                            Exit Do
-                                        End If
-                                        Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
-                                        If blnGetFound Then objItem.AppliedPromo = 1
-                                        strVersionIDArray = strVersionIDArray & objItem.VersionID
-                                        'Dim numExcessItemsInPromo As Double = vBuyQty - (objPromotion.Value * objItem.Quantity)
-                                        index = GetItemMinCategoryValue(Basket.BasketItems, vItemID, strVersionIDArray)
-                                        If index <> -1 Then
-                                            objItem = Basket.BasketItems(index)
-                                            'If objItem.AppliedPromo = 1 Then Continue For
-                                            Call SetPromotionValue(vMaxPromoQty, objItem, strType, intExcessGetQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate, intExcessGetQty)
-                                            blnForceAdd = True
-                                        Else
-                                            intExcessGetQty = 0
-                                        End If
-                                    Loop
-                                End If
-                            Case "a"
-                                vQuantity = Math.Floor(Math.Min((vBuyQty / objPromotion.Value), (cnt / objPromotion.Value)))
-                                vQuantity = Math.Min(vQuantity, vMaxPromoQty) '' Make sure it didn't exceed the MaxQty / promotion
-                                If vQuantity <= 0 Then blnGetFound = False Else blnGetFound = True
-
-                                vTaxRate = Basket.TotalDiscountPriceTaxRate
-
-                                If vValue > Basket.TotalDiscountPriceExTax Then
-                                    vExTax = -Basket.TotalDiscountPriceExTax
-                                    vIncTax = -Basket.TotalDiscountPriceIncTax
-                                Else
-                                    Dim blnPricesExtax As Boolean = False
-
-                                    If Not blnZeroTotalTaxRate Then
-                                        If GetKartConfig("general.tax.pricesinctax") = "y" Then
-                                            vExTax = -Math.Round(vValue * (1 / (1 + vTaxRate)), CurrencyRoundNumber)
-                                            If Basket.D_Tax = 1 Then
-                                                vIncTax = -Math.Round(vValue, CurrencyRoundNumber)
-                                            Else
-                                                vIncTax = vExTax
-                                            End If
-                                        Else
-                                            blnPricesExtax = True
+                                            vIncTax = vExTax
                                         End If
                                     Else
                                         blnPricesExtax = True
                                     End If
-
-                                    If blnPricesExtax Then
-                                        vIncTax = -Math.Round(vValue * (1 + vTaxRate), CurrencyRoundNumber)
-                                        vExTax = -Math.Round(vValue, CurrencyRoundNumber)
-                                    End If
+                                Else
+                                    blnPricesExtax = True
                                 End If
 
-                                blnIsFixedValuePromo = True
-                                objItem.AppliedPromo = 1
-                        End Select
-                    Next
-                    Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
-                    If blnGetFound Then objItem.AppliedPromo = 1
-                Else
-                    Call AddPromotion(Basket, False, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
+                                If blnPricesExtax Then
+                                    vIncTax = -Math.Round(vValue * (1 + vTaxRate), CurrencyRoundNumber)
+                                    vExTax = -Math.Round(vValue, CurrencyRoundNumber)
+                                End If
+                            End If
+
+                            blnIsFixedValuePromo = True
+                            objItem.AppliedPromo = 1
+                    End Select
+                Next
+                Call AddPromotion(Basket, blnGetFound, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate, blnIsFixedValuePromo, blnForceAdd)
+                'If blnGetFound Then objItem.AppliedPromo = 1
+            Else
+                Call AddPromotion(Basket, False, strPromoDiscountIDs, objPromotion, vPromoID, vIncTax, vExTax, vQuantity, vTaxRate)
                 End If
 
             End If
         Next
 
-        '' get promotions from basket category IDs
+        'get promotions from basket category IDs
         strList = "PP_PartNo='a' and PP_ItemType='c' and PP_Type='q' and PP_ItemID in (" & strItemCategoryIDs & ")"
         drwBuys = tblPromotions.Select(strList)
         For Each drwBuy As DataRow In drwBuys
@@ -1981,7 +2007,6 @@ Public Class BasketBLL
                 Dim objPromotion As New Promotion
                 Call SetPromotionData(objPromotion, drwBuy)
 
-                Dim cnt As Integer = 0
                 For i As Integer = 0 To Basket.BasketItems.Count - 1
                     objItem = Basket.BasketItems(i)
                     If InStr("," & objItem.CategoryIDs & ",", "," & objPromotion.ItemID & ",") > 0 Then
@@ -2008,7 +2033,7 @@ Public Class BasketBLL
                         vMaxPromoQty = IIf(drGet("PROM_MaxQuantity") = 0, 1000000, drGet("PROM_MaxQuantity"))
                         blnIsFixedValuePromo = False
                         Select Case strItemType.ToLower
-                            Case "v"                    '' buy category and get item from version
+                            Case "v" 'buy category and get item from version
                                 If InStr("," & strItemVersionIDs & ",", "," & vItemID & ",") > 0 Then
                                     objItem = GetBasketItemByVersionID(Basket.BasketItems, vItemID)
                                     If objItem.AppliedPromo = 1 Then Exit Select
@@ -2016,7 +2041,7 @@ Public Class BasketBLL
                                     Call SetPromotionValue(vMaxPromoQty, objItem, strType, vBuyQty, objPromotion.Value, objItem.Quantity, vValue, vIncTax, vExTax, vQuantity, vTaxRate)
                                 End If
 
-                            Case "p"                    '' buy category and get item from product
+                            Case "p" 'buy category and get item from product
                                 If InStr("," & strItemProductIDs & ",", "," & vItemID & ",") > 0 Then
                                     Dim index As Integer
                                     index = GetItemMinProductValue(Basket.BasketItems, vItemID)
@@ -2051,7 +2076,7 @@ Public Class BasketBLL
                                     Loop
                                 End If
 
-                            Case "c"                    '' buy category and get item from category
+                            Case "c" 'buy category and get item from category
                                 If InStr("," & strItemCategoryIDs & ",", "," & vItemID & ",") > 0 Then
                                     Dim index As Integer
                                     index = GetItemMinCategoryValue(Basket.BasketItems, vItemID)
@@ -2137,6 +2162,11 @@ Public Class BasketBLL
         strList = "PP_PartNo='a' and PP_ItemType='a'"
         drwSpends = tblPromotions.Select(strList)
 
+        'cnt = 0
+        'For i As Integer = 0 To Basket.BasketItems.Count - 1
+        '    objItem = Basket.BasketItems(i)
+        '    cnt = cnt + objItem.Quantity
+        'Next
 
         For Each drSpend As DataRow In drwSpends
             vPromoID = drSpend("PROM_ID")
@@ -2450,17 +2480,16 @@ Public Class BasketBLL
         If KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y" Then
             'Lookup user email
             Dim strEmail As String = UsersBLL.GetEmailByID(UserID)
-            AddListSubscriber(strEmail)
+            Dim manager As MailChimpBLL = New MailChimpBLL()
+            Dim member As Member = manager.AddListSubscriber(strEmail).Result()
         End If
 
         Return UserID
 
     End Function
 
-    'Add user to MailChimp mailing list
-    Public Shared Sub AddListSubscriber(ByVal strEmail As String)
-        Dim manager As MailChimpBLL = New MailChimpBLL()
-        Dim member As Member = manager.AddListSubscriber(strEmail).Result()
+    Public Shared Sub AddListSubscriber()
+
     End Sub
 #End Region
 

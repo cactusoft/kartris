@@ -42,6 +42,9 @@ Public Class LoginsBLL
     Public Shared Function Validate(ByVal UserName As String, ByVal Password As String, Optional ByVal blnDirect As Boolean = False) As Integer
         If blnDirect Then
             Return Adptr._Validate(UserName, Password)
+
+            'KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins,
+            ' "Login", "username: " & UserName & " ---  password(hashed): " & Password, UserName)
         Else
             Dim strUserSalt As String = _GetSaltByUserName(UserName)
             Dim blnUserValidated As Boolean = Adptr._Validate(UserName, UsersBLL.EncryptSHA256Managed(Password, strUserSalt, True))
@@ -71,8 +74,8 @@ Public Class LoginsBLL
                         End With
 
                         If ReturnedID <> LOGIN_ID Then
-                            Throw New Exception("Login ID and the Updated ID don't match")
-                        End If
+                            Throw New Exception("Login ID And the Updated ID don't match")
+        End If
 
                         KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins,
                          GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"), CreateQuery(cmdUpdateLogin), UserName, sqlConn, savePoint)
