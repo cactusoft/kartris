@@ -195,8 +195,8 @@ Partial Class Callback
                                     Dim kartrisBasket As Basket = Session("Basket")
                                     Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(tempKartrisUser, kartrisBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
                                     Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(tempKartrisUser.ID).Result
-                                    Dim mcOrder As MailChimp.Net.Models.Order = mailChimpLib.AddOrder(mcCustomer, O_ID).Result
-                                    Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart(O_ID).Result
+                                    Dim mcOrder As MailChimp.Net.Models.Order = mailChimpLib.AddOrder(mcCustomer, "cart_" & O_ID.ToString()).Result
+                                    Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart("cart_" & O_ID).Result
                                     'Log the success
                                     CkartrisFormatErrors.LogError("Mailchimp basket was deleted successfully")
                                 Catch ex As Exception
