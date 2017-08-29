@@ -101,14 +101,14 @@ Public Class MailChimpBLL
         Dim toReturn As String = ""
         Dim storeName As String = KartSettingsManager.GetKartConfig("general.mailchimp.storeid")
         Try
-            mcStore = Await manager.ECommerceStores.GetAsync(storeName).ConfigureAwait(False)
+            mcStore = Await manager.ECommerceStores.GetAsync(KartSettingsManager.GetKartConfig("general.mailchimp.storeid")).ConfigureAwait(False)
         Catch ex As Exception
             If ex.Message.Contains("Unable to find the resource at") Then
                 mcStore = Nothing
             End If
             'Debug.Print(ex.Message)
             'Log the error
-            CkartrisFormatErrors.LogError("MailchimpBLL AddCartToCustomerToStore(1): " & ex.Message)
+            'CkartrisFormatErrors.LogError("MailchimpBLL AddCartToCustomerToStore(1): " & ex.Message)
         End Try
 
         Try
