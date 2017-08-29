@@ -1096,4 +1096,18 @@ Partial Class ProductVersions
                                                     ByVal numLanguageID As Byte) As String
         Return (numVersionID.ToString & "|||" & numProductID.ToString & "|||" & Server.UrlEncode(strVersionName) & "|||" & Server.UrlEncode(strPageLink) & "|||" & numLanguageID.ToString)
     End Function
+
+    ''' <summary>
+    ''' This code tries to deal with occasional errors in the OptionsContainer.ascx.vb
+    ''' file, where _ProductID ends up as -1. In that case, we raise an event called 
+    ''' 'SomethingWentWrong()' there, and then act on it here.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub UC_OptionsContainer_SomethingWentWrong() Handles UC_OptionsContainer.SomethingWentWrong
+        UC_PopupMessage.SetTitle = GetGlobalResourceObject("Kartris", "ContentText_Alert")
+        UC_PopupMessage.SetTextMessage = "Some kind of error occurred."
+        UC_PopupMessage.SetWidthHeight(350, 200)
+        UC_PopupMessage.ShowPopup()
+        Response.Redirect(Request.RawUrl)
+    End Sub
 End Class

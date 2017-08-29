@@ -568,7 +568,7 @@ Public Class BasketBLL
                 Next
             Catch ex As Exception
                 SqlConnection.ClearPool(_BasketValuesAdptr.Connection)
-                CkartrisFormatErrors.LogError("BasketBLL.LoadBasketItems - " & ex.Message)
+            CkartrisFormatErrors.LogError("BasketBLL.GetBasketItems - " & ex.Message)
         End Try
 
         Return BasketItems

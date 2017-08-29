@@ -149,7 +149,7 @@ Partial Class UserControls_Back_ProductAttributes
         valSummary.ValidationGroup = LANG_ELEM_TABLE_TYPE.AttributeValues
         'If Session("_tab") = "attributes" Then CheckSelectedAttributes()
 
-        If Session("_tab") = "attributes" Then BuildLangaugeControls()
+        If Session("_tab") = "attributes" Then BuildLanguageControls()
 
         'Style the filter links on first load
         If Not Me.IsPostBack Then
@@ -200,7 +200,7 @@ Partial Class UserControls_Back_ProductAttributes
         If chkSelected.Checked Then
             If AttributeType = "t" Then
                 CType(item.FindControl("mvAttributeData"), MultiView).ActiveViewIndex = 0
-                BuildLangaugeControls()
+                BuildLanguageControls()
             ElseIf AttributeType = "c" Then
                 CType(item.FindControl("mvAttributeData"), MultiView).ActiveViewIndex = 1
                 LoadYesNoAttribute(AttributeID, item)
@@ -216,21 +216,21 @@ Partial Class UserControls_Back_ProductAttributes
     ''' Build all visible language controls
     ''' </summary>
     ''' <remarks></remarks>
-    Private Overloads Sub BuildLangaugeControls()
+    Private Overloads Sub BuildLanguageControls()
 
         For Each item As RepeaterItem In rptAttributes.Items
             If CType(item.FindControl("litAttributeType"), Literal).Text = "t" And CType(item.FindControl("chkAttribute"), CheckBox).Checked = True Then
                 ' Build this language control
-                BuildLangaugeControls(item)
+                BuildLanguageControls(item)
             End If
         Next
     End Sub
 
     ''' <summary>
-    ''' The language controls have to be built on each redraw, so they are seperated out to here for simplicity.
+    ''' The language controls have to be built on each redraw, so they are separated out to here for simplicity.
     ''' </summary>
     ''' <remarks></remarks>
-    Private Overloads Sub BuildLangaugeControls(ByRef item As RepeaterItem)
+    Private Overloads Sub BuildLanguageControls(ByRef item As RepeaterItem)
         Dim tblAttributeValues As New DataTable
         tblAttributeValues = AttributesBLL._GetAttributeValuesByProduct(_GetProductID())
 
@@ -256,12 +256,12 @@ Partial Class UserControls_Back_ProductAttributes
 
                     Dim arrRowValues() As DataRow = tblAttributeValues.Select("ATTRIBV_AttributeID=" & AttributeID)
                     If arrRowValues.Length = 1 Then
-                        CType(item.FindControl("_UC_LangContainer"),  _
-                        _LanguageContainer).CreateLanguageStrings( _
+                        CType(item.FindControl("_UC_LangContainer"),
+                        _LanguageContainer).CreateLanguageStrings(
                             LANG_ELEM_TABLE_TYPE.AttributeValues, False, CLng(arrRowValues(0)("ATTRIBV_ID")))
                     Else
-                        CType(item.FindControl("_UC_LangContainer"),  _
-                        _LanguageContainer).CreateLanguageStrings( _
+                        CType(item.FindControl("_UC_LangContainer"),
+                        _LanguageContainer).CreateLanguageStrings(
                             LANG_ELEM_TABLE_TYPE.AttributeValues, True)
                     End If
                 End If

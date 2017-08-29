@@ -48,8 +48,15 @@ Public Class LoginsBLL
         Else
             Dim strUserSalt As String = _GetSaltByUserName(UserName)
             Dim blnUserValidated As Boolean = Adptr._Validate(UserName, UsersBLL.EncryptSHA256Managed(Password, strUserSalt, True))
+
+            KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins,
+             "Login", "username: " & UserName & " ---  password(hashed): " & UsersBLL.EncryptSHA256Managed(Password, strUserSalt, True), UserName)
+
+            'LogError("Login info: " & "username: " & UserName & " ---  password(hashed): " & UsersBLL.EncryptSHA256Managed(Password, strUserSalt, True))
+
             'Password still doesn't use hash salt so update login record
             If blnUserValidated AndAlso String.IsNullOrEmpty(strUserSalt) Then
+
                 Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
                 Dim strRandomSalt As String = Membership.GeneratePassword(20, 0)
                 Using sqlConn As New SqlClient.SqlConnection(strConnString)
@@ -75,7 +82,7 @@ Public Class LoginsBLL
 
                         If ReturnedID <> LOGIN_ID Then
                             Throw New Exception("Login ID And the Updated ID don't match")
-        End If
+                        End If
 
                         KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins,
                          GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"), CreateQuery(cmdUpdateLogin), UserName, sqlConn, savePoint)

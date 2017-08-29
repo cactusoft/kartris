@@ -193,7 +193,7 @@
                                                             <li style="display:none;"><span class="Kartris-DetailsView-Name">
                                                                 <!-- THIS SECTION SET AS display:none BECAUSE THIS FUNCTION IS NOT IMPLMENTED IN THE GLOBAL KARTRIS APPLICATION.
                                                                     I have left it in (but hidden) in case I want to move this functionality over into the general application from the 
-                                                                    custom applicaiton it was written for - Craig Moore 20170708 -->
+                                                                    custom application it was written for - Craig Moore 20170708 -->
                                                                 <asp:Literal ID="litAttributeOptionLink" runat="server" Text="Link Option Group Options"></asp:Literal>
                                                             </span>
                                                                 <span class="Kartris-DetailsView-Value">

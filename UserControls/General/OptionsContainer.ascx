@@ -3,7 +3,7 @@
 <%@ Register TagPrefix="user" TagName="Options" Src="~/UserControls/General/Options.ascx" %>
 <div class="options">
     <div class="pad">
-        <asp:Label ID="lblErrorDefaults" runat="server" ForeColor="Red" Text="Error: No Selected Product, Language and/or Currency."
+        <asp:Label ID="lblErrorDefaults" runat="server" ForeColor="Red" Text="Error: could not retrieve the details for this product"
             Visible="False"></asp:Label>
         <user:Options ID="UC_HiddenOption" runat="server" Visible="false" OnOption_IndexChanged="UCEvent_Options_IndexChaged" />
         <asp:UpdatePanel ID="updOptions2" runat="server">

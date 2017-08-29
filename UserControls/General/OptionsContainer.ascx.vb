@@ -37,6 +37,11 @@ Partial Class OptionsContainer
     Private _LanguageID As Short = -1
     Private _NoOptionsRows As Integer = -1
 
+    'Sometimes we see errors in the page_load, it seems that _ProductID = -1 for some reason
+    'If we raise an event, we can try to reset the options in the ProductVersions control,
+    'if the event is triggered
+    Public Event SomethingWentWrong()
+
     '' If this is true, will use the entered price for each option combination instead of adding the "selected option" price separately
     Private _UseCombinationPrices As Boolean = False
     Public ReadOnly Property IsUsingCombinationPrices As Boolean
@@ -58,7 +63,10 @@ Partial Class OptionsContainer
         If Not (_ProductID = -1) Then
             'CreateProductOptions()
         Else
-            lblErrorDefaults.Visible = True
+            'lblErrorDefaults.Visible = True
+            If Me.Visible Then
+                RaiseEvent SomethingWentWrong()
+            End If
         End If
         'End If
     End Sub

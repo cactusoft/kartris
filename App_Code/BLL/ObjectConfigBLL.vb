@@ -75,6 +75,11 @@ Public Class ObjectConfigBLL
     End Function
 
     Public Shared Function GetValue(ByVal strConfigName As String, ByVal numParentID As Long) As Object
+        Try
+            Return Adptr.GetValue(strConfigName, numParentID)
+        Catch ex As Exception
+            CkartrisFormatErrors.LogError("ObjectConfigBLL.GetValue - " & ex.Message & vbCrLf & "strConfigName: " & strConfigName & vbCrLf & "numParentID: " & numParentID)
+        End Try
         Return Adptr.GetValue(strConfigName, numParentID)
     End Function
 End Class

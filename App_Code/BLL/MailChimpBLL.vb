@@ -106,7 +106,9 @@ Public Class MailChimpBLL
             If ex.Message.Contains("Unable to find the resource at") Then
                 mcStore = Nothing
             End If
-            Debug.Print(ex.Message)
+            'Debug.Print(ex.Message)
+            'Log the error
+            CkartrisFormatErrors.LogError("MailchimpBLL AddCartToCustomerToStore(1): " & ex.Message)
         End Try
 
         Try
@@ -132,7 +134,9 @@ Public Class MailChimpBLL
                 'Dim order As Order = Await AddOrder(customer).ConfigureAwait(False)
             End If
         Catch ex As Exception
-            Debug.Print(ex.Message)
+            'Debug.Print(ex.Message)
+            'Log the error
+            CkartrisFormatErrors.LogError("MailchimpBLL AddCartToCustomerToStore(2): " & ex.Message)
         End Try
         Return toReturn
     End Function
@@ -179,7 +183,9 @@ Public Class MailChimpBLL
             Dim taskResult As Customer = Await manager.ECommerceStores.Customers(mcStoreId).AddAsync(customer).ConfigureAwait(False)
             Return taskResult
         Catch ex As Exception
-            Debug.Print(ex.Message)
+            'Debug.Print(ex.Message)
+            'Log the error
+            CkartrisFormatErrors.LogError("MailchimpBLL AddCustomer: " & ex.Message)
         End Try
     End Function
 
@@ -255,7 +261,9 @@ Public Class MailChimpBLL
             End If
             Return Nothing
         Catch ex As Exception
-            Debug.Print(ex.Message)
+            'Debug.Print(ex.Message)
+            'Log the error
+            CkartrisFormatErrors.LogError("MailchimpBLL AddProduct: " & ex.Message)
         End Try
     End Function
 
@@ -304,7 +312,9 @@ Public Class MailChimpBLL
 
             Return taskResult
         Catch ex As Exception
-            Debug.Print(ex.Message)
+            'Debug.Print(ex.Message)
+            'Log the error
+            CkartrisFormatErrors.LogError("MailchimpBLL AddCart: " & ex.Message)
         End Try
     End Function
 
@@ -322,7 +332,9 @@ Public Class MailChimpBLL
             Else
                 result = False
             End If
-            Debug.Print(ex.Message)
+            'Debug.Print(ex.Message)
+            'Log the error
+            CkartrisFormatErrors.LogError("MailchimpBLL DeleteCart: " & ex.Message)
         End Try
         Return result
     End Function
@@ -341,7 +353,9 @@ Public Class MailChimpBLL
             Else
                 result = False
             End If
-            Debug.Print(ex.Message)
+            'Debug.Print(ex.Message)
+            'Log the error
+            CkartrisFormatErrors.LogError("MailchimpBLL DeleteOrder: " & ex.Message)
         End Try
         Return result
     End Function
@@ -392,7 +406,9 @@ Public Class MailChimpBLL
 
             Return taskResult
         Catch ex As Exception
-            Debug.Print(ex.Message)
+            'Debug.Print(ex.Message)
+            'Log the error
+            CkartrisFormatErrors.LogError("MailchimpBLL AddOrder: " & ex.Message)
         End Try
     End Function
 
@@ -412,7 +428,9 @@ Public Class MailChimpBLL
 
             Return taskResult
         Catch ex As Exception
-            Debug.Print(ex.Message)
+            'Debug.Print(ex.Message)
+            'Log the error
+            CkartrisFormatErrors.LogError("MailchimpBLL AddStore: " & ex.Message)
             Throw ex
         End Try
     End Function
@@ -429,7 +447,9 @@ Public Class MailChimpBLL
             Dim taskResult As Member = Await manager.Members.AddOrUpdateAsync(strListID, member).ConfigureAwait(False)
             Return taskResult
         Catch ex As Exception
-            Debug.Print(ex.Message)
+            'Debug.Print(ex.Message)
+            'Log the error
+            CkartrisFormatErrors.LogError("MailchimpBLL AddListSubscriber: " & ex.Message)
             Throw ex
         End Try
     End Function

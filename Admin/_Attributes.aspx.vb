@@ -135,7 +135,7 @@ Partial Class Admin_Attributes
     End Sub
 
     ''' <summary>
-    ''' Prepare the area for editting an existing option
+    ''' Prepare the area for editing an existing option
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub PrepareEditOptionEntry(Optional ByVal OptionIndex As Integer = -1)
