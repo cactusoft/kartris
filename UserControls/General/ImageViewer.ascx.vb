@@ -86,7 +86,7 @@ Partial Class ImageViewer
         Optional ByVal strAltText As String = "")
 
         'We need to be able to handle showing full size
-        'images directly (not via Image.aspx script) if
+        'images directly (not via Image.ashx script) if
         'the imageview is called within the new page
         'rather than an AJAX popup. Easiest way is to
         'have zero height and width passed in. Then we
@@ -194,7 +194,7 @@ Partial Class ImageViewer
                     If intIndex = 1 Then strFirstImageName = objFile.Name
                     Select Case _eViewType
                         Case SmallImagesType.enum_ImageButton
-                            strImageMainViewStart = "Image.aspx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
+                            strImageMainViewStart = "Image.ashx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
 
                             '---------------------------------------
                             'LARGE VIEW DISPLAY, OR GENERAL IMAGE
@@ -213,7 +213,7 @@ Partial Class ImageViewer
                             Else
                                 '---------------------------------------
                                 'IN 'AJAX' LARGE VIEW MODE
-                                'Link to image.aspx resizer
+                                'Link to Image.ashx resizer
                                 '---------------------------------------
                                 litSingleImage.Text &= "<!-- IMAGE DISPLAY: Image with no 'large view' click --><div class=""imageholder singleimage"" style=""width: " &
                                     numImageWidthMax & "px;" &
@@ -245,7 +245,7 @@ Partial Class ImageViewer
                             'Set link to thumbnail image
                             'This is the same for 'new page' and 'AJAX' settings
                             'because it is always a thumbnail
-                            strImageLinkPath = "Image.aspx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
+                            strImageLinkPath = "Image.ashx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
 
                             If blnFullSizeImage Then
                                 '---------------------------------------
@@ -256,9 +256,9 @@ Partial Class ImageViewer
                             Else
                                 '---------------------------------------
                                 'IN 'AJAX' LARGE VIEW MODE
-                                'Link to image.aspx resizer
+                                'Link to Image.ashx resizer
                                 '---------------------------------------
-                                strImageMainView = "Image.aspx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
+                                strImageMainView = "Image.ashx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
                             End If
 
                             If intIndex = 1 Then
@@ -267,7 +267,7 @@ Partial Class ImageViewer
                                 'Defaults to first image in folder
                                 '---------------------------------------
                                 strFirstImageName = objFile.Name
-                                strImageMainViewStart = "Image.aspx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
+                                strImageMainViewStart = "Image.ashx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
                             End If
 
                             '---------------------------------------
@@ -354,7 +354,7 @@ Partial Class ImageViewer
             pnlSingleImage.Visible = True
 
             'this should for an image placeholder
-            Dim strStartImage As String = "Image.aspx?strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=0&amp;strParent=0"
+            Dim strStartImage As String = "Image.ashx?strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=0&amp;strParent=0"
 
             litSingleImage.Text &= "<!-- NO IMAGE FOUND --><div class=""imageviewer""><div class=""imageholder singleimage"" style=""height: " & numImageHeight & "px;width: " & numImageWidth & "px;"">"
 

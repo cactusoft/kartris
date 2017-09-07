@@ -49,7 +49,7 @@ Partial Class ProductTemplateImageOnly
                 'NO IMAGES FOUND
                 'But folder found
                 '=======================================
-                strImageLinkPath = CkartrisBLL.WebShopURL & "Image.aspx?strItemType=" & strItemType & "&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=0&amp;strParent=0"
+                strImageLinkPath = CkartrisBLL.WebShopURL & "Image.ashx?strItemType=" & strItemType & "&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=0&amp;strParent=0"
                 If blnPlaceHolder Then
                     strImageTag = "<a href=""" & strNavigateURL & """><img alt=""No image"" src=""" & strImageLinkPath & """ /></a>"
                 Else
@@ -64,7 +64,7 @@ Partial Class ProductTemplateImageOnly
 
 
                     For Each objFile In dirFolder.GetFiles()
-                        strImageLinkPath = CkartrisBLL.WebShopURL & "Image.aspx?strFileName=" & objFile.Name & "&amp;strItemType=" & strItemType & "&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=" & litProductID.Text & "&amp;strParent=0"
+                        strImageLinkPath = CkartrisBLL.WebShopURL & "Image.ashx?strFileName=" & objFile.Name & "&amp;strItemType=" & strItemType & "&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=" & litProductID.Text & "&amp;strParent=0"
                         strImageTag = "<a href=""" & strNavigateURL & """><img alt=""" & litP_Name.Text & """ src=""" & strImageLinkPath & """ /></a>"
                         Exit For
                     Next
@@ -74,7 +74,7 @@ Partial Class ProductTemplateImageOnly
                     'SHOW NO IMAGES FOUND
                     'Best to do this if some error
                     '=======================================
-                    strImageLinkPath = CkartrisBLL.WebShopURL & "Image.aspx?strItemType=" & strItemType & "&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=0&amp;strParent=0"
+                    strImageLinkPath = CkartrisBLL.WebShopURL & "Image.ashx?strItemType=" & strItemType & "&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=0&amp;strParent=0"
                     If blnPlaceHolder Then
                         strImageTag = "<a href=""" & strNavigateURL & """><img alt=""No image"" src=""" & strImageLinkPath & """ /></a>"
                     Else
@@ -88,7 +88,7 @@ Partial Class ProductTemplateImageOnly
             'NO IMAGES FOUND
             'But folder found
             '=======================================
-            strImageLinkPath = CkartrisBLL.WebShopURL & "Image.aspx?strItemType=" & strItemType & "&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=0&amp;strParent=0"
+            strImageLinkPath = CkartrisBLL.WebShopURL & "Image.ashx?strItemType=" & strItemType & "&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=0&amp;strParent=0"
             If blnPlaceHolder Then
                 strImageTag = "<a href=""" & strNavigateURL & """><img alt=""No image"" src=""" & strImageLinkPath & """ /></a>"
             Else

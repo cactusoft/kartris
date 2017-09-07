@@ -320,7 +320,7 @@ Partial Class Admin_GenerateFeeds
                             'If not, we use a product image
                             'If nothing found, we leave blank
                             'Note that Froogle/Google will not accept URLs
-                            'that go to scripts (such as Image.aspx that provides
+                            'that go to scripts (such as Image.ashx that provides
                             'thumbnails). Instead, we have to give them the full
                             'image link.
                             strImageLink = ImageLink(FixNullFromDB(drwVersion("V_ID")), FixNullFromDB(drwProduct("P_ID")))

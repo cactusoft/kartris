@@ -254,6 +254,9 @@ All rights reserved.
 			<add type="KartrisHttpModule" name="KartrisHttpModule"/>
 		</httpModules>
 		<machineKey validationKey="AutoGenerate,IsolateApps" decryptionKey="AutoGenerate,IsolateApps" validation="SHA1" decryption="Auto"/>
+		<urlMappings enabled="true">
+			<add url="~/Image.aspx" mappedUrl="~/Image.ashx"/>
+		</urlMappings>
 	</system.web>
 	<system.webServer>
 		<validation validateIntegratedModeConfiguration="false"/>

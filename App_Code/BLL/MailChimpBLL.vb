@@ -212,7 +212,7 @@ Public Class MailChimpBLL
                 itemprice = Math.Round((basketItem.IR_PricePerItem * (1 + basketItem.IR_TaxPerItem)), 2)
             End If
 
-            Dim imageUrl As String = CkartrisBLL.WebShopURL & "Image.aspx?strItemType=p&numMaxHeight=100&numMaxWidth=100&numItem=" & basketItem.ProductID
+            Dim imageUrl As String = CkartrisBLL.WebShopURL & "Image.ashx?strItemType=p&numMaxHeight=100&numMaxWidth=100&numItem=" & basketItem.ProductID
             If product Is Nothing Then
                 productVariant = New [Variant] With {.Id = basketItem.ProductID,
                                                  .Title = basketItem.Name,

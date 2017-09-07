@@ -27,7 +27,7 @@
                                 CssClass="triggerswitch triggerswitch_off" />
                         </div>
                         <div class="sort_image_holder">
-                            <asp:HyperLink runat="server" NavigateURL='<%# Bind("ImageURL") %>' ID="hlnkImage"><img src="../Image.aspx?strFullPath=<asp:Literal ID="litImgName2" runat="server"
+                            <asp:HyperLink runat="server" NavigateURL='<%# Bind("ImageURL") %>' ID="hlnkImage"><img src="../Image.ashx?strFullPath=<asp:Literal ID="litImgName2" runat="server"
                             Text='<%# Bind("ImageURL") %>' />&numMaxHeight=80&numMaxWidth=80&nocache=<% =Now.Hour & Now.Minute & Now.Second%>" /></asp:HyperLink>
                         </div>
                         <div class="sort_details_holder">
@@ -70,7 +70,7 @@
             <asp:PlaceHolder ID="phdRemove" runat="server">
                 <div>
                     <div class="imageholder">
-                        <img src="../Image.aspx?strFullPath=<asp:Literal ID="litImgName3" runat="server"
+                        <img src="../Image.ashx?strFullPath=<asp:Literal ID="litImgName3" runat="server"
                             Text='<%# Bind("ImageURL") %>' />&numMaxHeight=120&numMaxWidth=120" />
                         <asp:Image ID="imgToRemove" runat="server" Width="120px" Height="120px" AlternateText="" Visible="False" />
                         

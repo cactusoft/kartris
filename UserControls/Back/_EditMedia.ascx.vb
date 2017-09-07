@@ -168,8 +168,8 @@ Partial Class UserControls_Back_EditMedia
             Dim blnCustomThumb As Boolean = Not strIconLink.Contains("Images/MediaTypes/")
             Dim numHeightWidth As Integer = 80
             If Not blnCustomThumb Then numHeightWidth = 32
-            Dim strMediaImageLink As String = "<img alt="""" class=""media_image"" src=""" & _
-                            "../Image.aspx?strFullPath=" & strIconLink & "&numMaxHeight=" & numHeightWidth & "&numMaxWidth=" & numHeightWidth & """ />"
+            Dim strMediaImageLink As String = "<img alt="""" class=""media_image"" src=""" &
+                            "../Image.ashx?strFullPath=" & strIconLink & "&numMaxHeight=" & numHeightWidth & "&numMaxWidth=" & numHeightWidth & """ />"
 
             CType(e.Item.FindControl("litMediaLink"), Literal).Text = "<a class = """ & intML_ID & """>" & _
                             strMediaImageLink & "</a>"
