@@ -30452,6 +30452,43 @@ CREATE NONCLUSTERED INDEX [LE_ParentID] ON [dbo].[tblKartrisLanguageElements]
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 
+/****** Improve session response time with fill factor changes ******/
+BEGIN TRY  
+  ALTER INDEX [aaaaatblKartrisSessions_PK] ON [tblKartrisSessions]
+  REBUILD WITH (FILLFACTOR = 80)
+END TRY  
+BEGIN CATCH  
+     -- do nothing 
+END CATCH  
+GO
+
+BEGIN TRY  
+  ALTER INDEX [SESS_Code] ON [tblKartrisSessions]
+  REBUILD WITH (FILLFACTOR = 80)
+END TRY  
+BEGIN CATCH  
+     -- do nothing 
+END CATCH  
+GO
+
+BEGIN TRY  
+  ALTER INDEX [SESS_ID] ON [tblKartrisSessions]
+  REBUILD WITH (FILLFACTOR = 80)
+END TRY  
+BEGIN CATCH  
+     -- do nothing 
+END CATCH  
+GO
+
+BEGIN TRY  
+  ALTER INDEX [idxSESS_Code] ON [tblKartrisSessions]
+  REBUILD WITH (FILLFACTOR = 80)
+END TRY  
+BEGIN CATCH  
+     -- do nothing 
+END CATCH  
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9010', N's', N's', N'kartris version', N'', 2.9010, N'2.9010', 0)
 GO

@@ -1033,6 +1033,44 @@ CREATE NONCLUSTERED INDEX [LE_ParentID] ON [dbo].[tblKartrisLanguageElements]
 GO
 
 
+/****** Improve session response time with fill factor changes ******/
+BEGIN TRY  
+  ALTER INDEX [aaaaatblKartrisSessions_PK] ON [tblKartrisSessions]
+  REBUILD WITH (FILLFACTOR = 80)
+END TRY  
+BEGIN CATCH  
+	 -- do nothing 
+END CATCH  
+GO
+
+BEGIN TRY  
+  ALTER INDEX [SESS_Code] ON [tblKartrisSessions]
+  REBUILD WITH (FILLFACTOR = 80)
+END TRY  
+BEGIN CATCH  
+	 -- do nothing 
+END CATCH  
+GO
+
+BEGIN TRY  
+  ALTER INDEX [SESS_ID] ON [tblKartrisSessions]
+  REBUILD WITH (FILLFACTOR = 80)
+END TRY  
+BEGIN CATCH  
+	 -- do nothing 
+END CATCH  
+GO
+
+BEGIN TRY  
+  ALTER INDEX [idxSESS_Code] ON [tblKartrisSessions]
+  REBUILD WITH (FILLFACTOR = 80)
+END TRY  
+BEGIN CATCH  
+	 -- do nothing 
+END CATCH  
+GO
+
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.9010', CFG_VersionAdded=2.9010 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
