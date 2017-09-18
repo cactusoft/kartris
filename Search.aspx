@@ -1,5 +1,5 @@
 <%@ Page Language="VB" AutoEventWireup="false" MasterPageFile="~/Skins/Kartris/Template.master"
-	CodeFile="Search.aspx.vb" Inherits="Search" %>
+	CodeFile="Search.aspx.vb" Inherits="Search" EnableSessionState="ReadOnly" %>
 
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
 	<user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />

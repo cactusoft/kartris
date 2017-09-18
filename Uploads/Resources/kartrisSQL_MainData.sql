@@ -30489,6 +30489,14 @@ BEGIN CATCH
 END CATCH  
 GO
 
+/****** Improve cleanup of expired sessions ******/
+CREATE NONCLUSTERED INDEX [SESS_DateLastUpdated] ON [dbo].[tblKartrisSessions]
+(
+	[SESS_DateLastUpdated] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+
 /****** Set this to tell Data tool which version of db we have ******/
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9010', N's', N's', N'kartris version', N'', 2.9010, N'2.9010', 0)
 GO

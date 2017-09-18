@@ -1,5 +1,5 @@
 <%@ Page Language="VB" MasterPageFile="~/Skins/Kartris/Template.master" AutoEventWireup="true"
-    CodeFile="Basket.aspx.vb" Inherits="Basket" %>
+    CodeFile="Basket.aspx.vb" Inherits="Basket" EnableSessionState="ReadOnly" %>
 
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
     <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />

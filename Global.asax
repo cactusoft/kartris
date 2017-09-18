@@ -57,6 +57,15 @@
             AddHandler SiteMap.Providers("BreadCrumbSiteMap").SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
             AddHandler SiteMap.Providers("_CategorySiteMapProvider").SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
             TaxRegime.LoadTaxConfigXML()
+
+            'Clean up expired sessions
+            'Originally this was run in the session start, but
+            'that was inefficient, it really doesn't need to
+            'run more than occasionally, so let's put it
+            'here instead
+            Dim objSession As New SessionsBLL
+            objSession.NewSession()
+            objSession.CleanExpiredSessionsData()
         End If
     End Sub
 
@@ -119,7 +128,12 @@
         If Application("DBConnected") Then
             Dim objSession As New SessionsBLL
             objSession.NewSession()
-            objSession.CleanExpiredSessionsData()
+
+            'Disable cleanup here, we moved
+            'this to the application start instead,
+            'really doesn't need to run on every session
+            'objSession.CleanExpiredSessionsData()
+
             Session("SessionCode") = objSession.SessionCode
             Session("SessionID") = objSession.SessionID
             objSession = Nothing

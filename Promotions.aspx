@@ -1,5 +1,5 @@
 ﻿<%@ Page Language="VB" MasterPageFile="~/Skins/Kartris/Template.master" AutoEventWireup="false"
-    CodeFile="Promotions.aspx.vb" Inherits="Promotions" %>
+    CodeFile="Promotions.aspx.vb" Inherits="Promotions" EnableSessionState="ReadOnly" %>
 
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
     <asp:MultiView ID="mvwMain" runat="server" ActiveViewIndex="0">

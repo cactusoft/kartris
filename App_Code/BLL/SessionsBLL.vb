@@ -120,60 +120,60 @@ Public Class SessionsBLL
         End Get
     End Property
 
-	Private Shared Function GetRandomString(ByVal numLength As Integer) As String
-		Dim strRandomString As String = ""
-		Dim numRandomNumber As Integer
+    Private Shared Function GetRandomString(ByVal numLength As Integer) As String
+        Dim strRandomString As String = ""
+        Dim numRandomNumber As Integer
 
-		'Generate a new seed based on the server timer
-		Randomize()
+        'Generate a new seed based on the server timer
+        Randomize()
 
-		'Loop for as many letters as we need
-		Do While Len(strRandomString) < numLength
-			'Generate random number	
-			numRandomNumber = Int(Rnd(1) * 36) + 1
-			If numRandomNumber < 11 Then
-				'If it's less than 11 then we'll do a number
-				strRandomString = strRandomString & Chr(numRandomNumber + 47)
-			Else
-				'Otherwise we'll do a letter; + 86 because 96 (min being 97, 'a') - 10 (the first 10 was for the number)
-				strRandomString = strRandomString & Chr(numRandomNumber + 86)
-			End If
-		Loop
+        'Loop for as many letters as we need
+        Do While Len(strRandomString) < numLength
+            'Generate random number	
+            numRandomNumber = Int(Rnd(1) * 36) + 1
+            If numRandomNumber < 11 Then
+                'If it's less than 11 then we'll do a number
+                strRandomString = strRandomString & Chr(numRandomNumber + 47)
+            Else
+                'Otherwise we'll do a letter; + 86 because 96 (min being 97, 'a') - 10 (the first 10 was for the number)
+                strRandomString = strRandomString & Chr(numRandomNumber + 86)
+            End If
+        Loop
 
-		'Zero and 'o' and '1' and 'I' are easily confused...
-		'So we replace any of these with alternatives
-		'To ensure best randomness, replace the numbers
-		'with alternative letters and letters
-		'with alternative numbers
+        'Zero and 'o' and '1' and 'I' are easily confused...
+        'So we replace any of these with alternatives
+        'To ensure best randomness, replace the numbers
+        'with alternative letters and letters
+        'with alternative numbers
 
-		strRandomString = Replace(strRandomString, "0", "X")
-		strRandomString = Replace(strRandomString, "1", "Y")
-		strRandomString = Replace(strRandomString, "O", "4")
-		strRandomString = Replace(strRandomString, "I", "9")
+        strRandomString = Replace(strRandomString, "0", "X")
+        strRandomString = Replace(strRandomString, "1", "Y")
+        strRandomString = Replace(strRandomString, "O", "4")
+        strRandomString = Replace(strRandomString, "I", "9")
 
-		Return strRandomString
-	End Function
-	''//
+        Return strRandomString
+    End Function
+    ''//
 
-	Public Sub NewSession()
-		Dim COOKIE_NAME, strValue As String
-		''Dim SESS_Values As String = ""
-		Dim SESS_DateCreated, SESS_DateLastUpdated As Date
-		Dim SESS_Expiry As Integer
-		Dim oDT As New Data.DataTable
+    Public Sub NewSession()
+        Dim COOKIE_NAME, strValue As String
+        ''Dim SESS_Values As String = ""
+        Dim SESS_DateCreated, SESS_DateLastUpdated As Date
+        Dim SESS_Expiry As Integer
+        Dim oDT As New Data.DataTable
 
-		If IsBrowser Then
+        If IsBrowser Then
 
-			'Set related config settings
+            'Set related config settings
             COOKIE_NAME = HttpSecureCookie.GetCookieName("Basket")
-			DEFAULT_SESSION_EXPIRY = CInt(GetKartConfig("general.sessions.expiry"))
+            DEFAULT_SESSION_EXPIRY = CInt(GetKartConfig("general.sessions.expiry"))
 
-			strUsingCookies = LCase(Trim(GetKartConfig("general.sessions.usecookies")))
+            strUsingCookies = LCase(Trim(GetKartConfig("general.sessions.usecookies")))
 
-			'Try and find a session id somewhere. The cookie takes preference (so
-			'if a user goes to a page in the history with an old ID, they won't
-			'switch sessions and see an old basket, someone elses login etc)
-			strValue = ""
+            'Try and find a session id somewhere. The cookie takes preference (so
+            'if a user goes to a page in the history with an old ID, they won't
+            'switch sessions and see an old basket, someone elses login etc)
+            strValue = ""
 			If strUsingCookies <> Trim(LCase(USING_COOKIES_NO)) Then
 				If Not (Current.Request.Cookies(COOKIE_NAME) Is Nothing) Then
 					strValue = Current.Request.Cookies(COOKIE_NAME).Item(VARIABLE_NAME)
