@@ -14,6 +14,7 @@
 '========================================================================
 Imports System.Reflection
 Imports System.Threading
+Imports System.Web.Script.Serialization
 Imports CkartrisBLL
 Imports CkartrisDataManipulation
 Imports KartSettingsManager
@@ -193,9 +194,21 @@ Partial Class Callback
                                     'Need to create a temp user for the code below to work
                                     Dim tempKartrisUser As KartrisMemberShipUser = New KartrisMemberShipUser(O_CustomerID, UsersBLL.GetEmailByID(O_CustomerID), 0, 0, 0, 0, 1, True)
                                     Dim kartrisBasket As Basket = Session("Basket")
+
+                                    CkartrisFormatErrors.LogError("Get Session Basket")
+                                    CkartrisFormatErrors.LogError("Get Session Basket: " + kartrisBasket.ToString())
+
                                     Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(tempKartrisUser, kartrisBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
-                                    Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(tempKartrisUser.ID).Result
-                                    Dim mcOrder As MailChimp.Net.Models.Order = mailChimpLib.AddOrder(mcCustomer, "cart_" & O_ID.ToString()).Result
+                                    CkartrisFormatErrors.LogError("MailChimp callback customer")
+                                    'Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(tempKartrisUser.ID).Result
+                                    'Dim customerJson As String = New JavaScriptSerializer().Serialize(mcCustomer)
+                                    'CkartrisFormatErrors.LogError("MailchimpBLL Product before basketItem JSON: " & customerJson)
+                                    CkartrisFormatErrors.LogError("MailChimp callback order")
+                                    CkartrisFormatErrors.LogError("MailChimp callback O_CustomerID")
+                                    'Dim mcOrder As MailChimp.Net.Models.Order = mailChimpLib.AddOrder(mcCustomer, "cart_" & O_ID.ToString()).Result
+                                    Dim mcOrder As MailChimp.Net.Models.Order = mailChimpLib.AddOrderByCustomerId(tempKartrisUser.ID, "cart_" & O_ID.ToString()).Result
+
+                                    CkartrisFormatErrors.LogError("MailChimp callback deletecart")
                                     Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart("cart_" & O_ID).Result
                                     'Log the success
                                     CkartrisFormatErrors.LogError("Mailchimp basket was deleted successfully")
@@ -206,93 +219,93 @@ Partial Class Callback
                             End If
 
                             Dim blnCheckInvoicedOnPayment As Boolean = GetKartConfig("frontend.orders.checkinvoicedonpayment") = "y"
-                                Dim blnCheckReceivedOnPayment As Boolean = GetKartConfig("frontend.orders.checkreceivedonpayment") = "y"
+                            Dim blnCheckReceivedOnPayment As Boolean = GetKartConfig("frontend.orders.checkreceivedonpayment") = "y"
 
-                                '-----------------------------------------------------
-                                'UPDATE ORDER STATUS
-                                'Set invoiced and received checkboxes, depending on
-                                'config settings
-                                '-----------------------------------------------------
-                                Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True,
-                                                                                          blnCheckInvoicedOnPayment,
-                                                                                          blnCheckReceivedOnPayment,
-                                                                                          GetGlobalResourceObject("Email", "EmailText_OrderTime") & " " & CkartrisDisplayFunctions.NowOffset,
-                                                                                          O_CouponCode, O_WLID, O_CustomerID, O_CurrencyIDGateway, clsPlugin.GatewayName, O_TotalPriceGateway)
-                                If clsPlugin.GatewayName.ToLower = "easypaycreditcard" And Request.QueryString("a") = "update" Then
-                                    Try
-                                        Dim notes As String = "Multibanco order with Entity: " & strMultibancoData(2).Split(":")(1) &
-                                                           " and Reference:" & strMultibancoData(3).Split(":")(1)
-                                        OrdersBLL._UpdateStatus(O_ID,
-                                                                True,
-                                                                True,
-                                                                tblOrder.Rows(0)("O_Shipped"),
-                                                                True,
-                                                                tblOrder.Rows(0)("O_Status"),
-                                                                notes,
-                                                                tblOrder.Rows(0)("O_Cancelled"))
-                                    Catch ex As Exception
-                                    End Try
-                                End If
+                            '-----------------------------------------------------
+                            'UPDATE ORDER STATUS
+                            'Set invoiced and received checkboxes, depending on
+                            'config settings
+                            '-----------------------------------------------------
+                            Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True,
+                                                                                      blnCheckInvoicedOnPayment,
+                                                                                      blnCheckReceivedOnPayment,
+                                                                                      GetGlobalResourceObject("Email", "EmailText_OrderTime") & " " & CkartrisDisplayFunctions.NowOffset,
+                                                                                      O_CouponCode, O_WLID, O_CustomerID, O_CurrencyIDGateway, clsPlugin.GatewayName, O_TotalPriceGateway)
+                            If clsPlugin.GatewayName.ToLower = "easypaycreditcard" And Request.QueryString("a") = "update" Then
+                                Try
+                                    Dim notes As String = "Multibanco order with Entity: " & strMultibancoData(2).Split(":")(1) &
+                                                       " and Reference:" & strMultibancoData(3).Split(":")(1)
+                                    OrdersBLL._UpdateStatus(O_ID,
+                                                            True,
+                                                            True,
+                                                            tblOrder.Rows(0)("O_Shipped"),
+                                                            True,
+                                                            tblOrder.Rows(0)("O_Status"),
+                                                            notes,
+                                                            tblOrder.Rows(0)("O_Cancelled"))
+                                Catch ex As Exception
+                                End Try
+                            End If
 
 
-                                '-----------------------------------------------------
-                                'FORMAT CONFIRMATION EMAIL
-                                '-----------------------------------------------------
-                                'Set some values for use later
-                                Dim blnUseHTMLOrderEmail As Boolean = (GetKartConfig("general.email.enableHTML") = "y")
-                                Dim strCustomerEmailText As String = ""
-                                Dim strStoreEmailText As String = ""
-                                strBodyText = strBodyText.Replace("[orderid]", O_ID)
-                                'we're in the callback page so obviously po_offlinedetails/bitcoin method is not being used
-                                strBodyText = strBodyText.Replace("[poofflinepaymentdetails]", "")
-                                strBodyText = strBodyText.Replace("[bitcoinpaymentdetails]", "")
+                            '-----------------------------------------------------
+                            'FORMAT CONFIRMATION EMAIL
+                            '-----------------------------------------------------
+                            'Set some values for use later
+                            Dim blnUseHTMLOrderEmail As Boolean = (GetKartConfig("general.email.enableHTML") = "y")
+                            Dim strCustomerEmailText As String = ""
+                            Dim strStoreEmailText As String = ""
+                            strBodyText = strBodyText.Replace("[orderid]", O_ID)
+                            'we're in the callback page so obviously po_offlinedetails/bitcoin method is not being used
+                            strBodyText = strBodyText.Replace("[poofflinepaymentdetails]", "")
+                            strBodyText = strBodyText.Replace("[bitcoinpaymentdetails]", "")
 
-                                If KartSettingsManager.GetKartConfig("frontend.checkout.ordertracking") <> "n" Then
-                                    If Not blnUseHTMLOrderEmail Then
-                                        'Add order tracking information at the top
-                                        strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderLookup") & vbCrLf & vbCrLf & WebShopURL() & "Customer.aspx" & vbCrLf & vbCrLf
-                                    End If
-                                End If
-                                strCustomerEmailText += strBodyText
-
+                            If KartSettingsManager.GetKartConfig("frontend.checkout.ordertracking") <> "n" Then
                                 If Not blnUseHTMLOrderEmail Then
-                                    'Add in email header above that
-                                    strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderReceived") & vbCrLf & vbCrLf &
-                                        GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf &
-                                        strCustomerEmailText
-                                Else
-                                    strCustomerEmailText = strCustomerEmailText.Replace("[storeowneremailheader]", "")
+                                    'Add order tracking information at the top
+                                    strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderLookup") & vbCrLf & vbCrLf & WebShopURL() & "Customer.aspx" & vbCrLf & vbCrLf
                                 End If
+                            End If
+                            strCustomerEmailText += strBodyText
 
-                                Dim strFromEmail As String = LanguagesBLL.GetEmailFrom(O_LanguageID)
-
-                                '-----------------------------------------------------
-                                'SEND CONFIRMATION EMAIL
-                                'To customer
-                                '-----------------------------------------------------
-                                If KartSettingsManager.GetKartConfig("frontend.orders.emailcustomer") <> "n" Then
-                                    SendEmail(strFromEmail, UsersBLL.GetEmailByID(O_CustomerID), GetGlobalResourceObject("Email", "Config_Subjectline") & " (#" & O_ID & ")", strCustomerEmailText, , , , , blnUseHTMLOrderEmail)
-                                End If
-
-                                '-----------------------------------------------------
-                                'SEND CONFIRMATION EMAIL
-                                'To store owner
-                                '-----------------------------------------------------
-                                If KartSettingsManager.GetKartConfig("frontend.orders.emailmerchant") <> "n" Then
-                                    If Not blnUseHTMLOrderEmail Then
-                                        strStoreEmailText = GetGlobalResourceObject("Email", "EmailText_StoreEmailHeader") & vbCrLf & vbCrLf &
-                                   GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf & strBodyText
-                                    Else
-                                        strStoreEmailText = strBodyText.Replace("[storeowneremailheader]", GetGlobalResourceObject("Email", "EmailText_StoreEmailHeader"))
-                                    End If
-
-                                    SendEmail(strFromEmail, LanguagesBLL.GetEmailTo(1), GetGlobalResourceObject("Email", "Config_Subjectline2") & " (#" & O_ID & ")", strStoreEmailText, , , , , blnUseHTMLOrderEmail)
-                                End If
-
-                                'Send an order notification to Windows Store App if enabled
-                                PushKartrisNotification("o")
+                            If Not blnUseHTMLOrderEmail Then
+                                'Add in email header above that
+                                strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderReceived") & vbCrLf & vbCrLf &
+                                    GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf &
+                                    strCustomerEmailText
                             Else
-                                strBodyText = strBodyText.Replace("[orderid]", O_ID)
+                                strCustomerEmailText = strCustomerEmailText.Replace("[storeowneremailheader]", "")
+                            End If
+
+                            Dim strFromEmail As String = LanguagesBLL.GetEmailFrom(O_LanguageID)
+
+                            '-----------------------------------------------------
+                            'SEND CONFIRMATION EMAIL
+                            'To customer
+                            '-----------------------------------------------------
+                            If KartSettingsManager.GetKartConfig("frontend.orders.emailcustomer") <> "n" Then
+                                SendEmail(strFromEmail, UsersBLL.GetEmailByID(O_CustomerID), GetGlobalResourceObject("Email", "Config_Subjectline") & " (#" & O_ID & ")", strCustomerEmailText, , , , , blnUseHTMLOrderEmail)
+                            End If
+
+                            '-----------------------------------------------------
+                            'SEND CONFIRMATION EMAIL
+                            'To store owner
+                            '-----------------------------------------------------
+                            If KartSettingsManager.GetKartConfig("frontend.orders.emailmerchant") <> "n" Then
+                                If Not blnUseHTMLOrderEmail Then
+                                    strStoreEmailText = GetGlobalResourceObject("Email", "EmailText_StoreEmailHeader") & vbCrLf & vbCrLf &
+                               GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf & strBodyText
+                                Else
+                                    strStoreEmailText = strBodyText.Replace("[storeowneremailheader]", GetGlobalResourceObject("Email", "EmailText_StoreEmailHeader"))
+                                End If
+
+                                SendEmail(strFromEmail, LanguagesBLL.GetEmailTo(1), GetGlobalResourceObject("Email", "Config_Subjectline2") & " (#" & O_ID & ")", strStoreEmailText, , , , , blnUseHTMLOrderEmail)
+                            End If
+
+                            'Send an order notification to Windows Store App if enabled
+                            PushKartrisNotification("o")
+                        Else
+                            strBodyText = strBodyText.Replace("[orderid]", O_ID)
                             'we're in the callback page so obviously po_offline/bitcoin method is not being used
                             strBodyText = strBodyText.Replace("[poofflinepaymentdetails]", "")
                             strBodyText = strBodyText.Replace("[bitcoinpaymentdetails]", "")

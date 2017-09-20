@@ -918,9 +918,16 @@ Partial Class _Checkout
                         'MAILCHIMP Adding Cart to BrainTree Payments
                         Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
                         'If the User is Logged
-                        If CurrentLoggedUser IsNot Nothing Then
-                            Session("BraintreeCartId") = mailChimpLib.AddCartToCustomerToStore().Result
-                        End If
+                        Try
+                            If CurrentLoggedUser IsNot Nothing Then
+                                CkartrisFormatErrors.LogError("Checkout MailchimpBLL addcart 1: ")
+                                Session("BraintreeCartId") = mailChimpLib.AddCartToCustomerToStore().Result
+                            End If
+                        Catch ex As Exception
+                            CkartrisFormatErrors.LogError("Checkout MailchimpBLL 1: " & ex.Message)
+                            Dim trace = New System.Diagnostics.StackTrace(ex, True)
+                            CkartrisFormatErrors.LogError("Checkout MailchimpBLL 1 stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddCart 2 - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
+                        End Try
 
                         phdBrainTree.Visible = True
                         phdCreditCardInput.Visible = False
@@ -1498,10 +1505,16 @@ Partial Class _Checkout
                 'MAILCHIMP Adding Cart
                 Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
                 'If the User is Logged
-                If CurrentLoggedUser IsNot Nothing And Session("BraintreeCartId") Is Nothing Then
-                    Dim addCartResult As String = mailChimpLib.AddCartToCustomerToStore(O_ID).Result
-                End If
-
+                Try
+                    If CurrentLoggedUser IsNot Nothing And Session("BraintreeCartId") Is Nothing Then
+                        CkartrisFormatErrors.LogError("Checkout MailchimpBLL addcart 2: ")
+                        Dim addCartResult As String = mailChimpLib.AddCartToCustomerToStore(O_ID).ConfigureAwait(False).GetAwaiter().GetResult()
+                    End If
+                Catch ex As Exception
+                    CkartrisFormatErrors.LogError("Checkout MailchimpBLL 2: " & ex.Message)
+                    Dim trace = New System.Diagnostics.StackTrace(ex, True)
+                    CkartrisFormatErrors.LogError("Checkout MailchimpBLL 2 stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddCart 2 - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
+                End Try
 
                 'Order Creation successful
                 If O_ID > 0 Then
@@ -1679,6 +1692,27 @@ Partial Class _Checkout
 
                     'serialize order object and store it as a session value
                     Session("objOrder") = Payment.Serialize(objOrder)
+
+                    Try
+
+                        Dim xmlPath As String = Path.Combine(Request.PhysicalApplicationPath, "XmlStoring")
+                        If (Not System.IO.Directory.Exists(xmlPath)) Then
+                            System.IO.Directory.CreateDirectory(xmlPath)
+                        End If
+                        Dim timestamp = CLng(DateTime.UtcNow.Subtract(New DateTime(1970, 1, 1)).TotalMilliseconds)
+                        Dim orderXmlPath = xmlPath & "\" & O_ID & "_order.xml"
+                        Dim basketXmlPath = xmlPath & "\" & O_ID & "_basket.xml"
+                        Dim orderFile As New IO.StreamWriter(orderXmlPath, True)
+                        Dim basketFile As New IO.StreamWriter(basketXmlPath, True)
+                        orderFile.WriteLine(Session("objOrder"))
+                        orderFile.Close()
+
+                        basketFile.WriteLine(Payment.Serialize(Session("Basket")))
+                        basketFile.Close()
+
+                    Catch ex As Exception
+                        CkartrisFormatErrors.LogError("Error Storing XML Files From Order/Basket: " & ex.Message())
+                    End Try
 
                     'update data field with serialized order and basket objects and selected shipping method id - this allows us to edit this order later if needed
                     OrdersBLL.DataUpdate(O_ID, Session("objOrder") & "|||" & Payment.Serialize(objBasket) & "|||" & UC_BasketView.SelectedShippingID)
