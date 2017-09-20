@@ -123,7 +123,11 @@ Partial Class UserControls_Front_MediaGallery
             'be thumbnail images of a video for example, rather than an
             'icon which you'd generally set centrally for a particular file
             'type.
-            blnCustomThumb = Not strIconLink.Contains("Images/MediaTypes/")
+            Try
+                blnCustomThumb = Not strIconLink.Contains("Images/MediaTypes/")
+            Catch ex As Exception
+                blnCustomThumb = False
+            End Try
 
             Dim strML_EmbedSource1 As String = ""
 
@@ -237,16 +241,24 @@ Partial Class UserControls_Front_MediaGallery
 
         Dim strImagesFolder As String = KartSettingsManager.GetKartConfig("general.uploadfolder") & "Media/"
         Dim dirMediaImages As New DirectoryInfo(Server.MapPath(strImagesFolder))
-        For Each objFile As FileInfo In dirMediaImages.GetFiles(numMediaID & "_thumb.*")
-            Return Replace(strImagesFolder, "~/", strWebShopURL) & objFile.Name
-        Next
+        Try
+            For Each objFile As FileInfo In dirMediaImages.GetFiles(numMediaID & "_thumb.*")
+                Return Replace(strImagesFolder, "~/", strWebShopURL) & objFile.Name
+            Next
+        Catch ex As Exception
+            'maybe local files don't match what db means we think we have
+        End Try
 
         'Media Link doesn't have thumbnail so get the default media type icon
         strImagesFolder = "~/Images/MediaTypes/"
         Dim dirMediaIconImages As New DirectoryInfo(Server.MapPath(strImagesFolder))
-        For Each objFile As FileInfo In dirMediaIconImages.GetFiles(strMediaType & ".*")
-            Return Replace(strImagesFolder, "~/", strWebShopURL) & objFile.Name
-        Next
+        Try
+            For Each objFile As FileInfo In dirMediaIconImages.GetFiles(strMediaType & ".*")
+                Return Replace(strImagesFolder, "~/", strWebShopURL) & objFile.Name
+            Next
+        Catch ex As Exception
+            'maybe local files don't match what db means we think we have
+        End Try
 
         Return Nothing
     End Function

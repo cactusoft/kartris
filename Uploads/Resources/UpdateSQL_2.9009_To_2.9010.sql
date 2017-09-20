@@ -1077,6 +1077,101 @@ CREATE NONCLUSTERED INDEX [SESS_DateLastUpdated] ON [dbo].[tblKartrisSessions]
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 
+/******
+New sproc for data tool; this will update products without changing existing settings and values
+of things that are not in the data tool spreadsheet format
+******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisProducts_Update_DataTool](
+								@P_ID as int,
+								@P_SupplierID as smallint,
+								@P_Type as char(1),
+								@NowOffset as datetime 
+								)
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	DECLARE @OldType as char(1);
+	SELECT @OldType = P_Type FROM dbo.tblKartrisProducts WHERE P_ID = @P_ID;
+	IF @OldType <> @P_Type BEGIN
+		IF @OldType = 'o' BEGIN
+			EXEC	[dbo].[_spKartrisProductOptionGroupLink_DeleteByProductID]	
+			@ProductID = @P_ID;
+			EXEC	[dbo].[_spKartrisProductOptionLink_DeleteByProductID]
+			@ProductID = @P_ID;
+		END
+	END;
+	
+	UPDATE tblKartrisProducts
+	SET P_SupplierID = @P_SupplierID, 
+		P_Type = @P_Type,
+		P_LastModified = @NowOffset
+	WHERE P_ID = @P_ID;
+		
+END
+GO
+
+/******
+New sproc for data tool; this will update versions without changing existing settings and values
+of things that are not in the data tool spreadsheet format
+******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisVersions_Update_DataTool]
+(
+	@V_ID as bigint,
+	@V_CodeNumber as nvarchar(25),
+	@V_ProductID as int,
+	@V_Price as DECIMAL(18,4),
+	@V_Tax as tinyint,
+	@V_Weight as real,
+	@V_Quantity as real,
+	@V_RRP as DECIMAL(18,4),
+	@V_Type as char(1),
+	@V_Tax2 as tinyint,
+	@V_TaxExtra as nvarchar(255),
+	@V_BulkUpdateTimeStamp as datetime = NULL
+)
+								
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	UPDATE tblKartrisVersions
+	SET V_CodeNumber = @V_CodeNumber,
+	V_ProductID = @V_ProductID,
+	V_Price = @V_Price,
+	V_Tax = @V_Tax,
+	V_Weight = @V_Weight, 
+	V_Quantity = @V_Quantity,
+	V_RRP = @V_RRP,
+	V_Type = @V_Type,
+	V_Tax2 = @V_Tax2,
+	V_TaxExtra = @V_TaxExtra,
+	V_BulkUpdateTimeStamp = Coalesce(@V_BulkUpdateTimeStamp, GetDate())
+	WHERE V_ID = @V_ID;
+
+END
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.9010', CFG_VersionAdded=2.9010 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
