@@ -2334,6 +2334,7 @@ Public NotInheritable Class CKartrisCSVExporter
         Current.Response.AddHeader("Content-Type", "application/Excel; charset=utf-8")
         Current.Response.AddHeader("Content-Disposition", "inline;filename=" & strFileName.Replace(" ", "_") & ".csv")
         Current.Response.AddHeader("Content-Length", data.Length.ToString)
+        Current.Response.ContentEncoding = Encoding.Unicode
         Current.Response.BinaryWrite(data)
         Current.Response.End()
         Current.Response.Flush()
