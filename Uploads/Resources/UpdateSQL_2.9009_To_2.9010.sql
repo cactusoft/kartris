@@ -1172,6 +1172,18 @@ BEGIN
 END
 GO
 
+/****** Object:  Index [V_CodeNumber]    Script Date: 21/09/2017 12:30:10 ******/
+BEGIN TRY  
+	CREATE UNIQUE NONCLUSTERED INDEX [V_CodeNumber] ON [dbo].[tblKartrisVersions]
+	(
+		[V_CodeNumber] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+END TRY  
+BEGIN CATCH  
+	 -- do nothing 
+END CATCH  
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.9010', CFG_VersionAdded=2.9010 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

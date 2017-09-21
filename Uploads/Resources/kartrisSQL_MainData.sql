@@ -19738,101 +19738,6 @@ BEGIN
 END
 GO
 
-/******
-New sproc for data tool; this will update products without changing existing settings and values
-of things that are not in the data tool spreadsheet format
-******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
--- =============================================
--- Author:		Paul
--- Create date: <Create Date,,>
--- Description:	<Description,,>
--- =============================================
-CREATE PROCEDURE [dbo].[_spKartrisProducts_Update_DataTool](
-								@P_ID as int,
-								@P_SupplierID as smallint,
-								@P_Type as char(1),
-								@NowOffset as datetime 
-								)
-AS
-BEGIN
-	
-	SET NOCOUNT ON;
-
-	DECLARE @OldType as char(1);
-	SELECT @OldType = P_Type FROM dbo.tblKartrisProducts WHERE P_ID = @P_ID;
-	IF @OldType <> @P_Type BEGIN
-		IF @OldType = 'o' BEGIN
-			EXEC	[dbo].[_spKartrisProductOptionGroupLink_DeleteByProductID]	
-			@ProductID = @P_ID;
-			EXEC	[dbo].[_spKartrisProductOptionLink_DeleteByProductID]
-			@ProductID = @P_ID;
-		END
-	END;
-	
-	UPDATE tblKartrisProducts
-	SET P_SupplierID = @P_SupplierID, 
-		P_Type = @P_Type,
-		P_LastModified = @NowOffset
-	WHERE P_ID = @P_ID;
-		
-END
-GO
-
-/******
-New sproc for data tool; this will update versions without changing existing settings and values
-of things that are not in the data tool spreadsheet format
-******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
--- =============================================
--- Author:		Paul
--- Create date: <Create Date,,>
--- Description:	<Description,,>
--- =============================================
-CREATE PROCEDURE [dbo].[_spKartrisVersions_Update_DataTool]
-(
-	@V_ID as bigint,
-	@V_CodeNumber as nvarchar(25),
-	@V_ProductID as int,
-	@V_Price as DECIMAL(18,4),
-	@V_Tax as tinyint,
-	@V_Weight as real,
-	@V_Quantity as real,
-	@V_RRP as DECIMAL(18,4),
-	@V_Type as char(1),
-	@V_Tax2 as tinyint,
-	@V_TaxExtra as nvarchar(255),
-	@V_BulkUpdateTimeStamp as datetime = NULL
-)
-								
-AS
-BEGIN
-	
-	SET NOCOUNT ON;
-
-	UPDATE tblKartrisVersions
-	SET V_CodeNumber = @V_CodeNumber,
-	V_ProductID = @V_ProductID,
-	V_Price = @V_Price,
-	V_Tax = @V_Tax,
-	V_Weight = @V_Weight, 
-	V_Quantity = @V_Quantity,
-	V_RRP = @V_RRP,
-	V_Type = @V_Type,
-	V_Tax2 = @V_Tax2,
-	V_TaxExtra = @V_TaxExtra,
-	V_BulkUpdateTimeStamp = Coalesce(@V_BulkUpdateTimeStamp, GetDate())
-	WHERE V_ID = @V_ID;
-
-END
-GO
-
 /****** Object:  StoredProcedure [dbo].[_spKartrisVersions_SuspendProductVersions]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -20578,92 +20483,6 @@ AS
 	SELECT BSKTOPT_ID, BSKTOPT_BasketValueID, BSKTOPT_OptionID FROM tblKartrisBasketOptionValues WHERE (BSKTOPT_ID = SCOPE_IDENTITY());
 GO
 
-/****** Updating save basket so autosaves and recovers if logged in, logging in ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
--- =============================================
--- Author:		Joseph / Paul
--- Create date: 12/May/2008
--- Update date: 21/Jun/2017
--- Description:	
--- =============================================
-CREATE PROCEDURE [dbo].[spKartrisBasket_SaveBasket] ( 
-	@CustomerID INT,
-	@BasketName NVARCHAR(200),
-	@BasketID BIGINT,
-	@NowOffset datetime
-) AS
-BEGIN
-
-	SET NOCOUNT ON;
-
-	DECLARE @SavedBasketID BIGINT;
-	DECLARE @newBV_ID BIGINT;
-
-	
-	-- 2017/06/21 Update to allow basket to be saved in
-	-- background when a user is logged in, or has just
-	-- ordered and a new account was created. This way,
-	-- the user will see their basket contents later if
-	-- they login on another device.	
-	-- We will give such baskets the name "AUTOSAVE",
-	-- so we know what to look for and can filter it out
-	-- of saved basket display if we want to.
-
-	-- Because there might be an AUTOSAVE basket for this
-	-- user already, we're going to first try to delete
-	-- any baskets of that name for this user.
-
-	BEGIN TRY  
-		-- Lookup basket ID
-		SELECT @SavedBasketID = SBSKT_ID FROM tblKartrisSavedBaskets WHERE SBSKT_Name='AUTOSAVE' AND SBSKT_UserID=@CustomerID;
-
-		-- Delete this basket
-		EXEC dbo.spKartrisBasket_DeleteSavedBasket @SavedBasketID;
-	END TRY  
-	BEGIN CATCH  
-		 -- NEVER MIND, no basket exists, no problem
-	END CATCH  
-
-	INSERT INTO tblKartrisSavedBaskets (SBSKT_UserID,SBSKT_Name,SBSKT_DateTimeAdded)
-	VALUES (@CustomerID,@BasketName,@NowOffset);
-	
-	SET @SavedBasketID=SCOPE_IDENTITY() ;
-
-	DECLARE @BV_ID INT
-	DECLARE @BV_VersionID INT
-	DECLARE @BV_Quantity FLOAT
-	DECLARE @BV_CustomText nvarchar(2000)
-
-	DECLARE Basket_cursor CURSOR FOR 
-	SELECT BV_ID,BV_VersionID,BV_Quantity,BV_CustomText FROM tblKartrisBasketValues WHERE BV_ParentID=@BasketID AND BV_ParentType='b';
-
-	OPEN Basket_cursor
-	FETCH NEXT FROM Basket_cursor INTO @BV_ID,@BV_VersionID,@BV_Quantity,@BV_CustomText
-	WHILE @@FETCH_STATUS = 0
-	BEGIN
-		INSERT INTO tblKartrisBasketValues(BV_ParentType,BV_ParentID,BV_VersionID,BV_Quantity,BV_CustomText,BV_DateTimeAdded)
-		VALUES ('s',@SavedBasketID,@BV_VersionID,@BV_Quantity,@BV_CustomText,@NowOffset)
-
-		SET @newBV_ID=SCOPE_IDENTITY() 
-
-		IF EXISTS (SELECT * FROM tblKartrisBasketOptionValues WHERE BSKTOPT_BasketValueID=@BV_ID) 
-		BEGIN
-			INSERT INTO tblKartrisBasketOptionValues
-			SELECT @newBV_ID,BSKTOPT_OptionID FROM tblKartrisBasketOptionValues WHERE BSKTOPT_BasketValueID=@BV_ID
-		END
-
-		FETCH NEXT FROM Basket_cursor INTO @BV_ID,@BV_VersionID,@BV_Quantity,@BV_CustomText
-	End
-
-	CLOSE Basket_cursor
-	DEALLOCATE Basket_cursor;
-
-END
-GO
-
 /****** Object:  StoredProcedure [dbo].[spKartrisBasket_LoadAutosaveBasket]    Script Date: 23/06/2017 12:21:41 ******/
 SET ANSI_NULLS ON
 GO
@@ -21022,9 +20841,8 @@ begin
 	where BV_ParentType='b' and BV_ID=@intID
 end;
 
---	
---
 GO
+
 /****** Object:  StoredProcedure [dbo].[spKartrisBasket_GetOptionText]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -21053,6 +20871,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  UserDefinedFunction [dbo].[fnKartrisCategories_GetName]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -21083,6 +20902,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  UserDefinedFunction [dbo].[fnKartrisBasketOptionValues_GetOptionsTotalPrice]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -21124,6 +20944,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[spKartrisBasket_GetCategoryID]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -21145,6 +20966,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[spKartrisBasket_DeleteSavedBasket]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -21179,6 +21001,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  UserDefinedFunction [dbo].[fnKartrisBasket_GetItemWeight]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -21238,6 +21061,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  UserDefinedFunction [dbo].[fnKartrisAttributeValues_GetProductID]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -21267,6 +21091,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisVersions_GetSingleVersionByProductID]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -21287,6 +21112,7 @@ BEGIN
 	WHERE     (V_ProductID = @ProductID) AND (V_Type = 'v');
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisVersions_GetRowsByProductID]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -21309,6 +21135,7 @@ BEGIN
 	
 END
 GO
+
 /****** Object:  UserDefinedFunction [dbo].[fnKartris_GetBaseVersionID]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -21347,6 +21174,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisVersions_UpdateStockLevelByCode]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -21375,6 +21203,7 @@ BEGIN
 	WHERE V_CodeNumber = @V_CodeNumber;
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisVersions_UpdateStockLevel]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -21403,6 +21232,92 @@ BEGIN
 	SET V_Quantity = @V_Quantity, V_QuantityWarnLevel = @V_QuantityWarnLevel,
 	V_BulkUpdateTimeStamp = Coalesce(@V_BulkUpdateTimeStamp, GetDate())
 	WHERE V_ID = @V_ID;
+END
+GO
+
+/****** Updating save basket so autosaves and recovers if logged in, logging in ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Joseph / Paul
+-- Create date: 12/May/2008
+-- Update date: 21/Jun/2017
+-- Description:	
+-- =============================================
+CREATE PROCEDURE [dbo].[spKartrisBasket_SaveBasket] ( 
+	@CustomerID INT,
+	@BasketName NVARCHAR(200),
+	@BasketID BIGINT,
+	@NowOffset datetime
+) AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+	DECLARE @SavedBasketID BIGINT;
+	DECLARE @newBV_ID BIGINT;
+
+	
+	-- 2017/06/21 Update to allow basket to be saved in
+	-- background when a user is logged in, or has just
+	-- ordered and a new account was created. This way,
+	-- the user will see their basket contents later if
+	-- they login on another device.	
+	-- We will give such baskets the name "AUTOSAVE",
+	-- so we know what to look for and can filter it out
+	-- of saved basket display if we want to.
+
+	-- Because there might be an AUTOSAVE basket for this
+	-- user already, we're going to first try to delete
+	-- any baskets of that name for this user.
+
+	BEGIN TRY  
+		-- Lookup basket ID
+		SELECT @SavedBasketID = SBSKT_ID FROM tblKartrisSavedBaskets WHERE SBSKT_Name='AUTOSAVE' AND SBSKT_UserID=@CustomerID;
+
+		-- Delete this basket
+		EXEC dbo.spKartrisBasket_DeleteSavedBasket @SavedBasketID;
+	END TRY  
+	BEGIN CATCH  
+		 -- NEVER MIND, no basket exists, no problem
+	END CATCH  
+
+	INSERT INTO tblKartrisSavedBaskets (SBSKT_UserID,SBSKT_Name,SBSKT_DateTimeAdded)
+	VALUES (@CustomerID,@BasketName,@NowOffset);
+	
+	SET @SavedBasketID=SCOPE_IDENTITY() ;
+
+	DECLARE @BV_ID INT
+	DECLARE @BV_VersionID INT
+	DECLARE @BV_Quantity FLOAT
+	DECLARE @BV_CustomText nvarchar(2000)
+
+	DECLARE Basket_cursor CURSOR FOR 
+	SELECT BV_ID,BV_VersionID,BV_Quantity,BV_CustomText FROM tblKartrisBasketValues WHERE BV_ParentID=@BasketID AND BV_ParentType='b';
+
+	OPEN Basket_cursor
+	FETCH NEXT FROM Basket_cursor INTO @BV_ID,@BV_VersionID,@BV_Quantity,@BV_CustomText
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		INSERT INTO tblKartrisBasketValues(BV_ParentType,BV_ParentID,BV_VersionID,BV_Quantity,BV_CustomText,BV_DateTimeAdded)
+		VALUES ('s',@SavedBasketID,@BV_VersionID,@BV_Quantity,@BV_CustomText,@NowOffset)
+
+		SET @newBV_ID=SCOPE_IDENTITY() 
+
+		IF EXISTS (SELECT * FROM tblKartrisBasketOptionValues WHERE BSKTOPT_BasketValueID=@BV_ID) 
+		BEGIN
+			INSERT INTO tblKartrisBasketOptionValues
+			SELECT @newBV_ID,BSKTOPT_OptionID FROM tblKartrisBasketOptionValues WHERE BSKTOPT_BasketValueID=@BV_ID
+		END
+
+		FETCH NEXT FROM Basket_cursor INTO @BV_ID,@BV_VersionID,@BV_Quantity,@BV_CustomText
+	End
+
+	CLOSE Basket_cursor
+	DEALLOCATE Basket_cursor;
+
 END
 GO
 
@@ -30592,6 +30507,112 @@ CREATE NONCLUSTERED INDEX [SESS_DateLastUpdated] ON [dbo].[tblKartrisSessions]
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 
+/****** Object:  Index [V_CodeNumber]    Script Date: 21/09/2017 12:30:10 ******/
+BEGIN TRY  
+	CREATE UNIQUE NONCLUSTERED INDEX [V_CodeNumber] ON [dbo].[tblKartrisVersions]
+	(
+		[V_CodeNumber] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+END TRY  
+BEGIN CATCH  
+     -- do nothing 
+END CATCH  
+GO
+
+/******
+New sproc for data tool; this will update products without changing existing settings and values
+of things that are not in the data tool spreadsheet format
+******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisProducts_Update_DataTool](
+								@P_ID as int,
+								@P_SupplierID as smallint,
+								@P_Type as char(1),
+								@NowOffset as datetime 
+								)
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	DECLARE @OldType as char(1);
+	SELECT @OldType = P_Type FROM dbo.tblKartrisProducts WHERE P_ID = @P_ID;
+	IF @OldType <> @P_Type BEGIN
+		IF @OldType = 'o' BEGIN
+			EXEC	[dbo].[_spKartrisProductOptionGroupLink_DeleteByProductID]	
+			@ProductID = @P_ID;
+			EXEC	[dbo].[_spKartrisProductOptionLink_DeleteByProductID]
+			@ProductID = @P_ID;
+		END
+	END;
+	
+	UPDATE tblKartrisProducts
+	SET P_SupplierID = @P_SupplierID, 
+		P_Type = @P_Type,
+		P_LastModified = @NowOffset
+	WHERE P_ID = @P_ID;
+		
+END
+GO
+
+/******
+New sproc for data tool; this will update versions without changing existing settings and values
+of things that are not in the data tool spreadsheet format
+******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisVersions_Update_DataTool]
+(
+	@V_ID as bigint,
+	@V_CodeNumber as nvarchar(25),
+	@V_ProductID as int,
+	@V_Price as DECIMAL(18,4),
+	@V_Tax as tinyint,
+	@V_Weight as real,
+	@V_Quantity as real,
+	@V_RRP as DECIMAL(18,4),
+	@V_Type as char(1),
+	@V_Tax2 as tinyint,
+	@V_TaxExtra as nvarchar(255),
+	@V_BulkUpdateTimeStamp as datetime = NULL
+)
+								
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	UPDATE tblKartrisVersions
+	SET V_CodeNumber = @V_CodeNumber,
+	V_ProductID = @V_ProductID,
+	V_Price = @V_Price,
+	V_Tax = @V_Tax,
+	V_Weight = @V_Weight, 
+	V_Quantity = @V_Quantity,
+	V_RRP = @V_RRP,
+	V_Type = @V_Type,
+	V_Tax2 = @V_Tax2,
+	V_TaxExtra = @V_TaxExtra,
+	V_BulkUpdateTimeStamp = Coalesce(@V_BulkUpdateTimeStamp, GetDate())
+	WHERE V_ID = @V_ID;
+
+END
+GO
 
 /****** Set this to tell Data tool which version of db we have ******/
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9010', N's', N's', N'kartris version', N'', 2.9010, N'2.9010', 0)
