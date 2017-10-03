@@ -905,7 +905,7 @@ Namespace Kartris
                             'that doesn't seem to work now
                             'BasketBLL.UpdateQuantity(.ID, 0)
                             BasketBLL.DeleteBasketItems(.ID)
-                            Current.Response.Redirect("~/Basket.aspx")
+                            'Current.Response.Redirect("~/Basket.aspx")
 
                         End If
                     End With

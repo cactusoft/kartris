@@ -1,5 +1,5 @@
 <%@ Page Language="VB" MasterPageFile="~/Skins/Kartris/Template.master" AutoEventWireup="true"
-    CodeFile="Category.aspx.vb" Inherits="Category" EnableSessionState="ReadOnly" %>
+    CodeFile="Category.aspx.vb" Inherits="Category" %>
 
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
     <div class="page_category">

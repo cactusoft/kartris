@@ -1,5 +1,5 @@
 <%@ Page Language="VB" AutoEventWireup="true" CodeFile="Default.aspx.vb" Inherits="Main"
-	MasterPageFile="~/Skins/Kartris/Template.master" EnableSessionState="ReadOnly" %>
+	MasterPageFile="~/Skins/Kartris/Template.master" %>
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
 	<div id="homepage">
 		<user:PopupMessage ID="UC_PopUpConfirmMail" runat="server" />
