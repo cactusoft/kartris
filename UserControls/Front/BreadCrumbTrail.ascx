@@ -4,6 +4,8 @@
         runat="server" SiteMapProvider="BreadCrumbSiteMap" />
 
 </div>
+<% If Request.Url.ToString.ToLower.Contains("product.aspx") Then %>
 <script>
     $('div.breadcrumbtrail span span:nth-last-child(4) a[href*="__c-p-"]').attr('href', 'javascript:window.location=document.referrer;')
 </script>
+<% End if %>
