@@ -229,7 +229,9 @@ VERSIONS
 .versions td.addtobasket img            { float: none }
 .versions td.addtobasket                { white-space: nowrap; width: 10%; }
 .versions td.addtobasket div            { background-color: transparent; background-image: none; display: inline; }
-.versions .imageviewer_holder           { float: left; margin: 0 10px 0 0; }
+.versions .imageviewer_holder           { float: left; margin: 0 10px 0 0; width: 100px; border: solid 1px #666; overflow: hidden; background-color: #fff; }
+.versions .imageholder                  { margin: 0; padding: 0; max-width: 100px; max-height: 100px; text-align: left; }
+.versions .imageviewer_holder img       { margin: 0; padding: 0; max-width: 100px; max-height: 100px; }
 .versions .cancustomizetag,
 .versions td.addtobasket div.cancustomizetag
                                         { vertical-align: middle; display: inline-block; width: 15px; height: 15px; background-image: url(Images/icon_customizable.png); background-position: top left; background-repeat: no-repeat; float: left; margin: 5px 5px 0 0; }

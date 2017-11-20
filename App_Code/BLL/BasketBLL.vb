@@ -2464,4 +2464,59 @@ Public Class BasketBLL
     End Sub
 #End Region
 
+    ''' <summary>
+    ''' Return Image Tag for a version/product to use in basket and on order email - if no version image, uses product image 
+    ''' </summary>
+    ''' <param name="numVersionID">The version we want to find images for</param>
+    ''' <param name="numProductID">The product we want to find images for</param>
+    ''' <returns>a string of html</returns>
+    ''' <remarks></remarks>
+    Public Shared Function GetImageURL(ByVal numVersionID As Long, ByVal numProductID As Long) As String
+
+        Dim strImageURL As String = ""
+        Dim strProductsFolderPath As String = HttpContext.Current.Server.MapPath(CkartrisImages.strProductImagesPath & "/" & numProductID & "/")
+        Dim strVersionsFolderPath As String = strProductsFolderPath & "/" & numVersionID & "/"
+
+        If numVersionID > 0 And Directory.Exists(strVersionsFolderPath) Then
+            'we look for version image
+            Dim dirFolder As New DirectoryInfo(strVersionsFolderPath)
+
+            If dirFolder.GetFiles().Length < 1 Then
+                'folder found, but no images in it
+                strImageURL = ""
+            Else
+                Try
+                    For Each objFile In dirFolder.GetFiles()
+                        strImageURL = CkartrisBLL.WebShopURL & "Image.aspx?strFileName=" & objFile.Name & "&amp;strItemType=v&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=" & numVersionID & "&amp;strParent=" & numProductID
+                        Exit For
+                    Next
+
+                Catch ex As Exception
+                    strImageURL = ""
+                End Try
+            End If
+        End If
+        'no version image found, so look for product images
+        If numProductID > 0 And strImageURL = "" Then
+            Dim dirFolder As New DirectoryInfo(strProductsFolderPath)
+
+            If dirFolder.GetFiles().Length < 1 Then
+                'folder found, but no images in it
+                strImageURL = ""
+            Else
+                Try
+                    For Each objFile In dirFolder.GetFiles()
+                        strImageURL = CkartrisBLL.WebShopURL & "Image.aspx?strFileName=" & objFile.Name & "&amp;strItemType=p&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=" & numProductID & "&amp;strParent=0"
+                        Exit For
+                    Next
+
+                Catch ex As Exception
+                    strImageURL = ""
+                End Try
+            End If
+        End If
+
+        Return strImageURL
+    End Function
+
 End Class

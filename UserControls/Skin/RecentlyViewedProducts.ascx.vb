@@ -30,6 +30,7 @@ Partial Class UserControls_Skin_RecentlyViewedProducts
                 Dim tblRecentlyViewedProducts As New DataTable
                 tblRecentlyViewedProducts.Columns.Add(New DataColumn("P_ID", Type.GetType("System.Int32")))
                 tblRecentlyViewedProducts.Columns.Add(New DataColumn("P_Name", Type.GetType("System.String")))
+                tblRecentlyViewedProducts.Columns.Add(New DataColumn("VersionID", Type.GetType("System.String")))
 
                 Dim arrRecentProducts() As String = CStr(Session("RecentProducts")).Split("||||")
                 Dim numMaxProductsToDisplay As Integer = 0
@@ -44,7 +45,7 @@ Partial Class UserControls_Skin_RecentlyViewedProducts
 
                         If IsNumeric(arrProduct(0)) AndAlso arrProduct(0) > 0 Then
 
-                            tblRecentlyViewedProducts.Rows.Add(arrProduct(0), arrProduct(4))
+                            tblRecentlyViewedProducts.Rows.Add(arrProduct(0), arrProduct(4), 0)
                             arrAddedProducts(numCounter) = arrProduct(0)
                             numCounter += 1
                         End If

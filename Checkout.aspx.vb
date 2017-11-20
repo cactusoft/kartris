@@ -914,12 +914,19 @@ Partial Class _Checkout
                         End Try
                     End Try
 
+                    'Mailchimp library
+                    Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
+
+                    'Mailchimp
+                    Dim blnMailChimp As Boolean = KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y"
+
                     If Not clientToken.Equals("") Then
                         'MAILCHIMP Adding Cart to BrainTree Payments
-                        Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
                         'If the User is Logged
-                        If CurrentLoggedUser IsNot Nothing Then
-                            Session("BraintreeCartId") = mailChimpLib.AddCartToCustomerToStore().Result
+                        If blnMailChimp Then
+                            If CurrentLoggedUser IsNot Nothing Then
+                                Session("BraintreeCartId") = mailChimpLib.AddCartToCustomerToStore().Result
+                            End If
                         End If
 
                         phdBrainTree.Visible = True
@@ -1447,7 +1454,7 @@ Partial Class _Checkout
                             If blnUseHTMLOrderEmail Then
                                 'this line builds up the individual rows of the order contents table in the HTML email
                                 sbdHTMLOrderBasket.AppendLine(GetHTMLEmailRowText(.Quantity & " x " & .ProductName & strMark, .VersionName & " (" & .CodeNumber & ") " &
-                                                         sbdOptionText.ToString & strCustomText, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
+                                                         sbdOptionText.ToString & strCustomText, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate, 0, .VersionID, .ProductID))
                             End If
                         End With
                     Next
@@ -1495,13 +1502,18 @@ Partial Class _Checkout
                                           arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID,
                                          intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice,
                                          IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtPurchaseOrderNo.Text, Trim(txtComments.Text))
-                'MAILCHIMP Adding Cart
-                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
-                'If the User is Logged
-                If CurrentLoggedUser IsNot Nothing And Session("BraintreeCartId") Is Nothing Then
-                    Dim addCartResult As String = mailChimpLib.AddCartToCustomerToStore(O_ID).Result
-                End If
 
+                'Mailchimp
+                Dim blnMailChimp As Boolean = KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y"
+
+                If blnMailChimp Then
+                    'MAILCHIMP Adding Cart
+                    Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
+                    'If the User is Logged
+                    If CurrentLoggedUser IsNot Nothing And Session("BraintreeCartId") Is Nothing Then
+                        Dim addCartResult As String = mailChimpLib.AddCartToCustomerToStore(O_ID).Result
+                    End If
+                End If
 
                 'Order Creation successful
                 If O_ID > 0 Then
@@ -1738,14 +1750,20 @@ Partial Class _Checkout
                                     If transactionId <> "" Then
                                         blnResult = True
                                         Try
-                                            Dim cartId As String = Session("BraintreeCartId")
-                                            If cartId IsNot Nothing Then
-                                                ' Removing Cart and adding Order to successful payment made with Braintree
-                                                Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(CurrentLoggedUser.ID).Result
-                                                Dim mcOrder As Order = mailChimpLib.AddOrder(mcCustomer, cartId).Result
-                                                Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart(cartId).Result
-                                                Session("BraintreeCartId") = Nothing
+                                            'Mailchimp, try to remove cart
+                                            If blnMailChimp Then
+                                                'Mailchimp library
+                                                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
 
+                                                Dim cartId As String = Session("BraintreeCartId")
+                                                If cartId IsNot Nothing Then
+                                                    ' Removing Cart and adding Order to successful payment made with Braintree
+                                                    Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(CurrentLoggedUser.ID).Result
+                                                    Dim mcOrder As Order = mailChimpLib.AddOrder(mcCustomer, cartId).Result
+                                                    Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart(cartId).Result
+                                                    Session("BraintreeCartId") = Nothing
+
+                                                End If
                                             End If
                                         Catch ex As Exception
                                             Debug.Print(ex.Message)

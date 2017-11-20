@@ -1671,11 +1671,22 @@ Public NotInheritable Class CkartrisBLL
         End With
         Return GetBasketModifierEmailText
     End Function
+
     ''' <summary>
     ''' Format the table 'rows' section of order/confirmation HTML emails
     ''' </summary>
-    Public Shared Function GetHTMLEmailRowText(ByVal strName As String, ByVal strDescription As String, ByVal numExTax As Double, ByVal numIncTax As Double, ByVal numTaxAmount As Double, ByVal numTaxRate As Double, Optional ByVal CurrencyID As Integer = 0) As String
+    Public Shared Function GetHTMLEmailRowText(ByVal strName As String,
+                                               ByVal strDescription As String,
+                                               ByVal numExTax As Double,
+                                               ByVal numIncTax As Double,
+                                               ByVal numTaxAmount As Double,
+                                               ByVal numTaxRate As Double,
+                                               Optional ByVal CurrencyID As Integer = 0,
+                                               Optional ByVal VersionID As Long = 0,
+                                               Optional ByVal ProductID As Long = 0) As String
         Dim CUR_ID As Integer
+        Dim strImageURL As String
+        Dim strImageTag As String
         If CurrencyID > 0 Then
             CUR_ID = CurrencyID
         Else
@@ -1684,6 +1695,16 @@ Public NotInheritable Class CkartrisBLL
 
         Dim sbdHTMLRowText As StringBuilder = New StringBuilder
         sbdHTMLRowText.Append("<tr class=""row_item""><td class=""col1"">")
+
+        '## START modification mart 14 sep 2017
+
+        strImageURL = BasketBLL.GetImageURL(VersionID, ProductID)
+        If strImageURL <> "" Then
+            strImageTag = "<img src=""" & strImageURL & """ align = ""right"" />"
+            sbdHTMLRowText.Append(strImageTag)
+        End If
+
+        '## END modification mart 14 sep 2017
 
         'Put the name and description on the first column
         sbdHTMLRowText.Append("<strong>" & strName & "</strong><br/>")
@@ -1711,6 +1732,7 @@ Public NotInheritable Class CkartrisBLL
         sbdHTMLRowText.Append("</td></tr>")
         Return sbdHTMLRowText.ToString
     End Function
+
     ''' <summary>
     ''' Format the 'modifier' section of order/confirmation HTML emails
     ''' </summary>
