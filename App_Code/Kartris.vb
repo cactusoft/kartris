@@ -31,7 +31,7 @@ Imports System.Xml
 Public NotInheritable Class CkartrisEnumerations
 
     Public Const KARTRIS_VERSION As Decimal = 2.901
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #07/24/2017# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #11/20/2017# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
