@@ -2488,7 +2488,7 @@ Public Class BasketBLL
                 Else
                     Try
                         For Each objFile In dirFolder.GetFiles()
-                            strImageURL = CkartrisBLL.WebShopURL & "Image.aspx?strFileName=" & objFile.Name & "&amp;strItemType=v&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=" & numVersionID & "&amp;strParent=" & numProductID
+                            strImageURL = CkartrisBLL.WebShopURL & "Image.ashx?strFileName=" & objFile.Name & "&amp;strItemType=v&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=" & numVersionID & "&amp;strParent=" & numProductID
                             Exit For
                         Next
 
