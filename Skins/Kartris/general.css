@@ -181,6 +181,7 @@ html>body .imageviewer .gallery .imageholder
 .imageviewer .gallery .imageholder:hover
 										{ border: solid 1px #fc5 }
 .imageviewer .gallery .imageholder img  { vertical-align: middle; margin: 5px; }
+.clearing-assembled .clearing-container .carousel > ul li.fix-height img { height: auto; }
 .singleimage                            { margin: auto }
 .product .promotions .singleimage       { float: left }
 .largeview                              { margin: 0 0 5px 0; float: left; }
