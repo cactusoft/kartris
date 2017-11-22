@@ -57,7 +57,7 @@ Public Class StockNotificationsBLL
         'Couple of values not passed in
         Dim datDateCreated As DateTime = Now()
         Dim strStatus As String = "w" 'waiting to be sent!
-        Dim strUserIP As String = Current.Request.ServerVariables("REMOTE_ADDR")
+        Dim strUserIP As String = CkartrisEnvironment.GetClientIPAddress()
 
         'Connection string
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()

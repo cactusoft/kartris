@@ -133,7 +133,7 @@ Public Class AffiliateBLL
                 Dim strReferer, strIP, strRequestedItem As String
                 strReferer = Current.Request.ServerVariables("HTTP_REFERER")
                 If strReferer Is Nothing Then strReferer = ""
-                strIP = Current.Request.ServerVariables("REMOTE_ADDR")
+                strIP = CkartrisEnvironment.GetClientIPAddress()
                 strRequestedItem = Left(Current.Request.ServerVariables("PATH_INFO") & "?" & Current.Request.ServerVariables("QUERY_STRING"), 255)
 
                 AffiliateBLL.UpdateCustomerAffiliateLog(numAffiliateID, strReferer, strIP, strRequestedItem)

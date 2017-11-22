@@ -68,7 +68,7 @@ Public Class StatisticsBLL
                 cmdAddStats.Parameters.AddWithValue("@Type", FixNullToDB(chrItemType, "c"))
                 cmdAddStats.Parameters.AddWithValue("@ParentID", FixNullToDB(numItemParentID, "i"))
                 cmdAddStats.Parameters.AddWithValue("@ItemID", FixNullToDB(numItemID, "i"))
-                cmdAddStats.Parameters.AddWithValue("@IP", Current.Request.ServerVariables("REMOTE_ADDR"))
+                cmdAddStats.Parameters.AddWithValue("@IP", CkartrisEnvironment.GetClientIPAddress())
                 cmdAddStats.Parameters.AddWithValue("@NowOffset", NowOffset)
 
                 sqlConn.Open()

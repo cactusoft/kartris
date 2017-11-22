@@ -38,10 +38,7 @@ Imports System.ServiceModel.Activation
         If Not blnKeyValidated Then strOutput = "Sorry. Cant authenticate request!"
 
         'Get user's IP address
-        Dim strClientIP As String = HttpContext.Current.Request.ServerVariables("HTTP_X_FORWARDED_FOR")
-        If String.IsNullOrEmpty(strClientIP) Then
-            strClientIP = HttpContext.Current.Request.ServerVariables("REMOTE_ADDR")
-        End If
+        Dim strClientIP As String = CkartrisEnvironment.GetClientIPAddress()
 
         'Check matches specified IPs in web.config, if not blank
         Dim strBackEndIPLock = ConfigurationManager.AppSettings("KartrisWebAPIIPLock").ToString()

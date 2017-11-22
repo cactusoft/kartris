@@ -53,10 +53,7 @@ Partial Class _OrderInvoice
         If cokKartris IsNot Nothing Then
             arrAuth = HttpSecureCookie.DecryptValue(cokKartris.Value, "Order Invoice")
             If UBound(arrAuth) = 8 Then
-                Dim strClientIP As String = Request.ServerVariables("HTTP_X_FORWARDED_FOR")
-                If String.IsNullOrEmpty(strClientIP) Then
-                    strClientIP = Request.ServerVariables("REMOTE_ADDR")
-                End If
+                Dim strClientIP As String = CkartrisEnvironment.GetClientIPAddress()
                 If Not String.IsNullOrEmpty(arrAuth(0)) And strClientIP = arrAuth(7) Then
                     Session("Back_Auth") = cokKartris.Value
                     Session("_LANG") = arrAuth(4)

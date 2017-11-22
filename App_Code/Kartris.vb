@@ -156,7 +156,7 @@ Public NotInheritable Class CkartrisFormatErrors
             swtErrors.WriteLine("-----------------------------------------------------------------------------")
             swtErrors.WriteLine(">>" & Space(5) & Now.ToString())
             Try
-                swtErrors.WriteLine(">>" & Space(5) & HttpContext.Current.Request.ServerVariables("REMOTE_ADDR"))
+                swtErrors.WriteLine(">>" & Space(5) & CkartrisEnvironment.GetClientIPAddress())
             Catch ex As Exception
 
             End Try
@@ -232,7 +232,7 @@ Public NotInheritable Class CkartrisFormatErrors
             swtErrors.WriteLine(">>    " & Now.ToString())
             swtErrors.WriteLine(">>" & Space(5) & "Version:" & CkartrisEnumerations.KARTRIS_VERSION)
             swtErrors.WriteLine(">>" & Space(5) & "URL:" & HttpContext.Current.Request.Url.ToString)
-            swtErrors.WriteLine(">>    " & HttpContext.Current.Request.ServerVariables("REMOTE_ADDR"))
+            swtErrors.WriteLine(">>    " & CkartrisEnvironment.GetClientIPAddress())
             swtErrors.WriteLine(">>    CUSTOM MESSAGE:")
             swtErrors.WriteLine(_msg)
             Try
@@ -293,7 +293,7 @@ Public NotInheritable Class CkartrisFormatErrors
                     Try
                         swtErrors.WriteLine(">>" & Space(5) & "Version:" & CkartrisEnumerations.KARTRIS_VERSION)
                         swtErrors.WriteLine(">>" & Space(5) & "URL:" & HttpContext.Current.Request.Url.ToString)
-                        swtErrors.WriteLine(">>" & Space(5) & HttpContext.Current.Request.ServerVariables("REMOTE_ADDR"))
+                        swtErrors.WriteLine(">>" & Space(5) & CkartrisEnvironment.GetClientIPAddress())
                     Catch ex As Exception
 
                     End Try

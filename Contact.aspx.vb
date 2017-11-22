@@ -62,7 +62,7 @@ Partial Class contact
         strBldr.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
         strBldr.Append(GetGlobalResourceObject("Email", "EmailText_ContactName") & txtName.Text & vbCrLf)
         strBldr.Append(GetGlobalResourceObject("Email", "EmailText_ContactEmail") & txtEmail.Text & vbCrLf)
-        strBldr.Append(GetGlobalResourceObject("Email", "EmailText_ContactIP") & Request.ServerVariables("REMOTE_ADDR") & vbCrLf)
+        strBldr.Append(GetGlobalResourceObject("Email", "EmailText_ContactIP") & CkartrisEnvironment.GetClientIPAddress() & vbCrLf)
         strBldr.Append(GetGlobalResourceObject("Email", "EmailText_ContactDateStamp") & Now.ToString & vbCrLf)
         strBldr.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
         strBldr.Append(txtMessage.Text)

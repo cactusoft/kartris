@@ -78,7 +78,7 @@ Public Class SessionsBLL
 
     Public ReadOnly Property SessionIP() As String
         Get
-            Return Current.Request.ServerVariables("REMOTE_ADDR")
+            Return CkartrisEnvironment.GetClientIPAddress()
         End Get
     End Property
 
@@ -174,18 +174,18 @@ Public Class SessionsBLL
             'if a user goes to a page in the history with an old ID, they won't
             'switch sessions and see an old basket, someone elses login etc)
             strValue = ""
-			If strUsingCookies <> Trim(LCase(USING_COOKIES_NO)) Then
-				If Not (Current.Request.Cookies(COOKIE_NAME) Is Nothing) Then
-					strValue = Current.Request.Cookies(COOKIE_NAME).Item(VARIABLE_NAME)
-				End If
-				If strValue = "" Then
-					strValue = Current.Request.QueryString(VARIABLE_NAME)
-					If strValue = "" Then strValue = Current.Request.Form(VARIABLE_NAME)
-				End If
-			End If
+            If strUsingCookies <> Trim(LCase(USING_COOKIES_NO)) Then
+                If Not (Current.Request.Cookies(COOKIE_NAME) Is Nothing) Then
+                    strValue = Current.Request.Cookies(COOKIE_NAME).Item(VARIABLE_NAME)
+                End If
+                If strValue = "" Then
+                    strValue = Current.Request.QueryString(VARIABLE_NAME)
+                    If strValue = "" Then strValue = Current.Request.Form(VARIABLE_NAME)
+                End If
+            End If
 
-			'Check it's the right length
-			If Len(strValue & "") < CODE_LENGTH + 1 Then
+            'Check it's the right length
+            If Len(strValue & "") < CODE_LENGTH + 1 Then
 				_SessionID = 0
 				_SessionCode = ""
 			Else
