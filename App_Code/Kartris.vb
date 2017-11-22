@@ -2429,3 +2429,27 @@ Public NotInheritable Class CkartrisRecovery
     'Experimental code to try to recycle app pool
 End Class
 
+''' <summary>
+''' Class relating to the kartris hosting environment
+''' and other tools relating to it
+''' </summary>
+Public NotInheritable Class CkartrisEnvironment
+    Public Shared Function GetClientIPAddress() As String
+        Dim strClientIP As String = ""
+        If GetKartConfig("general.security.ssl") = "e" Then
+            'using cloudflare or similar, try to find the client IP
+            Try
+                strClientIP = HttpContext.Current.Request.ServerVariables("HTTP_CF_CONNECTING_IP")
+            Catch ex As Exception
+                'maybe not cloudflare
+            End Try
+
+            If String.IsNullOrEmpty(strClientIP) Then strClientIP = Current.Request.ServerVariables("HTTP_X_FORWARDED_FOR")
+            If String.IsNullOrEmpty(strClientIP) Then strClientIP = "unknown"
+        Else
+            strClientIP = HttpContext.Current.Request.ServerVariables("REMOTE_ADDR")
+        End If
+        Return strClientIP
+    End Function
+End Class
+
