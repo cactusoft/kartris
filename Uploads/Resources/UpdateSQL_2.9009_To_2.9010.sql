@@ -1032,44 +1032,6 @@ CREATE NONCLUSTERED INDEX [LE_ParentID] ON [dbo].[tblKartrisLanguageElements]
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 
-
-/****** Improve session response time with fill factor changes ******/
-BEGIN TRY  
-  ALTER INDEX [aaaaatblKartrisSessions_PK] ON [tblKartrisSessions]
-  REBUILD WITH (FILLFACTOR = 80)
-END TRY  
-BEGIN CATCH  
-	 -- do nothing 
-END CATCH  
-GO
-
-BEGIN TRY  
-  ALTER INDEX [SESS_Code] ON [tblKartrisSessions]
-  REBUILD WITH (FILLFACTOR = 80)
-END TRY  
-BEGIN CATCH  
-	 -- do nothing 
-END CATCH  
-GO
-
-BEGIN TRY  
-  ALTER INDEX [SESS_ID] ON [tblKartrisSessions]
-  REBUILD WITH (FILLFACTOR = 80)
-END TRY  
-BEGIN CATCH  
-	 -- do nothing 
-END CATCH  
-GO
-
-BEGIN TRY  
-  ALTER INDEX [idxSESS_Code] ON [tblKartrisSessions]
-  REBUILD WITH (FILLFACTOR = 80)
-END TRY  
-BEGIN CATCH  
-	 -- do nothing 
-END CATCH  
-GO
-
 /****** Improve cleanup of expired sessions ******/
 CREATE NONCLUSTERED INDEX [SESS_DateLastUpdated] ON [dbo].[tblKartrisSessions]
 (
