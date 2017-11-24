@@ -87,7 +87,10 @@
                                     <div class="section" id="section_products">
                                         <asp:PlaceHolder ID="phdProducts" runat="server">
                                             <div class="floatright rightpad">
-                                                <a class="linkbutton icon_new" href="_ModifyProduct.aspx?ProductID=0&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>">
+                                                <asp:LinkButton ID="lnkTurnProductsOff" Text="<%$ Resources:_Product, ContentText_TurnAllProductsOff %>" runat="server" CssClass="linkbutton" Visible="False" />
+                                                <asp:LinkButton ID="lnkTurnProductsOn" Text="<%$ Resources:_Product, ContentText_TurnAllProductsOn %>" runat="server" CssClass="linkbutton" Visible="False" />
+
+                                                <a style="margin-left:40px" class="linkbutton icon_new" href="_ModifyProduct.aspx?ProductID=0&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>">
                                                     <asp:Literal ID="litNewProductLink" Text='<%$ Resources:_Kartris, FormButton_New %>'
                                                         runat="server"></asp:Literal></a>
                                             </div>
@@ -128,8 +131,10 @@
                                                         </div>
                                                         </asp:PlaceHolder>
                                                     <strong>
+                                                        <asp:Literal ID="litProductNameStyle" runat="server" Visible='<%# Eval("P_Live")=false %>'><span class="hidden"></asp:Literal>
                                                         <asp:HyperLink ID="lnkEditThisProduct" runat="server" ToolTip="<%$ Resources:_Product, ImageLabel_EditThisProduct %>"
                                                             Text='<%# Eval("P_Name") %>' NavigateUrl='<%# "~/Admin/_ModifyProduct.aspx?ProductID=" & Eval("P_ID")& "&CategoryID=" & _GetCategoryID() & "&strParent=" & IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>' /></strong>
+                                                    <asp:Literal ID="litProductNameStyleClose" runat="server" Visible='<%# Eval("P_Live")=false %>'></span></asp:Literal>
                                                 </ItemTemplate>
                                                 <SelectedItemTemplate>
                                                     <asp:Literal ID="litProductType" runat="server" Text='<%# Eval("P_Type") %>' Visible="false"

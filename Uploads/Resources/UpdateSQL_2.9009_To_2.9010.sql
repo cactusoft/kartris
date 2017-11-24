@@ -1184,6 +1184,41 @@ BEGIN CATCH
 END CATCH  
 GO
 
+/****** SET ALL PRODUCTS TO LIVE, SET ALL PRODUCTS TO HIDDEN *******/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_TurnAllProductsOff', N'Turn all products OFF', NULL, 2.9010, N'Turn all products OFF', NULL, N'_Product',1);
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_TurnAllProductsOn', N'Turn all products ON', NULL, 2.9010, N'Turn all products ON', NULL, N'_Product',1);
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisProducts_Update]    Script Date: 23/11/2017 11:12:48 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	Quick way to set all products
+-- in a category live or not live. Useful when
+-- using powerpack or for hiding products from
+-- other features where hiding parent category
+-- doesn't stop product being found.
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisProducts_HideShowAllByCategoryID](
+								@CAT_ID as int,
+								@P_Live as bit
+								)
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+	
+	UPDATE tblKartrisProducts
+	SET P_Live = @P_Live
+	WHERE P_ID IN (SELECT PCAT_ProductID FROM tblKartrisProductCategoryLink WHERE PCAT_CategoryID=@CAT_ID);
+	
+END
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.9010', CFG_VersionAdded=2.9010 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
