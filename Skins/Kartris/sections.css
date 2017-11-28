@@ -231,7 +231,6 @@ VERSIONS
 .versions td.addtobasket div            { background-color: transparent; background-image: none; display: inline; }
 .versions .imageviewer_holder           { float: left; margin: 0 10px 0 0; }
 .versions .imageholder                  { margin: 0; padding: 0; max-width: 100px; max-height: 100px; text-align: left; }
-.versions .imageviewer_holder img       { margin: 0; padding: 0; max-width: 100px; max-height: 100px; }
 .versions .largeview                    { display: none; }      
 
 .versions .cancustomizetag,
