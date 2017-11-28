@@ -229,7 +229,7 @@
                                                         =====================================
                                                         --%>
                                                         <asp:PlaceHolder ID="phdVersionImage" runat="server">
-                                                            <user:ImageViewer ID="UC_ImageViewer_Rows" runat="server" />
+                                                            <user:ImageViewer ID="UC_ImageViewer_Rows" runat="server" VersionImages="true" />
                                                         </asp:PlaceHolder>
 
                                                         <%--

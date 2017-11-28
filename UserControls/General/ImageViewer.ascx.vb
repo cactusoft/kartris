@@ -35,6 +35,7 @@ Partial Class ImageViewer
     Private _blnPlaceHolder As Boolean = False
     Private _blnFoundImage As Boolean = True
     Public _blnLargeViewClickable As Boolean = False
+    Public _blnVersionImages As Boolean = False
 
     'We can use this on pages with the image viewer
     'to switch off the large link when no image
@@ -51,9 +52,18 @@ Partial Class ImageViewer
     'on the large view itself won't be. So we can also use
     'this property to determine if the image is a preview
     'one on a product, or a large view.
-    Public WriteOnly Property LargeViewClickable() As String
-        Set(ByVal value As String)
+    Public WriteOnly Property LargeViewClickable() As Boolean
+        Set(ByVal value As Boolean)
             _blnLargeViewClickable = value
+        End Set
+    End Property
+
+    'Is this set of images being called for versions?
+    'If so, we need to hide the main image and use some
+    'classes in Foundation to get the desired effect
+    Public WriteOnly Property VersionImages() As Boolean
+        Set(ByVal value As Boolean)
+            _blnVersionImages = value
         End Set
     End Property
 
@@ -179,7 +189,7 @@ Partial Class ImageViewer
                     Me.Visible = False
                 End If
 
-            ElseIf (dirFolder.GetFiles().Length = 1 Or strHyperlink <> "") And _blnLargeViewClickable = False Then
+            ElseIf (dirFolder.GetFiles().Length = 1 Or strHyperlink <> "") And (_blnLargeViewClickable = False And Not _blnVersionImages) Then
 
                 '=======================================
                 'SINGLE IMAGE
@@ -242,6 +252,8 @@ Partial Class ImageViewer
                     intIndex += 1
                     Select Case _eViewType
                         Case SmallImagesType.enum_ImageButton
+
+                            'Product main product image
                             'Set link to thumbnail image
                             'This is the same for 'new page' and 'AJAX' settings
                             'because it is always a thumbnail
@@ -261,7 +273,7 @@ Partial Class ImageViewer
                                 strImageMainView = "Image.ashx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
                             End If
 
-                            If intIndex = 1 Then
+                            If intIndex = 1 And Not _blnVersionImages Then
                                 '---------------------------------------
                                 'SET INITIAL LARGE IMAGE PREVIEW
                                 'Defaults to first image in folder
@@ -282,10 +294,24 @@ Partial Class ImageViewer
                             'image doesn't seem to produce a popup. Instead,
                             'we just set it invisible, this seems to hide
                             'it while the popup functionality is retained.
-                            If dirFolder.GetFiles().Length > 1 Then
-                                litGalleryThumbs.Text &= "<li><a href=""" & strImageFilePath & """><img src=""" & strImageLinkPath & """></a></li>" ' & vbCrLf
+                            If _blnVersionImages Then
+                                'Version images
+                                If intIndex = 1 Then
+                                    'First image in version gallery
+                                    litGalleryThumbs.Text &= "<li class=""clearing-featured-img""><a href=""" & strImageFilePath & """><img src=""" & strImageLinkPath & """></a></li>" ' & vbCrLf
+                                Else
+                                    'Subsequent images in version gallery
+                                    litGalleryThumbs.Text &= "<li class=""hide""><a href=""" & strImageFilePath & """><img src=""" & strImageLinkPath & """></a></li>" ' & vbCrLf
+                                End If
                             Else
-                                litGalleryThumbs.Text &= "<li style=""visibility: hidden;""><a href=""" & strImageFilePath & """><img src=""" & strImageLinkPath & """></a></li>" ' & vbCrLf
+                                'product images
+                                If dirFolder.GetFiles().Length > 1 Then
+                                    'Product image gallery thumbs
+                                    litGalleryThumbs.Text &= "<li><a href=""" & strImageFilePath & """><img src=""" & strImageLinkPath & """></a></li>" ' & vbCrLf
+                                Else
+                                    'Hide gallery
+                                    litGalleryThumbs.Text &= "<li style=""visibility: hidden;""><a href=""" & strImageFilePath & """><img src=""" & strImageLinkPath & """></a></li>" ' & vbCrLf
+                                End If
                             End If
                     End Select
 
@@ -296,29 +322,31 @@ Partial Class ImageViewer
                 'MAIN IMAGE PREVIEW (not large view)
                 '---------------------------------------
                 If KartSettingsManager.GetKartConfig("frontend.display.images.large.linktype") = "n" Then
-                    '---------------------------------------
-                    'IN 'NEW PAGE' LARGE VIEW MODE
-                    'Direct link to the image itself
-                    '---------------------------------------
-                    litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'NEW PAGE' LARGE VIEW MODE Direct link to the image itself --><div class=""imageholder hand"" >"
-                    litMainImage.Text &= "<a target=""_blank"" href=""" &
-                        "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>"
-                    litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" &
-                        strImageMainViewStart & """ /></a>"
-                    litMainImage.Text &= "</div>" & vbCrLf
-                    litLargeViewLink.Text &= "<a target=""_blank"" href=""" &
-                        "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>" &
-                        GetGlobalResourceObject("Product", "ContentText_LargeView") & "</a>"
-                Else
-                    '---------------------------------------
-                    'IN 'AJAX' LARGE VIEW MODE
-                    '---------------------------------------
-                    litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div class=""imageholder hand"" onclick=""javascript:ShowLargeViewPopup()"" " &
-                        "style=""height: " & numImageHeightMax & "px;"">"
-                    litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" & strImageMainViewStart & """ />" & vbCrLf
-                    litMainImage.Text &= "</div>"
-                    litLargeViewLink.Text = "<span>" & GetGlobalResourceObject("Product", "ContentText_LargeView") & "</span>"
+                    If Not _blnVersionImages Then
+                        '---------------------------------------
+                        'IN 'NEW PAGE' LARGE VIEW MODE
+                        'Direct link to the image itself
+                        '---------------------------------------
+                        litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'NEW PAGE' LARGE VIEW MODE Direct link to the image itself --><div class=""imageholder hand"" >"
+                        litMainImage.Text &= "<a target=""_blank"" href=""" &
+                            "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>"
+                        litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" &
+                            strImageMainViewStart & """ /></a>"
+                        litMainImage.Text &= "</div>" & vbCrLf
+                    Else
+                        litMainImage.Text = ""
+                    End If
 
+                Else
+                    If Not _blnVersionImages Then
+                        '---------------------------------------
+                        'IN 'AJAX' LARGE VIEW MODE
+                        '---------------------------------------
+                        litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div class=""imageholder hand"" " &
+                        "style=""height: " & numImageHeightMax & "px;"">"
+                        litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" & strImageMainViewStart & """ />" & vbCrLf
+                        litMainImage.Text &= "</div>"
+                    End If
                 End If
 
             End If
