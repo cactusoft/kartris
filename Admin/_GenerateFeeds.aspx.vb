@@ -100,7 +100,7 @@ Partial Class Admin_GenerateFeeds
             Try
                 AddURLElement(CurrentXmlSiteMap, CreateFeedURL(strCulture, drwFeedData("PAGE_Name").ToString, drwFeedData("RecordType").ToString, drwFeedData("ItemID").ToString))
 
-                If intCurrentURLCounter = 49999 Then
+                If intCurrentURLCounter = 49990 Then 'safely under the 50,000 urls limit
                     intCurrentURLCounter = 0
                     intSiteMapCounter += 1
                     CloseXMLSitemap(CurrentXmlSiteMap)
@@ -126,12 +126,12 @@ Partial Class Admin_GenerateFeeds
                 .WriteStartElement("sitemapindex")
                 .WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9")
 
-                '.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
-                '.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd")
+                .WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
+                .WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd")
 
 
                 .WriteWhitespace(vbCrLf)
-                .WriteStartElement("url")
+                .WriteStartElement("sitemap")
                 .WriteWhitespace(vbCrLf)
                 .WriteElementString("loc", CkartrisBLL.WebShopURLhttp & "sitemap.xml")
                 .WriteWhitespace(vbCrLf)
@@ -139,7 +139,7 @@ Partial Class Admin_GenerateFeeds
 
                 For i As Integer = 1 To intSiteMapCounter
                     .WriteWhitespace(vbCrLf)
-                    .WriteStartElement("url")
+                    .WriteStartElement("sitemap")
                     .WriteWhitespace(vbCrLf)
                     .WriteElementString("loc", CkartrisBLL.WebShopURLhttp & "sitemap" & i & ".xml")
                     .WriteWhitespace(vbCrLf)
@@ -178,8 +178,9 @@ Partial Class Admin_GenerateFeeds
             .WriteStartElement("urlset")
             .WriteAttributeString("xmlns", "http://www.sitemaps.org/schemas/sitemap/0.9")
 
-            '.WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
-            '.WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd")
+            .WriteAttributeString("xmlns:xsi", "http://www.w3.org/2001/XMLSchema-instance")
+            .WriteAttributeString("xsi:schemaLocation", "http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/siteindex.xsd")
+
         End With
 
         Return xmlSiteMap

@@ -202,6 +202,7 @@ v2.9 This replaces the popup we used to use
 .clearing-assembled .clearing-container .carousel > ul li:hover { border: solid 1px #fc5; }
 .clearing-assembled .clearing-container .carousel > ul li.fix-height img
 															{ height: auto; }
+.versions .carousel > ul li                                 { height: 120px; width: 120px; } /* height of version images, without affecting product thumbs */
 a.clearing-close                                            { font-size: 27pt; font-weight: bold; color: #000; }
 .clearing-main-prev > span                                  { border-right-color: #444; }
 .clearing-main-next > span                                  { border-left-color: #444; }

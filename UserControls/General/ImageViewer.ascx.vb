@@ -257,7 +257,7 @@ Partial Class ImageViewer
                             'Set link to thumbnail image
                             'This is the same for 'new page' and 'AJAX' settings
                             'because it is always a thumbnail
-                            strImageLinkPath = "Image.ashx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.height") & "&amp;numMaxWidth=" & KartSettingsManager.GetKartConfig("frontend.display.images.minithumb.width") & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
+                            strImageLinkPath = "Image.ashx?strFileName=" & objFile.Name & "&amp;strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=" & strImagesDirName & "&amp;strParent=" & strParentDirName
 
                             If blnFullSizeImage Then
                                 '---------------------------------------
