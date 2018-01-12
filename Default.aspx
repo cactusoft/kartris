@@ -1,5 +1,6 @@
 <%@ Page Language="VB" AutoEventWireup="true" CodeFile="Default.aspx.vb" Inherits="Main"
 	MasterPageFile="~/Skins/Kartris/Template.master" %>
+<%@ Register TagPrefix="user" TagName="SiteLinksSearch" Src="~/UserControls/Front/SiteLinksSearch.ascx" %>
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
 	<div id="homepage">
 		<user:PopupMessage ID="UC_PopUpConfirmMail" runat="server" />
@@ -25,4 +26,5 @@
 			</div>
 		</div>
 	</div>
+	<user:SiteLinksSearch ID="UC_SiteLinksSearch" runat="server" EnableViewState="False" />
 </asp:Content>

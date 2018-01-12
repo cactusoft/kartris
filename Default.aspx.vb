@@ -47,7 +47,7 @@ Partial Class Main
 
         If Not Page.IsPostBack Then
             'Set canonical tag to webshopURL
-            Me.CanonicalTag = CkartrisBLL.WebShopURLhttp
+            Me.CanonicalTag = CkartrisBLL.WebShopURL
         End If
 
     End Sub

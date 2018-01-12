@@ -1,0 +1,56 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+Sagepay
+</name>
+</assembly>
+<members>
+<member name="T:Kartris.My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:Kartris.My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:Kartris.My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="M:Kartris.includes.aesEncrypt(System.String)">
+ <summary>
+ Encrypts input string using Rijndael (AES) algorithm with CBC blocking and PKCS7 padding.
+ </summary>
+ <param name="inputText">text string to encrypt </param>
+ <returns>Encrypted text in Byte array</returns>
+ <remarks>The key and IV are the same, and use strEncryptionPassword.</remarks>
+</member>
+<member name="M:Kartris.includes.aesDecrypt(System.Byte[])">
+ <summary>
+ Decrypts input string from Rijndael (AES) algorithm with CBC blocking and PKCS7 padding.
+ </summary>
+ <param name="inputBytes">Encrypted binary array to decrypt</param>
+ <returns>string of Decrypted data</returns>
+ <remarks>The key and IV are the same, and use strEncryptionPassword.</remarks>
+</member>
+<member name="M:Kartris.includes.hexStringToBytes(System.String)">
+ <summary>
+ Converts a string of characters representing hexadecimal values into an array of bytes
+ </summary>
+ <param name="strInput">A hexadecimal string of characters to convert to binary.</param>
+ <returns>A byte array</returns>
+</member>
+<member name="M:Kartris.includes.byteArrayToHexString(System.Byte[])">
+ <summary>
+ Converts an array of bytes into a hexadecimal string representation.
+ </summary>
+ <param name="ba">Array of bytes to convert</param>
+ <returns>String of hexadecimal values.</returns>
+</member>
+</members>
+</doc>
