@@ -57,9 +57,15 @@ Partial Class Admin_StockNotifications
         gvwDetailsClosed.DataBind()
     End Sub
 
-    'Page stock level gridview
+    'Page notifications gridview
     Protected Sub gvwDetails_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvwDetails.PageIndexChanging
         gvwDetails.PageIndex = e.NewPageIndex
+        LoadStockNotifications()
+    End Sub
+
+    'Page closed notifications gridview
+    Protected Sub gvwDetailsClosed_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvwDetailsClosed.PageIndexChanging
+        gvwDetailsClosed.PageIndex = e.NewPageIndex
         LoadStockNotifications()
     End Sub
 End Class
