@@ -82,6 +82,20 @@ Partial Class _Checkout
             'methods.
             Dim objBasket As Kartris.Basket = Session("Basket")
             Dim blnOrderIsFree As Boolean = False 'Disable, suspect this might misfire (objBasket.FinalPriceIncTax = 0)
+
+            'This line below looks a bit more complicated than it should. We have seen
+            'some cases where orders slip by without payment, when they should not. It doesn't seem
+            'to be possible, but apparently has happened in some cases. The code below is an idea to try
+            'to stop this, the assumption that if the finalprice shows as zero because of some glitch,
+            'maybe the first item in the basket would have a zero name too. Or that maybe it will trigger
+            'an error. Only time will tell. If this causes problems, comment it out and just stop accepting
+            'free orders (most sites don't do this, but some use it to give promotions away).
+            Try
+                blnOrderIsFree = (objBasket.FinalPriceIncTax = 0 And objBasket.BasketItems.Item(0).Name <> "")
+            Catch ex As Exception
+                'order stays as not free
+            End Try
+
             If blnOrderIsFree Then
                 'Add the PO option with name 'FREE' and hide payment selection
                 'The 'False' flag indicates this is not for authorized users
@@ -1072,8 +1086,7 @@ Partial Class _Checkout
                     strTempEmailTextHolder = GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf & " " & GetGlobalResourceObject("Basket", "ContentText_ApplyCouponCode") & vbCrLf & " " & objBasket.CouponName & vbCrLf
                     sbdBodyText.AppendLine(strTempEmailTextHolder)
                     If blnUseHTMLOrderEmail Then
-                        sbdHTMLOrderContents.Append("<tr class=""row_promotioncoupons""><td colspan=""2"">" & strTempEmailTextHolder.Replace(vbCrLf, "<br/>") &
-                                                    "</td></tr>")
+                        sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.CouponDiscount, GetGlobalResourceObject("Kartris", "ContentText_CouponDiscount"), objBasket.CouponName))
                     End If
                 End If
 
