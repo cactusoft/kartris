@@ -10,7 +10,7 @@
     <!--
         '========================================================================
         'Kartris - www.kartris.com
-        'Copyright 2017 CACTUSOFT
+        'Copyright 2018 CACTUSOFT
 
         'GNU GENERAL PUBLIC LICENSE v2
         'This program is free software distributed under the GPL without any
