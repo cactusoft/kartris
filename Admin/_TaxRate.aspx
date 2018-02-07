@@ -5,7 +5,10 @@
 </asp:Content>
 <asp:Content ID="cntMain" ContentPlaceHolderID="phdMain" runat="Server">
     <h1>
-        <asp:Literal ID="litPageTitleTaxRates" runat="server" Text="<%$ Resources: _Kartris, PageTitle_TaxRates %>" /></h1>
+        <asp:Literal ID="litPageTitleTaxRates" runat="server" Text="<%$ Resources: _Kartris, PageTitle_TaxRates %>" />
+        <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=10173')">?</a>
+
+    </h1>
     <asp:MultiView ID="mvwTax" runat="server" ActiveViewIndex="0">
         <asp:View ID="viwTaxRates" runat="server">
             <asp:UpdatePanel ID="updTaxRates" runat="server" UpdateMode="Conditional">

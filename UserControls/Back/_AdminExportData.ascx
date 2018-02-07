@@ -3,9 +3,11 @@
 <asp:UpdatePanel ID="updMain" runat="server" UpdateMode="Conditional">
     <ContentTemplate>
         <h2>
-            <asp:Literal ID="litBackMenuProducts" runat="server" Text='<%$ Resources: _Export, ContentText_DataExport %>' /></h2>
+            <asp:Literal ID="litBackMenuProducts" runat="server" Text='<%$ Resources: _Export, ContentText_DataExport %>' />
+            <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9806')">?</a>
+        </h2>
         <p>
-            <asp:Literal ID="Literal2" runat="server" Text='<%$ Resources: _Export, ContentText_DataExportHeader %>' /></p><br />
+            <asp:Literal ID="litHeader" runat="server" Text='<%$ Resources: _Export, ContentText_DataExportHeader %>' /></p><br />
         <div>
             <ajaxToolkit:TabContainer ID="tabExport" runat="server" EnableTheming="False" CssClass=".tab"
                 AutoPostBack="false">

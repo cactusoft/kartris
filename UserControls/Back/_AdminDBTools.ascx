@@ -3,7 +3,9 @@
 <asp:UpdatePanel ID="updAdminTools" runat="server" UpdateMode="Conditional">
     <ContentTemplate>
         <h2>
-            <asp:Literal ID="litPageTitleDatabaseInformation" runat="server" Text="<%$ Resources: _Kartris, PageTitle_DatabaseInformation %>" /></h2>
+            <asp:Literal ID="litPageTitleDatabaseInformation" runat="server" Text="<%$ Resources: _Kartris, PageTitle_DatabaseInformation %>" />
+            <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9809')">?</a>
+        </h2>
         <div class="Kartris-DetailsView">
             <div class="Kartris-DetailsView-Data">
                 <strong>

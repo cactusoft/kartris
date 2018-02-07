@@ -8,7 +8,9 @@
         <asp:UpdatePanel ID="updMain" runat="server" UpdateMode="Conditional">
             <ContentTemplate>
                 <h1>
-                    <asp:Literal ID="litPageTitleShipping" runat="server" Text="<%$ Resources: _Shipping, PageTitle_Shipping %>" /></h1>
+                    <asp:Literal ID="litPageTitleShipping" runat="server" Text="<%$ Resources: _Shipping, PageTitle_Shipping %>" />
+                    <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9789')">?</a>
+                </h1>
                 <ajaxToolkit:TabContainer ID="tabContainerShipping" runat="server" CssClass=".tab"
                     EnableTheming="false">
                     <ajaxToolkit:TabPanel ID="tabPnlConfig" runat="server">

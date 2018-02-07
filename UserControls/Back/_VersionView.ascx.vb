@@ -52,8 +52,10 @@ Partial Class _VersionView
 
         End If
         lnkImages.Visible = False
+        lnkMedia.Visible = False
         If (Request.QueryString("strClone") <> "yes") AndAlso ProductsBLL._GetProductType_s(_GetProductID()) = "m" Then
             lnkImages.Visible = True
+            lnkMedia.Visible = True
             LoadVersionImages()
         End If
 
@@ -81,6 +83,7 @@ Partial Class _VersionView
 
     Public Sub LoadVersionInformation(Optional ByVal blnClone As Boolean = False)
         lnkImages.Visible = False
+        lnkMedia.Visible = False
         If blnClone Then
             HideVersionTabs()
             litVersionName.Text = GetGlobalResourceObject("_Version", "PageTitle_CloneVersion")
@@ -109,6 +112,7 @@ Partial Class _VersionView
                     End Select
                 Case "m"
                     lnkImages.Visible = True
+                    lnkMedia.Visible = True
                     LoadVersionImages()
                     LoadVersionMedia()
             End Select

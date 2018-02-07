@@ -5,6 +5,7 @@
 <asp:UpdatePanel ID="updShippingZonesList" runat="server" UpdateMode="Conditional">
     <ContentTemplate>
         <div id="section_shippingzones">
+            <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9792')">?</a>
             <asp:PlaceHolder ID="phdList" runat="server">
                 <asp:LinkButton ID="lnkAddNewShippingZone" runat="server" Text="<%$ Resources: _Kartris, FormButton_New %>"
                     CssClass="linkbutton icon_new floatright" />

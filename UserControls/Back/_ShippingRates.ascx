@@ -7,7 +7,8 @@
         <asp:UpdatePanel ID="updShipping" runat="server" UpdateMode="Conditional">
             <ContentTemplate>
                 <span class="zonename">
-                    <asp:Literal ID="litShippingZoneName" runat="server" /></span>
+                    <asp:Literal ID="litShippingZoneName" runat="server" />
+                </span>
                 <asp:LinkButton ID="lnkBtnDeleteZone" runat="server" Text="<%$ Resources: _Kartris, FormButton_Delete %>"
                     CssClass="linkbutton icon_delete" />
             </ContentTemplate>

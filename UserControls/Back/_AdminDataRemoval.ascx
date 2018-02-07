@@ -5,7 +5,9 @@
     <asp:UpdatePanel ID="updAdminDataRemoval" runat="server" UpdateMode="Conditional">
         <ContentTemplate>
             <div>
-                <h2><asp:Literal ID="litContentText_ClearData" runat="server" Text="<%$ Resources: _DBAdmin, ContentText_ClearData %>" /></h2>
+                <h2><asp:Literal ID="litContentText_ClearData" runat="server" Text="<%$ Resources: _DBAdmin, ContentText_ClearData %>" />
+                    <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9804')">?</a>
+                </h2>
                 <asp:DropDownList ID="ddlDataToRemove" runat="server" CssClass="short">
                     <asp:ListItem Text="<%$ Resources: _Kartris, ContentText_None %>" Selected="True"
                         Value="N" />

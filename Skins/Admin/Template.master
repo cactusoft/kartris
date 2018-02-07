@@ -111,5 +111,9 @@
         <_user:StoreStatus ID="_UC_StoreStatus" runat="server" ClientIDMode="Predictable" />
     </span>
     </form>
+   
+    <link rel='stylesheet' type='text/css' href='https://tome.host/bundles/embed-css'>
+    <script src='https://tome.host/bundles/embed-js'></script>
+                        
 </body>
 </html>

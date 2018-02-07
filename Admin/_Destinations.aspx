@@ -5,7 +5,9 @@
 </asp:Content>
 <asp:Content ID="cntMain" ContentPlaceHolderID="phdMain" runat="Server">
     <h1>
-        <asp:Literal ID="litPageTitleShippingDestinationCountries" runat="server" Text="<%$ Resources: _Shipping, PageTitle_ShippingDestinationCountries %>" /></h1>
+        <asp:Literal ID="litPageTitleShippingDestinationCountries" runat="server" Text="<%$ Resources: _Shipping, PageTitle_ShippingDestinationCountries %>" />
+        <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9798')">?</a>
+    </h1>
     <asp:UpdatePanel ID="updDefaultCountry" runat="server" UpdateMode="Conditional">
         <ContentTemplate>
             <p>

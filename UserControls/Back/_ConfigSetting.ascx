@@ -2,7 +2,9 @@
     Inherits="_ConfigSetting" %>
 <div id="page_config">
     <h1>
-        <asp:Literal ID="litPageTitle" runat="server" Text='<%$ Resources:_Kartris, BackMenu_ConfigSettings %>'></asp:Literal></h1>
+        <asp:Literal ID="litPageTitle" runat="server" Text='<%$ Resources:_Kartris, BackMenu_ConfigSettings %>'></asp:Literal>
+        <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9774')">?</a>
+    </h1>
     <asp:UpdatePanel ID="updPanel" runat="server">
         <ContentTemplate>
             <div class="dropdownmenu2" id="configmenu">

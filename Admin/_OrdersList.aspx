@@ -13,7 +13,10 @@ MasterPageFile="~/Skins/Admin/Template.master" %>
                 <span class="h1_light">
                     <asp:Literal ID="litOrderListMode" runat="server" Text="<%$Resources: PageTitle_OrdersRecent %>"></asp:Literal></span>
                 <span class="h1_light_extra">
-                    <asp:Literal ID="litModeDetails" runat="server" Text="<%$Resources: ContentText_OrdersRecentText%>"></asp:Literal></span></h1>
+                    <asp:Literal ID="litModeDetails" runat="server" Text="<%$Resources: ContentText_OrdersRecentText%>"></asp:Literal></span>
+                <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9876')" />?</a>
+            </h1>
+            
             <div id="searchboxrow">
                 <asp:Panel ID="pnlSearch" runat="server" DefaultButton="btnSearch">
                     <asp:PlaceHolder ID="phdGateway" runat="server" Visible="false">

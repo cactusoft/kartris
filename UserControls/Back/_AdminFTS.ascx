@@ -1,6 +1,8 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="_AdminFTS.ascx.vb" Inherits="UserControls_Back_AdminFTS" %>
 <h2>
-    <asp:Literal ID="litSubHeadingFullTextSearch" runat="server" Text="<%$ Resources: _DBAdmin, SubHeading_FullTextSearch %>"></asp:Literal></h2>
+    <asp:Literal ID="litSubHeadingFullTextSearch" runat="server" Text="<%$ Resources: _DBAdmin, SubHeading_FullTextSearch %>"></asp:Literal>
+    <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9962')">?</a>
+</h2>
 <asp:UpdatePanel ID="updMain" runat="server" UpdateMode="Conditional">
     <ContentTemplate>
         <asp:MultiView ID="mvwFTS" runat="server" ActiveViewIndex="0">

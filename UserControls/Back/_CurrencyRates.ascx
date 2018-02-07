@@ -8,7 +8,9 @@
                 NavigateUrl="~/Admin/_LiveCurrencies.aspx" Text="<%$ Resources:_Currency, PageTitle_LiveCurrencyRateUpdate %>"></asp:HyperLink>
         </div>
         <h1>
-            <asp:Literal ID="litPageTitleCurrencies" runat="server" Text="<%$ Resources:_Currency, PageTitle_Currencies %>" /></h1>
+            <asp:Literal ID="litPageTitleCurrencies" runat="server" Text="<%$ Resources:_Currency, PageTitle_Currencies %>" />
+            <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9784')">?</a>
+        </h1>
         <asp:UpdatePanel ID="updCurrencyList" runat="server" UpdateMode="Conditional">
             <ContentTemplate>
                 <asp:PlaceHolder ID="phdList" runat="server">
