@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="ProductTemplateTabular.ascx.vb" Inherits="ProductTemplateTabular" %>
 <!-- product tabular template start -->
-<div class="item">
+<div class="item loadspinner">
     <div class="box">
         <div class="pad">
             <asp:Literal ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>

@@ -1,0 +1,202 @@
+/* 
+========================================================================
+MAIN LAYOUT
+========================================================================
+*/
+html                                    { height:100%; overflow-y:scroll; overflow-x: hidden; overflow:-moz-scrollbars-vertical; }
+body									{ background-color: #fff; }
+body.main                               { min-height: 100%; background: #f7f7f7; padding: 0; background-image: url(Images/background.png); }
+#container                              { position: relative; margin: 0 auto; min-height: 100%;}
+#centre_container                       { max-width: 1140px; position: relative; min-height: 100%; display: block; padding: 105px 20px 0 20px; margin: 0 auto; }
+
+/* 
+========================================================================
+PAGE LOADING SPINNER
+========================================================================
+*/
+.page-loading-container                 { position: fixed; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 9999; background-color: white; text-align: center; opacity: 1; }
+.page-loading-container .spinner        { position: absolute; top: 40%; left: calc(50% - 25px); transform: translate(-50%, -50%); }
+@keyframes spinner {
+    to { transform: rotate(360deg); }
+}
+.page-loading-container .spinner:before { content: ''; box-sizing: border-box; position: absolute; width: 40px; height: 40px; margin-top: -15px; margin-left: -15px; border-radius: 50%; border: 3px solid #ccc; border-top-color: #333; animation: spinner .6s linear infinite; }
+
+/* 
+========================================================================
+FADE IN FADE OUT
+========================================================================
+*/
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+@keyframes fadeout {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+}
+
+/* 
+========================================================================
+SECTIONS
+========================================================================
+*/
+#header                                 { position: fixed; width: 100%; z-index: 90; background-color: #fff; border-bottom: solid 1px #333; height: 105px; }
+#header .logo                           { margin: 20px 0 20px 10px; max-width: 220px; }
+#header #h_centre                       { text-align: center; }
+#header #h_bottom                       { text-align: center; }
+#header #right_icons                    { max-width: 290px; float: right; }
+#pagecontent_pad                        { min-height: 300px; padding-bottom: 15px; }
+.left-off-canvas-menu #categorymenu     { display: none; }
+
+/* 
+========================================================================
+CATEGORY NAVIGATION MENU
+The primary styles are created by foundation.css. We override some here.
+========================================================================
+*/
+#categorymenu .top-bar                  { border-bottom: solid 1px #fff; background-color: #fff; max-width: 800px; margin: 0 auto; height: 35px; line-height: 35px; text-align: left; }
+#categorymenu .top-bar-section li       { border-right: solid 1px #fff; }
+#categorymenu .top-bar-section li a:not(.button)
+                                        { font-family: Courier New, Courier, monospace; color: #000; background-color: #fff; text-transform: uppercase; font-size: 13px; font-weight: bold; padding: 3px 15px; line-height: 1.2em; }
+#categorymenu .top-bar-section li a:hover
+                                        { background-color: #fff; color: #999; }
+#categorymenu .top-bar-section li ul    { box-shadow: rgba(0, 0, 0, 0.2) 2px 6px 6px; border: solid 1px #333; padding: 10px; background-color: #fff; }
+#categorymenu .top-bar-section li li    { background-color: #fff; }
+
+#categorymenu .top-bar-section .has-dropdown > a:after
+                                        { border-style: solid; border-color: rgba(0, 0, 0, 0.5) transparent transparent transparent; top: 12.5px; }
+#categorymenu .top-bar-section .dropdown li a
+                                        { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; letter-spacing: 1px; margin: 2px 0; background-color: #fff; color: #333; width: auto; height: auto; font-weight: normal; padding: 2px 15px 4px 15px; font-size: 11px; text-transform: uppercase; }
+#categorymenu .top-bar-section .dropdown li a:hover
+                                        { color: #fff; background-color: #000; }
+#categorymenu .top-bar-section .has-dropdown .dropdown li.has-dropdown > a:after
+                                        { visibility: hidden; }
+#categorymenu .title-area li.name span  { display: none; }
+
+/* 
+========================================================================
+OFF CANVAS MENU
+========================================================================
+*/
+a.off-canvas-open                       { width: 20px; color: #333; background: #fff; text-transform: uppercase; font-size: 13px; font-weight: bold; position: relative; display: block; padding: 0 0 0 0; height: 35px; margin: 5px; line-height: 35px; }
+a.off-canvas-open::before               { content: ""; position: absolute; left: 2px; display: block; width: 16px; top: 2px; height: 0; box-shadow: 0 10px 0 2px #333, 0 15px 0 2px #333, 0 20px 0 2px #333; }
+a.off-canvas-close                      { color: #fff; font-size: 25px; font-weight: bold; display: block; padding: 1px 3px; position: absolute; top: 2px; right: 20px; }
+a.left-off-canvas-toggle                { float: left; display: inline-block; margin: 5px 0 0 0; }
+.off-canvas-wrap                        { min-height: 100%; }
+.left-off-canvas-menu                   { padding: 0; background: none repeat scroll 0% 0% transparent; width: 300px; max-width: 100%; }
+.left-off-canvas-menu .content          { border-right: solid 1px #777; margin-right: 10px; padding: 30px 10px 10px 10px; background: rgba(0,0,0,0.7); height: 100%; box-shadow: 1px 1px 10px #333; }
+.left-off-canvas-menu ul li             { list-style-type:none; }
+.left-off-canvas-menu ul li a           { text-align: left; color: #fff; font-size: 90%; width: 100%; text-transform: uppercase; font-weight: normal; letter-spacing: 1px; line-height: 1.1em; padding: 3px 5px 3px 5px; margin: 0 0 1px 0; display: block; }
+.left-off-canvas-menu ul li a:hover     { background-color: #eee; color: #333; }
+a.toggleswitch                          { display: inline-block; margin-top: 15px; }
+.move-left .exit-off-canvas             { box-shadow: none; }
+/* 
+========================================================================
+LOGIN STATUS
+========================================================================
+*/
+#loginstatus                            { font-family: Courier New, Courier, monospace; margin: 7px 5px 0 0; display: inline-block; text-transform: uppercase; font-size: 11px; font-weight: normal; color: #888; padding: 5px 0 3px 30px; }
+#loginstatus strong                     { font-weight: normal; font-size: 13px; text-transform: none; }
+#loginstatus .loginbutton               { float: left; display: block; width: 22px; height: 22px; border: none; background-position: 0; background-image: url(Images/icon_account.png); background-repeat: no-repeat; background-size: contain; background-color: transparent; color: transparent; display: inline-block; }
+#loginstatus .loginbutton.loggedin      { background-image: url(Images/icon_account_in.png); }
+#loginstatus #username,
+#loginstatus #statuslabel               { display: inline-block; margin-left: 5px; color: #333; }
+#loginstatus:hover #account_menu        { width: 190px; margin: 2px 0 0 -30px; }
+/* 
+========================================================================
+SEARCH BOX
+========================================================================
+*/
+#searchlink                             { margin: 12px 5px 0 5px; float: right; display: block; width: 20px; height: 20px; border: none; background-position: 0; background-image: url(Images/icon_search.png); background-repeat: no-repeat; background-size: contain; background-color: transparent; color: transparent; display: inline-block; }
+
+#searchbox_popup                        { display: none; z-index: 9999; background-color: rgba(0, 0, 0, 0.7); height: 100%; width: 100%; position: fixed; top: 0; left: 0; }
+#searchbox_popup .searchclosebutton     { color: #fff; font-weight: bold; font-size: 50px; float: right; margin: 30px; }
+#searchbox_popup h1                     { color: #fff; font-weight: bold; font-size: 40px; width: auto; height: 42px; display: block; position: absolute; top: calc(40% - 90px); left: calc(50%); transform: translate(-50%, -50%); }
+
+#section_searchbox                      { min-width: 320px; max-width: 99%; height: 42px; border: solid 2px #fff; position: absolute; top: 40%; left: calc(50%); transform: translate(-50%, -50%); }
+#section_searchbox .small-10            { padding-left: 5px; }
+#section_searchbox input.button         { margin-top: 4px !important; border: none; width: 100%; float: right; background-color: transparent; background-position: right; background-image: url(Images/icon_search_light.png); background-repeat: no-repeat; background-size: contain; color: transparent; font-weight: bold; margin: 0; height: 32px; }
+#section_searchbox input.button:hover   { border: none; border-bottom: #333; }
+#section_searchbox input[type="text"],
+#section_searchbox input[type="search"]   { margin-top: 4px !important; box-shadow: none; border: none; height: 32px; background-color: transparent; color: #fff; font-size: 23px; }
+#section_searchbox input[type="text"]:focus,
+#section_searchbox input[type="search"]:focus
+                                        { border: none; }
+/* 
+========================================================================
+OTHER CONTROLS language, currency, etc.
+========================================================================
+*/
+#currencymenu                           { margin: 10px 5px 0 5px; width: 50px; overflow: hidden; }
+#currencymenu select					{ font-family: Courier New, Courier, monospace; color: #333; border: none; background-color: #fff; font-size: 13px; box-shadow: none; min-width: 70px; }
+#currencymenu select:hover              { cursor: pointer; }
+#languagemenu                           { font-family: Courier New, Courier, monospace; margin: 10px 5px 0 5px; float: right; text-align: left; display: block; max-width: 110px; border: none; }
+#languagemenu .language-link            { display: inline-block; border: none; padding: 1px 3px; color: #333; text-transform: uppercase; font-size: 12px; }
+#languagemenu .lang-selected            { background-color: #333; color: #fff; }
+#recentlyviewed                         { padding: 10px 0 20px 0; }
+/* 
+========================================================================
+TEMPLATE HOVERMENU
+========================================================================
+*/
+.hovermenu                      { display: none; font-size: 11px; }
+.hovermenu ul                   { margin: 0; padding: 0; }
+.hovermenu ul li                { list-style: none; float: none; clear: both; margin: 0 0 0 0; padding: 2px 0 0 0; }
+.hovermenu_holder:hover .hovermenu
+                                { animation: fadein 0.3s; min-height: 50px; box-shadow: rgba(0, 0, 0, 0.2) 2px 6px 6px; width: 230px; background-color: #fff; border: solid 1px #333; display: block; z-index: 999; text-align: left; height: auto; position: absolute; padding: 10px 8px 8px 8px; margin: 35px 0 0 -9px; }     
+.hovermenu ul li a              { line-height: 1.1em; font-size: 100%; color: #000; padding: 3px 5px 3px 5px; margin: 0 0 1px 0; display: block; }
+.hovermenu ul li a:hover        { background-color: #000; color: #fff; }
+.hovermenu .button              { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 11px; text-align: left; border-color: transparent; background-color: transparent; color: #000; width: 100%; text-transform: uppercase; font-weight: normal; letter-spacing: 1px; }
+.hovermenu .button:hover        { background-color: #000; color: #fff; }
+/* 
+========================================================================
+BASKET SUMMARY
+========================================================================
+*/
+#minibasketholder                       { position: relative; }
+.compactminibasket,
+#minibasket                             { float: right; width: auto; max-width: 200px; padding: 0; margin: 8px 0 0 0; }
+#minibasket #minibasket_header          { min-width: 32px; background-color: transparent; }
+#compactbasket_title                    { display: none; }
+#compactbasket_totalprice               { display: none; font-size: 120%; color: #333; font-weight: normal; }
+#compactbasket_noofitems span.bracket   { display: none; }
+#minibasket h4                          { margin: 0; padding: 0; font-size: 12px; }
+#minibasket h4 strong                   { color: #999; font-weight: bold; }
+
+.compactminibasket a,
+#minibasket h4 a                        { height: 22px; display: inline-block; width: auto; background-position: 0; background-image: url(Images/icon_shopping_cart.png); background-size: contain; background-repeat: no-repeat; color: #000; padding: 0 0 0 18px; font-weight: bold; }
+#compactbasket_noofitems                { display: inline-block; background-color: #333; color: #fff; font-size: 1.1em; font-weight: bold; margin: 11px 5px 0 0; padding: 0 4px 1px 3px; }
+#compactbasket_noofitems.basket-items-0 { visibility: hidden; }
+#minibasket:hover #minibasket_main      { margin: -5px 0 0 -180px; font-family: Segoe UI, Arial, Helvetica, Sans-Serif; }
+#minibasket:hover                       {  }
+#minibasket:hover h4 strong             { color: #000; }
+#minibasket:hover h4 a                  { color: #000; }
+#minibasket #contents                   { width: 100%; }
+#minibasket .button                     { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 11px; }
+#minibasket .minibasket_item a          { font-size: 13px; }
+#minibasket #contents #orderinprogress,
+#minibasket #contents #basketisempty    { padding: 1px 5px 12px 5px; font-weight: normal; color: #000; font-size: 13px; }
+#minibasket #contents ul #totals        { margin-top: 10px; border-top: solid 1px #000; padding: 4px 5px 6px 10px; font-weight: normal; text-transform: uppercase; color: #000; font-size: 80%; text-align: right; }
+#minibasket #contents ul #totals span.price
+                                        { color: #333; font-weight: normal; font-size: 170%; }
+#minibasket #contents ul #totals span.total
+                                        { color: #333; font-weight: bold; font-size: 220%; }
+#minibasket #contents ul #totals #minibasket_whereapplicable
+                                        { margin: 10px 0 0 0; font-size: 85%; letter-spacing: 1px; }
+#minibasket #contents ul #totals strong { font-weight: bold }
+
+/* 
+========================================================================
+FOOTER
+========================================================================
+*/
+#footer                                 { background-color: #333; padding: 0; min-height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; }
+#footer_inside                          { min-height: 232px; max-width: 1140px; margin: 0 auto; color: #555; padding: 10px 20px 0 20px; }
+#footer a                               { color: #ddd; font-weight: normal; }
+#footer #copyright                      { font-size: 90%; margin: 45px 0 20px 0; }
+#footer h2                              { color: #fff }
+#footer ul                              { margin: 0; text-transform: uppercase; font-size: 90%; padding: 0; list-style-type: none; }
+#footer ul li                           { padding: 0; }
+#footer ul li a                         { padding: 2px; display: block; }
+#footer ul li a:hover                   { background-color: #aaa; color: #ddd; }
+

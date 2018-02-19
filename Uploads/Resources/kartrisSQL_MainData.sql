@@ -98,7 +98,7 @@ CREATE TABLE [dbo].[tblKartrisAffiliateLog](
 	[AFLG_ID] [int] IDENTITY(1,1) NOT NULL,
 	[AFLG_AffiliateID] [int] NULL,
 	[AFLG_Referer] [nvarchar](255) NULL,
-	[AFLG_IP] [nvarchar](30) NULL,
+	[AFLG_IP] [nvarchar](50) NULL,
 	[AFLG_RequestedItem] [nvarchar](255) NULL,
 	[AFLG_DateTime] [datetime] NULL,
  CONSTRAINT [aaaaatblKartrisAffiliateLog_PK] PRIMARY KEY NONCLUSTERED 
@@ -571,7 +571,7 @@ GO
 CREATE TABLE [dbo].[tblKartrisSessions](
 	[SESS_ID] [int] IDENTITY(1,1) NOT NULL,
 	[SESS_Code] [nvarchar](20) NOT NULL,
-	[SESS_IP] [nvarchar](16) NOT NULL,
+	[SESS_IP] [nvarchar](50) NOT NULL,
 	[SESS_DateCreated] [datetime] NOT NULL,
 	[SESS_DateLastUpdated] [datetime] NULL,
 	[SESS_Expiry] [int] NULL,
@@ -3857,7 +3857,7 @@ INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value],
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomerDiscountText2', N' available on all orders. This will be shown on the basket and automatically applied when you check out.', NULL, 1, N'%</b> available on all orders. This will be shown on the basket and automatically applied when you check out.', NULL, N'Kartris',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomerName', N'Customer Name', NULL, 1, N'Customer Name', NULL, N'Kartris',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomerNumberEmailSent', N'A password reset link has been sent to ', NULL, 1, N'A password reset link has been sent to ', N'KartrisLogin.ascx', NULL,1)
-INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomerReviews', N'Customer Reviews', NULL, 1, N'Customer Reviews', NULL, N'Reviews',1)
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomerReviews', N'Reviews', NULL, 1, N'Reviews', NULL, N'Reviews',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_Customization', N'Customization', N'', 1, N'Customization', N'', N'Kartris',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomizationDetails', N'Customization Details', N'', 1, N'Customization Details', N'', N'Kartris',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomizationExplanation', N'Enter customization text in the field below.', NULL, 1, N'This item can be customized with your own text. The additional price for this is shown below. If you wish to customize it, enter your text in the space provided and click ''save''.', NULL, N'Kartris',1)
@@ -4531,7 +4531,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tblKartrisUsers](
-	[U_ID] [int] IDENTITY(1,1) NOT NULL,
+[U_ID] [int] IDENTITY(1,1) NOT NULL,
 	[U_EmailAddress] [nvarchar](100) NULL,
 	[U_Telephone] [nvarchar](50) NULL,
 	[U_Password] [nvarchar](64) NULL,
@@ -4555,9 +4555,9 @@ CREATE TABLE [dbo].[tblKartrisUsers](
 	[U_AffiliateCommission] [real] NULL,
 	[U_LanguageID] [int] NULL,
 	[U_ML_SignupDateTime] [datetime] NULL,
-	[U_ML_SignupIP] [nvarchar](20) NULL,
+	[U_ML_SignupIP] [nvarchar](50) NULL,
 	[U_ML_ConfirmationDateTime] [datetime] NULL,
-	[U_ML_ConfirmationIP] [nvarchar](20) NULL,
+	[U_ML_ConfirmationIP] [nvarchar](50) NULL,
 	[U_ML_RandomKey] [nvarchar](20) NULL,
 	[U_ML_Format] [nvarchar](1) NULL,
 	[U_ML_SendMail] [bit] NULL,
@@ -4566,6 +4566,8 @@ CREATE TABLE [dbo].[tblKartrisUsers](
 	[U_Notes] [nvarchar](max) NULL,
 	[U_CustomerBalance] [real] NULL,
 	[U_SaltValue] [nvarchar](64) NULL,
+	[U_GDPR_OptIn] [datetime] NULL,
+	[U_GDPR_SignupIP] [nvarchar](50) NULL,
  CONSTRAINT [aaaaatblKartrisCustomers_PK] PRIMARY KEY NONCLUSTERED 
 (
 	[U_ID] ASC
@@ -4607,6 +4609,12 @@ CREATE UNIQUE NONCLUSTERED INDEX [U_EmailAddress] ON [dbo].[tblKartrisUsers]
 	[U_EmailAddress] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
+
+-- default value of optin date to now
+ALTER TABLE tblKartrisUsers ADD CONSTRAINT
+idx_U_GDPR_OptIn DEFAULT GETDATE() FOR U_GDPR_OptIn
+GO
+
 /****** Object:  Table [dbo].[tblKartrisOrders]    Script Date: 01/23/2013 21:59:08 ******/
 SET ANSI_NULLS ON
 GO
@@ -13800,7 +13808,8 @@ CREATE PROCEDURE [dbo].[spKartrisUsers_Add]
 (
 		   @U_EmailAddress nvarchar(100),
 		   @U_Password nvarchar(64),
-		   @U_SaltValue nvarchar(64)
+		   @U_SaltValue nvarchar(64),
+		   @U_GDPR_SignupIP nvarchar(50)
 )
 AS
 DECLARE @U_ID INT
@@ -13815,11 +13824,13 @@ DECLARE @U_ID INT
 			,[U_DefShippingAddressID]
 			,[U_DefBillingAddressID]
 			,[U_CustomerDiscount]
-			,[U_SaltValue])
+			,[U_SaltValue]
+			,[U_GDPR_SignupIP])
 	 VALUES
 		   (@U_EmailAddress,
 			@U_Password,
-			1,0,0,0,0,@U_SaltValue);
+			1,0,0,0,0,@U_SaltValue,
+			@U_GDPR_SignupIP);
 	SET @U_ID = SCOPE_IDENTITY();
 	SELECT @U_ID;
 GO
@@ -30445,8 +30456,21 @@ BEGIN
 END
 GO
 
+/*** New language strings 2.9012 ***/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'FormLabel_GDPRConfirmText', N'Please confirm you have read, understand and accept our privacy policy and terms and conditions', NULL, 2.9012, N'', NULL, N'Kartris',1);
+
+GO
+
+/****** new GDPR functionality 2.9012 ******/
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.gdpr.enabled', N'y', N's', N'b',	'y|n',N'Whether to include the GDPR explicit approval opt-in for new customers',2.9012, N'y', 0);
+
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9010', N's', N's', N'kartris version', N'', 2.9010, N'2.9010', 0)
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9012', N's', N's', N'kartris version', N'', 2.9012, N'2.9012', 0)
 GO
 
 

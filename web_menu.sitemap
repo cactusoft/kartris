@@ -6,7 +6,9 @@
 			<siteMapNode url="~/Wishlist.aspx" title="$resources:Kartris,PageTitle_WishListLogin"  description="$resources:Kartris,PageTitle_WishListLogin" value="wishlist" />
 			<siteMapNode url="~/CustomerTickets.aspx?" title="$resources:Tickets,PageTitle_SupportTickets"  description="$resources:Tickets,PageTitle_SupportTickets" value="supporttickets" />
 		</siteMapNode>
-		
+
+		<siteMapNode url="~/Promotions.aspx" title="$resources:Kartris,PageTitle_Promotions"  description="$resources:Kartris,PageTitle_Promotions" value="promotions" />
+
 		<siteMapNode url="~/News.aspx" title="$resources:News,PageTitle_SiteNews"  description="$resources:News,PageTitle_SiteNews" value="news" />
 
 		<siteMapNode url="~/Knowledgebase.aspx" title="$resources:Knowledgebase,PageTitle_Knowledgebase"  description="$resources:Knowledgebase,PageTitle_Knowledgebase" value="knowledgebase" />

@@ -443,6 +443,9 @@ LOGIN / MY ACCOUNT
 #login .radio label                     { max-width: 80vw; white-space: normal; }
 #login .radio strong                    { color: #000; }
 #login .Kartris-DetailsView-Data        { width: 100% }
+#login .GDPR .checkbox                  { width: 30px; }
+
+
 /* 
 ========================================================================
 PASSWORD STRENGTH

@@ -17,7 +17,7 @@
 					<div class="inputform row">
 						<!-- BASIC SEARCH FORM -->
 						<div class="small-12 large-4 columns">
-							<input type="text" size="40" class="textbox" id="searchbox_basic" onkeypress="javascript:presssearchkey_basic(event);" />
+							<input type="search" size="40" class="textbox" id="searchbox_basic" onkeypress="javascript:presssearchkey_basic(event);" />
 						</div>
 						<div class="small-12 large-8 columns">
 							<input id="searchbutton_basic" type="button" value='<asp:Literal ID="litContentText_Search_Basic" runat="server" Text="<%$ Resources: Kartris, ContentText_Search%>" />'
@@ -49,7 +49,7 @@
 					<div class="inputform row">
 						<!-- ADVANCED SEARCH FORM -->
 						<div class="small-12 large-4 columns">
-						<input type="text" size="40" class="textbox" id="searchbox_advanced" onkeypress="javascript:presssearchkey_advanced(event);" />
+						<input type="search" size="40" class="textbox" id="searchbox_advanced" onkeypress="javascript:presssearchkey_advanced(event);" />
 						</div>
 						<div class="small-12 large-3 columns"><select id="searchmethod">
 							<option value="any"><asp:Literal runat="server" ID="litSearchOption1" Text='<%$ Resources: Search, ContentText_SearchMethodAny %>' /></option>

@@ -6,7 +6,7 @@
             <asp:Repeater ID="rptSearchResult" runat="server">
                 <ItemTemplate>
                     <!-- product search results template start -->
-                    <div class="item">
+                    <div class="item loadspinner">
                         <div class="box">
                             <div class="pad row">
                                 <asp:Literal ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>
