@@ -29,8 +29,10 @@
     <link href='//fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
     <asp:ContentPlaceHolder ID="phdHead" runat="server" EnableViewState="False">
     </asp:ContentPlaceHolder>
+
 </head>
 <body class="main">
+
     <form id="mainform" runat="server" class="container">
     <ajaxToolkit:ToolkitScriptManager ID="scrManager" runat="server" ScriptMode="Release"
         EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"
@@ -112,4 +114,11 @@
     </span>
     </form>
 </body>
+
+<%--<link rel="stylesheet" type="text/css" href="https://tome.host/Content/embed/css/_embed.css">
+<script src="https://tome.host/Content/embed/js/embed.js"></script>--%>
+
+<link rel="stylesheet" type="text/css" href="http://localhost.com:63046/Content/embed/css/_embed.css">
+<script src="http://localhost.com:63046/Content/embed/js/embed.js"></script>
+
 </html>

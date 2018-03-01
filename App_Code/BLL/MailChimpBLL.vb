@@ -202,8 +202,6 @@ Public Class MailChimpBLL
             Dim productVariant As [Variant]
             Dim listVariants As List(Of [Variant]) = New List(Of [Variant])
             Try
-                CkartrisFormatErrors.LogError("MailchimpBLL Product trycatch 1 ")
-
                 product = manager.ECommerceStores.Products(mcStoreId).GetAsync(basketItem.ProductID).Result
             Catch ex As Exception
                 CkartrisFormatErrors.LogError("MailchimpBLL Product trycatch ")
@@ -213,7 +211,6 @@ Public Class MailChimpBLL
                 End If
             End Try
 
-            CkartrisFormatErrors.LogError("MailchimpBLL Product after get")
             Dim itemprice As Double
             If basketItem.PricesIncTax = True Then
                 itemprice = basketItem.IR_PricePerItem
@@ -221,10 +218,7 @@ Public Class MailChimpBLL
                 itemprice = Math.Round((basketItem.IR_PricePerItem * (1 + basketItem.IR_TaxPerItem)), 2)
             End If
 
-            CkartrisFormatErrors.LogError("MailchimpBLL Product after itemprice")
-
             Dim imageUrl As String = CkartrisBLL.WebShopURL & "Image.aspx?strItemType=p&numMaxHeight=100&numMaxWidth=100&numItem=" & basketItem.ProductID
-            CkartrisFormatErrors.LogError("MailchimpBLL Product after imageurl")
             If product Is Nothing Then
                 productVariant = New [Variant] With {.Id = basketItem.ProductID,
                                                  .Title = basketItem.Name,
@@ -238,9 +232,7 @@ Public Class MailChimpBLL
                                             .Variants = listVariants,
                                             .ImageUrl = imageUrl
                                             }
-                CkartrisFormatErrors.LogError("MailchimpBLL Product before add")
                 Dim taskResult As Product = manager.ECommerceStores.Products(mcStoreId).AddAsync(product).Result
-                CkartrisFormatErrors.LogError("MailchimpBLL Product after add")
                 Return taskResult
             Else
                 Dim modified As Boolean = False
@@ -267,27 +259,23 @@ Public Class MailChimpBLL
                     End If
                 End If
 
-                CkartrisFormatErrors.LogError("MailchimpBLL Product before modified if")
                 If modified Then
                     Dim taskResult As Product = Nothing
-                    CkartrisFormatErrors.LogError("MailchimpBLL Product before modified")
                     Try
                         taskResult = manager.ECommerceStores.Products(mcStoreId).UpdateAsync(basketItem.ProductID, product).Result
                     Catch ex As Exception
                         CkartrisFormatErrors.LogError("MailchimpBLL Product try catch modified")
                     End Try
-                    CkartrisFormatErrors.LogError("MailchimpBLL Product after modified")
                     Return taskResult
                 Else
                     Return product
                 End If
-                CkartrisFormatErrors.LogError("MailchimpBLL Product after modified if")
             End If
             Return Nothing
         Catch ex As Exception
             'Debug.Print(ex.Message)
             'Log the error
-            CkartrisFormatErrors.LogError("MailchimpBLL AddProduct: " & ex.Message)
+            CkartrisFormatErrors.LogError("MailchimpBLL trycatch AddProduct: " & ex.Message)
         End Try
     End Function
 
@@ -413,15 +401,12 @@ Public Class MailChimpBLL
         Try
             Dim timestamp As String = ""
             If (IsDBNull(CkartrisDisplayFunctions.NowOffset())) Then
-                CkartrisFormatErrors.LogError("MailchimpBLL AddOrder offset: " + CkartrisDisplayFunctions.NowOffset().ToString())
                 timestamp = CkartrisDisplayFunctions.NowOffset().ToString("yyyy-MM-dd HH:mm")
             Else
-                CkartrisFormatErrors.LogError("MailchimpBLL AddOrder offset: was null ")
                 timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm")
             End If
 
             If kartrisBasket Is Nothing Then
-                CkartrisFormatErrors.LogError("MailchimpBLL Basket is null")
                 Dim orderId As Integer = 0
                 If cartId.Contains("cart") Then
                     Dim cartIdSplit As String() = cartId.Split(New String() {"cart_"},
@@ -439,20 +424,10 @@ Public Class MailChimpBLL
 
                 Dim objBasket As Kartris.Basket = Payment.Deserialize(readText, GetType(Kartris.Basket))
                 kartrisBasket = objBasket
-                CkartrisFormatErrors.LogError("MailchimpBLL Basket after file being processed")
-                CkartrisFormatErrors.LogError("MailchimpBLL Basket kartrisBasket.FinalPriceIncTax: " & kartrisBasket.FinalPriceIncTax.ToString())
             End If
 
-
-            CkartrisFormatErrors.LogError("MailchimpBLL kartrisCurrencyCode")
-            CkartrisFormatErrors.LogError("MailchimpBLL kartrisCurrencyCode: " & Me.kartrisCurrencyCode)
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
-            CkartrisFormatErrors.LogError("MailchimpBLL cartId: " & cartId)
-            CkartrisFormatErrors.LogError("MailchimpBLL customer")
-            Dim customerJson As String = New JavaScriptSerializer().Serialize(customer)
-            CkartrisFormatErrors.LogError("MailchimpBLL Product before basketItem JSON: " & customerJson)
-            CkartrisFormatErrors.LogError("MailchimpBLL currencyCodeEnum: " & currencyCodeEnum)
-            CkartrisFormatErrors.LogError("MailchimpBLL timestamp: " & timestamp)
+
             Dim order As Order = New Order With {.Id = "order_" & cartId,
                                             .Customer = New Customer With {.Id = customer.Id},
                                           .CurrencyCode = currencyCodeEnum,
@@ -464,20 +439,15 @@ Public Class MailChimpBLL
             Dim product As Product
             Dim itemprice As Double
 
-            CkartrisFormatErrors.LogError("MailchimpBLL AddOrder basketItems 1 : " & kartrisBasket.ToString())
-            CkartrisFormatErrors.LogError("MailchimpBLL AddOrder basketItems 2 : " & kartrisBasket.BasketItems.Count.ToString())
-
             For counter As Integer = 0 To kartrisBasket.BasketItems.Count - 1
-                CkartrisFormatErrors.LogError("MailchimpBLL AddOrder inside For")
-                CkartrisFormatErrors.LogError("MailchimpBLL AddOrder inside For: " & kartrisBasket.BasketItems(counter).ToString())
                 product = Await AddProduct(kartrisBasket.BasketItems(counter))
-                CkartrisFormatErrors.LogError("MailchimpBLL AddOrder after add product ")
+
                 If kartrisBasket.BasketItems(counter).PricesIncTax = True Then
                     itemprice = (kartrisBasket.BasketItems(counter).IR_PricePerItem)
                 Else
                     itemprice = Math.Round((kartrisBasket.BasketItems(counter).IR_PricePerItem * (1 + kartrisBasket.BasketItems(counter).IR_TaxPerItem)), 2)
                 End If
-                CkartrisFormatErrors.LogError("MailchimpBLL AddOrder after item price ")
+
                 order.Lines.Add(New Line With {.Id = "order_" & cartId & "_l" & counter,
                                             .ProductId = kartrisBasket.BasketItems(counter).ProductID,
                                             .ProductTitle = kartrisBasket.BasketItems(counter).Name,
@@ -486,7 +456,7 @@ Public Class MailChimpBLL
                                             .Quantity = kartrisBasket.BasketItems(counter).Quantity,
                                             .Price = itemprice
                 })
-                CkartrisFormatErrors.LogError("MailchimpBLL AddOrder added line to order")
+
             Next
             Dim taskResult As Order = Await manager.ECommerceStores.Orders(mcStoreId).AddAsync(order).ConfigureAwait(False)
 
@@ -516,15 +486,12 @@ Public Class MailChimpBLL
             Dim orderId As Integer = 0
             Dim timestamp As String = ""
             If (IsDBNull(CkartrisDisplayFunctions.NowOffset())) Then
-                CkartrisFormatErrors.LogError("MailchimpBLL AddOrder offset: " + CkartrisDisplayFunctions.NowOffset().ToString())
                 timestamp = CkartrisDisplayFunctions.NowOffset().ToString("yyyy-MM-dd HH:mm")
             Else
-                CkartrisFormatErrors.LogError("MailchimpBLL AddOrder offset: was null ")
                 timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm")
             End If
 
             If kartrisBasket Is Nothing Then
-                CkartrisFormatErrors.LogError("MailchimpBLL Basket is null")
 
                 If cartId.Contains("cart") Then
                     Dim cartIdSplit As String() = cartId.Split(New String() {"cart_"},
@@ -561,8 +528,6 @@ Public Class MailChimpBLL
 
 
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
-            CkartrisFormatErrors.LogError("MailchimpBLL cartId: " & cartId)
-            CkartrisFormatErrors.LogError("MailchimpBLL customer")
 
             Dim order As Order = New Order With {.Id = "order_" & cartId,
                                             .Customer = New Customer With {.Id = customerId},
@@ -575,24 +540,17 @@ Public Class MailChimpBLL
             Dim product As Product
             Dim itemprice As Double
 
-            CkartrisFormatErrors.LogError("MailchimpBLL AddOrder basketItems 1 : " & kartrisBasket.ToString())
-            CkartrisFormatErrors.LogError("MailchimpBLL AddOrder basketItems 2 : " & kartrisBasket.BasketItems.Count.ToString())
-
             For counter As Integer = 0 To kartrisBasket.BasketItems.Count - 1
-                CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId inside For")
+
                 Try
-                    CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId inside For: " & kartrisBasket.BasketItems(counter).ToString())
-                    Dim itemJson As String = New JavaScriptSerializer().Serialize(kartrisBasket)
-                    CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId basketItem JSON: " & itemJson)
-                    CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId before addproduct")
+
                     product = Await AddProduct(kartrisBasket.BasketItems(counter))
-                    CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId after addproduct")
+
                 Catch ex As Exception
                     CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId addproduct")
                 End Try
 
                 Try
-                    CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId after add product ")
                     If kartrisBasket.BasketItems(counter).PricesIncTax = True Then
                         itemprice = (kartrisBasket.BasketItems(counter).IR_PricePerItem)
                     Else
@@ -600,7 +558,7 @@ Public Class MailChimpBLL
                     End If
 
                     If itemprice > 0 Then
-                        CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId after item price ")
+
                         order.Lines.Add(New Line With {.Id = "order_" & cartId & "_l" & counter,
                                             .ProductId = kartrisBasket.BasketItems(counter).ProductID,
                                             .ProductTitle = kartrisBasket.BasketItems(counter).Name,
@@ -610,7 +568,7 @@ Public Class MailChimpBLL
                                             .Price = itemprice
                     })
                     End If
-                    CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId added line to order")
+
                 Catch ex As Exception
                     CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId orderline add : " & ex.Message)
                     Dim trace = New System.Diagnostics.StackTrace(ex, True)

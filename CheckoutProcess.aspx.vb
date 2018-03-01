@@ -12,6 +12,8 @@
 'overrides the GPL v2.
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
+Imports GoCardless.Services
+
 Partial Class checkout_process
     Inherits System.Web.UI.Page
     Private clsPlugin As Kartris.Interfaces.PaymentGateway
@@ -28,7 +30,7 @@ Partial Class checkout_process
             strGatewayName = Session("GateWayName")
             Dim clsPlugin As Kartris.Interfaces.PaymentGateway
             clsPlugin = Payment.PPLoader(strGatewayName)
-            Dim GatewayBasketBLL As New kartris.Basket
+            Dim GatewayBasketBLL As New Kartris.Basket
             Dim BasketXML As String
             If clsPlugin.RequiresBasketItems Then
                 Dim intGatewayCurrencyID As Integer = 0
@@ -58,7 +60,14 @@ Partial Class checkout_process
             End If
 
             strOutput = clsPlugin.ProcessOrder(Session("objOrder"), BasketXML)
-            btnSubmit.PostBackUrl = clsPlugin.PostbackURL
+            If (clsPlugin.GatewayName.Equals("GoCardlessPlugin")) Then
+                btnSubmit.PostBackUrl = GoCardlessURL(Session.SessionID)
+                Response.Redirect(btnSubmit.PostBackUrl)
+            Else
+                btnSubmit.PostBackUrl = clsPlugin.PostbackURL
+            End If
+
+
             strGatewayStatus = clsPlugin.Status
             clsPlugin = Nothing
         End If
@@ -138,5 +147,20 @@ Partial Class checkout_process
             Next
         End If
     End Sub
+
+    Function GoCardlessURL(ByVal sessionToken As String) As String
+        Dim createRequest = New RedirectFlowCreateRequest() With
+            {
+            .Description = "Kartris Checkout",
+            .SessionToken = sessionToken,
+            .SuccessRedirectUrl = "https://developer.gocardless.com/example-redirect-uri"
+            }
+        Dim clsCardlessCore = New GoCardlessCore(CStr(ConfigurationManager.AppSettings("AppMode")))
+        Dim redirectFlowResponse As RedirectFlowResponse = clsCardlessCore.Client.RedirectFlows.CreateAsync(createRequest).Result
+
+        Dim redirectFlow = redirectFlowResponse.RedirectFlow
+        Return redirectFlow.RedirectUrl
+        'Return SystemURL(UCase(My.Settings.Status))
+    End Function
 
 End Class
