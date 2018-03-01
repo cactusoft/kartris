@@ -281,9 +281,14 @@
                 <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
                     <asp:LinkButton CausesValidation="True" CssClass="button savebutton" runat="server" OnClick="btnCustomerUpdate_Click"
                         ID="btnCustomerUpdate" Text="<%$ Resources: _Kartris, FormButton_Save %>" ToolTip="<%$ Resources: _Kartris, FormButton_Save %>" />
+                    <asp:Hyperlink CausesValidation="False" CssClass="button exportbutton" runat="server" 
+                        ID="btnGDPRExport" Text="<%$ Resources: _GDPR, ContentText_GDPRExport %>" ToolTip="<%$ Resources: _GDPR, ContentText_GDPRExport %>" 
+                        NavigateUrl="<%# FormatExportURL(Request.RawUrl) %>" />
+
                     <asp:LinkButton CssClass="button deletebutton" runat="server" ID="btnCustomerDelete"
                             OnClick="btnCustomerDelete_Click" Text="<%$ Resources: ContentText_DeleteThisCustomer %>"
                             ToolTip="<%$ Resources: ContentText_DeleteThisCustomer %>" />
+
                     <asp:ValidationSummary CausesValidation="True" ID="valSummary" runat="server" ForeColor=""
                         CssClass="valsummary" DisplayMode="BulletList" HeaderText="<%$ Resources: _Kartris, ContentText_Errors %>" />
 

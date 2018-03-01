@@ -117,7 +117,7 @@
                                                             <asp:PlaceHolder ID="phdGDPROptIn" runat="server" Visible="false">
                                                                 <div class="GDPR">
                                                                     <asp:CheckBox ID="chkGDPRConfirm" runat="server" class="checkbox" />
-                                                                    <asp:Label ID="lblGDPRConfirmText" runat="server" Text="<%$ Resources: Kartris, FormLabel_GDPRConfirmText %>" AssociatedControlID="chkGDPRConfirm"></asp:Label>
+                                                                    <asp:Label ID="lblGDPRConfirmText" runat="server" Text="<%$ Resources: GDPR, FormLabel_GDPRConfirmText %>" AssociatedControlID="chkGDPRConfirm"></asp:Label>
 
                                                                 </div>
                                                             </asp:PlaceHolder>

@@ -227,7 +227,7 @@ Partial Class ImageViewer
                                 '---------------------------------------
                                 litSingleImage.Text &= "<!-- IMAGE DISPLAY: Image with no 'large view' click --><div class=""imageholder singleimage"" style=""width: " &
                                     numImageWidthMax & "px;" &
-                                    "height: " & numImageHeightMax & "px;"">"
+                                    "height: " & numImageHeightMax & "px; max-width: 100%; max-height: 100%;"">"
 
                                 If strHyperlink <> "" Then litSingleImage.Text &= "<a href=""" & strHyperlink & """>"
                                 litSingleImage.Text &= "<img alt=""" & strAltText & """ src=""" &
@@ -343,7 +343,7 @@ Partial Class ImageViewer
                         'IN 'AJAX' LARGE VIEW MODE
                         '---------------------------------------
                         litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div class=""imageholder hand"" " &
-                        "style=""height: " & numImageHeightMax & "px;"">"
+                        "style=""height: " & numImageHeightMax & "px; max-width: 100%; max-height: 100%;"">"
                         litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" & strImageMainViewStart & """ />" & vbCrLf
                         litMainImage.Text &= "</div>"
                     End If
@@ -384,7 +384,7 @@ Partial Class ImageViewer
             'this should for an image placeholder
             Dim strStartImage As String = "Image.ashx?strItemType=" & _strItemType & "&amp;numMaxHeight=" & numImageHeight & "&amp;numMaxWidth=" & numImageWidth & "&amp;numItem=0&amp;strParent=0"
 
-            litSingleImage.Text &= "<!-- NO IMAGE FOUND --><div class=""imageviewer""><div class=""imageholder singleimage"" style=""height: " & numImageHeight & "px;width: " & numImageWidth & "px;"">"
+            litSingleImage.Text &= "<!-- NO IMAGE FOUND --><div class=""imageviewer""><div class=""imageholder singleimage"" style=""height: " & numImageHeight & "px;width: " & numImageWidth & "px; max-width: 100%; max-height: 100%;"">"
 
             'Open hyperlink (if not blank) and show image
             litSingleImage.Text &= strHyperlink & "<img alt=""No image"" src=""" & _

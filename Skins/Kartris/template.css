@@ -53,8 +53,10 @@ SEARCH BOX
 #section_searchbox                      { margin: 3px 0 0 0; display: block; }
 #section_searchbox input.button         { width: 100%; float: right; background-position: right; background-image: url(Images/icon_search.png); background-repeat: no-repeat; background-color: #eee; color: transparent; font-weight: bold; margin: 0; height: 26px; }
 #section_searchbox input.button:hover   { border: none; }
-#section_searchbox input[type="text"]   { box-shadow: none; height: 26px; background-color: #eee; border: none; }
-#section_searchbox input[type="text"]:focus
+#section_searchbox input[type="text"],
+#section_searchbox input[type="search"]   { box-shadow: none; height: 26px; background-color: #eee; border: none; }
+#section_searchbox input[type="text"]:focus,
+#section_searchbox input[type="search"]:focus
                                         { background-color: #ddd; border: none; }
 /* 
 ========================================================================
