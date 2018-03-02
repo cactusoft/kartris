@@ -23511,11 +23511,10 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Author:		Mohammad
--- Create date: 
--- Description:	
--- Remarks: Updated by Paul, 2017/05/25
--- include MinPrice
+-- Author: Mohammad/Paul/Joni
+-- Remarks: Updated by Joni, 2018/03/02
+-- optimized so finds newest prods, then gets
+-- details of them
 -- =============================================
 CREATE PROCEDURE [dbo].[spKartrisProducts_GetNewestProducts]
 	(
@@ -23527,19 +23526,24 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 	
-	SELECT DISTINCT TOP (10) tblKartrisProducts.P_ID, tblKartrisLanguageElements.LE_Value AS P_Name, dbo.fnKartrisProduct_GetMinPrice(P_ID) As MinPrice, tblKartrisProducts.P_DateCreated, @LANG_ID LANG_ID
-	FROM    tblKartrisProducts INNER JOIN
-			  tblKartrisVersions ON tblKartrisProducts.P_ID = tblKartrisVersions.V_ProductID INNER JOIN
-			  tblKartrisProductCategoryLink ON tblKartrisProducts.P_ID = tblKartrisProductCategoryLink.PCAT_ProductID INNER JOIN
-			  tblKartrisCategories ON tblKartrisProductCategoryLink.PCAT_CategoryID = tblKartrisCategories.CAT_ID INNER JOIN
-			  tblKartrisLanguageElements ON tblKartrisProducts.P_ID = tblKartrisLanguageElements.LE_ParentID
-	WHERE   (tblKartrisProducts.P_Live=1) AND (tblKartrisProducts.P_CustomerGroupID IS NULL) AND (tblKartrisCategories.CAT_CustomerGroupID IS NULL) AND (tblKartrisVersions.V_CustomerGroupID IS NULL) AND
-		   (tblKartrisLanguageElements.LE_LanguageID = @LANG_ID) AND (tblKartrisLanguageElements.LE_TypeID = 2) AND (tblKartrisLanguageElements.LE_FieldID = 1) AND 
-		  (NOT (tblKartrisLanguageElements.LE_Value IS NULL))
-	ORDER BY tblKartrisProducts.P_DateCreated DESC, tblKartrisProducts.P_ID DESC
+	SELECT products.P_ID, products.P_Name, dbo.fnKartrisProduct_GetMinPrice(products.P_ID) As MinPrice, products.P_DateCreated, @LANG_ID LANG_ID
+	FROM (
+		SELECT DISTINCT TOP (10) tblKartrisProducts.P_ID, tblKartrisLanguageElements.LE_Value AS P_Name, tblKartrisProducts.P_DateCreated, @LANG_ID LANG_ID
+		FROM    tblKartrisProducts INNER JOIN
+				  tblKartrisLanguageElements ON tblKartrisProducts.P_ID = tblKartrisLanguageElements.LE_ParentID
+		WHERE   (tblKartrisProducts.P_Live=1) AND (tblKartrisProducts.P_CustomerGroupID IS NULL) AND
+			   (tblKartrisLanguageElements.LE_LanguageID = @LANG_ID) AND (tblKartrisLanguageElements.LE_TypeID = 2) AND (tblKartrisLanguageElements.LE_FieldID = 1) AND 
+			  (NOT (tblKartrisLanguageElements.LE_Value IS NULL))
+		ORDER BY tblKartrisProducts.P_ID DESC
+	) as products
+	INNER JOIN tblKartrisVersions ON products.P_ID = tblKartrisVersions.V_ProductID INNER JOIN
+			  tblKartrisProductCategoryLink ON products.P_ID = tblKartrisProductCategoryLink.PCAT_ProductID INNER JOIN
+			  tblKartrisCategories ON tblKartrisProductCategoryLink.PCAT_CategoryID = tblKartrisCategories.CAT_ID
+	WHERE (tblKartrisCategories.CAT_CustomerGroupID IS NULL) AND (tblKartrisVersions.V_CustomerGroupID IS NULL) 
 
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetNameByProductID]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -29702,6 +29706,13 @@ GO
 
 /*** New language strings  ***/
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_GDPRExport', N'GDPR Export', NULL, 2.9012, N'', NULL, N'_GDPR',1);
+GO
+
+/****** Index to improve speed product date operations ******/
+CREATE NONCLUSTERED INDEX [P_DateCreated] ON [dbo].[tblKartrisProducts]
+(
+	[P_DateCreated] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 
 /****** Set this to tell Data tool which version of db we have ******/
