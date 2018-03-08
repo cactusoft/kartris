@@ -251,11 +251,11 @@ VERSIONS
 .versions span.inctax span.figure       { color: #090; float: left; font-weight: bold; font-size: 260%; padding: 0 10px 10px 0; }
 .versions .line                         { text-align: left; padding: 0 0 0 0; }
 .versions .multipleversiondropdown      { border-top: solid 1px #000; border-bottom: solid 2px #eee; }
-.versions .addtobasket                  { clear: both }
+.versions .addtobasket                  { clear: both; }
 .versions .addtobasket select           { margin: 3px 0 0 0; width: 450px; max-width: 99%; } /* version name and price */
 .versions .addtobasket .dropdown        { width: 45px } /* qty */
 .versions .addtobasket .textbox         { width: 45px }
-.versions .addtobasket div.selector     { clear: both; display: block; vertical-align: bottom; padding: 0 0 0 0; }
+.versions .addtobasket div.selector     { display: block; vertical-align: bottom; padding: 0 0 0 0; }
 .versions .addtobasket div.outofstock   { color: #f00; font-weight: bold; }
 .versions .addtobasket span.outofstock  { color: #f00; font-weight: bold; }
 .versions .addtobasket div.stocknotification
