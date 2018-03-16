@@ -183,9 +183,11 @@ Public Class MailChimpBLL
             Dim taskResult As Customer = Await manager.ECommerceStores.Customers(mcStoreId).AddAsync(customer).ConfigureAwait(False)
             Return taskResult
         Catch ex As Exception
-            'Debug.Print(ex.Message)
             'Log the error
             CkartrisFormatErrors.LogError("MailchimpBLL AddCustomer: " & ex.Message)
+
+            'Avoid warnings when building, they tend to confuse people
+            Return Nothing
         End Try
     End Function
 
@@ -194,7 +196,7 @@ Public Class MailChimpBLL
     ''' </summary>
     Public Async Function AddProduct(ByVal basketItem As BasketItem) As Task(Of Product)
         Try
-            Dim product As Product
+            Dim product As Product = Nothing
             Dim productVariant As [Variant]
             Dim listVariants As List(Of [Variant]) = New List(Of [Variant])
             Try
@@ -264,6 +266,7 @@ Public Class MailChimpBLL
             'Debug.Print(ex.Message)
             'Log the error
             CkartrisFormatErrors.LogError("MailchimpBLL AddProduct: " & ex.Message)
+            Return Nothing
         End Try
     End Function
 
@@ -309,12 +312,14 @@ Public Class MailChimpBLL
 
             Dim taskResult As Cart = Await manager.ECommerceStores.Carts(mcStoreId).AddAsync(cart).ConfigureAwait(False)
 
-
             Return taskResult
         Catch ex As Exception
             'Debug.Print(ex.Message)
             'Log the error
             CkartrisFormatErrors.LogError("MailchimpBLL AddCart: " & ex.Message)
+
+            'Avoid build warnings
+            Return Nothing
         End Try
     End Function
 
@@ -406,9 +411,11 @@ Public Class MailChimpBLL
 
             Return taskResult
         Catch ex As Exception
-            'Debug.Print(ex.Message)
             'Log the error
             CkartrisFormatErrors.LogError("MailchimpBLL AddOrder: " & ex.Message)
+
+            'Avoid build warnings
+            Return Nothing
         End Try
     End Function
 

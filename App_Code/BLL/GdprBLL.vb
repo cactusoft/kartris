@@ -163,6 +163,18 @@ Public Class GdprBLL
 
         Dim strData As New StringBuilder("")
 
+        'First, we put a header with time and date and some
+        'details of the data within the file
+
+        '============== GDPR DATA REQUEST ===============
+        strData.AppendLine("============== GDPR DATA REQUEST ===============")
+        strData.AppendLine("File created: " & CkartrisDisplayFunctions.FormatDate(Now(), "t", 1))
+        strData.AppendLine("The data contained within this file is a direct export")
+        strData.AppendLine("from the site database at " & CkartrisBLL.WebShopURL.ToLower & ".")
+        strData.AppendLine("")
+        strData.AppendLine("")
+
+
         '============== CUSTOMER DATA ===============
         strData.AppendLine("")
         strData.AppendLine("== CUSTOMER DATA ==")
@@ -178,8 +190,13 @@ Public Class GdprBLL
 
                 'Format dates nicely
                 If strColumnName = "U_TempPasswordExpiry" Or strColumnName = "U_ML_SignupDateTime" Or strColumnName = "U_ML_ConfirmationDateTime" Then
-                    strColumnValue = CkartrisDisplayFunctions.FormatDate(strColumnValue, "t", 1)
-                    If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
+                    Try
+                        strColumnValue = CkartrisDisplayFunctions.FormatDate(strColumnValue, "t", 1)
+                        If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
+                    Catch ex As Exception
+                        strColumnValue = "-" 'some issue with converting date, return a dash
+                    End Try
+
                 End If
 
                 strData.AppendLine(strColumnName & ": [ " & strColumnValue & " ]")
@@ -234,10 +251,10 @@ Public Class GdprBLL
                     If strColumnName = "O_Date" Or strColumnName = "O_LastModified" Then
                         Try
                             strColumnValue = CkartrisDisplayFunctions.FormatDate(strColumnValue, "t", 1)
+                            If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
                         Catch ex As Exception
-                            'probably null or blank already
+                            strColumnValue = "-" 'some issue with converting date, return a dash
                         End Try
-                        If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
                     End If
                     strData.AppendLine(strColumnName & ": [ " & strColumnValue & " ]")
                 End If
@@ -273,10 +290,10 @@ Public Class GdprBLL
                 If strColumnName = "REV_DateCreated" Or strColumnName = "REV_DateLastUpdated" Then
                     Try
                         strColumnValue = CkartrisDisplayFunctions.FormatDate(strColumnValue, "t", 1)
+                        If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
                     Catch ex As Exception
-                        'probably null or blank already
+                        strColumnValue = "-" 'some issue with converting date, return a dash
                     End Try
-                    If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
                 End If
 
                 strData.AppendLine(strColumnName & ": [ " & strColumnValue & " ]")
@@ -301,10 +318,10 @@ Public Class GdprBLL
                 If strColumnName = "WL_DateTimeAdded" Or strColumnName = "WL_LastUpdated" Then
                     Try
                         strColumnValue = CkartrisDisplayFunctions.FormatDate(strColumnValue, "t", 1)
+                        If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
                     Catch ex As Exception
-                        'probably null or blank already
+                        strColumnValue = "-" 'some issue with converting date, return a dash
                     End Try
-                    If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
                 End If
 
                 strData.AppendLine(strColumnName & ": [ " & strColumnValue & " ]")
@@ -337,10 +354,10 @@ Public Class GdprBLL
                 If strColumnName = "TIC_DateOpened" Or strColumnName = "TIC_DateClosed" Then
                     Try
                         strColumnValue = CkartrisDisplayFunctions.FormatDate(strColumnValue, "t", 1)
+                        If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
                     Catch ex As Exception
-                        'probably null or blank already
+                        strColumnValue = "-" 'some issue with converting date, return a dash
                     End Try
-                    If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
                 End If
                 strData.AppendLine(strColumnName & ": [ " & strColumnValue & " ]")
 
@@ -382,10 +399,10 @@ Public Class GdprBLL
                 If strColumnName = "SBSKT_DateTimeAdded" Or strColumnName = "SBSKT_LastUpdated" Then
                     Try
                         strColumnValue = CkartrisDisplayFunctions.FormatDate(strColumnValue, "t", 1)
+                        If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
                     Catch ex As Exception
-                        'probably null or blank already
+                        strColumnValue = "-" 'some issue with converting date, return a dash
                     End Try
-                    If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
                 End If
                 strData.AppendLine(strColumnName & ": [ " & strColumnValue & " ]")
 
@@ -404,10 +421,10 @@ Public Class GdprBLL
                     If strColumnName = "BV_DateTimeAdded" Then
                         Try
                             strColumnValue = CkartrisDisplayFunctions.FormatDate(strColumnValue, "t", 1)
+                            If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
                         Catch ex As Exception
-                            'probably null or blank already
+                            strColumnValue = "-" 'some issue with converting date, return a dash
                         End Try
-                        If strColumnValue.Contains("1/1/1900") Then strColumnValue = "-" 'some default dates are stored as 1/1/1900, but really means no date
                     End If
                     strData.AppendLine(strColumnName & ": [ " & strColumnValue & " ]")
                 Next
@@ -417,6 +434,9 @@ Public Class GdprBLL
             strData.AppendLine("== End of Saved Basket ==")
             strData.AppendLine("")
         Next
+
+        '============== END OF FILE ===============
+        strData.AppendLine("============== END OF FILE ===============")
 
         Return strData.ToString
     End Function

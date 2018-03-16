@@ -64,6 +64,7 @@ Public Class Payment
             oStrW.Close()
         Catch ex As Exception
             DumpException(ex)
+            Return Nothing
         End Try
 
     End Function

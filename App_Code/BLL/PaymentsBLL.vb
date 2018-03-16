@@ -41,7 +41,8 @@ Public Class PaymentsBLL
         Dim CurrencyCode As String = ""
 
         CurrencyCode = CurrenciesBLL.CurrencyCode(currencyId)
-        merchAccId = merchAccId.Concat(merchAccId, CurrencyCode)
+        'merchAccId = merchAccId.Concat(merchAccId, CurrencyCode)
+        merchAccId = merchAccId & CurrencyCode
         Dim gatewayCurrencyCode As String = BT_GetBrainTreeConfigMember("ProcessCurrency")
         Dim gatewayCurrencyId As Short = CurrenciesBLL.CurrencyID(gatewayCurrencyCode)
         merchAccId = BT_GetBrainTreeConfigMember(merchAccId)

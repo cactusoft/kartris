@@ -391,6 +391,7 @@ Partial Class UserControls_General_CheckoutAddress
         If (dtsAddresses.Tables("Error") IsNot Nothing) AndAlso (dtsAddresses.Tables("Error").Columns("Description") IsNot Nothing) Then
             Dim exc As String = dtsAddresses.Tables("Error").Rows(0)("Description").ToString()
             'Throw New Exception(exc)
+            Return Nothing
         Else
             litNotValidError.Text = ""
             If dtsAddresses.Tables("Summary") IsNot Nothing Then
