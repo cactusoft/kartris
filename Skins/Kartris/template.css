@@ -27,7 +27,7 @@ a.off-canvas-close                      { color: #000; font-size: 25px; font-wei
 a.left-off-canvas-toggle                { float: left; display: inline-block; margin: 5px 0 0 0; }
 .off-canvas-wrap                        { min-height: 100%; }
 .left-off-canvas-menu                   { padding: 0; background: none repeat scroll 0% 0% transparent; }
-.left-off-canvas-menu .content          { border-right: solid 1px #777; margin-right: 10px; padding: 30px 10px 10px 10px; background: #eee; height: 100%; box-shadow: 1px 1px 10px #333; }
+.left-off-canvas-menu .content          { position: fixed; border-right: solid 1px #777; margin-right: 10px; padding: 30px 10px 10px 10px; background: #eee; height: 100%; box-shadow: 1px 1px 10px #333; }
 .left-off-canvas-menu ul li             { list-style-type:none; }
 .left-off-canvas-menu ul li a           { text-align: left; color: #000; font-size: 90%; width: 100%; text-transform: uppercase; font-weight: normal; letter-spacing: 1px; line-height: 1.1em; padding: 3px 5px 3px 5px; margin: 0 0 1px 0; display: block; }
 .left-off-canvas-menu ul li a:hover     { background-color: #000; color: #fff; }
