@@ -1680,7 +1680,20 @@ Partial Class _Checkout
                                     End If
                                 End If
 
-                                SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, GetGlobalResourceObject("Kartris", "PageTitle_MailingList"), strBodyText, , , , , blnHTMLEmail)
+                                'GDPR Mod - v2.9013 
+                                'We want to be able to have a log of all opt-in
+                                'requests sent, so we can prove the user was sent
+                                'the GDPR notice, and also prove what text they
+                                'received. We do this by BCCing the confirmation
+                                'opt-in mail to an email address. A free account
+                                'like gmail would be good for this.
+                                Dim objBCCsCollection As New System.Net.Mail.MailAddressCollection
+                                Dim strGDPROptinArchiveEmail As String = KartSettingsManager.GetKartConfig("general.gdpr.mailinglistbcc")
+                                If strGDPROptinArchiveEmail.Length > 0 Then
+                                    objBCCsCollection.Add(strGDPROptinArchiveEmail)
+                                End If
+
+                                SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, GetGlobalResourceObject("Kartris", "PageTitle_MailingList"), strBodyText, , , , , blnHTMLEmail,, objBCCsCollection)
                             End If
 
                         End If
