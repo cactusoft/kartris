@@ -459,7 +459,9 @@ Public NotInheritable Class CkartrisDisplayFunctions
         'will need to be replaced by a regex
         'strInput = strInput.Replace("""", "")
         'strInput = strInput.Replace("*", "")
-        'strInput = strInput.Replace("#", "")
+        strInput = strInput.Replace(vbCrLf, "")
+        strInput = strInput.Replace(vbCr, "")
+        strInput = strInput.Replace(vbTab, "")
         strInput = strInput.Replace("//", "/")
         strInput = strInput.Replace("°", "o")
         strInput = strInput.Replace("./", "_/")

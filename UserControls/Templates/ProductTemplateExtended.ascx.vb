@@ -27,7 +27,7 @@ Partial Class ProductTemplateExtended
         Dim strNavigateURL As String = SiteMapHelper.CreateURL(SiteMapHelper.Page.Product, litProductID.Text, Request.QueryString("strParent"), Request.QueryString("CategoryID"))
 
         lnkProductName.NavigateUrl = strNavigateURL
-        lnknMore.NavigateUrl = strNavigateURL
+        lnkMore.NavigateUrl = strNavigateURL
 
         UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_ProductImage,
             litProductID.Text,

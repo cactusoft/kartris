@@ -17,7 +17,7 @@
                 <p class="description">
                     <asp:Literal ID="litProductDesc" runat="server" Text='<%# CkartrisDisplayFunctions.TruncateDescription(Eval("P_Desc"), KartSettingsManager.GetKartConfig("frontend.products.display.truncatedescription")) %>'></asp:Literal>
                 </p>
-                <asp:HyperLink ID="lnknMore" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>'
+                <asp:HyperLink ID="lnkMore" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>'
                     Text="<%$ Resources:Products,ContentText_ViewProductMoreDetail %>" CssClass="link2"></asp:HyperLink>
 
 
