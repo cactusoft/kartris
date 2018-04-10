@@ -115,11 +115,14 @@
 
                                                             <% 'GDPR opt in section %>
                                                             <asp:PlaceHolder ID="phdGDPROptIn" runat="server" Visible="false">
-                                                                <div class="GDPR">
-                                                                    <asp:CheckBox ID="chkGDPRConfirm" runat="server" class="checkbox" />
-                                                                    <asp:Label ID="lblGDPRConfirmText" runat="server" Text="<%$ Resources: GDPR, FormLabel_GDPRConfirmText %>" AssociatedControlID="chkGDPRConfirm"></asp:Label>
+                                                                <li>
+                                                                    <div class="GDPR">
+                                                                        <asp:CheckBox ID="chkGDPRConfirm" runat="server" class="checkbox" />
+                                                                        <asp:Label ID="lblGDPRConfirmText" runat="server" Text="<%$ Resources: GDPR, FormLabel_GDPRConfirmText %>" AssociatedControlID="chkGDPRConfirm"></asp:Label>
 
-                                                                </div>
+                                                                    </div>
+
+                                                                </li>
                                                             </asp:PlaceHolder>
 
 
