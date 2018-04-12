@@ -243,7 +243,7 @@ Partial Class KartrisLogin
             litFailureText.Text = "<div class=""errortext"">" & GetGlobalResourceObject("Kartris", "ContentText_SomeFieldsBlank") & "</div>"
             popLogin.Show()
         ElseIf chkGDPRConfirm.Checked = False Then
-            litFailureText.Text = "<div class=""errortext"">" & GetGlobalResourceObject("Kartris", "FormLabel_GDPRConfirmText") & "</div>"
+            litFailureText.Text = "<div class=""errortext"">" & GetGlobalResourceObject("GDPR", "FormLabel_GDPRConfirmText") & "</div>"
             popLogin.Show()
         Else
 

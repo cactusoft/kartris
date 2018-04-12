@@ -69,6 +69,8 @@ Partial Class ProductVersions
             'do nothing
         End Try
 
+
+
         If Request.QueryString("strOptions") & "" = "" Then Session("BasketItemInfo") = ""
 
     End Sub
@@ -675,7 +677,7 @@ Partial Class ProductVersions
         Else
             phdOutOfStock3.Visible = True
             phdNotOutOfStock3.Visible = False
-            updVersionQty3.Update()
+            'updVersionQty3.Update()
         End If
     End Sub
 

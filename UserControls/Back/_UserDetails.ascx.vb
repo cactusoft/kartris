@@ -33,6 +33,11 @@ Partial Class UserControls_Back_UserDetails
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
+            'Export for GDPR
+            If Request.QueryString("Export") = "y" Then
+                btnGDPRExport_Click()
+                Response.End()
+            End If
 
             'Format back link - if we detect is coming from customer
             'list, we format back link to there with saved parameters.
@@ -231,5 +236,24 @@ Partial Class UserControls_Back_UserDetails
                 'set to black
                 Return "color: #000;"
         End Select
+    End Function
+
+    ''' <summary>
+    ''' Clicked to export customer data for GDPR
+    ''' </summary>
+    Protected Sub btnGDPRExport_Click()
+        Dim strFileName As String = CkartrisDisplayFunctions.SanitizeProductName(UsersBLL.GetEmailByID(GetCustomerID()))
+        Response.ClearHeaders()
+        GdprBLL.WriteToTextFile(Replace(strFileName, "@", "_at_"), GdprBLL.FormatGDPRText(GetCustomerID()))
+    End Sub
+
+    ''' <summary>
+    ''' URL for the GDPR export
+    ''' this avoids issues with not being able to create
+    ''' the file download because response.write content
+    ''' already on the page
+    ''' </summary>
+    Public Function FormatExportURL(ByVal strRawURL As String) As String
+        Return strRawURL & "&Export=y"
     End Function
 End Class

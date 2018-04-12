@@ -105,7 +105,7 @@ PRODUCT - Single page product
 */
 .product #strapline                     { display: block; margin: 10px 0px 12px 0px; padding: 0; color: #111; font-weight: bold; font-size: 110%; font-style: italic; }
 .product #description                   { margin: 0 0 15px 0px }
-.product div.imagecolumn                { margin: 0 0 40px 0; padding: 10px 20px 0 0; }
+.product div.imagecolumn                { margin: 0 0 40px 0; padding: 10px 20px 0 0 !important; }
 .product div.imagecolumn div.pad        { padding: 10px 0 10px 0 }
 .product div.imagecolumn .imageviewer   { width: 100% }
 .product div.imagecolumn .singleimage   { }
@@ -179,7 +179,7 @@ PRODUCTS - IMAGE ONLY FORMAT
 ------------------------------------------------------------------------
 */
 .products_imageonly                     { padding-top: 0px; }
-.products_imageonly .item               { padding: 3px; display: inline-block; float: left; border: solid 1px #ccc; margin: 3px 8px 3px 0; text-align: center; }
+.products_imageonly .item               { width: 215px; max-height: 215px; overflow: hidden; float: left; padding: 3px; display: inline-block; float: left; border: solid 1px #ccc; margin: 3px 8px 3px 0; text-align: center; }
 .products_imageonly .item:hover         { border: solid 1px #fc5; }
 .products_imageonly .box                { background-color: #fff; border: solid 3px #fff; text-align: center; }
 .products_imageonly img                 { margin: 0 auto; float: none; }
@@ -251,11 +251,11 @@ VERSIONS
 .versions span.inctax span.figure       { color: #090; float: left; font-weight: bold; font-size: 260%; padding: 0 10px 10px 0; }
 .versions .line                         { text-align: left; padding: 0 0 0 0; }
 .versions .multipleversiondropdown      { border-top: solid 1px #000; border-bottom: solid 2px #eee; }
-.versions .addtobasket                  { clear: both }
+.versions .addtobasket                  { clear: both; }
 .versions .addtobasket select           { margin: 3px 0 0 0; width: 450px; max-width: 99%; } /* version name and price */
 .versions .addtobasket .dropdown        { width: 45px } /* qty */
 .versions .addtobasket .textbox         { width: 45px }
-.versions .addtobasket div.selector     { clear: both; display: block; vertical-align: bottom; padding: 0 0 0 0; }
+.versions .addtobasket div.selector     { display: block; vertical-align: bottom; padding: 0 0 0 0; }
 .versions .addtobasket div.outofstock   { color: #f00; font-weight: bold; }
 .versions .addtobasket span.outofstock  { color: #f00; font-weight: bold; }
 .versions .addtobasket div.stocknotification

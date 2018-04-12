@@ -60,9 +60,10 @@ DECLARE @U_ID INT
 			@U_GDPR_SignupIP);
 	SET @U_ID = SCOPE_IDENTITY();
 	SELECT @U_ID;
+GO
 
 /*** New language strings  ***/
-INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'FormLabel_GDPRConfirmText', N'Please confirm you have read, understand and accept our privacy policy and terms and conditions', NULL, 2.9012, N'', NULL, N'Kartris',1);
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'FormLabel_GDPRConfirmText', N'Please confirm you have read, understand and accept our privacy policy and terms and conditions', NULL, 2.9012, N'', NULL, N'GDPR',1);
 
 GO
 
@@ -80,6 +81,206 @@ INSERT INTO [tblKartrisConfig]
 VALUES
 (N'frontend.adminlinkposition', N'top', N's', N'b',	'top|bottom',N'Position for front end admin link. Bottom moves it down a little in case it clashes with hamburger or other navigation.',2.9012, N'top', 0);
 
+GO
+
+/****** create new addresses view, this will help exporting data for GDPR ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[vKartrisAddresses]
+AS
+SELECT DISTINCT 
+						 dbo.tblKartrisAddresses.ADR_ID, dbo.tblKartrisAddresses.ADR_UserID, dbo.tblKartrisAddresses.ADR_Label, dbo.tblKartrisAddresses.ADR_Name, dbo.tblKartrisAddresses.ADR_Company, 
+						 dbo.tblKartrisAddresses.ADR_StreetAddress, dbo.tblKartrisAddresses.ADR_TownCity, dbo.tblKartrisAddresses.ADR_County, dbo.tblKartrisAddresses.ADR_PostCode, dbo.tblKartrisAddresses.ADR_Telephone, 
+						 dbo.tblKartrisLanguageElements.LE_Value, dbo.tblKartrisLanguageElements.LE_TypeID, dbo.tblKartrisLanguageElements.LE_LanguageID
+FROM            dbo.tblKartrisLanguageElements INNER JOIN
+						 dbo.tblKartrisLanguageElementFieldNames ON dbo.tblKartrisLanguageElements.LE_FieldID = dbo.tblKartrisLanguageElementFieldNames.LEFN_ID INNER JOIN
+						 dbo.tblKartrisLanguageElementTypeFields ON dbo.tblKartrisLanguageElementFieldNames.LEFN_ID = dbo.tblKartrisLanguageElementTypeFields.LEFN_ID INNER JOIN
+						 dbo.tblKartrisLanguageElementTypes ON dbo.tblKartrisLanguageElements.LE_TypeID = dbo.tblKartrisLanguageElementTypes.LET_ID INNER JOIN
+						 dbo.tblKartrisAddresses INNER JOIN
+						 dbo.tblKartrisDestination ON dbo.tblKartrisAddresses.ADR_Country = dbo.tblKartrisDestination.D_ID ON dbo.tblKartrisLanguageElements.LE_ParentID = dbo.tblKartrisDestination.D_ID
+WHERE        (dbo.tblKartrisLanguageElements.LE_TypeID = 11) AND (dbo.tblKartrisLanguageElements.LE_LanguageID = 1)
+GO
+
+/****** new sproc to find addresses by user ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetAddressesByUserID]
+(
+	@UserID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         vKartrisAddresses
+WHERE     (ADR_UserID = @UserID)
+GO
+
+/****** GDPR export: new sproc to find orders by user ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetOrdersByUserID]
+(
+	@UserID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         tblKartrisOrders
+WHERE     (O_CustomerID = @UserID)
+ORDER BY O_ID
+GO
+
+/****** GDPR export: new sproc to find reviews by user ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetReviewsByUserID]
+(
+	@UserID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         tblKartrisReviews
+WHERE     (REV_CustomerID = @UserID)
+ORDER BY REV_ID
+GO
+
+/****** GDPR export: new sproc to find wishlists by user ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetWishListsByUserID]
+(
+	@UserID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         tblKartrisWishLists
+WHERE     (WL_UserID = @UserID)
+ORDER BY WL_ID
+GO
+
+/****** GDPR export: new sproc to find support tickets by user ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetSupportTicketsByUserID]
+(
+	@UserID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         tblKartrisSupportTickets
+WHERE     (TIC_UserID = @UserID)
+ORDER BY TIC_ID
+GO
+
+/****** GDPR: new view for saved baskets ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[vKartrisTypeSavedBasketItems]
+AS
+SELECT        dbo.tblKartrisBasketValues.BV_VersionID, dbo.vKartrisTypeVersions.V_Name, dbo.vKartrisTypeVersions.V_CodeNumber, dbo.tblKartrisBasketValues.BV_Quantity, dbo.tblKartrisBasketValues.BV_CustomText, 
+						 dbo.tblKartrisBasketValues.BV_DateTimeAdded, dbo.tblKartrisBasketValues.BV_LastUpdated, dbo.tblKartrisBasketValues.BV_ParentID, dbo.tblKartrisBasketValues.BV_ParentType, dbo.tblKartrisBasketValues.BV_ID
+FROM            dbo.tblKartrisBasketValues INNER JOIN
+						 dbo.vKartrisTypeVersions ON dbo.tblKartrisBasketValues.BV_VersionID = dbo.vKartrisTypeVersions.V_ID
+WHERE        (dbo.tblKartrisBasketValues.BV_ParentType = 's')
+GO
+
+/****** GDPR export: new sproc to find saved baskets ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetSavedBasketsByUserID]
+(
+	@UserID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         tblKartrisSavedBaskets
+WHERE     (SBSKT_UserID = @UserID)
+ORDER BY SBSKT_ID
+GO
+
+/****** GDPR export: saved basket items ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetSavedBasketValuesByUserID]
+(
+	@SavedBasketID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         vKartrisTypeSavedBasketItems
+WHERE     (BV_ParentID = @SavedBasketID)
+ORDER BY BV_ID
+GO
+
+/*** New language strings  ***/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_GDPRExport', N'GDPR Export', NULL, 2.9012, N'', NULL, N'_GDPR',1);
+GO
+
+/****** Index to improve speed product date operations ******/
+CREATE NONCLUSTERED INDEX [P_DateCreated] ON [dbo].[tblKartrisProducts]
+(
+	[P_DateCreated] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Improve performance of latest products lookup ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[spKartrisProducts_GetNewestProducts]
+	(
+	@LANG_ID tinyint
+	)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+	SELECT products.P_ID, products.P_Name, dbo.fnKartrisProduct_GetMinPrice(products.P_ID) As MinPrice, products.P_DateCreated, @LANG_ID LANG_ID
+	FROM (
+		SELECT DISTINCT TOP (10) tblKartrisProducts.P_ID, tblKartrisLanguageElements.LE_Value AS P_Name, tblKartrisProducts.P_DateCreated, @LANG_ID LANG_ID
+		FROM    tblKartrisProducts INNER JOIN
+				  tblKartrisLanguageElements ON tblKartrisProducts.P_ID = tblKartrisLanguageElements.LE_ParentID
+		WHERE   (tblKartrisProducts.P_Live=1) AND (tblKartrisProducts.P_CustomerGroupID IS NULL) AND
+			   (tblKartrisLanguageElements.LE_LanguageID = @LANG_ID) AND (tblKartrisLanguageElements.LE_TypeID = 2) AND (tblKartrisLanguageElements.LE_FieldID = 1) AND 
+			  (NOT (tblKartrisLanguageElements.LE_Value IS NULL))
+		ORDER BY tblKartrisProducts.P_ID DESC
+	) as products
+	INNER JOIN tblKartrisVersions ON products.P_ID = tblKartrisVersions.V_ProductID INNER JOIN
+			  tblKartrisProductCategoryLink ON products.P_ID = tblKartrisProductCategoryLink.PCAT_ProductID INNER JOIN
+			  tblKartrisCategories ON tblKartrisProductCategoryLink.PCAT_CategoryID = tblKartrisCategories.CAT_ID
+	WHERE (tblKartrisCategories.CAT_CustomerGroupID IS NULL) AND (tblKartrisVersions.V_CustomerGroupID IS NULL) 
+
+END
 GO
 
 /****** Set this to tell Data tool which version of db we have ******/

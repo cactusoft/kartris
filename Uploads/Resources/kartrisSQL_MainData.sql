@@ -6187,7 +6187,7 @@ INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_IS
 INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (103, 5, 0, N'IN', N'IND', N'356', NULL, 1, NULL, NULL)
 INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (104, 5, 0, N'ID', N'IDN', N'360', NULL, 1, NULL, NULL)
 INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (105, 5, 0, N'IR', N'IRN', N'364', NULL, 1, NULL, NULL)
-INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (106, 2, 1, N'IE', N'IR ', N'372', NULL, 1, NULL, NULL)
+INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (106, 2, 1, N'IE', N'IRL', N'372', NULL, 1, NULL, NULL)
 INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (107, 5, 0, N'IL', N'ISR', N'376', NULL, 1, NULL, NULL)
 INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (108, 2, 1, N'IT', N'ITA', N'380', NULL, 1, NULL, NULL)
 INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (109, 5, 0, N'CI', N'CIV', N'384', NULL, 1, NULL, NULL)
@@ -6346,7 +6346,7 @@ INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_IS
 INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (262, 5, 0, N'ZM', N'ZMB', N'894', NULL, 1, NULL, NULL)
 INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (263, 5, 0, N'ZW', N'ZWE', N'716', NULL, 1, NULL, NULL)
 INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (264, 9, 0, NULL, NULL, N'999', NULL, 0, NULL, NULL)
-INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (265, 9, 0, N'XX', N'XXX', N'999', NULL, 0, NULL, NULL)
+INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (265, 9, 0, N'RS', N'SRB', N'688', NULL, 0, NULL, NULL)
 INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (266, 9, 0, N'XX', N'XXX', N'999', NULL, 0, NULL, NULL)
 INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (267, 9, 0, N'XX', N'XXX', N'999', NULL, 0, NULL, NULL)
 INSERT [dbo].[tblKartrisDestination] ([D_ID], [D_ShippingZoneID], [D_Tax], [D_ISOCode], [D_ISOCode3Letter], [D_ISOCodeNumeric], [D_Region], [D_Live], [D_Tax2], [D_TaxExtra]) VALUES (268, 9, 0, N'XX', N'XXX', N'999', NULL, 0, NULL, NULL)
@@ -6661,7 +6661,7 @@ INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_Fie
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 11, 1, 262, N'Zambia')
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 11, 1, 263, N'Zimbabwe')
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 11, 1, 264, NULL)
-INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 11, 1, 265, N'SPARE RECORD #2')
+INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 11, 1, 265, N'Serbia')
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 11, 1, 266, N'SPARE RECORD #3')
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 11, 1, 267, N'SPARE RECORD #4')
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 11, 1, 268, N'SPARE RECORD #5')
@@ -18400,142 +18400,7 @@ FROM         dbo.tblKartrisLanguageElements INNER JOIN
 WHERE     (dbo.tblKartrisLanguageElements.LE_TypeID = 4) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 1) AND 
 					  (dbo.tblKartrisLanguageElements.LE_Value IS NOT NULL)
 GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
-Begin DesignProperties = 
-   Begin PaneConfigurations = 
-	  Begin PaneConfiguration = 0
-		 NumPanes = 4
-		 Configuration = "(H (1[41] 4[20] 2[12] 3) )"
-	  End
-	  Begin PaneConfiguration = 1
-		 NumPanes = 3
-		 Configuration = "(H (1 [50] 4 [25] 3))"
-	  End
-	  Begin PaneConfiguration = 2
-		 NumPanes = 3
-		 Configuration = "(H (1 [50] 2 [25] 3))"
-	  End
-	  Begin PaneConfiguration = 3
-		 NumPanes = 3
-		 Configuration = "(H (4 [30] 2 [40] 3))"
-	  End
-	  Begin PaneConfiguration = 4
-		 NumPanes = 2
-		 Configuration = "(H (1 [56] 3))"
-	  End
-	  Begin PaneConfiguration = 5
-		 NumPanes = 2
-		 Configuration = "(H (2 [66] 3))"
-	  End
-	  Begin PaneConfiguration = 6
-		 NumPanes = 2
-		 Configuration = "(H (4 [50] 3))"
-	  End
-	  Begin PaneConfiguration = 7
-		 NumPanes = 1
-		 Configuration = "(V (3))"
-	  End
-	  Begin PaneConfiguration = 8
-		 NumPanes = 3
-		 Configuration = "(H (1[56] 4[18] 2) )"
-	  End
-	  Begin PaneConfiguration = 9
-		 NumPanes = 2
-		 Configuration = "(H (1 [75] 4))"
-	  End
-	  Begin PaneConfiguration = 10
-		 NumPanes = 2
-		 Configuration = "(H (1[66] 2) )"
-	  End
-	  Begin PaneConfiguration = 11
-		 NumPanes = 2
-		 Configuration = "(H (4 [60] 2))"
-	  End
-	  Begin PaneConfiguration = 12
-		 NumPanes = 1
-		 Configuration = "(H (1) )"
-	  End
-	  Begin PaneConfiguration = 13
-		 NumPanes = 1
-		 Configuration = "(V (4))"
-	  End
-	  Begin PaneConfiguration = 14
-		 NumPanes = 1
-		 Configuration = "(V (2))"
-	  End
-	  ActivePaneConfig = 0
-   End
-   Begin DiagramPane = 
-	  Begin Origin = 
-		 Top = 0
-		 Left = 0
-	  End
-	  Begin Tables = 
-		 Begin Table = "tblKartrisLanguageElements"
-			Begin Extent = 
-			   Top = 6
-			   Left = 277
-			   Bottom = 140
-			   Right = 460
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisAttributes"
-			Begin Extent = 
-			   Top = 6
-			   Left = 38
-			   Bottom = 199
-			   Right = 239
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-	  End
-   End
-   Begin SQLPane = 
-   End
-   Begin DataPane = 
-	  Begin ParameterDefaults = ""
-	  End
-	  Begin ColumnWidths = 13
-		 Width = 284
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-	  End
-   End
-   Begin CriteriaPane = 
-	  Begin ColumnWidths = 11
-		 Column = 1440
-		 Alias = 2445
-		 Table = 2070
-		 Output = 720
-		 Append = 1400
-		 NewValue = 1170
-		 SortType = 1350
-		 SortOrder = 1410
-		 GroupBy = 1350
-		 Filter = 1350
-		 Or = 1350
-		 Or = 1350
-		 Or = 1350
-	  End
-   End
-End
-' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisTypeAttributes'
-GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisTypeAttributes'
-GO
+
 /****** Object:  View [dbo].[vKartrisTypeCategories]    Script Date: 01/23/2013 21:59:09 ******/
 SET ANSI_NULLS ON
 GO
@@ -18564,176 +18429,7 @@ WHERE     (dbo.tblKartrisLanguageElements.LE_TypeID = 3) AND (dbo.tblKartrisLang
 					  (tblKartrisLanguageElements_1.LE_FieldID = 2) AND (tblKartrisLanguageElements_2.LE_Value IS NOT NULL) AND (tblKartrisLanguageElements_2.LE_TypeID = 3) 
 					  AND (tblKartrisLanguageElements_2.LE_FieldID = 3)
 GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
-Begin DesignProperties = 
-   Begin PaneConfigurations = 
-	  Begin PaneConfiguration = 0
-		 NumPanes = 4
-		 Configuration = "(H (1[40] 4[20] 2[20] 3) )"
-	  End
-	  Begin PaneConfiguration = 1
-		 NumPanes = 3
-		 Configuration = "(H (1[36] 4[44] 3) )"
-	  End
-	  Begin PaneConfiguration = 2
-		 NumPanes = 3
-		 Configuration = "(H (1 [50] 2 [25] 3))"
-	  End
-	  Begin PaneConfiguration = 3
-		 NumPanes = 3
-		 Configuration = "(H (4 [30] 2 [40] 3))"
-	  End
-	  Begin PaneConfiguration = 4
-		 NumPanes = 2
-		 Configuration = "(H (1 [56] 3))"
-	  End
-	  Begin PaneConfiguration = 5
-		 NumPanes = 2
-		 Configuration = "(H (2 [66] 3))"
-	  End
-	  Begin PaneConfiguration = 6
-		 NumPanes = 2
-		 Configuration = "(H (4 [50] 3))"
-	  End
-	  Begin PaneConfiguration = 7
-		 NumPanes = 1
-		 Configuration = "(V (3))"
-	  End
-	  Begin PaneConfiguration = 8
-		 NumPanes = 3
-		 Configuration = "(H (1[56] 4[18] 2) )"
-	  End
-	  Begin PaneConfiguration = 9
-		 NumPanes = 2
-		 Configuration = "(H (1 [75] 4))"
-	  End
-	  Begin PaneConfiguration = 10
-		 NumPanes = 2
-		 Configuration = "(H (1[66] 2) )"
-	  End
-	  Begin PaneConfiguration = 11
-		 NumPanes = 2
-		 Configuration = "(H (4 [60] 2))"
-	  End
-	  Begin PaneConfiguration = 12
-		 NumPanes = 1
-		 Configuration = "(H (1) )"
-	  End
-	  Begin PaneConfiguration = 13
-		 NumPanes = 1
-		 Configuration = "(V (4))"
-	  End
-	  Begin PaneConfiguration = 14
-		 NumPanes = 1
-		 Configuration = "(V (2))"
-	  End
-	  ActivePaneConfig = 1
-   End
-   Begin DiagramPane = 
-	  Begin Origin = 
-		 Top = 0
-		 Left = 0
-	  End
-	  Begin Tables = 
-		 Begin Table = "tblKartrisCategories"
-			Begin Extent = 
-			   Top = 102
-			   Left = 304
-			   Bottom = 250
-			   Right = 514
-			End
-			DisplayFlags = 280
-			TopColumn = 2
-		 End
-		 Begin Table = "tblKartrisLanguageElements"
-			Begin Extent = 
-			   Top = 17
-			   Left = 21
-			   Bottom = 153
-			   Right = 236
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisLanguages"
-			Begin Extent = 
-			   Top = 0
-			   Left = 302
-			   Bottom = 101
-			   Right = 521
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisLanguageElements_1"
-			Begin Extent = 
-			   Top = 0
-			   Left = 587
-			   Bottom = 136
-			   Right = 751
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisLanguageElements_2"
-			Begin Extent = 
-			   Top = 158
-			   Left = 686
-			   Bottom = 295
-			   Right = 900
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-	  End
-   End
-   Begin SQLPane = 
-	  PaneHidden = 
-   End
-   Begin DataPane = 
-	  Begin ParameterDefaults = ""
-	  End
-	  Begin ColumnWidths = 14
-		 Width = 284
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 3345
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisTypeCategories'
-GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N'         Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-	  End
-   End
-   Begin CriteriaPane = 
-	  Begin ColumnWidths = 11
-		 Column = 3750
-		 Alias = 1620
-		 Table = 3120
-		 Output = 720
-		 Append = 1400
-		 NewValue = 1170
-		 SortType = 1350
-		 SortOrder = 1410
-		 GroupBy = 1350
-		 Filter = 1350
-		 Or = 1350
-		 Or = 1350
-		 Or = 1350
-	  End
-   End
-End
-' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisTypeCategories'
-GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=2 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisTypeCategories'
-GO
+
 /****** Object:  View [dbo].[vKartrisTypeAttributeValues]    Script Date: 01/23/2013 21:59:09 ******/
 SET ANSI_NULLS ON
 GO
@@ -18749,138 +18445,7 @@ FROM         dbo.tblKartrisLanguageElements INNER JOIN
 WHERE     (dbo.tblKartrisLanguageElements.LE_TypeID = 14) AND (dbo.tblKartrisLanguageElements.LE_FieldID = 1) AND 
 					  (dbo.tblKartrisLanguageElements.LE_Value IS NOT NULL)
 GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
-Begin DesignProperties = 
-   Begin PaneConfigurations = 
-	  Begin PaneConfiguration = 0
-		 NumPanes = 4
-		 Configuration = "(H (1[40] 4[20] 2[20] 3) )"
-	  End
-	  Begin PaneConfiguration = 1
-		 NumPanes = 3
-		 Configuration = "(H (1 [50] 4 [25] 3))"
-	  End
-	  Begin PaneConfiguration = 2
-		 NumPanes = 3
-		 Configuration = "(H (1 [50] 2 [25] 3))"
-	  End
-	  Begin PaneConfiguration = 3
-		 NumPanes = 3
-		 Configuration = "(H (4 [30] 2 [40] 3))"
-	  End
-	  Begin PaneConfiguration = 4
-		 NumPanes = 2
-		 Configuration = "(H (1 [56] 3))"
-	  End
-	  Begin PaneConfiguration = 5
-		 NumPanes = 2
-		 Configuration = "(H (2 [66] 3))"
-	  End
-	  Begin PaneConfiguration = 6
-		 NumPanes = 2
-		 Configuration = "(H (4 [50] 3))"
-	  End
-	  Begin PaneConfiguration = 7
-		 NumPanes = 1
-		 Configuration = "(V (3))"
-	  End
-	  Begin PaneConfiguration = 8
-		 NumPanes = 3
-		 Configuration = "(H (1[56] 4[18] 2) )"
-	  End
-	  Begin PaneConfiguration = 9
-		 NumPanes = 2
-		 Configuration = "(H (1 [75] 4))"
-	  End
-	  Begin PaneConfiguration = 10
-		 NumPanes = 2
-		 Configuration = "(H (1[66] 2) )"
-	  End
-	  Begin PaneConfiguration = 11
-		 NumPanes = 2
-		 Configuration = "(H (4 [60] 2))"
-	  End
-	  Begin PaneConfiguration = 12
-		 NumPanes = 1
-		 Configuration = "(H (1) )"
-	  End
-	  Begin PaneConfiguration = 13
-		 NumPanes = 1
-		 Configuration = "(V (4))"
-	  End
-	  Begin PaneConfiguration = 14
-		 NumPanes = 1
-		 Configuration = "(V (2))"
-	  End
-	  ActivePaneConfig = 0
-   End
-   Begin DiagramPane = 
-	  Begin Origin = 
-		 Top = 0
-		 Left = 0
-	  End
-	  Begin Tables = 
-		 Begin Table = "tblKartrisLanguageElements"
-			Begin Extent = 
-			   Top = 6
-			   Left = 38
-			   Bottom = 138
-			   Right = 224
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisAttributeValues"
-			Begin Extent = 
-			   Top = 6
-			   Left = 262
-			   Bottom = 120
-			   Right = 453
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-	  End
-   End
-   Begin SQLPane = 
-   End
-   Begin DataPane = 
-	  Begin ParameterDefaults = ""
-	  End
-	  Begin ColumnWidths = 9
-		 Width = 284
-		 Width = 1500
-		 Width = 1500
-		 Width = 2430
-		 Width = 1890
-		 Width = 1875
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-	  End
-   End
-   Begin CriteriaPane = 
-	  Begin ColumnWidths = 11
-		 Column = 1440
-		 Alias = 1530
-		 Table = 1170
-		 Output = 720
-		 Append = 1400
-		 NewValue = 1170
-		 SortType = 1350
-		 SortOrder = 1410
-		 GroupBy = 1350
-		 Filter = 1350
-		 Or = 1350
-		 Or = 1350
-		 Or = 1350
-	  End
-   End
-End
-' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisTypeAttributeValues'
-GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisTypeAttributeValues'
-GO
+
 /****** Object:  View [dbo].[vKartrisTypeVersions]    Script Date: 01/23/2013 21:59:09 ******/
 SET ANSI_NULLS ON
 GO
@@ -18906,173 +18471,7 @@ WHERE        (dbo.tblKartrisLanguageElements.LE_FieldID = 1) AND (tblKartrisLang
 						 (dbo.tblKartrisLanguageElements.LE_FieldID = 1) AND (tblKartrisLanguageElements_1.LE_FieldID = 2) AND (dbo.tblKartrisLanguageElements.LE_TypeID = 1) AND (tblKartrisLanguageElements_1.LE_TypeID = 1) 
 						 AND (tblKartrisLanguageElements_1.LE_Value IS NOT NULL)
 GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
-Begin DesignProperties = 
-   Begin PaneConfigurations = 
-	  Begin PaneConfiguration = 0
-		 NumPanes = 4
-		 Configuration = "(H (1[22] 4[43] 2[6] 3) )"
-	  End
-	  Begin PaneConfiguration = 1
-		 NumPanes = 3
-		 Configuration = "(H (1[50] 4[25] 3) )"
-	  End
-	  Begin PaneConfiguration = 2
-		 NumPanes = 3
-		 Configuration = "(H (1[50] 2[25] 3) )"
-	  End
-	  Begin PaneConfiguration = 3
-		 NumPanes = 3
-		 Configuration = "(H (4[30] 2[27] 3) )"
-	  End
-	  Begin PaneConfiguration = 4
-		 NumPanes = 2
-		 Configuration = "(H (1[31] 3) )"
-	  End
-	  Begin PaneConfiguration = 5
-		 NumPanes = 2
-		 Configuration = "(H (2 [66] 3))"
-	  End
-	  Begin PaneConfiguration = 6
-		 NumPanes = 2
-		 Configuration = "(H (4[50] 3) )"
-	  End
-	  Begin PaneConfiguration = 7
-		 NumPanes = 1
-		 Configuration = "(V (3) )"
-	  End
-	  Begin PaneConfiguration = 8
-		 NumPanes = 3
-		 Configuration = "(H (1[56] 4[18] 2) )"
-	  End
-	  Begin PaneConfiguration = 9
-		 NumPanes = 2
-		 Configuration = "(H (1 [75] 4))"
-	  End
-	  Begin PaneConfiguration = 10
-		 NumPanes = 2
-		 Configuration = "(H (1[66] 2) )"
-	  End
-	  Begin PaneConfiguration = 11
-		 NumPanes = 2
-		 Configuration = "(H (4 [60] 2))"
-	  End
-	  Begin PaneConfiguration = 12
-		 NumPanes = 1
-		 Configuration = "(H (1) )"
-	  End
-	  Begin PaneConfiguration = 13
-		 NumPanes = 1
-		 Configuration = "(V (4))"
-	  End
-	  Begin PaneConfiguration = 14
-		 NumPanes = 1
-		 Configuration = "(V (2))"
-	  End
-	  ActivePaneConfig = 0
-   End
-   Begin DiagramPane = 
-	  Begin Origin = 
-		 Top = 0
-		 Left = 0
-	  End
-	  Begin Tables = 
-		 Begin Table = "tblKartrisLanguageElements"
-			Begin Extent = 
-			   Top = 6
-			   Left = 45
-			   Bottom = 147
-			   Right = 209
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisVersions"
-			Begin Extent = 
-			   Top = 112
-			   Left = 352
-			   Bottom = 229
-			   Right = 546
-			End
-			DisplayFlags = 280
-			TopColumn = 15
-		 End
-		 Begin Table = "tblKartrisLanguageElements_1"
-			Begin Extent = 
-			   Top = 6
-			   Left = 662
-			   Bottom = 147
-			   Right = 826
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisLanguages"
-			Begin Extent = 
-			   Top = 0
-			   Left = 336
-			   Bottom = 117
-			   Right = 555
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-	  End
-   End
-   Begin SQLPane = 
-   End
-   Begin DataPane = 
-	  Begin ParameterDefaults = ""
-	  End
-	  Begin ColumnWidths = 21
-		 Width = 284
-		 Width = 1560
-		 Width = 1620
-		 Width = 2775
-		 Width = 2460
-		 Width = 2055
-		 Width = 1500
-		 Width = 2370
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-	  End
-   End
-   Begin CriteriaPane = 
-	  Begin' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisTypeVersions'
-GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N' ColumnWidths = 11
-		 Column = 2400
-		 Alias = 1605
-		 Table = 2460
-		 Output = 720
-		 Append = 1400
-		 NewValue = 1170
-		 SortType = 900
-		 SortOrder = 975
-		 GroupBy = 1350
-		 Filter = 1200
-		 Or = 1485
-		 Or = 1170
-		 Or = 1350
-		 Or = 1350
-	  End
-   End
-End
-' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisTypeVersions'
-GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=2 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisTypeVersions'
-GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisPages_GetByID]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -24112,11 +23511,10 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Author:		Mohammad
--- Create date: 
--- Description:	
--- Remarks: Updated by Paul, 2017/05/25
--- include MinPrice
+-- Author: Mohammad/Paul/Joni
+-- Remarks: Updated by Joni, 2018/03/02
+-- optimized so finds newest prods, then gets
+-- details of them
 -- =============================================
 CREATE PROCEDURE [dbo].[spKartrisProducts_GetNewestProducts]
 	(
@@ -24128,19 +23526,24 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 	
-	SELECT DISTINCT TOP (10) tblKartrisProducts.P_ID, tblKartrisLanguageElements.LE_Value AS P_Name, dbo.fnKartrisProduct_GetMinPrice(P_ID) As MinPrice, tblKartrisProducts.P_DateCreated, @LANG_ID LANG_ID
-	FROM    tblKartrisProducts INNER JOIN
-			  tblKartrisVersions ON tblKartrisProducts.P_ID = tblKartrisVersions.V_ProductID INNER JOIN
-			  tblKartrisProductCategoryLink ON tblKartrisProducts.P_ID = tblKartrisProductCategoryLink.PCAT_ProductID INNER JOIN
-			  tblKartrisCategories ON tblKartrisProductCategoryLink.PCAT_CategoryID = tblKartrisCategories.CAT_ID INNER JOIN
-			  tblKartrisLanguageElements ON tblKartrisProducts.P_ID = tblKartrisLanguageElements.LE_ParentID
-	WHERE   (tblKartrisProducts.P_Live=1) AND (tblKartrisProducts.P_CustomerGroupID IS NULL) AND (tblKartrisCategories.CAT_CustomerGroupID IS NULL) AND (tblKartrisVersions.V_CustomerGroupID IS NULL) AND
-		   (tblKartrisLanguageElements.LE_LanguageID = @LANG_ID) AND (tblKartrisLanguageElements.LE_TypeID = 2) AND (tblKartrisLanguageElements.LE_FieldID = 1) AND 
-		  (NOT (tblKartrisLanguageElements.LE_Value IS NULL))
-	ORDER BY tblKartrisProducts.P_DateCreated DESC, tblKartrisProducts.P_ID DESC
+	SELECT products.P_ID, products.P_Name, dbo.fnKartrisProduct_GetMinPrice(products.P_ID) As MinPrice, products.P_DateCreated, @LANG_ID LANG_ID
+	FROM (
+		SELECT DISTINCT TOP (10) tblKartrisProducts.P_ID, tblKartrisLanguageElements.LE_Value AS P_Name, tblKartrisProducts.P_DateCreated, @LANG_ID LANG_ID
+		FROM    tblKartrisProducts INNER JOIN
+				  tblKartrisLanguageElements ON tblKartrisProducts.P_ID = tblKartrisLanguageElements.LE_ParentID
+		WHERE   (tblKartrisProducts.P_Live=1) AND (tblKartrisProducts.P_CustomerGroupID IS NULL) AND
+			   (tblKartrisLanguageElements.LE_LanguageID = @LANG_ID) AND (tblKartrisLanguageElements.LE_TypeID = 2) AND (tblKartrisLanguageElements.LE_FieldID = 1) AND 
+			  (NOT (tblKartrisLanguageElements.LE_Value IS NULL))
+		ORDER BY tblKartrisProducts.P_ID DESC
+	) as products
+	INNER JOIN tblKartrisVersions ON products.P_ID = tblKartrisVersions.V_ProductID INNER JOIN
+			  tblKartrisProductCategoryLink ON products.P_ID = tblKartrisProductCategoryLink.PCAT_ProductID INNER JOIN
+			  tblKartrisCategories ON tblKartrisProductCategoryLink.PCAT_CategoryID = tblKartrisCategories.CAT_ID
+	WHERE (tblKartrisCategories.CAT_CustomerGroupID IS NULL) AND (tblKartrisVersions.V_CustomerGroupID IS NULL) 
 
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetNameByProductID]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -26419,189 +25822,7 @@ FROM         dbo.tblKartrisCategories INNER JOIN
 					  dbo.tblKartrisTaxRates AS tblKartrisTaxRates_1 ON dbo.vKartrisTypeVersions.V_Tax = tblKartrisTaxRates_1.T_ID
 WHERE     (dbo.vKartrisTypeProducts.P_Live = 1) AND (dbo.tblKartrisCategories.CAT_Live = 1) AND (dbo.vKartrisTypeVersions.V_Live = 1)
 GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
-Begin DesignProperties = 
-   Begin PaneConfigurations = 
-	  Begin PaneConfiguration = 0
-		 NumPanes = 4
-		 Configuration = "(H (1[37] 4[36] 2[6] 3) )"
-	  End
-	  Begin PaneConfiguration = 1
-		 NumPanes = 3
-		 Configuration = "(H (1 [50] 4 [25] 3))"
-	  End
-	  Begin PaneConfiguration = 2
-		 NumPanes = 3
-		 Configuration = "(H (1 [50] 2 [25] 3))"
-	  End
-	  Begin PaneConfiguration = 3
-		 NumPanes = 3
-		 Configuration = "(H (4 [30] 2 [40] 3))"
-	  End
-	  Begin PaneConfiguration = 4
-		 NumPanes = 2
-		 Configuration = "(H (1 [56] 3))"
-	  End
-	  Begin PaneConfiguration = 5
-		 NumPanes = 2
-		 Configuration = "(H (2 [66] 3))"
-	  End
-	  Begin PaneConfiguration = 6
-		 NumPanes = 2
-		 Configuration = "(H (4 [50] 3))"
-	  End
-	  Begin PaneConfiguration = 7
-		 NumPanes = 1
-		 Configuration = "(V (3))"
-	  End
-	  Begin PaneConfiguration = 8
-		 NumPanes = 3
-		 Configuration = "(H (1[56] 4[18] 2) )"
-	  End
-	  Begin PaneConfiguration = 9
-		 NumPanes = 2
-		 Configuration = "(H (1 [75] 4))"
-	  End
-	  Begin PaneConfiguration = 10
-		 NumPanes = 2
-		 Configuration = "(H (1[66] 2) )"
-	  End
-	  Begin PaneConfiguration = 11
-		 NumPanes = 2
-		 Configuration = "(H (4 [60] 2))"
-	  End
-	  Begin PaneConfiguration = 12
-		 NumPanes = 1
-		 Configuration = "(H (1) )"
-	  End
-	  Begin PaneConfiguration = 13
-		 NumPanes = 1
-		 Configuration = "(V (4))"
-	  End
-	  Begin PaneConfiguration = 14
-		 NumPanes = 1
-		 Configuration = "(V (2))"
-	  End
-	  ActivePaneConfig = 0
-   End
-   Begin DiagramPane = 
-	  Begin Origin = 
-		 Top = 0
-		 Left = 0
-	  End
-	  Begin Tables = 
-		 Begin Table = "tblKartrisCategories"
-			Begin Extent = 
-			   Top = 147
-			   Left = 531
-			   Bottom = 250
-			   Right = 741
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "vKartrisTypeProducts"
-			Begin Extent = 
-			   Top = 6
-			   Left = 38
-			   Bottom = 282
-			   Right = 232
-			End
-			DisplayFlags = 280
-			TopColumn = 2
-		 End
-		 Begin Table = "tblKartrisProductCategoryLink"
-			Begin Extent = 
-			   Top = 155
-			   Left = 283
-			   Bottom = 265
-			   Right = 460
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "vKartrisTypeVersions"
-			Begin Extent = 
-			   Top = 6
-			   Left = 787
-			   Bottom = 266
-			   Right = 981
-			End
-			DisplayFlags = 280
-			TopColumn = 9
-		 End
-		 Begin Table = "tblKartrisTaxRates"
-			Begin Extent = 
-			   Top = 10
-			   Left = 562
-			   Bottom = 97
-			   Right = 722
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-	  End
-   End
-   Begin SQLPane = 
-   End
-   Begin DataPane = 
-	  Begin ParameterDefaults = ""
-	  End
-	  Begin ColumnWidths = 28
-		 Width = 284
-		 Width = 975
-		 Width = 2175
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisProductsVersions'
-GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N' = 870
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-		 Width = 1500
-	  End
-   End
-   Begin CriteriaPane = 
-	  Begin ColumnWidths = 11
-		 Column = 4560
-		 Alias = 1035
-		 Table = 1170
-		 Output = 720
-		 Append = 1400
-		 NewValue = 1170
-		 SortType = 1350
-		 SortOrder = 1410
-		 GroupBy = 1350
-		 Filter = 1350
-		 Or = 1350
-		 Or = 1350
-		 Or = 1350
-	  End
-   End
-End
-' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisProductsVersions'
-GO
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=2 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisProductsVersions'
-GO
+
 /****** Object:  View [dbo].[vKartrisVersionsStock]    Script Date: 10/15/2013 23:51:34 ******/
 SET ANSI_NULLS ON
 GO
@@ -26620,148 +25841,6 @@ WHERE     (dbo.tblKartrisCategories.CAT_Live = 1) AND (dbo.tblKartrisProducts.P_
 
 GO
 
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
-Begin DesignProperties = 
-   Begin PaneConfigurations = 
-	  Begin PaneConfiguration = 0
-		 NumPanes = 4
-		 Configuration = "(H (1[40] 4[20] 2[20] 3) )"
-	  End
-	  Begin PaneConfiguration = 1
-		 NumPanes = 3
-		 Configuration = "(H (1 [50] 4 [25] 3))"
-	  End
-	  Begin PaneConfiguration = 2
-		 NumPanes = 3
-		 Configuration = "(H (1 [50] 2 [25] 3))"
-	  End
-	  Begin PaneConfiguration = 3
-		 NumPanes = 3
-		 Configuration = "(H (4 [30] 2 [40] 3))"
-	  End
-	  Begin PaneConfiguration = 4
-		 NumPanes = 2
-		 Configuration = "(H (1 [56] 3))"
-	  End
-	  Begin PaneConfiguration = 5
-		 NumPanes = 2
-		 Configuration = "(H (2 [66] 3))"
-	  End
-	  Begin PaneConfiguration = 6
-		 NumPanes = 2
-		 Configuration = "(H (4 [50] 3))"
-	  End
-	  Begin PaneConfiguration = 7
-		 NumPanes = 1
-		 Configuration = "(V (3))"
-	  End
-	  Begin PaneConfiguration = 8
-		 NumPanes = 3
-		 Configuration = "(H (1[56] 4[18] 2) )"
-	  End
-	  Begin PaneConfiguration = 9
-		 NumPanes = 2
-		 Configuration = "(H (1 [75] 4))"
-	  End
-	  Begin PaneConfiguration = 10
-		 NumPanes = 2
-		 Configuration = "(H (1[66] 2) )"
-	  End
-	  Begin PaneConfiguration = 11
-		 NumPanes = 2
-		 Configuration = "(H (4 [60] 2))"
-	  End
-	  Begin PaneConfiguration = 12
-		 NumPanes = 1
-		 Configuration = "(H (1) )"
-	  End
-	  Begin PaneConfiguration = 13
-		 NumPanes = 1
-		 Configuration = "(V (4))"
-	  End
-	  Begin PaneConfiguration = 14
-		 NumPanes = 1
-		 Configuration = "(V (2))"
-	  End
-	  ActivePaneConfig = 0
-   End
-   Begin DiagramPane = 
-	  Begin Origin = 
-		 Top = 0
-		 Left = 0
-	  End
-	  Begin Tables = 
-		 Begin Table = "tblKartrisCategories"
-			Begin Extent = 
-			   Top = 6
-			   Left = 38
-			   Bottom = 114
-			   Right = 258
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisProductCategoryLink"
-			Begin Extent = 
-			   Top = 6
-			   Left = 296
-			   Bottom = 99
-			   Right = 464
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisProducts"
-			Begin Extent = 
-			   Top = 6
-			   Left = 502
-			   Bottom = 114
-			   Right = 696
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisVersions"
-			Begin Extent = 
-			   Top = 6
-			   Left = 734
-			   Bottom = 161
-			   Right = 919
-			End
-			DisplayFlags = 280
-			TopColumn = 5
-		 End
-	  End
-   End
-   Begin SQLPane = 
-   End
-   Begin DataPane = 
-	  Begin ParameterDefaults = ""
-	  End
-   End
-   Begin CriteriaPane = 
-	  Begin ColumnWidths = 11
-		 Column = 1440
-		 Alias = 900
-		 Table = 1170
-		 Output = 720
-		 Append = 1400
-		 NewValue = 1170
-		 SortType = 1350
-		 SortOrder = 1410
-		 GroupBy = 1350
-		 Filter = 1350
-		 Or = 1350
-		 Or = 1350
-		 Or = 1350
-	  End
-   End
-End
-' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisVersionsStock'
-GO
-
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisVersionsStock'
-GO
 /****** Object:  UserDefinedFunction [dbo].[fnKartrisVersions_GetProductName]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -30457,7 +29536,7 @@ END
 GO
 
 /*** New language strings 2.9012 ***/
-INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'FormLabel_GDPRConfirmText', N'Please confirm you have read, understand and accept our privacy policy and terms and conditions', NULL, 2.9012, N'', NULL, N'Kartris',1);
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'FormLabel_GDPRConfirmText', N'Please confirm you have read, understand and accept our privacy policy and terms and conditions', NULL, 2.9012, N'', NULL, N'GDPR',1);
 
 GO
 
@@ -30469,8 +29548,183 @@ VALUES
 
 GO
 
+/****** create new addresses view, this will help exporting data for GDPR 2.9012 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[vKartrisAddresses]
+AS
+SELECT DISTINCT 
+						 dbo.tblKartrisAddresses.ADR_ID, dbo.tblKartrisAddresses.ADR_UserID, dbo.tblKartrisAddresses.ADR_Label, dbo.tblKartrisAddresses.ADR_Name, dbo.tblKartrisAddresses.ADR_Company, 
+						 dbo.tblKartrisAddresses.ADR_StreetAddress, dbo.tblKartrisAddresses.ADR_TownCity, dbo.tblKartrisAddresses.ADR_County, dbo.tblKartrisAddresses.ADR_PostCode, dbo.tblKartrisAddresses.ADR_Telephone, 
+						 dbo.tblKartrisLanguageElements.LE_Value, dbo.tblKartrisLanguageElements.LE_TypeID, dbo.tblKartrisLanguageElements.LE_LanguageID
+FROM            dbo.tblKartrisLanguageElements INNER JOIN
+						 dbo.tblKartrisLanguageElementFieldNames ON dbo.tblKartrisLanguageElements.LE_FieldID = dbo.tblKartrisLanguageElementFieldNames.LEFN_ID INNER JOIN
+						 dbo.tblKartrisLanguageElementTypeFields ON dbo.tblKartrisLanguageElementFieldNames.LEFN_ID = dbo.tblKartrisLanguageElementTypeFields.LEFN_ID INNER JOIN
+						 dbo.tblKartrisLanguageElementTypes ON dbo.tblKartrisLanguageElements.LE_TypeID = dbo.tblKartrisLanguageElementTypes.LET_ID INNER JOIN
+						 dbo.tblKartrisAddresses INNER JOIN
+						 dbo.tblKartrisDestination ON dbo.tblKartrisAddresses.ADR_Country = dbo.tblKartrisDestination.D_ID ON dbo.tblKartrisLanguageElements.LE_ParentID = dbo.tblKartrisDestination.D_ID
+WHERE        (dbo.tblKartrisLanguageElements.LE_TypeID = 11) AND (dbo.tblKartrisLanguageElements.LE_LanguageID = 1)
+GO
+
+/****** GDPR export: new sproc to find addresses by user ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetAddressesByUserID]
+(
+	@UserID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         vKartrisAddresses
+WHERE     (ADR_UserID = @UserID)
+GO
+
+/****** GDPR export: new sproc to find orders by user ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetOrdersByUserID]
+(
+	@UserID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         tblKartrisOrders
+WHERE     (O_CustomerID = @UserID)
+ORDER BY O_ID
+GO
+
+/****** GDPR export: new sproc to find reviews by user ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetReviewsByUserID]
+(
+	@UserID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         tblKartrisReviews
+WHERE     (REV_CustomerID = @UserID)
+ORDER BY REV_ID
+GO
+
+/****** GDPR export: new sproc to find wishlists by user ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetWishListsByUserID]
+(
+	@UserID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         tblKartrisWishLists
+WHERE     (WL_UserID = @UserID)
+ORDER BY WL_ID
+GO
+
+/****** GDPR export: new sproc to find support tickets by user ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetSupportTicketsByUserID]
+(
+	@UserID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         tblKartrisSupportTickets
+WHERE     (TIC_UserID = @UserID)
+ORDER BY TIC_ID
+GO
+
+/****** GDPR: new view for saved baskets ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[vKartrisTypeSavedBasketItems]
+AS
+SELECT        dbo.tblKartrisBasketValues.BV_VersionID, dbo.vKartrisTypeVersions.V_Name, dbo.vKartrisTypeVersions.V_CodeNumber, dbo.tblKartrisBasketValues.BV_Quantity, dbo.tblKartrisBasketValues.BV_CustomText, 
+                         dbo.tblKartrisBasketValues.BV_DateTimeAdded, dbo.tblKartrisBasketValues.BV_LastUpdated, dbo.tblKartrisBasketValues.BV_ParentID, dbo.tblKartrisBasketValues.BV_ParentType, dbo.tblKartrisBasketValues.BV_ID
+FROM            dbo.tblKartrisBasketValues INNER JOIN
+                         dbo.vKartrisTypeVersions ON dbo.tblKartrisBasketValues.BV_VersionID = dbo.vKartrisTypeVersions.V_ID
+WHERE        (dbo.tblKartrisBasketValues.BV_ParentType = 's')
+GO
+
+/****** GDPR export: new sproc to find saved baskets ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetSavedBasketsByUserID]
+(
+	@UserID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         tblKartrisSavedBaskets
+WHERE     (SBSKT_UserID = @UserID)
+ORDER BY SBSKT_ID
+GO
+
+/****** GDPR export: saved basket items ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetSavedBasketValuesByUserID]
+(
+	@SavedBasketID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         vKartrisTypeSavedBasketItems
+WHERE     (BV_ParentID = @SavedBasketID)
+ORDER BY BV_ID
+GO
+
+/*** New language strings  ***/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_GDPRExport', N'GDPR Export', NULL, 2.9012, N'', NULL, N'_GDPR',1);
+GO
+
+/****** Index to improve speed product date operations ******/
+CREATE NONCLUSTERED INDEX [P_DateCreated] ON [dbo].[tblKartrisProducts]
+(
+	[P_DateCreated] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** new GDPR functionality ******/
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.gdpr.mailinglistbcc', N'', N's', N't', '', N'An email address to BCC mailing list confirmations to as proof of GDPR terms',2.9013, N'', 0);
+
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9012', N's', N's', N'kartris version', N'', 2.9012, N'2.9012', 0)
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9013', N's', N's', N'kartris version', N'', 2.9013, N'2.9013', 0)
 GO
 
 

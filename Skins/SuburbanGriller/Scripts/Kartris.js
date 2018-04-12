@@ -4,7 +4,7 @@
 $(document).ready(function () {
     $(document).foundation();
     $('.loadspinner').find('a').click(function () {
-        $(".page-loading-container").fadeIn("200");
+        $(".page-loading-container").fadeIn("20");
     });
 });
 $(document).foundation({

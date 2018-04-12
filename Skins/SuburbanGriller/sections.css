@@ -279,11 +279,11 @@ VERSIONS
 .versions span.inctax span.figure       { color: #333; float: left; font-weight: bold; font-size: 260%; padding: 0 10px 10px 0; }
 .versions .line                         { text-align: left; padding: 0 0 0 0; }
 .versions .multipleversiondropdown      { border-top: solid 1px #000; border-bottom: solid 2px #eee; }
-.versions .addtobasket                  { clear: both }
+.versions .addtobasket                  { clear: both; }
 .versions .addtobasket select           { margin: 3px 0 0 0; width: 450px; max-width: 99%; } /* version name and price */
 .versions .addtobasket .dropdown        { width: 45px } /* qty */
 .versions .addtobasket .textbox         { width: 45px }
-.versions .addtobasket div.selector     { clear: both; display: block; vertical-align: bottom; padding: 0 0 0 0; }
+.versions .addtobasket div.selector     { display: block; vertical-align: bottom; padding: 0 0 0 0; }
 .versions .addtobasket div.outofstock   { color: #f00; font-weight: bold; }
 .versions .addtobasket span.outofstock  { color: #f00; font-weight: bold; }
 .versions .addtobasket div.stocknotification
@@ -409,20 +409,21 @@ SUPPORT TICKETS
 ========================================================================
 */
 #supporttickets .section                { border: none; }
+#supporttickets td                      { background-color: #f6e6e6; }
 #supporttickets td.idfield              { width: 45px }
 #supporttickets td.subject              { font-weight: bold }
 #supporttickets td.opened               { width: 100px }
 #supporttickets td.closed               { width: 100px }
 #supporttickets td.selectfield          { width: 55px; text-align: right; }
 #supporttickets div.userreply           { border-top: solid 1px #ccc; margin: 10px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #f5f5f5; }
-#supporttickets div.ownerreply          { border-top: solid 1px #fc5;margin: 10px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #fe9; }
+#supporttickets div.ownerreply          { border-top: solid 1px #999;margin: 10px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #fff; }
 #supporttickets p.details               { color: #999; padding-bottom: 5px; }
 #supporttickets p.message               { white-space: pre-wrap }
 #supporttickets textarea                { width: 100%; height: 150px; }
 #supporttickets .expirywarning          { display: block; width: auto; border: dotted 1px #999; color: #999; background-color: #f6f6f6; padding: 3px 9px 3px 9px; margin: 2px 0 15px 0; }
 #supporttickets .expiredwarning         { display: block; width: auto; border: dotted 1px #f00; color: #f00; background-color: #f6e6e6; padding: 3px 9px 3px 9px; margin: 2px 0 15px 0; }
 #supporttickets .filled .sp_highlight_ticket td
-                                        { background-color: #fd5 }
+                                        { background-color: #fff }
 /* 
 ========================================================================
 REVIEWS AND CROSS-SELLING
@@ -651,8 +652,8 @@ WISHLIST
 #page_wishlist		                    { margin-bottom: 30px; }
 #page_wishlist table                    { }
 #page_wishlist table th                 { }
-#page_wishlist table td                 { color: #000; vertical-align: top; background-color: #fff; border-top: solid 1px #fff; background-position: top left; background-repeat: repeat-x; padding: 5px 5px 10px 5px; }
-#page_wishlist table td a               { display: block; color: #04d; font-weight: bold; margin: 0 0 5px 0; padding: 0; }
+#page_wishlist table td                 { }
+#page_wishlist table td a               { font-weight: bold; }
 #page_wishlist table td span.versioncode
                                         { color: #888 }
 /* 

@@ -101,7 +101,7 @@ Partial Class Skins_Hugofox_UserControls_HugoFoxContent
         Dim xmlDoc As XDocument = Nothing
         Dim strResponse As String = ""
         Dim strFormattedFeed As String = ""
-        Dim strConnection As String = "http://www.hugofox.com/business/kartris-" & numHugoFoxID.ToString & "/kartris"
+        Dim strConnection As String = "https://www.hugofox.com/community/kartris-" & numHugoFoxID.ToString & "/kartris"
 
         'We want to pull from cache if possible, it is
         'faster and keeps traffic to kartris.com down
@@ -136,15 +136,16 @@ Partial Class Skins_Hugofox_UserControls_HugoFoxContent
                 strFormattedFeed &= FormatHTMLPageForCaching(strResponse, "FOOTER")
 
                 'Now we need to add in the main HugoFox URL to images and links
+                strFormattedFeed = Replace(strFormattedFeed, "href=""/community/", "href=""//www.hugofox.com/community/")
                 strFormattedFeed = Replace(strFormattedFeed, "href=""/business/", "href=""//www.hugofox.com/business/")
-                strFormattedFeed = Replace(strFormattedFeed, "/getImage.asp", "//www.hugofox.com/getImage.asp")
+                strFormattedFeed = Replace(strFormattedFeed, "/getImage.aspx", "//www.hugofox.com/getImage.aspx")
                 strFormattedFeed = Replace(strFormattedFeed, "<script src=""/scripts/", "<script src=""//www.hugofox.com/scripts/")
 
                 'Add feed data to local cache for one hour
                 Cache.Insert(strCacheKey, strFormattedFeed, Nothing, DateTime.Now.AddMinutes(60), TimeSpan.Zero)
 
             Catch ex As Exception
-                CkartrisFormatErrors.LogError("Problem receiving HTML from HugoFox. " & ex.Message)
+                CkartrisFormatErrors.LogError("Problem receiving HTML from HugoFox. " & ex.Message & " - " & strConnection)
 
             End Try
         Else

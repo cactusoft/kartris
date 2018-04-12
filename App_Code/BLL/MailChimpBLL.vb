@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -189,9 +189,11 @@ Public Class MailChimpBLL
             Dim taskResult As Customer = Await manager.ECommerceStores.Customers(mcStoreId).AddAsync(customer).ConfigureAwait(False)
             Return taskResult
         Catch ex As Exception
-            'Debug.Print(ex.Message)
             'Log the error
             CkartrisFormatErrors.LogError("MailchimpBLL AddCustomer: " & ex.Message)
+
+            'Avoid warnings when building, they tend to confuse people
+            Return Nothing
         End Try
     End Function
 
@@ -200,7 +202,7 @@ Public Class MailChimpBLL
     ''' </summary>
     Public Async Function AddProduct(ByVal basketItem As BasketItem) As Task(Of Product)
         Try
-            Dim product As Product
+            Dim product As Product = Nothing
             Dim productVariant As [Variant]
             Dim listVariants As List(Of [Variant]) = New List(Of [Variant])
             Try
@@ -232,7 +234,7 @@ Public Class MailChimpBLL
                 product = New Product With {.Id = basketItem.ProductID,
                                             .Title = basketItem.Name,
                                             .Variants = listVariants,
-                                            .ImageUrl = imageUrl
+                                            .imageUrl = imageUrl
                                             }
                 Dim taskResult As Product = manager.ECommerceStores.Products(mcStoreId).AddAsync(product).Result
                 Return taskResult
@@ -277,7 +279,8 @@ Public Class MailChimpBLL
         Catch ex As Exception
             'Debug.Print(ex.Message)
             'Log the error
-            CkartrisFormatErrors.LogError("MailchimpBLL trycatch AddProduct: " & ex.Message)
+            CkartrisFormatErrors.LogError("MailchimpBLL AddProduct: " & ex.Message)
+            Return Nothing
         End Try
     End Function
 
@@ -294,7 +297,7 @@ Public Class MailChimpBLL
 
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
             Dim cart As Cart = New Cart With {.Id = "cart_" & idSufix,
-                                            .Customer = New Customer With {.Id = customer.Id, .OptInStatus = True},
+                                            .customer = New Customer With {.Id = customer.Id, .OptInStatus = True},
                                             .CurrencyCode = currencyCodeEnum,
                                           .OrderTotal = kartrisBasket.FinalPriceIncTax,
                                           .CheckoutUrl = CkartrisBLL.WebShopURL.ToLower & "Checkout.aspx",
@@ -323,7 +326,6 @@ Public Class MailChimpBLL
 
             Dim taskResult As Cart = manager.ECommerceStores.Carts(mcStoreId).AddAsync(cart).Result
 
-
             Return taskResult
         Catch ex As Exception
             'Debug.Print(ex.Message)
@@ -331,6 +333,9 @@ Public Class MailChimpBLL
             Dim trace = New System.Diagnostics.StackTrace(ex, True)
             CkartrisFormatErrors.LogError("MailchimpBLL AddCart stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddCart - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
             CkartrisFormatErrors.LogError("MailchimpBLL AddCart: " & ex.Message)
+
+            'Avoid build warnings
+            Return Nothing
         End Try
     End Function
 
@@ -431,7 +436,7 @@ Public Class MailChimpBLL
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
 
             Dim order As Order = New Order With {.Id = "order_" & cartId,
-                                            .Customer = New Customer With {.Id = customer.Id},
+                                            .customer = New Customer With {.Id = customer.Id},
                                           .CurrencyCode = currencyCodeEnum,
                                           .OrderTotal = kartrisBasket.FinalPriceIncTax,
                                           .ProcessedAtForeign = timestamp,
@@ -470,7 +475,6 @@ Public Class MailChimpBLL
 
             Return taskResult
         Catch ex As Exception
-            'Debug.Print(ex.Message)
             'Log the error
             CkartrisFormatErrors.LogError("MailchimpBLL AddOrder: " & ex.Message)
             Dim trace = New System.Diagnostics.StackTrace(ex, True)
@@ -605,7 +609,7 @@ Public Class MailChimpBLL
         Try
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
             Dim storeObj = New Store With {.Id = storeId,
-                                        .ListId = listId,
+                                        .listId = listId,
                                         .Name = storeName,
                                         .Domain = storeDomain,
                                         .EmailAddress = EmailAddress,

@@ -29,7 +29,7 @@ Partial Class Callback
             Dim strCallbackError As String = ""
             Dim strResult As String = ""
             Dim strUpdateResult As String = ""
-            Dim strMultibancoData As String()
+            Dim strMultibancoData As String() = Split("", " ")
             Dim strBodyText As String = ""
             Dim blnFullDisplay As Boolean = True
             If Request.QueryString("d") = "off" Then blnFullDisplay = False
@@ -135,6 +135,7 @@ Partial Class Callback
                         strMultibancoData = strUpdateResult.Split("&")
                     Catch ex As Exception
                         Response.Write("<br>Error: <br>" + ex.Message)
+
                     End Try
 
                 End If

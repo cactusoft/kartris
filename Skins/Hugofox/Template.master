@@ -29,12 +29,17 @@
 
 	<!-- HUGOFOX DEFAULT STYLE SHEETS -->
 	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/normalize.min.css" media="all">
-	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/foundation.5.0.3.css" media="all">
+	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/foundation.css" media="all">
 	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/fonts.css" media="all">
+	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/foundation-icons.css" media="all">
+	<link rel="stylesheet" href="https://www.hugofox.com/scripts/jquery-ui-1.11.1.custom/jquery-ui.min.css">
 	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/base.css" media="all">
+	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/common.css" media="all">
+	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/accessibility.css">
 	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/overrides.css" media="all">
+	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/base_community.css?v5" media="all">
+	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/customsitesonly.css" media="all">
 	<link rel="stylesheet" href="https://www.hugofox.com/skin_hugofox/css/stylesheet3.css" media="print">
-    <link rel="stylesheet" href="https://www.hugofox.com/scripts/jquery-ui-1.11.1.custom/jquery-ui.min.css">
 
 	<!-- KARTRIS STYLE SHEETS -->
 	<link href="general.css" rel="stylesheet" type="text/css" />
@@ -43,8 +48,8 @@
 	<link href="custom.css" rel="stylesheet" type="text/css" />
 	<link href="powerpack.css" rel="stylesheet" type="text/css" />
 
-    <!-- HEADER IMAGE CSS -->
-    <user:HugoFoxContent ID="UC_HeaderImageCSS" runat="server" DisplayItem="headerimagecss"/>
+	<!-- HEADER IMAGE CSS -->
+	<user:HugoFoxContent ID="UC_HeaderImageCSS" runat="server" DisplayItem="headerimagecss"/>
 	<title>Kartris v1</title>
 </head>
 
@@ -61,16 +66,16 @@
 
 
 		<!-- TAG COOKIE MESSAGE -->
-        <user:HugoFoxContent ID="UC_CookieMessage" runat="server" DisplayItem="cookiemessage"/>
+		<user:HugoFoxContent ID="UC_CookieMessage" runat="server" DisplayItem="cookiemessage"/>
 
 		<div class="off-canvas-wrap">
 			<div class="inner-wrap">
-                <!-- HUGOFOX HEADER -->
-                <user:HugoFoxContent ID="UC_HugoFoxHeader" runat="server" DisplayItem="hugofoxheader"/>
+				<!-- HUGOFOX HEADER -->
+				<user:HugoFoxContent ID="UC_HugoFoxHeader" runat="server" DisplayItem="hugofoxheader"/>
 
 				<div class="main-wrapper">
 					<!-- USER HEADER -->
-                    <user:HugoFoxContent ID="UC_UserHeader" runat="server" DisplayItem="userheader"/>
+					<user:HugoFoxContent ID="UC_UserHeader" runat="server" DisplayItem="userheader"/>
 
 					<!-- HUGOFOX CUSTOMER HEADING ROW -->
 					<div class="main-container row">
@@ -78,10 +83,10 @@
 						<!-- LEFT MENU  -->
 						<aside class="sidebar columns medium-3">
 
-					        <!-- USER HEADER -->
-                            <div class="hide-for-small">
-                                <user:HugoFoxContent ID="UC_LeftSideBarLinks" runat="server" DisplayItem="leftsidebarlinks"/>
-                            </div>
+							<!-- USER HEADER -->
+							<div class="hide-for-small">
+								<user:HugoFoxContent ID="UC_LeftSideBarLinks" runat="server" DisplayItem="leftsidebarlinks"/>
+							</div>
 
 							<!-- TAG CATEGORY MENU -->
 							<user:CategoryMenu ID="UC_CategoryMenuCSSFoldout" runat="server" EnableViewState="False"
@@ -92,8 +97,8 @@
 						<!-- RIGHT CONTENT -->
 						<main class="page-content columns medium-9">
 
-                            <!-- USER TITLES -->
-                            <user:HugoFoxContent ID="UC_UserTitles" runat="server" DisplayItem="usertitles"/>
+							<!-- USER TITLES -->
+							<user:HugoFoxContent ID="UC_UserTitles" runat="server" DisplayItem="usertitles"/>
 
 							<!-- MINIBASKET, CURRENCY, LANGUAGE, etc. -->
 							<div id="ecommerce-controls">
@@ -112,33 +117,33 @@
 								<asp:ContentPlaceHolder ID="cntMain" runat="server"></asp:ContentPlaceHolder>
 							</div>
 
-                            
-                        <script>
-                            /* This handles the email link on the share icons, top right of page */
-                            function reportCurrentPage() {
-                                window.location.href = "//www.hugofox.com/home/contact.asp?mode=report&url=" + escape(window.location.href);
-                            }
-                        </script>
-                            <!-- REPORT PAGE -->
-                            <user:HugoFoxContent ID="UC_ReportPage" runat="server" DisplayItem="reportpage"/>
+							
+						<script>
+							/* This handles the email link on the share icons, top right of page */
+							function reportCurrentPage() {
+								window.location.href = "//www.hugofox.com/home/contact.asp?mode=report&url=" + escape(window.location.href);
+							}
+						</script>
+							<!-- REPORT PAGE -->
+							<user:HugoFoxContent ID="UC_ReportPage" runat="server" DisplayItem="reportpage"/>
 
 						</main>
 
-                    </div>
+					</div>
 
-                </div>
-
-
-
-                <!-- FOOTER -->
-                <user:HugoFoxContent ID="UC_Footer" runat="server" DisplayItem="footer" />
-
-            </div>
-        </div>
+				</div>
 
 
-        <user:AdminBar ID="UC_AdminBar" runat="server" />
-    </form>
+
+				<!-- FOOTER -->
+				<user:HugoFoxContent ID="UC_Footer" runat="server" DisplayItem="footer" />
+
+			</div>
+		</div>
+
+
+		<user:AdminBar ID="UC_AdminBar" runat="server" />
+	</form>
 </body>
 
 

@@ -56,10 +56,12 @@ MEDIUM SCREENS
 ========================================================================
 */
 @media only screen and (max-width: 930px) {
-    .products_tabular .item,
+    /* Products*/
     .products_shortened .item,
-    .subcategories_shortened .item,
-    #homepage .products_tabular .item { display: block; float: none; width: 50%; margin: 0 0 5px 0; }
+    .subcategories_shortened .item          { width: calc(50% - 10px); }
+    .products_tabular .item                 { width: calc(50% - 10px); }
+    .versions td.info                       { max-width: 200px; overflow: hidden; }
+
     .Kartris-DetailsView-Value { width: 270px; }
     ul { max-width: 100%; }
     #pagecontent_pad { min-height: 200px; padding-bottom: 15px; }
@@ -80,7 +82,7 @@ MEDIUM SCREENS
 
     /* Basket */
     #compactbasket_totalprice               { display: none; }
-  }
+}
 
 /* 
 ========================================================================
@@ -88,19 +90,23 @@ SMALL SCREENS
 ========================================================================
 */
 @media only screen and (max-width: 530px) {
-  .products_tabular .item,
-  .products_shortened .item,
-  .subcategories_shortened .item,
-  #homepage .products_tabular .item { display: block; float: none; width: 100%; margin: 0 0 5px 0; }
-  .Kartris-DetailsView-Value { width: 270px; }
-  ul { max-width: 100%; }
-  #pagecontent_pad { min-height: 200px; padding-bottom: 15px; }
-  .versions td.info { max-width: 200px; overflow: hidden; }
-  .basket td.quantity input { width: 32px; text-align: right; }
-  select,
-  input { width: 100%; }
-  #footer_inside { margin: 0; }
-  }
+  .product div.imagecolumn { padding: 10px 0 0 0 !important; }
+
+    /* Products*/
+    .products_shortened .item,
+    .subcategories_shortened .item          { width: 100%; }
+    .products_tabular .item                 { width: 100%; }
+    .versions td.info                       { max-width: 200px; overflow: hidden; }
+
+    .Kartris-DetailsView-Value { width: 270px; }
+    ul { max-width: 100%; }
+    #pagecontent_pad { min-height: 200px; padding-bottom: 15px; }
+    .versions td.info { max-width: 200px; overflow: hidden; }
+    .basket td.quantity input { width: 32px; text-align: right; }
+    select,
+    input { width: 100%; }
+    #footer_inside { margin: 0; }
+}
 
 /* 
 ========================================================================
