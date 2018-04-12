@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -104,8 +104,8 @@ Public NotInheritable Class HttpSecureCookie
         arrAuth = Decrypt()
         If arrAuth IsNot Nothing Then
             If UBound(arrAuth) = 8 Then
-                Dim strClientIP As String = Current.Request.ServerVariables("HTTP_X_FORWARDED_FOR")
-                If String.IsNullOrEmpty(strClientIP) Then strClientIP = Current.Request.ServerVariables("REMOTE_ADDR")
+                Dim strClientIP As String = CkartrisEnvironment.GetClientIPAddress()
+
                 If Not String.IsNullOrEmpty(arrAuth(0)) And strClientIP = arrAuth(7) Then Return True
             End If
         End If

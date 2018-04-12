@@ -5,8 +5,7 @@
         <asp:PlaceHolder ID="phdReviewsList" runat="server">
             <asp:UpdatePanel ID="updReviewsList" runat="server" UpdateMode="Conditional">
                 <ContentTemplate>
-                    <div id="section_reviews">
-                                            
+                    <div id="section_reviews">                
                         <asp:GridView CssClass="kartristable" ID="gvwProductReviews" runat="server" AllowSorting="true"
                             AutoGenerateColumns="False" DataKeyNames="REV_ID" AutoGenerateEditButton="False"
                             GridLines="None" SelectedIndex="0" AllowPaging="true">

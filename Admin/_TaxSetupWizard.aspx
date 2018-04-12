@@ -6,7 +6,10 @@
 <asp:Content ID="cntMain" ContentPlaceHolderID="phdMain" runat="Server">
 	<asp:UpdatePanel ID="updDefaultCountry" runat="server" UpdateMode="Conditional">
 		<ContentTemplate>
-		<h1><asp:Literal ID="litPageTitleTaxSetupWizard" runat="server" Text="<%$ Resources: _RegionalWizard, PageTitle_RegionalSetupWizard %>" /></h1>
+		<h1><asp:Literal ID="litPageTitleTaxSetupWizard" runat="server" Text="<%$ Resources: _RegionalWizard, PageTitle_RegionalSetupWizard %>" />
+			<a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9783')">?</a>
+
+		</h1>
 		<div class="Kartris-DetailsView">
 			<div class="Kartris-DetailsView-Data">
 			<ul>

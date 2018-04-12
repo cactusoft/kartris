@@ -5,7 +5,7 @@
 	<!--
 		===============================================================================
 		KARTRIS by cactusoft
-		Copyright 2017 CACTUSOFT - www.kartris.com
+		Copyright 2018 CACTUSOFT - www.kartris.com
 		All rights reserved.
 		===============================================================================
 		-->
@@ -16,17 +16,21 @@
 	<title>Kartris v1</title>
 </head>
 <body>
-    <form id="form1" runat="server">
-        <div>
+	<form id="form1" runat="server">
+		<div>
 
-            <div id="invoice-control-buttons" class="topsubmitbuttons squarebuttons">
-                <a onclick="history.back();" class="backbutton" href="#">Back</a>
-                <asp:LinkButton ID="lnkPrint" runat="server" OnClientClick="window.print();" CssClass="printbutton">Print</asp:LinkButton>
-            </div>
-            
-            <asp:ContentPlaceHolder ID="cntMain" runat="server" EnableViewState="false">
-            </asp:ContentPlaceHolder>
-        </div>
-    </form>
+			<div id="invoice-control-buttons" class="topsubmitbuttons squarebuttons">
+				<a onclick="history.back();" class="backbutton" href="#">Back</a>
+				<asp:LinkButton ID="lnkPrint" runat="server" OnClientClick="window.print();" CssClass="printbutton">Print</asp:LinkButton>
+				<a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9881')" style="position: absolute; top: 8px;margin-left: 10px;">?</a>
+
+			</div>
+			
+			<asp:ContentPlaceHolder ID="cntMain" runat="server" EnableViewState="false">
+			</asp:ContentPlaceHolder>
+		</div>
+	</form>
+	<link rel='stylesheet' type='text/css' href='https://tome.host/bundles/embed-css'>
+	<script src='https://tome.host/bundles/embed-js'></script>
 </body>
 </html>

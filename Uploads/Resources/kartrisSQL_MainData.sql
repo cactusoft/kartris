@@ -98,7 +98,7 @@ CREATE TABLE [dbo].[tblKartrisAffiliateLog](
 	[AFLG_ID] [int] IDENTITY(1,1) NOT NULL,
 	[AFLG_AffiliateID] [int] NULL,
 	[AFLG_Referer] [nvarchar](255) NULL,
-	[AFLG_IP] [nvarchar](30) NULL,
+	[AFLG_IP] [nvarchar](50) NULL,
 	[AFLG_RequestedItem] [nvarchar](255) NULL,
 	[AFLG_DateTime] [datetime] NULL,
  CONSTRAINT [aaaaatblKartrisAffiliateLog_PK] PRIMARY KEY NONCLUSTERED 
@@ -571,7 +571,7 @@ GO
 CREATE TABLE [dbo].[tblKartrisSessions](
 	[SESS_ID] [int] IDENTITY(1,1) NOT NULL,
 	[SESS_Code] [nvarchar](20) NOT NULL,
-	[SESS_IP] [nvarchar](16) NOT NULL,
+	[SESS_IP] [nvarchar](50) NOT NULL,
 	[SESS_DateCreated] [datetime] NOT NULL,
 	[SESS_DateLastUpdated] [datetime] NULL,
 	[SESS_Expiry] [int] NULL,
@@ -3857,7 +3857,7 @@ INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value],
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomerDiscountText2', N' available on all orders. This will be shown on the basket and automatically applied when you check out.', NULL, 1, N'%</b> available on all orders. This will be shown on the basket and automatically applied when you check out.', NULL, N'Kartris',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomerName', N'Customer Name', NULL, 1, N'Customer Name', NULL, N'Kartris',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomerNumberEmailSent', N'A password reset link has been sent to ', NULL, 1, N'A password reset link has been sent to ', N'KartrisLogin.ascx', NULL,1)
-INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomerReviews', N'Customer Reviews', NULL, 1, N'Customer Reviews', NULL, N'Reviews',1)
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomerReviews', N'Reviews', NULL, 1, N'Reviews', NULL, N'Reviews',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_Customization', N'Customization', N'', 1, N'Customization', N'', N'Kartris',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomizationDetails', N'Customization Details', N'', 1, N'Customization Details', N'', N'Kartris',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_CustomizationExplanation', N'Enter customization text in the field below.', NULL, 1, N'This item can be customized with your own text. The additional price for this is shown below. If you wish to customize it, enter your text in the space provided and click ''save''.', NULL, N'Kartris',1)
@@ -4531,7 +4531,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 CREATE TABLE [dbo].[tblKartrisUsers](
-	[U_ID] [int] IDENTITY(1,1) NOT NULL,
+[U_ID] [int] IDENTITY(1,1) NOT NULL,
 	[U_EmailAddress] [nvarchar](100) NULL,
 	[U_Telephone] [nvarchar](50) NULL,
 	[U_Password] [nvarchar](64) NULL,
@@ -4555,9 +4555,9 @@ CREATE TABLE [dbo].[tblKartrisUsers](
 	[U_AffiliateCommission] [real] NULL,
 	[U_LanguageID] [int] NULL,
 	[U_ML_SignupDateTime] [datetime] NULL,
-	[U_ML_SignupIP] [nvarchar](20) NULL,
+	[U_ML_SignupIP] [nvarchar](50) NULL,
 	[U_ML_ConfirmationDateTime] [datetime] NULL,
-	[U_ML_ConfirmationIP] [nvarchar](20) NULL,
+	[U_ML_ConfirmationIP] [nvarchar](50) NULL,
 	[U_ML_RandomKey] [nvarchar](20) NULL,
 	[U_ML_Format] [nvarchar](1) NULL,
 	[U_ML_SendMail] [bit] NULL,
@@ -4566,6 +4566,8 @@ CREATE TABLE [dbo].[tblKartrisUsers](
 	[U_Notes] [nvarchar](max) NULL,
 	[U_CustomerBalance] [real] NULL,
 	[U_SaltValue] [nvarchar](64) NULL,
+	[U_GDPR_OptIn] [datetime] NULL,
+	[U_GDPR_SignupIP] [nvarchar](50) NULL,
  CONSTRAINT [aaaaatblKartrisCustomers_PK] PRIMARY KEY NONCLUSTERED 
 (
 	[U_ID] ASC
@@ -4607,6 +4609,12 @@ CREATE UNIQUE NONCLUSTERED INDEX [U_EmailAddress] ON [dbo].[tblKartrisUsers]
 	[U_EmailAddress] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
+
+-- default value of optin date to now
+ALTER TABLE tblKartrisUsers ADD CONSTRAINT
+idx_U_GDPR_OptIn DEFAULT GETDATE() FOR U_GDPR_OptIn
+GO
+
 /****** Object:  Table [dbo].[tblKartrisOrders]    Script Date: 01/23/2013 21:59:08 ******/
 SET ANSI_NULLS ON
 GO
@@ -13800,7 +13808,8 @@ CREATE PROCEDURE [dbo].[spKartrisUsers_Add]
 (
 		   @U_EmailAddress nvarchar(100),
 		   @U_Password nvarchar(64),
-		   @U_SaltValue nvarchar(64)
+		   @U_SaltValue nvarchar(64),
+		   @U_GDPR_SignupIP nvarchar(50)
 )
 AS
 DECLARE @U_ID INT
@@ -13815,11 +13824,13 @@ DECLARE @U_ID INT
 			,[U_DefShippingAddressID]
 			,[U_DefBillingAddressID]
 			,[U_CustomerDiscount]
-			,[U_SaltValue])
+			,[U_SaltValue]
+			,[U_GDPR_SignupIP])
 	 VALUES
 		   (@U_EmailAddress,
 			@U_Password,
-			1,0,0,0,0,@U_SaltValue);
+			1,0,0,0,0,@U_SaltValue,
+			@U_GDPR_SignupIP);
 	SET @U_ID = SCOPE_IDENTITY();
 	SELECT @U_ID;
 GO
@@ -19737,6 +19748,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisVersions_SuspendProductVersions]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -20482,92 +20494,6 @@ AS
 	SELECT BSKTOPT_ID, BSKTOPT_BasketValueID, BSKTOPT_OptionID FROM tblKartrisBasketOptionValues WHERE (BSKTOPT_ID = SCOPE_IDENTITY());
 GO
 
-/****** Updating save basket so autosaves and recovers if logged in, logging in ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
--- =============================================
--- Author:		Joseph / Paul
--- Create date: 12/May/2008
--- Update date: 21/Jun/2017
--- Description:	
--- =============================================
-CREATE PROCEDURE [dbo].[spKartrisBasket_SaveBasket] ( 
-	@CustomerID INT,
-	@BasketName NVARCHAR(200),
-	@BasketID BIGINT,
-	@NowOffset datetime
-) AS
-BEGIN
-
-	SET NOCOUNT ON;
-
-	DECLARE @SavedBasketID BIGINT;
-	DECLARE @newBV_ID BIGINT;
-
-	
-	-- 2017/06/21 Update to allow basket to be saved in
-	-- background when a user is logged in, or has just
-	-- ordered and a new account was created. This way,
-	-- the user will see their basket contents later if
-	-- they login on another device.	
-	-- We will give such baskets the name "AUTOSAVE",
-	-- so we know what to look for and can filter it out
-	-- of saved basket display if we want to.
-
-	-- Because there might be an AUTOSAVE basket for this
-	-- user already, we're going to first try to delete
-	-- any baskets of that name for this user.
-
-	BEGIN TRY  
-		-- Lookup basket ID
-		SELECT @SavedBasketID = SBSKT_ID FROM tblKartrisSavedBaskets WHERE SBSKT_Name='AUTOSAVE' AND SBSKT_UserID=@CustomerID;
-
-		-- Delete this basket
-		EXEC dbo.spKartrisBasket_DeleteSavedBasket @SavedBasketID;
-	END TRY  
-	BEGIN CATCH  
-		 -- NEVER MIND, no basket exists, no problem
-	END CATCH  
-
-	INSERT INTO tblKartrisSavedBaskets (SBSKT_UserID,SBSKT_Name,SBSKT_DateTimeAdded)
-	VALUES (@CustomerID,@BasketName,@NowOffset);
-	
-	SET @SavedBasketID=SCOPE_IDENTITY() ;
-
-	DECLARE @BV_ID INT
-	DECLARE @BV_VersionID INT
-	DECLARE @BV_Quantity FLOAT
-	DECLARE @BV_CustomText nvarchar(2000)
-
-	DECLARE Basket_cursor CURSOR FOR 
-	SELECT BV_ID,BV_VersionID,BV_Quantity,BV_CustomText FROM tblKartrisBasketValues WHERE BV_ParentID=@BasketID AND BV_ParentType='b';
-
-	OPEN Basket_cursor
-	FETCH NEXT FROM Basket_cursor INTO @BV_ID,@BV_VersionID,@BV_Quantity,@BV_CustomText
-	WHILE @@FETCH_STATUS = 0
-	BEGIN
-		INSERT INTO tblKartrisBasketValues(BV_ParentType,BV_ParentID,BV_VersionID,BV_Quantity,BV_CustomText,BV_DateTimeAdded)
-		VALUES ('s',@SavedBasketID,@BV_VersionID,@BV_Quantity,@BV_CustomText,@NowOffset)
-
-		SET @newBV_ID=SCOPE_IDENTITY() 
-
-		IF EXISTS (SELECT * FROM tblKartrisBasketOptionValues WHERE BSKTOPT_BasketValueID=@BV_ID) 
-		BEGIN
-			INSERT INTO tblKartrisBasketOptionValues
-			SELECT @newBV_ID,BSKTOPT_OptionID FROM tblKartrisBasketOptionValues WHERE BSKTOPT_BasketValueID=@BV_ID
-		END
-
-		FETCH NEXT FROM Basket_cursor INTO @BV_ID,@BV_VersionID,@BV_Quantity,@BV_CustomText
-	End
-
-	CLOSE Basket_cursor
-	DEALLOCATE Basket_cursor;
-
-END
-GO
-
 /****** Object:  StoredProcedure [dbo].[spKartrisBasket_LoadAutosaveBasket]    Script Date: 23/06/2017 12:21:41 ******/
 SET ANSI_NULLS ON
 GO
@@ -20926,9 +20852,8 @@ begin
 	where BV_ParentType='b' and BV_ID=@intID
 end;
 
---	
---
 GO
+
 /****** Object:  StoredProcedure [dbo].[spKartrisBasket_GetOptionText]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -20957,6 +20882,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  UserDefinedFunction [dbo].[fnKartrisCategories_GetName]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -20987,6 +20913,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  UserDefinedFunction [dbo].[fnKartrisBasketOptionValues_GetOptionsTotalPrice]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -21028,6 +20955,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[spKartrisBasket_GetCategoryID]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -21049,6 +20977,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[spKartrisBasket_DeleteSavedBasket]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -21083,6 +21012,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  UserDefinedFunction [dbo].[fnKartrisBasket_GetItemWeight]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -21142,6 +21072,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  UserDefinedFunction [dbo].[fnKartrisAttributeValues_GetProductID]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -21171,6 +21102,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisVersions_GetSingleVersionByProductID]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -21191,6 +21123,7 @@ BEGIN
 	WHERE     (V_ProductID = @ProductID) AND (V_Type = 'v');
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisVersions_GetRowsByProductID]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -21213,6 +21146,7 @@ BEGIN
 	
 END
 GO
+
 /****** Object:  UserDefinedFunction [dbo].[fnKartris_GetBaseVersionID]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
@@ -21251,6 +21185,7 @@ BEGIN
 
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisVersions_UpdateStockLevelByCode]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -21279,6 +21214,7 @@ BEGIN
 	WHERE V_CodeNumber = @V_CodeNumber;
 END
 GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisVersions_UpdateStockLevel]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
@@ -21307,6 +21243,92 @@ BEGIN
 	SET V_Quantity = @V_Quantity, V_QuantityWarnLevel = @V_QuantityWarnLevel,
 	V_BulkUpdateTimeStamp = Coalesce(@V_BulkUpdateTimeStamp, GetDate())
 	WHERE V_ID = @V_ID;
+END
+GO
+
+/****** Updating save basket so autosaves and recovers if logged in, logging in ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Joseph / Paul
+-- Create date: 12/May/2008
+-- Update date: 21/Jun/2017
+-- Description:	
+-- =============================================
+CREATE PROCEDURE [dbo].[spKartrisBasket_SaveBasket] ( 
+	@CustomerID INT,
+	@BasketName NVARCHAR(200),
+	@BasketID BIGINT,
+	@NowOffset datetime
+) AS
+BEGIN
+
+	SET NOCOUNT ON;
+
+	DECLARE @SavedBasketID BIGINT;
+	DECLARE @newBV_ID BIGINT;
+
+	
+	-- 2017/06/21 Update to allow basket to be saved in
+	-- background when a user is logged in, or has just
+	-- ordered and a new account was created. This way,
+	-- the user will see their basket contents later if
+	-- they login on another device.	
+	-- We will give such baskets the name "AUTOSAVE",
+	-- so we know what to look for and can filter it out
+	-- of saved basket display if we want to.
+
+	-- Because there might be an AUTOSAVE basket for this
+	-- user already, we're going to first try to delete
+	-- any baskets of that name for this user.
+
+	BEGIN TRY  
+		-- Lookup basket ID
+		SELECT @SavedBasketID = SBSKT_ID FROM tblKartrisSavedBaskets WHERE SBSKT_Name='AUTOSAVE' AND SBSKT_UserID=@CustomerID;
+
+		-- Delete this basket
+		EXEC dbo.spKartrisBasket_DeleteSavedBasket @SavedBasketID;
+	END TRY  
+	BEGIN CATCH  
+		 -- NEVER MIND, no basket exists, no problem
+	END CATCH  
+
+	INSERT INTO tblKartrisSavedBaskets (SBSKT_UserID,SBSKT_Name,SBSKT_DateTimeAdded)
+	VALUES (@CustomerID,@BasketName,@NowOffset);
+	
+	SET @SavedBasketID=SCOPE_IDENTITY() ;
+
+	DECLARE @BV_ID INT
+	DECLARE @BV_VersionID INT
+	DECLARE @BV_Quantity FLOAT
+	DECLARE @BV_CustomText nvarchar(2000)
+
+	DECLARE Basket_cursor CURSOR FOR 
+	SELECT BV_ID,BV_VersionID,BV_Quantity,BV_CustomText FROM tblKartrisBasketValues WHERE BV_ParentID=@BasketID AND BV_ParentType='b';
+
+	OPEN Basket_cursor
+	FETCH NEXT FROM Basket_cursor INTO @BV_ID,@BV_VersionID,@BV_Quantity,@BV_CustomText
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		INSERT INTO tblKartrisBasketValues(BV_ParentType,BV_ParentID,BV_VersionID,BV_Quantity,BV_CustomText,BV_DateTimeAdded)
+		VALUES ('s',@SavedBasketID,@BV_VersionID,@BV_Quantity,@BV_CustomText,@NowOffset)
+
+		SET @newBV_ID=SCOPE_IDENTITY() 
+
+		IF EXISTS (SELECT * FROM tblKartrisBasketOptionValues WHERE BSKTOPT_BasketValueID=@BV_ID) 
+		BEGIN
+			INSERT INTO tblKartrisBasketOptionValues
+			SELECT @newBV_ID,BSKTOPT_OptionID FROM tblKartrisBasketOptionValues WHERE BSKTOPT_BasketValueID=@BV_ID
+		END
+
+		FETCH NEXT FROM Basket_cursor INTO @BV_ID,@BV_VersionID,@BV_Quantity,@BV_CustomText
+	End
+
+	CLOSE Basket_cursor
+	DEALLOCATE Basket_cursor;
+
 END
 GO
 
@@ -29346,173 +29368,6 @@ WHERE        (dbo.tblKartrisCategories.CAT_Live = 1) AND (dbo.tblKartrisVersions
 
 GO
 
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane1', @value=N'[0E232FF0-B466-11cf-A24F-00AA00A3EFFF, 1.00]
-Begin DesignProperties = 
-   Begin PaneConfigurations = 
-	  Begin PaneConfiguration = 0
-		 NumPanes = 4
-		 Configuration = "(H (1[41] 4[21] 2[21] 3) )"
-	  End
-	  Begin PaneConfiguration = 1
-		 NumPanes = 3
-		 Configuration = "(H (1[50] 4[25] 3) )"
-	  End
-	  Begin PaneConfiguration = 2
-		 NumPanes = 3
-		 Configuration = "(H (1 [50] 2 [25] 3))"
-	  End
-	  Begin PaneConfiguration = 3
-		 NumPanes = 3
-		 Configuration = "(H (4 [30] 2 [40] 3))"
-	  End
-	  Begin PaneConfiguration = 4
-		 NumPanes = 2
-		 Configuration = "(H (1 [56] 3))"
-	  End
-	  Begin PaneConfiguration = 5
-		 NumPanes = 2
-		 Configuration = "(H (2 [66] 3))"
-	  End
-	  Begin PaneConfiguration = 6
-		 NumPanes = 2
-		 Configuration = "(H (4 [50] 3))"
-	  End
-	  Begin PaneConfiguration = 7
-		 NumPanes = 1
-		 Configuration = "(V (3))"
-	  End
-	  Begin PaneConfiguration = 8
-		 NumPanes = 3
-		 Configuration = "(H (1[56] 4[18] 2) )"
-	  End
-	  Begin PaneConfiguration = 9
-		 NumPanes = 2
-		 Configuration = "(H (1[63] 4) )"
-	  End
-	  Begin PaneConfiguration = 10
-		 NumPanes = 2
-		 Configuration = "(H (1[66] 2) )"
-	  End
-	  Begin PaneConfiguration = 11
-		 NumPanes = 2
-		 Configuration = "(H (4 [60] 2))"
-	  End
-	  Begin PaneConfiguration = 12
-		 NumPanes = 1
-		 Configuration = "(H (1) )"
-	  End
-	  Begin PaneConfiguration = 13
-		 NumPanes = 1
-		 Configuration = "(V (4))"
-	  End
-	  Begin PaneConfiguration = 14
-		 NumPanes = 1
-		 Configuration = "(V (2))"
-	  End
-	  ActivePaneConfig = 9
-   End
-   Begin DiagramPane = 
-	  Begin Origin = 
-		 Top = 0
-		 Left = 0
-	  End
-	  Begin Tables = 
-		 Begin Table = "tblKartrisCategories"
-			Begin Extent = 
-			   Top = 263
-			   Left = 70
-			   Bottom = 393
-			   Right = 258
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisProductCategoryLink"
-			Begin Extent = 
-			   Top = 0
-			   Left = 366
-			   Bottom = 113
-			   Right = 549
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisProducts"
-			Begin Extent = 
-			   Top = 17
-			   Left = 768
-			   Bottom = 147
-			   Right = 982
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisVersions"
-			Begin Extent = 
-			   Top = 140
-			   Left = 654
-			   Bottom = 305
-			   Right = 858
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisTaxRates_1"
-			Begin Extent = 
-			   Top = 60
-			   Left = 430
-			   Bottom = 173
-			   Right = 600
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-		 Begin Table = "tblKartrisTaxRates"
-			Begin Extent = 
-			   Top = 46
-			   Left = 29
-			   Bottom = 159
-			   Right = 199
-			End
-			DisplayFlags = 280
-			TopColumn = 0
-		 End
-	  End
-   End
-   Begin SQLPane = 
-	  PaneHidden = 
-   End
-   Begin DataPane = 
-	  PaneHidden = 
-	  Begin ParameterDefaults' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisCategoryProductsVersionsLink'
-GO
-
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPane2', @value=N' = ""
-	  End
-   End
-   Begin CriteriaPane = 
-	  Begin ColumnWidths = 11
-		 Column = 2955
-		 Alias = 900
-		 Table = 2610
-		 Output = 720
-		 Append = 1400
-		 NewValue = 1170
-		 SortType = 1350
-		 SortOrder = 1410
-		 GroupBy = 1350
-		 Filter = 1350
-		 Or = 1350
-		 Or = 1350
-		 Or = 1350
-	  End
-   End
-End
-' , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisCategoryProductsVersionsLink'
-GO
-
-EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=2 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisCategoryProductsVersionsLink'
-GO
 -- =============================================
 -- Some new records for adding orders to the
 -- back end.
@@ -30427,12 +30282,195 @@ GO
 /deadline automation's attribute improvements
 ******************************************************/
 
-
-/****** Set this to tell Data tool which version of db we have ******/
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9010', N's', N's', N'kartris version', N'', 2.9010, N'2.9010', 0)
+/****** More indexes on language elements ******/
+CREATE NONCLUSTERED INDEX [LE_LanguageID] ON [dbo].[tblKartrisLanguageElements]
+(
+	[LE_LanguageID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 
+CREATE NONCLUSTERED INDEX [LE_TypeID] ON [dbo].[tblKartrisLanguageElements]
+(
+	[LE_TypeID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
 
+CREATE NONCLUSTERED INDEX [LE_FieldID] ON [dbo].[tblKartrisLanguageElements]
+(
+	[LE_FieldID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
 
+CREATE NONCLUSTERED INDEX [LE_ParentID] ON [dbo].[tblKartrisLanguageElements]
+(
+	[LE_ParentID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Improve cleanup of expired sessions ******/
+CREATE NONCLUSTERED INDEX [SESS_DateLastUpdated] ON [dbo].[tblKartrisSessions]
+(
+	[SESS_DateLastUpdated] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Object:  Index [V_CodeNumber]    Script Date: 21/09/2017 12:30:10 ******/
+BEGIN TRY  
+	CREATE UNIQUE NONCLUSTERED INDEX [V_CodeNumber] ON [dbo].[tblKartrisVersions]
+	(
+		[V_CodeNumber] ASC
+	)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+END TRY  
+BEGIN CATCH  
+     -- do nothing 
+END CATCH  
+GO
+
+/******
+New sproc for data tool; this will update products without changing existing settings and values
+of things that are not in the data tool spreadsheet format
+******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisProducts_Update_DataTool](
+								@P_ID as int,
+								@P_SupplierID as smallint,
+								@P_Type as char(1),
+								@NowOffset as datetime 
+								)
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	DECLARE @OldType as char(1);
+	SELECT @OldType = P_Type FROM dbo.tblKartrisProducts WHERE P_ID = @P_ID;
+	IF @OldType <> @P_Type BEGIN
+		IF @OldType = 'o' BEGIN
+			EXEC	[dbo].[_spKartrisProductOptionGroupLink_DeleteByProductID]	
+			@ProductID = @P_ID;
+			EXEC	[dbo].[_spKartrisProductOptionLink_DeleteByProductID]
+			@ProductID = @P_ID;
+		END
+	END;
+	
+	UPDATE tblKartrisProducts
+	SET P_SupplierID = @P_SupplierID, 
+		P_Type = @P_Type,
+		P_LastModified = @NowOffset
+	WHERE P_ID = @P_ID;
+		
+END
+GO
+
+/******
+New sproc for data tool; this will update versions without changing existing settings and values
+of things that are not in the data tool spreadsheet format
+******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisVersions_Update_DataTool]
+(
+	@V_ID as bigint,
+	@V_CodeNumber as nvarchar(25),
+	@V_ProductID as int,
+	@V_Price as DECIMAL(18,4),
+	@V_Tax as tinyint,
+	@V_Weight as real,
+	@V_Quantity as real,
+	@V_RRP as DECIMAL(18,4),
+	@V_Type as char(1),
+	@V_Tax2 as tinyint,
+	@V_TaxExtra as nvarchar(255),
+	@V_BulkUpdateTimeStamp as datetime = NULL
+)
+								
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	UPDATE tblKartrisVersions
+	SET V_CodeNumber = @V_CodeNumber,
+	V_ProductID = @V_ProductID,
+	V_Price = @V_Price,
+	V_Tax = @V_Tax,
+	V_Weight = @V_Weight, 
+	V_Quantity = @V_Quantity,
+	V_RRP = @V_RRP,
+	V_Type = @V_Type,
+	V_Tax2 = @V_Tax2,
+	V_TaxExtra = @V_TaxExtra,
+	V_BulkUpdateTimeStamp = Coalesce(@V_BulkUpdateTimeStamp, GetDate())
+	WHERE V_ID = @V_ID;
+
+END
+GO
+
+/****** SET ALL PRODUCTS TO LIVE, SET ALL PRODUCTS TO HIDDEN *******/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_TurnAllProductsOff', N'Turn all products OFF', NULL, 2.9010, N'Turn all products OFF', NULL, N'_Product',1);
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_TurnAllProductsOn', N'Turn all products ON', NULL, 2.9010, N'Turn all products ON', NULL, N'_Product',1);
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisProducts_Update]    Script Date: 23/11/2017 11:12:48 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	Quick way to set all products
+-- in a category live or not live. Useful when
+-- using powerpack or for hiding products from
+-- other features where hiding parent category
+-- doesn't stop product being found.
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisProducts_HideShowAllByCategoryID](
+								@CAT_ID as int,
+								@P_Live as bit
+								)
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+	
+	UPDATE tblKartrisProducts
+	SET P_Live = @P_Live
+	WHERE P_ID IN (SELECT PCAT_ProductID FROM tblKartrisProductCategoryLink WHERE PCAT_CategoryID=@CAT_ID);
+	
+END
+GO
+
+/*** New language strings 2.9012 ***/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'FormLabel_GDPRConfirmText', N'Please confirm you have read, understand and accept our privacy policy and terms and conditions', NULL, 2.9012, N'', NULL, N'Kartris',1);
+
+GO
+
+/****** new GDPR functionality 2.9012 ******/
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.gdpr.enabled', N'y', N's', N'b',	'y|n',N'Whether to include the GDPR explicit approval opt-in for new customers',2.9012, N'y', 0);
+
+GO
+
+/****** Set this to tell Data tool which version of db we have ******/
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9012', N's', N's', N'kartris version', N'', 2.9012, N'2.9012', 0)
+GO
 
 

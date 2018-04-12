@@ -1,7 +1,7 @@
 /* 
 ========================================================================
 KARTRIS by cactusoft
-Copyright 2017 CACTUSOFT - www.kartris.com
+Copyright 2018 CACTUSOFT - www.kartris.com
 This work is licensed under a
 Creative Commons Attribution-ShareAlike 3.0 Unported License
 
@@ -542,6 +542,7 @@ SECTION: PRODUCTS
 */
 #section_products strong                { display: inline-block; width: 210px; }
 #section_products strong a              { color: #000 }
+#section_products strong span.hidden a  { font-weight: normal; font-style: italic; }
 #section_products a,
 #section_products strong                { vertical-align: top }
 

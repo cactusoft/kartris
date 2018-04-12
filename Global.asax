@@ -4,7 +4,7 @@
 <script runat="server">
     '========================================================================
     'Kartris - www.kartris.com
-    'Copyright 2017 CACTUSOFT
+    'Copyright 2018 CACTUSOFT
 
     'GNU GENERAL PUBLIC LICENSE v2
     'This program is free software distributed under the GPL without any
@@ -18,13 +18,21 @@
     '========================================================================
 
     Sub Application_Start(ByVal sender As Object, ByVal e As EventArgs)
-        ' Code that runs on application startup
+        'Code that runs on application startup
 
+        'Force TLS 1.2 for secure connections if possible
         Try
-            'detect application trust
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls12
+        Catch
+            'oh well
+        End Try
+
+        'detect application trust
+        Try
+
             Dim p As System.Reflection.PropertyInfo = GetType(HttpRuntime).GetProperty("FileChangesMonitor", System.Reflection.BindingFlags.NonPublic Or _
-               System.Reflection.BindingFlags.[Public] Or _
-               System.Reflection.BindingFlags.[Static])
+           System.Reflection.BindingFlags.[Public] Or _
+           System.Reflection.BindingFlags.[Static])
             Dim o As Object = p.GetValue(Nothing, Nothing)
             Dim f As System.Reflection.FieldInfo = o.[GetType]().GetField("_dirMonSubdirs", System.Reflection.BindingFlags.Instance Or _
                System.Reflection.BindingFlags.NonPublic Or _
@@ -51,12 +59,21 @@
         End Try
 
         If Application("DBConnected") Then
-            ' Register a handler for SiteMap.SiteMapResolve events so that SiteMapPath 
-            ' will show the path to pages that don't appear in the site map. 
+            'Register a handler for SiteMap.SiteMapResolve events so that SiteMapPath 
+            'will show the path to pages that don't appear in the site map. 
             AddHandler SiteMap.SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
             AddHandler SiteMap.Providers("BreadCrumbSiteMap").SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
             AddHandler SiteMap.Providers("_CategorySiteMapProvider").SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
             TaxRegime.LoadTaxConfigXML()
+
+            'Clean up expired sessions
+            'Originally this was run in the session start, but
+            'that was inefficient, it really doesn't need to
+            'run more than occasionally, so let's put it
+            'here instead
+            Dim objSession As New SessionsBLL
+            objSession.NewSession()
+            objSession.CleanExpiredSessionsData()
         End If
     End Sub
 
@@ -104,11 +121,11 @@
             Response.End()
         End If
 
-        'This tries to recylce the app pool
-        If ex.InnerException.ToString.Contains("IndexOutOfRangeException") Then
-            CkartrisBLL.RecycleAppPool()
-            CkartrisFormatErrors.LogError("Recycled from global.asax")
-        End If
+        'This tries to recycle the app pool
+        'If ex.InnerException.ToString.Contains("IndexOutOfRangeException") Then
+        '    CkartrisBLL.RecycleAppPool()
+        '    CkartrisFormatErrors.LogError("Recycled from global.asax")
+        'End If
 
         'Log the un-handled error
         CkartrisFormatErrors.ReportUnHandledError()
@@ -119,7 +136,12 @@
         If Application("DBConnected") Then
             Dim objSession As New SessionsBLL
             objSession.NewSession()
-            objSession.CleanExpiredSessionsData()
+
+            'Disable cleanup here, we moved
+            'this to the application start instead,
+            'really doesn't need to run on every session
+            'objSession.CleanExpiredSessionsData()
+
             Session("SessionCode") = objSession.SessionCode
             Session("SessionID") = objSession.SessionID
             objSession = Nothing

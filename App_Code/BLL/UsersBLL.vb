@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -131,7 +131,7 @@ Public Class UsersBLL
     Public Shared Function Add(ByVal strEmailAddress As String, ByVal strPassword As String) As Integer
         Try
             Dim strRandomSalt As String = Membership.GeneratePassword(20, 0)
-            Return DetailsAdptr.Add(strEmailAddress, EncryptSHA256Managed(strPassword, strRandomSalt), strRandomSalt)
+            Return DetailsAdptr.Add(strEmailAddress, EncryptSHA256Managed(strPassword, strRandomSalt), strRandomSalt, CkartrisEnvironment.GetClientIPAddress())
         Catch ex As Exception
             ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
         End Try

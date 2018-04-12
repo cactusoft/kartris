@@ -1,6 +1,6 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="ProductLinkTemplate.ascx.vb" Inherits="Templates_ProductLinkTemplate" %>
 <!-- product link template start -->
-<div class="item">
+<div class="item loadspinner">
     <div class="box">
         <div class="pad">
             <asp:Literal ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>

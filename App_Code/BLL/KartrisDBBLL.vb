@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -340,7 +340,7 @@ Public Class KartrisDBBLL
             cmdAddAdminLog.Parameters.AddWithValue("@Desc", FixNullToDB(strDesc))
             cmdAddAdminLog.Parameters.AddWithValue("@Query", FixNullToDB(strQuery))
             cmdAddAdminLog.Parameters.AddWithValue("@RelatedID", FixNullToDB(strRelatedID))
-            cmdAddAdminLog.Parameters.AddWithValue("@IP", FixNullToDB(HttpContext.Current.Request.ServerVariables("REMOTE_ADDR")))
+            cmdAddAdminLog.Parameters.AddWithValue("@IP", FixNullToDB(CkartrisEnvironment.GetClientIPAddress()))
             cmdAddAdminLog.Parameters.AddWithValue("@NowOffset", CkartrisDisplayFunctions.NowOffset)
 
             cmdAddAdminLog.ExecuteNonQuery()
@@ -411,7 +411,7 @@ Public Class KartrisDBBLL
                 cmdClearProductsData.Parameters.AddWithValue("@DataType", FixNullToDB(chrDataType, "c"))
                 cmdClearProductsData.Parameters.AddWithValue("@UserName", FixNullToDB(strUser, "s"))
                 cmdClearProductsData.Parameters.AddWithValue("@Password", UsersBLL.EncryptSHA256Managed(FixNullToDB(strPassword), LoginsBLL._GetSaltByUserName(strUser), True))
-                cmdClearProductsData.Parameters.AddWithValue("@IPAddress", FixNullToDB(HttpContext.Current.Request.ServerVariables("REMOTE_ADDR")))
+                cmdClearProductsData.Parameters.AddWithValue("@IPAddress", FixNullToDB(CkartrisEnvironment.GetClientIPAddress()))
                 cmdClearProductsData.Parameters.AddWithValue("@Succeeded", False).Direction = ParameterDirection.Output
                 cmdClearProductsData.Parameters.Add("@Output", SqlDbType.NVarChar, 4000).Direction = ParameterDirection.Output
                 cmdClearProductsData.Parameters("@Output").Value = ""

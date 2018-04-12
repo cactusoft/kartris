@@ -12,7 +12,9 @@
         <ContentTemplate>
             <div id="page_attributes">
                 <h1>
-                    <asp:Literal ID="litPageTitle" runat="server" Text='<%$ Resources:_Product, FormLabel_TabProductAttributes %>' /></h1>
+                    <asp:Literal ID="litPageTitle" runat="server" Text='<%$ Resources:_Product, FormLabel_TabProductAttributes %>' />
+                    <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9856')">?</a>
+                </h1>
                 <div id="searchboxrow">
                     <div style="display:none;">
                         <asp:TextBox ID="txtSearch" runat="server" /><asp:Button ID="btnSearch" runat="server" Text="<%$ Resources:_Kartris, FormButton_Search %>"

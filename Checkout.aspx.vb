@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -82,6 +82,20 @@ Partial Class _Checkout
             'methods.
             Dim objBasket As Kartris.Basket = Session("Basket")
             Dim blnOrderIsFree As Boolean = False 'Disable, suspect this might misfire (objBasket.FinalPriceIncTax = 0)
+
+            'This line below looks a bit more complicated than it should. We have seen
+            'some cases where orders slip by without payment, when they should not. It doesn't seem
+            'to be possible, but apparently has happened in some cases. The code below is an idea to try
+            'to stop this, the assumption that if the finalprice shows as zero because of some glitch,
+            'maybe the first item in the basket would have a zero name too. Or that maybe it will trigger
+            'an error. Only time will tell. If this causes problems, comment it out and just stop accepting
+            'free orders (most sites don't do this, but some use it to give promotions away).
+            Try
+                blnOrderIsFree = (objBasket.FinalPriceIncTax = 0 And objBasket.BasketItems.Item(0).Name <> "")
+            Catch ex As Exception
+                'order stays as not free
+            End Try
+
             If blnOrderIsFree Then
                 'Add the PO option with name 'FREE' and hide payment selection
                 'The 'False' flag indicates this is not for authorized users
@@ -914,20 +928,20 @@ Partial Class _Checkout
                         End Try
                     End Try
 
+                    'Mailchimp library
+                    Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
+
+                    'Mailchimp
+                    Dim blnMailChimp As Boolean = KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y"
+
                     If Not clientToken.Equals("") Then
                         'MAILCHIMP Adding Cart to BrainTree Payments
-                        Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
                         'If the User is Logged
-                        Try
+                        If blnMailChimp Then
                             If CurrentLoggedUser IsNot Nothing Then
-                                CkartrisFormatErrors.LogError("Checkout MailchimpBLL addcart 1: ")
                                 Session("BraintreeCartId") = mailChimpLib.AddCartToCustomerToStore().Result
                             End If
-                        Catch ex As Exception
-                            CkartrisFormatErrors.LogError("Checkout MailchimpBLL 1: " & ex.Message)
-                            Dim trace = New System.Diagnostics.StackTrace(ex, True)
-                            CkartrisFormatErrors.LogError("Checkout MailchimpBLL 1 stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddCart 2 - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
-                        End Try
+                        End If
 
                         phdBrainTree.Visible = True
                         phdCreditCardInput.Visible = False
@@ -1072,8 +1086,7 @@ Partial Class _Checkout
                     strTempEmailTextHolder = GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf & " " & GetGlobalResourceObject("Basket", "ContentText_ApplyCouponCode") & vbCrLf & " " & objBasket.CouponName & vbCrLf
                     sbdBodyText.AppendLine(strTempEmailTextHolder)
                     If blnUseHTMLOrderEmail Then
-                        sbdHTMLOrderContents.Append("<tr class=""row_promotioncoupons""><td colspan=""2"">" & strTempEmailTextHolder.Replace(vbCrLf, "<br/>") &
-                                                    "</td></tr>")
+                        sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.CouponDiscount, GetGlobalResourceObject("Kartris", "ContentText_CouponDiscount"), objBasket.CouponName))
                     End If
                 End If
 
@@ -1366,11 +1379,11 @@ Partial Class _Checkout
                 End If
 
                 sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_OrderTime2") & ": " & CkartrisDisplayFunctions.NowOffset & vbCrLf)
-                sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_IPAddress") & ": " & Request.ServerVariables("REMOTE_ADDR") & vbCrLf)
+                sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_IPAddress") & ": " & CkartrisEnvironment.GetClientIPAddress() & vbCrLf)
                 sbdBodyText.Append(" " & Request.ServerVariables("HTTP_USER_AGENT") & vbCrLf)
                 If blnUseHTMLOrderEmail Then
                     sbdHTMLOrderEmail.Replace("[nowoffset]", CkartrisDisplayFunctions.NowOffset)
-                    sbdHTMLOrderEmail.Replace("[customerip]", Request.ServerVariables("REMOTE_ADDR"))
+                    sbdHTMLOrderEmail.Replace("[customerip]", CkartrisEnvironment.GetClientIPAddress())
                     sbdHTMLOrderEmail.Replace("[customeruseragent]", Request.ServerVariables("HTTP_USER_AGENT"))
                     sbdHTMLOrderEmail.Replace("[webshopurl]", CkartrisBLL.WebShopURL)
                     sbdHTMLOrderEmail.Replace("[websitename]", Server.HtmlEncode(GetGlobalResourceObject("Kartris", "Config_Webshopname")))
@@ -1454,7 +1467,7 @@ Partial Class _Checkout
                             If blnUseHTMLOrderEmail Then
                                 'this line builds up the individual rows of the order contents table in the HTML email
                                 sbdHTMLOrderBasket.AppendLine(GetHTMLEmailRowText(.Quantity & " x " & .ProductName & strMark, .VersionName & " (" & .CodeNumber & ") " &
-                                                         sbdOptionText.ToString & strCustomText, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
+                                                         sbdOptionText.ToString & strCustomText, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate, 0, .VersionID, .ProductID))
                             End If
                         End With
                     Next
@@ -1502,19 +1515,18 @@ Partial Class _Checkout
                                           arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID,
                                          intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice,
                                          IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtPurchaseOrderNo.Text, Trim(txtComments.Text))
-                'MAILCHIMP Adding Cart
-                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
-                'If the User is Logged
-                Try
+
+                'Mailchimp
+                Dim blnMailChimp As Boolean = KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y"
+
+                If blnMailChimp Then
+                    'MAILCHIMP Adding Cart
+                    Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
+                    'If the User is Logged
                     If CurrentLoggedUser IsNot Nothing And Session("BraintreeCartId") Is Nothing Then
-                        CkartrisFormatErrors.LogError("Checkout MailchimpBLL addcart 2: ")
-                        Dim addCartResult As String = mailChimpLib.AddCartToCustomerToStore(O_ID).ConfigureAwait(False).GetAwaiter().GetResult()
+                        Dim addCartResult As String = mailChimpLib.AddCartToCustomerToStore(O_ID).Result
                     End If
-                Catch ex As Exception
-                    CkartrisFormatErrors.LogError("Checkout MailchimpBLL 2: " & ex.Message)
-                    Dim trace = New System.Diagnostics.StackTrace(ex, True)
-                    CkartrisFormatErrors.LogError("Checkout MailchimpBLL 2 stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddCart 2 - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
-                End Try
+                End If
 
                 'Order Creation successful
                 If O_ID > 0 Then
@@ -1693,27 +1705,6 @@ Partial Class _Checkout
                     'serialize order object and store it as a session value
                     Session("objOrder") = Payment.Serialize(objOrder)
 
-                    Try
-
-                        Dim xmlPath As String = Path.Combine(Request.PhysicalApplicationPath, "XmlStoring")
-                        If (Not System.IO.Directory.Exists(xmlPath)) Then
-                            System.IO.Directory.CreateDirectory(xmlPath)
-                        End If
-                        Dim timestamp = CLng(DateTime.UtcNow.Subtract(New DateTime(1970, 1, 1)).TotalMilliseconds)
-                        Dim orderXmlPath = xmlPath & "\" & O_ID & "_order.xml"
-                        Dim basketXmlPath = xmlPath & "\" & O_ID & "_basket.xml"
-                        Dim orderFile As New IO.StreamWriter(orderXmlPath, True)
-                        Dim basketFile As New IO.StreamWriter(basketXmlPath, True)
-                        orderFile.WriteLine(Session("objOrder"))
-                        orderFile.Close()
-
-                        basketFile.WriteLine(Payment.Serialize(Session("Basket")))
-                        basketFile.Close()
-
-                    Catch ex As Exception
-                        CkartrisFormatErrors.LogError("Error Storing XML Files From Order/Basket: " & ex.Message())
-                    End Try
-
                     'update data field with serialized order and basket objects and selected shipping method id - this allows us to edit this order later if needed
                     OrdersBLL.DataUpdate(O_ID, Session("objOrder") & "|||" & Payment.Serialize(objBasket) & "|||" & UC_BasketView.SelectedShippingID)
 
@@ -1772,14 +1763,20 @@ Partial Class _Checkout
                                     If transactionId <> "" Then
                                         blnResult = True
                                         Try
-                                            Dim cartId As String = Session("BraintreeCartId")
-                                            If cartId IsNot Nothing Then
-                                                ' Removing Cart and adding Order to successful payment made with Braintree
-                                                Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(CurrentLoggedUser.ID).Result
-                                                Dim mcOrder As Order = mailChimpLib.AddOrder(mcCustomer, cartId).Result
-                                                Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart(cartId).Result
-                                                Session("BraintreeCartId") = Nothing
+                                            'Mailchimp, try to remove cart
+                                            If blnMailChimp Then
+                                                'Mailchimp library
+                                                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
 
+                                                Dim cartId As String = Session("BraintreeCartId")
+                                                If cartId IsNot Nothing Then
+                                                    ' Removing Cart and adding Order to successful payment made with Braintree
+                                                    Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(CurrentLoggedUser.ID).Result
+                                                    Dim mcOrder As Order = mailChimpLib.AddOrder(mcCustomer, cartId).Result
+                                                    Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart(cartId).Result
+                                                    Session("BraintreeCartId") = Nothing
+
+                                                End If
                                             End If
                                         Catch ex As Exception
                                             Debug.Print(ex.Message)

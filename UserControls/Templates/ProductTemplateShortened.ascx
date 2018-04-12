@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="ProductTemplateShortened.ascx.vb"
     Inherits="ProductTemplateShortened" %>
 <!-- template start -->
-<div class="item">
+<div class="item loadspinner">
     <div class="box">
         <div class="pad">
             <asp:Literal ID="litProductID" runat="server" Visible="false" Text='<%# Eval("P_ID") %>'></asp:Literal>

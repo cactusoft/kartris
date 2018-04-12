@@ -131,7 +131,7 @@
                                         COMPARE LINK
                                         --%>
                                         <asp:PlaceHolder ID="phdCompareLink" runat="server">
-                                            <div id="comparelink">
+                                            <div id="comparelink loadspinner">
                                                 <asp:HyperLink CssClass="link2" ID="lnkCompare" runat="server" Text="<%$ Resources:Products,ContentText_ViewCompareLink %>" EnableViewState="false" />
                                             </div>
                                         </asp:PlaceHolder>

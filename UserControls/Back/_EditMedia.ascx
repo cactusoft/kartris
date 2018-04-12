@@ -102,7 +102,7 @@
                                     <asp:UpdatePanel ID="updUploadThumb" runat="server" UpdateMode="Conditional">
                                         <ContentTemplate>
                                             <asp:Image ID="imgMediaThumb" runat="server" visible="False" />
-                                            <img src="../Image.aspx?strFullPath=<asp:Literal ID="litImgName" runat="server"/>&numMaxHeight=<asp:Literal Text="80" ID="litImgHeight" runat="server"/>&numMaxWidth=<asp:Literal Text="80" ID="litImgWidth" runat="server"/>" />
+                                            <img src="../Image.ashx?strFullPath=<asp:Literal ID="litImgName" runat="server"/>&numMaxHeight=<asp:Literal Text="80" ID="litImgHeight" runat="server"/>&numMaxWidth=<asp:Literal Text="80" ID="litImgWidth" runat="server"/>" />
                                             <asp:LinkButton ID="lnkUploadThumb" runat="server" CssClass="linkbutton icon_upload"
                                                 Text="<%$ Resources:_Kartris, ContentText_Upload %>" />
 

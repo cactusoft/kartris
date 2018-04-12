@@ -8,6 +8,7 @@
     <ContentTemplate>
         <asp:PlaceHolder ID="phdMethodsList" runat="server">
             <div id="section_shippingmethods">
+                <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9791')">?</a>
                 <asp:LinkButton ID="lnkAddNewShippingMethod" runat="server" Text="<%$ Resources: _Kartris, FormButton_New %>"
                     CssClass="linkbutton icon_new floatright" />
                 <asp:GridView CssClass="kartristable" ID="gvwShippingMethods" runat="server" AllowPaging="false" AllowSorting="true"
@@ -184,6 +185,7 @@
                             <asp:Literal ID="litPageTitleShippingRates" runat="server" Text="<%$ Resources: _Shipping, PageTitle_ShippingRates %>" />:
                             <span class="h1_light">
                                 <asp:Literal ID="litShippingMethodNameRates" runat="server" /></span>
+                            <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9793')">?</a>
                         </h2>
                     <asp:Repeater ID="rptShippingRateZones" runat="server">
                         <ItemTemplate>

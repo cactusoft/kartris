@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -158,6 +158,14 @@ Partial Class KartrisLogin
                             lblPasswordOptional.Visible = False
                     End Select
 
+                    'GDPR opt in,
+                    'New EU rules coming May 2018, need to get explicit permission
+                    'for what you're doing with customer data.
+                    Dim blnGDPR As Boolean = (GetKartConfig("general.gdpr.enabled") = "y")
+                    If blnGDPR Then
+                        phdGDPROptIn.Visible = True
+                    End If
+
                     txtConfirmEmail.Focus()
                 Else
 
@@ -233,6 +241,9 @@ Partial Class KartrisLogin
             popLogin.Show()
         ElseIf (String.IsNullOrEmpty(txtNewPassword.Text.Trim) Or String.IsNullOrEmpty(txtConfirmPassword.Text.Trim)) AndAlso (strUserPasswordRule = "required" Or blnValueEntered) Then
             litFailureText.Text = "<div class=""errortext"">" & GetGlobalResourceObject("Kartris", "ContentText_SomeFieldsBlank") & "</div>"
+            popLogin.Show()
+        ElseIf chkGDPRConfirm.Checked = False Then
+            litFailureText.Text = "<div class=""errortext"">" & GetGlobalResourceObject("Kartris", "FormLabel_GDPRConfirmText") & "</div>"
             popLogin.Show()
         Else
 

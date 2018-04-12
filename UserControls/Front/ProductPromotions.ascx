@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="ProductPromotions.ascx.vb"
     Inherits="ProductPromotions" %>
 <asp:Panel ID="pnlPromotions" runat="server">
-    <div class="section_promotions">
+    <div class="section_promotions loadspinner">
         <asp:PlaceHolder ID="phdSubHeading" runat="server">
             <h4>
                 <asp:Literal ID="litSubHeaderPromotions" runat="server" Text="<%$ Resources: Kartris, SubHeading_Promotions %>" /></h4>

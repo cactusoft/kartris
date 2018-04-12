@@ -9,7 +9,9 @@
         <ContentTemplate>
             <div id="page_customers">
                 <h1>
-                    <asp:Literal ID="litCustomersListTitle" runat="server" Text="<%$Resources: PageTitle_Customers %>"></asp:Literal></h1>
+                    <asp:Literal ID="litCustomersListTitle" runat="server" Text="<%$Resources: PageTitle_Customers %>"></asp:Literal>
+                    <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9885')">?</a>
+                </h1>
                 <div id="searchboxrow">
                     <asp:Label ID="lblFindCustomer" runat="server" Text="<%$Resources: ContentText_FindACustomer%>"
                         Visible="False"></asp:Label>

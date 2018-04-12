@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -823,11 +823,11 @@ Partial Class UserControls_Back_CreateOrder
                 'End If
 
                 sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_OrderTime2") & ": " & CkartrisDisplayFunctions.NowOffset & vbCrLf)
-                sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_IPAddress") & ": " & Request.ServerVariables("REMOTE_ADDR") & vbCrLf)
+                sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_IPAddress") & ": " & CkartrisEnvironment.GetClientIPAddress() & vbCrLf)
                 sbdBodyText.Append(" " & Request.ServerVariables("HTTP_USER_AGENT") & vbCrLf)
                 If blnUseHTMLOrderEmail Then
                     sbdHTMLOrderEmail.Replace("[nowoffset]", CkartrisDisplayFunctions.NowOffset)
-                    sbdHTMLOrderEmail.Replace("[customerip]", Request.ServerVariables("REMOTE_ADDR"))
+                    sbdHTMLOrderEmail.Replace("[customerip]", CkartrisEnvironment.GetClientIPAddress())
                     sbdHTMLOrderEmail.Replace("[customeruseragent]", Request.ServerVariables("HTTP_USER_AGENT"))
                     sbdHTMLOrderEmail.Replace("[webshopurl]", CkartrisBLL.WebShopURL)
                     sbdHTMLOrderEmail.Replace("[websitename]", Server.HtmlEncode(GetGlobalResourceObject("Kartris", "Config_Webshopname")))

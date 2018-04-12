@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -55,5 +55,17 @@ Partial Class Admin_StockNotifications
         gvwDetails.DataBind()
         gvwDetailsClosed.DataSource = StockNotificationsBLL._GetStockNotificationsDetails("s")
         gvwDetailsClosed.DataBind()
+    End Sub
+
+    'Page notifications gridview
+    Protected Sub gvwDetails_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvwDetails.PageIndexChanging
+        gvwDetails.PageIndex = e.NewPageIndex
+        LoadStockNotifications()
+    End Sub
+
+    'Page closed notifications gridview
+    Protected Sub gvwDetailsClosed_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvwDetailsClosed.PageIndexChanging
+        gvwDetailsClosed.PageIndex = e.NewPageIndex
+        LoadStockNotifications()
     End Sub
 End Class

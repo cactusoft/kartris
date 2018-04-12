@@ -31,7 +31,7 @@
                                                 <asp:Label ID="lblEmail" runat="server" Text="<%$ Resources: Kartris, FormLabel_EmailAddress %> "
                                                     AssociatedControlID="C_Email" CssClass="requiredfield" EnableViewState="false" /></span><span
                                                         class="Kartris-DetailsView-Value">
-                                                        <asp:TextBox ID="C_Email" runat="server" AutoPostBack="false" /></span>
+                                                        <asp:TextBox ID="C_Email" runat="server" AutoPostBack="false" type="email" /></span>
                                                         <asp:RequiredFieldValidator ID="valEmailAddress1" runat="server" ControlToValidate="C_Email"
                                                             ValidationGroup="Checkout" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>"
                                                             CssClass="error" ForeColor="" />
@@ -112,6 +112,17 @@
                                                                             class="Kartris-DetailsView-Value">
                                                                             <asp:TextBox ID="txtConfirmPassword" runat="server" TextMode="Password" /></span></li>
                                                             </asp:PlaceHolder>
+
+                                                            <% 'GDPR opt in section %>
+                                                            <asp:PlaceHolder ID="phdGDPROptIn" runat="server" Visible="false">
+                                                                <div class="GDPR">
+                                                                    <asp:CheckBox ID="chkGDPRConfirm" runat="server" class="checkbox" />
+                                                                    <asp:Label ID="lblGDPRConfirmText" runat="server" Text="<%$ Resources: Kartris, FormLabel_GDPRConfirmText %>" AssociatedControlID="chkGDPRConfirm"></asp:Label>
+
+                                                                </div>
+                                                            </asp:PlaceHolder>
+
+
                                                             <li><span class="Kartris-DetailsView-Name"></span><span class="Kartris-DetailsView-Value">
                                                                 <asp:Button ID="btnContinue" CssClass="button" runat="server" Text="<%$ Resources: Kartris, FormButton_Submit %>"
                                                                     CausesValidation="true" /></span></li>

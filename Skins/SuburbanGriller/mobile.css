@@ -1,0 +1,72 @@
+
+/* 
+========================================================================
+BIG SCREENS
+========================================================================
+*/
+@media only screen and (min-width: 930px) {
+  .row { max-width: 100%; }
+  }
+
+/* 
+========================================================================
+MEDIUM SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 930px) {
+    /* Products*/
+    .products_shortened .item,
+    .subcategories_shortened .item          { width: calc(33% - 6px); }
+    .products_tabular .item                 { width: calc(50% - 10px); }
+    .versions td.info                       { max-width: 200px; overflow: hidden; }
+
+    /* Misc*/
+    .Kartris-DetailsView-Value              { width: 270px; }
+    ul                                      { max-width: 100%; }
+    #pagecontent_pad                        { min-height: 200px; padding-bottom: 15px; }
+    .basket td.quantity input               { width: 32px; text-align: right; }
+    #centre_container                       { padding: 0; }
+    select,
+    input                                   { width: 100%; }
+    #footer_inside                          { margin: 0; }
+
+    /* Header */ 
+    #header                                 { height: 50px; }
+    #header .logo                           { width: 160px; }
+    #header #h_bottom                       { display: none; }
+    #centre_container                       { padding-top: 50px; }
+    .left-off-canvas-menu #categorymenu     { display: block; }
+
+    /* Login status */
+    #loginstatus                            { width: 40px; }
+    #loginstatus #username,
+    #loginstatus #statuslabel               { display: none; }
+    #loginstatus:hover #account_menu        { margin: 19px 0 0 -30px; }
+
+    /* Basket */
+    #compactbasket_totalprice               { display: none; }
+  }
+
+/* 
+========================================================================
+SMALL SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 640px) {
+    /* Products*/
+    .products_shortened .item,
+    .subcategories_shortened .item          { width: calc(50% - 6px); }
+    .products_tabular .item                 { width: 100%; }
+    .versions td.info                       { max-width: 200px; overflow: hidden; }
+
+    /* Misc*/
+
+
+    /* Header */ 
+    #header .logo                           { width: 120px; }
+
+    /* Login status */
+    #loginstatus                            { display: none; }
+
+  }
+

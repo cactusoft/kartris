@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="CarryOnShopping.ascx.vb"
     Inherits="CarryOnShopping" %>
 <%@ OutputCache Duration="300" Shared="true" VaryByCustom="culture;user" VaryByParam="*" %>
-<div class="section carryonshopping">
+<div class="section carryonshopping loadspinner">
     <div class="pad">
         <h4>
             <asp:Literal ID="litCarryOnShoppingHeader" runat="server"></asp:Literal></h4>

@@ -2,7 +2,7 @@
 <!-- subcat text template start -->
 <asp:UpdatePanel ID="updMain" runat="server">
     <ContentTemplate>
-        <div class="item">
+        <div class="item loadspinner">
             <div class="box">
                 <div class="pad">
                     <asp:Literal ID="litCategoryID" runat="server" Visible="false" Text='<%# Eval("CAT_ID") %>'></asp:Literal>

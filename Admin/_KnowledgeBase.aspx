@@ -6,7 +6,10 @@
 <asp:Content ID="cntMain" ContentPlaceHolderID="phdMain" runat="Server">
     <div id="page_knowledgebase">
         <h1>
-            <asp:Literal ID="litTitle" runat="server" Text="<%$ Resources: _Knowledgebase, PageTitle_KnowledgeBase %>" /></h1>
+            <asp:Literal ID="litTitle" runat="server" Text="<%$ Resources: _Knowledgebase, PageTitle_KnowledgeBase %>" />
+            <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=10078')">?</a>
+
+        </h1>
         <asp:PlaceHolder ID="phdFeatureDisabled" runat="server" Visible="false">
             <div class="warnmessage">
                 <asp:Literal ID="litFeatureDisabled" runat="server" />

@@ -119,19 +119,27 @@
                                 </asp:View>
                                 <asp:View ID="viwVersionImages" runat="server">
                                     <div class="subtabsection">
+                                        <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=10160')" style="margin-bottom: 20px;">?</a>
                                         <_user:FileUploader ID="_UC_Uploader" runat="server" />
                                     </div>
                                 </asp:View>
                                 <asp:View runat="server" ID="viwVersionMedia">
                                     <div class="subtabsection">
+                                        <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9838')" style="margin-bottom: 20px;">?</a>
                                         <_user:EditMedia ID="_UC_EditMedia" runat="server" />
                                     </div>
                                 </asp:View>
                                 <asp:View ID="viwQuantityDiscount" runat="server">
-                                    <_user:QuantityDiscount ID="_UC_QtyDiscount" runat="server" />
+                                    <div class="subtabsection">
+                                        <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9927')">?</a>
+                                        <_user:QuantityDiscount ID="_UC_QtyDiscount" runat="server" />
+                                    </div>
                                 </asp:View>
                                 <asp:View ID="viwCustomerGroupPrices" runat="server">
-                                    <_user:CustomerGroupPrices ID="_UC_CustomerGroupPrices" runat="server" />
+                                    <div class="subtabsection">
+                                        <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9889')">?</a>
+                                        <_user:CustomerGroupPrices ID="_UC_CustomerGroupPrices" runat="server" />
+                                    </div>
                                 </asp:View>
                                 <asp:View runat="server" ID="tabObjectConfig">
                                     <div class="subtabsection">

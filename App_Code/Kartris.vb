@@ -1,6 +1,6 @@
 '========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -30,8 +30,8 @@ Imports System.Xml
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 2.901
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #07/24/2017# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION As Decimal = 2.9012
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #01/30/2018# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
@@ -156,7 +156,7 @@ Public NotInheritable Class CkartrisFormatErrors
             swtErrors.WriteLine("-----------------------------------------------------------------------------")
             swtErrors.WriteLine(">>" & Space(5) & Now.ToString())
             Try
-                swtErrors.WriteLine(">>" & Space(5) & HttpContext.Current.Request.ServerVariables("REMOTE_ADDR"))
+                swtErrors.WriteLine(">>" & Space(5) & CkartrisEnvironment.GetClientIPAddress())
             Catch ex As Exception
 
             End Try
@@ -232,7 +232,7 @@ Public NotInheritable Class CkartrisFormatErrors
             swtErrors.WriteLine(">>    " & Now.ToString())
             swtErrors.WriteLine(">>" & Space(5) & "Version:" & CkartrisEnumerations.KARTRIS_VERSION)
             swtErrors.WriteLine(">>" & Space(5) & "URL:" & HttpContext.Current.Request.Url.ToString)
-            swtErrors.WriteLine(">>    " & HttpContext.Current.Request.ServerVariables("REMOTE_ADDR"))
+            swtErrors.WriteLine(">>    " & CkartrisEnvironment.GetClientIPAddress())
             swtErrors.WriteLine(">>    CUSTOM MESSAGE:")
             swtErrors.WriteLine(_msg)
             Try
@@ -293,7 +293,7 @@ Public NotInheritable Class CkartrisFormatErrors
                     Try
                         swtErrors.WriteLine(">>" & Space(5) & "Version:" & CkartrisEnumerations.KARTRIS_VERSION)
                         swtErrors.WriteLine(">>" & Space(5) & "URL:" & HttpContext.Current.Request.Url.ToString)
-                        swtErrors.WriteLine(">>" & Space(5) & HttpContext.Current.Request.ServerVariables("REMOTE_ADDR"))
+                        swtErrors.WriteLine(">>" & Space(5) & CkartrisEnvironment.GetClientIPAddress())
                     Catch ex As Exception
 
                     End Try
@@ -1671,11 +1671,22 @@ Public NotInheritable Class CkartrisBLL
         End With
         Return GetBasketModifierEmailText
     End Function
+
     ''' <summary>
     ''' Format the table 'rows' section of order/confirmation HTML emails
     ''' </summary>
-    Public Shared Function GetHTMLEmailRowText(ByVal strName As String, ByVal strDescription As String, ByVal numExTax As Double, ByVal numIncTax As Double, ByVal numTaxAmount As Double, ByVal numTaxRate As Double, Optional ByVal CurrencyID As Integer = 0) As String
+    Public Shared Function GetHTMLEmailRowText(ByVal strName As String,
+                                               ByVal strDescription As String,
+                                               ByVal numExTax As Double,
+                                               ByVal numIncTax As Double,
+                                               ByVal numTaxAmount As Double,
+                                               ByVal numTaxRate As Double,
+                                               Optional ByVal CurrencyID As Integer = 0,
+                                               Optional ByVal VersionID As Long = 0,
+                                               Optional ByVal ProductID As Long = 0) As String
         Dim CUR_ID As Integer
+        Dim strImageURL As String
+        Dim strImageTag As String
         If CurrencyID > 0 Then
             CUR_ID = CurrencyID
         Else
@@ -1684,6 +1695,16 @@ Public NotInheritable Class CkartrisBLL
 
         Dim sbdHTMLRowText As StringBuilder = New StringBuilder
         sbdHTMLRowText.Append("<tr class=""row_item""><td class=""col1"">")
+
+        '## START modification mart 14 sep 2017
+
+        strImageURL = BasketBLL.GetImageURL(VersionID, ProductID)
+        If strImageURL <> "" Then
+            strImageTag = "<img src=""" & strImageURL & """ align = ""right"" />"
+            sbdHTMLRowText.Append(strImageTag)
+        End If
+
+        '## END modification mart 14 sep 2017
 
         'Put the name and description on the first column
         sbdHTMLRowText.Append("<strong>" & strName & "</strong><br/>")
@@ -1711,6 +1732,7 @@ Public NotInheritable Class CkartrisBLL
         sbdHTMLRowText.Append("</td></tr>")
         Return sbdHTMLRowText.ToString
     End Function
+
     ''' <summary>
     ''' Format the 'modifier' section of order/confirmation HTML emails
     ''' </summary>
@@ -2334,6 +2356,7 @@ Public NotInheritable Class CKartrisCSVExporter
         Current.Response.AddHeader("Content-Type", "application/Excel; charset=utf-8")
         Current.Response.AddHeader("Content-Disposition", "inline;filename=" & strFileName.Replace(" ", "_") & ".csv")
         Current.Response.AddHeader("Content-Length", data.Length.ToString)
+        Current.Response.ContentEncoding = Encoding.Unicode
         Current.Response.BinaryWrite(data)
         Current.Response.End()
         Current.Response.Flush()
@@ -2404,5 +2427,29 @@ End Class
 ''' </summary>
 Public NotInheritable Class CkartrisRecovery
     'Experimental code to try to recycle app pool
+End Class
+
+''' <summary>
+''' Class relating to the kartris hosting environment
+''' and other tools relating to it
+''' </summary>
+Public NotInheritable Class CkartrisEnvironment
+    Public Shared Function GetClientIPAddress() As String
+        Dim strClientIP As String = ""
+        If GetKartConfig("general.security.ssl") = "e" Then
+            'using cloudflare or similar, try to find the client IP
+            Try
+                strClientIP = HttpContext.Current.Request.ServerVariables("HTTP_CF_CONNECTING_IP")
+            Catch ex As Exception
+                'maybe not cloudflare
+            End Try
+
+            If String.IsNullOrEmpty(strClientIP) Then strClientIP = Current.Request.ServerVariables("HTTP_X_FORWARDED_FOR")
+            If String.IsNullOrEmpty(strClientIP) Then strClientIP = "unknown"
+        Else
+            strClientIP = HttpContext.Current.Request.ServerVariables("REMOTE_ADDR")
+        End If
+        Return strClientIP
+    End Function
 End Class
 

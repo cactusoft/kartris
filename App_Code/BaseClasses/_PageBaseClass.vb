@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -127,10 +127,7 @@ Public MustInherit Class _PageBaseClass
             End If
 
             'Get user's IP address
-            Dim strClientIP As String = Request.ServerVariables("HTTP_X_FORWARDED_FOR")
-            If String.IsNullOrEmpty(strClientIP) Then
-                strClientIP = Request.ServerVariables("REMOTE_ADDR")
-            End If
+            Dim strClientIP As String = CkartrisEnvironment.GetClientIPAddress()
 
             'Check matches specified IPs in web.config, if not blank
             Dim strBackEndIPLock = ConfigurationManager.AppSettings("BackEndIpLock").ToString()

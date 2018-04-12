@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -56,6 +56,7 @@ Partial Class _CategoryView
         End If
     End Sub
 
+    'Load subcategories
     Public Sub LoadSubCategories()
         Dim numCategoryPageSize As Integer = 1000
         If KartSettingsManager.GetKartConfig("backend.categories.paging.enabled") = "y" Then
@@ -106,6 +107,7 @@ Partial Class _CategoryView
         End If
     End Sub
 
+    'Whether to show the up/down subcat buttons
     Private Sub ShowHideUpDownArrowsSubCategories(ByVal TotalRows As Integer)
         Try
             CType(dtlSubCategories.Items(0).FindControl("lnkBtnMoveUp"), LinkButton).Enabled = False
@@ -115,7 +117,8 @@ Partial Class _CategoryView
         Catch ex As Exception
         End Try
     End Sub
-    
+
+    'Load products
     Public Sub LoadProducts()
         Dim numProductPageSize As Integer = 1000
         If KartSettingsManager.GetKartConfig("backend.products.paging.enabled") = "y" Then
@@ -146,6 +149,8 @@ Partial Class _CategoryView
                     _UC_ItemPager_PROD_Header.Visible = True
                 End If
                 phdNoProducts.Visible = False
+                lnkTurnProductsOn.Visible = True
+                lnkTurnProductsOff.Visible = True
             Else
                 dtlProducts.Visible = False
                 _UC_ItemPager_PROD_Header.Visible = False
@@ -162,6 +167,7 @@ Partial Class _CategoryView
         ShowHideUpDownArrowsProducts(numTotalNumberOfProducts)
     End Sub
 
+    'Whether to show the up/down
     Private Sub ShowHideUpDownArrowsProducts(ByVal TotalRows As Integer)
         Try
             CType(dtlProducts.Items(0).FindControl("lnkBtnMoveUp"), LinkButton).Enabled = False
@@ -326,4 +332,19 @@ Partial Class _CategoryView
         updCategoryViews.Update()
     End Sub
 
+    'Turn all products in a category ON (live=true)
+    Protected Sub lnkTurnProductsOn_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkTurnProductsOn.Click
+        If ProductsBLL._HideShowAllByCategoryID(_GetCategoryID(), True) Then
+            RaiseEvent ShowMasterUpdate()
+            LoadProducts()
+        End If
+    End Sub
+
+    'Turn all products in a category OFF (live=false)
+    Protected Sub lnkTurnProductsOff_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkTurnProductsOff.Click
+        If ProductsBLL._HideShowAllByCategoryID(_GetCategoryID(), False) Then
+            RaiseEvent ShowMasterUpdate()
+            LoadProducts()
+        End If
+    End Sub
 End Class

@@ -6,7 +6,9 @@
 <asp:Content ID="cntMain" ContentPlaceHolderID="phdMain" runat="Server">
     <div id="page_languagestrings">
         <h1>
-            <asp:Literal ID="litBackMenuLanguageStrings" runat="server" Text='<%$ Resources:_Kartris, BackMenu_LanguageStrings %>'></asp:Literal></h1>
+            <asp:Literal ID="litBackMenuLanguageStrings" runat="server" Text='<%$ Resources:_Kartris, BackMenu_LanguageStrings %>'></asp:Literal>
+            <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=10006')">?</a>
+        </h1>
         <ajaxToolkit:TabContainer ID="conTabs" runat="server" CssClass=".tab" EnableTheming="false">
             <ajaxToolkit:TabPanel ID="tabLanguageStrings" runat="server">
                 <HeaderTemplate>
@@ -23,6 +25,7 @@
                     <asp:Literal ID="litPageTitle" runat="server" Text='<%$ Resources: _Kartris, BackMenu_StringsTranslation %>'></asp:Literal></HeaderTemplate>
                 <ContentTemplate>
                     <div class="subtabsection">
+                        <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=10174')" style="margin-bottom: 20px;">?</a>
                         <_user:LanguageStringsTranslation ID="_UC_LSTranslation" runat="server" />
                     </div>
                 </ContentTemplate>

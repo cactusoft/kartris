@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -638,5 +638,40 @@ Public Class ProductsBLL
 
     Public Shared Function GetRichSnippetProperties(numProductID As Integer, numLanguageID As Byte) As DataTable
         Return Adptr.GetRichSnippetProperties(numProductID, numLanguageID)
+    End Function
+
+    'Set whether product live or not
+    Public Shared Function _HideShowAllByCategoryID(ByVal pCategoryID As Integer, ByVal pLive As Boolean) As Boolean
+
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Using sqlConn As New SqlConnection(strConnString)
+            Dim cmd As SqlCommand = sqlConn.CreateCommand
+            cmd.CommandText = "_spKartrisProducts_HideShowAllByCategoryID"
+            Dim savePoint As SqlTransaction = Nothing
+            cmd.CommandType = CommandType.StoredProcedure
+
+            Try
+                cmd.Parameters.AddWithValue("@CAT_ID", pCategoryID)
+                cmd.Parameters.AddWithValue("@P_Live", pLive)
+
+                sqlConn.Open()
+                savePoint = sqlConn.BeginTransaction()
+                cmd.Transaction = savePoint
+
+                cmd.ExecuteNonQuery()
+
+                savePoint.Commit()
+                sqlConn.Close()
+
+                Return True
+            Catch ex As Exception
+                ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
+                If Not savePoint Is Nothing Then savePoint.Rollback()
+            Finally
+                If sqlConn.State = ConnectionState.Open Then sqlConn.Close() : savePoint.Dispose()
+            End Try
+
+        End Using
+        Return False
     End Function
 End Class

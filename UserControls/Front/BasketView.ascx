@@ -189,7 +189,7 @@ MAIN BASKET
                             <ItemTemplate>
                                 <tr class="product_row <%# AddClassToBasketRow(Eval("ExcludeFromCustomerDiscount"), BSKT_CustomerDiscount, "excustomerdiscount") %>">
                                     <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>
-                                    <td class="image_cell hide-for-small">
+                                    <td class="image_cell hide-for-small loadspinner">
                                         <user:ProductTemplateImageOnly ID="UC_ProductTemplateImageOnly" runat="server" />
                                     </td>
                                     <td>
@@ -197,7 +197,7 @@ MAIN BASKET
                                     <td colspan="2">
                                         <% End If%>
                                         <div class="name" style="cursor: pointer;">
-                                            <strong>
+                                            <strong class="loadspinner">
                                                 <asp:HyperLink ID="lnkProduct" runat="server" Text='<%# AddMarkToBasketItemName(Eval("ExcludeFromCustomerDiscount"), BSKT_CustomerDiscount, Server.HtmlEncode(Eval("Quantity") & " x " & Eval("ProductName")), " **") %>'></asp:HyperLink></strong>
                                             <asp:UpdatePanel ID="updCustomize" runat="server" UpdateMode="Conditional">
                                                 <ContentTemplate>

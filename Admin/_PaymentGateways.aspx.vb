@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -84,6 +84,7 @@ Partial Class Admin_PaymentGateways
                     clsShippingPlugin = Nothing
                 Catch ex As Exception
                     'Whoops, this means something didn't go right above
+                    CkartrisFormatErrors.LogError("Error loading up a payment gateway - " & ex.Message)
                 End Try
             End If
         Next

@@ -1,6 +1,6 @@
 '========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -47,7 +47,7 @@ Partial Class Main
 
         If Not Page.IsPostBack Then
             'Set canonical tag to webshopURL
-            Me.CanonicalTag = CkartrisBLL.WebShopURLhttp
+            Me.CanonicalTag = CkartrisBLL.WebShopURL
         End If
 
     End Sub

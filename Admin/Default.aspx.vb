@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2017 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -39,10 +39,7 @@ Partial Class Admin_Default
                 arrAuth = HttpSecureCookie.Decrypt(cokKartris.Value)
                 If arrAuth IsNot Nothing Then
                     If UBound(arrAuth) = 8 Then
-                        Dim strClientIP As String = Request.ServerVariables("HTTP_X_FORWARDED_FOR")
-                        If String.IsNullOrEmpty(strClientIP) Then
-                            strClientIP = Request.ServerVariables("REMOTE_ADDR")
-                        End If
+                        Dim strClientIP As String = CkartrisEnvironment.GetClientIPAddress()
                         If Not String.IsNullOrEmpty(arrAuth(0)) And strClientIP = arrAuth(7) Then
                             Session("Back_Auth") = cokKartris.Value
                             Session("_LANG") = arrAuth(4)
@@ -77,10 +74,7 @@ Partial Class Admin_Default
         Dim strPassword As String = txtPass.Text
         Dim blnResult As Boolean = LoginsBLL.Validate(strUsername, strPassword)
         If blnResult Then
-            Dim strClientIP As String = Request.ServerVariables("HTTP_X_FORWARDED_FOR")
-            If String.IsNullOrEmpty(strClientIP) Then
-                strClientIP = Request.ServerVariables("REMOTE_ADDR")
-            End If
+            Dim strClientIP As String = CkartrisEnvironment.GetClientIPAddress()
 
             Dim tblLogInDetails As DataTable = LoginsBLL.GetDetails(strUsername)
 

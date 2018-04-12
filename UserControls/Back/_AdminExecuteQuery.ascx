@@ -7,6 +7,7 @@
                 <asp:View ID="viwExecuteQuery" runat="server">
                     <h2>
                         <asp:Literal ID="litContentTextLogQuery" runat="server" Text="<%$ Resources: _DBAdmin, ContentText_LogQuery %>" />
+                        <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9805')">?</a>
                     </h2>
                     <p>
                         <asp:Literal ID="litContentTextExecuteQueryText" runat="server" Text="<%$ Resources: _DBAdmin, ContentText_ExecuteQueryText %>" />
