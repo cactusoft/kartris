@@ -1689,7 +1689,7 @@ Partial Class _Checkout
                                 'like gmail would be good for this.
                                 Dim objBCCsCollection As New System.Net.Mail.MailAddressCollection
                                 Dim strGDPROptinArchiveEmail As String = KartSettingsManager.GetKartConfig("general.gdpr.mailinglistbcc")
-                                If strGDPROptinArchiveEmail.Length > 0 Then
+                                If strGDPROptinArchiveEmail.Length > 2 Then
                                     objBCCsCollection.Add(strGDPROptinArchiveEmail)
                                 End If
 
