@@ -790,6 +790,13 @@ Partial Class _Checkout
                 End If
             End If
 
+
+            If clsPlugin.GatewayName.ToLower = "afforditnow" And (UC_BasketView.GetBasket.FinalPriceIncTax * 100 < 25000 Or UC_BasketView.GetBasket.FinalPriceIncTax * 100 > 1875000) Then
+                CkartrisFormatErrors.LogError("Requested order amount is not with the valid range of £250.00 to £18,750.00")
+                litOtherErrors.Text += "AffordItNow: Requested order amount is not with the valid range of £250.00 to £18,750.00"
+                blnValidEUVAT = False
+            End If
+
             '=======================================
             'PAGE IS VALID
             'Set up confirmation page
@@ -1509,575 +1516,576 @@ Partial Class _Checkout
                 End If
 
 
+
                 'Create the order record
                 O_ID = OrdersBLL.Add(C_ID, UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword, UC_BillingAddress.SelectedAddress,
-                                         UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket,
-                                          arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID,
-                                         intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice,
-                                         IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtPurchaseOrderNo.Text, Trim(txtComments.Text))
+                                             UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket,
+                                              arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID,
+                                             intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice,
+                                             IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtPurchaseOrderNo.Text, Trim(txtComments.Text))
 
-                'Mailchimp
-                Dim blnMailChimp As Boolean = KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y"
+                    'Mailchimp
+                    Dim blnMailChimp As Boolean = KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y"
 
-                If blnMailChimp Then
-                    'MAILCHIMP Adding Cart
-                    Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
-                    'If the User is Logged
-                    If CurrentLoggedUser IsNot Nothing And Session("BraintreeCartId") Is Nothing Then
-                        Dim addCartResult As String = mailChimpLib.AddCartToCustomerToStore(O_ID).Result
-                    End If
-                End If
-
-                'Order Creation successful
-                If O_ID > 0 Then
-                    objOrder = New Kartris.Interfaces.objOrder
-                    'Create the Order object and fill in the property values.
-                    objOrder.ID = O_ID
-                    objOrder.Description = GetGlobalResourceObject("Kartris", "Config_OrderDescription")
-                    objOrder.Amount = numGatewayTotalPrice
-                    objOrder.ShippingPrice = objBasket.ShippingPrice.IncTax
-                    objOrder.OrderHandlingPrice = objBasket.OrderHandlingPrice.IncTax
-                    objOrder.ShippingExTaxPrice = objBasket.ShippingPrice.ExTax
-                    objOrder.Currency = CurrenciesBLL.CurrencyCode(CUR_ID)
-
-                    'Set billing address for order
-                    If Not _blnAnonymousCheckout Then
-                        With UC_BillingAddress.SelectedAddress
-                            objOrder.Billing.Name = .FullName
-                            objOrder.Billing.StreetAddress = .StreetAddress
-                            objOrder.Billing.TownCity = .TownCity
-                            objOrder.Billing.CountyState = .County
-                            objOrder.Billing.CountryName = .Country.Name
-                            objOrder.Billing.Postcode = .Postcode
-                            objOrder.Billing.Phone = .Phone
-                            objOrder.Billing.CountryIsoCode = .Country.IsoCode
-                            objOrder.Billing.Company = .Company
-                        End With
+                    If blnMailChimp Then
+                        'MAILCHIMP Adding Cart
+                        Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
+                        'If the User is Logged
+                        If CurrentLoggedUser IsNot Nothing And Session("BraintreeCartId") Is Nothing Then
+                            Dim addCartResult As String = mailChimpLib.AddCartToCustomerToStore(O_ID).Result
+                        End If
                     End If
 
-                    'Set shipping address for order
-                    If Not blnBasketAllDigital Then
-                        If chkSameShippingAsBilling.Checked Then
-                            objOrder.SameShippingAsBilling = True
-                        Else
-                            With UC_ShippingAddress.SelectedAddress
-                                objOrder.Shipping.Name = .FullName
-                                objOrder.Shipping.StreetAddress = .StreetAddress
-                                objOrder.Shipping.TownCity = .TownCity
-                                objOrder.Shipping.CountyState = .County
-                                objOrder.Shipping.CountryName = .Country.Name
-                                objOrder.Shipping.Postcode = .Postcode
-                                objOrder.Shipping.Phone = .Phone
-                                objOrder.Shipping.CountryIsoCode = .Country.IsoCode
-                                objOrder.Shipping.Company = .Company
+                    'Order Creation successful
+                    If O_ID > 0 Then
+                        objOrder = New Kartris.Interfaces.objOrder
+                        'Create the Order object and fill in the property values.
+                        objOrder.ID = O_ID
+                        objOrder.Description = GetGlobalResourceObject("Kartris", "Config_OrderDescription")
+                        objOrder.Amount = numGatewayTotalPrice
+                        objOrder.ShippingPrice = objBasket.ShippingPrice.IncTax
+                        objOrder.OrderHandlingPrice = objBasket.OrderHandlingPrice.IncTax
+                        objOrder.ShippingExTaxPrice = objBasket.ShippingPrice.ExTax
+                        objOrder.Currency = CurrenciesBLL.CurrencyCode(CUR_ID)
+
+                        'Set billing address for order
+                        If Not _blnAnonymousCheckout Then
+                            With UC_BillingAddress.SelectedAddress
+                                objOrder.Billing.Name = .FullName
+                                objOrder.Billing.StreetAddress = .StreetAddress
+                                objOrder.Billing.TownCity = .TownCity
+                                objOrder.Billing.CountyState = .County
+                                objOrder.Billing.CountryName = .Country.Name
+                                objOrder.Billing.Postcode = .Postcode
+                                objOrder.Billing.Phone = .Phone
+                                objOrder.Billing.CountryIsoCode = .Country.IsoCode
+                                objOrder.Billing.Company = .Company
                             End With
                         End If
-                    Else
-                        'For digital orders, we always set shipping same as 
-                        'billing on the order. We generally hide it from view
-                        'but most payment systems require shipping address
-                        'so this keeps them happy
-                        objOrder.SameShippingAsBilling = True
-                    End If
 
-                    objOrder.CustomerIPAddress = Request.ServerVariables("REMOTE_HOST")
-                    objOrder.CustomerEmail = UC_KartrisLogin.UserEmailAddress
-
-                    If Not User.Identity.IsAuthenticated Then
-                        If Membership.ValidateUser(UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword) Then
-                            FormsAuthentication.SetAuthCookie(UC_KartrisLogin.UserEmailAddress, True)
-                        End If
-                    End If
-                    Try
-                        Dim KartrisUser As KartrisMemberShipUser = Membership.GetUser(UC_KartrisLogin.UserEmailAddress)
-                        If KartrisUser IsNot Nothing Then
-                            objOrder.CustomerID = KartrisUser.ID
-                        End If
-                    Catch ex As Exception
-                        objOrder.CustomerID = 0
-                    End Try
-
-                    objOrder.CustomerLanguage = LanguagesBLL.GetUICultureByLanguageID_s(CInt(Session("LANG")))
-
-
-                    Dim strFromEmail As String = LanguagesBLL.GetEmailFrom(CInt(Session("LANG")))
-
-                    'Send new account email to new customer
-                    If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" And blnNewUser Then
-
-                        Dim blnHTMLEmail As Boolean = KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y"
-                        If blnHTMLEmail Then
-                            Dim strHTMLEmailText As String = RetrieveHTMLEmailTemplate("NewCustomerSignUp")
-                            'build up the HTML email if template is found
-                            If Not String.IsNullOrEmpty(strHTMLEmailText) Then
-                                strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
-                                strHTMLEmailText = strHTMLEmailText.Replace("[websitename]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
-                                strHTMLEmailText = strHTMLEmailText.Replace("[customeremail]", UC_KartrisLogin.UserEmailAddress)
-                                strHTMLEmailText = strHTMLEmailText.Replace("[customerpassword]", UC_KartrisLogin.UserPassword)
-                                sbdNewCustomerEmailText.Clear()
-                                sbdNewCustomerEmailText.Append(strHTMLEmailText)
+                        'Set shipping address for order
+                        If Not blnBasketAllDigital Then
+                            If chkSameShippingAsBilling.Checked Then
+                                objOrder.SameShippingAsBilling = True
                             Else
-                                blnHTMLEmail = False
-                            End If
-                        End If
-                        SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, strSubject, sbdNewCustomerEmailText.ToString, , , , , blnHTMLEmail)
-                    End If
-
-                    'Mailing List
-                    If chkMailingList.Checked Then
-                        Dim ML_SignupDateTime, ML_ConfirmationDateTime As DateTime
-                        Dim blnSignupCustomer As Boolean = False
-                        If objOrder.CustomerID > 0 Then
-                            Dim tblCustomerData As DataTable = BasketBLL.GetCustomerData(objOrder.CustomerID)
-                            If tblCustomerData.Rows.Count > 0 Then
-                                ''// mailing list
-                                ML_ConfirmationDateTime = FixNullFromDB(tblCustomerData.Rows(0).Item("U_ML_ConfirmationDateTime"))
-                                ML_SignupDateTime = FixNullFromDB(tblCustomerData.Rows(0).Item("U_ML_SignupDateTime"))
-                                If Not (ML_SignupDateTime > New Date(1900, 1, 1) Or ML_ConfirmationDateTime > New Date(1900, 1, 1)) Then blnSignupCustomer = True
+                                With UC_ShippingAddress.SelectedAddress
+                                    objOrder.Shipping.Name = .FullName
+                                    objOrder.Shipping.StreetAddress = .StreetAddress
+                                    objOrder.Shipping.TownCity = .TownCity
+                                    objOrder.Shipping.CountyState = .County
+                                    objOrder.Shipping.CountryName = .Country.Name
+                                    objOrder.Shipping.Postcode = .Postcode
+                                    objOrder.Shipping.Phone = .Phone
+                                    objOrder.Shipping.CountryIsoCode = .Country.IsoCode
+                                    objOrder.Shipping.Company = .Company
+                                End With
                             End If
                         Else
-                            blnSignupCustomer = False
+                            'For digital orders, we always set shipping same as 
+                            'billing on the order. We generally hide it from view
+                            'but most payment systems require shipping address
+                            'so this keeps them happy
+                            objOrder.SameShippingAsBilling = True
                         End If
 
+                        objOrder.CustomerIPAddress = Request.ServerVariables("REMOTE_HOST")
+                        objOrder.CustomerEmail = UC_KartrisLogin.UserEmailAddress
 
-                        If blnSignupCustomer Then
-                            Dim strRandomString As String = ""
-
-                            BasketBLL.UpdateCustomerMailingList(UC_KartrisLogin.UserEmailAddress, strRandomString, ddlMailingList.SelectedValue, objOrder.CustomerIPAddress)
-
-
-                            'If mailchimp is active, we want to add the user to the mailing list
-                            If KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y" Then
-                                'Add user direct to MailChimp
-                                BasketBLL.AddListSubscriber(UC_KartrisLogin.UserEmailAddress)
-                            Else
-                                'Use the built in mailing list
-                                Dim sbdMLBodyText As StringBuilder = New StringBuilder()
-                                Dim strBodyText As String
-                                Dim strMailingListSignUpLink As String = WebShopURL() & "Default.aspx?id=" & objOrder.CustomerID & "&r=" & strRandomString
-
-                                sbdMLBodyText.Append(GetGlobalResourceObject("Kartris", "EmailText_NewsletterSignup") & vbCrLf & vbCrLf)
-                                sbdMLBodyText.Append(strMailingListSignUpLink & vbCrLf & vbCrLf)
-                                sbdMLBodyText.Append(GetGlobalResourceObject("Kartris", "EmailText_NewsletterAuthorizeFooter"))
-
-                                strBodyText = sbdMLBodyText.ToString
-                                strBodyText = Replace(strBodyText, "[IPADDRESS]", objOrder.CustomerIPAddress)
-                                strBodyText = Replace(strBodyText, "[WEBSHOPNAME]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
-                                strBodyText = Replace(strBodyText, "[WEBSHOPURL]", WebShopURL)
-                                strBodyText = strBodyText & GetGlobalResourceObject("Kartris", "ContentText_NewsletterSignup")
-
-                                Dim blnHTMLEmail As Boolean = KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y"
-                                If blnHTMLEmail Then
-                                    Dim strHTMLEmailText As String = RetrieveHTMLEmailTemplate("MailingListSignUp")
-                                    'build up the HTML email if template is found
-                                    If Not String.IsNullOrEmpty(strHTMLEmailText) Then
-                                        strHTMLEmailText = strHTMLEmailText.Replace("[mailinglistconfirmationlink]", strMailingListSignUpLink)
-                                        strHTMLEmailText = strHTMLEmailText.Replace("[websitename]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
-                                        strHTMLEmailText = strHTMLEmailText.Replace("[customerip]", objOrder.CustomerIPAddress)
-                                        strBodyText = strHTMLEmailText
-                                    Else
-                                        blnHTMLEmail = False
-                                    End If
-                                End If
-
-                                'GDPR Mod - v2.9013 
-                                'We want to be able to have a log of all opt-in
-                                'requests sent, so we can prove the user was sent
-                                'the GDPR notice, and also prove what text they
-                                'received. We do this by BCCing the confirmation
-                                'opt-in mail to an email address. A free account
-                                'like gmail would be good for this.
-                                Dim objBCCsCollection As New System.Net.Mail.MailAddressCollection
-                                Dim strGDPROptinArchiveEmail As String = KartSettingsManager.GetKartConfig("general.gdpr.mailinglistbcc")
-                                If strGDPROptinArchiveEmail.Length > 0 Then
-                                    objBCCsCollection.Add(strGDPROptinArchiveEmail)
-                                End If
-
-                                SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, GetGlobalResourceObject("Kartris", "PageTitle_MailingList"), strBodyText, , , , , blnHTMLEmail,, objBCCsCollection)
+                        If Not User.Identity.IsAuthenticated Then
+                            If Membership.ValidateUser(UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword) Then
+                                FormsAuthentication.SetAuthCookie(UC_KartrisLogin.UserEmailAddress, True)
                             End If
-
                         End If
-                    End If
-
-                    'Save Basket
-                    If chkSaveBasket.Checked Then
-                        Call BasketBLL.SaveBasket(objOrder.CustomerID, "Order #" & O_ID & ", " & CkartrisDisplayFunctions.NowOffset, Session("SessionID"))
-                    End If
-
-                    'v2.9010 Autosave basket
-                    'This is in addition to the normal saving process, which lets a 
-                    'customer save a named basket
-                    Try
-                        BasketBLL.AutosaveBasket(objOrder.CustomerID)
-                    Catch ex As Exception
-                        'User not logged in
-                    End Try
-
-                    objOrder.WebShopURL = Page.Request.Url.ToString.Replace("?new=y", "")
-
-                    'serialize order object and store it as a session value
-                    Session("objOrder") = Payment.Serialize(objOrder)
-
-                    'update data field with serialized order and basket objects and selected shipping method id - this allows us to edit this order later if needed
-                    OrdersBLL.DataUpdate(O_ID, Session("objOrder") & "|||" & Payment.Serialize(objBasket) & "|||" & UC_BasketView.SelectedShippingID)
-
-                    Dim transactionId As String = ""
-                    If LCase(clsPlugin.GatewayType) = "local" Then
-                        '---------------------------------------
-                        'LOCAL PROCESS
-                        'This includes gateways where card
-                        'details are taken through the checkout
-                        'page and relayed to the gateway, and
-                        'also the 'PO offline' method where
-                        'orders are made without payment, to be
-                        'paid later offline.
-                        '---------------------------------------
-                        Dim blnResult As Boolean
-                        Dim strBitcoinPaymentAddress As String = ""
-
-                        Dim strEasypayPayment As String = ""
-                        Dim strBraintreePayment As String = ""
-
-                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" OrElse
-                        clsPlugin.GatewayName.ToLower = "bitcoin" OrElse
-                        clsPlugin.GatewayName.ToLower = "easypaymultibanco" OrElse
-                        clsPlugin.GatewayName.ToLower = "braintreepayment" Then
-                            'PO orders don't need authorizing, they are
-                            'effectively successful if placed as payment
-                            'will come later
-                            If clsPlugin.GatewayName.ToLower = "bitcoin" Then
-                                strBitcoinPaymentAddress = clsPlugin.ProcessOrder(Payment.Serialize(objOrder))
-                                blnResult = True
-                            ElseIf clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
-                                strEasypayPayment = clsPlugin.ProcessOrder(Payment.Serialize(objOrder))
-                                blnResult = True
-                                BasketBLL.DeleteBasket()
-                                Session("Basket") = Nothing
-                            ElseIf clsPlugin.GatewayName.ToLower = "braintreepayment" Then      ' if the user selected BrainTree as a paying method, retrieves some data from the form and calls PaymentsBLL to perform the transaction
-                                Dim paymentMethodNonce, output As String
-                                Dim amount As Decimal
-                                Dim CurrencyID As Short
-                                CurrencyID = Session("CUR_ID")
-                                Try
-                                    paymentMethodNonce = Request.Form("ctl00$cntMain$tbPaymentMethodNonce")
-                                    amount = Request.Form("ctl00$cntMain$tbAmount")
-                                    Try
-                                        transactionId = PaymentsBLL.BrainTreePayment(paymentMethodNonce, amount, CurrencyID)
-                                    Catch bEx As BrainTreeException
-                                        transactionId = ""
-                                        UC_PopUpErrors.SetTextMessage = If(bEx.CustomMessage IsNot Nothing, bEx.CustomMessage, bEx.Message)
-                                        UC_PopUpErrors.SetTitle = GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors")
-                                        UC_PopUpErrors.ShowPopup()
-                                        mvwCheckout.ActiveViewIndex = 1
-                                        blnResult = False
-                                    End Try
-
-
-                                    If transactionId <> "" Then
-                                        blnResult = True
-                                        Try
-                                            'Mailchimp, try to remove cart
-                                            If blnMailChimp Then
-                                                'Mailchimp library
-                                                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
-
-                                                Dim cartId As String = Session("BraintreeCartId")
-                                                If cartId IsNot Nothing Then
-                                                    ' Removing Cart and adding Order to successful payment made with Braintree
-                                                    Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(CurrentLoggedUser.ID).Result
-                                                    Dim mcOrder As Order = mailChimpLib.AddOrder(mcCustomer, cartId).Result
-                                                    Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart(cartId).Result
-                                                    Session("BraintreeCartId") = Nothing
-
-                                                End If
-                                            End If
-                                        Catch ex As Exception
-                                            Debug.Print(ex.Message)
-                                        End Try
-                                        BasketBLL.DeleteBasket()
-                                        Session("Basket") = Nothing
-
-                                    End If
-                                Catch ex As Exception
-                                    output = "Error: 81503: Amount is an invalid format."
-                                End Try
+                        Try
+                            Dim KartrisUser As KartrisMemberShipUser = Membership.GetUser(UC_KartrisLogin.UserEmailAddress)
+                            If KartrisUser IsNot Nothing Then
+                                objOrder.CustomerID = KartrisUser.ID
                             End If
+                        Catch ex As Exception
+                            objOrder.CustomerID = 0
+                        End Try
 
-                            blnResult = True
-                        Else
-                            '---------------------------------------
-                            'COLLECT CARD DETAILS
-                            '---------------------------------------
-                            objOrder.CreditCardInfo.CardNumber = UC_CreditCardInput.CardNumber
-                            objOrder.CreditCardInfo.CardType = UC_CreditCardInput.CardType
-                            objOrder.CreditCardInfo.BeginMonth = Left(UC_CreditCardInput.StartDate, 2)
-                            objOrder.CreditCardInfo.BeginYear = Right(UC_CreditCardInput.StartDate, 2)
-                            objOrder.CreditCardInfo.IssueNumber = UC_CreditCardInput.CardIssueNumber
-                            objOrder.CreditCardInfo.CV2 = UC_CreditCardInput.CardSecurityNumber
-                            objOrder.CreditCardInfo.ExpiryMonth = Left(UC_CreditCardInput.ExpiryDate, 2)
-                            objOrder.CreditCardInfo.ExpiryYear = Right(UC_CreditCardInput.ExpiryDate, 2)
+                        objOrder.CustomerLanguage = LanguagesBLL.GetUICultureByLanguageID_s(CInt(Session("LANG")))
 
-                            '---------------------------------------
-                            'VALIDATE CREDIT CARD DETAILS
-                            'Did the gateway return a 'sucess' result on validation?
-                            '---------------------------------------
-                            blnResult = clsPlugin.ValidateCardOrder(Payment.Serialize(objOrder), Payment.Serialize(objBasket))
-                        End If
 
-                        '---------------------------------------
-                        'SUCCESSFULLY PLACED ORDER
-                        '---------------------------------------
-                        If blnResult Then
-                            'The transaction was authorized so update the order
-                            If clsPlugin.CallbackSuccessful Or
-                            clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
-                            clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
-                            clsPlugin.GatewayName.ToLower = "braintreepayment" Then
-                                If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
-                                clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
-                                clsPlugin.GatewayName.ToLower = "braintreepayment" Then
-                                    O_ID = objOrder.ID
+                        Dim strFromEmail As String = LanguagesBLL.GetEmailFrom(CInt(Session("LANG")))
+
+                        'Send new account email to new customer
+                        If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" And blnNewUser Then
+
+                            Dim blnHTMLEmail As Boolean = KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y"
+                            If blnHTMLEmail Then
+                                Dim strHTMLEmailText As String = RetrieveHTMLEmailTemplate("NewCustomerSignUp")
+                                'build up the HTML email if template is found
+                                If Not String.IsNullOrEmpty(strHTMLEmailText) Then
+                                    strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
+                                    strHTMLEmailText = strHTMLEmailText.Replace("[websitename]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
+                                    strHTMLEmailText = strHTMLEmailText.Replace("[customeremail]", UC_KartrisLogin.UserEmailAddress)
+                                    strHTMLEmailText = strHTMLEmailText.Replace("[customerpassword]", UC_KartrisLogin.UserPassword)
+                                    sbdNewCustomerEmailText.Clear()
+                                    sbdNewCustomerEmailText.Append(strHTMLEmailText)
                                 Else
-                                    'Get order ID that was passed back with callback
-                                    O_ID = clsPlugin.CallbackOrderID
+                                    blnHTMLEmail = False
                                 End If
+                            End If
+                            SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, strSubject, sbdNewCustomerEmailText.ToString, , , , , blnHTMLEmail)
+                        End If
 
-                                '---------------------------------------
-                                'CREATE DATATABLE OF ORDER
-                                '---------------------------------------
-                                Dim tblOrder As DataTable = OrdersBLL.GetOrderByID(O_ID)
+                        'Mailing List
+                        If chkMailingList.Checked Then
+                            Dim ML_SignupDateTime, ML_ConfirmationDateTime As DateTime
+                            Dim blnSignupCustomer As Boolean = False
+                            If objOrder.CustomerID > 0 Then
+                                Dim tblCustomerData As DataTable = BasketBLL.GetCustomerData(objOrder.CustomerID)
+                                If tblCustomerData.Rows.Count > 0 Then
+                                    ''// mailing list
+                                    ML_ConfirmationDateTime = FixNullFromDB(tblCustomerData.Rows(0).Item("U_ML_ConfirmationDateTime"))
+                                    ML_SignupDateTime = FixNullFromDB(tblCustomerData.Rows(0).Item("U_ML_SignupDateTime"))
+                                    If Not (ML_SignupDateTime > New Date(1900, 1, 1) Or ML_ConfirmationDateTime > New Date(1900, 1, 1)) Then blnSignupCustomer = True
+                                End If
+                            Else
+                                blnSignupCustomer = False
+                            End If
 
-                                Dim O_CouponCode As String = ""
-                                Dim O_TotalPriceGateway As Double = 0
-                                Dim O_PurchaseOrderNo As String = ""
-                                Dim O_WishListID As Integer = 0
-                                Dim strCallBodyText As String = ""
-                                Dim strBasketBLL As String = ""
 
-                                '---------------------------------------
-                                'DATA EXISTS FOR THIS ORDER ID
-                                '---------------------------------------
-                                If tblOrder.Rows.Count > 0 Then
-                                    If tblOrder.Rows(0)("O_Sent") = 0 Then
+                            If blnSignupCustomer Then
+                                Dim strRandomString As String = ""
 
-                                        'Store order details
-                                        O_CouponCode = CStr(FixNullFromDB(tblOrder.Rows(0)("O_CouponCode")))
-                                        O_TotalPriceGateway = CDbl(tblOrder.Rows(0)("O_TotalPriceGateway"))
-                                        O_PurchaseOrderNo = CStr(tblOrder.Rows(0)("O_PurchaseOrderNo"))
-                                        O_WishListID = CInt(tblOrder.Rows(0)("O_WishListID"))
-                                        strBasketBLL = CStr(tblOrder.Rows(0)("O_Status"))
+                                BasketBLL.UpdateCustomerMailingList(UC_KartrisLogin.UserEmailAddress, strRandomString, ddlMailingList.SelectedValue, objOrder.CustomerIPAddress)
 
-                                        '---------------------------------------
-                                        'FORMAT EMAIL TEXT
-                                        'Mark offline orders clearly so they
-                                        'are not mistaken for finished orders
-                                        'where payment is already received and
-                                        'goods need to be dispatched
-                                        '---------------------------------------
-                                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
-                                            Dim strPOline As String = ""
 
-                                            strPOline += GetGlobalResourceObject("Invoice", "ContentText_PONumber") & ": " & O_PurchaseOrderNo & vbCrLf
-                                            strPOline += vbCrLf
+                                'If mailchimp is active, we want to add the user to the mailing list
+                                If KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y" Then
+                                    'Add user direct to MailChimp
+                                    BasketBLL.AddListSubscriber(UC_KartrisLogin.UserEmailAddress)
+                                Else
+                                    'Use the built in mailing list
+                                    Dim sbdMLBodyText As StringBuilder = New StringBuilder()
+                                    Dim strBodyText As String
+                                    Dim strMailingListSignUpLink As String = WebShopURL() & "Default.aspx?id=" & objOrder.CustomerID & "&r=" & strRandomString
 
-                                            If blnUseHTMLOrderEmail Then
-                                                strCallBodyText = CStr(tblOrder.Rows(0)("O_Details"))
-                                                strCallBodyText = strCallBodyText.Replace("[poofflinepaymentdetails]", strPOline.Replace(vbCrLf, "<br />"))
-                                            Else
-                                                strCallBodyText = strPOline & CStr(tblOrder.Rows(0)("O_Details"))
-                                            End If
+                                    sbdMLBodyText.Append(GetGlobalResourceObject("Kartris", "EmailText_NewsletterSignup") & vbCrLf & vbCrLf)
+                                    sbdMLBodyText.Append(strMailingListSignUpLink & vbCrLf & vbCrLf)
+                                    sbdMLBodyText.Append(GetGlobalResourceObject("Kartris", "EmailText_NewsletterAuthorizeFooter"))
+
+                                    strBodyText = sbdMLBodyText.ToString
+                                    strBodyText = Replace(strBodyText, "[IPADDRESS]", objOrder.CustomerIPAddress)
+                                    strBodyText = Replace(strBodyText, "[WEBSHOPNAME]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
+                                    strBodyText = Replace(strBodyText, "[WEBSHOPURL]", WebShopURL)
+                                    strBodyText = strBodyText & GetGlobalResourceObject("Kartris", "ContentText_NewsletterSignup")
+
+                                    Dim blnHTMLEmail As Boolean = KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y"
+                                    If blnHTMLEmail Then
+                                        Dim strHTMLEmailText As String = RetrieveHTMLEmailTemplate("MailingListSignUp")
+                                        'build up the HTML email if template is found
+                                        If Not String.IsNullOrEmpty(strHTMLEmailText) Then
+                                            strHTMLEmailText = strHTMLEmailText.Replace("[mailinglistconfirmationlink]", strMailingListSignUpLink)
+                                            strHTMLEmailText = strHTMLEmailText.Replace("[websitename]", GetGlobalResourceObject("Kartris", "Config_Webshopname"))
+                                            strHTMLEmailText = strHTMLEmailText.Replace("[customerip]", objOrder.CustomerIPAddress)
+                                            strBodyText = strHTMLEmailText
                                         Else
-                                            strCallBodyText = CStr(tblOrder.Rows(0)("O_Details"))
-                                            strCallBodyText = strCallBodyText.Replace("[poofflinepaymentdetails]", "")
+                                            blnHTMLEmail = False
                                         End If
-
-                                        If clsPlugin.GatewayName.ToLower = "bitcoin" Then
-                                            Dim strBitcoinline As String = ""
-
-                                            strBitcoinline += GetGlobalResourceObject("Kartris", "ContentText_BitcoinPaymentDetails").ToString.Replace("[bitcoinpaymentaddress]", strBitcoinPaymentAddress)
-                                            strBitcoinline += vbCrLf
-
-                                            If blnUseHTMLOrderEmail Then
-                                                strCallBodyText = strCallBodyText.Replace("[bitcoinpaymentdetails]", strBitcoinline)
-                                            Else
-                                                strCallBodyText += strBitcoinline.Replace("<br/>", vbCrLf) & strCallBodyText
-                                            End If
-
-                                        Else
-                                            strCallBodyText = strCallBodyText.Replace("[bitcoinpaymentdetails]", "")
-                                        End If
-                                        '---------------------------------------
-                                        'DETERMINE BEHAVIOUR OF STATUS BOXES
-                                        'There are config settings to determine
-                                        'whether the 'invoiced' and 'payment
-                                        'received' status checkboxes on each
-                                        'order are checked when a successful
-                                        'payment is received
-                                        '---------------------------------------
-                                        Dim blnCheckInvoicedOnPayment As Boolean = KartSettingsManager.GetKartConfig("frontend.orders.checkinvoicedonpayment") = "y"
-                                        Dim blnCheckReceivedOnPayment As Boolean = KartSettingsManager.GetKartConfig("frontend.orders.checkreceivedonpayment") = "y"
-                                        Dim blnCheckSent As Boolean = True
-
-                                        '---------------------------------------
-                                        'SET ORDER TIME
-                                        'It uses the offset config setting in
-                                        'case the server your site runs on is
-                                        'not in your time zone
-                                        '---------------------------------------
-                                        Dim strOrderTimeText As String = GetGlobalResourceObject("Email", "EmailText_OrderTime") & " " & CkartrisDisplayFunctions.NowOffset
-                                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin" Or clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
-                                            blnCheckReceivedOnPayment = False
-                                            blnCheckInvoicedOnPayment = False
-                                        End If
-
-                                        If clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
-                                            blnCheckSent = False
-                                        End If
-
-                                        '---------------------------------------
-                                        'UPDATE THE ORDER RECORD
-                                        '---------------------------------------
-                                        Dim referenceCode As String = ""
-                                        If clsPlugin.GatewayName.ToLower = "braintreepayment" Then
-                                            referenceCode = transactionId
-                                        Else
-                                            referenceCode = clsPlugin.CallbackReferenceCode
-                                        End If
-
-                                        Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, referenceCode, CkartrisDisplayFunctions.NowOffset, blnCheckSent,
-                                                                                                  blnCheckInvoicedOnPayment,
-                                                                                                  blnCheckReceivedOnPayment,
-                                                                                                  strOrderTimeText,
-                                                                                                  O_CouponCode, O_WishListID, 0, 0, "", 0)
-                                        'If intUpdateResult = O_ID Then
-                                        Dim strCustomerEmailText As String = ""
-                                        Dim strStoreEmailText As String = ""
-
-                                        strCallBodyText = strCallBodyText.Replace("[orderid]", O_ID)
-
-                                        '---------------------------------------
-                                        'FORMAT CUSTOMER EMAIL TEXT
-                                        '---------------------------------------
-                                        If KartSettingsManager.GetKartConfig("frontend.checkout.ordertracking") <> "n" Then
-                                            'Add order tracking information at the top
-                                            If Not blnUseHTMLOrderEmail Then
-                                                strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderLookup") & vbCrLf & vbCrLf & WebShopURL() & "Customer.aspx" & vbCrLf & vbCrLf
-                                            End If
-                                        End If
-                                        'Don't need order tracking info
-                                        strCustomerEmailText += strCallBodyText
-
-                                        'Add in email header above that
-                                        If Not blnUseHTMLOrderEmail Then
-                                            strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderReceived") & vbCrLf & vbCrLf &
-                                                            GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf &
-                                                            strCustomerEmailText
-                                        Else
-                                            strCustomerEmailText = strCustomerEmailText.Replace("[storeowneremailheader]", "")
-                                        End If
-
-
-                                        '---------------------------------------
-                                        'SEND CUSTOMER EMAIL
-                                        '---------------------------------------
-                                        If KartSettingsManager.GetKartConfig("frontend.orders.emailcustomer") <> "n" Then
-                                            SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, GetGlobalResourceObject("Email", "Config_Subjectline") & " (#" & O_ID & ")", strCustomerEmailText, , , , , blnUseHTMLOrderEmail)
-                                        End If
-
-                                        '---------------------------------------
-                                        'SEND STORE OWNER EMAIL
-                                        '---------------------------------------
-                                        If KartSettingsManager.GetKartConfig("frontend.orders.emailmerchant") <> "n" Then
-                                            strStoreEmailText = GetGlobalResourceObject("Email", "EmailText_StoreEmailHeader") & vbCrLf & vbCrLf
-                                            If Not blnUseHTMLOrderEmail Then
-                                                strStoreEmailText += GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & strCallBodyText
-                                            Else
-                                                strStoreEmailText = strCallBodyText.Replace("[storeowneremailheader]", strStoreEmailText)
-                                            End If
-                                            SendEmail(strFromEmail, LanguagesBLL.GetEmailTo(1), GetGlobalResourceObject("Email", "Config_Subjectline2") & " (#" & O_ID & ")", strStoreEmailText, , , , , blnUseHTMLOrderEmail)
-                                        End If
-
-                                        'Send an order notification to Windows Store App if enabled
-                                        PushKartrisNotification("o")
                                     End If
+
+                                    'GDPR Mod - v2.9013 
+                                    'We want to be able to have a log of all opt-in
+                                    'requests sent, so we can prove the user was sent
+                                    'the GDPR notice, and also prove what text they
+                                    'received. We do this by BCCing the confirmation
+                                    'opt-in mail to an email address. A free account
+                                    'like gmail would be good for this.
+                                    Dim objBCCsCollection As New System.Net.Mail.MailAddressCollection
+                                    Dim strGDPROptinArchiveEmail As String = KartSettingsManager.GetKartConfig("general.gdpr.mailinglistbcc")
+                                    If strGDPROptinArchiveEmail.Length > 0 Then
+                                        objBCCsCollection.Add(strGDPROptinArchiveEmail)
+                                    End If
+
+                                    SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, GetGlobalResourceObject("Kartris", "PageTitle_MailingList"), strBodyText, , , , , blnHTMLEmail,, objBCCsCollection)
                                 End If
 
-                                If clsPlugin.GatewayName.ToLower <> "easypaymultibanco" Then
+                            End If
+                        End If
 
-                                    '---------------------------------------
+                        'Save Basket
+                        If chkSaveBasket.Checked Then
+                            Call BasketBLL.SaveBasket(objOrder.CustomerID, "Order #" & O_ID & ", " & CkartrisDisplayFunctions.NowOffset, Session("SessionID"))
+                        End If
 
-                                    'ORDER UPDATED
-                                    'Clear object, transfer to the 
-                                    'CheckoutComplete.aspx page
-                                    '---------------------------------------
-                                    'Dim BasketObject As Kartris.Basket = New Kartris.Basket
+                        'v2.9010 Autosave basket
+                        'This is in addition to the normal saving process, which lets a 
+                        'customer save a named basket
+                        Try
+                            BasketBLL.AutosaveBasket(objOrder.CustomerID)
+                        Catch ex As Exception
+                            'User not logged in
+                        End Try
 
+                        objOrder.WebShopURL = Page.Request.Url.ToString.Replace("?new=y", "")
 
+                        'serialize order object and store it as a session value
+                        Session("objOrder") = Payment.Serialize(objOrder)
+
+                        'update data field with serialized order and basket objects and selected shipping method id - this allows us to edit this order later if needed
+                        OrdersBLL.DataUpdate(O_ID, Session("objOrder") & "|||" & Payment.Serialize(objBasket) & "|||" & UC_BasketView.SelectedShippingID)
+
+                        Dim transactionId As String = ""
+                        If LCase(clsPlugin.GatewayType) = "local" Then
+                            '---------------------------------------
+                            'LOCAL PROCESS
+                            'This includes gateways where card
+                            'details are taken through the checkout
+                            'page and relayed to the gateway, and
+                            'also the 'PO offline' method where
+                            'orders are made without payment, to be
+                            'paid later offline.
+                            '---------------------------------------
+                            Dim blnResult As Boolean
+                            Dim strBitcoinPaymentAddress As String = ""
+
+                            Dim strEasypayPayment As String = ""
+                            Dim strBraintreePayment As String = ""
+
+                            If clsPlugin.GatewayName.ToLower = "po_offlinepayment" OrElse
+                            clsPlugin.GatewayName.ToLower = "bitcoin" OrElse
+                            clsPlugin.GatewayName.ToLower = "easypaymultibanco" OrElse
+                            clsPlugin.GatewayName.ToLower = "braintreepayment" Then
+                                'PO orders don't need authorizing, they are
+                                'effectively successful if placed as payment
+                                'will come later
+                                If clsPlugin.GatewayName.ToLower = "bitcoin" Then
+                                    strBitcoinPaymentAddress = clsPlugin.ProcessOrder(Payment.Serialize(objOrder))
+                                    blnResult = True
+                                ElseIf clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
+                                    strEasypayPayment = clsPlugin.ProcessOrder(Payment.Serialize(objOrder))
+                                    blnResult = True
                                     BasketBLL.DeleteBasket()
                                     Session("Basket") = Nothing
-                                    Session("OrderDetails") = strCallBodyText
-                                    Session("OrderID") = O_ID
-                                    Session("_NewPassword") = Nothing
-                                    Session("objOrder") = Nothing
-                                    Server.Transfer("CheckoutComplete.aspx")
-                                Else
-                                    Session("GateWayName") = clsPlugin.GatewayName
-                                    Session("_PostBackURL") = ""
-                                    Session("EasypayPayment") = strEasypayPayment
-                                    Server.Transfer("VisaDetail.aspx?g=easypay&a=mbrefer")
+                                ElseIf clsPlugin.GatewayName.ToLower = "braintreepayment" Then      ' if the user selected BrainTree as a paying method, retrieves some data from the form and calls PaymentsBLL to perform the transaction
+                                    Dim paymentMethodNonce, output As String
+                                    Dim amount As Decimal
+                                    Dim CurrencyID As Short
+                                    CurrencyID = Session("CUR_ID")
+                                    Try
+                                        paymentMethodNonce = Request.Form("ctl00$cntMain$tbPaymentMethodNonce")
+                                        amount = Request.Form("ctl00$cntMain$tbAmount")
+                                        Try
+                                            transactionId = PaymentsBLL.BrainTreePayment(paymentMethodNonce, amount, CurrencyID)
+                                        Catch bEx As BrainTreeException
+                                            transactionId = ""
+                                            UC_PopUpErrors.SetTextMessage = If(bEx.CustomMessage IsNot Nothing, bEx.CustomMessage, bEx.Message)
+                                            UC_PopUpErrors.SetTitle = GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors")
+                                            UC_PopUpErrors.ShowPopup()
+                                            mvwCheckout.ActiveViewIndex = 1
+                                            blnResult = False
+                                        End Try
 
+
+                                        If transactionId <> "" Then
+                                            blnResult = True
+                                            Try
+                                                'Mailchimp, try to remove cart
+                                                If blnMailChimp Then
+                                                    'Mailchimp library
+                                                    Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
+
+                                                    Dim cartId As String = Session("BraintreeCartId")
+                                                    If cartId IsNot Nothing Then
+                                                        ' Removing Cart and adding Order to successful payment made with Braintree
+                                                        Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(CurrentLoggedUser.ID).Result
+                                                        Dim mcOrder As Order = mailChimpLib.AddOrder(mcCustomer, cartId).Result
+                                                        Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart(cartId).Result
+                                                        Session("BraintreeCartId") = Nothing
+
+                                                    End If
+                                                End If
+                                            Catch ex As Exception
+                                                Debug.Print(ex.Message)
+                                            End Try
+                                            BasketBLL.DeleteBasket()
+                                            Session("Basket") = Nothing
+
+                                        End If
+                                    Catch ex As Exception
+                                        output = "Error: 81503: Amount is an invalid format."
+                                    End Try
                                 End If
+
+                                blnResult = True
                             Else
                                 '---------------------------------------
-                                'REDIRECT TO PAYPAL OR 3D-SECURE
+                                'COLLECT CARD DETAILS
                                 '---------------------------------------
-                                Dim strPostBackURL As String = clsPlugin.PostbackURL
-                                Dim strCallbackMessage As String = clsPlugin.CallbackMessage
-                                clsPlugin = Nothing
-                                Session("_NewPassword") = Nothing
-                                If String.IsNullOrEmpty(strCallbackMessage) Then
-                                    Response.Redirect(strPostBackURL)
+                                objOrder.CreditCardInfo.CardNumber = UC_CreditCardInput.CardNumber
+                                objOrder.CreditCardInfo.CardType = UC_CreditCardInput.CardType
+                                objOrder.CreditCardInfo.BeginMonth = Left(UC_CreditCardInput.StartDate, 2)
+                                objOrder.CreditCardInfo.BeginYear = Right(UC_CreditCardInput.StartDate, 2)
+                                objOrder.CreditCardInfo.IssueNumber = UC_CreditCardInput.CardIssueNumber
+                                objOrder.CreditCardInfo.CV2 = UC_CreditCardInput.CardSecurityNumber
+                                objOrder.CreditCardInfo.ExpiryMonth = Left(UC_CreditCardInput.ExpiryDate, 2)
+                                objOrder.CreditCardInfo.ExpiryYear = Right(UC_CreditCardInput.ExpiryDate, 2)
+
+                                '---------------------------------------
+                                'VALIDATE CREDIT CARD DETAILS
+                                'Did the gateway return a 'sucess' result on validation?
+                                '---------------------------------------
+                                blnResult = clsPlugin.ValidateCardOrder(Payment.Serialize(objOrder), Payment.Serialize(objBasket))
+                            End If
+
+                            '---------------------------------------
+                            'SUCCESSFULLY PLACED ORDER
+                            '---------------------------------------
+                            If blnResult Then
+                                'The transaction was authorized so update the order
+                                If clsPlugin.CallbackSuccessful Or
+                                clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
+                                clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
+                                clsPlugin.GatewayName.ToLower = "braintreepayment" Then
+                                    If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
+                                    clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
+                                    clsPlugin.GatewayName.ToLower = "braintreepayment" Then
+                                        O_ID = objOrder.ID
+                                    Else
+                                        'Get order ID that was passed back with callback
+                                        O_ID = clsPlugin.CallbackOrderID
+                                    End If
+
+                                    '---------------------------------------
+                                    'CREATE DATATABLE OF ORDER
+                                    '---------------------------------------
+                                    Dim tblOrder As DataTable = OrdersBLL.GetOrderByID(O_ID)
+
+                                    Dim O_CouponCode As String = ""
+                                    Dim O_TotalPriceGateway As Double = 0
+                                    Dim O_PurchaseOrderNo As String = ""
+                                    Dim O_WishListID As Integer = 0
+                                    Dim strCallBodyText As String = ""
+                                    Dim strBasketBLL As String = ""
+
+                                    '---------------------------------------
+                                    'DATA EXISTS FOR THIS ORDER ID
+                                    '---------------------------------------
+                                    If tblOrder.Rows.Count > 0 Then
+                                        If tblOrder.Rows(0)("O_Sent") = 0 Then
+
+                                            'Store order details
+                                            O_CouponCode = CStr(FixNullFromDB(tblOrder.Rows(0)("O_CouponCode")))
+                                            O_TotalPriceGateway = CDbl(tblOrder.Rows(0)("O_TotalPriceGateway"))
+                                            O_PurchaseOrderNo = CStr(tblOrder.Rows(0)("O_PurchaseOrderNo"))
+                                            O_WishListID = CInt(tblOrder.Rows(0)("O_WishListID"))
+                                            strBasketBLL = CStr(tblOrder.Rows(0)("O_Status"))
+
+                                            '---------------------------------------
+                                            'FORMAT EMAIL TEXT
+                                            'Mark offline orders clearly so they
+                                            'are not mistaken for finished orders
+                                            'where payment is already received and
+                                            'goods need to be dispatched
+                                            '---------------------------------------
+                                            If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
+                                                Dim strPOline As String = ""
+
+                                                strPOline += GetGlobalResourceObject("Invoice", "ContentText_PONumber") & ": " & O_PurchaseOrderNo & vbCrLf
+                                                strPOline += vbCrLf
+
+                                                If blnUseHTMLOrderEmail Then
+                                                    strCallBodyText = CStr(tblOrder.Rows(0)("O_Details"))
+                                                    strCallBodyText = strCallBodyText.Replace("[poofflinepaymentdetails]", strPOline.Replace(vbCrLf, "<br />"))
+                                                Else
+                                                    strCallBodyText = strPOline & CStr(tblOrder.Rows(0)("O_Details"))
+                                                End If
+                                            Else
+                                                strCallBodyText = CStr(tblOrder.Rows(0)("O_Details"))
+                                                strCallBodyText = strCallBodyText.Replace("[poofflinepaymentdetails]", "")
+                                            End If
+
+                                            If clsPlugin.GatewayName.ToLower = "bitcoin" Then
+                                                Dim strBitcoinline As String = ""
+
+                                                strBitcoinline += GetGlobalResourceObject("Kartris", "ContentText_BitcoinPaymentDetails").ToString.Replace("[bitcoinpaymentaddress]", strBitcoinPaymentAddress)
+                                                strBitcoinline += vbCrLf
+
+                                                If blnUseHTMLOrderEmail Then
+                                                    strCallBodyText = strCallBodyText.Replace("[bitcoinpaymentdetails]", strBitcoinline)
+                                                Else
+                                                    strCallBodyText += strBitcoinline.Replace("<br/>", vbCrLf) & strCallBodyText
+                                                End If
+
+                                            Else
+                                                strCallBodyText = strCallBodyText.Replace("[bitcoinpaymentdetails]", "")
+                                            End If
+                                            '---------------------------------------
+                                            'DETERMINE BEHAVIOUR OF STATUS BOXES
+                                            'There are config settings to determine
+                                            'whether the 'invoiced' and 'payment
+                                            'received' status checkboxes on each
+                                            'order are checked when a successful
+                                            'payment is received
+                                            '---------------------------------------
+                                            Dim blnCheckInvoicedOnPayment As Boolean = KartSettingsManager.GetKartConfig("frontend.orders.checkinvoicedonpayment") = "y"
+                                            Dim blnCheckReceivedOnPayment As Boolean = KartSettingsManager.GetKartConfig("frontend.orders.checkreceivedonpayment") = "y"
+                                            Dim blnCheckSent As Boolean = True
+
+                                            '---------------------------------------
+                                            'SET ORDER TIME
+                                            'It uses the offset config setting in
+                                            'case the server your site runs on is
+                                            'not in your time zone
+                                            '---------------------------------------
+                                            Dim strOrderTimeText As String = GetGlobalResourceObject("Email", "EmailText_OrderTime") & " " & CkartrisDisplayFunctions.NowOffset
+                                            If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin" Or clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
+                                                blnCheckReceivedOnPayment = False
+                                                blnCheckInvoicedOnPayment = False
+                                            End If
+
+                                            If clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
+                                                blnCheckSent = False
+                                            End If
+
+                                            '---------------------------------------
+                                            'UPDATE THE ORDER RECORD
+                                            '---------------------------------------
+                                            Dim referenceCode As String = ""
+                                            If clsPlugin.GatewayName.ToLower = "braintreepayment" Then
+                                                referenceCode = transactionId
+                                            Else
+                                                referenceCode = clsPlugin.CallbackReferenceCode
+                                            End If
+
+                                            Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, referenceCode, CkartrisDisplayFunctions.NowOffset, blnCheckSent,
+                                                                                                      blnCheckInvoicedOnPayment,
+                                                                                                      blnCheckReceivedOnPayment,
+                                                                                                      strOrderTimeText,
+                                                                                                      O_CouponCode, O_WishListID, 0, 0, "", 0)
+                                            'If intUpdateResult = O_ID Then
+                                            Dim strCustomerEmailText As String = ""
+                                            Dim strStoreEmailText As String = ""
+
+                                            strCallBodyText = strCallBodyText.Replace("[orderid]", O_ID)
+
+                                            '---------------------------------------
+                                            'FORMAT CUSTOMER EMAIL TEXT
+                                            '---------------------------------------
+                                            If KartSettingsManager.GetKartConfig("frontend.checkout.ordertracking") <> "n" Then
+                                                'Add order tracking information at the top
+                                                If Not blnUseHTMLOrderEmail Then
+                                                    strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderLookup") & vbCrLf & vbCrLf & WebShopURL() & "Customer.aspx" & vbCrLf & vbCrLf
+                                                End If
+                                            End If
+                                            'Don't need order tracking info
+                                            strCustomerEmailText += strCallBodyText
+
+                                            'Add in email header above that
+                                            If Not blnUseHTMLOrderEmail Then
+                                                strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderReceived") & vbCrLf & vbCrLf &
+                                                                GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf &
+                                                                strCustomerEmailText
+                                            Else
+                                                strCustomerEmailText = strCustomerEmailText.Replace("[storeowneremailheader]", "")
+                                            End If
+
+
+                                            '---------------------------------------
+                                            'SEND CUSTOMER EMAIL
+                                            '---------------------------------------
+                                            If KartSettingsManager.GetKartConfig("frontend.orders.emailcustomer") <> "n" Then
+                                                SendEmail(strFromEmail, UC_KartrisLogin.UserEmailAddress, GetGlobalResourceObject("Email", "Config_Subjectline") & " (#" & O_ID & ")", strCustomerEmailText, , , , , blnUseHTMLOrderEmail)
+                                            End If
+
+                                            '---------------------------------------
+                                            'SEND STORE OWNER EMAIL
+                                            '---------------------------------------
+                                            If KartSettingsManager.GetKartConfig("frontend.orders.emailmerchant") <> "n" Then
+                                                strStoreEmailText = GetGlobalResourceObject("Email", "EmailText_StoreEmailHeader") & vbCrLf & vbCrLf
+                                                If Not blnUseHTMLOrderEmail Then
+                                                    strStoreEmailText += GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & strCallBodyText
+                                                Else
+                                                    strStoreEmailText = strCallBodyText.Replace("[storeowneremailheader]", strStoreEmailText)
+                                                End If
+                                                SendEmail(strFromEmail, LanguagesBLL.GetEmailTo(1), GetGlobalResourceObject("Email", "Config_Subjectline2") & " (#" & O_ID & ")", strStoreEmailText, , , , , blnUseHTMLOrderEmail)
+                                            End If
+
+                                            'Send an order notification to Windows Store App if enabled
+                                            PushKartrisNotification("o")
+                                        End If
+                                    End If
+
+                                    If clsPlugin.GatewayName.ToLower <> "easypaymultibanco" Then
+
+                                        '---------------------------------------
+
+                                        'ORDER UPDATED
+                                        'Clear object, transfer to the 
+                                        'CheckoutComplete.aspx page
+                                        '---------------------------------------
+                                        'Dim BasketObject As Kartris.Basket = New Kartris.Basket
+
+
+                                        BasketBLL.DeleteBasket()
+                                        Session("Basket") = Nothing
+                                        Session("OrderDetails") = strCallBodyText
+                                        Session("OrderID") = O_ID
+                                        Session("_NewPassword") = Nothing
+                                        Session("objOrder") = Nothing
+                                        Server.Transfer("CheckoutComplete.aspx")
+                                    Else
+                                        Session("GateWayName") = clsPlugin.GatewayName
+                                        Session("_PostBackURL") = ""
+                                        Session("EasypayPayment") = strEasypayPayment
+                                        Server.Transfer("VisaDetail.aspx?g=easypay&a=mbrefer")
+
+                                    End If
                                 Else
-                                    Session("_CallbackMessage") = strCallbackMessage
-                                    Session("_PostBackURL") = strPostBackURL
-                                    Server.Transfer("CheckoutProcess.aspx", True)
+                                    '---------------------------------------
+                                    'REDIRECT TO PAYPAL OR 3D-SECURE
+                                    '---------------------------------------
+                                    Dim strPostBackURL As String = clsPlugin.PostbackURL
+                                    Dim strCallbackMessage As String = clsPlugin.CallbackMessage
+                                    clsPlugin = Nothing
+                                    Session("_NewPassword") = Nothing
+                                    If String.IsNullOrEmpty(strCallbackMessage) Then
+                                        Response.Redirect(strPostBackURL)
+                                    Else
+                                        Session("_CallbackMessage") = strCallbackMessage
+                                        Session("_PostBackURL") = strPostBackURL
+                                        Server.Transfer("CheckoutProcess.aspx", True)
+                                    End If
+
                                 End If
 
+                            Else
+                                '---------------------------------------
+                                'ERROR BACK FROM CREDIT CARD GATEWAY
+                                'Show error in popup
+                                '---------------------------------------
+                                If clsPlugin.GatewayName.ToLower <> "braintreepayment" Then
+                                    UC_PopUpErrors.SetTextMessage = clsPlugin.CallbackMessage
+                                End If
+                                UC_PopUpErrors.SetTitle = GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors")
+                                UC_PopUpErrors.ShowPopup()
+                                mvwCheckout.ActiveViewIndex = 1
                             End If
 
+                            clsPlugin = Nothing
                         Else
                             '---------------------------------------
-                            'ERROR BACK FROM CREDIT CARD GATEWAY
-                            'Show error in popup
+                            'REMOTE PAYMENT PROCESS
                             '---------------------------------------
-                            If clsPlugin.GatewayName.ToLower <> "braintreepayment" Then
-                                UC_PopUpErrors.SetTextMessage = clsPlugin.CallbackMessage
-                            End If
-                            UC_PopUpErrors.SetTitle = GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors")
-                            UC_PopUpErrors.ShowPopup()
-                            mvwCheckout.ActiveViewIndex = 1
+                            Session("BasketObject") = objBasket
+                            Session("GatewayName") = strGatewayName
+                            Session("_NewPassword") = Nothing
+                            clsPlugin = Nothing
+
+                            '---------------------------------------
+                            'FORMAT FORM TO POST TO REMOTE GATEWAY
+                            '---------------------------------------
+                            Server.Transfer("CheckoutProcess.aspx", True)
                         End If
-
-                        clsPlugin = Nothing
-                    Else
-                        '---------------------------------------
-                        'REMOTE PAYMENT PROCESS
-                        '---------------------------------------
-                        Session("BasketObject") = objBasket
-                        Session("GatewayName") = strGatewayName
-                        Session("_NewPassword") = Nothing
-                        clsPlugin = Nothing
-
-                        '---------------------------------------
-                        'FORMAT FORM TO POST TO REMOTE GATEWAY
-                        '---------------------------------------
-                        Server.Transfer("CheckoutProcess.aspx", True)
                     End If
                 End If
+
+
             End If
-
-
-        End If
 
     End Sub
 
