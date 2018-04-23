@@ -109,27 +109,14 @@ Partial Class Callback
                     strReferrerURL = Request.ServerVariables("HTTP_REFERER")
                 End Try
 
-                If strGatewayName.ToLower = "afforditnow" Then
-                    If (Request.QueryString("status").Equals("abandoned")) Then
-                        Response.Clear()
-                        Response.Redirect("~/checkout.aspx")
-                        Response.End()
-                    ElseIf (Request.QueryString("status").Equals("pre_declined") Or Request.QueryString("status").Equals("declined")) Then
-                        'Record error
-                        strResult = "Callback Failure: " & Request.QueryString("status")
-                    Else
-                        strResult = clsPlugin.ProcessCallback(strResult, strReferrerURL)
-                    End If
-                Else
-                    strResult = clsPlugin.ProcessCallback(strResult, strReferrerURL)
-                End If
+                strResult = clsPlugin.ProcessCallback(strResult, strReferrerURL)
 
                 'For Easypay gateway only
                 If strGatewayName.ToLower = "easypaycreditcard" And Request.QueryString("a") = "notify" Then
-                        blnFullDisplay = False
+                    blnFullDisplay = False
 
-                        ' Get And parse XML file
-                        Dim XMLreader As XmlDocument = New XmlDocument()
+                    ' Get And parse XML file
+                    Dim XMLreader As XmlDocument = New XmlDocument()
                     Try
                         XMLreader.Load(New StringReader(strResult))
                         Dim strQs As String = ""
@@ -340,12 +327,11 @@ Partial Class Callback
                 Else
                     'Record error
                     strCallbackError = "Callback Failure: " & strResult & vbCrLf & clsPlugin.CallbackMessage &
-                                                vbCrLf & "FF: " & Request.Form.ToString & vbCrLf & "QS: " & Request.QueryString.ToString
-
-                    End If
-                Else
-                    'No gateway name passed with callback, log error
-                    strCallbackError = "Callback Failure: Gateway name not specified. " &
+                                        vbCrLf & "FF: " & Request.Form.ToString & vbCrLf & "QS: " & Request.QueryString.ToString
+                End If
+            Else
+                'No gateway name passed with callback, log error
+                strCallbackError = "Callback Failure: Gateway name not specified. " &
                                         vbCrLf & "FF: " & Request.Form.ToString & vbCrLf & "QS: " & Request.QueryString.ToString
             End If
 

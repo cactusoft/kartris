@@ -13,8 +13,6 @@
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
 Imports GoCardless.Services
-Imports CkartrisFormatErrors
-
 
 Partial Class checkout_process
     Inherits System.Web.UI.Page
@@ -62,15 +60,12 @@ Partial Class checkout_process
             End If
 
             strOutput = clsPlugin.ProcessOrder(Session("objOrder"), BasketXML)
-                If (clsPlugin.GatewayName.Equals("GoCardlessPlugin")) Then
-                    btnSubmit.PostBackUrl = GoCardlessURL(Session.SessionID)
-                    Response.Redirect(btnSubmit.PostBackUrl)
-                ElseIf clsPlugin.GatewayName.Equals("AffordItNow") Then
-                    btnSubmit.PostBackUrl = clsPlugin.PostbackURL
-                    Response.Redirect(btnSubmit.PostBackUrl)
-                Else
-                    btnSubmit.PostBackUrl = clsPlugin.PostbackURL
-                End If
+            If (clsPlugin.GatewayName.Equals("GoCardlessPlugin")) Then
+                btnSubmit.PostBackUrl = GoCardlessURL(Session.SessionID)
+                Response.Redirect(btnSubmit.PostBackUrl)
+            Else
+                btnSubmit.PostBackUrl = clsPlugin.PostbackURL
+            End If
 
 
             strGatewayStatus = clsPlugin.Status
