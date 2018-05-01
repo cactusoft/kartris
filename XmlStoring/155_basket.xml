@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-16"?>
+<Basket xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <DB_C_CustomerID>4</DB_C_CustomerID>
+  <ShippingPrice>
+    <ExTax>0</ExTax>
+    <IncTax>0</IncTax>
+    <TaxRate>0.2</TaxRate>
+  </ShippingPrice>
+  <OrderHandlingPrice>
+    <ExTax>0</ExTax>
+    <IncTax>0</IncTax>
+    <TaxRate>0.2</TaxRate>
+  </OrderHandlingPrice>
+  <CouponDiscount>
+    <ExTax>0</ExTax>
+    <IncTax>0</IncTax>
+    <TaxRate>0.1998</TaxRate>
+  </CouponDiscount>
+  <CustomerDiscount>
+    <ExTax>-0</ExTax>
+    <IncTax>-0</IncTax>
+    <TaxRate>0.1998</TaxRate>
+  </CustomerDiscount>
+  <PromotionDiscount>
+    <ExTax>0</ExTax>
+    <IncTax>0</IncTax>
+    <TaxRate>0</TaxRate>
+  </PromotionDiscount>
+  <objPromotions />
+  <objPromotionsDiscount />
+  <CustomerDiscountPercentage>0</CustomerDiscountPercentage>
+  <CurrencyID>0</CurrencyID>
+  <ApplyTax>true</ApplyTax>
+  <PricesIncTax>true</PricesIncTax>
+  <D_Tax>1</D_Tax>
+  <D_Tax2>0</D_Tax2>
+  <BasketItems>
+    <BasketItem>
+      <_VersionID>7</_VersionID>
+      <ComboVersionID>0</ComboVersionID>
+      <_AppliedPromo>0</_AppliedPromo>
+      <FreeShipping>false</FreeShipping>
+      <Weight>5</Weight>
+      <RRP>0</RRP>
+      <ApplyTax>true</ApplyTax>
+      <PricesIncTax>true</PricesIncTax>
+      <HasCombinations>false</HasCombinations>
+      <VersionCode>SKU-options-1</VersionCode>
+      <Price>10.99</Price>
+      <TableText />
+      <CustomText />
+      <CodeNumber>SKU-options-1</CodeNumber>
+      <ExcludeFromCustomerDiscount>False</ExcludeFromCustomerDiscount>
+      <VersionName>Base Version</VersionName>
+      <ProductName>Options Product 1</ProductName>
+      <P_Name>Options Product 1</P_Name>
+      <ProductType>o</ProductType>
+      <VersionType>b</VersionType>
+      <ID>10314</ID>
+      <ProductID>4</ProductID>
+      <P_ID>4</P_ID>
+      <CategoryIDs>1,2,4</CategoryIDs>
+      <CustomType>n</CustomType>
+      <CustomDesc />
+      <CustomCost>0</CustomCost>
+      <PromoQty>1</PromoQty>
+      <Quantity>1</Quantity>
+      <StockQty>0</StockQty>
+      <AdjustedQty>false</AdjustedQty>
+      <AppliedPromo>0</AppliedPromo>
+      <DownloadType>n</DownloadType>
+      <QtyWarnLevel>0</QtyWarnLevel>
+      <OptionPrice>0</OptionPrice>
+      <OptionText>Colour: Yellow&lt;br /&gt;Size: Small&lt;br /&gt;</OptionText>
+      <OptionLink>1,7</OptionLink>
+      <Free>false</Free>
+      <VersionID>7</VersionID>
+      <VersionBaseID>7</VersionBaseID>
+      <ExTax>9.16</ExTax>
+      <IncTax>10.99</IncTax>
+      <ComputedTaxRate>0.2</ComputedTaxRate>
+      <TaxRate1>20</TaxRate1>
+      <TaxRate2>0</TaxRate2>
+      <TaxRateItem>20</TaxRateItem>
+    </BasketItem>
+    <BasketItem>
+      <_VersionID>1</_VersionID>
+      <ComboVersionID>0</ComboVersionID>
+      <_AppliedPromo>0</_AppliedPromo>
+      <FreeShipping>false</FreeShipping>
+      <Weight>0.44999998807907104</Weight>
+      <RRP>25.99</RRP>
+      <ApplyTax>true</ApplyTax>
+      <PricesIncTax>true</PricesIncTax>
+      <HasCombinations>false</HasCombinations>
+      <VersionCode>SKU-single-1</VersionCode>
+      <Price>19.99</Price>
+      <TableText />
+      <CustomText />
+      <CodeNumber>SKU-single-1</CodeNumber>
+      <ExcludeFromCustomerDiscount>False</ExcludeFromCustomerDiscount>
+      <VersionName>Single Item Product</VersionName>
+      <ProductName>Single Item Product</ProductName>
+      <P_Name>Single Item Product</P_Name>
+      <ProductType>s</ProductType>
+      <VersionType>v</VersionType>
+      <ID>10316</ID>
+      <ProductID>1</ProductID>
+      <P_ID>1</P_ID>
+      <CategoryIDs>1,2,4</CategoryIDs>
+      <CustomType>n</CustomType>
+      <CustomDesc />
+      <CustomCost>0</CustomCost>
+      <PromoQty>1</PromoQty>
+      <Quantity>1</Quantity>
+      <StockQty>0</StockQty>
+      <AdjustedQty>false</AdjustedQty>
+      <AppliedPromo>0</AppliedPromo>
+      <DownloadType>n</DownloadType>
+      <QtyWarnLevel>0</QtyWarnLevel>
+      <OptionPrice>0</OptionPrice>
+      <OptionText />
+      <OptionLink />
+      <Free>false</Free>
+      <VersionID>1</VersionID>
+      <VersionBaseID>1</VersionBaseID>
+      <ExTax>16.66</ExTax>
+      <IncTax>19.99</IncTax>
+      <ComputedTaxRate>0.2</ComputedTaxRate>
+      <TaxRate1>20</TaxRate1>
+      <TaxRate2>0</TaxRate2>
+      <TaxRateItem>20</TaxRateItem>
+    </BasketItem>
+  </BasketItems>
+</Basket>

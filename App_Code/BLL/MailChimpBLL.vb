@@ -23,6 +23,9 @@ Imports MailChimp.Net.Models
 Imports Newtonsoft.Json.Linq
 Imports System.Collections.ObjectModel
 Imports System.Web.Script.Serialization
+Imports System.Xml.Serialization
+Imports Kartris
+Imports System.Diagnostics
 
 
 '========================================================================
@@ -85,8 +88,10 @@ Public Class MailChimpBLL
     Public Async Function GetCustomer(ByVal kartrisUserId As Integer) As Task(Of Customer)
         Dim customer As Customer = Nothing
         Try
-            customer = Await manager.ECommerceStores.Customers(mcStoreId).GetAsync(kartrisUserId)
+            customer = manager.ECommerceStores.Customers(mcStoreId).GetAsync(kartrisUserId).Result
         Catch ex As Exception
+            CkartrisFormatErrors.LogError("MailchimpBLL GetCustomer ")
+            CkartrisFormatErrors.LogError("MailchimpBLL GetCustomer ex:" & ex.Message)
             Debug.Print(ex.Message)
         End Try
         Return customer
@@ -99,9 +104,8 @@ Public Class MailChimpBLL
     Public Async Function AddCartToCustomerToStore(Optional ByVal orderId As Integer = 0) As Task(Of String)
         Dim mcStore As Store = New Store()
         Dim toReturn As String = ""
-        Dim storeName As String = KartSettingsManager.GetKartConfig("general.mailchimp.storeid")
         Try
-            mcStore = Await manager.ECommerceStores.GetAsync(KartSettingsManager.GetKartConfig("general.mailchimp.storeid")).ConfigureAwait(False)
+            mcStore = manager.ECommerceStores.GetAsync(mcStoreId).Result
         Catch ex As Exception
             If ex.Message.Contains("Unable to find the resource at") Then
                 mcStore = Nothing
@@ -113,15 +117,16 @@ Public Class MailChimpBLL
 
         Try
             If (mcStore Is Nothing) Then
-                mcStore = Await Me.AddStore(storeName).ConfigureAwait(False)
+                mcStore = Await Me.AddStore(mcStoreId).ConfigureAwait(False)
             End If
 
             Dim customer As Customer
             Try
-                customer = Await manager.ECommerceStores.Customers(mcStore.Id).GetAsync(currentLoggedUser.ID)
+                customer = manager.ECommerceStores.Customers(mcStore.Id).GetAsync(currentLoggedUser.ID).Result
             Catch ex As Exception
                 customer = Nothing
             End Try
+
             If customer Is Nothing Then
                 customer = Await Me.AddCustomer().ConfigureAwait(False)
             End If
@@ -136,6 +141,7 @@ Public Class MailChimpBLL
         Catch ex As Exception
             'Debug.Print(ex.Message)
             'Log the error
+            CkartrisFormatErrors.LogError("MailchimpBLL AddCartToCustomerToStore(1): ")
             CkartrisFormatErrors.LogError("MailchimpBLL AddCartToCustomerToStore(2): " & ex.Message)
         End Try
         Return toReturn
@@ -200,8 +206,10 @@ Public Class MailChimpBLL
             Dim productVariant As [Variant]
             Dim listVariants As List(Of [Variant]) = New List(Of [Variant])
             Try
-                product = Await manager.ECommerceStores.Products(mcStoreId).GetAsync(basketItem.ProductID).ConfigureAwait(False)
+                product = manager.ECommerceStores.Products(mcStoreId).GetAsync(basketItem.ProductID).Result
             Catch ex As Exception
+                CkartrisFormatErrors.LogError("MailchimpBLL Product trycatch ")
+                CkartrisFormatErrors.LogError("MailchimpBLL Product trycatch :" & ex.Message)
                 If ex.Message.Contains("A product with the provided ID already") Then
                     product = Nothing
                 End If
@@ -214,7 +222,7 @@ Public Class MailChimpBLL
                 itemprice = Math.Round((basketItem.IR_PricePerItem * (1 + basketItem.IR_TaxPerItem)), 2)
             End If
 
-            Dim imageUrl As String = CkartrisBLL.WebShopURL & "Image.ashx?strItemType=p&numMaxHeight=100&numMaxWidth=100&numItem=" & basketItem.ProductID
+            Dim imageUrl As String = CkartrisBLL.WebShopURL & "Image.aspx?strItemType=p&numMaxHeight=100&numMaxWidth=100&numItem=" & basketItem.ProductID
             If product Is Nothing Then
                 productVariant = New [Variant] With {.Id = basketItem.ProductID,
                                                  .Title = basketItem.Name,
@@ -226,10 +234,9 @@ Public Class MailChimpBLL
                 product = New Product With {.Id = basketItem.ProductID,
                                             .Title = basketItem.Name,
                                             .Variants = listVariants,
-                                            .ImageUrl = imageUrl
+                                            .imageUrl = imageUrl
                                             }
-
-                Dim taskResult As Product = Await manager.ECommerceStores.Products(mcStoreId).AddAsync(product).ConfigureAwait(False)
+                Dim taskResult As Product = manager.ECommerceStores.Products(mcStoreId).AddAsync(product).Result
                 Return taskResult
             Else
                 Dim modified As Boolean = False
@@ -257,8 +264,15 @@ Public Class MailChimpBLL
                 End If
 
                 If modified Then
-                    Dim taskResult As Product = Await manager.ECommerceStores.Products(mcStoreId).UpdateAsync(basketItem.ProductID, product).ConfigureAwait(False)
+                    Dim taskResult As Product = Nothing
+                    Try
+                        taskResult = manager.ECommerceStores.Products(mcStoreId).UpdateAsync(basketItem.ProductID, product).Result
+                    Catch ex As Exception
+                        CkartrisFormatErrors.LogError("MailchimpBLL Product try catch modified")
+                    End Try
                     Return taskResult
+                Else
+                    Return product
                 End If
             End If
             Return Nothing
@@ -283,7 +297,7 @@ Public Class MailChimpBLL
 
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
             Dim cart As Cart = New Cart With {.Id = "cart_" & idSufix,
-                                            .Customer = New Customer With {.Id = customer.Id, .OptInStatus = True},
+                                            .customer = New Customer With {.Id = customer.Id, .OptInStatus = True},
                                             .CurrencyCode = currencyCodeEnum,
                                           .OrderTotal = kartrisBasket.FinalPriceIncTax,
                                           .CheckoutUrl = CkartrisBLL.WebShopURL.ToLower & "Checkout.aspx",
@@ -310,12 +324,14 @@ Public Class MailChimpBLL
                                })
             Next
 
-            Dim taskResult As Cart = Await manager.ECommerceStores.Carts(mcStoreId).AddAsync(cart).ConfigureAwait(False)
+            Dim taskResult As Cart = manager.ECommerceStores.Carts(mcStoreId).AddAsync(cart).Result
 
             Return taskResult
         Catch ex As Exception
             'Debug.Print(ex.Message)
             'Log the error
+            Dim trace = New System.Diagnostics.StackTrace(ex, True)
+            CkartrisFormatErrors.LogError("MailchimpBLL AddCart stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddCart - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
             CkartrisFormatErrors.LogError("MailchimpBLL AddCart: " & ex.Message)
 
             'Avoid build warnings
@@ -331,6 +347,26 @@ Public Class MailChimpBLL
         Try
             Await manager.ECommerceStores.Carts(mcStoreId).DeleteAsync(cartId).ConfigureAwait(False)
             result = True
+
+            ' Deleting XML Files
+            Dim xmlPath As String = Path.Combine(HttpRuntime.AppDomainAppPath, "XmlStoring")
+            Dim orderId As Integer = 0
+            If cartId.Contains("cart") Then
+                Dim cartIdSplit As String() = cartId.Split(New String() {"cart_"}, StringSplitOptions.None)
+                orderId = Integer.Parse(cartIdSplit(1))
+            Else
+                orderId = Integer.Parse(cartId)
+            End If
+            Dim xmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_basket.xml"
+            Dim orderXmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_order.xml"
+
+            If File.Exists(xmlFilePath) Then
+                File.Delete(xmlFilePath)
+            End If
+            If File.Exists(orderXmlFilePath) Then
+                File.Delete(orderXmlFilePath)
+            End If
+
         Catch ex As Exception
             If ex.Message.Contains("Unable to find") Then
                 result = True
@@ -370,11 +406,37 @@ Public Class MailChimpBLL
     ''' </summary>
     Public Async Function AddOrder(ByVal customer As Customer, ByVal cartId As String) As Task(Of Order)
         Try
-            Dim timestamp As String = CkartrisDisplayFunctions.NowOffset().ToString("yyyy-MM-dd HH:mm")
+            Dim timestamp As String = ""
+            If (IsDBNull(CkartrisDisplayFunctions.NowOffset())) Then
+                timestamp = CkartrisDisplayFunctions.NowOffset().ToString("yyyy-MM-dd HH:mm")
+            Else
+                timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm")
+            End If
+
+            If kartrisBasket Is Nothing Then
+                Dim orderId As Integer = 0
+                If cartId.Contains("cart") Then
+                    Dim cartIdSplit As String() = cartId.Split(New String() {"cart_"},
+                                        StringSplitOptions.None)
+                    orderId = Integer.Parse(cartIdSplit(1))
+                Else
+                    orderId = Integer.Parse(cartId)
+                End If
+
+                Dim xmlPath As String = Path.Combine(System.Web.HttpContext.Current.Request.PhysicalApplicationPath, "XmlStoring")
+                Dim xmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_basket.xml"
+
+                ' Open the file to read from.
+                Dim readText As String = File.ReadAllText(xmlFilePath)
+
+                Dim objBasket As Kartris.Basket = Payment.Deserialize(readText, GetType(Kartris.Basket))
+                kartrisBasket = objBasket
+            End If
 
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
+
             Dim order As Order = New Order With {.Id = "order_" & cartId,
-                                            .Customer = New Customer With {.Id = customer.Id},
+                                            .customer = New Customer With {.Id = customer.Id},
                                           .CurrencyCode = currencyCodeEnum,
                                           .OrderTotal = kartrisBasket.FinalPriceIncTax,
                                           .ProcessedAtForeign = timestamp,
@@ -383,6 +445,7 @@ Public Class MailChimpBLL
                                         }
             Dim product As Product
             Dim itemprice As Double
+
             For counter As Integer = 0 To kartrisBasket.BasketItems.Count - 1
                 product = Await AddProduct(kartrisBasket.BasketItems(counter))
 
@@ -400,6 +463,7 @@ Public Class MailChimpBLL
                                             .Quantity = kartrisBasket.BasketItems(counter).Quantity,
                                             .Price = itemprice
                 })
+
             Next
             Dim taskResult As Order = Await manager.ECommerceStores.Orders(mcStoreId).AddAsync(order).ConfigureAwait(False)
 
@@ -413,9 +477,128 @@ Public Class MailChimpBLL
         Catch ex As Exception
             'Log the error
             CkartrisFormatErrors.LogError("MailchimpBLL AddOrder: " & ex.Message)
+            Dim trace = New System.Diagnostics.StackTrace(ex, True)
+            CkartrisFormatErrors.LogError("MailchimpBLL AddOrder stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddOrder - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
+        End Try
+    End Function
 
-            'Avoid build warnings
-            Return Nothing
+
+    ''' <summary>
+    ''' Add order
+    ''' </summary>
+    Public Async Function AddOrderByCustomerId(ByVal customerId As Integer, ByVal cartId As String) As Task(Of Order)
+        Try
+            Dim O_TotalPriceGateway As Double = 0
+            Dim orderId As Integer = 0
+            Dim timestamp As String = ""
+            If (IsDBNull(CkartrisDisplayFunctions.NowOffset())) Then
+                timestamp = CkartrisDisplayFunctions.NowOffset().ToString("yyyy-MM-dd HH:mm")
+            Else
+                timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm")
+            End If
+
+            If kartrisBasket Is Nothing Then
+
+                If cartId.Contains("cart") Then
+                    Dim cartIdSplit As String() = cartId.Split(New String() {"cart_"},
+                                        StringSplitOptions.None)
+                    orderId = Integer.Parse(cartIdSplit(1))
+                Else
+                    orderId = Integer.Parse(cartId)
+                End If
+
+                Dim xmlPath As String = Path.Combine(System.Web.HttpContext.Current.Request.PhysicalApplicationPath, "XmlStoring")
+                Dim xmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_basket.xml"
+
+                Dim orderXmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_order.xml"
+
+                ' Open the file to read from.
+                Dim readText As String = File.ReadAllText(xmlFilePath)
+                Dim orderReadText As String = File.ReadAllText(orderXmlFilePath)
+                Try
+                    Dim objBasket As Kartris.Basket = Payment.Deserialize(readText, GetType(Kartris.Basket))
+                    kartrisBasket = objBasket
+
+                    Dim xmlElem = XElement.Parse(orderReadText)
+
+                    xmlElem = xmlElem.Element("Amount")
+                    O_TotalPriceGateway = Double.Parse(xmlElem.Value)
+
+                Catch ex As Exception
+                    CkartrisFormatErrors.LogError("MailchimpBLL XML catch")
+                    CkartrisFormatErrors.LogError("MailchimpBLL XML catch: " & ex.Message)
+                End Try
+
+
+            End If
+
+
+            Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
+
+            Dim order As Order = New Order With {.Id = "order_" & cartId,
+                                            .Customer = New Customer With {.Id = customerId},
+                                          .CurrencyCode = currencyCodeEnum,
+                                          .OrderTotal = O_TotalPriceGateway,
+                                          .ProcessedAtForeign = timestamp,
+                                          .UpdatedAtForeign = timestamp,
+                                          .Lines = New Collection(Of Line)
+                                        }
+            Dim product As Product
+            Dim itemprice As Double
+
+            For counter As Integer = 0 To kartrisBasket.BasketItems.Count - 1
+
+                Try
+
+                    product = Await AddProduct(kartrisBasket.BasketItems(counter))
+
+                Catch ex As Exception
+                    CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId addproduct")
+                End Try
+
+                Try
+                    If kartrisBasket.BasketItems(counter).PricesIncTax = True Then
+                        itemprice = (kartrisBasket.BasketItems(counter).IR_PricePerItem)
+                    Else
+                        itemprice = Math.Round((kartrisBasket.BasketItems(counter).IR_PricePerItem * (1 + kartrisBasket.BasketItems(counter).IR_TaxPerItem)), 2)
+                    End If
+
+                    If itemprice > 0 Then
+
+                        order.Lines.Add(New Line With {.Id = "order_" & cartId & "_l" & counter,
+                                            .ProductId = kartrisBasket.BasketItems(counter).ProductID,
+                                            .ProductTitle = kartrisBasket.BasketItems(counter).Name,
+                                            .ProductVariantId = kartrisBasket.BasketItems(counter).ProductID,
+                                            .ProductVariantTitle = kartrisBasket.BasketItems(counter).Name,
+                                            .Quantity = kartrisBasket.BasketItems(counter).Quantity,
+                                            .Price = itemprice
+                    })
+                    End If
+
+                Catch ex As Exception
+                    CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId orderline add : " & ex.Message)
+                    Dim trace = New System.Diagnostics.StackTrace(ex, True)
+                    CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId  orderline addstacktrace: " & ex.StackTrace & vbCrLf & "Error in AddOrder - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
+                End Try
+            Next
+            Dim taskResult As Order = manager.ECommerceStores.Orders(mcStoreId).AddAsync(order).Result
+
+            Dim mcCustomer As Customer = manager.ECommerceStores.Customers(mcStoreId).GetAsync(customerId).Result
+
+
+            If taskResult IsNot Nothing Then
+                mcCustomer.OrdersCount = mcCustomer.OrdersCount + 1
+                mcCustomer.OptInStatus = True
+                Dim updateCustomer As Customer = Await manager.ECommerceStores.Customers(mcStoreId).UpdateAsync(customerId, mcCustomer).ConfigureAwait(False)
+            End If
+
+            Return taskResult
+        Catch ex As Exception
+            'Debug.Print(ex.Message)
+            'Log the error
+            CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId: " & ex.Message)
+            Dim trace = New System.Diagnostics.StackTrace(ex, True)
+            CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddOrder - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
         End Try
     End Function
 
@@ -426,7 +609,7 @@ Public Class MailChimpBLL
         Try
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
             Dim storeObj = New Store With {.Id = storeId,
-                                        .ListId = listId,
+                                        .listId = listId,
                                         .Name = storeName,
                                         .Domain = storeDomain,
                                         .EmailAddress = EmailAddress,
