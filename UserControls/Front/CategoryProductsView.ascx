@@ -42,7 +42,7 @@
                                 <ContentTemplate>
                                     <div class="row collapse">
                                         <div class="small-8 columns">
-                                            <h2>
+                                            <a id="filtertop"></a><h2>
                                                 <asp:Literal ID="litRefineHeading" runat="server" Text="<%$ Resources: Filters, ContentText_RefineSelection %>"></asp:Literal></h2>
                                         </div>
                                         <div class="small-4 columns">
