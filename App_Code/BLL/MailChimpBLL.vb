@@ -20,7 +20,6 @@ Imports System.Threading.Tasks
 Imports Microsoft.VisualBasic
 Imports MailChimp.Net.Interfaces
 Imports MailChimp.Net.Models
-Imports Newtonsoft.Json.Linq
 Imports System.Collections.ObjectModel
 Imports System.Web.Script.Serialization
 Imports System.Xml.Serialization
@@ -234,7 +233,7 @@ Public Class MailChimpBLL
                 product = New Product With {.Id = basketItem.ProductID,
                                             .Title = basketItem.Name,
                                             .Variants = listVariants,
-                                            .imageUrl = imageUrl
+                                            .ImageUrl = imageUrl
                                             }
                 Dim taskResult As Product = manager.ECommerceStores.Products(mcStoreId).AddAsync(product).Result
                 Return taskResult
@@ -297,7 +296,7 @@ Public Class MailChimpBLL
 
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
             Dim cart As Cart = New Cart With {.Id = "cart_" & idSufix,
-                                            .customer = New Customer With {.Id = customer.Id, .OptInStatus = True},
+                                            .Customer = New Customer With {.Id = customer.Id, .OptInStatus = True},
                                             .CurrencyCode = currencyCodeEnum,
                                           .OrderTotal = kartrisBasket.FinalPriceIncTax,
                                           .CheckoutUrl = CkartrisBLL.WebShopURL.ToLower & "Checkout.aspx",
@@ -349,7 +348,7 @@ Public Class MailChimpBLL
             result = True
 
             ' Deleting XML Files
-            Dim xmlPath As String = Path.Combine(HttpRuntime.AppDomainAppPath, "XmlStoring")
+            Dim xmlPath As String = Path.Combine(HttpRuntime.AppDomainAppPath, "Uploads\\Mailchimp\\XmlStoring")
             Dim orderId As Integer = 0
             If cartId.Contains("cart") Then
                 Dim cartIdSplit As String() = cartId.Split(New String() {"cart_"}, StringSplitOptions.None)
@@ -357,8 +356,8 @@ Public Class MailChimpBLL
             Else
                 orderId = Integer.Parse(cartId)
             End If
-            Dim xmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_basket.xml"
-            Dim orderXmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_order.xml"
+            Dim xmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_basket.config"
+            Dim orderXmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_order.config"
 
             If File.Exists(xmlFilePath) Then
                 File.Delete(xmlFilePath)
@@ -423,8 +422,8 @@ Public Class MailChimpBLL
                     orderId = Integer.Parse(cartId)
                 End If
 
-                Dim xmlPath As String = Path.Combine(System.Web.HttpContext.Current.Request.PhysicalApplicationPath, "XmlStoring")
-                Dim xmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_basket.xml"
+                Dim xmlPath As String = Path.Combine(System.Web.HttpContext.Current.Request.PhysicalApplicationPath, "Uploads\\Mailchimp\\XmlStoring")
+                Dim xmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_basket.config"
 
                 ' Open the file to read from.
                 Dim readText As String = File.ReadAllText(xmlFilePath)
@@ -436,7 +435,7 @@ Public Class MailChimpBLL
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
 
             Dim order As Order = New Order With {.Id = "order_" & cartId,
-                                            .customer = New Customer With {.Id = customer.Id},
+                                            .Customer = New Customer With {.Id = customer.Id},
                                           .CurrencyCode = currencyCodeEnum,
                                           .OrderTotal = kartrisBasket.FinalPriceIncTax,
                                           .ProcessedAtForeign = timestamp,
@@ -507,10 +506,10 @@ Public Class MailChimpBLL
                     orderId = Integer.Parse(cartId)
                 End If
 
-                Dim xmlPath As String = Path.Combine(System.Web.HttpContext.Current.Request.PhysicalApplicationPath, "XmlStoring")
-                Dim xmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_basket.xml"
+                Dim xmlPath As String = Path.Combine(System.Web.HttpContext.Current.Request.PhysicalApplicationPath, "Uploads\\Mailchimp\\XmlStoring")
+                Dim xmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_basket.config"
 
-                Dim orderXmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_order.xml"
+                Dim orderXmlFilePath As String = xmlPath & "\" & orderId.ToString() & "_order.config"
 
                 ' Open the file to read from.
                 Dim readText As String = File.ReadAllText(xmlFilePath)
@@ -609,7 +608,7 @@ Public Class MailChimpBLL
         Try
             Dim currencyCodeEnum As CurrencyCode = DirectCast(System.[Enum].Parse(GetType(CurrencyCode), Me.kartrisCurrencyCode), CurrencyCode)
             Dim storeObj = New Store With {.Id = storeId,
-                                        .listId = listId,
+                                        .ListId = listId,
                                         .Name = storeName,
                                         .Domain = storeDomain,
                                         .EmailAddress = EmailAddress,
