@@ -593,6 +593,7 @@ Public Class OrdersBLL
                     cmdAddOrderUser.Parameters.AddWithValue("@U_EmailAddress", strUserEmailAddress)
                     cmdAddOrderUser.Parameters.AddWithValue("@U_Password", UsersBLL.EncryptSHA256Managed(strUserPassword, strRandomSalt))
                     cmdAddOrderUser.Parameters.AddWithValue("@U_SaltValue", strRandomSalt)
+                    cmdAddOrderUser.Parameters.AddWithValue("@U_GDPR_SignupIP", CkartrisEnvironment.GetClientIPAddress())
 
                     C_ID = cmdAddOrderUser.ExecuteScalar
                     blnNewUser = True

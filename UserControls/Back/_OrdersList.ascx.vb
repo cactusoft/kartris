@@ -393,9 +393,12 @@ Partial Class UserControls_Back_OrdersList
                 strCustomerIDsQS += drwOrders("O_CustomerID") & "-"
             End If
         Next
-
-        strLink = String.Format("_OrderInvoice.aspx?OrderID={0}&CustomerID={1}", strOrderIDs.Substring(0, strOrderIDs.Length - 1), strCustomerIDsQS.Substring(0, strCustomerIDsQS.Length - 1))
-        Response.Redirect(strLink)
+        Try
+            strLink = String.Format("_OrderInvoice.aspx?OrderID={0}&CustomerID={1}", strOrderIDs.Substring(0, strOrderIDs.Length - 1), strCustomerIDsQS.Substring(0, strCustomerIDsQS.Length - 1))
+            Response.Redirect(strLink)
+        Catch ex As Exception
+            'maybe no orders yet
+        End Try
     End Sub
 
     Protected Sub btnGetAllOrderInvoices_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnGetAllOrderInvoices.Click

@@ -44,7 +44,7 @@ Partial Class UserControls_Front_RichSnippets
         If dirFolder.Exists Then
             If dirFolder.GetFiles().Length > 0 Then
                 For Each objFile In dirFolder.GetFiles()
-                    litImage.Text = litImage.Text.Replace( _
+                    litImage.Text = litImage.Text.Replace(
                         "[image_source]", Replace(CkartrisImages.strProductImagesPath, "~/", CkartrisBLL.WebShopURL()) & "/" & _ProductID & "/" & objFile.Name)
                     Exit For
                 Next
@@ -79,6 +79,12 @@ Partial Class UserControls_Front_RichSnippets
             litOfferAggregate.Text = litOfferAggregate.Text.Replace("[lowprice]", CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), FixNullFromDB(dr("P_MinPrice"))), False))
             litOfferAggregate.Text = litOfferAggregate.Text.Replace("[highprice]", CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), FixNullFromDB(dr("P_MaxPrice"))), False))
             litOffer.Visible = False
+        End If
+
+        '' Disable Offer if Call for Price is set
+        If FixNullFromDB(dr("P_CallForPrice")) = 1 Then
+            litOffer.Visible = False
+            litOfferAggregate.Visible = False
         End If
 
     End Sub

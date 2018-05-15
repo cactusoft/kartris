@@ -1523,7 +1523,7 @@ Partial Class _Checkout
                     'MAILCHIMP Adding Cart
                     Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
                     'If the User is Logged
-                    If CurrentLoggedUser IsNot Nothing And String.IsNullOrEmpty(Session("BraintreeCartId")) Then
+                    If CurrentLoggedUser IsNot Nothing And Session("BraintreeCartId") Is Nothing Then
                         Dim addCartResult As String = mailChimpLib.AddCartToCustomerToStore(O_ID).Result
                     End If
                 End If
@@ -1689,7 +1689,7 @@ Partial Class _Checkout
                                 'like gmail would be good for this.
                                 Dim objBCCsCollection As New System.Net.Mail.MailAddressCollection
                                 Dim strGDPROptinArchiveEmail As String = KartSettingsManager.GetKartConfig("general.gdpr.mailinglistbcc")
-                                If strGDPROptinArchiveEmail.Length > 0 Then
+                                If strGDPROptinArchiveEmail.Length > 2 Then
                                     objBCCsCollection.Add(strGDPROptinArchiveEmail)
                                 End If
 
