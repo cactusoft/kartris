@@ -228,7 +228,7 @@ Partial Class UserControls_Back_OrderDetails
                 If Not String.IsNullOrEmpty(strHTMLEmailText) Then
                     strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
                     strHTMLEmailText = strHTMLEmailText.Replace("[orderid]", ViewState("numOrderID"))
-                    strHTMLEmailText = strHTMLEmailText.Replace("[orderstatus]", strOrderStatus.Replace(vbCrLf, "<br />"))
+                    strHTMLEmailText = strHTMLEmailText.Replace("[orderstatus]", txtOrderStatus.Text.Replace(vbCrLf, "<br />"))
                     strHTMLEmailText = strHTMLEmailText.Replace("[orderdetails]", strOrderText)
                     If ViewState("O_Notes") <> txtOrderNotes.Text And Trim(txtOrderNotes.Text) <> "" Then
                         strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "<p>" & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_Notes") &
