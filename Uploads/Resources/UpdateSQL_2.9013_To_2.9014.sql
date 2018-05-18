@@ -79,6 +79,25 @@ BEGIN
 END
 GO
 
+/****** GDPR bug fix, kind of ******/
+/*
+This is a new sproc, it lets us pull out reviews
+by either customer ID or email
+*/
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetReviewsByUserIDOrEmail]
+(
+	@UserID as int,
+	@UserEmail as nvarchar(200)
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         tblKartrisReviews
+WHERE     (REV_CustomerID = @UserID) OR (REV_Email = @UserEmail)
+ORDER BY REV_ID
+
+GO
+
 
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.9014', CFG_VersionAdded=2.9014 WHERE CFG_Name='general.kartrisinfo.versionadded';

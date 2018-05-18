@@ -175,11 +175,13 @@ Public Class GdprBLL
         strData.AppendLine("")
 
 
+
         '============== CUSTOMER DATA ===============
         strData.AppendLine("")
         strData.AppendLine("== CUSTOMER DATA ==")
         strData.AppendLine("")
 
+        Dim strEmail As String = ""
         Dim dtbUser As DataTable = Adptr_User.GetData(numUserID)
         For Each drwUser As DataRow In dtbUser.Rows 'loop through users, but should only be one!
 
@@ -197,6 +199,10 @@ Public Class GdprBLL
                         strColumnValue = "-" 'some issue with converting date, return a dash
                     End Try
 
+                End If
+
+                If strColumnName = "U_EmailAddress" Then
+                    strEmail = strColumnValue
                 End If
 
                 strData.AppendLine(strColumnName & ": [ " & strColumnValue & " ]")
@@ -279,7 +285,7 @@ Public Class GdprBLL
         strData.AppendLine("== REVIEWS ==")
         strData.AppendLine("")
 
-        Dim dtbReviews As DataTable = Adptr_Reviews.GetData(numUserID)
+        Dim dtbReviews As DataTable = Adptr_Reviews.GetData(numUserID, strEmail)
         For Each drwReview As DataRow In dtbReviews.Rows
             For i = 0 To dtbReviews.Columns.Count - 1
 

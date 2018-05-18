@@ -126,10 +126,15 @@ Public Class VersionsBLL
 
     Public Shared Function _SearchVersionByCode(ByVal _Key As String) As DataTable
         Dim tbl As New DataTable
-        tbl = Adptr._SearchByCode(_Key)
-        If tbl.Rows.Count = 0 Then
-            tbl = Adptr._SearchByCode("")
-        End If
+        Try
+            tbl = Adptr._SearchByCode(_Key)
+            If tbl.Rows.Count = 0 Then
+                tbl = Adptr._SearchByCode("")
+            End If
+        Catch ex As Exception
+            'hmmm
+        End Try
+
         Return tbl
     End Function
 

@@ -228,7 +228,7 @@ Partial Class UserControls_Back_OrderDetails
                 If Not String.IsNullOrEmpty(strHTMLEmailText) Then
                     strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
                     strHTMLEmailText = strHTMLEmailText.Replace("[orderid]", ViewState("numOrderID"))
-                    strHTMLEmailText = strHTMLEmailText.Replace("[orderstatus]", strOrderStatus.Replace(vbCrLf, "<br />"))
+                    strHTMLEmailText = strHTMLEmailText.Replace("[orderstatus]", txtOrderStatus.Text.Replace(vbCrLf, "<br />"))
                     strHTMLEmailText = strHTMLEmailText.Replace("[orderdetails]", strOrderText)
                     If ViewState("O_Notes") <> txtOrderNotes.Text And Trim(txtOrderNotes.Text) <> "" Then
                         strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "<p>" & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_Notes") &
@@ -249,26 +249,34 @@ Partial Class UserControls_Back_OrderDetails
         'This line is actually the one that updates the order - not the built-in FormView update. Gives us more flexibility - needs to catch some thingies. =)
         If OrdersBLL._UpdateStatus(ViewState("numOrderID"), chkOrderSent.Checked, chkOrderPaid.Checked, chkOrderShipped.Checked,
                                 chkOrderInvoiced.Checked, txtOrderStatus.Text, txtOrderNotes.Text, chkOrderCancelled.Checked) > 0 Then
-            If chkOrderPaid.Checked Then
-                Dim hidOrderCurrencyID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidOrderCurrencyID"), HiddenField)
-                Dim intOrderCurrencyID As Integer = CInt(hidOrderCurrencyID.Value)
-                Dim hidCustomerID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidCustomerID"), HiddenField)
-                Dim kartrisUser As KartrisMemberShipUser = Membership.GetUser(UsersBLL.GetEmailByID(CInt(hidCustomerID.Value)))
-                Dim basketObj As Basket = GetBasket(ViewState("numOrderID"))
-                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(kartrisUser, basketObj, CurrenciesBLL.CurrencyCode(intOrderCurrencyID))
-
+            If KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y" Then
                 Try
+                    If chkOrderPaid.Checked Then
+                        Dim hidOrderCurrencyID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidOrderCurrencyID"), HiddenField)
+                        Dim intOrderCurrencyID As Integer = CInt(hidOrderCurrencyID.Value)
+                        Dim hidCustomerID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidCustomerID"), HiddenField)
+                        Dim kartrisUser As KartrisMemberShipUser = Membership.GetUser(UsersBLL.GetEmailByID(CInt(hidCustomerID.Value)))
+                        Dim basketObj As Basket = GetBasket(ViewState("numOrderID"))
+                        Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(kartrisUser, basketObj, CurrenciesBLL.CurrencyCode(intOrderCurrencyID))
 
-                    Dim result As Boolean = mailChimpLib.DeleteOrder("order_" & ViewState("numOrderID")).Result
-                    If result Then
-                        Dim mcOrder As MailChimp.Net.Models.Order = mailChimpLib.AddOrder(mailChimpLib.GetCustomer(hidCustomerID.Value).Result, ViewState("numOrderID")).Result
-                        ' Not creating the order, it's missing Basket
-                        mailChimpLib.DeleteCart("cart_" & ViewState("numOrderID"))
+                        Try
+
+                            Dim result As Boolean = mailChimpLib.DeleteOrder("order_" & ViewState("numOrderID")).Result
+                            If result Then
+                                Dim mcOrder As MailChimp.Net.Models.Order = mailChimpLib.AddOrder(mailChimpLib.GetCustomer(hidCustomerID.Value).Result, ViewState("numOrderID")).Result
+                                ' Not creating the order, it's missing Basket
+                                mailChimpLib.DeleteCart("cart_" & ViewState("numOrderID"))
+                            End If
+                        Catch ex As Exception
+
+                        End Try
                     End If
                 Catch ex As Exception
-
+                    'Oops
                 End Try
+
             End If
+
             RaiseEvent ShowMasterUpdate()
         Else
             'error

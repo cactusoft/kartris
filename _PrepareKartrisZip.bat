@@ -33,7 +33,11 @@ ECHO DONE!
 ECHO REMOVING GIT AND VS FILES...
 IF EXIST "c:\CleanKartris\Kartris\.git" rd "c:\CleanKartris\Kartris\.git" /S /Q
 IF EXIST "c:\CleanKartris\Kartris\.vs" rd "c:\CleanKartris\Kartris\.vs" /S /Q
-IF EXIST "c:\CleanKartris\Kartris\.gitignore" rd "c:\CleanKartris\Kartris\.gitignore" /S /Q
+IF EXIST "c:\CleanKartris\Kartris\.gitignore" del "c:\CleanKartris\Kartris\.gitignore" /Q
+IF EXIST "c:\CleanKartris\Kartris\.gitattributes" del "c:\CleanKartris\Kartris\.gitattributes" /Q
+ECHO REMOVING OTHER CRUFT...
+IF EXIST "c:\CleanKartris\Kartris\kartris.sln" del "c:\CleanKartris\Kartris\kartris.sln" /Q
+IF EXIST "c:\CleanKartris\Kartris\WebEssentials2015-Settings.json" del "c:\CleanKartris\Kartris\WebEssentials2015-Settings.json" /Q
 ECHO DONE!
 ECHO **
 ECHO REMOVING SAMPLE MEDIA FILES...
