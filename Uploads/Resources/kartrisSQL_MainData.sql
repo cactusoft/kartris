@@ -27208,10 +27208,9 @@ BEGIN
 Exit_sp:
 END
 GO
-/****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetRichSnippetProperties]    Script Date: 2/27/2013 5:29:37 PM ******/
+/****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetRichSnippetProperties]    Script Date: 5/1/2018 8:12:47 AM ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 
@@ -27226,7 +27225,15 @@ BEGIN
 			@P_Category as nvarchar(max), @P_SKU as nvarchar(25), @P_Type as char(1),
 			@P_Price as real, @P_MinPrice as real, @P_MaxPrice as real, 
 			@P_StockQuantity as real, @P_WarnLevel as real,
-			@P_Rev as char(1), @Rev_Avg as real, @Rev_Total as int;
+			@P_Rev as char(1), @Rev_Avg as real, @Rev_Total as int,
+			@P_CallForPrice as int;
+	
+	SET @P_CallForPrice = (SELECT TOP (1) [OCV_Value] FROM [dbo].[tblKartrisObjectConfigValue] WHERE OCV_ParentID = @P_ID AND OCV_ObjectConfigID = 1)
+	IF @P_CallForPrice != 1
+	BEGIN
+		SET @P_CallForPrice = 0
+	END
+
 
 	SELECT Top(1) @P_Category = vKartrisTypeCategories.CAT_Name
 	FROM  vKartrisTypeCategories INNER JOIN tblKartrisProductCategoryLink 
@@ -27271,7 +27278,8 @@ BEGIN
 			@P_Category As P_Category, @P_SKU As P_SKU, @P_Type As P_Type,
 			@P_Price As P_Price, @P_MinPrice As P_MinPrice, @P_MaxPrice As P_MaxPrice, 
 			@P_StockQuantity As P_Quanity, @P_WarnLevel As P_WarnLevel,
-			@P_Rev As P_Review, @Rev_Avg As P_AverageReview, @Rev_Total As P_TotalReview
+			@P_Rev As P_Review, @Rev_Avg As P_AverageReview, @Rev_Total As P_TotalReview,
+			@P_CallForPrice As P_CallForPrice
 END
 GO
 /****** Object:  StoredProcedure [dbo].[_spKartrisCurrencies_UpdateRates]    Script Date: 7/3/2013 10:01:55 PM ******/
