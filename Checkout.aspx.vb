@@ -1523,7 +1523,7 @@ Partial Class _Checkout
                     'MAILCHIMP Adding Cart
                     Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
                     'If the User is Logged
-                    If CurrentLoggedUser IsNot Nothing And Session("BraintreeCartId") Is Nothing Then
+                    If CurrentLoggedUser IsNot Nothing And String.IsNullOrEmpty(Session("BraintreeCartId")) Then
                         Dim addCartResult As String = mailChimpLib.AddCartToCustomerToStore(O_ID).Result
                     End If
                 End If
