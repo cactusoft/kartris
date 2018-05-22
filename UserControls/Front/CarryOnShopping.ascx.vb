@@ -43,20 +43,26 @@ Partial Class CarryOnShopping
     ''' <remarks></remarks>
     Public Sub LoadCarryOnShopping(ByVal pProductID As Integer, ByVal pLanguageID As Short)
 
-        _ProductID = pProductID
-        _LanguageID = pLanguageID
+        'Any issues, let's just skip this
+        Try
+            _ProductID = pProductID
+            _LanguageID = pLanguageID
 
-        '' Calls to load the list of Related Products & Linked Categories as well.
-        LoadRelatedProducts()
-        LoadLinkedCategories()
-        LoadPeopleWhoBoughtThis()
+            '' Calls to load the list of Related Products & Linked Categories as well.
+            LoadRelatedProducts()
+            LoadLinkedCategories()
+            LoadPeopleWhoBoughtThis()
 
-        '' Gets the Title of CarryOnShopping's section, if one of the lists has data.
-        If rptRelatedProducts.Items.Count > 0 OrElse rptLinkedCategories.Items.Count > 0 OrElse rptPeopleWhoBoughtThis.Items.Count > 0 Then
-            litCarryOnShoppingHeader.Text = GetGlobalResourceObject("Products", "ContentText_CarryOnShopping")
-        Else
-            Me.Visible = False
-        End If
+            '' Gets the Title of CarryOnShopping's section, if one of the lists has data.
+            If rptRelatedProducts.Items.Count > 0 OrElse rptLinkedCategories.Items.Count > 0 OrElse rptPeopleWhoBoughtThis.Items.Count > 0 Then
+                litCarryOnShoppingHeader.Text = GetGlobalResourceObject("Products", "ContentText_CarryOnShopping")
+            Else
+                Me.Visible = False
+            End If
+        Catch ex As Exception
+            'possibly db timeouts on a big, busy sites or some other cache issue,
+            'but we don't want to crash the page over it
+        End Try
 
     End Sub
 
@@ -148,8 +154,12 @@ Partial Class CarryOnShopping
 
     Protected Sub rptLinkedCategories_ItemDataBound(ByVal Sender As Object, ByVal e As RepeaterItemEventArgs) Handles rptLinkedCategories.ItemDataBound
         If (e.Item.ItemType = ListItemType.Item) Or (e.Item.ItemType = ListItemType.AlternatingItem) Then
-            CType(e.Item.FindControl("lnkParentCategories"), HyperLink).NavigateUrl = _
-                SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalCategory, CType(e.Item.DataItem, DataRowView).Item(0))
+            Try
+                CType(e.Item.FindControl("lnkParentCategories"), HyperLink).NavigateUrl =
+                    SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalCategory, CType(e.Item.DataItem, DataRowView).Item(0))
+            Catch ex As Exception
+                'Oops
+            End Try
         End If
     End Sub
 
