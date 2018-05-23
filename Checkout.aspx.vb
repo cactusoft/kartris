@@ -1886,6 +1886,26 @@ Partial Class _Checkout
                                             Else
                                                 strCallBodyText = strPOline & CStr(tblOrder.Rows(0)("O_Details"))
                                             End If
+
+                                            Try
+                                                'Mailchimp, try to remove cart
+                                                If blnMailChimp Then
+                                                    'Mailchimp library
+                                                    Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
+
+                                                    Dim cartId As String = "cart_" + O_ID.ToString()
+                                                    If cartId IsNot Nothing Then
+                                                        ' Removing Cart and adding Order to successful payment made with Braintree
+                                                        Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(CurrentLoggedUser.ID).Result
+                                                        Dim mcOrder As Order = mailChimpLib.AddOrder(mcCustomer, cartId).Result
+                                                        Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart(cartId).Result
+
+                                                    End If
+                                                End If
+                                            Catch ex As Exception
+                                                Debug.Print(ex.Message)
+                                            End Try
+
                                         Else
                                             strCallBodyText = CStr(tblOrder.Rows(0)("O_Details"))
                                             strCallBodyText = strCallBodyText.Replace("[poofflinepaymentdetails]", "")
