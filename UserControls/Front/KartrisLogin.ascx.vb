@@ -228,7 +228,14 @@ Partial Class KartrisLogin
     Protected Sub btnContinue_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnContinue.Click
         Dim strUserPasswordRule As String = GetKartConfig("frontend.users.password.required")
         'check if either password or confirm password field has a value
+
         Dim blnValueEntered As Boolean = False
+
+        'GDPR opt in,
+        'New EU rules coming May 2018, need to get explicit permission
+        'for what you're doing with customer data.
+        Dim blnGDPR As Boolean = (GetKartConfig("general.gdpr.enabled") = "y")
+
         Dim strNewPassword = Trim(txtNewPassword.Text)
         If Not String.IsNullOrEmpty(strNewPassword) Then blnValueEntered = True
         If Not String.IsNullOrEmpty(Trim(txtConfirmPassword.Text)) Then blnValueEntered = True
@@ -242,7 +249,7 @@ Partial Class KartrisLogin
         ElseIf (String.IsNullOrEmpty(txtNewPassword.Text.Trim) Or String.IsNullOrEmpty(txtConfirmPassword.Text.Trim)) AndAlso (strUserPasswordRule = "required" Or blnValueEntered) Then
             litFailureText.Text = "<div class=""errortext"">" & GetGlobalResourceObject("Kartris", "ContentText_SomeFieldsBlank") & "</div>"
             popLogin.Show()
-        ElseIf chkGDPRConfirm.Checked = False Then
+        ElseIf (blnGDPR And chkGDPRConfirm.Checked = False) Then
             litFailureText.Text = "<div class=""errortext"">" & GetGlobalResourceObject("GDPR", "FormLabel_GDPRConfirmText") & "</div>"
             popLogin.Show()
         Else
