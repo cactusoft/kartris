@@ -212,6 +212,23 @@ Partial Class ProductView
         End If
 
         '=================================
+        'Handle specs tab
+        'Specs tab added in v2.9014
+        '=================================
+        Dim strSpecs As String = CkartrisDisplayFunctions.StripHTML(CkartrisDataManipulation.FixNullFromDB(ObjectConfigBLL.GetValue("K:product.spectable", _ProductID)))
+        If Trim(strSpecs) <> "" Then
+            'Great, we have specs - show tab
+            numVisibleTabs += 1
+            Dim litSpecsTable As Literal = CType(tabSpecs.FindControl("litSpecsTable"), Literal)
+            litSpecsTable.Text = strSpecs
+        Else
+            'Nevermind, hide it
+            Dim tabSpecs As AjaxControlToolkit.TabPanel = CType(tbcProduct.FindControl("tabSpecs"), AjaxControlToolkit.TabPanel) 'Finds tab panel in container
+            tabSpecs.Enabled = False
+            tabSpecs.Visible = False
+        End If
+
+        '=================================
         'Handle quantity discounts tab
         '=================================
         ' Check if Call for Price Product, will not process quantity discount

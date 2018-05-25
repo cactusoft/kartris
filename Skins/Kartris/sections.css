@@ -114,7 +114,7 @@ PRODUCT - Single page product
 .product div.textcolumn                 { padding: 0 0 20px 10px; }
 .product div.versions-holder            { float: right; }
 .product .section_promotions            { }
-.product div.spectable                  { margin-top: 20px; color: #090; white-space: pre-line; font-family: 'Courier New' } /* Imported specs field from CactuShop */
+.product div.spectable                  { color: #333; font-family: 'Lucida Sans Unicode','Courier New;'; white-space: pre; } /* Imported specs field from CactuShop */
 /* 
 ========================================================================
 PRODUCTS - Multiple products per page listing

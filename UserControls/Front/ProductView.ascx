@@ -157,9 +157,26 @@
                                 <user:ProductAttributes ID="UC_ProductAttributes" runat="server" EnableViewState="false" />
                             </ContentTemplate>
                         </ajaxToolkit:TabPanel>
+
                         <%--
                 =====================================
-                TAB 3 - Quantity Discounts
+                TAB 3 - Spectable
+                Displays PRE formatted text added to
+                the product's K:product.spectable
+                object config setting
+                =====================================
+                        --%>
+                        <ajaxToolkit:TabPanel runat="server" ID="tabSpecs" OnDemandMode="Once">
+                            <HeaderTemplate>
+                                <asp:Literal ID="litContentTextSpecsLabel" runat="server" Text="<%$ Resources:Products, ContentText_SpecTable %>" EnableViewState="false"></asp:Literal>
+                            </HeaderTemplate>
+                            <ContentTemplate>
+                                <div class="spectable"><asp:Literal ID="litSpecsTable" runat="server" EnableViewState="false"></asp:Literal></div>
+                            </ContentTemplate>
+                        </ajaxToolkit:TabPanel>
+                        <%--
+                =====================================
+                TAB 4 - Quantity Discounts
                 =====================================
                         --%>
                         <ajaxToolkit:TabPanel runat="server" ID="tabQuantityDiscounts" OnDemandMode="Once">
@@ -172,7 +189,7 @@
                         </ajaxToolkit:TabPanel>
                         <%--
                 =====================================
-                TAB 4 - Reviews
+                TAB 5 - Reviews
                 =====================================
                         --%>
                         <ajaxToolkit:TabPanel runat="server" ID="tabReviews" OnDemandMode="Once">

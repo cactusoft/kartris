@@ -58,6 +58,7 @@ INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (6, N'K:version.extrasku', N'Version', N's', NULL, N'Extra code number for versions (store specific).', 0, 2)
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (7, N'K:product.showlargeimageinline', N'Product', N'b', N'0', N'Change products images to large view mode instead of being displayed in the image gallery.', 0, 2.5006)
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (8, N'K:product.excustomerdiscount', N'Product', N'b', N'0', N'Exclude designated products from customer discount.', 0, 2.9010)
+INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (9, N'K:product.spectable', N'Product', N's', N'', N'Pre formatted text for specs, tabular data, etc.', 1, 2.9014)
 SET IDENTITY_INSERT [dbo].[tblKartrisObjectConfig] OFF
 /****** Object:  Table [dbo].[tblKartrisAffiliatePayments]    Script Date: 01/23/2013 21:59:08 ******/
 SET ANSI_NULLS ON
@@ -29754,8 +29755,11 @@ WHERE     (BV_ParentID = @SavedBasketID)
 ORDER BY BV_ID
 GO
 
-/*** New language strings  ***/
+/*** New language strings GDPR  ***/
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_GDPRExport', N'GDPR Export', NULL, 2.9012, N'', NULL, N'_GDPR',1);
+/*** New language string for spectable tab heading  ***/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_SpecTable', N'Specs', NULL, 2.9014, N'', NULL, N'Products',1);
+
 GO
 
 /****** Index to improve speed product date operations ******/

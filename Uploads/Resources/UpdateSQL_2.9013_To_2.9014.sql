@@ -98,6 +98,15 @@ ORDER BY REV_ID
 
 GO
 
+/****** New object config - spectable, similar to the old spectable field in CactuShop ******/
+SET IDENTITY_INSERT [dbo].[tblKartrisObjectConfig] ON
+INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (9, N'K:product.spectable', N'Product', N's', N'', N'Pre formatted text for specs, tabular data, etc.', 1, 2.9014)
+SET IDENTITY_INSERT [dbo].[tblKartrisObjectConfig] OFF
+
+/*** New language string for spectable tab heading  ***/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_SpecTable', N'Specs', NULL, 2.9014, N'', NULL, N'Products',1);
+
+GO
 
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.9014', CFG_VersionAdded=2.9014 WHERE CFG_Name='general.kartrisinfo.versionadded';
