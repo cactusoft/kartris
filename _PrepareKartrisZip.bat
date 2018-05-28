@@ -38,6 +38,7 @@ IF EXIST "c:\CleanKartris\Kartris\.gitattributes" del "c:\CleanKartris\Kartris\.
 ECHO REMOVING OTHER CRUFT...
 IF EXIST "c:\CleanKartris\Kartris\kartris.sln" del "c:\CleanKartris\Kartris\kartris.sln" /Q
 IF EXIST "c:\CleanKartris\Kartris\WebEssentials2015-Settings.json" del "c:\CleanKartris\Kartris\WebEssentials2015-Settings.json" /Q
+IF EXIST "c:\CleanKartris\Kartris\packages.config" del "c:\CleanKartris\Kartris\packages.config" /Q
 ECHO DONE!
 ECHO **
 ECHO REMOVING SAMPLE MEDIA FILES...
