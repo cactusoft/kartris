@@ -79,6 +79,15 @@ BEGIN
 END
 GO
 
+/****** Fix category sorting issue ******/
+/*
+Seems some cats go in with NULL, this should hopefully avoid that so if you switch to
+manual sorting, there are not NULL values messing things up
+*/
+ALTER TABLE [dbo].[tblKartrisCategoryHierarchy] ADD  CONSTRAINT [DF_tblKartrisCategoryHierarchy_CH_OrderNo]  DEFAULT ((1)) FOR [CH_OrderNo]
+GO
+
+
 /****** GDPR bug fix, kind of ******/
 /*
 This is a new sproc, it lets us pull out reviews
