@@ -322,13 +322,16 @@ Partial Class UserControls_Back_OrdersList
                         End If
                     End If
 
-                    'If this order has been cancelled and callmode is 'cancelled, use Violet otherwise hide row
+                    'Prior to v2.9014, we used to hide cancelled orders in main view. Not sure why.
+                    'From now on, let's show them. They're in a bright colour, so don't really
+                    'get in the way with other orders.
                     If chkOrderCancelled.Checked Then
                         If CallMode = OrdersBLL.ORDERS_LIST_CALLMODE.CANCELLED Then
                             e.Row.CssClass = "Violet"
                         Else
-                            e.Row.Cells.Clear()
-                            e.Row.Visible = False
+                            'e.Row.Cells.Clear()
+                            'e.Row.Visible = False
+                            e.Row.CssClass = "Violet"
                         End If
 
                     End If
