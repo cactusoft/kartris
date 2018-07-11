@@ -20,7 +20,7 @@ Partial Class _CategoryView
     Inherits System.Web.UI.UserControl
 
     Private c_ShowPages As Boolean = True
-
+    Protected Shared sortByValueBool As Boolean = False
     Const c_PROD_PAGER_QUERY_STRING_KEY As String = "_PPGR"
     Const c_CAT_PAGER_QUERY_STRING_KEY As String = "_CPGR"
 
@@ -56,6 +56,84 @@ Partial Class _CategoryView
         End If
     End Sub
 
+    Protected Sub btnUpdatePreference_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnUpdatePreference.Click
+        UpdatePreference(sender, e)
+    End Sub
+
+
+    Protected Sub UpdatePreference(sender As Object, e As EventArgs)
+        If Request.Form("CAT_ID") <> currentPreference.Value Then
+
+            Dim preferenceIds As Integer() = (From p In Request.Form("CAT_ID").Split(",")
+                                              Select Integer.Parse(p)).ToArray()
+            Dim preference As Integer = 1
+            For Each categoryId As Integer In preferenceIds
+                Me.UpdatePreference(categoryId, preference, _GetCategoryID())
+                preference += 1
+            Next
+
+            Response.Redirect(Request.Url.AbsoluteUri)
+
+        End If
+    End Sub
+
+    Private Sub UpdatePreference(id As Integer, preference As Integer, parent As Integer)
+        Dim _connectionstring As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ConnectionString
+        Using con As New SqlConnection(_connectionstring)
+            Using cmd As New SqlCommand("UPDATE tblKartrisCategoryHierarchy SET CH_OrderNo = @Preference WHERE CH_ChildId = @Id AND CH_ParentID = @Parent")
+                Using sda As New SqlDataAdapter()
+                    cmd.CommandType = CommandType.Text
+                    cmd.Parameters.AddWithValue("@Id", id)
+                    cmd.Parameters.AddWithValue("@Preference", preference)
+                    cmd.Parameters.AddWithValue("@Parent", parent)
+                    cmd.Connection = con
+                    con.Open()
+                    cmd.ExecuteNonQuery()
+                    con.Close()
+                End Using
+            End Using
+        End Using
+    End Sub
+
+    Protected Sub btnUpdatePreferenceProducts_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnUpdatePreferenceProducts.Click
+        UpdatePreferenceProducts(sender, e)
+    End Sub
+
+
+    Protected Sub UpdatePreferenceProducts(sender As Object, e As EventArgs)
+        If Request.Form("P_ID") <> currentPreferenceProducts.Value Then
+
+            Dim preferenceIds As Integer() = (From p In Request.Form("P_ID").Split(",")
+                                              Select Integer.Parse(p)).ToArray()
+            Dim preference As Integer = 1
+            For Each productId As Integer In preferenceIds
+                Me.UpdatePreferenceProducts(productId, preference, _GetCategoryID())
+                preference += 1
+            Next
+
+            Response.Redirect(Request.Url.AbsoluteUri)
+
+        End If
+    End Sub
+
+    Private Sub UpdatePreferenceProducts(id As Integer, preference As Integer, categoryId As Integer)
+        Dim _connectionstring As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ConnectionString
+        Using con As New SqlConnection(_connectionstring)
+            Using cmd As New SqlCommand("UPDATE tblKartrisProductCategoryLink SET PCAT_OrderNo = @Preference WHERE PCAT_ProductID = @Id AND PCAT_CategoryID = @CategoryId")
+                Using sda As New SqlDataAdapter()
+                    cmd.CommandType = CommandType.Text
+                    cmd.Parameters.AddWithValue("@Id", id)
+                    cmd.Parameters.AddWithValue("@Preference", preference)
+                    cmd.Parameters.AddWithValue("@CategoryId", categoryId)
+                    cmd.Connection = con
+                    con.Open()
+                    cmd.ExecuteNonQuery()
+                    con.Close()
+                End Using
+            End Using
+        End Using
+    End Sub
+
     'Load subcategories
     Public Sub LoadSubCategories()
         Dim numCategoryPageSize As Integer = 1000
@@ -79,7 +157,7 @@ Partial Class _CategoryView
         Dim tblCategories As New DataTable
 
         If c_ShowPages Then
-            tblCategories = CategoriesBLL._GetCategoriesPageByParentID(_GetCategoryID(), Session("_LANG"), numPageIndx, _
+            tblCategories = CategoriesBLL._GetCategoriesPageByParentID(_GetCategoryID(), Session("_LANG"), numPageIndx,
                                             numCategoryPageSize, numTotalNumberOfCategories)
             If tblCategories.Rows.Count <> 0 Then
                 If numTotalNumberOfCategories > numCategoryPageSize Then
@@ -95,7 +173,7 @@ Partial Class _CategoryView
                 phdNoSubCategories.Visible = True
             End If
         Else
-            tblCategories = CategoriesBLL._GetCategoriesPageByParentID(_GetCategoryID(), Session("_LANG"), 0, _
+            tblCategories = CategoriesBLL._GetCategoriesPageByParentID(_GetCategoryID(), Session("_LANG"), 0,
                                             500, 500)
             If tblCategories.Rows.Count <> 0 Then
                 dtlSubCategories.DataSource = tblCategories
@@ -105,6 +183,10 @@ Partial Class _CategoryView
                 phdNoSubCategories.Visible = True
             End If
         End If
+        Dim currentPreferencesItems = tblCategories.AsEnumerable().Select(Function(row) New With {.catId = row.Field(Of Int32)("CAT_ID")})
+        Dim sb As StringBuilder = New StringBuilder()
+        Dim currentPreferences As String = String.Join(",", currentPreferencesItems.ToList()).ToString().Replace("{", "").Replace("}", "").Replace("catId = ", "").Replace(" ", "").Replace("vbCrLf", "")
+        currentPreference.Value = currentPreferences
     End Sub
 
     'Whether to show the up/down subcat buttons
@@ -118,7 +200,7 @@ Partial Class _CategoryView
         End Try
     End Sub
 
-    'Load products
+    ''Load products
     Public Sub LoadProducts()
         Dim numProductPageSize As Integer = 1000
         If KartSettingsManager.GetKartConfig("backend.products.paging.enabled") = "y" Then
@@ -140,7 +222,7 @@ Partial Class _CategoryView
 
         Dim tblProducts As New DataTable
         If c_ShowPages Then
-            tblProducts = ProductsBLL._GetProductsPageByCategory(_GetCategoryID(), Session("_LANG"), numPageIndx, _
+            tblProducts = ProductsBLL._GetProductsPageByCategory(_GetCategoryID(), Session("_LANG"), numPageIndx,
                                                                 numProductPageSize, numTotalNumberOfProducts)
             If tblProducts.Rows.Count <> 0 Then
                 If numTotalNumberOfProducts > numProductPageSize Then
@@ -162,12 +244,25 @@ Partial Class _CategoryView
             End If
         End If
 
+
+        If tblProducts.Rows.Count > 0 Then
+            Dim sortByValue = tblProducts.Rows(0)("SortByValue")
+            If Not String.IsNullOrEmpty(sortByValue) Then
+                sortByValueBool = Convert.ToBoolean(sortByValue)
+            End If
+            If sortByValueBool Then
+                Dim currentPreferencesItems = tblProducts.AsEnumerable().Select(Function(row) New With {.pId = row.Field(Of Int32)("P_ID")})
+                Dim sb As StringBuilder = New StringBuilder()
+                Dim currentPreferences As String = String.Join(",", currentPreferencesItems.ToList()).ToString().Replace("{", "").Replace("}", "").Replace("pId = ", "").Replace(" ", "").Replace("vbCrLf", "")
+                currentPreferenceProducts.Value = currentPreferences
+            End If
+        End If
         dtlProducts.DataSource = tblProducts
         dtlProducts.DataBind()
         ShowHideUpDownArrowsProducts(numTotalNumberOfProducts)
     End Sub
 
-    'Whether to show the up/down
+    ''Whether to show the up/down
     Private Sub ShowHideUpDownArrowsProducts(ByVal TotalRows As Integer)
         Try
             CType(dtlProducts.Items(0).FindControl("lnkBtnMoveUp"), LinkButton).Enabled = False
@@ -313,7 +408,7 @@ Partial Class _CategoryView
         Dim tblLanguageContents As New DataTable()
         tblLanguageContents = _UC_LangContainer.ReadContent()
         Dim strMessage As String = ""
-        If Not CategoriesBLL._UpdateCategory(tblLanguageContents, "", 0, Nothing, Nothing, _
+        If Not CategoriesBLL._UpdateCategory(tblLanguageContents, "", 0, Nothing, Nothing,
                                     Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
             Return
@@ -340,7 +435,7 @@ Partial Class _CategoryView
         End If
     End Sub
 
-    'Turn all products in a category OFF (live=false)
+    ''Turn all products in a category OFF (live=false)
     Protected Sub lnkTurnProductsOff_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkTurnProductsOff.Click
         If ProductsBLL._HideShowAllByCategoryID(_GetCategoryID(), False) Then
             RaiseEvent ShowMasterUpdate()

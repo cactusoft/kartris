@@ -26,6 +26,7 @@
     <link href="general.css" rel="stylesheet" type="text/css" />
     <link href="sections.css" rel="stylesheet" type="text/css" />
     <link href="template.css" rel="stylesheet" type="text/css" />
+    <link href="jquery-ui.css" rel="stylesheet" type="text/css" />
     <link href='//fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
     <asp:ContentPlaceHolder ID="phdHead" runat="server" EnableViewState="False">
     </asp:ContentPlaceHolder>
@@ -39,6 +40,8 @@
         <Scripts>
             <asp:ScriptReference Path="~/JavaScript/Webkit.js" />
             <asp:ScriptReference Path="~/JavaScript/VwdCmsSplitterBar.js" />
+            <asp:ScriptReference Path="~/JavaScript/k29014/jquery.min.js" />
+            <asp:ScriptReference Path="~/JavaScript/k29014/jquery-ui.min.js" />
         </Scripts>
     </ajaxToolkit:ToolkitScriptManager>
     <div id="centrecontainer">

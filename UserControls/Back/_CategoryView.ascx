@@ -47,6 +47,8 @@
                                                 <asp:Literal ID="litSubCategories" runat="server" Text="<%$ Resources:_Category, ContentText_SubCategories %>"
                                                     EnableViewState="False" /></h2>
                                             <_user:ItemPager ID="_UC_ItemPager_CAT_Header" runat="server" Visible="false" />
+                                            <asp:Button Visible="false" Text="Update Preference" runat="server" ID="btnUpdatePreference" />
+                                            <asp:HiddenField ID="currentPreference"  value='' runat="server" />
                                             <asp:DataList ID="dtlSubCategories" runat="server" CssClass="kartristable Kartris-DataView notableheader">
                                                 <ItemStyle />
                                                 <AlternatingItemStyle CssClass="Kartris-GridView-Alternate" />
@@ -57,8 +59,13 @@
                                                             ToolTip="<%$ Resources:_Category, ContentText_EditThisCategory %>" Text='<%$ Resources: _Kartris, FormButton_Edit %>'
                                                             NavigateUrl='<%# "~/Admin/_ModifyCategory.aspx?CategoryID=" & Eval("CAT_ID") & "&strParent=" & Iif(String.IsNullorEmpty(_GetParentCategory),_GetCategoryID(),_GetParentCategory() & "," & _GetCategoryID())  %>' />
                                                     </div>
-                                                    <asp:Literal ID="litCategoryID" runat="server" Text='<%# Eval("CAT_ID") %>' Visible="false"></asp:Literal>
                                                     
+                                                    <asp:Literal ID="litCategoryID" runat="server" Text='<%# Eval("CAT_ID") %>' Visible="false"></asp:Literal>
+                                                    <asp:TemplateField ItemStyle-Width="30">
+                                                        <ItemTemplate>
+                                                            <input type="hidden" name="CAT_ID" value='<%# Eval("CAT_ID") %>' />
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
                                                         <asp:HyperLink runat="server" ID="lnkSelectPlus"
                                                         CssClass="imagebutton button_expand"
                                                             ToolTip='<%$ Resources:_Kartris, FormButton_Select %>' Text='+'
@@ -99,11 +106,18 @@
                                             <asp:PlaceHolder ID="phdNoProducts" runat="server"><span class="noresults">
                                                 <asp:Literal ID="litNoProducts" runat="server" Text="<%$ Resources: _Kartris, ContentText_NoItemsFound %>"
                                                     EnableViewState="False"></asp:Literal></span> </asp:PlaceHolder>
+                                            <asp:Button Visible="false" Text="Update Preference" runat="server" ID="btnUpdatePreferenceProducts" />
+                                            <asp:HiddenField ID="currentPreferenceProducts"  value='' runat="server" />
                                             <asp:DataList ID="dtlProducts" runat="server" CssClass="kartristable notableheader">
                                                 <ItemStyle />
                                                 <AlternatingItemStyle CssClass="Kartris-GridView-Alternate" />
                                                 <SelectedItemStyle CssClass="Kartris-DataList-SelectedItem" />
                                                 <ItemTemplate>
+                                                    <asp:TemplateField ItemStyle-Width="30">
+                                                        <ItemTemplate>
+                                                            <input type="hidden" name="P_ID" value='<%# Eval("P_ID") %>' />
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
                                                     <asp:Literal ID="litProductID" runat="server" Text='<%# Eval("P_ID") %>' Visible="false" />
                                                     <asp:Literal ID="litProductType" runat="server" Text='<%# Eval("P_Type") %>' Visible="false" />
                                                     <div class="floatright">
@@ -276,6 +290,74 @@
             <_user:PopupMessage ID="_UC_PopupMsg" runat="server" />
         </ContentTemplate>
     </asp:UpdatePanel>
+
+<script type="text/javascript">
+$(function () {
+    $("[id*=dtlSubCategories]").sortable({
+        items: 'tr',
+        cursor: 'pointer',
+        axis: 'y',
+        dropOnEmpty: false,
+        start: function (e, ui) {
+            ui.item.addClass("selected");
+            $(ui.item).find(".floatright").hide();
+        },
+        stop: function (e, ui) {
+            ui.item.removeClass("selected");
+            var catIds = document.forms[0].elements["CAT_ID"];
+            var catIdsStr = "";
+            for (var i = 0; i < catIds.length; i++) {
+                if (catIdsStr == "") {
+                    catIdsStr = catIds[i].value;
+                } else {
+                    catIdsStr = catIdsStr + "," + catIds[i].value;
+                }
+                
+            }
+            $(ui.item).find(".floatright").show();
+            if (catIdsStr != $("#phdMain__UC_CategoryView_currentPreference").val()) {
+                __doPostBack('ctl00$phdMain$_UC_CategoryView$btnUpdatePreference', 'OnClick');
+            }
+        },
+        receive: function (e, ui) {
+            $(this).find("tbody").append(ui.item);
+        }
+    });
+
+    <% If sortByValueBool Then %>
+    $("[id*=dtlProducts]").sortable({
+        items: 'tr',
+        cursor: 'pointer',
+        axis: 'y',
+        dropOnEmpty: false,
+        start: function (e, ui) {
+            ui.item.addClass("selected");
+            $(ui.item).find(".floatright").hide();
+        },
+        stop: function (e, ui) {
+            ui.item.removeClass("selected");
+            var pIds = document.forms[0].elements["P_ID"];
+            var pIdsStr = "";
+            for (var i = 0; i < pIds.length; i++) {
+                if (pIdsStr == "") {
+                    pIdsStr = pIds[i].value;
+                } else {
+                    pIdsStr = pIdsStr + "," + pIds[i].value;
+                }
+                
+            }
+            $(ui.item).find(".floatright").show();
+            if (pIdsStr != $("#phdMain__UC_CategoryView_currentPreferenceProducts").val()) {
+                __doPostBack('ctl00$phdMain$_UC_CategoryView$btnUpdatePreferenceProducts', 'OnClick');
+            }
+        },
+        receive: function (e, ui) {
+            $(this).find("tbody").append(ui.item);
+        }
+    });
+    <%End If %>
+});
+</script>
 </div>
 <asp:UpdateProgress ID="prgMain" runat="server" AssociatedUpdatePanelID="updMain">
     <ProgressTemplate>
