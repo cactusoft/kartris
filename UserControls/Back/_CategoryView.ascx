@@ -292,7 +292,7 @@
     </asp:UpdatePanel>
 
 <script type="text/javascript">
-$(function () {
+function dndEvents() {
     $("[id*=dtlSubCategories]").sortable({
         items: 'tr',
         cursor: 'pointer',
@@ -356,7 +356,39 @@ $(function () {
         }
     });
     <%End If %>
-});
+    
+    var isDragging = false;
+    $("tr")
+    .mousedown(function() {
+        isDragging = true;
+    })
+    .mousemove(function(e) {
+        if (isDragging) {
+            var y = $("#divPageContent").scrollTop();  //your current y position on the page
+            if ((screen.availHeight - e.screenY) < 100) {
+                $("#divPageContent").scrollTop(y+10);
+            }
+            else if ((e.screenY) < (400)) {
+                $("#divPageContent").scrollTop(y-10);
+            }
+        }
+        
+     })
+    .mouseup(function() {
+        var wasDragging = isDragging;
+        isDragging = false;
+    });
+    }
+
+    var prm = Sys.WebForms.PageRequestManager.getInstance();
+    prm.add_endRequest(function (s, e) {
+        dndEvents();
+    });
+
+    $(function () {
+        dndEvents();
+    });
+
 </script>
 </div>
 <asp:UpdateProgress ID="prgMain" runat="server" AssociatedUpdatePanelID="updMain">
