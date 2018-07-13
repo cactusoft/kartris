@@ -50,6 +50,7 @@
                                             <asp:Button Visible="false" Text="Update Preference" runat="server" ID="btnUpdatePreference" />
                                             <asp:HiddenField ID="currentPreference"  value='' runat="server" />
                                             <asp:DataList ID="dtlSubCategories" runat="server" CssClass="kartristable Kartris-DataView notableheader">
+                                            <%--<asp:DataList ID="dtlSubCategories" runat="server" CssClass="kartristable Kartris-DataView notableheader">--%>
                                                 <ItemStyle />
                                                 <AlternatingItemStyle CssClass="Kartris-GridView-Alternate" />
                                                 <ItemTemplate>
@@ -81,6 +82,9 @@
                                                             ToolTip='<%# Eval("CAT_Name") %>' Text='<%# Eval("CAT_Name") %>'
                                                             NavigateUrl='<%# FormatNavURL(_GetParentCategory, _GetCategoryID())  %>' /></strong>
                                                 </ItemTemplate>
+                                                <FooterTemplate>
+                                                    <asp:LinkButton ID="lnkBtnRefreshCat" runat="server" CommandName="Refresh" Text="refresh" CssClass="invisible"/>
+                                                </FooterTemplate>
                                             </asp:DataList>
                                         </asp:PlaceHolder>
                                         <asp:PlaceHolder ID="phdNoSubCategories" runat="server" Visible="false"><span class="noresults">
@@ -251,6 +255,9 @@
                                                         </tbody>
                                                     </table>
                                                 </SelectedItemTemplate>
+                                                <FooterTemplate>
+                                                    <asp:LinkButton ID="lnkBtnRefreshProd" runat="server" CommandName="Refresh" Text="refresh" CssClass="invisible"/>
+                                                </FooterTemplate>
                                             </asp:DataList>
                                             <_user:ItemPager ID="_UC_ItemPager_PROD_Header" runat="server" Visible="true" />
                                         </asp:PlaceHolder>
@@ -316,7 +323,8 @@ function dndEvents() {
             }
             $(ui.item).find(".floatright").show();
             if (catIdsStr != $("#phdMain__UC_CategoryView_currentPreference").val()) {
-                __doPostBack('ctl00$phdMain$_UC_CategoryView$btnUpdatePreference', 'OnClick');
+                $("#phdMain__UC_CategoryView_dtlSubCategories_lnkBtnRefreshCat")[0].click();
+                //__doPostBack('ctl00$phdMain$_UC_CategoryView$btnUpdatePreference', 'OnClick');
             }
         },
         receive: function (e, ui) {
@@ -348,7 +356,8 @@ function dndEvents() {
             }
             $(ui.item).find(".floatright").show();
             if (pIdsStr != $("#phdMain__UC_CategoryView_currentPreferenceProducts").val()) {
-                __doPostBack('ctl00$phdMain$_UC_CategoryView$btnUpdatePreferenceProducts', 'OnClick');
+                $("#phdMain__UC_CategoryView_dtlProducts_lnkBtnRefreshProd")[0].click();
+                //__doPostBack('ctl00$phdMain$_UC_CategoryView$btnUpdatePreferenceProducts', 'OnClick');
             }
         },
         receive: function (e, ui) {
@@ -356,7 +365,7 @@ function dndEvents() {
         }
     });
     <%End If %>
-    
+
     var isDragging = false;
     $("tr")
     .mousedown(function() {

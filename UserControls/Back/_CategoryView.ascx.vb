@@ -57,11 +57,11 @@ Partial Class _CategoryView
     End Sub
 
     Protected Sub btnUpdatePreference_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnUpdatePreference.Click
-        UpdatePreference(sender, e)
+        UpdatePreference()
     End Sub
 
 
-    Protected Sub UpdatePreference(sender As Object, e As EventArgs)
+    Protected Sub UpdatePreference()
         If Request.Form("CAT_ID") <> currentPreference.Value Then
 
             Dim preferenceIds As Integer() = (From p In Request.Form("CAT_ID").Split(",")
@@ -71,8 +71,6 @@ Partial Class _CategoryView
                 Me.UpdatePreference(categoryId, preference, _GetCategoryID())
                 preference += 1
             Next
-
-            Response.Redirect(Request.Url.AbsoluteUri)
 
         End If
     End Sub
@@ -96,11 +94,11 @@ Partial Class _CategoryView
     End Sub
 
     Protected Sub btnUpdatePreferenceProducts_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnUpdatePreferenceProducts.Click
-        UpdatePreferenceProducts(sender, e)
+        UpdatePreferenceProducts()
     End Sub
 
 
-    Protected Sub UpdatePreferenceProducts(sender As Object, e As EventArgs)
+    Protected Sub UpdatePreferenceProducts()
         If Request.Form("P_ID") <> currentPreferenceProducts.Value Then
 
             Dim preferenceIds As Integer() = (From p In Request.Form("P_ID").Split(",")
@@ -110,8 +108,6 @@ Partial Class _CategoryView
                 Me.UpdatePreferenceProducts(productId, preference, _GetCategoryID())
                 preference += 1
             Next
-
-            Response.Redirect(Request.Url.AbsoluteUri)
 
         End If
     End Sub
@@ -300,6 +296,12 @@ Partial Class _CategoryView
                     LoadProducts()
                 Catch ex As Exception
                 End Try
+            Case "Refresh"
+                Try
+                    UpdatePreferenceProducts()
+                    LoadProducts()
+                Catch ex As Exception
+                End Try
         End Select
     End Sub
 
@@ -381,6 +383,14 @@ Partial Class _CategoryView
                     updSubCategories.Update()
                 Catch ex As Exception
                 End Try
+            Case "Refresh"
+                Try
+                    UpdatePreference()
+                    LoadSubCategories()
+                    RefreshSiteMap()
+                    updSubCategories.Update()
+                Catch ex As Exception
+                End Try
         End Select
     End Sub
 
@@ -408,7 +418,7 @@ Partial Class _CategoryView
         Dim tblLanguageContents As New DataTable()
         tblLanguageContents = _UC_LangContainer.ReadContent()
         Dim strMessage As String = ""
-        If Not CategoriesBLL._UpdateCategory(tblLanguageContents, "", 0, Nothing, Nothing,
+        If Not CategoriesBLL._UpdateCategory(tblLanguageContents, "", 0, Nothing, Nothing, _
                                     Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
             Return
