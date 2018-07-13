@@ -87,6 +87,31 @@ manual sorting, there are not NULL values messing things up
 ALTER TABLE [dbo].[tblKartrisCategoryHierarchy] ADD  CONSTRAINT [DF_tblKartrisCategoryHierarchy_CH_OrderNo]  DEFAULT ((1)) FOR [CH_OrderNo]
 GO
 
+/****** New index on category hierarchy, speed up sorting of cats ******/
+CREATE NONCLUSTERED INDEX [CH_OrderNo] ON [dbo].[tblKartrisCategoryHierarchy]
+(
+	[CH_OrderNo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** New indexes on attributes, performance improvement ******/
+CREATE NONCLUSTERED INDEX [ATTRIB_OrderByValue] ON [dbo].[tblKartrisAttributes]
+(
+	[ATTRIB_OrderByValue] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [ATTRIB_Live] ON [dbo].[tblKartrisAttributes]
+(
+	[ATTRIB_Live] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** New index on product-category link, improve sorting performance ******/
+CREATE NONCLUSTERED INDEX [PCAT_OrderNo] ON [dbo].[tblKartrisProductCategoryLink]
+(
+	[PCAT_OrderNo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
 
 /****** GDPR bug fix, kind of ******/
 /*

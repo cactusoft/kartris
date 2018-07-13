@@ -22,6 +22,11 @@
 
 strID = request.querystring("PT_ID")
 If strID = "" then strID = request.querystring("CAT_ID")
-Response.Status="301 Moved Permanently"
-Response.AddHeader "Location","Category.aspx?CategoryID=" & strID
+If strID = "" then
+    Response.Status="301 Moved Permanently"
+    Response.AddHeader "Location","Category.aspx" 
+Else
+    Response.Status="301 Moved Permanently"
+    Response.AddHeader "Location","Category.aspx?CategoryID=" & strID
+End if
 %>

@@ -27209,6 +27209,11 @@ BEGIN
 Exit_sp:
 END
 GO
+/*
+Update to richsnippets, handle 'call for pricing'
+Thanks to Michael Correia @pyramidimaging.com
+*/
+
 /****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetRichSnippetProperties]    Script Date: 5/1/2018 8:12:47 AM ******/
 SET ANSI_NULLS ON
 GO
@@ -27427,6 +27432,13 @@ ALTER TABLE [dbo].[tblKartrisCategoryHierarchy] ADD  CONSTRAINT [DF__tblKartris_
 GO
 /****** Object:  Default [DF__tblKartris__CH_Ch__14270015]    Script Date: 01/23/2013 21:59:08 ******/
 ALTER TABLE [dbo].[tblKartrisCategoryHierarchy] ADD  CONSTRAINT [DF__tblKartris__CH_Ch__14270015]  DEFAULT ((0)) FOR [CH_ChildID]
+GO
+/****** Fix category sorting issue ******/
+/*
+Seems some cats go in with NULL, this should hopefully avoid that so if you switch to
+manual sorting, there are not NULL values messing things up
+*/
+ALTER TABLE [dbo].[tblKartrisCategoryHierarchy] ADD  CONSTRAINT [DF_tblKartrisCategoryHierarchy_CH_OrderNo]  DEFAULT ((1)) FOR [CH_OrderNo]
 GO
 /****** Object:  Default [DF__tblKartris__CP_Di__7D439ABD]    Script Date: 01/23/2013 21:59:08 ******/
 ALTER TABLE [dbo].[tblKartrisCoupons] ADD  CONSTRAINT [DF__tblKartris__CP_Di__7D439ABD]  DEFAULT ((0)) FOR [CP_DiscountValue]
@@ -29757,6 +29769,7 @@ GO
 
 /*** New language strings GDPR  ***/
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_GDPRExport', N'GDPR Export', NULL, 2.9012, N'', NULL, N'_GDPR',1);
+
 /*** New language string for spectable tab heading  ***/
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_SpecTable', N'Specs', NULL, 2.9014, N'', NULL, N'Products',1);
 
@@ -29777,8 +29790,53 @@ VALUES
 
 GO
 
+/****** New index on category hierarchy, speed up sorting of cats ******/
+CREATE NONCLUSTERED INDEX [CH_OrderNo] ON [dbo].[tblKartrisCategoryHierarchy]
+(
+	[CH_OrderNo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** New indexes on attributes, performance improvement ******/
+CREATE NONCLUSTERED INDEX [ATTRIB_OrderByValue] ON [dbo].[tblKartrisAttributes]
+(
+	[ATTRIB_OrderByValue] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+CREATE NONCLUSTERED INDEX [ATTRIB_Live] ON [dbo].[tblKartrisAttributes]
+(
+	[ATTRIB_Live] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** New index on product-category link, improve sorting performance ******/
+CREATE NONCLUSTERED INDEX [PCAT_OrderNo] ON [dbo].[tblKartrisProductCategoryLink]
+(
+	[PCAT_OrderNo] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** GDPR bug fix, kind of ******/
+/*
+This is a new sproc, it lets us pull out reviews
+by either customer ID or email
+*/
+CREATE PROCEDURE [dbo].[_spKartrisGDPR_GetReviewsByUserIDOrEmail]
+(
+	@UserID as int,
+	@UserEmail as nvarchar(200)
+)
+AS
+	SET NOCOUNT ON;
+SELECT     * 
+FROM         tblKartrisReviews
+WHERE     (REV_CustomerID = @UserID) OR (REV_Email = @UserEmail)
+ORDER BY REV_ID
+
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9013', N's', N's', N'kartris version', N'', 2.9013, N'2.9013', 0)
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9014', N's', N's', N'kartris version', N'', 2.9014, N'2.9014', 0)
 GO
 
 

@@ -308,72 +308,77 @@ Partial Class Admin_GenerateFeeds
 
                         Dim dtGoogleAttributes As DataTable = AttributesBLL.GetSpecialAttributesByProductID(drwProduct("P_ID"), 1)
 
-                        'Loop through each version
-                        For Each drwVersion As DataRow In VersionsBLL.GetByProduct(drwProduct("P_ID"), 1, 0).Rows
+                        Try
+                            'Loop through each version
+                            For Each drwVersion As DataRow In VersionsBLL.GetByProduct(drwProduct("P_ID"), 1, 0).Rows
 
-                            strVersionName = FixNullFromDB(drwVersion("V_Name"))
-                            strDesc = Replace(Replace(FixNullFromDB(drwVersion("V_Desc")), vbTab, ""), vbCrLf, "")
-                            dblPrice = CurrenciesBLL.FormatCurrencyPrice(1, CDbl(FixNullFromDB((drwVersion("V_Price")))), False)
-                            strLink = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, drwProduct("P_ID"), , , , , , drwProduct("P_Name"))
+                                strVersionName = FixNullFromDB(drwVersion("V_Name"))
+                                strDesc = Replace(Replace(FixNullFromDB(drwVersion("V_Desc")), vbTab, ""), vbCrLf, "")
+                                dblPrice = CurrenciesBLL.FormatCurrencyPrice(1, CDbl(FixNullFromDB((drwVersion("V_Price")))), False)
+                                strLink = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, drwProduct("P_ID"), , , , , , drwProduct("P_Name"))
 
-                            'Format image link
-                            'Ideally we look to see if there is a version image
-                            'If not, we use a product image
-                            'If nothing found, we leave blank
-                            'Note that Froogle/Google will not accept URLs
-                            'that go to scripts (such as Image.ashx that provides
-                            'thumbnails). Instead, we have to give them the full
-                            'image link.
-                            strImageLink = ImageLink(FixNullFromDB(drwVersion("V_ID")), FixNullFromDB(drwProduct("P_ID")))
+                                'Format image link
+                                'Ideally we look to see if there is a version image
+                                'If not, we use a product image
+                                'If nothing found, we leave blank
+                                'Note that Froogle/Google will not accept URLs
+                                'that go to scripts (such as Image.ashx that provides
+                                'thumbnails). Instead, we have to give them the full
+                                'image link.
+                                strImageLink = ImageLink(FixNullFromDB(drwVersion("V_ID")), FixNullFromDB(drwProduct("P_ID")))
 
-                            strLink = FixURL(strLink)
+                                strLink = FixURL(strLink)
 
-                            If strProductName <> strVersionName And String.IsNullOrEmpty(strVersionName) Then strProductName += " - " & strVersionName
-                            If String.IsNullOrEmpty(strDesc) Then strDesc = FixNullFromDB(drwProduct("P_Desc"))
+                                If strProductName <> strVersionName And String.IsNullOrEmpty(strVersionName) Then strProductName += " - " & strVersionName
+                                If String.IsNullOrEmpty(strDesc) Then strDesc = FixNullFromDB(drwProduct("P_Desc"))
 
-                            If ddlXMLorTXT.SelectedValue = "txt" Then
-                                AddFroogleTextLine(objStreamWriter, FixNullFromDB(drwVersion("V_CodeNumber")), strProductName, strDesc, dblPrice, strLink, strImageLink)
-                            ElseIf ddlXMLorTXT.SelectedValue = "csv" Then
-                                AddFroogleCSVLine(objStreamWriter, FixNullFromDB(drwVersion("V_CodeNumber")), strProductName, strDesc, dblPrice, strLink, strImageLink)
-                            Else
-                                With xmlGoogleBase
-                                    .WriteWhitespace(vbCrLf)
-                                    .WriteStartElement("item")
-                                    .WriteWhitespace(vbCrLf)
-                                    .WriteWhitespace("   ")
-                                    .WriteElementString("g:id", FixNullFromDB(drwVersion("V_CodeNumber")))
-                                    .WriteWhitespace(vbCrLf)
-                                    .WriteWhitespace("   ")
-                                    .WriteElementString("title", CkartrisDisplayFunctions.StripHTML(strProductName))
-                                    .WriteWhitespace(vbCrLf)
-                                    .WriteWhitespace("   ")
-                                    .WriteElementString("description", CkartrisDisplayFunctions.StripHTML(strDesc))
-                                    .WriteWhitespace(vbCrLf)
-                                    .WriteWhitespace("   ")
-                                    .WriteElementString("g:price", dblPrice)
-                                    .WriteWhitespace(vbCrLf)
-                                    .WriteWhitespace("   ")
-                                    .WriteElementString("link", strLink)
-                                    .WriteWhitespace(vbCrLf)
-                                    .WriteWhitespace("   ")
-                                    If strImageLink <> "" Then
-                                        .WriteElementString("g:image_link", strImageLink)
+                                If ddlXMLorTXT.SelectedValue = "txt" Then
+                                    AddFroogleTextLine(objStreamWriter, FixNullFromDB(drwVersion("V_CodeNumber")), strProductName, strDesc, dblPrice, strLink, strImageLink)
+                                ElseIf ddlXMLorTXT.SelectedValue = "csv" Then
+                                    AddFroogleCSVLine(objStreamWriter, FixNullFromDB(drwVersion("V_CodeNumber")), strProductName, strDesc, dblPrice, strLink, strImageLink)
+                                Else
+                                    With xmlGoogleBase
+                                        .WriteWhitespace(vbCrLf)
+                                        .WriteStartElement("item")
                                         .WriteWhitespace(vbCrLf)
                                         .WriteWhitespace("   ")
-                                    End If
-                                    .WriteElementString("g:condition", UCase(ddlCondition.SelectedValue))
-                                    .WriteWhitespace(vbCrLf)
-                                    For Each drwGoogle As DataRow In dtGoogleAttributes.Rows
-                                        If FixNullFromDB(drwGoogle("ATTRIBV_Value")) IsNot Nothing Then
-                                            .WriteWhitespace("   ")
-                                            .WriteElementString(FixNullFromDB(drwGoogle("ATTRIB_Name")), FixNullFromDB(drwGoogle("ATTRIBV_Value")))
+                                        .WriteElementString("g:id", FixNullFromDB(drwVersion("V_CodeNumber")))
+                                        .WriteWhitespace(vbCrLf)
+                                        .WriteWhitespace("   ")
+                                        .WriteElementString("title", CkartrisDisplayFunctions.StripHTML(strProductName))
+                                        .WriteWhitespace(vbCrLf)
+                                        .WriteWhitespace("   ")
+                                        .WriteElementString("description", CkartrisDisplayFunctions.StripHTML(strDesc))
+                                        .WriteWhitespace(vbCrLf)
+                                        .WriteWhitespace("   ")
+                                        .WriteElementString("g:price", dblPrice)
+                                        .WriteWhitespace(vbCrLf)
+                                        .WriteWhitespace("   ")
+                                        .WriteElementString("link", strLink)
+                                        .WriteWhitespace(vbCrLf)
+                                        .WriteWhitespace("   ")
+                                        If strImageLink <> "" Then
+                                            .WriteElementString("g:image_link", strImageLink)
                                             .WriteWhitespace(vbCrLf)
+                                            .WriteWhitespace("   ")
                                         End If
-                                    Next
-                                    .WriteEndElement()
-                                End With
-                            End If
-                        Next
+                                        .WriteElementString("g:condition", UCase(ddlCondition.SelectedValue))
+                                        .WriteWhitespace(vbCrLf)
+                                        For Each drwGoogle As DataRow In dtGoogleAttributes.Rows
+                                            If FixNullFromDB(drwGoogle("ATTRIBV_Value")) IsNot Nothing Then
+                                                .WriteWhitespace("   ")
+                                                .WriteElementString(FixNullFromDB(drwGoogle("ATTRIB_Name")), FixNullFromDB(drwGoogle("ATTRIBV_Value")))
+                                                .WriteWhitespace(vbCrLf)
+                                            End If
+                                        Next
+                                        .WriteEndElement()
+                                    End With
+                                End If
+                            Next
+                        Catch ex As Exception
+                            'Well, it can happen
+                        End Try
+
                     End If
                 Next
             End If

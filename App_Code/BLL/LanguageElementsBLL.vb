@@ -37,9 +37,31 @@ Public Class LanguageElementsBLL
         Return Adptr.GetDataByLanguageID(_LanguageID)
     End Function
 
-    Public Shared Function GetElementValue(ByVal _LanguageID As Short, ByVal _TypeID As LANG_ELEM_TABLE_TYPE, _
+    Public Shared Function GetElementValue(ByVal _LanguageID As Short, ByVal _TypeID As LANG_ELEM_TABLE_TYPE,
                                         ByVal _FieldID As LANG_ELEM_FIELD_NAME, ByVal _ParentID As Long) As String
-        Dim strValue As String = FixNullFromDB(Adptr.GetElementValue_s(_LanguageID, _TypeID, _FieldID, _ParentID))
+        'In v2.9014 we modified this a little to make it more resilient. From time
+        'to time, sites with very large numbers of products seem to get OOps messages
+        'relating to the retrieval of language elements. Generally refreshing the page
+        'clears the error. So what this does is if an error occurs retrieving a value, it
+        'waits 20ms, then tries again. Generally this will work ok, but if not, we
+        'then return blank. The idea is generally that if we encounter an error, we try
+        'again after a little wait, and hopefully it works and the 20ms will be 
+        'unnoticeable to users, but in the worst case, we may have a value missing on the
+        'page which shouldn't be a world ending event and acceptable if we avoid a big
+        'page blow-up "oops" message.
+        Dim strValue As String = ""
+        Try
+            strValue = FixNullFromDB(Adptr.GetElementValue_s(_LanguageID, _TypeID, _FieldID, _ParentID))
+        Catch ex As Exception
+            'Wait a little, then try again
+            System.Threading.Thread.Sleep(20)
+            Try
+                strValue = FixNullFromDB(Adptr.GetElementValue_s(_LanguageID, _TypeID, _FieldID, _ParentID))
+            Catch ex2 As Exception
+                'Ok, maybe something more going on.
+            End Try
+        End Try
+
         If strValue Is Nothing Then strValue = "# -LE- #" '' The string is not found
         Return strValue
     End Function
