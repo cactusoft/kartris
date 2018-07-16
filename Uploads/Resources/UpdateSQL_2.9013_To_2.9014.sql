@@ -142,6 +142,94 @@ INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value],
 
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisProducts_DeleteByCategory]    Script Date: 16/07/2018 14:08:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	Changed to allow product IDs
+-- longer than 5 chars
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisProducts_DeleteByCategory](@CategoryID as int)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	
+	DECLARE productCursor CURSOR FOR 
+	SELECT PCAT_ProductID
+	FROM dbo.tblKartrisProductCategoryLink
+	WHERE PCAT_CategoryID = @CategoryID
+		
+	DECLARE @ChildProductID as bigint;
+	
+	OPEN productCursor
+	FETCH NEXT FROM productCursor
+	INTO @ChildProductID;
+
+	DECLARE @ProductList as nvarchar(max);
+	SET @ProductList = '';
+
+	WHILE @@FETCH_STATUS = 0
+	BEGIN
+		SET @ProductList = @ProductList + CAST(@ChildProductID as nvarchar(20)) +  ',';
+		
+		FETCH NEXT FROM productCursor
+		INTO @ChildProductID;
+
+	END
+
+	CLOSE productCursor
+	DEALLOCATE productCursor;
+
+	DECLARE @SIndx as int;
+	DECLARE @CIndx as int;
+	DECLARE @ProductIDToDelete as nvarchar(20);
+	DECLARE @Counter as int;
+	DECLARE @CurrentScore as int;
+
+	SET @SIndx = 0;
+	SET @Counter = 0;
+	WHILE @SIndx <= LEN(@ProductList)
+	BEGIN
+		
+		SET @Counter = @Counter + 1;
+		SET @CIndx = CHARINDEX(',', @ProductList, @SIndx)	-- Next keyword starting index (1-Based Index)
+		IF @CIndx = 0 BEGIN SET @CIndx = LEN(@ProductList)+ 1 END	-- If no more keywords, set next starting index to not exist
+		SET @ProductIDToDelete = SUBSTRING(@ProductList, @SIndx, @CIndx - @SIndx)
+		SET @SIndx = @CIndx + 1;	-- The next starting index
+		DECLARE @Product as bigint;
+		SET @Product = CAST(@ProductIDToDelete as bigint);
+			
+			-- delete the link with the selected product
+			DELETE FROM tblKartrisProductCategoryLink
+			WHERE     (PCAT_CategoryID = @CategoryID) AND (PCAT_ProductID = @Product);
+			
+		
+		DECLARE @NoOfOtherParentCategories as int;
+		SET @NoOfOtherParentCategories = 0;
+		SELECT @NoOfOtherParentCategories = Count(1)
+		FROM dbo.tblKartrisProductCategoryLink
+		WHERE (PCAT_ProductID = @Product) AND (PCAT_CategoryID <> @CategoryID)
+		
+		-- if no other parent categories.
+		IF @NoOfOtherParentCategories = 0 
+		BEGIN
+			EXEC [dbo].[_spKartrisProducts_Delete] 
+			@ProductID = @Product;
+		END
+		-- delete the products, since no other related categories.
+		
+		
+		
+	END
+	
+	
+END
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='2.9014', CFG_VersionAdded=2.9014 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

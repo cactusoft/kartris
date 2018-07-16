@@ -26952,7 +26952,7 @@ BEGIN
 
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
-		SET @ProductList = @ProductList + CAST(@ChildProductID as nvarchar(5)) +  ',';
+		SET @ProductList = @ProductList + CAST(@ChildProductID as nvarchar(20)) +  ',';
 		
 		FETCH NEXT FROM productCursor
 		INTO @ChildProductID;
@@ -26964,7 +26964,7 @@ BEGIN
 
 	DECLARE @SIndx as int;
 	DECLARE @CIndx as int;
-	DECLARE @ProductIDToDelete as nvarchar(5);
+	DECLARE @ProductIDToDelete as nvarchar(20);
 	DECLARE @Counter as int;
 	DECLARE @CurrentScore as int;
 
