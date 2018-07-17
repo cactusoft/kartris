@@ -103,7 +103,10 @@
             Response.Redirect(Replace(strRawURL, "/admin/", "/Admin/_Default.aspx"))
         ElseIf strRawURL.EndsWith("/") Then
             If Not strRawURL.ToLower.Contains("/p-") And Not strRawURL.ToLower.Contains("/c-") Then 'fixes issue where old CactuShop friendly URLs don't redirect right
-                Response.Redirect(strRawURL & "Default.aspx")
+                'Response.Redirect(strRawURL & "Default.aspx")
+                'The above line was added because of breaking changes in ASP.NET 4.
+                'It appears now that the action will be rendered with a / rather than blank,
+                'so in theory this should no longer be required.
             End If
         End If
     End Sub
