@@ -35,16 +35,23 @@ Partial Class UserControls_Back_SiteNews
             'link comes in from front end admin
             'dropdown menu
             If strNewsID <> "" Then
-                litNewsID.Text = strNewsID
-                hidNewsID.Value = CkartrisBLL.WebShopURL & "News.aspx?NewsID=" & strNewsID
-                mvwNewsList.SetActiveView(viwNewsInfo)
-                LoadNewsInformationByID(strNewsID)
-                updNewsList.Update()
+                If strNewsID = "0" Then
+                    PrepareNewSiteNews()
+                Else
+                    litNewsID.Text = strNewsID
+                    hidNewsID.Value = CkartrisBLL.WebShopURL & "News.aspx?NewsID=" & strNewsID
+                    mvwNewsList.SetActiveView(viwNewsInfo)
+                    LoadNewsInformationByID(strNewsID)
+                    updNewsList.Update()
+                End If
+
             End If
+
         End If
 
         If GetNewsID() = 0 Then
             _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.News, True)
+
         Else
             _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.News, False, GetNewsID())
         End If
@@ -56,10 +63,6 @@ Partial Class UserControls_Back_SiteNews
         If dvwNews.Count = 0 Then mvwSiteNews.SetActiveView(viwNoNews) : Return
         gvwNews.DataSource = dvwNews
         gvwNews.DataBind()
-    End Sub
-
-    Protected Sub lnkAddNews_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddNews.Click
-        PrepareNewSiteNews()
     End Sub
 
     Private Sub PrepareNewSiteNews()
@@ -147,11 +150,6 @@ Partial Class UserControls_Back_SiteNews
         updNewsList.Update()
     End Sub
 
-    'Click back to listing
-    Protected Sub lnkBtnBack_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnBack.Click
-        Response.Redirect("_SiteNews.aspx")
-    End Sub
-
     Protected Sub lnkBtnCancelNews_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnCancelNews.Click
         BackToNewsList()
     End Sub
@@ -216,4 +214,12 @@ Partial Class UserControls_Back_SiteNews
         End If
 
     End Sub
+
+    'v2.9014
+    'Formats a hyperlink to news, the command type button
+    'seems to kill the image upload in the edit html, this
+    'overcomes it
+    Function FormatEditLink(ByVal numNewsID As Integer) As String
+        Return "~/Admin/_SiteNews.aspx?NewsID=" & numNewsID.ToString
+    End Function
 End Class

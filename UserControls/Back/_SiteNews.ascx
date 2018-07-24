@@ -2,13 +2,14 @@
 <%@ Register TagPrefix="_user" TagName="LanguageContainer" Src="~/UserControls/Back/_LanguageContainer.ascx" %>
 <asp:UpdatePanel ID="updNewsList" runat="server" UpdateMode="Conditional">
     <ContentTemplate>
-    <%  'The javascript routine is to dynamically change the link URL of
-        'the top left 'front' button %>
+        <%  'The javascript routine is to dynamically change the link URL of
+'the top left 'front' button %>
         <script type="text/javascript">
             Sys.WebForms.PageRequestManager.getInstance().add_endRequest(EndRequestHandler);
 
             function EndRequestHandler(sender, args) {
                 document.getElementById("_UC_AdminBar_lnkFront").href = document.getElementById("phdMain__UC_SiteNews_hidNewsID").value;
+
             }
         </script>
         <asp:Literal ID="litNewsID" runat="server" Visible="False" />
@@ -16,13 +17,14 @@
         <asp:MultiView ID="mvwNewsList" runat="server" ActiveViewIndex="0">
             <asp:View ID="viwList" runat="server">
                 <div class="section">
-                    <asp:LinkButton ID="lnkAddNews" runat="server" Text="<%$ Resources: _Kartris, FormButton_New %>"
-                        CssClass="linkbutton icon_new floatright" /><br />
+                    <asp:HyperLink ID="lnkNew" runat="server" Text="<%$ Resources: _Kartris, FormButton_New %>"
+                        CssClass="linkbutton icon_new floatright" NavigateUrl="~/Admin/_SiteNews.aspx?NewsID=0" />
+                    <br />
                     <asp:MultiView ID="mvwSiteNews" runat="server">
                         <asp:View ID="viwNewsData" runat="server">
                             <asp:GridView CssClass="kartristable" ID="gvwNews" runat="server" AllowPaging="true"
                                 AllowSorting="false" AutoGenerateColumns="False" DataKeyNames="N_ID" AutoGenerateEditButton="False"
-                                GridLines="None" SelectedIndex="0" PageSize="15">
+                                GridLines="None" SelectedIndex="0" PageSize="50">
                                 <Columns>
                                     <asp:TemplateField>
                                         <ItemStyle CssClass="column1" />
@@ -55,8 +57,8 @@
                                         <HeaderTemplate>
                                         </HeaderTemplate>
                                         <ItemTemplate>
-                                            <asp:LinkButton ID="lnkBtnEdit" runat="server" CommandName="EditNews" CommandArgument='<%# Container.DataItemIndex %>'
-                                                Text='<%$ Resources: _Kartris, FormButton_Edit %>' CssClass="linkbutton icon_edit" />
+                                            <asp:HyperLink ID="lnkEdit" runat="server"
+                                                Text='<%$ Resources: _Kartris, FormButton_Edit %>' CssClass="linkbutton icon_edit" NavigateUrl='<%# FormatEditLink(Eval("N_ID")) %>' />
                                         </ItemTemplate>
                                     </asp:TemplateField>
                                 </Columns>
@@ -80,8 +82,10 @@
                 <div>
                     <%-- Back Link --%>
                     <asp:PlaceHolder runat="server" ID="phdBackLink">
-                        <asp:LinkButton ID="lnkBtnBack" runat="server" Text='<%$ Resources: _Kartris, ContentText_BackLink %>'
-                            CssClass="linkbutton icon_back floatright"></asp:LinkButton>
+
+                        <asp:HyperLink ID="lnkBack" runat="server" Text='<%$ Resources: _Kartris, ContentText_BackLink %>'
+                            CssClass="linkbutton icon_back floatright" NavigateUrl="~/Admin/_SiteNews.aspx"></asp:HyperLink>
+
                     </asp:PlaceHolder>
                     <asp:UpdatePanel ID="updLanguageContainer" runat="server" UpdateMode="Conditional">
                         <ContentTemplate>
