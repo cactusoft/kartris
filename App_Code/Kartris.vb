@@ -1369,21 +1369,22 @@ Public NotInheritable Class CkartrisBLL
     ''' due to rapid fail protection, or issues like the currency cache code returning
     ''' </summary>
     Public Shared Function RecycleAppPool() As Boolean
-        Try
-            Using iisManager As New ServerManager()
-                Dim colSites As SiteCollection = iisManager.Sites
-                For Each strSiteName As Site In colSites
-                    If strSiteName.Name = System.Web.Hosting.HostingEnvironment.ApplicationHost.GetSiteName() Then
-                        iisManager.ApplicationPools(strSiteName.Applications("/").ApplicationPoolName).Recycle()
-                        Return True
-                    End If
-                Next
-                Return False
-            End Using
-        Catch ex As Exception
-            'maybe don't have right permissions
-            Return False
-        End Try
+        'Try
+        '    Using iisManager As New ServerManager()
+        '        Dim colSites As SiteCollection = iisManager.Sites
+        '        For Each strSiteName As Site In colSites
+        '            If strSiteName.Name = System.Web.Hosting.HostingEnvironment.ApplicationHost.GetSiteName() Then
+        '                iisManager.ApplicationPools(strSiteName.Applications("/").ApplicationPoolName).Recycle()
+        '                Return True
+        '            End If
+        '        Next
+        '        Return False
+        '    End Using
+        'Catch ex As Exception
+        '    'maybe don't have right permissions
+        '    Return False
+        'End Try
+        Return False
     End Function
 
 
