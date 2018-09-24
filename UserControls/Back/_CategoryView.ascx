@@ -83,7 +83,7 @@
                                                             NavigateUrl='<%# FormatNavURL(_GetParentCategory, _GetCategoryID())  %>' /></strong>
                                                 </ItemTemplate>
                                                 <FooterTemplate>
-                                                    <asp:LinkButton ID="lnkBtnRefreshCat" runat="server" CommandName="Refresh" Text="refresh" CssClass="invisible"/>
+                                                    <asp:LinkButton ID="lnkBtnRefreshCat" runat="server" CommandName="Refresh" Text="refresh" CssClass="invisible btnRefreshCat"/>
                                                 </FooterTemplate>
                                             </asp:DataList>
                                         </asp:PlaceHolder>
@@ -256,7 +256,7 @@
                                                     </table>
                                                 </SelectedItemTemplate>
                                                 <FooterTemplate>
-                                                    <asp:LinkButton ID="lnkBtnRefreshProd" runat="server" CommandName="Refresh" Text="refresh" CssClass="invisible"/>
+                                                    <asp:LinkButton ID="lnkBtnRefreshProd" runat="server" CommandName="Refresh" Text="refresh" CssClass="invisible btnRefreshProd"/>
                                                 </FooterTemplate>
                                             </asp:DataList>
                                             <_user:ItemPager ID="_UC_ItemPager_PROD_Header" runat="server" Visible="true" />
@@ -323,8 +323,7 @@ function dndEvents() {
             }
             $(ui.item).find(".floatright").show();
             if (catIdsStr != $("#phdMain__UC_CategoryView_currentPreference").val()) {
-                $("#phdMain__UC_CategoryView_dtlSubCategories_lnkBtnRefreshCat")[0].click();
-                //__doPostBack('ctl00$phdMain$_UC_CategoryView$btnUpdatePreference', 'OnClick');
+                $(".btnRefreshCat")[0].click();
             }
         },
         receive: function (e, ui) {
@@ -356,8 +355,7 @@ function dndEvents() {
             }
             $(ui.item).find(".floatright").show();
             if (pIdsStr != $("#phdMain__UC_CategoryView_currentPreferenceProducts").val()) {
-                $("#phdMain__UC_CategoryView_dtlProducts_lnkBtnRefreshProd")[0].click();
-                //__doPostBack('ctl00$phdMain$_UC_CategoryView$btnUpdatePreferenceProducts', 'OnClick');
+                $(".btnRefreshProd")[0].click();
             }
         },
         receive: function (e, ui) {
