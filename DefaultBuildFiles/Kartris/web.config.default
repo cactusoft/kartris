@@ -44,7 +44,7 @@ All rights reserved.
 	<location path="Callback.aspx">
 		<system.web>
 			<pages validateRequest="false" enableEventValidation="false" viewStateEncryptionMode="Always" />
-			<httpRuntime requestValidationMode="2.0" />
+			<httpRuntime requestValidationMode="2.0" targetFramework="4.6" />
 			<browserCaps userAgentCacheKeyLength="256" />
 		</system.web>
 	</location>

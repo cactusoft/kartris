@@ -29835,6 +29835,47 @@ ORDER BY REV_ID
 
 GO
 
+/****** Kartris v3.0000 below here ******/
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisSubSites_Get]    Script Date: 28/09/2018 15:05:08 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	Gets all subsites
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisSubSites_Get]
+AS
+	SET NOCOUNT ON;
+	SELECT  *
+	FROM	dbo.tblKartrisSubSites
+	ORDER BY SUB_ID
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisSubSite_GetByID]    Script Date: 28/09/2018 15:07:36 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	Gets a single sub site by ID
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisSubSite_GetByID](@SUB_ID as smallint)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT * FROM tblKartrisSubSites
+WHERE     (tblKartrisSubSites.SUB_ID = @SUB_ID)
+END
+GO
+
+
 /****** Set this to tell Data tool which version of db we have ******/
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'2.9014', N's', N's', N'kartris version', N'', 2.9014, N'2.9014', 0)
 GO
