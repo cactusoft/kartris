@@ -36,6 +36,43 @@ GO
 UPDATE tblKartrisCategories SET CAT_SubSiteBaseRecord = 0;
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisSubSite_GetByID]    Script Date: 01/10/2018 11:29:52 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	Gets a single sub site by ID
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisSubSite_GetByID](@SUB_ID as smallint)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	SELECT * FROM tblKartrisSubSites
+WHERE     (tblKartrisSubSites.SUB_ID = @SUB_ID)
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisSubSites_Get]    Script Date: 01/10/2018 11:30:55 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[_spKartrisSubSites_Get]
+AS
+	SET NOCOUNT ON;
+	SELECT  *
+	FROM	dbo.tblKartrisSubSites
+	ORDER BY SUB_ID
+
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
