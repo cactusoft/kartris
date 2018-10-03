@@ -53,8 +53,19 @@ Partial Class UserControls_Back_SubSiteDetails
                         lbxCategory.Items.Add(New ListItem(strCategoryName, CStr(numCategoryID)))
                         lbxCategory.SelectedIndex = lbxCategory.Items.Count - 1
                     End If
+
+                    SetThemeDropDown()
+
+                    'Set skin dropdown
+                    Try
+                        ddlistTheme.SelectedValue = CStr(FixNullFromDB(subSiteDataTable.Rows.Item(0).Item("SUB_Skin")))
+                    Catch ex As Exception
+                        'Ignore
+                    End Try
                 Else
-                    fvwSubSiteDetails.ChangeMode(FormViewMode.Insert)
+                    'fvwSubSiteDetails.ChangeMode(FormViewMode.Insert)
+
+                    SetThemeDropDown()
                     'txtSubSiteName.Text = ""
                 End If
 
@@ -63,7 +74,7 @@ Partial Class UserControls_Back_SubSiteDetails
                 Response.Redirect("_SubSitesList.aspx")
             End Try
 
-            SetThemeDropDown()
+
         End If
     End Sub
 
@@ -78,7 +89,7 @@ Partial Class UserControls_Back_SubSiteDetails
         If ddlistTheme.Items.Count > 0 Then
             ddlistTheme.Items.Clear()
         End If
-        ddlistTheme.Items.Add(New ListItem("-", ""))
+        'ddlistTheme.Items.Add(New ListItem("-", ""))
 
         Dim dirThemes As New DirectoryInfo(Server.MapPath("~/Skins"))
         If dirThemes.Exists Then
@@ -131,15 +142,20 @@ Partial Class UserControls_Back_SubSiteDetails
     End Sub
 
     Protected Sub lnkBtnUpdate_Click(ByVal sender As Object, ByVal e As System.EventArgs)
-        If GetSubSiteID() > 0 Then
-            Page.Validate()
-            If Page.IsValid Then
-
-                SubSitesBLL._Update(GetSubSiteID(), txtSubSiteName.Text, txtSubSiteDomain.Text, lbxCategory.Items(0).Value, 1, txtSubSiteNotes.Text, chkSubSiteLive.Checked)
-
+        Dim subSiteId = GetSubSiteID()
+        Page.Validate()
+        If Page.IsValid Then
+            If subSiteId > 0 Then
+                SubSitesBLL._Update(subSiteId, txtSubSiteName.Text, txtSubSiteDomain.Text, lbxCategory.Items(0).Value, ddlistTheme.SelectedItem.Value, txtSubSiteNotes.Text, chkSubSiteLive.Checked)
+                RaiseEvent ShowMasterUpdate()
+            Else
+                SubSitesBLL._Add(txtSubSiteName.Text, txtSubSiteDomain.Text, lbxCategory.Items(0).Value, ddlistTheme.SelectedItem.Value, txtSubSiteNotes.Text, chkSubSiteLive.Checked)
+                Response.Redirect("_SubSitesList.aspx")
             End If
         End If
     End Sub
+
+
 
 
     ''' <summary>
@@ -171,31 +187,6 @@ Partial Class UserControls_Back_SubSiteDetails
     End Function
 
 
-    ''' <summary>
-    ''' when the order details are bound to the data
-    ''' </summary>
-    ''' <remarks></remarks>
-    Private Sub fvwOrderDetails_DataBound(ByVal sender As Object, ByVal e As System.EventArgs) Handles fvwSubSiteDetails.DataBound
-
-        'Dim hidOrderCoupon As HiddenField = DirectCast(fvwSubSiteDetails.FindControl("hidOrderCoupon"), HiddenField)
-        'Dim hidOrderText As HiddenField = DirectCast(fvwSubSiteDetails.FindControl("hidOrderText"), HiddenField)
-
-        'Dim hidAffiliatePaymentID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidAffiliatePaymentID"), HiddenField)
-        'Dim hidOrderCurrencyID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidOrderCurrencyID"), HiddenField)
-        'Dim phdAffiliate As PlaceHolder = DirectCast(fvwOrderDetails.FindControl("phdAffiliate"), PlaceHolder)
-        'Dim litOrderTotalPrice As Literal = DirectCast(fvwOrderDetails.FindControl("litOrderTotalPrice"), Literal)
-        'Dim litOrderLanguage As Literal = DirectCast(fvwOrderDetails.FindControl("litOrderLanguage"), Literal)
-        'Dim txtOrderShippingAddress As TextBox = DirectCast(fvwOrderDetails.FindControl("txtOrderShippingAddress"), TextBox)
-        'Dim hidOrderData As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidOrderData"), HiddenField)
-
-        'Dim dblOrderTotalPrice As Single = CSng(litOrderTotalPrice.Text)
-        'Dim srtOrderCurrencyID As Short = CShort(hidOrderCurrencyID.Value)
-
-        'Get the initial values of the checkboxes and store them in the variables
-        'ViewState("SUB_Live") = DirectCast(fvwSubSiteDetails.FindControl("chkSubSiteLive"), CheckBox).Checked
-
-    End Sub
-
     Protected Function GetSubSiteID() As Integer
         Try
             Return CInt(Request.QueryString("SubSiteID"))
@@ -203,47 +194,6 @@ Partial Class UserControls_Back_SubSiteDetails
         End Try
         Return 0
     End Function
-
-    ''' <summary>
-    ''' handles updating the order
-    ''' </summary>
-    ''' <remarks></remarks>
-    'Public Sub fvwOrderDetails_ItemUpdating(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.FormViewUpdateEventArgs) Handles fvwSubSiteDetails.ItemUpdating
-    '    Dim chkOrderSent As CheckBox = DirectCast(fvwOrderDetails.FindControl("chkOrderSent"), CheckBox)
-    '    Dim chkOrderPaid As CheckBox = DirectCast(fvwOrderDetails.FindControl("chkOrderPaid"), CheckBox)
-    '    Dim chkOrderInvoiced As CheckBox = DirectCast(fvwOrderDetails.FindControl("chkOrderInvoiced"), CheckBox)
-    '    Dim chkOrderShipped As CheckBox = DirectCast(fvwOrderDetails.FindControl("chkOrderShipped"), CheckBox)
-    '    Dim txtOrderStatus As TextBox = DirectCast(fvwOrderDetails.FindControl("txtOrderStatus"), TextBox)
-    '    Dim txtOrderNotes As TextBox = DirectCast(fvwOrderDetails.FindControl("txtOrderNotes"), TextBox)
-    '    Dim chkOrderCancelled As CheckBox = DirectCast(fvwOrderDetails.FindControl("chkOrderCancelled"), CheckBox)
-
-    '    Dim hidSendOrderUpdateEmail As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidSendOrderUpdateEmail"), HiddenField)
-
-    '    'This line is actually the one that updates the order - not the built-in FormView update. Gives us more flexibility - needs to catch some thingies. =)
-    '    If OrdersBLL._UpdateStatus(ViewState("numOrderID"), chkOrderSent.Checked, chkOrderPaid.Checked, chkOrderShipped.Checked,
-    '                            chkOrderInvoiced.Checked, txtOrderStatus.Text, txtOrderNotes.Text, chkOrderCancelled.Checked) > 0 Then
-    '        If KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y" Then
-    '            Try
-    '                If chkOrderPaid.Checked Then
-    '                    Dim hidOrderCurrencyID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidOrderCurrencyID"), HiddenField)
-    '                    Dim intOrderCurrencyID As Integer = CInt(hidOrderCurrencyID.Value)
-    '                    Dim hidCustomerID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidCustomerID"), HiddenField)
-    '                    Dim kartrisUser As KartrisMemberShipUser = Membership.GetUser(UsersBLL.GetEmailByID(CInt(hidCustomerID.Value)))
-    '                    Dim basketObj As Basket = GetBasket(ViewState("numOrderID"))
-
-    '                End If
-    '            Catch ex As Exception
-    '                'Oops
-    '            End Try
-
-    '        End If
-
-    '        RaiseEvent ShowMasterUpdate()
-    '    Else
-    '        'error
-    '    End If
-
-    'End Sub
 
     ''' <summary>
     ''' If 'edit' clicked, redirects to order editing page

@@ -38,15 +38,8 @@ Partial Class UserControls_Back_SubSiteList
         Page.Culture = System.Globalization.CultureInfo.CreateSpecificCulture(System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName).Name
         If Not IsPostBack Then
             RefreshSubSiteList()
-            'If CallMode = OrdersBLL.ORDERS_LIST_CALLMODE.DISPATCH Then
-            '    DispatchLabels.Visible = True
-            'End If
-        End If
 
-        ' Prevents the button triggering a partial postback as in some browsers that postback never
-        ' completes when using the response.redirect function
-        'Dim PrintLabelButton As Button = CType(DispatchLabels.FindControl("btnPrint"), Button)
-        'ScriptManager.GetCurrent(Page).RegisterPostBackControl(PrintLabelButton)
+        End If
 
     End Sub
 
@@ -98,6 +91,34 @@ Partial Class UserControls_Back_SubSiteList
         End Set
     End Property
 
+
+    '''' <summary> 
+    '''' Fills skin dropdown from contents of 'Skins' folder'
+    '''' For legacy reasons, it uses the term 'theme' instead
+    '''' of 'skin'
+    '''' </summary> 
+    Protected Sub SetThemeDropDown()
+        Dim blnSkip As Boolean
+
+        If ddlistTheme.Items.Count > 0 Then
+            ddlistTheme.Items.Clear()
+        End If
+        ddlistTheme.Items.Add(New ListItem("-", ""))
+
+        Dim dirThemes As New DirectoryInfo(Server.MapPath("~/Skins"))
+        If dirThemes.Exists Then
+            For Each dirTheme As DirectoryInfo In dirThemes.GetDirectories
+                blnSkip = False
+                If (dirTheme.Name.ToLower = ("admin")) Then blnSkip = True 'skip admin theme
+                If (dirTheme.Name.ToLower = ("invoice")) Then blnSkip = True 'skip invoice theme
+                If blnSkip = False Then
+                    ddlistTheme.Items.Add(New ListItem(dirTheme.Name, dirTheme.Name))
+                End If
+            Next
+        End If
+
+    End Sub
+
     ''' <summary>
     ''' A generic parameter. Expects the Gateway Reference Code but will also accept the second Date value in case we decide to search the orders by date range.
     ''' </summary>
@@ -111,6 +132,64 @@ Partial Class UserControls_Back_SubSiteList
             ViewState("_datValue2") = value
         End Set
     End Property
+
+    Private Sub PrepareNewSubSite()
+        chkSubSiteLive.Checked = False
+
+        txtSubSiteName.Text = Nothing
+        txtSubSiteDomain.Text = Nothing
+        txtSubSiteNotes.Text = Nothing
+        txtTheme.Text = Nothing
+
+        SetThemeDropDown()
+        'SetMasterDropDown()
+    End Sub
+
+    Protected Sub lnkBtnAddCategory_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnAddCategory.Click
+        Try
+            Dim strCategoryText As String = _UC_AutoComplete.GetText()
+            If strCategoryText <> "" Then
+                If lbxCategory.Items.Count = 0 Then
+
+                    Dim numCategoryID As Integer = CInt(Mid(strCategoryText, strCategoryText.LastIndexOf("(") + 2, strCategoryText.LastIndexOf(")") - strCategoryText.LastIndexOf("(") - 1))
+                    Dim strCategoryName As String = CategoriesBLL._GetNameByCategoryID(numCategoryID, Session("_LANG"))
+                    If Not strCategoryName Is Nothing Then
+                        If lbxCategory.Items.FindByValue(CStr(numCategoryID)) Is Nothing Then
+                            lbxCategory.Items.Add(New ListItem(strCategoryName, CStr(numCategoryID)))
+                            lbxCategory.SelectedIndex = lbxCategory.Items.Count - 1
+                        End If
+                    Else
+                        _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_InvalidCategory"))
+                    End If
+                Else
+                    _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, "You can only select one Base Category")
+                End If
+            End If
+        Catch ex As Exception
+            _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_InvalidCategory"))
+        Finally
+            _UC_AutoComplete.ClearText()
+            _UC_AutoComplete.SetFoucs()
+        End Try
+
+    End Sub
+
+    Protected Sub lnkBtnBack_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        phdupdSubSiteDetails.Visible = False
+        gvwSubSites.Visible = True
+        RefreshSubSiteList()
+        updSubSites.Update()
+    End Sub
+
+    Protected Sub gvwSubSites_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles gvwSubSites.RowCommand
+        If e.CommandName = "CreateNewSubSite" Then
+            PrepareNewSubSite()
+            gvwSubSites.Visible = False
+            phdupdSubSiteDetails.Visible = True
+
+            'updLanguage.Update()
+        End If
+    End Sub
 
     Public Sub RefreshSubSiteList(Optional ByVal blnRetrieveTotalCount As Boolean = True)
         If ViewState("intTotalRowCount") Is Nothing Then blnRetrieveTotalCount = True
@@ -147,93 +226,25 @@ Partial Class UserControls_Back_SubSiteList
             ViewState("originalValuesDataTable") = tblSubSitesList
             blnTableCopied = True
         End If
-        '_UC_ItemPager.TotalItems = ViewState("intTotalRowCount")
-        '_UC_ItemPager.ItemsPerPage = intRowsPerPage
-        '_UC_ItemPager.PopulatePagerControl()
+
         gvwSubSites.DataSource = tblSubSitesList
         gvwSubSites.DataBind()
 
-        'If litOLIndicatesComplete.Visible = False And litOLIndicates.Visible = False Then
-        '    phdIndicates.Visible = False
-        'Else
-        '    phdIndicates.Visible = True
-        'End If
     End Sub
 
-    'Protected Sub btnUpdate_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnUpdate.Click
-    '    Dim tblOriginal As DataTable = DirectCast(ViewState("originalValuesDataTable"), DataTable)
-    '    For Each rowOrder As GridViewRow In gvwOrders.Rows
-    '        If IsRowModified(rowOrder) Then
-    '            gvwOrders.UpdateRow(rowOrder.RowIndex, False)
-    '        End If
-    '    Next
+    Protected Sub lnkBtnAdd_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        Page.Validate()
+        If Page.IsValid Then
+            Dim newId = SubSitesBLL._Add(txtSubSiteName.Text, txtSubSiteDomain.Text, lbxCategory.Items(0).Value, ddlistTheme.SelectedItem.Value, txtSubSiteNotes.Text, chkSubSiteLive.Checked)
+            If newId > 0 Then
+                phdupdSubSiteDetails.Visible = False
+                gvwSubSites.Visible = True
+                RefreshSubSiteList()
+                updSubSites.Update()
+                RaiseEvent ShowMasterUpdate()
+            End If
 
-    '    'Rebind the Grid to repopulate the original values table.
-    '    blnTableCopied = False
-    '    RefreshSubSiteList()
-    '    RaiseEvent ShowMasterUpdate()
-    'End Sub
-
-
-    'Protected Function IsRowModified(ByVal r As GridViewRow) As Boolean
-    '    Dim currentID As Integer = Convert.ToInt32(gvwOrders.DataKeys(r.RowIndex).Value)
-    '    Dim rowOrders As DataRow = tblOriginal.Select(String.Format("O_ID = {0}", currentID))(0)
-
-    '    Dim chkOrderPaid As CheckBox = DirectCast(r.FindControl("chkOrderPaid"), CheckBox)
-    '    Dim chkOrderInvoiced As CheckBox = DirectCast(r.FindControl("chkOrderInvoiced"), CheckBox)
-    '    Dim chkOrderShipped As CheckBox = DirectCast(r.FindControl("chkOrderShipped"), CheckBox)
-    '    Dim chkOrderCancelled As CheckBox = DirectCast(r.FindControl("chkOrderCancelled"), CheckBox)
-
-
-    '    If Not chkOrderPaid.Checked = rowOrders("O_Paid") Then Return True
-    '    If Not chkOrderInvoiced.Checked = rowOrders("O_Invoiced") Then Return True
-    '    If Not chkOrderShipped.Checked = rowOrders("O_Shipped") Then Return True
-    '    If Not chkOrderCancelled.Checked = rowOrders("O_Cancelled") Then Return True
-
-    '    Return False
-    'End Function
-
-    'Protected Sub gvwOrders_RowUpdating(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewUpdateEventArgs) Handles gvwOrders.RowUpdating
-    '    Dim intCurrentID As Integer = Convert.ToInt32(gvwOrders.DataKeys(e.RowIndex).Value)
-    '    Dim rowOrders As DataRow = tblOriginal.Select(String.Format("O_ID = {0}", intCurrentID))(0)
-    '    Dim rowGridView As GridViewRow = gvwOrders.Rows(e.RowIndex)
-
-    '    Dim chkOrderPaid As CheckBox = DirectCast(rowGridView.FindControl("chkOrderPaid"), CheckBox)
-    '    Dim chkOrderInvoiced As CheckBox = DirectCast(rowGridView.FindControl("chkOrderInvoiced"), CheckBox)
-    '    Dim chkOrderShipped As CheckBox = DirectCast(rowGridView.FindControl("chkOrderShipped"), CheckBox)
-    '    Dim hidOrderID As HiddenField = DirectCast(rowGridView.FindControl("hidOrderID"), HiddenField)
-    '    Dim hidOrderStatus As HiddenField = DirectCast(rowGridView.FindControl("hidOrderStatus"), HiddenField)
-    '    Dim chkOrderCancelled As CheckBox = DirectCast(rowGridView.FindControl("chkOrderCancelled"), CheckBox)
-
-    '    OrdersBLL._UpdateStatus(hidOrderID.Value, True, chkOrderPaid.Checked, chkOrderShipped.Checked, chkOrderInvoiced.Checked, hidOrderStatus.Value, "", chkOrderCancelled.Checked)
-
-    '    'Email order update?
-    '    If chkInformCustomers.Checked Then
-    '        Dim hidOrderLanguageID As HiddenField = DirectCast(rowGridView.FindControl("hidOrderLanguageID"), HiddenField)
-    '        Dim hidCustomerID As HiddenField = DirectCast(rowGridView.FindControl("hidOrderCustomerID"), HiddenField)
-
-    '        Dim strCustomOrderStatus As String = String.Empty
-    '        If chkOrderShipped.Checked Then
-    '            strCustomOrderStatus = GetGlobalResourceObject("Kartris", "ContentText_OrderStatusShipped") & IIf(String.IsNullOrEmpty(hidOrderStatus.Value), "", vbCrLf & hidOrderStatus.Value)
-    '        ElseIf chkOrderPaid.Checked Then
-    '            strCustomOrderStatus = GetGlobalResourceObject("Kartris", "ContentText_OrderStatusPaid") & IIf(String.IsNullOrEmpty(hidOrderStatus.Value), "", vbCrLf & hidOrderStatus.Value)
-    '        ElseIf chkOrderInvoiced.Checked Then
-    '            strCustomOrderStatus = GetGlobalResourceObject("Kartris", "ContentText_OrderStatusInvoiced") & IIf(String.IsNullOrEmpty(hidOrderStatus.Value), "", vbCrLf & hidOrderStatus.Value)
-    '        ElseIf chkOrderCancelled.Checked Then
-    '            strCustomOrderStatus = GetGlobalResourceObject("_Orders", "ContentText_OrderStatusCancelled") & IIf(String.IsNullOrEmpty(hidOrderStatus.Value), "", vbCrLf & hidOrderStatus.Value)
-    '        Else
-    '            strCustomOrderStatus = hidOrderStatus.Value
-    '        End If
-    '        Dim strEmailFrom As String = LanguagesBLL.GetEmailFrom(CInt(hidOrderLanguageID.Value))
-    '        Dim strEmailTo As String = UsersBLL.GetEmailByID(CInt(hidCustomerID.Value))
-    '        Dim strEmailText As String
-    '        Dim strSubjectLine As String = GetGlobalResourceObject("Email", "EmailText_OrderUpdateFrom") & " " & GetGlobalResourceObject("Kartris", "Config_Webshopname")
-    '        strEmailText = GetGlobalResourceObject("Email", "EmailText_OrderStatusUpdated").Replace("[order_status]", strCustomOrderStatus) & vbCrLf & vbCrLf & WebShopURL() & "CustomerViewOrder.aspx?O_ID=" & intCurrentID
-    '        SendEmail(strEmailFrom, strEmailTo, strSubjectLine, strEmailText)
-    '    End If
-
-    'End Sub
-
-
+        End If
+    End Sub
 
 End Class

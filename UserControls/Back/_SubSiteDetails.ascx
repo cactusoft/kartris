@@ -29,11 +29,19 @@
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblSubSiteName" runat="server" Text="Name"
                                                 AssociatedControlID="txtSubSiteName" /></span> <span class="Kartris-DetailsView-Value">
-                                                    <asp:TextBox runat="server" ID="txtSubSiteName" Text='<%#Eval("SUB_Name")%>' /></span></li>
+                                                    <asp:TextBox runat="server" ID="txtSubSiteName" Text='<%# CkartrisDataManipulation.FixNullFromDB(Eval("SUB_Name"))%>' /></span>
+                                                <asp:RequiredFieldValidator ID="valRequiredSubSiteName" runat="server" CssClass="error"
+                                                    ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
+                                                    ControlToValidate="txtSubSiteName" ValidationGroup="SaveSubSite" Display="Dynamic" />
+                                        </li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblSubSiteDomain" runat="server" Text="Domain"
                                                 AssociatedControlID="txtSubSiteDomain" /></span> <span class="Kartris-DetailsView-Value">
-                                                    <asp:TextBox runat="server" ID="txtSubSiteDomain" Text='<%#Eval("SUB_Domain")%>' /></span></li>
+                                                    <asp:TextBox runat="server" ID="txtSubSiteDomain" Text='<%# CkartrisDataManipulation.FixNullFromDB(Eval("SUB_Domain"))%>' /></span>
+                                             <asp:RequiredFieldValidator ID="valRequiredSubSiteDomain" runat="server" CssClass="error"
+                                                    ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
+                                                    ControlToValidate="txtSubSiteDomain" ValidationGroup="SaveSubSite" Display="Dynamic" />
+                                        </li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="litContentTextCategoryParent" runat="server" Text="Category"></asp:Label>
                                         </span>
@@ -46,6 +54,9 @@
                                                     <_user:AutoComplete ID="_UC_AutoComplete" runat="server" MethodName="GetCategories" />
                                                     <asp:LinkButton ID="lnkBtnAddCategory" Cssclass="linkbutton icon_new" runat="server"
                                                         Text='Select' /><br />
+                                                    <asp:RequiredFieldValidator ID="RequiredLbxCategory" runat="server" CssClass="error"
+                                                    ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
+                                                    ControlToValidate="lbxCategory" ValidationGroup="SaveSubSite" Display="Dynamic" />
                                                 </ContentTemplate>
                                             </asp:UpdatePanel>
                                         </span>
@@ -55,8 +66,13 @@
                                                 AssociatedControlID="ddlistTheme" /></span> <span class="Kartris-DetailsView-Value">
                                                     <%--<asp:TextBox ReadOnly="true" runat="server" ID="txtSubSiteSkin" Text='<%#Eval("SUB_Skin")%>' />--%>
                                                     <asp:DropDownList ID="ddlistTheme" runat="server" AutoPostBack="False">
+                                                            <asp:ListItem Text="-" Value="" />   
                                                             </asp:DropDownList></span>
-                                                            <asp:TextBox ID="txtTheme" runat="server" MaxLength="50" Visible="False" /></li>
+                                                            <asp:TextBox ID="txtTheme" runat="server" MaxLength="50" Visible="False" />
+                                            <asp:RequiredFieldValidator ID="RequiredtxtTheme" runat="server" CssClass="error"
+                                                    ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
+                                                    ControlToValidate="ddlistTheme" ValidationGroup="SaveSubSite" Display="Dynamic" />
+                                        </li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblSubSiteNotes" runat="server" Text="Notes"
                                                 AssociatedControlID="txtSubSiteNotes" /></span> <span class="Kartris-DetailsView-Value">
