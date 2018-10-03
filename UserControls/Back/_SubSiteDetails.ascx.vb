@@ -36,7 +36,7 @@ Partial Class UserControls_Back_SubSiteDetails
         If Not Page.IsPostBack Then
 
             ViewState("Referer") = Request.ServerVariables("HTTP_REFERER")
-            SetThemeDropDown()
+
 
             Try
                 'Get the Order ID QueryString - if it won't convert to integer then force return to Orders List page
@@ -62,6 +62,8 @@ Partial Class UserControls_Back_SubSiteDetails
                 CkartrisFormatErrors.LogError(ex.Message)
                 Response.Redirect("_SubSitesList.aspx")
             End Try
+
+            SetThemeDropDown()
         End If
     End Sub
 

@@ -52,14 +52,15 @@
                                         </li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblSubSiteCatSkin" runat="server" Text="Skin"
-                                                AssociatedControlID="txtSubSiteSkin" /></span> <span class="Kartris-DetailsView-Value">
-                                                    <%--<asp:TextBox ReadOnly="true" runat="server" ID="txtSubSiteSkin" Text='<%#Eval("SUB_Skin")%>' />--%><asp:DropDownList ID="ddlistTheme" runat="server" AutoPostBack="False">
+                                                AssociatedControlID="ddlistTheme" /></span> <span class="Kartris-DetailsView-Value">
+                                                    <%--<asp:TextBox ReadOnly="true" runat="server" ID="txtSubSiteSkin" Text='<%#Eval("SUB_Skin")%>' />--%>
+                                                    <asp:DropDownList ID="ddlistTheme" runat="server" AutoPostBack="False">
                                                             </asp:DropDownList></span>
                                                             <asp:TextBox ID="txtTheme" runat="server" MaxLength="50" Visible="False" /></li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblSubSiteNotes" runat="server" Text="Notes"
                                                 AssociatedControlID="txtSubSiteNotes" /></span> <span class="Kartris-DetailsView-Value">
-                                                    <asp:TextBox runat="server" ID="txtSubSiteNotes" TextMode="MultiLine" Text='<%#Eval("SUB_Notes")%>' /></span></li>
+                                                    <asp:TextBox runat="server" ID="txtSubSiteNotes" TextMode="MultiLine" Text='<%# CkartrisDataManipulation.FixNullFromDB(Eval("SUB_Notes"))%>' /></span></li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblOrderStatus" runat="server" Text="Status" /></span>
                                                 
