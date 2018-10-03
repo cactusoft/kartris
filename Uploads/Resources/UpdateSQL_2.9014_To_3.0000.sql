@@ -52,8 +52,12 @@ CREATE PROCEDURE [dbo].[_spKartrisSubSite_GetByID](@SUB_ID as smallint)
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT * FROM tblKartrisSubSites
-WHERE     (tblKartrisSubSites.SUB_ID = @SUB_ID)
+
+	SELECT SubSites.*, CAT_Name
+	FROM tblKartrisSubSites SubSites
+	INNER JOIN vKartrisTypeCategories Cat ON Cat.CAT_ID = SUB_BaseCategoryID AND LANG_ID = 1
+	WHERE     (SubSites.SUB_ID = @SUB_ID)	
+
 END
 GO
 
@@ -67,12 +71,74 @@ GO
 CREATE PROCEDURE [dbo].[_spKartrisSubSites_Get]
 AS
 	SET NOCOUNT ON;
-	SELECT  *
-	FROM	dbo.tblKartrisSubSites
+	
+	SELECT  SubSites.*, CAT_Name
+	FROM	dbo.tblKartrisSubSites SubSites
+	INNER JOIN vKartrisTypeCategories Cat ON Cat.CAT_ID = SUB_BaseCategoryID AND LANG_ID = 1
 	ORDER BY SUB_ID
+
 
 GO
 
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
+GO
+
+
+
+CREATE PROCEDURE [dbo].[_spKartrisSubSite_Add]
+(
+			@SS_Name nvarchar(255),
+			@SS_Domain nvarchar(255),
+			@SS_BaseCategoryID bigint,
+			@SS_Skin nvarchar(255),
+			@SS_Notes nvarchar(max),
+			@SS_Live bit
+)
+AS
+DECLARE @SS_ID INT
+	SET NOCOUNT OFF;
+
+	
+	INSERT INTO [tblKartrisSubSites]
+		   (
+		   	[SUB_Name],
+			[SUB_Domain],
+			[SUB_BaseCategoryID],
+			[SUB_Skin],
+			[SUB_Notes],
+			[SUB_Live]
+			)
+	 VALUES
+		   (@SS_Name, @SS_Domain, @SS_BaseCategoryID, @SS_Skin, @SS_Notes, @SS_Live);
+	SET @SS_ID = SCOPE_IDENTITY();
+	SELECT @SS_ID;
+
+
+	
+GO
+
+
+CREATE PROCEDURE [dbo].[_spKartrisSubSite_Update]
+(
+			@SS_ID int,
+			@SS_Name nvarchar(255),
+			@SS_Domain nvarchar(255),
+			@SS_BaseCategoryID bigint,
+			@SS_Skin nvarchar(255),
+			@SS_Notes nvarchar(max),
+			@SS_Live bit
+)
+AS
+
+	
+	UPDATE [tblKartrisSubSites]
+	SET SUB_Name = @SS_Name,
+		SUB_Domain = @SS_Domain,
+		SUB_BaseCategoryID = @SS_BaseCategoryID,
+		SUB_Skin = @SS_Skin,
+		SUB_Notes = @SS_Notes,
+		SUB_Live = @SS_Live
+	WHERE SUB_ID = @SS_ID;
+
 GO

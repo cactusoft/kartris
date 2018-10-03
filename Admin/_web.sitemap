@@ -3,103 +3,108 @@
 	<siteMapNode title="Kartris"  description="Kartris" >
 
 		<siteMapNode title="$resources:_Kartris,BackMenu_Home" url="~/Admin/_Default.aspx" visible="false" />
-		
-		<siteMapNode title="$resources:_Kartris,BackMenu_Orders" url="~/Admin/_OrdersList.aspx?" value="orders">
-			<siteMapNode title="$resources:_Kartris,BackMenu_ListRecent" url="~/Admin/_OrdersList.aspx" value="orders"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_AwaitingInvoice" url="~/Admin/_OrdersList.aspx?callmode=invoice" value="orders" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_AwaitingPayment" url="~/Admin/_OrdersList.aspx?callmode=payment" value="orders"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_AwaitingDispatch" url="~/Admin/_OrdersList.aspx?callmode=dispatch" value="orders"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_Complete" url="~/Admin/_OrdersList.aspx?callmode=complete" value="orders"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_Cancelled" url="~/Admin/_OrdersList.aspx?callmode=cancelled" value="orders"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_Unfinished" url="~/Admin/_OrdersList.aspx?callmode=unfinished" value="orders"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_BatchProcess" url="~/Admin/_OrdersList.aspx?callmode=bybatch" value="orders"/>
-			<siteMapNode title="$resources:_Kartris,ContentText_Payments" url="~/Admin/_PaymentsList.aspx" value="orders"/>
-			<siteMapNode title="$resources:_Orders,PageTitle_CreateNewOrder" url="~/Admin/_CreateOrder.aspx" value="orders"/>
-		</siteMapNode>
 
-		<siteMapNode title="$resources:_Kartris,BackMenu_Customers" url="~/Admin/_CustomersList.aspx?" value="orders">
-			<siteMapNode title="$resources:_Kartris,FormButton_New" url="~/Admin/_ModifyCustomerStatus.aspx" value="orders" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_ListFind" url="~/Admin/_CustomersList.aspx" value="orders" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_CustomerGroups" url="~/Admin/_CustomerGroupsList.aspx" value="orders" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_Affiliates" url="~/Admin/_CustomersList.aspx?mode=af" value="orders">
-				<siteMapNode title="$resources:_Kartris,BackMenu_Affiliates" url="~/Admin/_CustomersList.aspx?mode=af&amp;from=menu" value="orders" />
-				<siteMapNode title="$resources:_Kartris,PageTitle_AffiliateStats" url="~/Admin/_AffiliateReport.aspx" value="orders" />
-				<siteMapNode title="$resources:_Kartris,BackMenu_MailingList" url="~/Admin/_CustomersList.aspx?mode=ml" Value="orders" />
-			</siteMapNode>
-		</siteMapNode>
+      <siteMapNode title="$resources:_Kartris,BackMenu_Orders" url="~/Admin/_OrdersList.aspx?" value="orders">
+        <siteMapNode title="$resources:_Kartris,BackMenu_ListRecent" url="~/Admin/_OrdersList.aspx" value="orders"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_AwaitingInvoice" url="~/Admin/_OrdersList.aspx?callmode=invoice" value="orders" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_AwaitingPayment" url="~/Admin/_OrdersList.aspx?callmode=payment" value="orders"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_AwaitingDispatch" url="~/Admin/_OrdersList.aspx?callmode=dispatch" value="orders"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_Complete" url="~/Admin/_OrdersList.aspx?callmode=complete" value="orders"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_Cancelled" url="~/Admin/_OrdersList.aspx?callmode=cancelled" value="orders"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_Unfinished" url="~/Admin/_OrdersList.aspx?callmode=unfinished" value="orders"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_BatchProcess" url="~/Admin/_OrdersList.aspx?callmode=bybatch" value="orders"/>
+        <siteMapNode title="$resources:_Kartris,ContentText_Payments" url="~/Admin/_PaymentsList.aspx" value="orders"/>
+        <siteMapNode title="$resources:_Orders,PageTitle_CreateNewOrder" url="~/Admin/_CreateOrder.aspx" value="orders"/>
+      </siteMapNode>
 
-		<siteMapNode title="$resources:_Kartris,BackMenu_Products " url="~/Admin/_Category.aspx" value="products">
-			<siteMapNode title="$resources:_Category,ContentText_AddNewProduct" url="~/Admin/_ModifyProduct.aspx?ProductID=0" value="products"/>
-			<siteMapNode title="$resources:_Category,ContentText_AddNewSubcategory" url="~/Admin/_ModifyCategory.aspx?CategoryID=0" value="products" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_FeaturedProducts" url="~/Admin/_FeaturedProducts.aspx" value="products" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_OptionGroupsList" url="~/Admin/_OptionGroups.aspx" value="products" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_CustomerReviewsList" url="~/Admin/_Reviews.aspx" value="products" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_Suppliers" url="~/Admin/_Suppliers.aspx" value="products" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_Promotions" url="~/Admin/_Promotions.aspx" value="products"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_Attributes" url="~/Admin/_Attributes.aspx"  value="products"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_StockLevels" url="~/Admin/_StockWarning.aspx" value="products" />
-			<siteMapNode title="$resources:_StockNotification,ContentText_StockNotifications" url="~/Admin/_StockNotifications.aspx" value="products" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_VersionDownloads" url="~/Admin/_Downloads.aspx" value="products" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_MediaTypes" url="~/Admin/_MediaTypes.aspx" value="products" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_MarkupPrices" url="~/Admin/_MarkupPrices.aspx" value="products" />
-		</siteMapNode>
-		
-		<siteMapNode title="$resources:_Kartris,BackMenu_Reports" url="~/Admin/_Stats.aspx?" Value="config">
-			<siteMapNode title="$resources:_Kartris,BackMenu_Statistics" url="~/Admin/_Stats.aspx" Value="config"/>
-			<siteMapNode title="$resources:_Kartris,PageTitle_AffiliateStats" url="~/Admin/_AffiliateReport.aspx?" value="orders" />
-			<siteMapNode title="$resources:_DBAdmin,ContentText_AdminLogs" url="~/Admin/_AdminLogs.aspx" value="adminlogs" />
-			<siteMapNode title="$resources:_DBAdmin,ContentText_ErrorLogs" url="~/Admin/_ErrorLogs.aspx" value="errorlogs" />
-		</siteMapNode>
-		
-		<siteMapNode title="$resources:_Kartris,BackMenu_RegionalSetup" url="~/Admin/_LanguageStrings.aspx?" value="config">
-			<siteMapNode title="$resources:_RegionalWizard,PageTitle_RegionalSetupWizard" url="~/Admin/_TaxSetupWizard.aspx" value="config"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_TaxRates" url="~/Admin/_TaxRate.aspx" value="config"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_LanguageStrings" url="~/Admin/_LanguageStrings.aspx" value="config"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_Currencies" url="~/Admin/_Currency.aspx" value="config"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_LiveCurrencyRates" url="~/Admin/_LiveCurrencies.aspx" value="config"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_ShippingDestinations" url="~/Admin/_Destinations.aspx" value="config"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_ShippingRates" url="~/Admin/_Shipping.aspx" value="config"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_LangEmailSetup" url="~/Admin/_Languages.aspx" value="config"/>
-		</siteMapNode>
+      <siteMapNode title="$resources:_Kartris,BackMenu_Customers" url="~/Admin/_CustomersList.aspx?" value="orders">
+        <siteMapNode title="$resources:_Kartris,FormButton_New" url="~/Admin/_ModifyCustomerStatus.aspx" value="orders" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_ListFind" url="~/Admin/_CustomersList.aspx" value="orders" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_CustomerGroups" url="~/Admin/_CustomerGroupsList.aspx" value="orders" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_Affiliates" url="~/Admin/_CustomersList.aspx?mode=af" value="orders">
+          <siteMapNode title="$resources:_Kartris,BackMenu_Affiliates" url="~/Admin/_CustomersList.aspx?mode=af&amp;from=menu" value="orders" />
+          <siteMapNode title="$resources:_Kartris,PageTitle_AffiliateStats" url="~/Admin/_AffiliateReport.aspx" value="orders" />
+          <siteMapNode title="$resources:_Kartris,BackMenu_MailingList" url="~/Admin/_CustomersList.aspx?mode=ml" Value="orders" />
+        </siteMapNode>
+      </siteMapNode>
 
-		<siteMapNode title="$resources:_Kartris,BackMenu_Configuration" url="~/Admin/_Config.aspx?" Value="config">
-			<siteMapNode title="$resources:_Kartris,BackMenu_ConfigSettings" url="~/Admin/_Config.aspx" value="config"/>
-			<siteMapNode title="$resources:_Kartris,BackMenu_Logins" url="~/Admin/_LoginsList.aspx" Value="config" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_DBAdmin" url="~/Admin/_DBAdmin.aspx" Value="config" />
-			<siteMapNode title="$resources:_Kartris,ContentText_PaymentShippingGateways" url="~/Admin/_PaymentGateways.aspx" Value="config" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_QuickBooks" url="~/Admin/_QuickBooks.aspx" Value="config" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_Revisions" url="~/Admin/_Revisions.aspx" />
-		</siteMapNode>
+      <siteMapNode title="$resources:_Kartris,BackMenu_Products " url="~/Admin/_Category.aspx" value="products">
+        <siteMapNode title="$resources:_Category,ContentText_AddNewProduct" url="~/Admin/_ModifyProduct.aspx?ProductID=0" value="products"/>
+        <siteMapNode title="$resources:_Category,ContentText_AddNewSubcategory" url="~/Admin/_ModifyCategory.aspx?CategoryID=0" value="products" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_FeaturedProducts" url="~/Admin/_FeaturedProducts.aspx" value="products" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_OptionGroupsList" url="~/Admin/_OptionGroups.aspx" value="products" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_CustomerReviewsList" url="~/Admin/_Reviews.aspx" value="products" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_Suppliers" url="~/Admin/_Suppliers.aspx" value="products" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_Promotions" url="~/Admin/_Promotions.aspx" value="products"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_Attributes" url="~/Admin/_Attributes.aspx"  value="products"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_StockLevels" url="~/Admin/_StockWarning.aspx" value="products" />
+        <siteMapNode title="$resources:_StockNotification,ContentText_StockNotifications" url="~/Admin/_StockNotifications.aspx" value="products" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_VersionDownloads" url="~/Admin/_Downloads.aspx" value="products" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_MediaTypes" url="~/Admin/_MediaTypes.aspx" value="products" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_MarkupPrices" url="~/Admin/_MarkupPrices.aspx" value="products" />
+      </siteMapNode>
 
-		<siteMapNode title="$resources:_Kartris,BackMenu_Support" url="~/Admin/_SupportTickets.aspx?" Value="support">
-			<siteMapNode title="$resources:_Kartris,BackMenu_Knowledgebase" url="~/Admin/_KnowledgeBase.aspx" Value="support" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_SupportTickets" url="~/Admin/_SupportTickets.aspx" Value="support" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_SupportTicketTypes" url="~/Admin/_SupportTicketTypes.aspx" Value="support" />
-		</siteMapNode>
-		
-		<siteMapNode title="$resources:_Kartris,BackMenu_Miscellaneous" url="~/Admin/" Value="config">
-			<siteMapNode title="$resources:_Kartris,BackMenu_News" url="~/Admin/_SiteNews.aspx" Value="config" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_CustomPages" url="~/Admin/_CustomPages.aspx" Value="config" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_Coupons" url="~/Admin/_Coupons.aspx" Value="config" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_GenerateFeeds" url="~/Admin/_GenerateFeeds.aspx" value="products" />
-			<siteMapNode title="$resources:_Kartris,BackMenu_GeneralFiles" url="~/Admin/_GeneralFiles.aspx" value="config" />
-			<siteMapNode title="MailChimp" url="~/Admin/_MailChimp.aspx" value="config" />
-		</siteMapNode>
-		
-		<siteMapNode title="login" url="~/Admin/Default.aspx" visible="false" resourceKey="Default.aspx"/>
-		<siteMapNode title="modifyorderstatus" url="~/Admin/_ModifyOrderStatus.aspx" visible="false" value="orders"/>
-		<siteMapNode title="modifyorder" url="~/Admin/_ModifyOrder.aspx" visible="false" value="orders"/>
-		<siteMapNode title="modifycategory" url="~/Admin/_ModifyCategory.aspx" visible="false" value="products" />
-		<siteMapNode title="modifyproduct" url="~/Admin/_ModifyProduct.aspx" visible="false" value="products" />
-		<siteMapNode title="gatewaysettings" url="~/Admin/_GatewaySettings.aspx" visible="false" Value="config" />
-		<siteMapNode title="orderinvoice" url="~/Admin/_OrderInvoice.aspx" visible="false" Value="orders" />
-		<siteMapNode title="adminsearch" url="~/Admin/_Search.aspx" visible="false" />
+      <siteMapNode title="$resources:_Kartris,BackMenu_Reports" url="~/Admin/_Stats.aspx?" Value="config">
+        <siteMapNode title="$resources:_Kartris,BackMenu_Statistics" url="~/Admin/_Stats.aspx" Value="config"/>
+        <siteMapNode title="$resources:_Kartris,PageTitle_AffiliateStats" url="~/Admin/_AffiliateReport.aspx?" value="orders" />
+        <siteMapNode title="$resources:_DBAdmin,ContentText_AdminLogs" url="~/Admin/_AdminLogs.aspx" value="adminlogs" />
+        <siteMapNode title="$resources:_DBAdmin,ContentText_ErrorLogs" url="~/Admin/_ErrorLogs.aspx" value="errorlogs" />
+      </siteMapNode>
 
-		<siteMapNode title="Basket" url="~/Admin/_basket.aspx" value="orders" visible="false"/>
-		<siteMapNode title="modifyPayment" url="~/Admin/_ModifyPayment.aspx" value="orders" visible="false"/>
+      <siteMapNode title="$resources:_Kartris,BackMenu_RegionalSetup" url="~/Admin/_LanguageStrings.aspx?" value="config">
+        <siteMapNode title="$resources:_RegionalWizard,PageTitle_RegionalSetupWizard" url="~/Admin/_TaxSetupWizard.aspx" value="config"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_TaxRates" url="~/Admin/_TaxRate.aspx" value="config"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_LanguageStrings" url="~/Admin/_LanguageStrings.aspx" value="config"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_Currencies" url="~/Admin/_Currency.aspx" value="config"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_LiveCurrencyRates" url="~/Admin/_LiveCurrencies.aspx" value="config"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_ShippingDestinations" url="~/Admin/_Destinations.aspx" value="config"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_ShippingRates" url="~/Admin/_Shipping.aspx" value="config"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_LangEmailSetup" url="~/Admin/_Languages.aspx" value="config"/>
+      </siteMapNode>
 
-		<siteMapNode title="affiliateonerep" url="~/Admin/_AffiliateOneRep.aspx" visible="false" Value="orders" />
-		<siteMapNode title="affiliatepayrep" url="~/Admin/_AffiliatePayRep.aspx" visible="false" Value="orders" />
+      <siteMapNode title="$resources:_Kartris,BackMenu_Configuration" url="~/Admin/_Config.aspx?" Value="config">
+        <siteMapNode title="$resources:_Kartris,BackMenu_ConfigSettings" url="~/Admin/_Config.aspx" value="config"/>
+        <siteMapNode title="$resources:_Kartris,BackMenu_Logins" url="~/Admin/_LoginsList.aspx" Value="config" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_DBAdmin" url="~/Admin/_DBAdmin.aspx" Value="config" />
+        <siteMapNode title="$resources:_Kartris,ContentText_PaymentShippingGateways" url="~/Admin/_PaymentGateways.aspx" Value="config" />
+        <siteMapNode title="SubSites" url="~/Admin/_SubSitesList.aspx" Value="config" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_QuickBooks" url="~/Admin/_QuickBooks.aspx" Value="config" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_Revisions" url="~/Admin/_Revisions.aspx" />
+      </siteMapNode>
 
-	</siteMapNode>
+      <siteMapNode title="$resources:_Kartris,BackMenu_Support" url="~/Admin/_SupportTickets.aspx?" Value="support">
+        <siteMapNode title="$resources:_Kartris,BackMenu_Knowledgebase" url="~/Admin/_KnowledgeBase.aspx" Value="support" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_SupportTickets" url="~/Admin/_SupportTickets.aspx" Value="support" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_SupportTicketTypes" url="~/Admin/_SupportTicketTypes.aspx" Value="support" />
+      </siteMapNode>
+
+      <siteMapNode title="$resources:_Kartris,BackMenu_Miscellaneous" url="~/Admin/" Value="config">
+        <siteMapNode title="$resources:_Kartris,BackMenu_News" url="~/Admin/_SiteNews.aspx" Value="config" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_CustomPages" url="~/Admin/_CustomPages.aspx" Value="config" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_Coupons" url="~/Admin/_Coupons.aspx" Value="config" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_GenerateFeeds" url="~/Admin/_GenerateFeeds.aspx" value="products" />
+        <siteMapNode title="$resources:_Kartris,BackMenu_GeneralFiles" url="~/Admin/_GeneralFiles.aspx" value="config" />
+        <siteMapNode title="MailChimp" url="~/Admin/_MailChimp.aspx" value="config" />
+      </siteMapNode>
+
+      <siteMapNode title="login" url="~/Admin/Default.aspx" visible="false" resourceKey="Default.aspx"/>
+    
+      <siteMapNode title="modifysubsite" url="~/Admin/_ModifySubSiteStatus.aspx" visible="false" value="subsites"/>
+    
+
+    <siteMapNode title="modifyorderstatus" url="~/Admin/_ModifyOrderStatus.aspx" visible="false" value="orders"/>
+      <siteMapNode title="modifyorder" url="~/Admin/_ModifyOrder.aspx" visible="false" value="orders"/>
+      <siteMapNode title="modifycategory" url="~/Admin/_ModifyCategory.aspx" visible="false" value="products" />
+      <siteMapNode title="modifyproduct" url="~/Admin/_ModifyProduct.aspx" visible="false" value="products" />
+      <siteMapNode title="gatewaysettings" url="~/Admin/_GatewaySettings.aspx" visible="false" Value="config" />
+      <siteMapNode title="orderinvoice" url="~/Admin/_OrderInvoice.aspx" visible="false" Value="orders" />
+      <siteMapNode title="adminsearch" url="~/Admin/_Search.aspx" visible="false" />
+
+      <siteMapNode title="Basket" url="~/Admin/_basket.aspx" value="orders" visible="false"/>
+      <siteMapNode title="modifyPayment" url="~/Admin/_ModifyPayment.aspx" value="orders" visible="false"/>
+
+      <siteMapNode title="affiliateonerep" url="~/Admin/_AffiliateOneRep.aspx" visible="false" Value="orders" />
+      <siteMapNode title="affiliatepayrep" url="~/Admin/_AffiliatePayRep.aspx" visible="false" Value="orders" />
+
+    </siteMapNode>
 </siteMap>
