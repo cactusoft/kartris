@@ -26,9 +26,6 @@ Partial Class UserControls_Back_SubSiteList
 
     Private _RowCount As Integer
 
-    Private blnTableCopied As Boolean = False
-    Private tblOriginal As DataTable
-
     ''' <summary>
     ''' this runs when an update to data is made to trigger the animation
     ''' </summary>
@@ -41,55 +38,6 @@ Partial Class UserControls_Back_SubSiteList
             RefreshSubSiteList()
         End If
     End Sub
-
-    ''' <summary>
-    ''' Order List Call Mode. See ORDERS_LIST_CALLMODE Enum in OrdersBLL to check the available call modes.
-    ''' </summary>
-    ''' <value></value>
-    ''' <remarks></remarks>
-    Public Property CallMode() As OrdersBLL.ORDERS_LIST_CALLMODE
-        Get
-            Return ViewState("_Callmode")
-        End Get
-        Set(ByVal value As OrdersBLL.ORDERS_LIST_CALLMODE)
-            ViewState("_Callmode") = value
-        End Set
-    End Property
-
-    ''' <summary>
-    ''' Activate / Deactivate Order List Batch Process Mode. 
-    ''' </summary>
-    ''' <value></value>
-    ''' <remarks></remarks>
-    Public Property BatchProcess() As Boolean
-        Get
-            Return ViewState("_BatchProcess")
-        End Get
-        Set(ByVal value As Boolean)
-            ViewState("_BatchProcess") = value
-        End Set
-    End Property
-
-    Public ReadOnly Property RowCount() As Integer
-        Get
-            Return _RowCount
-        End Get
-    End Property
-
-    ''' <summary>
-    ''' A generic parameter. Expects either the Affiliate ID, Payment Gateway Code, or the Date depending on the callmode.
-    ''' </summary>
-    ''' <value></value>
-    ''' <remarks></remarks>
-    Public Property datValue1() As String
-        Get
-            Return ViewState("_datValue1")
-        End Get
-        Set(ByVal value As String)
-            ViewState("_datValue1") = value
-        End Set
-    End Property
-
 
     '''' <summary> 
     '''' Fills skin dropdown from contents of 'Skins' folder'
@@ -118,20 +66,6 @@ Partial Class UserControls_Back_SubSiteList
 
     End Sub
 
-    ''' <summary>
-    ''' A generic parameter. Expects the Gateway Reference Code but will also accept the second Date value in case we decide to search the orders by date range.
-    ''' </summary>
-    ''' <value></value>
-    ''' <remarks></remarks>
-    Public Property datValue2() As String
-        Get
-            Return ViewState("_datValue2")
-        End Get
-        Set(ByVal value As String)
-            ViewState("_datValue2") = value
-        End Set
-    End Property
-
     Private Sub PrepareNewSubSite()
         chkSubSiteLive.Checked = False
 
@@ -141,7 +75,6 @@ Partial Class UserControls_Back_SubSiteList
         txtTheme.Text = Nothing
 
         SetThemeDropDown()
-        'SetMasterDropDown()
     End Sub
 
     Protected Sub lnkBtnAddCategory_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnAddCategory.Click
@@ -186,46 +119,13 @@ Partial Class UserControls_Back_SubSiteList
             gvwSubSites.Visible = False
             phdupdSubSiteDetails.Visible = True
 
-            'updLanguage.Update()
         End If
     End Sub
 
     Public Sub RefreshSubSiteList(Optional ByVal blnRetrieveTotalCount As Boolean = True)
-        If ViewState("intTotalRowCount") Is Nothing Then blnRetrieveTotalCount = True
-        'If the callmode if 'ByDate' then we need to convert the parameters to 'Date'
         Dim tblSubSitesList As DataTable = Nothing
 
-        Dim intRowsPerPage As Integer = 25
-        Try
-            intRowsPerPage = CType(KartSettingsManager.GetKartConfig("backend.display.pagesize"), Double)
-        Catch ex As Exception
-            'Stays at 25
-        End Try
-
-        'See if date passed to page by querystring
-        Dim strDateQS As String = Request.QueryString("strDate")
-
-        'If date passed by querystring, set up page
-        If IsDate(strDateQS) And Not Me.IsPostBack Then
-            ViewState("_Callmode") = OrdersBLL.ORDERS_LIST_CALLMODE.BYDATE
-            ViewState("_datValue1") = strDateQS
-            ViewState("_datValue2") = Date.MinValue
-        End If
-
-        'backend.search.pagesize
-        If ViewState("_BatchProcess") Then ViewState("_Callmode") = OrdersBLL.ORDERS_LIST_CALLMODE.BYDATE
-
         tblSubSitesList = SubSitesBLL.GetSubSites()
-
-        _RowCount = tblSubSitesList.Rows.Count
-
-
-
-        If Not blnTableCopied Then
-            ViewState("originalValuesDataTable") = tblSubSitesList
-            blnTableCopied = True
-        End If
-
         gvwSubSites.DataSource = tblSubSitesList
         gvwSubSites.DataBind()
 

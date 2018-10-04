@@ -151,9 +151,6 @@ Partial Class UserControls_Back_SubSiteDetails
             If subSiteId > 0 Then
                 SubSitesBLL._Update(subSiteId, txtSubSiteName.Text, txtSubSiteDomain.Text, lbxCategory.Items(0).Value, ddlistTheme.SelectedItem.Value, txtSubSiteNotes.Text, chkSubSiteLive.Checked)
                 RaiseEvent ShowMasterUpdate()
-            Else
-                SubSitesBLL._Add(txtSubSiteName.Text, txtSubSiteDomain.Text, lbxCategory.Items(0).Value, ddlistTheme.SelectedItem.Value, txtSubSiteNotes.Text, chkSubSiteLive.Checked)
-                Response.Redirect("_SubSitesList.aspx")
             End If
         End If
     End Sub
@@ -197,14 +194,6 @@ Partial Class UserControls_Back_SubSiteDetails
         End Try
         Return 0
     End Function
-
-    ''' <summary>
-    ''' If 'edit' clicked, redirects to order editing page
-    ''' </summary>
-    ''' <remarks></remarks>
-    Protected Sub lnkBtnEdit_Click(ByVal sender As Object, ByVal e As System.EventArgs)
-        Response.Redirect("_ModifySubSite.aspx?SubSiteID=" & ViewState("numSubSiteID"))
-    End Sub
 
     ''' <summary>
     ''' If 'cancel' clicked, redirects to order editing page
