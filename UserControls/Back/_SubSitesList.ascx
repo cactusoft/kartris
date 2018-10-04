@@ -36,11 +36,6 @@
                             <asp:Literal ID="litSkinValue" runat="server" Text='<%#Eval("SUB_Skin") %>'> </asp:Literal>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField ItemStyle-CssClass="" HeaderText='Notes'>
-                        <ItemTemplate>
-                            <asp:Literal ID="litNotesValue" runat="server" Text='<%#Eval("SUB_Notes") %>'> </asp:Literal>
-                        </ItemTemplate>
-                    </asp:TemplateField>
                     <asp:TemplateField ItemStyle-CssClass="" HeaderText='Live'>
                         <ItemTemplate>
                             <asp:Literal ID="litLiveValue" runat="server" Text='<%#Eval("SUB_Live") %>'> </asp:Literal>

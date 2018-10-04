@@ -28,21 +28,25 @@ Partial Class UserControls_Back_SubSiteDetails
     ''' <remarks></remarks>
     Public Event ShowMasterUpdate()
 
+
     ''' <summary>
     ''' this runs each time the page is called
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
-
-            ViewState("Referer") = Request.ServerVariables("HTTP_REFERER")
-
+            Dim numSubSiteID As Integer = 0
+            If Request.QueryString("SubSiteID") <> "" Then
+                Try
+                    numSubSiteID = CType(Request.QueryString("SubSiteID"), Integer)
+                Catch ex As Exception
+                    numSubSiteID = 0
+                End Try
+            End If
 
             Try
-                'Get the Order ID QueryString - if it won't convert to integer then force return to Orders List page
-                ViewState("numSubSiteID") = CType(Request.QueryString("SubSiteID"), Integer)
-                If ViewState("numSubSiteID") <> 0 Then
-                    Dim subSiteDataTable As DataTable = SubSitesBLL.GetSubSiteByID(ViewState("numSubSiteID"))
+                If numSubSiteID <> 0 Then
+                    Dim subSiteDataTable As DataTable = SubSitesBLL.GetSubSiteByID(numSubSiteID)
                     fvwSubSiteDetails.DataSource = subSiteDataTable
                     fvwSubSiteDetails.DataBind()
 
@@ -54,26 +58,25 @@ Partial Class UserControls_Back_SubSiteDetails
                         lbxCategory.SelectedIndex = lbxCategory.Items.Count - 1
                     End If
 
+                    'Full the skins selection menu
                     SetThemeDropDown()
 
-                    'Set skin dropdown
+                    'Set skins selection menu to currently selected item
                     Try
                         ddlistTheme.SelectedValue = CStr(FixNullFromDB(subSiteDataTable.Rows.Item(0).Item("SUB_Skin")))
                     Catch ex As Exception
                         'Ignore
                     End Try
                 Else
-                    'fvwSubSiteDetails.ChangeMode(FormViewMode.Insert)
-
                     SetThemeDropDown()
-                    'txtSubSiteName.Text = ""
                 End If
 
             Catch ex As Exception
                 CkartrisFormatErrors.LogError(ex.Message)
                 Response.Redirect("_SubSitesList.aspx")
             End Try
-
+        Else
+            'RaiseEvent ShowMasterUpdate()
 
         End If
     End Sub
@@ -181,7 +184,7 @@ Partial Class UserControls_Back_SubSiteDetails
     'Format back link
     Public Function FormatBackLink() As String
         Dim strURL As String = ""
-        strURL = "javascript:history.back()"
+        strURL = "~/Admin/_SubSitesList.aspx"
 
         Return strURL
     End Function
@@ -201,6 +204,14 @@ Partial Class UserControls_Back_SubSiteDetails
     ''' <remarks></remarks>
     Protected Sub lnkBtnEdit_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         Response.Redirect("_ModifySubSite.aspx?SubSiteID=" & ViewState("numSubSiteID"))
+    End Sub
+
+    ''' <summary>
+    ''' If 'cancel' clicked, redirects to order editing page
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub lnkBtnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnCancel.Click
+        Response.Redirect("~/Admin/_SubSitesList.aspx")
     End Sub
 
 End Class

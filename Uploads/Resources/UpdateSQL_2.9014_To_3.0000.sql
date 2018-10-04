@@ -68,6 +68,11 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
+-- =============================================
+-- Author:		Joni
+-- Create date: <Create Date,,>
+-- Description:	Gets subsites
+-- =============================================
 CREATE PROCEDURE [dbo].[_spKartrisSubSites_Get]
 AS
 	SET NOCOUNT ON;
@@ -80,12 +85,13 @@ AS
 
 GO
 
-/****** Set this to tell Data tool which version of db we have ******/
-UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
-GO
 
 
-
+-- =============================================
+-- Author:		Joni
+-- Create date: <Create Date,,>
+-- Description:	Add new subsite
+-- =============================================
 CREATE PROCEDURE [dbo].[_spKartrisSubSite_Add]
 (
 			@SS_Name nvarchar(255),
@@ -118,7 +124,11 @@ DECLARE @SS_ID INT
 	
 GO
 
-
+-- =============================================
+-- Author:		Joni
+-- Create date: <Create Date,,>
+-- Description:	Update existing subsite
+-- =============================================
 CREATE PROCEDURE [dbo].[_spKartrisSubSite_Update]
 (
 			@SS_ID int,
@@ -141,4 +151,8 @@ AS
 		SUB_Live = @SS_Live
 	WHERE SUB_ID = @SS_ID;
 
+GO
+
+/****** Set this to tell Data tool which version of db we have ******/
+UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

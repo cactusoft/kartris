@@ -20,6 +20,7 @@ Imports CkartrisBLL
 Imports CkartrisEnumerations
 Imports CkartrisDataManipulation
 Imports KartSettingsManager
+
 Partial Class UserControls_Back_SubSiteList
     Inherits System.Web.UI.UserControl
 
@@ -38,9 +39,7 @@ Partial Class UserControls_Back_SubSiteList
         Page.Culture = System.Globalization.CultureInfo.CreateSpecificCulture(System.Threading.Thread.CurrentThread.CurrentUICulture.TwoLetterISOLanguageName).Name
         If Not IsPostBack Then
             RefreshSubSiteList()
-
         End If
-
     End Sub
 
     ''' <summary>
