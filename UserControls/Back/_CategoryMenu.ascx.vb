@@ -28,6 +28,7 @@ Partial Class _CategoryMenu
 
     Public Sub LoadCategoryMenu()
         BuildTopLevelMenu()
+        BuildSubSitesLevelMenu()
         BuildDefaultLevels()
         SelectCurrentPage()
     End Sub
@@ -69,6 +70,50 @@ Partial Class _CategoryMenu
             End If
             tvwCategory.Nodes.Add(childNode)
         Next
+    End Sub
+
+    Sub BuildSubSitesLevelMenu()
+        Dim tblSubSites As DataTable = SubSitesBLL.GetSubSites()
+        If tblSubSites.Rows.Count > 0 Then
+            Dim subSitePlaceholder As PlaceHolder = New PlaceHolder()
+            Dim divSubSites As LiteralControl = New LiteralControl()
+            divSubSites.Text = "<div class='subsites-container'>"
+            subSitePlaceholder.Controls.Add(divSubSites)
+
+            For Each drwSubSite As DataRow In tblSubSites.Rows
+                Dim subSiteBaseCategoryId = drwSubSite.Item("SUB_BaseCategoryID")
+                Dim subSiteTreeView As TreeView = New TreeView()
+                Dim baseCatNode As TreeNode = Nothing
+
+                baseCatNode = New TreeNode(drwSubSite("CAT_Name"), subSiteBaseCategoryId)
+                baseCatNode.NavigateUrl = _CategorySiteMapProvider.CreateURL(_CategorySiteMapProvider.BackEndPage.Category, subSiteBaseCategoryId)
+
+                Dim tblChilds As DataTable = CategoriesBLL._GetCategoriesPageByParentID(subSiteBaseCategoryId, Session("_LANG"), 0, 2000, 0)
+                Dim childNode As TreeNode = Nothing
+                For Each drwChilds As DataRow In tblChilds.Rows
+                    childNode = New TreeNode(drwChilds("CAT_Name"), drwChilds("CAT_ID"))
+                    childNode.NavigateUrl = _CategorySiteMapProvider.CreateURL(_CategorySiteMapProvider.BackEndPage.Category, drwChilds("CAT_ID"))
+                    childNode.PopulateOnDemand = True
+                    If CBool(drwChilds("CAT_Live")) Then
+                        childNode.ImageUrl = "~/Skins/Admin/Images/category-tree.gif"
+                    Else
+                        childNode.ImageUrl = "~/Skins/Admin/Images/offline-category-tree.gif"
+                    End If
+
+                    baseCatNode.ChildNodes.Add(childNode)
+                Next
+                Dim litSubSiteName As LiteralControl = New LiteralControl()
+                litSubSiteName.Text = "<h4>" & drwSubSite.Item("SUB_Name") & "</h4>"
+                subSitePlaceholder.Controls.Add(litSubSiteName)
+                subSiteTreeView.Nodes.Add(baseCatNode)
+                subSitePlaceholder.Controls.Add(subSiteTreeView)
+            Next
+            Dim divSubSitesEnd As LiteralControl = New LiteralControl()
+            divSubSitesEnd.Text = "</div>"
+            subSitePlaceholder.Controls.Add(divSubSitesEnd)
+            updMenu.ContentTemplateContainer.Controls.Add(subSitePlaceholder)
+        End If
+
     End Sub
 
     Sub BuildDefaultLevels()
