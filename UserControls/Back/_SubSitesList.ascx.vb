@@ -74,7 +74,16 @@ Partial Class UserControls_Back_SubSiteList
         txtSubSiteNotes.Text = Nothing
         txtTheme.Text = Nothing
 
+        tabContainerSubSite.ActiveTabIndex = 0
+        _UC_ObjectConfig.ItemID = Nothing
         SetThemeDropDown()
+    End Sub
+
+    Protected Sub tabContainerSubSite_ActiveTabChanged(ByVal sender As Object, ByVal e As EventArgs)
+        Session("_tab") = sender.ActiveTabIndex
+        If sender.ActiveTabIndex = 1 Then
+            _UC_ObjectConfig.LoadObjectConfig()
+        End If
     End Sub
 
     Protected Sub lnkBtnAddCategory_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnAddCategory.Click
@@ -136,6 +145,10 @@ Partial Class UserControls_Back_SubSiteList
         If Page.IsValid Then
             Dim newId = SubSitesBLL._Add(txtSubSiteName.Text, txtSubSiteDomain.Text, lbxCategory.Items(0).Value, ddlistTheme.SelectedItem.Value, txtSubSiteNotes.Text, chkSubSiteLive.Checked)
             If newId > 0 Then
+                'Save Object config Options
+                _UC_ObjectConfig.ItemID = newId
+                _UC_ObjectConfig.SaveConfig()
+
                 phdupdSubSiteDetails.Visible = False
                 gvwSubSites.Visible = True
                 RefreshSubSiteList()

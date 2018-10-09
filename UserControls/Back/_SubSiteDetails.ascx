@@ -1,5 +1,6 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="_SubSiteDetails.ascx.vb" Inherits="UserControls_Back_SubSiteDetails" %>
 <%@ Register TagPrefix="_user" TagName="AutoComplete" Src="~/UserControls/Back/_AutoCompleteInput.ascx" %>
+<%@ Register TagPrefix="_user" TagName="ObjectConfig" Src="~/UserControls/Back/_ObjectConfig.ascx" %>
 
 
 <div class="floatright">
@@ -11,11 +12,10 @@
     <ContentTemplate>
         <asp:FormView ID="fvwSubSiteDetails" runat="server" DefaultMode="Edit">
             <EditItemTemplate>
-                <ajaxToolkit:TabContainer ID="tabContaineSubSite" runat="server" EnableTheming="False"
-                    CssClass=".tab" AutoPostBack="false">
+                <ajaxToolkit:TabContainer ID="tabContainerSubSite" runat="server" EnableTheming="False" CssClass=".tab" AutoPostBack="true" ActiveTabIndex="0" OnActiveTabChanged="tabContainerSubSite_ActiveTabChanged">
                     <ajaxToolkit:TabPanel ID="tabMainInfo" runat="server">
                         <HeaderTemplate>
-                            <asp:Literal ID="litTabMainInfo2" runat="server" Text="Info" />
+                            <asp:Literal ID="litTabMainInfoHeader" runat="server" Text="Info" />
                         </HeaderTemplate>
                         <ContentTemplate>
                             <div class="Kartris-DetailsView">
@@ -96,6 +96,18 @@
                                     </asp:PlaceHolder>
 
                                 </div>
+                            </div>
+                        </ContentTemplate>
+                    </ajaxToolkit:TabPanel>
+                    <%-- Object Config Tab --%>
+                    <ajaxToolkit:TabPanel runat="server" ID="tabObjectConfig">
+                        <HeaderTemplate>
+                            <asp:Literal ID="litTabMainObjConfigHeader" runat="server" Text="Object Config" />
+                        </HeaderTemplate>
+                        <ContentTemplate>
+                            <div class="subtabsection">
+                                <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9996')" style="margin-bottom: 20px;">?</a>
+                                <_user:ObjectConfig ID="_UC_ObjectConfig" runat="server" ItemType="SubSite" />
                             </div>
                         </ContentTemplate>
                     </ajaxToolkit:TabPanel>

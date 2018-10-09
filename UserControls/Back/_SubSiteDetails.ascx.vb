@@ -22,6 +22,9 @@ Imports LanguageStringsBLL
 Partial Class UserControls_Back_SubSiteDetails
     Inherits System.Web.UI.UserControl
 
+    Private _ConfigLoaded As Boolean = False
+    Private _ActiveIndex As Integer = 0
+
     ''' <summary>
     ''' this runs when an update to data is made to trigger the animation
     ''' </summary>
@@ -79,6 +82,26 @@ Partial Class UserControls_Back_SubSiteDetails
             'RaiseEvent ShowMasterUpdate()
 
         End If
+    End Sub
+
+    Sub lnkConfig_Click()
+        Session("_tab") = "config"
+        If Not _ConfigLoaded Then _ConfigLoaded = True : _UC_ObjectConfig.LoadObjectConfig()
+        'tabContainerSubSite..ActiveViewIndex = 8
+        'HighLightTab()
+    End Sub
+
+    Protected Sub tabContainerSubSite_ActiveTabChanged(ByVal sender As Object, ByVal e As EventArgs)
+        '_UC_ObjectConfig.LoadObjectConfig()
+        Session("_tab") = sender.ActiveTabIndex
+        If sender.ActiveTabIndex = 1 Then
+            _UC_ObjectConfig.ItemID = Request.QueryString("SubSiteID")
+            _UC_ObjectConfig.LoadObjectConfig()
+        End If
+        'If (tabcon = 2) Then
+        '    _UC_ObjectConfig.LoadObjectConfig()
+        '    'Code hereTabContainer
+        'End If
     End Sub
 
     '''' <summary> 
@@ -149,8 +172,14 @@ Partial Class UserControls_Back_SubSiteDetails
         Page.Validate()
         If Page.IsValid Then
             If subSiteId > 0 Then
+                'If Session("_tab") = 0 Then
                 SubSitesBLL._Update(subSiteId, txtSubSiteName.Text, txtSubSiteDomain.Text, lbxCategory.Items(0).Value, ddlistTheme.SelectedItem.Value, txtSubSiteNotes.Text, chkSubSiteLive.Checked)
+                '    RaiseEvent ShowMasterUpdate()
+                'ElseIf Session("_tab") = 1 Then
+                _UC_ObjectConfig.ItemID = subSiteId
+                _UC_ObjectConfig.SaveConfig()
                 RaiseEvent ShowMasterUpdate()
+                'End If
             End If
         End If
     End Sub
