@@ -10,7 +10,7 @@
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="VersionsTblAdptr" GeneratorDataComponentClassName="VersionsTblAdptr" Name="Versions" UserDataComponentName="VersionsTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.spKartrisVersions_GetByLanguageID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetDataByLanguageID" GetMethodModifier="Public" GetMethodName="GetDataByLanguageID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetDataByLanguageID" UserSourceName="GetDataByLanguageID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisVersions_GetByLanguageID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetDataByLanguageID" GetMethodModifier="Public" GetMethodName="GetDataByLanguageID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetDataByLanguageID" UserSourceName="GetDataByLanguageID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisVersions_GetByLanguageID</CommandText>
@@ -86,7 +86,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisVersions_GetByID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByID" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="_GetByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByID" UserSourceName="_GetByID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisVersions_GetByID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByID" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="_GetByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByID" UserSourceName="_GetByID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisVersions_GetByID]</CommandText>
@@ -97,7 +97,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisVersions_GetByProductID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByProductID" GetMethodModifier="Public" GetMethodName="_GetByProductID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByProductID" UserSourceName="_GetByProductID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisVersions_GetByProductID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByProductID" GetMethodModifier="Public" GetMethodName="_GetByProductID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByProductID" UserSourceName="_GetByProductID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisVersions_GetByProductID]</CommandText>
@@ -131,7 +131,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisVersions_GetByCategoryList]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetDetailsByCategoryList" GetMethodModifier="Public" GetMethodName="_GetDetailsByCategoryList" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetDetailsByCategoryList" UserSourceName="_GetDetailsByCategoryList">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisVersions_GetByCategoryList]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetDetailsByCategoryList" GetMethodModifier="Public" GetMethodName="_GetDetailsByCategoryList" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetDetailsByCategoryList" UserSourceName="_GetDetailsByCategoryList">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisVersions_GetByCategoryList]</CommandText>
@@ -442,7 +442,7 @@ WHERE V_Type &lt;&gt; 's'</CommandText>
               <Mapping SourceColumn="QD_Price" DataSetColumn="QD_Price" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisQuantityDiscounts_GetByVersionIDs]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByVersionIDList" GetMethodModifier="Public" GetMethodName="_GetByVersionIDList" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByVersionIDList" UserSourceName="_GetByVersionIDList">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisQuantityDiscounts_GetByVersionIDs]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByVersionIDList" GetMethodModifier="Public" GetMethodName="_GetByVersionIDList" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByVersionIDList" UserSourceName="_GetByVersionIDList">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisQuantityDiscounts_GetByVersionIDs]</CommandText>
@@ -470,7 +470,7 @@ WHERE V_Type &lt;&gt; 's'</CommandText>
           </TableAdapter>
         </Tables>
         <Sources>
-          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.spKartrisVersions_GetProductID_s" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetProductID_s" MethodsParameterType="CLR" Modifier="Public" Name="GetProductID_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="GetProductID_s">
+          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisVersions_GetProductID_s" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetProductID_s" MethodsParameterType="CLR" Modifier="Public" Name="GetProductID_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="GetProductID_s">
             <SelectCommand>
               <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                 <CommandText>dbo.spKartrisVersions_GetProductID_s</CommandText>
@@ -482,7 +482,7 @@ WHERE V_Type &lt;&gt; 's'</CommandText>
               </DbCommand>
             </SelectCommand>
           </DbSource>
-          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.spKartrisVersions_GetCombinationPrice_s" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetCombinationPrice_s" MethodsParameterType="CLR" Modifier="Public" Name="GetCombinationPrice_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="GetCombinationPrice_s">
+          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisVersions_GetCombinationPrice_s" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetCombinationPrice_s" MethodsParameterType="CLR" Modifier="Public" Name="GetCombinationPrice_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="GetCombinationPrice_s">
             <SelectCommand>
               <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                 <CommandText>dbo.spKartrisVersions_GetCombinationPrice_s</CommandText>
@@ -495,7 +495,7 @@ WHERE V_Type &lt;&gt; 's'</CommandText>
               </DbCommand>
             </SelectCommand>
           </DbSource>
-          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.spKartrisVersions_GetCombinationVersionID_s" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetCombinationVersionID_s" MethodsParameterType="CLR" Modifier="Public" Name="GetCombinationVersionID_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="GetCombinationVersionID_s">
+          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisVersions_GetCombinationVersionID_s" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetCombinationVersionID_s" MethodsParameterType="CLR" Modifier="Public" Name="GetCombinationVersionID_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="GetCombinationVersionID_s">
             <SelectCommand>
               <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                 <CommandText>dbo.spKartrisVersions_GetCombinationVersionID_s</CommandText>

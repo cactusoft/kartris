@@ -30,7 +30,7 @@
               <Mapping SourceColumn="LE_Value" DataSetColumn="LE_Value" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisLanguageElements_GetByTypeAndParent]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByTypeAndParent" GetMethodModifier="Public" GetMethodName="_GetByTypeAndParent" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByTypeAndParent" UserSourceName="_GetByTypeAndParent">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisLanguageElements_GetByTypeAndParent]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByTypeAndParent" GetMethodModifier="Public" GetMethodName="_GetByTypeAndParent" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByTypeAndParent" UserSourceName="_GetByTypeAndParent">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisLanguageElements_GetByTypeAndParent]</CommandText>

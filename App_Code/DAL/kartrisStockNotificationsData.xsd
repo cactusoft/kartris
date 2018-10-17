@@ -9,7 +9,7 @@
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="StockNotificationsTblAdptr" GeneratorDataComponentClassName="StockNotificationsTblAdptr" Name="StockNotifications" UserDataComponentName="StockNotificationsTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisStockNotifications_Search]" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="_GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="_GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetData" UserSourceName="Fill">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisStockNotifications_Search]" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="_GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="_GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetData" UserSourceName="Fill">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisStockNotifications_Search]</CommandText>
@@ -32,7 +32,7 @@
               <Mapping SourceColumn="SNR_LanguageID" DataSetColumn="SNR_LanguageID" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisStockNotifications_Search]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetStockNotificationsByVersionID" GeneratorSourceName="_GetStockNotificationsByVersionID" GetMethodModifier="Public" GetMethodName="_GetStockNotificationsByVersionID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetStockNotificationsByVersionID" UserSourceName="_GetStockNotificationsByVersionID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisStockNotifications_Search]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetStockNotificationsByVersionID" GeneratorSourceName="_GetStockNotificationsByVersionID" GetMethodModifier="Public" GetMethodName="_GetStockNotificationsByVersionID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetStockNotificationsByVersionID" UserSourceName="_GetStockNotificationsByVersionID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisStockNotifications_Search]</CommandText>
@@ -44,7 +44,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisStockNotifications_GetDetails]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetStockNotificationsDetails" GetMethodModifier="Public" GetMethodName="_GetStockNotificationsDetails" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetStockNotificationsDetails" UserSourceName="_GetStockNotificationsDetails">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisStockNotifications_GetDetails]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetStockNotificationsDetails" GetMethodModifier="Public" GetMethodName="_GetStockNotificationsDetails" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetStockNotificationsDetails" UserSourceName="_GetStockNotificationsDetails">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisStockNotifications_GetDetails]</CommandText>
@@ -59,7 +59,7 @@
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="VersionsAwaitingTblAdptr" GeneratorDataComponentClassName="VersionsAwaitingTblAdptr" Name="Versions" UserDataComponentName="VersionsAwaitingTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.tblKartrisVersions" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.tblKartrisVersions" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="Fill" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetData" GeneratorSourceName="Fill" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="Fill">
                 <DeleteCommand>
                   <DbCommand CommandType="Text" ModifiedByUser="false">
                     <CommandText>DELETE FROM [dbo].[tblKartrisVersions] WHERE (([V_ID] = @Original_V_ID) AND ((@IsNull_V_CodeNumber = 1 AND [V_CodeNumber] IS NULL) OR ([V_CodeNumber] = @Original_V_CodeNumber)))</CommandText>
@@ -162,7 +162,7 @@
               <Mapping SourceColumn="V_BulkUpdateTimeStamp" DataSetColumn="V_BulkUpdateTimeStamp" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisStockNotifications_GetVersions]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetVersions" GetMethodModifier="Public" GetMethodName="_GetVersions" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetVersions" UserSourceName="_GetVersions">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisStockNotifications_GetVersions]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetVersions" GetMethodModifier="Public" GetMethodName="_GetVersions" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetVersions" UserSourceName="_GetVersions">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisStockNotifications_GetVersions]</CommandText>

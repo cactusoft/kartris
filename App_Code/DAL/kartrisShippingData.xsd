@@ -10,7 +10,7 @@
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="ShippingMethodsTblAdptr" GeneratorDataComponentClassName="ShippingMethodsTblAdptr" Name="ShippingMethods" UserDataComponentName="ShippingMethodsTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisShippingMethods_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetByLanguage" GetMethodModifier="Public" GetMethodName="_GetByLanguage" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetByLanguage" UserSourceName="_GetByLanguage">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisShippingMethods_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetByLanguage" GetMethodModifier="Public" GetMethodName="_GetByLanguage" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetByLanguage" UserSourceName="_GetByLanguage">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisShippingMethods_Get]</CommandText>
@@ -32,7 +32,7 @@
               <Mapping SourceColumn="SM_Tax" DataSetColumn="SM_Tax" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisShippingMethods_GetNameByMethodID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetNameByID" GetMethodModifier="Public" GetMethodName="_GetNameByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetNameByID" UserSourceName="_GetNameByID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisShippingMethods_GetNameByMethodID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetNameByID" GetMethodModifier="Public" GetMethodName="_GetNameByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetNameByID" UserSourceName="_GetNameByID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisShippingMethods_GetNameByMethodID]</CommandText>
@@ -48,7 +48,7 @@
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="ShippingRatesTblAdptr" GeneratorDataComponentClassName="ShippingRatesTblAdptr" Name="ShippingRates" UserDataComponentName="ShippingRatesTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisShippingRates_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetData" GetMethodModifier="Public" GetMethodName="_GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetData" UserSourceName="_GetData">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisShippingRates_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetData" GetMethodModifier="Public" GetMethodName="_GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetData" UserSourceName="_GetData">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisShippingRates_Get]</CommandText>
@@ -68,7 +68,7 @@
               <Mapping SourceColumn="S_ShippingGateways" DataSetColumn="S_ShippingGateways" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisShippingRates_GetByShippingMethod]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByMethod" GetMethodModifier="Public" GetMethodName="_GetByMethod" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByMethod" UserSourceName="_GetByMethod">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisShippingRates_GetByShippingMethod]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByMethod" GetMethodModifier="Public" GetMethodName="_GetByMethod" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByMethod" UserSourceName="_GetByMethod">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisShippingRates_GetByShippingMethod]</CommandText>
@@ -79,7 +79,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisShippingRates_GetByMethodAndZone]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByMethodAndZone" GetMethodModifier="Public" GetMethodName="_GetByMethodAndZone" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByMethodAndZone" UserSourceName="_GetByMethodAndZone">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisShippingRates_GetByMethodAndZone]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByMethodAndZone" GetMethodModifier="Public" GetMethodName="_GetByMethodAndZone" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByMethodAndZone" UserSourceName="_GetByMethodAndZone">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisShippingRates_GetByMethodAndZone]</CommandText>
@@ -91,7 +91,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisShippingRates_GetZonesByMethod]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetZonesByMethod" GetMethodModifier="Public" GetMethodName="_GetZonesByMethod" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetZonesByMethod" UserSourceName="_GetZonesByMethod">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisShippingRates_GetZonesByMethod]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetZonesByMethod" GetMethodModifier="Public" GetMethodName="_GetZonesByMethod" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetZonesByMethod" UserSourceName="_GetZonesByMethod">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisShippingRates_GetZonesByMethod]</CommandText>
@@ -106,7 +106,7 @@
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="ShippingZonesTblAdptr" GeneratorDataComponentClassName="ShippingZonesTblAdptr" Name="ShippingZones" UserDataComponentName="ShippingZonesTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisShippingZones_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetByLanguage" GetMethodModifier="Public" GetMethodName="_GetByLanguage" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetByLanguage" UserSourceName="_GetByLanguage">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisShippingZones_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetByLanguage" GetMethodModifier="Public" GetMethodName="_GetByLanguage" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetByLanguage" UserSourceName="_GetByLanguage">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisShippingZones_Get]</CommandText>
@@ -126,7 +126,7 @@
               <Mapping SourceColumn="SZ_OrderByValue" DataSetColumn="SZ_OrderByValue" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisShippingZones_GetNameByZoneID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetNameByID" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="_GetNameByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetNameByID" UserSourceName="_GetNameByID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisShippingZones_GetNameByZoneID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetNameByID" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="_GetNameByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetNameByID" UserSourceName="_GetNameByID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisShippingZones_GetNameByZoneID]</CommandText>
@@ -142,7 +142,7 @@
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="DestinationsTblAdptr" GeneratorDataComponentClassName="DestinationsTblAdptr" Name="Destinations" UserDataComponentName="DestinationsTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisDestinations_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetByLanguage" GetMethodModifier="Public" GetMethodName="_GetByLanguage" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetByLanguage" UserSourceName="_GetByLanguage">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisDestinations_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetByLanguage" GetMethodModifier="Public" GetMethodName="_GetByLanguage" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetByLanguage" UserSourceName="_GetByLanguage">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisDestinations_Get]</CommandText>
@@ -169,7 +169,7 @@
               <Mapping SourceColumn="D_TaxExtra" DataSetColumn="D_TaxExtra" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisDestinations_GetByZone]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetDestinationsByZone" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="_GetDestinationsByZone" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetDestinationsByZone" UserSourceName="_GetDestinationsByZone">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisDestinations_GetByZone]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetDestinationsByZone" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="_GetDestinationsByZone" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetDestinationsByZone" UserSourceName="_GetDestinationsByZone">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisDestinations_GetByZone]</CommandText>
@@ -181,7 +181,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisDestinations_GetISOForFilter]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetISOCodesForFilter" GetMethodModifier="Public" GetMethodName="_GetISOCodesForFilter" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetISOCodesForFilter" UserSourceName="_GetISOCodesForFilter">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisDestinations_GetISOForFilter]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetISOCodesForFilter" GetMethodModifier="Public" GetMethodName="_GetISOCodesForFilter" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetISOCodesForFilter" UserSourceName="_GetISOCodesForFilter">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisDestinations_GetISOForFilter]</CommandText>
@@ -191,7 +191,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.[_spKartrisDestinations_GetTotalDestinationsByZone]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetTotalDestinationsByZone" GetMethodModifier="Public" GetMethodName="_GetTotalDestinationsByZone" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetTotalDestinationsByZone" UserSourceName="_GetTotalDestinationsByZone">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisDestinations_GetTotalDestinationsByZone]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetTotalDestinationsByZone" GetMethodModifier="Public" GetMethodName="_GetTotalDestinationsByZone" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetTotalDestinationsByZone" UserSourceName="_GetTotalDestinationsByZone">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisDestinations_GetTotalDestinationsByZone]</CommandText>
@@ -206,7 +206,7 @@
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="ShippingMethodsRatesTblAdptr" GeneratorDataComponentClassName="ShippingMethodsRatesTblAdptr" Name="ShippingMethodsRates" UserDataComponentName="ShippingMethodsRatesTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.spKartrisShippingMethods_Get" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="GetData">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisShippingMethods_Get" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="GetData">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisShippingMethods_Get</CommandText>
@@ -230,7 +230,7 @@
               <Mapping SourceColumn="SM_Tax2" DataSetColumn="SM_Tax2" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[kartrisSQL_1.4].dbo.spKartrisShippingMethods_GetByName" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetDataByName" GetMethodModifier="Public" GetMethodName="GetDataByName" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataByName" UserSourceName="GetDataByName">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisShippingMethods_GetByName" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetDataByName" GetMethodModifier="Public" GetMethodName="GetDataByName" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataByName" UserSourceName="GetDataByName">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisShippingMethods_GetByName</CommandText>

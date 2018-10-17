@@ -153,6 +153,89 @@ AS
 
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisCategories_GetPageByParentID]    Script Date: 15/10/2018 10:47:21 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	Modified for Kartris v3, if top
+-- level (0) then will try to append sub sites
+-- as extra records.
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisCategories_Treeview]
+(
+	@LANG_ID as tinyint
+)
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	DECLARE @OrderBy as nvarchar(50), @OrderDirection as char(1)
+
+	SELECT @OrderBy = CAT_OrderCategoriesBy, @OrderDirection = CAT_CategoriesSortDirection
+	FROM dbo.tblKartrisCategories
+	WHERE CAT_ID = 0;
+
+	IF @OrderBy is NULL OR @OrderBy = 'd'
+	BEGIN 
+		SELECT @OrderBy = CFG_Value FROM tblKartrisConfig WHERE CFG_Name = 'frontend.categories.display.sortdefault';
+	END;
+	IF @OrderDirection is NULL OR @OrderDirection = '' BEGIN 
+		SELECT @OrderDirection = CFG_Value FROM tblKartrisConfig WHERE CFG_Name = 'frontend.categories.display.sortdirection';
+	END;
+
+	DECLARE @SortByValue as bit;
+	SET @SortByValue = 0;
+	IF @OrderBy = 'CH_OrderNo' BEGIN SET @SortByValue = 1 END;
+	
+	BEGIN
+		 SET @SortByValue = 1;
+		 SET @OrderBy = 'CH_OrderNo';
+	END;
+	
+	WITH CategoryList AS
+	(
+		SELECT	CASE 
+				WHEN (@OrderBy = 'CAT_ID' AND @OrderDirection = 'A') THEN	ROW_NUMBER() OVER (ORDER BY tblKartrisCategories.CAT_ID ASC) 
+				WHEN (@OrderBy = 'CAT_ID' AND @OrderDirection = 'D') THEN	ROW_NUMBER() OVER (ORDER BY tblKartrisCategories.CAT_ID DESC) 
+				WHEN (@OrderBy = 'CAT_Name' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY CAT_Name ASC) 
+				WHEN (@OrderBy = 'CAT_Name' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY CAT_Name DESC) 
+				WHEN (@OrderBy = 'CH_OrderNo' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY CH_OrderNo ASC) 
+				WHEN (@OrderBy = 'CH_OrderNo' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY CH_OrderNo DESC) 
+				END AS Row,
+				vKartrisTypeCategories.CAT_ID,
+				vKartrisTypeCategories.CAT_Name,
+				vKartrisTypeCategories.CAT_Desc, 
+				vKartrisTypeCategories.CAT_Live,
+				0 As SUB_ID,
+				'' As SUB_Name
+		FROM    tblKartrisCategoryHierarchy INNER JOIN
+				vKartrisTypeCategories ON tblKartrisCategoryHierarchy.CH_ChildID = vKartrisTypeCategories.CAT_ID INNER JOIN
+				tblKartrisCategories ON tblKartrisCategoryHierarchy.CH_ParentID = tblKartrisCategories.CAT_ID
+		WHERE   (tblKartrisCategoryHierarchy.CH_ParentID = 0) AND (vKartrisTypeCategories.LANG_ID = @LANG_ID)
+		
+	)
+
+	SELECT *
+	FROM CategoryList UNION ALL
+	-- subsites below
+	(
+		SELECT	0 AS Row,
+				vKartrisTypeCategories.CAT_ID, tblKartrisSubSites.SUB_Domain, vKartrisTypeCategories.CAT_Desc, 
+				vKartrisTypeCategories.CAT_Live, SUB_ID, SUB_Name
+		FROM    
+				vKartrisTypeCategories 
+				INNER JOIN tblKartrisSubSites ON tblKartrisSubSites.SUB_BaseCategoryID = vKartrisTypeCategories.CAT_ID
+		WHERE   (vKartrisTypeCategories.LANG_ID = @LANG_ID) AND SUB_Live = 1
+	)
+	ORDER BY SUB_ID, Row ASC;
+
+END
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

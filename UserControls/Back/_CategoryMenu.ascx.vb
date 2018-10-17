@@ -20,26 +20,32 @@ Partial Class _CategoryMenu
 
     Public Event ShowMasterUpdate()
 
+    ''' <summary>
+    ''' Page load
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             LoadCategoryMenu()
+        Else
+            '
         End If
     End Sub
 
+    ''' <summary>
+    ''' Loads the category menu and selects the current page 
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Sub LoadCategoryMenu()
         BuildTopLevelMenu()
-        BuildSubSitesLevelMenu()
         BuildDefaultLevels()
         SelectCurrentPage()
     End Sub
 
-    Public Function GetTree() As TreeView
-        Return tvwCategory
-    End Function
-
-    'This refreshes the category menu, but also clears all
-    'caches. Useful if certain data which has been updated is
-    'not visible on the front end.
+    ''' <summary>
+    ''' Refresh and clears caches when button clicked
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub btnRefresh_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnRefresh.Click
 
         'Refresh caches
@@ -56,14 +62,24 @@ Partial Class _CategoryMenu
         updMenu.Update()
     End Sub
 
+    ''' <summary>
+    ''' Build top level cats of treeview
+    ''' </summary>
+    ''' <remarks>
+    ''' New sproc for Kartris v3, now includes subsites
+    ''' </remarks>
     Sub BuildTopLevelMenu()
-        Dim tblChilds As DataTable = CategoriesBLL._GetCategoriesPageByParentID(0, Session("_LANG"), 0, 2000, 0)
+        Dim tblChilds As DataTable = CategoriesBLL._Treeview(Session("_LANG"))
         Dim childNode As TreeNode = Nothing
         For Each drwChilds As DataRow In tblChilds.Rows
-            childNode = New TreeNode(drwChilds("CAT_Name"), drwChilds("CAT_ID"))
+            childNode = New TreeNode(drwChilds("CAT_Name"), drwChilds("CAT_ID") & "|" & drwChilds("SUB_ID"))
             childNode.NavigateUrl = _CategorySiteMapProvider.CreateURL(_CategorySiteMapProvider.BackEndPage.Category, drwChilds("CAT_ID"))
             childNode.PopulateOnDemand = True
-            If CBool(drwChilds("CAT_Live")) Then
+            If (drwChilds("SUB_ID")) > 0 Then 'It is a sub site
+                childNode.ImageUrl = "~/Skins/Admin/Images/site-tree.gif"
+                childNode.ToolTip = drwChilds("SUB_Name")
+                childNode.NavigateUrl &= "&SiteID=" & drwChilds("SUB_ID")
+            ElseIf CBool(drwChilds("CAT_Live")) Then
                 childNode.ImageUrl = "~/Skins/Admin/Images/category-tree.gif"
             Else
                 childNode.ImageUrl = "~/Skins/Admin/Images/offline-category-tree.gif"
@@ -72,50 +88,10 @@ Partial Class _CategoryMenu
         Next
     End Sub
 
-    Sub BuildSubSitesLevelMenu()
-        Dim tblSubSites As DataTable = SubSitesBLL.GetSubSites()
-        If tblSubSites.Rows.Count > 0 Then
-            Dim subSitePlaceholder As PlaceHolder = New PlaceHolder()
-            Dim divSubSites As LiteralControl = New LiteralControl()
-            divSubSites.Text = "<div class='subsites-container'>"
-            subSitePlaceholder.Controls.Add(divSubSites)
-
-            For Each drwSubSite As DataRow In tblSubSites.Rows
-                Dim subSiteBaseCategoryId = drwSubSite.Item("SUB_BaseCategoryID")
-                Dim subSiteTreeView As TreeView = New TreeView()
-                Dim baseCatNode As TreeNode = Nothing
-
-                baseCatNode = New TreeNode(drwSubSite("CAT_Name"), subSiteBaseCategoryId)
-                baseCatNode.NavigateUrl = _CategorySiteMapProvider.CreateURL(_CategorySiteMapProvider.BackEndPage.Category, subSiteBaseCategoryId)
-
-                Dim tblChilds As DataTable = CategoriesBLL._GetCategoriesPageByParentID(subSiteBaseCategoryId, Session("_LANG"), 0, 2000, 0)
-                Dim childNode As TreeNode = Nothing
-                For Each drwChilds As DataRow In tblChilds.Rows
-                    childNode = New TreeNode(drwChilds("CAT_Name"), drwChilds("CAT_ID"))
-                    childNode.NavigateUrl = _CategorySiteMapProvider.CreateURL(_CategorySiteMapProvider.BackEndPage.Category, drwChilds("CAT_ID"))
-                    childNode.PopulateOnDemand = True
-                    If CBool(drwChilds("CAT_Live")) Then
-                        childNode.ImageUrl = "~/Skins/Admin/Images/category-tree.gif"
-                    Else
-                        childNode.ImageUrl = "~/Skins/Admin/Images/offline-category-tree.gif"
-                    End If
-
-                    baseCatNode.ChildNodes.Add(childNode)
-                Next
-                Dim litSubSiteName As LiteralControl = New LiteralControl()
-                litSubSiteName.Text = "<h4>" & drwSubSite.Item("SUB_Name") & "</h4>"
-                subSitePlaceholder.Controls.Add(litSubSiteName)
-                subSiteTreeView.Nodes.Add(baseCatNode)
-                subSitePlaceholder.Controls.Add(subSiteTreeView)
-            Next
-            Dim divSubSitesEnd As LiteralControl = New LiteralControl()
-            divSubSitesEnd.Text = "</div>"
-            subSitePlaceholder.Controls.Add(divSubSitesEnd)
-            updMenu.ContentTemplateContainer.Controls.Add(subSitePlaceholder)
-        End If
-
-    End Sub
-
+    ''' <summary>
+    ''' Builds sub levels if required, depending on back end levels setting
+    ''' </summary>
+    ''' <remarks></remarks>
     Sub BuildDefaultLevels()
         Dim numLevels As Integer = CInt(KartSettingsManager.GetKartConfig("backend.categorymenu.levels")) - 1
         If numLevels = 0 Then Return
@@ -124,23 +100,43 @@ Partial Class _CategoryMenu
         Next
     End Sub
 
+    ''' <summary>
+    ''' Recursive build levels
+    ''' </summary>
+    ''' <remarks></remarks>
     Sub BuildLevelsRecursive(ByVal numLevels As Integer, ByVal node As TreeNode)
         If numLevels = 0 Then Return
         node.Expand()
+
         For Each childNode As TreeNode In node.ChildNodes
             BuildLevelsRecursive(numLevels - 1, childNode)
         Next
     End Sub
 
-    Sub BuildChildNodes(ByRef node As TreeNode, ByVal numParentID As Integer, Optional ByVal chrParentType As Char = "c")
+    ''' <summary>
+    ''' Build child nodes
+    ''' </summary>
+    ''' <remarks></remarks>
+    Sub BuildChildNodes(ByRef node As TreeNode, ByVal numParentID As Integer, ByVal numSiteID As Integer, Optional ByVal chrParentType As Char = "c")
         If chrParentType = "c" Then
             Dim tblChilds As DataTable = CategoriesBLL._GetCategoriesPageByParentID(numParentID, Session("_LANG"), 0, 2000, 0)
             Dim childNode As TreeNode = Nothing
             For Each drwChilds As DataRow In tblChilds.Rows
-                childNode = New TreeNode(drwChilds("CAT_Name"), drwChilds("CAT_ID"))
-                childNode.NavigateUrl = _CategorySiteMapProvider.CreateURL( _
-                    _CategorySiteMapProvider.BackEndPage.Category, drwChilds("CAT_ID"), _
-                    node.ValuePath.Replace("/", ","), node.Value)
+                childNode = New TreeNode(drwChilds("CAT_Name"), drwChilds("CAT_ID") & "|" & numSiteID)
+
+                Dim strParents As String = node.ValuePath.Replace("/", ",")
+                If strParents.Contains("|") Then
+                    'Need to get just the parent cat ID
+                    strParents = GetIDFromNodeValue(strParents).ToString
+                End If
+
+                childNode.NavigateUrl = _CategorySiteMapProvider.CreateURL(
+                    _CategorySiteMapProvider.BackEndPage.Category, drwChilds("CAT_ID"),
+                    strParents, GetIDFromNodeValue(node.Value))
+
+                'Site ID
+                childNode.NavigateUrl &= "&SiteID=" & numSiteID
+
                 If childNode.ChildNodes.Count = 0 Then childNode.PopulateOnDemand = True
                 If CBool(drwChilds("CAT_Live")) Then
                     childNode.ImageUrl = "~/Skins/Admin/Images/category-tree.gif"
@@ -153,18 +149,26 @@ Partial Class _CategoryMenu
             Dim tblChilds As DataTable = ProductsBLL._GetProductsPageByCategory(numParentID, Session("_LANG"), 0, 2000, 0)
             Dim childNode As TreeNode = Nothing
             For Each drwChilds As DataRow In tblChilds.Rows
-                childNode = New TreeNode(drwChilds("P_Name"), drwChilds("P_ID"))
+                childNode = New TreeNode(drwChilds("P_Name"), drwChilds("P_ID") & "|" & numSiteID)
                 Dim strParents As String = node.ValuePath.Replace("/", ",")
-                If strParents.EndsWith("," & node.Value) Then
-                    strParents = Replace(strParents, "," & node.Value, "")
-                ElseIf strParents = node.Value Then
+                If strParents.Contains("|") Then
+                    'Need to get just the parent cat ID
+                    strParents = GetIDFromNodeValue(strParents).ToString
+                End If
+                If strParents.EndsWith("," & GetIDFromNodeValue(node.Value)) Then
+                    strParents = Replace(strParents, "," & GetIDFromNodeValue(node.Value), "")
+                ElseIf strParents = GetIDFromNodeValue(node.Value).ToString Then
                     strParents = "0"
                 End If
 
-                Dim strNavigateURL As String = _CategorySiteMapProvider.CreateURL( _
-                        _CategorySiteMapProvider.BackEndPage.Product, drwChilds("P_ID"), _
-                        strParents) & "&CategoryID=" & node.Value
+                Dim strNavigateURL As String = _CategorySiteMapProvider.CreateURL(
+                        _CategorySiteMapProvider.BackEndPage.Product, drwChilds("P_ID"),
+                        strParents) & "&CategoryID=" & GetIDFromNodeValue(node.Value)
                 If strParents = "0" Then strNavigateURL &= "&strParent=0"
+
+                'Site ID
+                strNavigateURL &= "&SiteID=" & numSiteID
+
                 childNode.NavigateUrl = strNavigateURL
                 If CBool(drwChilds("P_Live")) Then
                     childNode.ImageUrl = "~/Skins/Admin/Images/product-tree.gif"
@@ -176,6 +180,10 @@ Partial Class _CategoryMenu
         End If
     End Sub
 
+    ''' <summary>
+    ''' Highlight link for the current product or category, if viewing product or category
+    ''' </summary>
+    ''' <remarks></remarks>
     Sub SelectCurrentPage()
         Dim strCurrentURL As String = Request.Url.AbsoluteUri.ToString
 
@@ -202,12 +210,23 @@ Partial Class _CategoryMenu
         End If
     End Sub
 
+    ''' <summary>
+    ''' Select category node
+    ''' </summary>
+    ''' <remarks></remarks>
     Sub SelectCategoryNode(Optional ByVal ParentNode As TreeNode = Nothing)
-        Dim ValueID As Integer = _GetCategoryID()
+        Dim ValueID As Int64 = _GetCategoryID()
+        Dim numSiteID As Integer = 0
+        Try
+            numSiteID = Request.QueryString("SiteID")
+        Catch ex As Exception
+            'oh dear
+        End Try
+
         If ParentNode Is Nothing Then
             For Each node As TreeNode In tvwCategory.Nodes
                 If node.NavigateUrl.Contains("_Category.aspx") Then
-                    If node.Value = ValueID Then
+                    If GetIDFromNodeValue(node.Value) = ValueID And GetIDFromNodeValue(node.Value, True) = numSiteID Then
                         node.Selected = True
                         If node.ChildNodes.Count = 0 Then node.PopulateOnDemand = True
                         node.Expand()
@@ -218,7 +237,7 @@ Partial Class _CategoryMenu
         Else
             For Each node As TreeNode In ParentNode.ChildNodes
                 If node.NavigateUrl.Contains("_Category.aspx") Then
-                    If node.Value = ValueID Then
+                    If GetIDFromNodeValue(node.Value) = ValueID And GetIDFromNodeValue(node.Value, True) = numSiteID Then
                         node.Selected = True
                         If node.ChildNodes.Count = 0 Then node.PopulateOnDemand = True
                         node.Expand()
@@ -229,11 +248,22 @@ Partial Class _CategoryMenu
         End If
     End Sub
 
+    ''' <summary>
+    ''' Select product node
+    ''' </summary>
+    ''' <remarks></remarks>
     Sub SelectProductNode(ByVal ParentNode As TreeNode)
         Dim ValueID As Integer = _GetProductID()
+        Dim numSiteID As Integer = 0
+        Try
+            numSiteID = Request.QueryString("SiteID")
+        Catch ex As Exception
+            'oh dear
+        End Try
+
         For Each node As TreeNode In ParentNode.ChildNodes
             If node.NavigateUrl.Contains("_ModifyProduct.aspx") Then
-                If node.Value = ValueID Then
+                If GetIDFromNodeValue(node.Value) = ValueID And GetIDFromNodeValue(node.Value, True) = numSiteID Then
                     node.Selected = True
                     Exit For
                 End If
@@ -241,14 +271,24 @@ Partial Class _CategoryMenu
         Next
     End Sub
 
+    ''' <summary>
+    ''' Find page node
+    ''' </summary>
+    ''' <remarks></remarks>
     Sub FindPageNode(ByVal PageType As Char, ByVal Parents As String)
+        Dim numSiteID As Integer = 0
+        Try
+            numSiteID = Request.QueryString("SiteID")
+        Catch ex As Exception
+            'oh dear
+        End Try
         If PageType = "c" Then
             Dim arrCategories() As String = Split(Parents, ",")
             For i As Integer = 0 To arrCategories.Length - 1
                 Dim CatID As Integer = CInt(arrCategories(i))
                 For Each node As TreeNode In tvwCategory.Nodes
                     If node.NavigateUrl.Contains("_Category.aspx") Then
-                        If node.Value = CatID Then
+                        If GetIDFromNodeValue(node.Value) = CatID And GetIDFromNodeValue(node.Value, True) = numSiteID Then
                             Try
                                 node.Expand()
                                 node.Selected = True
@@ -277,7 +317,7 @@ Partial Class _CategoryMenu
                 Dim CatID As Integer = CInt(arrCategories(i))
                 For Each node As TreeNode In tvwCategory.Nodes
                     If node.NavigateUrl.Contains("_Category.aspx") Then
-                        If node.Value = CatID Then
+                        If GetIDFromNodeValue(node.Value) = CatID And GetIDFromNodeValue(node.Value, True) = numSiteID Then
                             Try
                                 node.Expand()
                                 If node.Expanded Then
@@ -308,12 +348,23 @@ Partial Class _CategoryMenu
         End If
     End Sub
 
+    ''' <summary>
+    ''' Find child node, recursively
+    ''' </summary>
+    ''' <remarks></remarks>
     Sub FindChildNodeRecursive(ByVal node As TreeNode, ByVal arrCategories() As String)
+        Dim numSiteID As Integer = 0
+        Try
+            numSiteID = Request.QueryString("SiteID")
+        Catch ex As Exception
+            'oh dear
+        End Try
+
         For i As Integer = 0 To arrCategories.Length - 1
             Dim CatID As Integer = CInt(arrCategories(i))
             For Each childNode As TreeNode In node.ChildNodes
                 If childNode.NavigateUrl.Contains("_Category.aspx") Then
-                    If childNode.Value = CatID Then
+                    If GetIDFromNodeValue(childNode.Value) = CatID And GetIDFromNodeValue(node.Value, True) = numSiteID Then
                         Try
                             childNode.Expand()
                             childNode.Selected = True
@@ -326,7 +377,7 @@ Partial Class _CategoryMenu
                                         counter += 1
                                     End If
                                 Next
-                                If _GetCategoryID() <> childNode.Value Then SelectCategoryNode(childNode)
+                                If _GetCategoryID() <> GetIDFromNodeValue(childNode.Value) Then SelectCategoryNode(childNode)
                                 If arrRest.Length > 0 Then FindChildNodeRecursive(childNode, arrRest)
                             End If
                         Catch ex As Exception
@@ -338,9 +389,44 @@ Partial Class _CategoryMenu
         Next
     End Sub
 
+    ''' <summary>
+    ''' Handle populated node when expanded
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub tvwCategory_TreeNodePopulate(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.TreeNodeEventArgs) Handles tvwCategory.TreeNodePopulate
         Dim currentNode As TreeNode = e.Node
-        BuildChildNodes(currentNode, currentNode.Value)
-        BuildChildNodes(currentNode, currentNode.Value, "p")
+        Dim numSiteID As Integer = 0
+        numSiteID = GetIDFromNodeValue(e.Node.Value, True)
+
+        'Here we look up the sub site ID to send down to child
+        'cats and products based on the site name of a sub site
+        'matching the treeview text for the link (i.e. the domain)
+        'Dim tblSubSites As DataTable = SubSitesBLL.GetSubSites()
+        'For Each drwSubSite As DataRow In tblSubSites.Rows
+        '    If drwSubSite("SUB_Domain").ToLower = e.Node.Text.ToLower Then numSiteID = drwSubSite("SUB_ID")
+        'Next
+
+        BuildChildNodes(currentNode, GetIDFromNodeValue(currentNode.Value), numSiteID)
+        BuildChildNodes(currentNode, GetIDFromNodeValue(currentNode.Value), numSiteID, "p")
     End Sub
+
+    ''' <summary>
+    ''' Pull out the category ID from the node value
+    ''' </summary>
+    ''' <remarks>
+    ''' The value used to be just category ID, but now in v3, we
+    ''' also store side ID, so we need function to return
+    ''' the category or site from the pipe separated
+    ''' string</remarks>
+    Private Function GetIDFromNodeValue(ByVal strNodeValue As String, Optional ByVal blnSiteID As Boolean = False) As Int64
+        Dim aryIDs As String() = Split(strNodeValue, "|")
+        Dim numOutputID As Int64 = 0
+        If blnSiteID Then
+            'Site ID
+            numOutputID = CLng(aryIDs(1))
+        Else
+            numOutputID = CLng(aryIDs(0))
+        End If
+        Return numOutputID
+    End Function
 End Class

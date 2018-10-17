@@ -10,7 +10,7 @@
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="ProductsTblAdptr" GeneratorDataComponentClassName="ProductsTblAdptr" Name="Products" UserDataComponentName="ProductsTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetByProductID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetByID" GetMethodModifier="Public" GetMethodName="GetByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetByID" UserSourceName="GetByID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetByProductID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetByID" GetMethodModifier="Public" GetMethodName="GetByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetByID" UserSourceName="GetByID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisProducts_GetByProductID</CommandText>
@@ -40,7 +40,7 @@
               <Mapping SourceColumn="P_CustomerGroupID" DataSetColumn="P_CustomerGroupID" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisProducts_GetBySupplier]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetBySupplier" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="_GetBySupplier" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetBySupplier" UserSourceName="_GetBySupplier">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisProducts_GetBySupplier]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetBySupplier" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="_GetBySupplier" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetBySupplier" UserSourceName="_GetBySupplier">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisProducts_GetBySupplier]</CommandText>
@@ -52,7 +52,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisProducts_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetData" GetMethodModifier="Public" GetMethodName="_GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetData" UserSourceName="_GetData">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisProducts_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetData" GetMethodModifier="Public" GetMethodName="_GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetData" UserSourceName="_GetData">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisProducts_Get]</CommandText>
@@ -63,7 +63,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisProducts_GetFeaturedProducts]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetFeaturedProducts" GetMethodModifier="Public" GetMethodName="_GetFeaturedProducts" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetFeaturedProducts" UserSourceName="_GetFeaturedProducts">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisProducts_GetFeaturedProducts]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetFeaturedProducts" GetMethodModifier="Public" GetMethodName="_GetFeaturedProducts" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetFeaturedProducts" UserSourceName="_GetFeaturedProducts">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisProducts_GetFeaturedProducts]</CommandText>
@@ -74,7 +74,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisProducts_GetByProductID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetProductInfoByID" GetMethodModifier="Public" GetMethodName="_GetProductInfoByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetProductInfoByID" UserSourceName="_GetProductInfoByID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisProducts_GetByProductID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetProductInfoByID" GetMethodModifier="Public" GetMethodName="_GetProductInfoByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetProductInfoByID" UserSourceName="_GetProductInfoByID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisProducts_GetByProductID]</CommandText>
@@ -85,7 +85,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisProducts_GetRowsBetweenByCatID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetProductsPageByCategoryID" GetMethodModifier="Public" GetMethodName="_GetProductsPageByCategoryID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetProductsPageByCategoryID" UserSourceName="_GetProductsPageByCategoryID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisProducts_GetRowsBetweenByCatID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetProductsPageByCategoryID" GetMethodModifier="Public" GetMethodName="_GetProductsPageByCategoryID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetProductsPageByCategoryID" UserSourceName="_GetProductsPageByCategoryID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisProducts_GetRowsBetweenByCatID]</CommandText>
@@ -99,7 +99,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisProducts_NumberOfCombinations]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_NumberOfCombinations" GeneratorSourceName="_NumberOfCombinations" GetMethodModifier="Public" GetMethodName="_NumberOfCombinations" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_NumberOfCombinations" UserSourceName="_NumberOfCombinations">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisProducts_NumberOfCombinations]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_NumberOfCombinations" GeneratorSourceName="_NumberOfCombinations" GetMethodModifier="Public" GetMethodName="_NumberOfCombinations" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_NumberOfCombinations" UserSourceName="_NumberOfCombinations">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisProducts_NumberOfCombinations]</CommandText>
@@ -110,7 +110,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisProducts_SearchProductsByName]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_SearchByName" GetMethodModifier="Public" GetMethodName="_SearchByName" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_SearchByName" UserSourceName="_SearchByName">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisProducts_SearchProductsByName]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_SearchByName" GetMethodModifier="Public" GetMethodName="_SearchByName" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_SearchByName" UserSourceName="_SearchByName">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="true">
                     <CommandText>dbo._spKartrisProducts_SearchProductsByName</CommandText>
@@ -122,7 +122,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetParentCategories" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="FillParentCategories" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetParentCategories" GeneratorSourceName="FillParentCategories" GetMethodModifier="Public" GetMethodName="GetParentCategories" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetParentCategories" UserSourceName="FillParentCategories">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetParentCategories" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="FillParentCategories" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetParentCategories" GeneratorSourceName="FillParentCategories" GetMethodModifier="Public" GetMethodName="GetParentCategories" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetParentCategories" UserSourceName="FillParentCategories">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisProducts_GetParentCategories</CommandText>
@@ -134,7 +134,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetRelatedProducts" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="FillRelatedProducts" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetRelatedProducts" GeneratorSourceName="FillRelatedProducts" GetMethodModifier="Public" GetMethodName="GetRelatedProducts" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetRelatedProducts" UserSourceName="FillRelatedProducts">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetRelatedProducts" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="FillRelatedProducts" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetRelatedProducts" GeneratorSourceName="FillRelatedProducts" GetMethodModifier="Public" GetMethodName="GetRelatedProducts" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetRelatedProducts" UserSourceName="FillRelatedProducts">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisProducts_GetRelatedProducts</CommandText>
@@ -147,7 +147,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetFeaturedProducts" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetFeaturedProducts" GetMethodModifier="Public" GetMethodName="GetFeaturedProducts" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetFeaturedProducts" UserSourceName="GetFeaturedProducts">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetFeaturedProducts" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetFeaturedProducts" GetMethodModifier="Public" GetMethodName="GetFeaturedProducts" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetFeaturedProducts" UserSourceName="GetFeaturedProducts">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisProducts_GetFeaturedProducts</CommandText>
@@ -157,7 +157,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetNewestProducts" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetNewestProducts" GetMethodModifier="Public" GetMethodName="GetNewestProducts" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetNewestProducts" UserSourceName="GetNewestProducts">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetNewestProducts" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetNewestProducts" GetMethodModifier="Public" GetMethodName="GetNewestProducts" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetNewestProducts" UserSourceName="GetNewestProducts">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisProducts_GetNewestProducts</CommandText>
@@ -168,7 +168,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetPeopleWhoBoughtThis" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetPeopleWhoBoughtThis" GetMethodModifier="Public" GetMethodName="GetPeopleWhoBoughtThis" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetPeopleWhoBoughtThis" UserSourceName="GetPeopleWhoBoughtThis">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetPeopleWhoBoughtThis" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetPeopleWhoBoughtThis" GetMethodModifier="Public" GetMethodName="GetPeopleWhoBoughtThis" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetPeopleWhoBoughtThis" UserSourceName="GetPeopleWhoBoughtThis">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisProducts_GetPeopleWhoBoughtThis</CommandText>
@@ -182,7 +182,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetRowsBetweenByCatID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetProductsPageByCategoryID" GeneratorSourceName="FillProductsPageByCategoryID" GetMethodModifier="Public" GetMethodName="GetProductsPageByCategoryID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetProductsPageByCategoryID" UserSourceName="GetProductsPageByCategoryID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetRowsBetweenByCatID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetProductsPageByCategoryID" GeneratorSourceName="FillProductsPageByCategoryID" GetMethodModifier="Public" GetMethodName="GetProductsPageByCategoryID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetProductsPageByCategoryID" UserSourceName="GetProductsPageByCategoryID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisProducts_GetRowsBetweenByCatID</CommandText>
@@ -197,7 +197,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetForSnippets" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetRichSnippetProperties" GetMethodModifier="Public" GetMethodName="GetRichSnippetProperties" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetRichSnippetProperties" UserSourceName="GetRichSnippetProperties">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetForSnippets" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetRichSnippetProperties" GetMethodModifier="Public" GetMethodName="GetRichSnippetProperties" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetRichSnippetProperties" UserSourceName="GetRichSnippetProperties">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="true">
                     <CommandText>dbo.spKartrisProducts_GetRichSnippetProperties</CommandText>
@@ -209,7 +209,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetSummaryByCatID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetSummaryByCatID" GeneratorSourceName="FillSummaryByCatID" GetMethodModifier="Public" GetMethodName="GetSummaryByCatID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetSummaryByCatID" UserSourceName="GetSummaryByCatID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetSummaryByCatID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetSummaryByCatID" GeneratorSourceName="FillSummaryByCatID" GetMethodModifier="Public" GetMethodName="GetSummaryByCatID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetSummaryByCatID" UserSourceName="GetSummaryByCatID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisProducts_GetSummaryByCatID</CommandText>
@@ -221,7 +221,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetTopList" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetTopList" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="GetTopList" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetTopList" UserSourceName="GetTopList">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetTopList" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetTopList" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="GetTopList" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetTopList" UserSourceName="GetTopList">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisProducts_GetTopList</CommandText>
@@ -238,7 +238,7 @@
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="ProductNameTblAdptr" GeneratorDataComponentClassName="ProductNameTblAdptr" Name="ProductName" UserDataComponentName="ProductNameTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetNameByProductID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetProductName" GetMethodModifier="Public" GetMethodName="GetProductName" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetProductName" UserSourceName="GetProductName">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetNameByProductID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetProductName" GetMethodModifier="Public" GetMethodName="GetProductName" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetProductName" UserSourceName="GetProductName">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisProducts_GetNameByProductID</CommandText>
@@ -255,7 +255,7 @@
               <Mapping SourceColumn="P_Name" DataSetColumn="P_Name" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisProducts_GetNameByProductID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetProductName" GeneratorSourceName="_GetNameByProductID" GetMethodModifier="Public" GetMethodName="_GetProductName" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetProductName" UserSourceName="_GetProductName">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisProducts_GetNameByProductID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetProductName" GeneratorSourceName="_GetNameByProductID" GetMethodModifier="Public" GetMethodName="_GetProductName" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetProductName" UserSourceName="_GetProductName">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="true">
                     <CommandText>_spKartrisProducts_GetNameByProductID</CommandText>
@@ -271,7 +271,7 @@
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="ProductCategoryLinkTblAdptr" GeneratorDataComponentClassName="ProductCategoryLinkTblAdptr" Name="ProductCategoryLink" UserDataComponentName="ProductCategoryLinkTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProductCategoryLink_Get" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="GetData">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProductCategoryLink_Get" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="GetData">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisProductCategoryLink_Get</CommandText>
@@ -288,7 +288,7 @@
               <Mapping SourceColumn="PCAT_CategoryID" DataSetColumn="PCAT_CategoryID" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisProductCategoryLink_ChangeSortValue]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_ChangeSortValue" Modifier="Public" Name="_ChangeSortValue" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="_ChangeSortValue">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisProductCategoryLink_ChangeSortValue]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_ChangeSortValue" Modifier="Public" Name="_ChangeSortValue" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="_ChangeSortValue">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisProductCategoryLink_ChangeSortValue]</CommandText>
@@ -301,7 +301,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProductCategoryLink_GetCategoriesByProductID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetCategoriesByProductID" GetMethodModifier="Public" GetMethodName="_GetCategoriesByProductID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetCategoriesByProductID" UserSourceName="_GetCategoriesByProductID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProductCategoryLink_GetCategoriesByProductID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetCategoriesByProductID" GetMethodModifier="Public" GetMethodName="_GetCategoriesByProductID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetCategoriesByProductID" UserSourceName="_GetCategoriesByProductID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisProductCategoryLink_GetCategoriesByProductID</CommandText>
@@ -316,7 +316,7 @@
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="RelatedProductsTblAdptr" GeneratorDataComponentClassName="RelatedProductsTblAdptr" Name="RelatedProducts" UserDataComponentName="RelatedProductsTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisRelatedProducts_GetByParentID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetRelatedProductsByParent" GetMethodModifier="Public" GetMethodName="_GetRelatedProductsByParent" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetRelatedProductsByParent" UserSourceName="_GetRelatedProductsByParent">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisRelatedProducts_GetByParentID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetRelatedProductsByParent" GetMethodModifier="Public" GetMethodName="_GetRelatedProductsByParent" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetRelatedProductsByParent" UserSourceName="_GetRelatedProductsByParent">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisRelatedProducts_GetByParentID]</CommandText>
@@ -336,7 +336,7 @@
           </TableAdapter>
         </Tables>
         <Sources>
-          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetTotalByCatID" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetTotalByCatID_s" MethodsParameterType="CLR" Modifier="Public" Name="GetTotalByCatID_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="GetTotalByCatID_s">
+          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetTotalByCatID" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetTotalByCatID_s" MethodsParameterType="CLR" Modifier="Public" Name="GetTotalByCatID_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="GetTotalByCatID_s">
             <SelectCommand>
               <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                 <CommandText>dbo.spKartrisProducts_GetTotalByCatID</CommandText>
@@ -350,7 +350,7 @@
               </DbCommand>
             </SelectCommand>
           </DbSource>
-          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetAttributeValue" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetAttributeValue_s" MethodsParameterType="CLR" Modifier="Public" Name="GetAttributeValue_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="GetAttributeValue_s">
+          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetAttributeValue" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetAttributeValue_s" MethodsParameterType="CLR" Modifier="Public" Name="GetAttributeValue_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="GetAttributeValue_s">
             <SelectCommand>
               <DbCommand CommandType="StoredProcedure" ModifiedByUser="true">
                 <CommandText>dbo.spKartrisProducts_GetAttributeValue</CommandText>
@@ -364,7 +364,7 @@
               </DbCommand>
             </SelectCommand>
           </DbSource>
-          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisProducts_GetProductType_s]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_GetProductType_s" MethodsParameterType="CLR" Modifier="Public" Name="_GetProductType_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="_GetProductType_s">
+          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisProducts_GetProductType_s]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_GetProductType_s" MethodsParameterType="CLR" Modifier="Public" Name="_GetProductType_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="_GetProductType_s">
             <SelectCommand>
               <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                 <CommandText>dbo.[_spKartrisProducts_GetProductType_s]</CommandText>
@@ -376,7 +376,7 @@
               </DbCommand>
             </SelectCommand>
           </DbSource>
-          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisProducts_GetTotalByCatID]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_GetTotalByCatID_s" MethodsParameterType="CLR" Modifier="Public" Name="_GetTotalByCatID_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy3" UserSourceName="_GetTotalByCatID_s">
+          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisProducts_GetTotalByCatID]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_GetTotalByCatID_s" MethodsParameterType="CLR" Modifier="Public" Name="_GetTotalByCatID_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy3" UserSourceName="_GetTotalByCatID_s">
             <SelectCommand>
               <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                 <CommandText>dbo.[_spKartrisProducts_GetTotalByCatID]</CommandText>
@@ -389,7 +389,7 @@
               </DbCommand>
             </SelectCommand>
           </DbSource>
-          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisProducts_GetCustomerGroup]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_GetCustomerGroup" MethodsParameterType="CLR" Modifier="Public" Name="_GetCustomerGroup" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy4" UserSourceName="_GetCustomerGroup">
+          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisProducts_GetCustomerGroup]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_GetCustomerGroup" MethodsParameterType="CLR" Modifier="Public" Name="_GetCustomerGroup" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy4" UserSourceName="_GetCustomerGroup">
             <SelectCommand>
               <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                 <CommandText>dbo.[_spKartrisProducts_GetCustomerGroup]</CommandText>
@@ -401,7 +401,7 @@
               </DbCommand>
             </SelectCommand>
           </DbSource>
-          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisProducts_GetMinPriceWithCG" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetMinPriceWithCG_s" MethodsParameterType="CLR" Modifier="Public" Name="GetMinPriceWithCG_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy5" UserSourceName="GetMinPriceWithCG_s">
+          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisProducts_GetMinPriceWithCG" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetMinPriceWithCG_s" MethodsParameterType="CLR" Modifier="Public" Name="GetMinPriceWithCG_s" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy5" UserSourceName="GetMinPriceWithCG_s">
             <SelectCommand>
               <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                 <CommandText>dbo.spKartrisProducts_GetMinPriceWithCG</CommandText>

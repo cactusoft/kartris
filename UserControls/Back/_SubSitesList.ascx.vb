@@ -122,13 +122,10 @@ Partial Class UserControls_Back_SubSiteList
         updSubSites.Update()
     End Sub
 
-    Protected Sub gvwSubSites_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles gvwSubSites.RowCommand
-        If e.CommandName = "CreateNewSubSite" Then
-            PrepareNewSubSite()
-            gvwSubSites.Visible = False
-            phdupdSubSiteDetails.Visible = True
-
-        End If
+    Protected Sub btnNew_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnNew.Click
+        PrepareNewSubSite()
+        gvwSubSites.Visible = False
+        phdupdSubSiteDetails.Visible = True
     End Sub
 
     Public Sub RefreshSubSiteList(Optional ByVal blnRetrieveTotalCount As Boolean = True)

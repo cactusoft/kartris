@@ -10,7 +10,7 @@
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="TaxRatesTblAdptr" GeneratorDataComponentClassName="TaxRatesTblAdptr" Name="TaxRates" UserDataComponentName="TaxRatesTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisTaxRates_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetTaxRates" GetMethodModifier="Public" GetMethodName="_GetTaxRates" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetTaxRates" UserSourceName="_GetTaxRates">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisTaxRates_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="_GetTaxRates" GetMethodModifier="Public" GetMethodName="_GetTaxRates" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="_GetTaxRates" UserSourceName="_GetTaxRates">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisTaxRates_Get]</CommandText>
@@ -39,7 +39,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisTaxRates_GetClosestRate" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetClosestRate" Modifier="Public" Name="GetClosestRate" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="GetClosestRate">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisTaxRates_GetClosestRate" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetClosestRate" Modifier="Public" Name="GetClosestRate" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="GetClosestRate">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisTaxRates_GetClosestRate</CommandText>
@@ -50,7 +50,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisVersions_GetQBTaxRefCode" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorGetMethodName="GetDataBy1" GeneratorSourceName="GetQBTaxRefCodeOfVerCode" Modifier="Public" Name="GetQBTaxRefCodeOfVerCode" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="GetQBTaxRefCodeOfVerCode">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisVersions_GetQBTaxRefCode" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorGetMethodName="GetDataBy1" GeneratorSourceName="GetQBTaxRefCodeOfVerCode" Modifier="Public" Name="GetQBTaxRefCodeOfVerCode" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="GetQBTaxRefCodeOfVerCode">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisVersions_GetQBTaxRefCode</CommandText>
@@ -61,7 +61,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.spKartrisTaxRates_Get" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetTaxRatebyID" Modifier="Public" Name="GetTaxRatebyID" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="GetTaxRatebyID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisTaxRates_Get" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="GetTaxRatebyID" Modifier="Public" Name="GetTaxRatebyID" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="GetTaxRatebyID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisTaxRates_Get</CommandText>

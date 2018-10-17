@@ -34,17 +34,26 @@ Public Class SubSitesBLL
         End Get
     End Property
 
-
-
+    ''' <summary>
+    ''' Get all subsites
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Shared Function GetSubSites() As DataTable
         Return Adptr.GetData()
     End Function
 
+    ''' <summary>
+    ''' Get a particular sub site by ID
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Shared Function GetSubSiteByID(ByVal SUB_ID As Long) As DataTable
         Return Adptr._GetSubSiteByID(SUB_ID)
     End Function
 
-
+    ''' <summary>
+    ''' Update sub site
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Shared Function _Update(ByVal SUB_ID As Integer, ByVal SUB_Name As String, ByVal SUB_Domain As String, ByVal SUB_BaseCategoryID As Integer, ByVal SUB_Skin As String, ByVal SUB_Notes As String, ByVal SUB_Live As Boolean) As Integer
         Try
             Dim dtNull As Nullable(Of DateTime) = Nothing
@@ -57,6 +66,10 @@ Public Class SubSitesBLL
 
     End Function
 
+    ''' <summary>
+    ''' Insert new sub site
+    ''' </summary>
+    ''' <remarks></remarks>
     Public Shared Function _Add(ByVal SUB_Name As String, ByVal SUB_Domain As String, ByVal SUB_BaseCategoryID As Integer, ByVal SUB_Skin As String, ByVal SUB_Notes As String, ByVal SUB_Live As Boolean) As Integer
         Try
             Dim dtNull As Nullable(Of DateTime) = Nothing

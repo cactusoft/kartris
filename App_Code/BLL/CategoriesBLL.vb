@@ -67,6 +67,12 @@ Public Class CategoriesBLL
         Return Adptr.GetCategoriesPageByParentID(_LanguageID, _ParentCategoryID, _PageIndx, _RowsPerPage, _CGroupID)
     End Function
 
+    'New in v3, new treeview function grabs main categories but also
+    'appends sub site cats too
+    Public Shared Function _Treeview(ByVal _LanguageID As Short) As DataTable
+        Return Adptr._Treeview(_LanguageID)
+    End Function
+
     Public Shared Function _GetCategoriesPageByParentID(ByVal _ParentCategoryID As Integer, ByVal _LanguageID As Short, _
                                             ByVal _PageIndx As Short, ByVal _RowsPerPage As Short, ByRef _TotalNoOfCategories As Integer) As DataTable
         _TotalNoOfCategories = _GetTotalCategoriesByParentID_o(_LanguageID, _ParentCategoryID)

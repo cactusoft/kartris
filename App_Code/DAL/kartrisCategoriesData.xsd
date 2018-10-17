@@ -11,7 +11,7 @@
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CategoriesTblAdptr" GeneratorDataComponentClassName="CategoriesTblAdptr" Name="Categories" UserDataComponentName="CategoriesTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategories_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="GetData">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategories_Get]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="GetData">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategories_Get]</CommandText>
@@ -39,7 +39,7 @@
               <Mapping SourceColumn="CAT_CategoriesSortDirection" DataSetColumn="CAT_CategoriesSortDirection" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategories_GetByID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByCategoryID" GeneratorSourceName="backFillByID" GetMethodModifier="Public" GetMethodName="_GetByCategoryID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByCategoryID" UserSourceName="_GetByCategoryID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategories_GetByID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetByCategoryID" GeneratorSourceName="backFillByID" GetMethodModifier="Public" GetMethodName="_GetByCategoryID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetByCategoryID" UserSourceName="_GetByCategoryID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategories_GetByID]</CommandText>
@@ -50,7 +50,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategories_GetPageByParentID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetCategoriesPageByParentID" GetMethodModifier="Public" GetMethodName="_GetCategoriesPageByParentID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetCategoriesPageByParentID" UserSourceName="_GetCategoriesPageByParentID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategories_GetPageByParentID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetCategoriesPageByParentID" GetMethodModifier="Public" GetMethodName="_GetCategoriesPageByParentID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetCategoriesPageByParentID" UserSourceName="_GetCategoriesPageByParentID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategories_GetPageByParentID]</CommandText>
@@ -64,7 +64,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategories_GetTotalByLanguageID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetTotalCategoriesByLanguageID" GetMethodModifier="Public" GetMethodName="_GetTotalCategoriesByLanguageID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetTotalCategoriesByLanguageID" UserSourceName="_GetTotalCategoriesByLanguageID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategories_GetTotalByLanguageID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetTotalCategoriesByLanguageID" GetMethodModifier="Public" GetMethodName="_GetTotalCategoriesByLanguageID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetTotalCategoriesByLanguageID" UserSourceName="_GetTotalCategoriesByLanguageID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategories_GetTotalByLanguageID]</CommandText>
@@ -76,7 +76,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategories_GetTotalByParentID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetTotalCategoriesByParent" GetMethodModifier="Public" GetMethodName="_GetTotalCategoriesByParent" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetTotalCategoriesByParent" UserSourceName="_GetTotalCategoriesByParent">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategories_GetTotalByParentID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetTotalCategoriesByParent" GetMethodModifier="Public" GetMethodName="_GetTotalCategoriesByParent" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetTotalCategoriesByParent" UserSourceName="_GetTotalCategoriesByParent">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategories_GetTotalByParentID]</CommandText>
@@ -89,7 +89,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategories_GetWithProductsOnly]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetWithProductsOnly" GetMethodModifier="Public" GetMethodName="_GetWithProductsOnly" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetWithProductsOnly" UserSourceName="_GetWithProductsOnly">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategories_GetWithProductsOnly]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetWithProductsOnly" GetMethodModifier="Public" GetMethodName="_GetWithProductsOnly" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetWithProductsOnly" UserSourceName="_GetWithProductsOnly">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategories_GetWithProductsOnly]</CommandText>
@@ -100,7 +100,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategories_SearchCategoriesByName]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_SearchByName" GetMethodModifier="Public" GetMethodName="_SearchByName" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_SearchByName" UserSourceName="_SearchByName">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategories_SearchCategoriesByName]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_SearchByName" GetMethodModifier="Public" GetMethodName="_SearchByName" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_SearchByName" UserSourceName="_SearchByName">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategories_SearchCategoriesByName]</CommandText>
@@ -112,7 +112,18 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.spKartrisCategories_GetByParentID" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="FillBy" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetCategoriesByParentID" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="GetCategoriesByParentID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetCategoriesByParentID" UserSourceName="FillBy">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisCategories_Treeview]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_Treeview" GetMethodModifier="Public" GetMethodName="_Treeview" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_Treeview" UserSourceName="_Treeview">
+                <SelectCommand>
+                  <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
+                    <CommandText>dbo.[_spKartrisCategories_Treeview]</CommandText>
+                    <Parameters>
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DataTypeServer="int" DbType="Int32" Direction="ReturnValue" ParameterName="@RETURN_VALUE" Precision="10" ProviderType="Int" Scale="0" Size="4" SourceColumnNullMapping="false" SourceVersion="Current" />
+                      <Parameter AllowDbNull="true" AutogeneratedName="" DataSourceName="" DataTypeServer="tinyint" DbType="Byte" Direction="Input" ParameterName="@LANG_ID" Precision="3" ProviderType="TinyInt" Scale="0" Size="1" SourceColumnNullMapping="false" SourceVersion="Current" />
+                    </Parameters>
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.spKartrisCategories_GetByParentID" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="FillBy" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetCategoriesByParentID" GeneratorSourceName="FillBy" GetMethodModifier="Public" GetMethodName="GetCategoriesByParentID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetCategoriesByParentID" UserSourceName="FillBy">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisCategories_GetByParentID</CommandText>
@@ -124,7 +135,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.spKartrisCategories_GetByID" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="FillByCategoryID" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetByCategoryID" GeneratorSourceName="FillByCategoryID" GetMethodModifier="Public" GetMethodName="GetByCategoryID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetByCategoryID" UserSourceName="FillByCategoryID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.spKartrisCategories_GetByID" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="FillByCategoryID" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetByCategoryID" GeneratorSourceName="FillByCategoryID" GetMethodModifier="Public" GetMethodName="GetByCategoryID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetByCategoryID" UserSourceName="FillByCategoryID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisCategories_GetByID</CommandText>
@@ -136,7 +147,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.spKartrisCategories_GetByProductID" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="FillByProductID" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetByProductID" GeneratorSourceName="FillByProductID" GetMethodModifier="Public" GetMethodName="GetByProductID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetByProductID" UserSourceName="FillByProductID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.spKartrisCategories_GetByProductID" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="FillByProductID" GenerateMethods="Both" GenerateShortCommands="true" GeneratorGetMethodName="GetByProductID" GeneratorSourceName="FillByProductID" GetMethodModifier="Public" GetMethodName="GetByProductID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetByProductID" UserSourceName="FillByProductID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisCategories_GetByProductID</CommandText>
@@ -148,7 +159,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.spKartrisCategories_GetPageByParentID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetCategoriesPageByParentID" GeneratorSourceName="FillCategoriesPageByParentID" GetMethodModifier="Public" GetMethodName="GetCategoriesPageByParentID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetCategoriesPageByParentID" UserSourceName="GetCategoriesPageByParentID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.spKartrisCategories_GetPageByParentID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetCategoriesPageByParentID" GeneratorSourceName="FillCategoriesPageByParentID" GetMethodModifier="Public" GetMethodName="GetCategoriesPageByParentID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetCategoriesPageByParentID" UserSourceName="GetCategoriesPageByParentID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisCategories_GetPageByParentID</CommandText>
@@ -167,7 +178,7 @@
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CategoryHierarchyTblAdptr" GeneratorDataComponentClassName="CategoryHierarchyTblAdptr" Name="CategoryHierarchy" UserDataComponentName="CategoryHierarchyTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.spKartrisCategoryHierarchy_Get" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="FillData" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="FillData" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="FillData">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.spKartrisCategoryHierarchy_Get" DbObjectType="StoredProcedure" FillMethodModifier="Public" FillMethodName="FillData" GenerateMethods="Both" GenerateShortCommands="false" GeneratorGetMethodName="GetData" GeneratorSourceName="FillData" GetMethodModifier="Public" GetMethodName="GetData" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetData" UserSourceName="FillData">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisCategoryHierarchy_Get</CommandText>
@@ -182,7 +193,7 @@
               <Mapping SourceColumn="CH_OrderNo" DataSetColumn="CH_OrderNo" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategoryHierarchy_ChangeSortValue]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_ChangeSortValue" Modifier="Public" Name="_ChangeSortValue" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="_ChangeSortValue">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategoryHierarchy_ChangeSortValue]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_ChangeSortValue" Modifier="Public" Name="_ChangeSortValue" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="_ChangeSortValue">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategoryHierarchy_ChangeSortValue]</CommandText>
@@ -195,7 +206,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategoryHierarchy_GetByLanguageID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetHierarchyByLanguage" GetMethodModifier="Public" GetMethodName="_GetHierarchyByLanguage" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetHierarchyByLanguage" UserSourceName="_GetHierarchyByLanguage">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategoryHierarchy_GetByLanguageID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetHierarchyByLanguage" GetMethodModifier="Public" GetMethodName="_GetHierarchyByLanguage" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetHierarchyByLanguage" UserSourceName="_GetHierarchyByLanguage">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategoryHierarchy_GetByLanguageID]</CommandText>
@@ -206,7 +217,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategoryHierarchy_GetOtherParents]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetOtherParents" GetMethodModifier="Public" GetMethodName="_GetOtherParents" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetOtherParents" UserSourceName="_GetOtherParents">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategoryHierarchy_GetOtherParents]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetOtherParents" GetMethodModifier="Public" GetMethodName="_GetOtherParents" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetOtherParents" UserSourceName="_GetOtherParents">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategoryHierarchy_GetOtherParents]</CommandText>
@@ -218,7 +229,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategoryHierarchy_GetParentsByID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetParentsByID" GeneratorSourceName="backFillParentsByID" GetMethodModifier="Public" GetMethodName="_GetParentsByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetParentsByID" UserSourceName="_GetParentsByID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategoryHierarchy_GetParentsByID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetParentsByID" GeneratorSourceName="backFillParentsByID" GetMethodModifier="Public" GetMethodName="_GetParentsByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetParentsByID" UserSourceName="_GetParentsByID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategoryHierarchy_GetParentsByID]</CommandText>
@@ -230,7 +241,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategoryHierarchy_GetSubcategories]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetSubcategoriesIDs" GetMethodModifier="Public" GetMethodName="_GetSubcategoriesIDs" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetSubcategoriesIDs" UserSourceName="_GetSubcategoriesIDs">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategoryHierarchy_GetSubcategories]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetSubcategoriesIDs" GetMethodModifier="Public" GetMethodName="_GetSubcategoriesIDs" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetSubcategoriesIDs" UserSourceName="_GetSubcategoriesIDs">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategoryHierarchy_GetSubcategories]</CommandText>
@@ -241,7 +252,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategoryHierarchy_GetTotalSubcategories_s]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetTotalSubcategories" GetMethodModifier="Public" GetMethodName="_GetTotalSubcategories" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetTotalSubcategories" UserSourceName="_GetTotalSubcategories">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategoryHierarchy_GetTotalSubcategories_s]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetTotalSubcategories" GetMethodModifier="Public" GetMethodName="_GetTotalSubcategories" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetTotalSubcategories" UserSourceName="_GetTotalSubcategories">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategoryHierarchy_GetTotalSubcategories_s]</CommandText>
@@ -253,7 +264,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.spKartrisCategoryHierarchy_GetByLanguageID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetHierarchyByLanguage" GetMethodModifier="Public" GetMethodName="GetHierarchyByLanguage" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetHierarchyByLanguage" UserSourceName="GetHierarchyByLanguage">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.spKartrisCategoryHierarchy_GetByLanguageID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="GetHierarchyByLanguage" GetMethodModifier="Public" GetMethodName="GetHierarchyByLanguage" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetHierarchyByLanguage" UserSourceName="GetHierarchyByLanguage">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisCategoryHierarchy_GetByLanguageID</CommandText>
@@ -269,7 +280,7 @@
           </TableAdapter>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="CategoryNameTblAdptr" GeneratorDataComponentClassName="CategoryNameTblAdptr" Name="CategoryName" UserDataComponentName="CategoryNameTblAdptr">
             <MainSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.spKartrisCategories_GetNameByCategoryID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetNameByID" GetMethodModifier="Public" GetMethodName="GetNameByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetNameByID" UserSourceName="GetNameByID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.spKartrisCategories_GetNameByCategoryID" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="false" GeneratorGetMethodName="GetNameByID" GetMethodModifier="Public" GetMethodName="GetNameByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="false" UserGetMethodName="GetNameByID" UserSourceName="GetNameByID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisCategories_GetNameByCategoryID</CommandText>
@@ -286,7 +297,7 @@
               <Mapping SourceColumn="CAT_Name" DataSetColumn="CAT_Name" />
             </Mappings>
             <Sources>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategories_GetNameByCategoryID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetNameByID" GetMethodModifier="Public" GetMethodName="_GetNameByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetNameByID" UserSourceName="_GetNameByID">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategories_GetNameByCategoryID]" DbObjectType="StoredProcedure" GenerateMethods="Get" GenerateShortCommands="true" GeneratorGetMethodName="_GetNameByID" GetMethodModifier="Public" GetMethodName="_GetNameByID" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="_GetNameByID" UserSourceName="_GetNameByID">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisCategories_GetNameByCategoryID]</CommandText>
@@ -316,7 +327,7 @@
               </DbCommand>
             </SelectCommand>
           </DbSource>
-          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.spKartrisCategories_GetNameByCategoryID" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="CategoryNameTblAdptr" MethodsParameterType="CLR" Modifier="Public" Name="CategoryNameTblAdptr" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="CategoryNameTblAdptr">
+          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.spKartrisCategories_GetNameByCategoryID" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="CategoryNameTblAdptr" MethodsParameterType="CLR" Modifier="Public" Name="CategoryNameTblAdptr" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="CategoryNameTblAdptr">
             <SelectCommand>
               <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                 <CommandText>dbo.spKartrisCategories_GetNameByCategoryID</CommandText>
@@ -328,7 +339,7 @@
               </DbCommand>
             </SelectCommand>
           </DbSource>
-          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="[nwt1.3003].dbo.[_spKartrisCategories_GetTotalByParentID]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_GetTotalByParentID_o" MethodsParameterType="CLR" Modifier="Public" Name="_GetTotalByParentID_o" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="_GetTotalByParentID_o">
+          <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL..dbo.[_spKartrisCategories_GetTotalByParentID]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_GetTotalByParentID_o" MethodsParameterType="CLR" Modifier="Public" Name="_GetTotalByParentID_o" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="_GetTotalByParentID_o">
             <SelectCommand>
               <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                 <CommandText>dbo.[_spKartrisCategories_GetTotalByParentID]</CommandText>
@@ -348,7 +359,7 @@
   <xs:element name="kartrisCategoriesData" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msdata:EnforceConstraints="False" msprop:Generator_DataSetName="kartrisCategoriesData" msprop:Generator_UserDSName="kartrisCategoriesData">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Categories" msprop:Generator_UserTableName="Categories" msprop:Generator_RowEvArgName="CategoriesRowChangeEvent" msprop:Generator_TableVarName="tableCategories" msprop:Generator_TablePropName="Categories" msprop:Generator_RowDeletingName="CategoriesRowDeleting" msprop:Generator_RowChangingName="CategoriesRowChanging" msprop:Generator_RowDeletedName="CategoriesRowDeleted" msprop:Generator_TableClassName="CategoriesDataTable" msprop:Generator_RowChangedName="CategoriesRowChanged" msprop:Generator_RowEvHandlerName="CategoriesRowChangeEventHandler" msprop:Generator_RowClassName="CategoriesRow">
+        <xs:element name="Categories" msprop:Generator_UserTableName="Categories" msprop:Generator_RowEvArgName="CategoriesRowChangeEvent" msprop:Generator_TableVarName="tableCategories" msprop:Generator_TablePropName="Categories" msprop:Generator_RowDeletingName="CategoriesRowDeleting" msprop:Generator_RowChangingName="CategoriesRowChanging" msprop:Generator_RowDeletedName="CategoriesRowDeleted" msprop:Generator_RowEvHandlerName="CategoriesRowChangeEventHandler" msprop:Generator_TableClassName="CategoriesDataTable" msprop:Generator_RowChangedName="CategoriesRowChanged" msprop:Generator_RowClassName="CategoriesRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="CAT_ID" msprop:Generator_ColumnVarNameInTable="columnCAT_ID" msprop:Generator_ColumnPropNameInRow="CAT_ID" msprop:Generator_ColumnPropNameInTable="CAT_IDColumn" msprop:Generator_UserColumnName="CAT_ID" type="xs:int" minOccurs="0" />
@@ -421,7 +432,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="CategoryHierarchy" msprop:Generator_UserTableName="CategoryHierarchy" msprop:Generator_RowEvArgName="CategoryHierarchyRowChangeEvent" msprop:Generator_TableVarName="tableCategoryHierarchy" msprop:Generator_TablePropName="CategoryHierarchy" msprop:Generator_RowDeletingName="CategoryHierarchyRowDeleting" msprop:Generator_RowChangingName="CategoryHierarchyRowChanging" msprop:Generator_RowDeletedName="CategoryHierarchyRowDeleted" msprop:Generator_TableClassName="CategoryHierarchyDataTable" msprop:Generator_RowChangedName="CategoryHierarchyRowChanged" msprop:Generator_RowEvHandlerName="CategoryHierarchyRowChangeEventHandler" msprop:Generator_RowClassName="CategoryHierarchyRow">
+        <xs:element name="CategoryHierarchy" msprop:Generator_UserTableName="CategoryHierarchy" msprop:Generator_RowEvArgName="CategoryHierarchyRowChangeEvent" msprop:Generator_TableVarName="tableCategoryHierarchy" msprop:Generator_TablePropName="CategoryHierarchy" msprop:Generator_RowDeletingName="CategoryHierarchyRowDeleting" msprop:Generator_RowChangingName="CategoryHierarchyRowChanging" msprop:Generator_RowDeletedName="CategoryHierarchyRowDeleted" msprop:Generator_RowEvHandlerName="CategoryHierarchyRowChangeEventHandler" msprop:Generator_TableClassName="CategoryHierarchyDataTable" msprop:Generator_RowChangedName="CategoryHierarchyRowChanged" msprop:Generator_RowClassName="CategoryHierarchyRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="CH_ParentID" msprop:Generator_ColumnVarNameInTable="columnCH_ParentID" msprop:Generator_ColumnPropNameInRow="CH_ParentID" msprop:Generator_ColumnPropNameInTable="CH_ParentIDColumn" msprop:Generator_UserColumnName="CH_ParentID" type="xs:int" minOccurs="0" />
@@ -430,7 +441,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="CategoryName" msprop:Generator_UserTableName="CategoryName" msprop:Generator_RowEvArgName="CategoryNameRowChangeEvent" msprop:Generator_TableVarName="tableCategoryName" msprop:Generator_TablePropName="CategoryName" msprop:Generator_RowDeletingName="CategoryNameRowDeleting" msprop:Generator_RowChangingName="CategoryNameRowChanging" msprop:Generator_RowDeletedName="CategoryNameRowDeleted" msprop:Generator_TableClassName="CategoryNameDataTable" msprop:Generator_RowChangedName="CategoryNameRowChanged" msprop:Generator_RowEvHandlerName="CategoryNameRowChangeEventHandler" msprop:Generator_RowClassName="CategoryNameRow">
+        <xs:element name="CategoryName" msprop:Generator_UserTableName="CategoryName" msprop:Generator_RowEvArgName="CategoryNameRowChangeEvent" msprop:Generator_TableVarName="tableCategoryName" msprop:Generator_TablePropName="CategoryName" msprop:Generator_RowDeletingName="CategoryNameRowDeleting" msprop:Generator_RowChangingName="CategoryNameRowChanging" msprop:Generator_RowDeletedName="CategoryNameRowDeleted" msprop:Generator_RowEvHandlerName="CategoryNameRowChangeEventHandler" msprop:Generator_TableClassName="CategoryNameDataTable" msprop:Generator_RowChangedName="CategoryNameRowChanged" msprop:Generator_RowClassName="CategoryNameRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="CAT_Name" msprop:Generator_ColumnVarNameInTable="columnCAT_Name" msprop:Generator_ColumnPropNameInRow="CAT_Name" msprop:Generator_ColumnPropNameInTable="CAT_NameColumn" msprop:Generator_UserColumnName="CAT_Name" minOccurs="0">

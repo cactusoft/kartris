@@ -24,3 +24,12 @@
             </div>
     </contenttemplate>
 </asp:UpdatePanel>
+<script>
+// This is a jquery function to add the site ID to the URLs in the treeview where required
+function AddSiteIDParameter()
+{
+$("a.leafnode").attr("href", function(i, href) {
+  return href + '&test=testing';
+});
+}
+</script>
