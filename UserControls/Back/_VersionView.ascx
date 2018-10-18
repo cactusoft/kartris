@@ -15,10 +15,18 @@
                     <asp:MultiView ID="mvwVersions" runat="server" ActiveViewIndex="0">
                         <asp:View ID="viwVersionList" runat="server">
                             <div>
+                                <asp:Button Visible="false" Text="Update Preference" runat="server" ID="btnUpdatePreference" />
+
+                                <asp:HiddenField ID="currentPreference"  value='' runat="server" />
                                 <asp:GridView CssClass="kartristable" ID="gvwViewVersions" runat="server" AllowPaging="False"
                                     AllowSorting="true" AutoGenerateColumns="False" DataKeyNames="V_ID" AutoGenerateEditButton="False"
                                     GridLines="None" SelectedIndex="-1">
                                     <Columns>
+                                        <asp:TemplateField ItemStyle-Width="30">
+                                                        <ItemTemplate>
+                                                            <input type="hidden" name="V_ID" value='<%# Eval("V_ID") %>' />
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
                                         <asp:TemplateField HeaderText='<%$ Resources:_Product, FormLabel_VersionName %>'
                                             ItemStyle-CssClass="itemname">
                                             <HeaderStyle />
@@ -54,7 +62,7 @@
                                             </HeaderTemplate>
                                             <ItemTemplate>
                                             <%  If TaxRegime.VTax_Type = "boolean" Then %>
-                                                    <span class="checkbox"><asp:CheckBox ID="chkTax" runat="server" Checked='<%# CkartrisDataManipulation.FixNullFromDB(Eval("T_TaxRate")) <>0 %>' Enabled="False"></asp:CheckBox></span>
+                                                    <span class="checkbox"><asp:CheckBox ID="chkTax" runat="server" Checked='<%# CkartrisDataManipulation.FixNullFromDB(Eval("T_TaxRate")) <> 0 %>' Enabled="False"></asp:CheckBox></span>
                                                     <% Else%>
                                                     <asp:Literal ID="T_TaxRate" runat="server" Text='<%# CkartrisDisplayFunctions.FixDecimal(CkartrisDataManipulation.FixNullFromDB(Eval("T_TaxRate"))) & "%"%>' />
                                             <% End If%>
@@ -161,5 +169,43 @@
             </asp:UpdatePanel>
         </ContentTemplate>
     </asp:UpdatePanel>
+    <script type="text/javascript">
+        $(function () {
+    <% If sortByValueBool Then %>
+        $("[id*=phdMain__UC_VersionView_gvwViewVersions]").sortable({
+            items: 'tr',
+            cursor: 'pointer',
+            axis: 'y',
+            dropOnEmpty: false,
+            start: function (e, ui) {
+                ui.item.addClass("selected");
+                $(ui.item).find(".floatright").hide();
+            },
+            stop: function (e, ui) {
+                console.log("stop");
+                console.log(document.forms[0]);
+                ui.item.removeClass("selected");
+                var versionIds = document.forms[0].elements["V_ID"];
+                var versionIdsStr = "";
+                for (var i = 0; i < versionIds.length; i++) {
+                    if (versionIdsStr == "") {
+                        versionIdsStr = versionIds[i].value;
+                    } else {
+                        versionIdsStr = versionIdsStr + "," + versionIds[i].value;
+                    }
+                
+                }
+                $(ui.item).find(".floatright").show();
+                if (versionIdsStr != $("#phdMain__UC_VersionView_currentPreference").val()) {
+                    __doPostBack('ctl00$phdMain$_UC_VersionView$btnUpdatePreference', 'OnClick');
+                }
+            },
+            receive: function (e, ui) {
+                $(this).find("tbody").append(ui.item);
+            }
+            });
+        <%End If %>
+});
+</script>
 </div>
 <_user:PopupMessage ID="_UC_PopupMsg" runat="server" />
