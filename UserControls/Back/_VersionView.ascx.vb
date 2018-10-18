@@ -298,8 +298,12 @@ Partial Class _VersionView
                 Catch ex As Exception
                 End Try
                 Exit Sub
+            Case "Refresh"
+                UpdatePreference()
         End Select
-        SetInnerTab("main")
+        If Not e.CommandName.Equals("Refresh") Then
+            SetInnerTab("main")
+        End If
         updVersions.Update()
 
     End Sub
