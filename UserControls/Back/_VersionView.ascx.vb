@@ -20,6 +20,8 @@ Imports KartSettingsManager
 Partial Class _VersionView
     Inherits System.Web.UI.UserControl
 
+    Protected Shared sortByValueBool As Boolean = False
+
     Public Event VersionsChanged()
     Public Event NeedCategoryRefresh()
     Public Event ShowMasterUpdate()
@@ -74,6 +76,44 @@ Partial Class _VersionView
     Public Sub EditVersion(ByVal VersionID As Long)
         litVersionID.Text = CStr(VersionID)
         LoadVersionInformation()
+    End Sub
+
+    Protected Sub btnUpdatePreference_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnUpdatePreference.Click
+        UpdatePreference()
+    End Sub
+
+
+    Protected Sub UpdatePreference()
+        If Request.Form("V_ID") <> currentPreference.Value Then
+
+            Dim preferenceIds As Integer() = (From p In Request.Form("V_ID").Split(",")
+                                              Select Integer.Parse(p)).ToArray()
+            Dim preference As Integer = 1
+            For index As Integer = 0 To preferenceIds.Length - 1
+                'For Each versionId As Integer In preferenceIds
+                Me.UpdatePreferences(preferenceIds(index), index, _GetProductID())
+                preference += 1
+            Next
+            LoadVersions()
+        End If
+    End Sub
+
+    Private Sub UpdatePreferences(id As Integer, preference As Integer, productId As Integer)
+        Dim _connectionstring As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ConnectionString
+        Using con As New SqlConnection(_connectionstring)
+            Using cmd As New SqlCommand("UPDATE tblKartrisVersions SET V_OrderByValue = @Preference WHERE V_ID = @Id AND V_ProductID = @ProductId ")
+                Using sda As New SqlDataAdapter()
+                    cmd.CommandType = CommandType.Text
+                    cmd.Parameters.AddWithValue("@Id", id)
+                    cmd.Parameters.AddWithValue("@Preference", preference)
+                    cmd.Parameters.AddWithValue("@ProductId", productId)
+                    cmd.Connection = con
+                    con.Open()
+                    cmd.ExecuteNonQuery()
+                    con.Close()
+                End Using
+            End Using
+        End Using
     End Sub
 
     Public Sub CloneVersion(ByVal VersionID As Long)
@@ -154,6 +194,8 @@ Partial Class _VersionView
             For Each rw In tblVersions.Rows
                 rw("SortByValue") = 0
             Next
+        Else
+            sortByValueBool = True
         End If
 
         gvwViewVersions.DataSource = tblVersions
@@ -256,8 +298,12 @@ Partial Class _VersionView
                 Catch ex As Exception
                 End Try
                 Exit Sub
+            Case "Refresh"
+                UpdatePreference()
         End Select
-        SetInnerTab("main")
+        If Not e.CommandName.Equals("Refresh") Then
+            SetInnerTab("main")
+        End If
         updVersions.Update()
 
     End Sub

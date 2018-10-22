@@ -15,68 +15,77 @@
                     <asp:MultiView ID="mvwVersions" runat="server" ActiveViewIndex="0">
                         <asp:View ID="viwVersionList" runat="server">
                             <div>
-                                <asp:GridView CssClass="kartristable" ID="gvwViewVersions" runat="server" AllowPaging="False"
-                                    AllowSorting="true" AutoGenerateColumns="False" DataKeyNames="V_ID" AutoGenerateEditButton="False"
-                                    GridLines="None" SelectedIndex="-1">
-                                    <Columns>
-                                        <asp:TemplateField HeaderText='<%$ Resources:_Product, FormLabel_VersionName %>'
-                                            ItemStyle-CssClass="itemname">
-                                            <HeaderStyle />
-                                            <ItemTemplate>
-                                                <asp:PlaceHolder ID="phdVersionSort" runat="server" Visible='<%# Eval("SortByValue") %>'>
-                                                    <div class="updownbuttons">
-                                                        <asp:LinkButton ID="lnkBtnMoveUp" runat="server" CommandName="MoveUp" CommandArgument='<%# Eval("V_ID") %>'
-                                                            Text="+" CssClass="triggerswitch triggerswitch_on" />
-                                                        <asp:LinkButton ID="lnkBtnMoveDown" runat="server" CommandName="MoveDown" CommandArgument='<%# Eval("V_ID") %>'
-                                                            Text="-" CssClass="triggerswitch triggerswitch_off" />
-                                                    </div>
-                                                </asp:PlaceHolder>
-                                                <asp:Literal ID="V_Name" runat="server" Text='<%# Eval("V_Name") %>' />
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:BoundField DataField="V_CodeNumber" HeaderText='<%$ Resources:_Version, FormLabel_CodeNumer %>'>
-                                            <HeaderStyle />
-                                        </asp:BoundField>
-                                        <asp:TemplateField ItemStyle-CssClass="alignright">
-                                            <HeaderTemplate>
-                                                <asp:Literal ID="litFormLabelStockQuantity" runat="server" Text='<%$ Resources:_Version, FormLabel_StockQuantity %>' />
-                                            </HeaderTemplate>
-                                            <ItemTemplate>
-                                                <asp:Literal ID="litQuantity" runat="server" Text='<%# Eval("V_Quantity") & " (" & Eval("V_QuantityWarnLevel") & ")" %>' />
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:BoundField ItemStyle-CssClass="alignright" DataField="V_Price" HeaderText='<%$ Resources:_Kartris, ContentText_Price %>'>
-                                            <HeaderStyle />
-                                        </asp:BoundField>
-                                        <asp:TemplateField ItemStyle-CssClass="alignright">
-                                            <HeaderTemplate>
-                                                <asp:Literal ID="litContentTextTax" runat="server" Text='<%$ Resources:_Version, ContentText_Tax %>' />
-                                            </HeaderTemplate>
-                                            <ItemTemplate>
-                                            <%  If TaxRegime.VTax_Type = "boolean" Then %>
-                                                    <span class="checkbox"><asp:CheckBox ID="chkTax" runat="server" Checked='<%# CkartrisDataManipulation.FixNullFromDB(Eval("T_TaxRate")) <>0 %>' Enabled="False"></asp:CheckBox></span>
-                                                    <% Else%>
-                                                    <asp:Literal ID="T_TaxRate" runat="server" Text='<%# CkartrisDisplayFunctions.FixDecimal(CkartrisDataManipulation.FixNullFromDB(Eval("T_TaxRate"))) & "%"%>' />
-                                            <% End If%>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                        <asp:TemplateField ItemStyle-CssClass="selectfield alignright nowrap">
-                                            <HeaderTemplate>
-                                                <asp:LinkButton ID="lnkNewVersion" runat="server" CssClass="linkbutton icon_new"
-                                                    CommandName="NewVersion" Text="<%$ Resources: _Kartris, FormButton_New %>" />
-                                            </HeaderTemplate>
-                                            <ItemTemplate>
-                                                <asp:PlaceHolder ID="phdCloneLink" runat="server"><a class="linkbutton icon_new"
-                                                    href="_ModifyProduct.aspx?ProductID=<%# Eval("V_ProductID") %>&CategoryID=<% =Request.QueryString("CategoryID") %>&VersionID=<%# Eval("V_ID") %>&strParent=<% =Request.Querystring("strParent") %>&strTab=versions&strClone=yes">
-                                                    <asp:Literal ID="litFormButtonClone" Text='<%$ Resources:_Kartris, FormButton_Clone %>'
-                                                        runat="server"></asp:Literal></a></asp:PlaceHolder>
-                                                <a class="linkbutton icon_edit" href="_ModifyProduct.aspx?ProductID=<%# Eval("V_ProductID") %>&CategoryID=<% =Request.QueryString("CategoryID") %>&VersionID=<%# Eval("V_ID") %>&strParent=<% =Request.Querystring("strParent") %>&strTab=versions">
-                                                    <asp:Literal ID="litRelatedProductsLink" Text='<%$ Resources:_Kartris, FormButton_Edit %>'
-                                                        runat="server"></asp:Literal></a>
-                                            </ItemTemplate>
-                                        </asp:TemplateField>
-                                    </Columns>
-                                </asp:GridView>
+                            <asp:UpdatePanel ID="updVersionsList" runat="server" UpdateMode="Conditional">
+                            <ContentTemplate>
+                                    <asp:Button Visible="false" Text="Update Preference" runat="server" ID="btnUpdatePreference" />
+
+                                    <asp:HiddenField ID="currentPreference"  value='' runat="server" />
+                                    <asp:GridView CssClass="kartristable" ID="gvwViewVersions" runat="server" AllowPaging="False" 
+                                        AllowSorting="true" AutoGenerateColumns="False" DataKeyNames="V_ID" AutoGenerateEditButton="False"
+                                        GridLines="None" SelectedIndex="-1">
+                                        <Columns>
+                                            <asp:TemplateField HeaderText='<%$ Resources:_Product, FormLabel_VersionName %>'
+                                                ItemStyle-CssClass="itemname">
+                                                <HeaderStyle />
+                                                <ItemTemplate>
+                                                    <asp:PlaceHolder ID="phdVersionSort" runat="server" Visible='<%# Eval("SortByValue") %>'>
+                                                        <div class="updownbuttons">
+                                                            <asp:LinkButton ID="lnkBtnMoveUp" runat="server" CommandName="MoveUp" CommandArgument='<%# Eval("V_ID") %>'
+                                                                Text="+" CssClass="triggerswitch triggerswitch_on" />
+                                                            <asp:LinkButton ID="lnkBtnMoveDown" runat="server" CommandName="MoveDown" CommandArgument='<%# Eval("V_ID") %>'
+                                                                Text="-" CssClass="triggerswitch triggerswitch_off" />
+                                                        </div>
+                                                    </asp:PlaceHolder>
+                                                    <input type="hidden" name="V_ID" value='<%# Eval("V_ID") %>' />
+                                                    <asp:Literal ID="V_Name" runat="server" Text='<%# Eval("V_Name") %>' />
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:BoundField DataField="V_CodeNumber" HeaderText='<%$ Resources:_Version, FormLabel_CodeNumer %>'>
+                                                <HeaderStyle />
+                                            </asp:BoundField>
+                                            <asp:TemplateField ItemStyle-CssClass="alignright">
+                                                <HeaderTemplate>
+                                                    <asp:Literal ID="litFormLabelStockQuantity" runat="server" Text='<%$ Resources:_Version, FormLabel_StockQuantity %>' />
+                                                </HeaderTemplate>
+                                                <ItemTemplate>
+                                                    <asp:Literal ID="litQuantity" runat="server" Text='<%# Eval("V_Quantity") & " (" & Eval("V_QuantityWarnLevel") & ")" %>' />
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:BoundField ItemStyle-CssClass="alignright" DataField="V_Price" HeaderText='<%$ Resources:_Kartris, ContentText_Price %>'>
+                                                <HeaderStyle />
+                                            </asp:BoundField>
+                                            <asp:TemplateField ItemStyle-CssClass="alignright">
+                                                <HeaderTemplate>
+                                                    <asp:LinkButton ID="lnkBtnRefreshVersions" runat="server" CommandName="Refresh" Text="refresh" CssClass="invisible btnRefreshVersions"/>
+                                                    <asp:Literal ID="litContentTextTax" runat="server" Text='<%$ Resources:_Version, ContentText_Tax %>' />
+                                                </HeaderTemplate>
+                                                <ItemTemplate>
+                                                <%  If TaxRegime.VTax_Type = "boolean" Then %>
+                                                        <span class="checkbox"><asp:CheckBox ID="chkTax" runat="server" Checked='<%# CkartrisDataManipulation.FixNullFromDB(Eval("T_TaxRate")) <> 0 %>' Enabled="False"></asp:CheckBox></span>
+                                                        <% Else%>
+                                                        <asp:Literal ID="T_TaxRate" runat="server" Text='<%# CkartrisDisplayFunctions.FixDecimal(CkartrisDataManipulation.FixNullFromDB(Eval("T_TaxRate"))) & "%"%>' />
+                                                <% End If%>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                            <asp:TemplateField ItemStyle-CssClass="selectfield alignright nowrap">
+                                                <HeaderTemplate>
+                                                    <asp:LinkButton ID="lnkNewVersion" runat="server" CssClass="linkbutton icon_new"
+                                                        CommandName="NewVersion" Text="<%$ Resources: _Kartris, FormButton_New %>" />
+                                                </HeaderTemplate>
+                                                <ItemTemplate>
+                                                    <asp:PlaceHolder ID="phdCloneLink" runat="server"><a class="linkbutton icon_new"
+                                                        href="_ModifyProduct.aspx?ProductID=<%# Eval("V_ProductID") %>&CategoryID=<% =Request.QueryString("CategoryID") %>&VersionID=<%# Eval("V_ID") %>&strParent=<% =Request.Querystring("strParent") %>&strTab=versions&strClone=yes">
+                                                        <asp:Literal ID="litFormButtonClone" Text='<%$ Resources:_Kartris, FormButton_Clone %>'
+                                                            runat="server"></asp:Literal></a></asp:PlaceHolder>
+                                                    <a class="linkbutton icon_edit" href="_ModifyProduct.aspx?ProductID=<%# Eval("V_ProductID") %>&CategoryID=<% =Request.QueryString("CategoryID") %>&VersionID=<%# Eval("V_ID") %>&strParent=<% =Request.Querystring("strParent") %>&strTab=versions">
+                                                        <asp:Literal ID="litRelatedProductsLink" Text='<%$ Resources:_Kartris, FormButton_Edit %>'
+                                                            runat="server"></asp:Literal></a>
+                                                </ItemTemplate>
+                                            </asp:TemplateField>
+                                        </Columns>
+                                    </asp:GridView>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
                             </div>
                         </asp:View>
                         <asp:View ID="viwVersionDetails" runat="server">
@@ -161,5 +170,53 @@
             </asp:UpdatePanel>
         </ContentTemplate>
     </asp:UpdatePanel>
+    <script type="text/javascript">
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+        prm.add_endRequest(function (s, e) {
+            dndEvents();
+        });
+
+        $(function () {
+            dndEvents();
+        });
+    <% If sortByValueBool Then %>
+            function dndEvents() {
+                $("[id*=phdMain__UC_VersionView_gvwViewVersions]").sortable({
+                    items: 'tr',
+                    cursor: 'pointer',
+                    axis: 'y',
+                    dropOnEmpty: false,
+                    start: function (e, ui) {
+                        ui.item.addClass("selected");
+                        $(ui.item).find(".floatright").hide();
+                    },
+                    stop: function (e, ui) {
+                        console.log("stop");
+                        console.log(document.forms[0]);
+                        ui.item.removeClass("selected");
+                        var versionIds = document.forms[0].elements["V_ID"];
+                        var versionIdsStr = "";
+                        for (var i = 0; i < versionIds.length; i++) {
+                            if (versionIdsStr == "") {
+                                versionIdsStr = versionIds[i].value;
+                            } else {
+                                versionIdsStr = versionIdsStr + "," + versionIds[i].value;
+                            }
+
+                        }
+                        $(ui.item).find(".floatright").show();
+                        if (versionIdsStr != $("#phdMain__UC_VersionView_currentPreference").val()) {
+                            console.log("click");
+                            $(".btnRefreshVersions")[0].click();
+                            //__doPostBack('ctl00$phdMain$_UC_VersionView$btnUpdatePreference', 'OnClick');
+                        }
+                    },
+                    receive: function (e, ui) {
+                        $(this).find("tbody").append(ui.item);
+                    }
+                });
+            }
+        <%End If %>
+</script>
 </div>
 <_user:PopupMessage ID="_UC_PopupMsg" runat="server" />
