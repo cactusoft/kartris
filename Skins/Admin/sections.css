@@ -540,7 +540,8 @@ SECTION: COMBINATIONS
 SECTION: PRODUCTS
 ========================================================================
 */
-#section_products strong                { display: inline-block; width: 210px; }
+#section_products .button_expand        { float: left; }
+#section_products strong                { display: table-cell; }
 #section_products strong a              { color: #000 }
 #section_products strong span.hidden a  { font-weight: normal; font-style: italic; }
 #section_products a,
@@ -551,7 +552,8 @@ SECTION: PRODUCTS
 SECTION: CATEGORIES
 ========================================================================
 */
-#section_categories strong              { display: inline-block; width: 240px; }
+#section_categories .button_expand      { float: left; }
+#section_categories strong              { display: table-cell; }
 #section_categories strong a            { color: #000 }
 /* 
 ========================================================================

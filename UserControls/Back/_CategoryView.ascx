@@ -50,7 +50,6 @@
                                             <asp:Button Visible="false" Text="Update Preference" runat="server" ID="btnUpdatePreference" />
                                             <asp:HiddenField ID="currentPreference"  value='' runat="server" />
                                             <asp:DataList ID="dtlSubCategories" runat="server" CssClass="kartristable Kartris-DataView notableheader">
-                                            <%--<asp:DataList ID="dtlSubCategories" runat="server" CssClass="kartristable Kartris-DataView notableheader">--%>
                                                 <ItemStyle />
                                                 <AlternatingItemStyle CssClass="Kartris-GridView-Alternate" />
                                                 <ItemTemplate>
@@ -70,7 +69,7 @@
                                                         <asp:HyperLink runat="server" ID="lnkSelectPlus"
                                                         CssClass="imagebutton button_expand"
                                                             ToolTip='<%$ Resources:_Kartris, FormButton_Select %>' Text='+'
-                                                            NavigateUrl='<%# FormatNavURL(_GetParentCategory, _GetCategoryID())  %>' /><asp:PlaceHolder ID="phdCategoriesSort" runat="server" Visible='<%# Eval("SortByValue") %>'>
+                                                            NavigateUrl='<%# FormatNavURL(_GetParentCategory, _GetCategoryID(), _GetSiteID())  %>' /><asp:PlaceHolder ID="phdCategoriesSort" runat="server" Visible='<%# Eval("SortByValue") %>'>
                                                             <div class="updownbuttons">
                                                                 <asp:LinkButton ID="lnkBtnMoveUp" runat="server" CommandName="MoveUp" CommandArgument='<%# Eval("CAT_ID") %>'
                                                                     Text="+" CssClass="triggerswitch triggerswitch_on" />
@@ -80,7 +79,7 @@
                                                         </asp:PlaceHolder>
                                                         <strong><asp:HyperLink runat="server" ID="lnkCategoryLink"
                                                             ToolTip='<%# Eval("CAT_Name") %>' Text='<%# Eval("CAT_Name") %>'
-                                                            NavigateUrl='<%# FormatNavURL(_GetParentCategory, _GetCategoryID())  %>' /></strong>
+                                                            NavigateUrl='<%# FormatNavURL(_GetParentCategory, _GetCategoryID(), _GetSiteID())  %>' /></strong>
                                                 </ItemTemplate>
                                                 <FooterTemplate>
                                                     <asp:LinkButton ID="lnkBtnRefreshCat" runat="server" CommandName="Refresh" Text="refresh" CssClass="invisible btnRefreshCat"/>
@@ -101,7 +100,7 @@
                                                 <asp:LinkButton ID="lnkTurnProductsOff" Text="<%$ Resources:_Product, ContentText_TurnAllProductsOff %>" runat="server" CssClass="linkbutton" Visible="False" />
                                                 <asp:LinkButton ID="lnkTurnProductsOn" Text="<%$ Resources:_Product, ContentText_TurnAllProductsOn %>" runat="server" CssClass="linkbutton" Visible="False" />
 
-                                                <a style="margin-left:40px" class="linkbutton icon_new" href="_ModifyProduct.aspx?ProductID=0&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>">
+                                                <a style="margin-left:40px" class="linkbutton icon_new" href="_ModifyProduct.aspx?ProductID=0&amp;CategoryID=<% =_GetCategoryID() %>&amp;strParent=<% =_GetSiteID() %>::<% = IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>">
                                                     <asp:Literal ID="litNewProductLink" Text='<%$ Resources:_Kartris, FormButton_New %>'
                                                         runat="server"></asp:Literal></a>
                                             </div>
@@ -127,19 +126,19 @@
                                                     <div class="floatright">
 
                                                         <asp:PlaceHolder ID="phdOptionsLink" runat="server" Visible="false"><a class="linkbutton icon_edit normalweight"
-                                                            href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strParent=<% = IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=options">
+                                                            href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;SiteID=<% =_GetSiteID() %>&amp;strParent=<% =_GetSiteID() %>::<% = IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=options">
                                                             <asp:Literal ID="litOptionsLink" Text='<%$ Resources:_Kartris, ContentText_Options %>'
                                                                 runat="server"></asp:Literal></a></asp:PlaceHolder>
-                                                        <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=attributes">
+                                                        <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;SiteID=<% =_GetSiteID() %>&amp;strParent=<% =_GetSiteID() %>::<% = IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=attributes">
                                                             <asp:Literal ID="litAttributesLink" Text='<%$ Resources:_Kartris, ContentText_ProductAttributes %>'
-                                                                runat="server"></asp:Literal></a> <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=reviews">
+                                                                runat="server"></asp:Literal></a> <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;SiteID=<% =_GetSiteID() %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;strParent=<% =_GetSiteID() %>::<% = IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=reviews">
                                                                     <asp:Literal ID="litReviewsLink" Text='<%$ Resources:_Product, ContentText_Reviews %>'
-                                                                        runat="server"></asp:Literal></a> <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=relatedproducts">
+                                                                        runat="server"></asp:Literal></a> <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;SiteID=<% =_GetSiteID() %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;strParent=<% =_GetSiteID() %>::<% = IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=relatedproducts">
                                                                             <asp:Literal ID="litRelatedProductsLink" Text='<%$ Resources:_Product, ContentText_RelatedProducts %>'
                                                                                 runat="server"></asp:Literal></a>
                                                         
                                                         <asp:HyperLink ID="lnkBtnProduct" runat="server" ToolTip="<%$ Resources:_Product, ImageLabel_EditThisProduct %>"
-                                                            Text='<%$ Resources: _Kartris, FormButton_Edit %>' NavigateUrl='<%# "~/Admin/_ModifyProduct.aspx?ProductID=" & Eval("P_ID") & "&CategoryID=" & _GetCategoryID() & "&strParent=" & IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>'
+                                                            Text='<%$ Resources: _Kartris, FormButton_Edit %>' NavigateUrl='<%# "~/Admin/_ModifyProduct.aspx?ProductID=" & Eval("P_ID") & "&CategoryID=" & _GetCategoryID() & "&SiteID="& _GetSiteID() & "&strParent=" & _GetSiteID() & "::" & IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>'
                                                             CssClass="linkbutton icon_edit" />
                                                     </div>
                                                     <asp:LinkButton ID="lnkBtnSelect" runat="server" CommandName="select" Text="+" CssClass="imagebutton button_expand" /><asp:PlaceHolder ID="phdProductSort" runat="server" Visible='<%# Eval("SortByValue") %>'>
@@ -151,7 +150,7 @@
                                                     <strong>
                                                         <asp:Literal ID="litProductNameStyle" runat="server" Visible='<%# Eval("P_Live")=false %>'><span class="hidden"></asp:Literal>
                                                         <asp:HyperLink ID="lnkEditThisProduct" runat="server" ToolTip="<%$ Resources:_Product, ImageLabel_EditThisProduct %>"
-                                                            Text='<%# Eval("P_Name") %>' NavigateUrl='<%# "~/Admin/_ModifyProduct.aspx?ProductID=" & Eval("P_ID")& "&CategoryID=" & _GetCategoryID() & "&strParent=" & IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>' /></strong>
+                                                            Text='<%# Eval("P_Name") %>' NavigateUrl='<%# "~/Admin/_ModifyProduct.aspx?ProductID=" & Eval("P_ID")& "&CategoryID=" & _GetCategoryID() & "&SiteID="& _GetSiteID() & "&strParent="  & _GetSiteID() & "::" & IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>' /></strong>
                                                     <asp:Literal ID="litProductNameStyleClose" runat="server" Visible='<%# Eval("P_Live")=false %>'></span></asp:Literal>
                                                 </ItemTemplate>
                                                 <SelectedItemTemplate>
@@ -159,18 +158,18 @@
                                                         EnableViewState="False" />
                                                     <div class="floatright">
                                                         <asp:PlaceHolder ID="phdOptionsLink" runat="server" Visible="false"><a class="linkbutton icon_edit normalweight"
-                                                            href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strTab=options">
+                                                            href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;strTab=options">
                                                             <asp:Literal ID="litOptionsLink" Text='<%$ Resources:_Kartris, ContentText_Options %>'
                                                                 runat="server"></asp:Literal></a></asp:PlaceHolder>
-                                                        <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=attributes">
+                                                        <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;SiteID=<% =_GetSiteID() %>&amp;strParent=<% =_GetSiteID() %>::<% = IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=attributes">
                                                             <asp:Literal ID="litAttributesLink" Text='<%$ Resources:_Kartris, ContentText_ProductAttributes %>'
-                                                                runat="server"></asp:Literal></a> <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=reviews">
+                                                                runat="server"></asp:Literal></a> <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;SiteID=<% =_GetSiteID() %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;strParent=<% =_GetSiteID() %>::<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=reviews">
                                                                     <asp:Literal ID="litReviewsLink" Text='<%$ Resources:_Product, ContentText_Reviews %>'
-                                                                        runat="server"></asp:Literal></a> <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=relatedproducts">
+                                                                        runat="server"></asp:Literal></a> <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;SiteID=<% =_GetSiteID() %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;strParent=<% =_GetSiteID() %>::<% = IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=relatedproducts">
                                                                             <asp:Literal ID="litRelatedProductsLink" Text='<%$ Resources:_Product, ContentText_RelatedProducts %>'
                                                                                 runat="server"></asp:Literal></a>
                                                         <asp:HyperLink ID="lnkProduct" runat="server" ToolTip="<%$ Resources:_Product, ImageLabel_EditThisProduct %>"
-                                                            Text='<%$ Resources: _Kartris, FormButton_Edit %>' NavigateUrl='<%# "~/Admin/_ModifyProduct.aspx?ProductID=" & Eval("P_ID") & "&CategoryID=" & _GetCategoryID() & "&strParent=" & IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>'
+                                                            Text='<%$ Resources: _Kartris, FormButton_Edit %>' NavigateUrl='<%# "~/Admin/_ModifyProduct.aspx?ProductID=" & Eval("P_ID") & "&CategoryID=" & _GetCategoryID() & "&SiteID="& _GetSiteID() & "&strParent=" & IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>'
                                                             CssClass="linkbutton icon_edit" />
                                                     </div>
                                                     <div>
@@ -178,7 +177,7 @@
                                                             EnableViewState="False"></asp:Literal>
                                                         <strong>
                                                             <asp:HyperLink ID="lnkEdit" runat="server" ToolTip="<%$ Resources:_Product, ImageLabel_EditThisProduct %>"
-                                                                Text='<%# Eval("P_Name") %>' NavigateUrl='<%# "~/Admin/_ModifyProduct.aspx?ProductID=" & Eval("P_ID") & "&amp;strParent=" & Request.Querystring("strParent") %>'
+                                                                Text='<%# Eval("P_Name") %>' NavigateUrl='<%# "~/Admin/_ModifyProduct.aspx?ProductID=" & Eval("P_ID") & "&SiteID="& _GetSiteID() & "&amp;strParent=" & Request.Querystring("strParent") %>'
                                                                 CssClass="" /></strong>
                                                     </div>
                                                     <table class="kartristable nested section_versions">
@@ -206,7 +205,7 @@
                                                                 </th>
                                                                 <th class="alignright selectfield">
                                                                     <asp:PlaceHolder ID="phdNewVersionLink" runat="server"><a class="linkbutton icon_new"
-                                                                        href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;VersionID=0&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=versions">
+                                                                        href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;SiteID=<% =_GetSiteID() %>&amp;VersionID=0&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=versions">
                                                                         <asp:Literal ID="litNewVersionLink" Text='<%$ Resources:_Kartris, FormButton_New %>'
                                                                             runat="server"></asp:Literal></a> </asp:PlaceHolder>
                                                                 </th>
@@ -242,10 +241,10 @@
                                                                         </td>
                                                                         <td class="alignright nowrap">
                                                                             <asp:PlaceHolder ID="phdCloneLink" Visible='<%# Eval("ShowClone") %>' runat="server">
-                                                                                <a class="linkbutton icon_new" href="_ModifyProduct.aspx?ProductID=<%# Eval("V_ProductID") %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;VersionID=<%# Eval("V_ID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=versions&strClone=yes">
+                                                                                <a class="linkbutton icon_new" href="_ModifyProduct.aspx?ProductID=<%# Eval("V_ProductID") %>&amp;SiteID=<% =_GetSiteID() %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;VersionID=<%# Eval("V_ID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=versions&strClone=yes">
                                                                                     <asp:Literal ID="litFormButtonClone" Text='<%$ Resources:_Kartris, FormButton_Clone %>'
                                                                                         runat="server"></asp:Literal></a></asp:PlaceHolder>
-                                                                            <a class="linkbutton icon_edit" href="_ModifyProduct.aspx?ProductID=<%# Eval("V_ProductID") %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;VersionID=<%# Eval("V_ID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=versions">
+                                                                            <a class="linkbutton icon_edit" href="_ModifyProduct.aspx?ProductID=<%# Eval("V_ProductID") %>&amp;SiteID=<% =_GetSiteID() %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;VersionID=<%# Eval("V_ID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=versions">
                                                                                 <asp:Literal ID="litRelatedProductsLink" Text='<%$ Resources:_Kartris, FormButton_Edit %>'
                                                                                     runat="server"></asp:Literal></a>
                                                                         </td>

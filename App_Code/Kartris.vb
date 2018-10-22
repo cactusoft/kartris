@@ -30,8 +30,8 @@ Imports System.Xml
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 2.9014
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #05/28/2018# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION As Decimal = 3.0
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #10/20/2018# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
@@ -742,6 +742,21 @@ Public NotInheritable Class CkartrisDataManipulation
     End Function
 
     ''' <summary>
+    ''' Handles the decimal point in strings
+    ''' </summary>
+    Public Shared Function HandleDecimalValuesString(ByVal strValue As String) As String
+        strValue = Replace(strValue, ",", ".")
+        If Not strValue.Contains(".") Then
+            strValue &= ".00"
+        Else
+            'Maybe has one char after dot
+            Dim aryText As String() = Split(strValue, ".")
+            If Len(aryText(1)) = 1 Then strValue &= "0"
+        End If
+        Return strValue
+    End Function
+
+    ''' <summary>
     ''' Get product ID from querystring
     ''' </summary>
     Public Shared Function _GetProductID() As Integer
@@ -767,6 +782,18 @@ Public NotInheritable Class CkartrisDataManipulation
         Return numCategoryID
     End Function
 
+    ''' <summary>
+    ''' Get site ID from querystring
+    ''' </summary>
+    Public Shared Function _GetSiteID() As Integer
+        Dim numSiteID As Integer = 0
+        Try
+            numSiteID = CInt(HttpContext.Current.Request.QueryString("SiteID"))
+        Catch ex As Exception
+            numSiteID = 0
+        End Try
+        Return numSiteID
+    End Function
     ''' <summary>
     ''' Get parent categories from QueryString
     ''' </summary>

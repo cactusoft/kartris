@@ -95,9 +95,9 @@ Partial Class UserControls_Front_EcommerceTracking
                         hidCurrencyID.Value = tblOrder.Rows(0).Item("O_CurrencyID")
 
                         'Order detail amounts
-                        litShipping.Text = CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numShippingTotal, False)
-                        litTotal.Text = CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numTotalItems, False)
-                        litTax.Text = CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numTax, False)
+                        litShipping.Text = CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numShippingTotal, False))
+                        litTotal.Text = CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numTotalItems, False))
+                        litTax.Text = CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numTax, False))
 
                         'Clear order details
                         tblOrder.Dispose()
@@ -167,7 +167,7 @@ Partial Class UserControls_Front_EcommerceTracking
         CType(e.Item.FindControl("litVersionCode"), Literal).Text = strVersionCode
         CType(e.Item.FindControl("litItemName"), Literal).Text = strItemName
         CType(e.Item.FindControl("litItemOptions"), Literal).Text = Replace(strItemOptions, "<br />", "/")
-        CType(e.Item.FindControl("litItemPrice"), Literal).Text = numItemPrice
+        CType(e.Item.FindControl("litItemPrice"), Literal).Text = CkartrisDataManipulation.HandleDecimalValuesString(numItemPrice.ToString)
         CType(e.Item.FindControl("litItemQuantity"), Literal).Text = numItemQuantity
     End Sub
 

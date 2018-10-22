@@ -73,12 +73,12 @@ Partial Class _CategoryMenu
         Dim childNode As TreeNode = Nothing
         For Each drwChilds As DataRow In tblChilds.Rows
             childNode = New TreeNode(drwChilds("CAT_Name"), drwChilds("CAT_ID") & "|" & drwChilds("SUB_ID"))
-            childNode.NavigateUrl = _CategorySiteMapProvider.CreateURL(_CategorySiteMapProvider.BackEndPage.Category, drwChilds("CAT_ID"))
+            childNode.NavigateUrl = _CategorySiteMapProvider.CreateURL(_CategorySiteMapProvider.BackEndPage.Category, drwChilds("CAT_ID"), drwChilds("SUB_ID"))
             childNode.PopulateOnDemand = True
             If (drwChilds("SUB_ID")) > 0 Then 'It is a sub site
                 childNode.ImageUrl = "~/Skins/Admin/Images/site-tree.gif"
                 childNode.ToolTip = drwChilds("SUB_Name")
-                childNode.NavigateUrl &= "&SiteID=" & drwChilds("SUB_ID")
+                'childNode.NavigateUrl &= "&SiteID=" & drwChilds("SUB_ID")
             ElseIf CBool(drwChilds("CAT_Live")) Then
                 childNode.ImageUrl = "~/Skins/Admin/Images/category-tree.gif"
             Else
@@ -125,17 +125,15 @@ Partial Class _CategoryMenu
                 childNode = New TreeNode(drwChilds("CAT_Name"), drwChilds("CAT_ID") & "|" & numSiteID)
 
                 Dim strParents As String = node.ValuePath.Replace("/", ",")
+
+                'Clean up so we just have cat IDs comma-separated, not the site IDs
                 If strParents.Contains("|") Then
-                    'Need to get just the parent cat ID
-                    strParents = GetIDFromNodeValue(strParents).ToString
+                    strParents = CleanParentsString(strParents)
                 End If
 
                 childNode.NavigateUrl = _CategorySiteMapProvider.CreateURL(
-                    _CategorySiteMapProvider.BackEndPage.Category, drwChilds("CAT_ID"),
-                    strParents, GetIDFromNodeValue(node.Value))
-
-                'Site ID
-                childNode.NavigateUrl &= "&SiteID=" & numSiteID
+                    _CategorySiteMapProvider.BackEndPage.Category, drwChilds("CAT_ID"), GetIDFromNodeValue(node.Value, True),
+                    strParents)
 
                 If childNode.ChildNodes.Count = 0 Then childNode.PopulateOnDemand = True
                 If CBool(drwChilds("CAT_Live")) Then
@@ -151,10 +149,12 @@ Partial Class _CategoryMenu
             For Each drwChilds As DataRow In tblChilds.Rows
                 childNode = New TreeNode(drwChilds("P_Name"), drwChilds("P_ID") & "|" & numSiteID)
                 Dim strParents As String = node.ValuePath.Replace("/", ",")
+
+                'Clean up so we just have cat IDs comma-separated, not the site IDs
                 If strParents.Contains("|") Then
-                    'Need to get just the parent cat ID
-                    strParents = GetIDFromNodeValue(strParents).ToString
+                    strParents = CleanParentsString(strParents)
                 End If
+
                 If strParents.EndsWith("," & GetIDFromNodeValue(node.Value)) Then
                     strParents = Replace(strParents, "," & GetIDFromNodeValue(node.Value), "")
                 ElseIf strParents = GetIDFromNodeValue(node.Value).ToString Then
@@ -163,11 +163,9 @@ Partial Class _CategoryMenu
 
                 Dim strNavigateURL As String = _CategorySiteMapProvider.CreateURL(
                         _CategorySiteMapProvider.BackEndPage.Product, drwChilds("P_ID"),
-                        strParents) & "&CategoryID=" & GetIDFromNodeValue(node.Value)
-                If strParents = "0" Then strNavigateURL &= "&strParent=0"
-
-                'Site ID
-                strNavigateURL &= "&SiteID=" & numSiteID
+                        GetIDFromNodeValue(node.Value, True),
+                        numSiteID & "::" & strParents,
+                        GetIDFromNodeValue(node.Value))
 
                 childNode.NavigateUrl = strNavigateURL
                 If CBool(drwChilds("P_Live")) Then
@@ -196,10 +194,13 @@ Partial Class _CategoryMenu
                 SelectCategoryNode()
             End If
         ElseIf strCurrentURL.Contains("_ModifyProduct.aspx") Then
+            Dim strParents As String = ""
+            Dim aryParents As String() = Split(_GetParentCategory(), "::")
+            strParents = aryParents(1)
             If String.IsNullOrEmpty(_GetParentCategory()) AndAlso Not String.IsNullOrEmpty(_GetCategoryID) Then
                 FindPageNode("p", _GetCategoryID())
             ElseIf Not String.IsNullOrEmpty(_GetParentCategory()) AndAlso Not String.IsNullOrEmpty(_GetCategoryID) Then
-                FindPageNode("p", _GetParentCategory() & "," & _GetCategoryID())
+                FindPageNode("p", strParents & "," & _GetCategoryID())
             End If
         End If
         If tvwCategory.SelectedNode IsNot Nothing Then
@@ -285,7 +286,13 @@ Partial Class _CategoryMenu
         If PageType = "c" Then
             Dim arrCategories() As String = Split(Parents, ",")
             For i As Integer = 0 To arrCategories.Length - 1
-                Dim CatID As Integer = CInt(arrCategories(i))
+                Dim CatID As Integer = 0
+                Try
+                    CatID = CLng(arrCategories(i))
+                Catch ex As Exception
+                    '
+                End Try
+
                 For Each node As TreeNode In tvwCategory.Nodes
                     If node.NavigateUrl.Contains("_Category.aspx") Then
                         If GetIDFromNodeValue(node.Value) = CatID And GetIDFromNodeValue(node.Value, True) = numSiteID Then
@@ -314,7 +321,20 @@ Partial Class _CategoryMenu
         ElseIf PageType = "p" Then
             Dim arrCategories() As String = Split(Parents, ",")
             For i As Integer = 0 To arrCategories.Length - 1
-                Dim CatID As Integer = CInt(arrCategories(i))
+
+                'This might come in with the numsite ID for uniqueness, to 
+                'distinguish between same product in different sites
+                Dim strCatContent As String = arrCategories(i)
+                Try
+                    'We use a quick array split to get the category
+                    'ID part from the string
+                    Dim aryCatContent As String() = Split(strCatContent, "::")
+                    strCatContent = aryCatContent(1)
+                Catch ex As Exception
+                    'erm, oh... this is embarrassing
+                End Try
+
+                Dim CatID As Integer = CLng(strCatContent)
                 For Each node As TreeNode In tvwCategory.Nodes
                     If node.NavigateUrl.Contains("_Category.aspx") Then
                         If GetIDFromNodeValue(node.Value) = CatID And GetIDFromNodeValue(node.Value, True) = numSiteID Then
@@ -428,5 +448,23 @@ Partial Class _CategoryMenu
             numOutputID = CLng(aryIDs(0))
         End If
         Return numOutputID
+    End Function
+
+    ''' <summary>
+    ''' Clean up parents string
+    ''' </summary>
+    ''' <remarks>
+    ''' With the new multi-site functionality, we get a parents
+    ''' string that includes catid|siteid values instead of just
+    ''' catID. This should clean it up.</remarks>
+    Private Function CleanParentsString(ByVal strParentsString As String) As String
+        Dim aryString As String() = Split(strParentsString, ",")
+        For i = 0 To UBound(aryString)
+            aryString(i) = GetIDFromNodeValue(aryString(i))
+        Next
+
+        Dim strOutput As String = ""
+        strOutput = String.Join(",", aryString)
+        Return strOutput
     End Function
 End Class

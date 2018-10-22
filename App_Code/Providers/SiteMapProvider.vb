@@ -97,27 +97,27 @@ Public Class CategorySiteMapProvider
     ''' records from database table
     ''' </summary>
     Public Overrides Function BuildSiteMap() As SiteMapNode
-        ' Only allow the Site Map to be created by a single thread
+        'Only allow the Site Map to be created by a single thread
         SyncLock Me
             _rootNode = DirectCast(_htRootNodes.Item(numLANGID), SiteMapNode)
             If _rootNode Is Nothing Then
-                ' Show trace for debugging
+                'Show trace for debugging
                 HttpContext.Current.Trace.Warn("Loading category site map from database")
 
-                ' Clear current Site Map
+                'Clear current Site Map
                 RefreshSiteMap()
 
-                ' Load the database data
+                'Load the database data
                 Dim tblSiteMap As DataTable = GetSiteMapFromDB(numLANGID)
-                ' Set the root node
+                'Set the root node
                 Dim strCategoryLabel As String = HttpContext.GetGlobalResourceObject("Kartris", "ContentText_Categories")
                 _rootNode = New SiteMapNode(Me, "0-" & numLANGID, "~/Category.aspx?L=" & numLANGID, strCategoryLabel, strCategoryLabel)
                 Dim HomeNode As SiteMapNode = New SiteMapNode(SiteMap.Providers.Item("BreadCrumbSiteMap"), "Home", "~/Default.aspx", HttpContext.GetGlobalResourceObject("Kartris", "ContentText_Home"))
 
-                'efreshSiteMap()
                 AddNode(_rootNode, HomeNode)
                 _htRootNodes.Add(numLANGID, _rootNode)
-                ' Build the child nodes 
+
+                'Build the child nodes 
                 BuildSiteMapRecurse(tblSiteMap, _rootNode, "0-" & numLANGID)
             End If
             Return _rootNode
@@ -214,8 +214,8 @@ Public Class SiteMapHelper
                         If Not [String].IsNullOrEmpty(context.Request("CategoryID")) And Not [String].IsNullOrEmpty(context.Request("ProductID")) Then
                             Dim strParentkeys As String = [String].Empty
 
-                            Dim id As Integer = Convert.ToString(context.Request("CategoryID"))
-                            Dim pid As Integer = Convert.ToString(context.Request("ProductID"))
+                            Dim id As Int64 = Convert.ToString(context.Request("CategoryID"))
+                            Dim pid As Int64 = Convert.ToString(context.Request("ProductID"))
 
                             ' Create a new SiteMapNode to represent the requested page 
                             'Dim node As New SiteMapNode(SiteMap.Provider, context.Request.Path, context.Request.Path, ProductsBLL.GetNameByProductID(pid, 1))
@@ -260,7 +260,7 @@ Public Class SiteMapHelper
                             node.ParentNode = SearchResultsNode
                             Return node
                         ElseIf Not [String].IsNullOrEmpty(context.Request("ProductID")) Then
-                            Dim pid As Integer = CInt(context.Request("ProductID"))
+                            Dim pid As Int64 = CInt(context.Request("ProductID"))
                             If pid > 0 Then
                                 Dim HomeNode As SiteMapNode = New SiteMapNode(SiteMap.Providers.Item("BreadCrumbSiteMap"), "Home", "~/Default.aspx", HttpContext.GetGlobalResourceObject("Kartris", "ContentText_Home"))
                                 Dim node As SiteMapNode = New SiteMapNode(SiteMap.Providers.Item("BreadCrumbSiteMap"), "Product", context.Request.Url.ToString(), GetProductName(pid, numLangID))
@@ -286,7 +286,7 @@ Public Class SiteMapHelper
                     ElseIf context.Request.Path.ToLower.Contains("compare.aspx") Then
                         Dim HomeNode As SiteMapNode = New SiteMapNode(SiteMap.Providers.Item("BreadCrumbSiteMap"), "Home", "~/Default.aspx", HttpContext.GetGlobalResourceObject("Kartris", "ContentText_Home"))
                         If Not [String].IsNullOrEmpty(context.Request("CategoryID")) Then
-                            Dim id As Integer = Convert.ToString(context.Request("CategoryID"))
+                            Dim id As Int64 = Convert.ToString(context.Request("CategoryID"))
                             Dim node As SiteMapNode
                             Dim strParentkeys As String = ""
                             If Not [String].IsNullOrEmpty(context.Request("strParent")) Then strParentkeys = "&strParent=" & Convert.ToString(context.Request("strParent"))
@@ -328,7 +328,7 @@ Public Class SiteMapHelper
 
                             Dim HomeNode As SiteMapNode = SiteMap.Providers.Item("BreadCrumbSiteMap").RootNode
 
-                            Dim intParentID As Integer = tblPage.Rows(0).Item("Page_ParentID").ToString
+                            Dim intParentID As Int64 = tblPage.Rows(0).Item("Page_ParentID").ToString
 
                             If intParentID > 0 Then
                                 RecursiveNodeToHome(numLangID, node, intParentID, HomeNode)
@@ -383,7 +383,7 @@ Public Class SiteMapHelper
 
         'Also check the backend URLs
         If context.Request.Path.ToLower().Contains("_modifycategory.aspx") Then
-            Dim id As Integer = CInt(context.Request("CategoryID"))
+            Dim id As Int64 = CInt(context.Request("CategoryID"))
             Dim node As SiteMapNode
             If id > 0 Then
                 node = New SiteMapNode(SiteMap.Providers("_CategorySiteMapProvider"), "_category-" & id, context.Request.Path.ToString, GetGlobalResourceObject("_Category", "ContentText_EditThisCategory"))
@@ -396,11 +396,10 @@ Public Class SiteMapHelper
 
             Return node
 
-            'DISABLED AS THE BREADCRUMB TRAIL WAS REMOVED FROM THE MODIFYPRODUCT PAGE
-            '
+            'breadcrumbs on modify product page
         ElseIf context.Request.Path.ToLower().Contains("_modifyproduct.aspx") Then
-            Dim id As Integer = CInt(context.Request("CategoryID"))
-            Dim ProductID As Integer = Convert.ToString(context.Request("ProductID"))
+            Dim id As Int64 = CInt(context.Request("CategoryID"))
+            Dim ProductID As Int64 = Convert.ToString(context.Request("ProductID"))
             Dim node As SiteMapNode
             If ProductID > 0 Then
                 node = New SiteMapNode(SiteMap.Providers("_CategorySiteMapProvider"), "_product-" & ProductID, context.Request.Path.ToString, GetProductName(ProductID, numLangID))
@@ -413,6 +412,29 @@ Public Class SiteMapHelper
 
             Return node
 
+            'normal view category in back end
+        ElseIf context.Request.Path.ToLower().Contains("_category.aspx") Then
+            'Try
+            '    Dim id As Integer = CInt(context.Request("CategoryID"))
+            '    Dim node As SiteMapNode
+            '    Dim strCategoryName As String = "test" 'GetCategoryName(id, numLangID, True)
+            '    node = New SiteMapNode(SiteMap.Providers("_CategorySiteMapProvider"), "_category-" & id, context.Request.Path.ToString, strCategoryName)
+            '    Dim strSub As String = IIf(String.IsNullOrEmpty(CStr(context.Request("Sub"))), "0,", CStr(context.Request("Sub")) & ",")
+            '    node.ParentNode = SiteMap.Providers.Item("_CategorySiteMapProvider").FindSiteMapNodeFromKey(strSub & Convert.ToString(context.Request("strParent")))
+
+            '    Return node
+            'Catch ex As Exception
+
+            'End Try
+            Dim id As Int64 = CInt(context.Request("CategoryID"))
+            Dim numSiteID As Int64 = CInt(context.Request("SiteID"))
+            Dim node As SiteMapNode
+            Dim strCategoryName As String = GetCategoryName(id, numLangID, True)
+            Dim strParent As String = Convert.ToString(context.Request("strParent"))
+            node = New SiteMapNode(SiteMap.Providers("_CategorySiteMapProvider"), "_category-" & id, context.Request.Path.ToString, strCategoryName)
+            Dim strSub As String = IIf(String.IsNullOrEmpty(CStr(context.Request("Sub"))), "0,", CStr(context.Request("Sub")) & ",")
+            'node.ParentNode = SiteMap.Providers.Item("_CategorySiteMapProvider").FindSiteMapNodeFromKey(strSub & strParent)
+            node.ParentNode = SiteMap.Providers.Item("_CategorySiteMapProvider").FindSiteMapNodeFromKey(Convert.ToString(context.Request("strParent") & "," & id & "," & numSiteID))
         End If
 
         ' 
@@ -1077,7 +1099,7 @@ Public Class _CategorySiteMapProvider
                 AddNode(_rootNode)
 
                 ' Build the child nodes 
-                BuildSiteMapRecurse(tblSiteMap, _rootNode, 0)
+                BuildSiteMapRecurse(tblSiteMap, _rootNode, 0, 0)
             End If
             Return _rootNode
         End SyncLock
@@ -1100,29 +1122,48 @@ Public Class _CategorySiteMapProvider
     ''' <summary>
     ''' Recursively build the Site Map from the DataTable
     ''' </summary>
-    Private Sub BuildSiteMapRecurse(ByVal siteMapTable As DataTable, ByVal parentNode As SiteMapNode, ByVal parentkey As String)
+    Private Sub BuildSiteMapRecurse(ByVal siteMapTable As DataTable, ByVal parentNode As SiteMapNode, ByVal parentkey As String, ByVal numSiteID As Int64)
         Dim arr As Array = Split(parentNode.Key, ",")
         Dim results() As DataRow = siteMapTable.Select("ParentID=" & arr(UBound(arr)))
         For Each row As DataRow In results
+            Try
+                Dim aryParentKey As String() = Split(parentkey, "::")
+                'parentkey = parentkey.Replace(numSiteID & "::", "")
+                parentkey = aryParentKey(1)
+            Catch ex As Exception
+                'erm, oh... this is embarrassing
+            End Try
+
             Dim url As String
             Dim strParentKey As String
+            If numSiteID = 0 Then numSiteID = row("SUB_ID")
+            Dim test As String = ""
             If Left(parentkey, 2) = "0," Then strParentKey = Mid(parentkey, 3) Else strParentKey = parentkey
             If strParentKey = "0" Then strParentKey = ""
             If strParentKey <> "" Then strParentKey = strParentKey & "," & row("parentid") Else strParentKey = row("parentid")
 
-            url = CreateURL(BackEndPage.Category, row("CAT_ID"), strParentKey)
-            Dim node As New SiteMapNode(Me, strParentKey & "," & row("CAT_ID").ToString(), url, row("title").ToString())
-            AddNode(node, parentNode)
-            BuildSiteMapRecurse(siteMapTable, node, parentNode.Key)
+            url = CreateURL(BackEndPage.Category, row("CAT_ID"), numSiteID, strParentKey)
+
+            'We add in the numsite ID to the key, this is a unique string we want
+            'to insert into the sitemap so each URL has a unique key. It's used
+            'for setting the breadcrumbtrail correctly.
+            Dim node As New SiteMapNode(Me, numSiteID & "::" & strParentKey & "," & row("CAT_ID").ToString(), url, row("title").ToString())
+            Try
+                AddNode(node, parentNode)
+            Catch ex As Exception
+
+            End Try
+
+            BuildSiteMapRecurse(siteMapTable, node, parentNode.Key, numSiteID)
         Next
     End Sub
 
-    Public Shared Function CreateURL(ByVal strPageType As BackEndPage, ByVal ID As Integer, Optional ByVal strParents As String = "", Optional ByVal ParentID As Integer = 0, Optional ByVal CPagerID As Integer = 0, Optional ByVal PPagerID As Integer = 0, Optional ByVal strActiveTab As String = "p") As String
+    Public Shared Function CreateURL(ByVal strPageType As BackEndPage, ByVal ID As Int64, ByVal numSiteID As Int64, Optional ByVal strParents As String = "", Optional ByVal ParentID As Integer = 0, Optional ByVal CPagerID As Integer = 0, Optional ByVal PPagerID As Integer = 0, Optional ByVal strActiveTab As String = "p") As String
         Dim numLangID As Integer
         If String.IsNullOrEmpty(HttpContext.Current.Session.Item("_LANG")) Then
             numLangID = 1
         Else
-            numLangID = CInt(HttpContext.Current.Session.Item("_LANG"))
+            numLangID = CLng(HttpContext.Current.Session.Item("_LANG"))
         End If
         Dim strUserCulture As String
         If String.IsNullOrEmpty(HttpContext.Current.Session.Item("KartrisUserCulture")) Then
@@ -1138,12 +1179,12 @@ Public Class _CategorySiteMapProvider
                 If Left(strParents, 1) = "," Then strParents = Mid(strParents, 2)
                 Dim strPageName As String = "~/Admin/_Category.aspx"
                 If Not (strParents = "" Or strParents = "0") Then
-                    strURL = String.Format("{0}?CategoryID={1}&strParent={2}", strPageName, ID, strParents)
+                    strURL = String.Format("{0}?CategoryID={1}&SiteID={2}&strParent={3}", strPageName, ID, numSiteID, strParents)
                 Else
                     If ParentID = 0 Then
-                        strURL = String.Format("{0}?CategoryID={1}", strPageName, ID)
+                        strURL = String.Format("{0}?CategoryID={1}&SiteID={2}", strPageName, ID, numSiteID)
                     Else
-                        strURL = String.Format("{0}?CategoryID={1}&strParent={2}", strPageName, ID, ParentID)
+                        strURL = String.Format("{0}?CategoryID={1}SiteID={2}&strParent={3}&", strPageName, ID, numSiteID, ParentID)
                     End If
                 End If
                 If CPagerID <> 0 Then strURL += "&CPGR=" & CPagerID
@@ -1152,15 +1193,7 @@ Public Class _CategorySiteMapProvider
             Case BackEndPage.Product
                 If Left(strParents, 1) = "," Then strParents = Mid(strParents, 2)
                 Dim strPageName As String = "~/Admin/_ModifyProduct.aspx"
-                If Not (strParents = "" Or strParents = "0") Then
-                    strURL = String.Format("{0}?ProductID={1}&strParent={2}", strPageName, ID, strParents)
-                Else
-                    If ParentID = 0 Then
-                        strURL = String.Format("{0}?ProductID={1}", strPageName, ID)
-                    Else
-                        strURL = String.Format("{0}?ProductID={1}&strParent={2}", strPageName, ID, ParentID)
-                    End If
-                End If
+                strURL = String.Format("{0}?ProductID={1}&SiteID={2}&CategoryID={3}&strParent={4}", strPageName, ID, numSiteID, ParentID, strParents)
                 If CPagerID <> 0 Then strURL += "&CPGR=" & CPagerID
                 If PPagerID <> 0 Then strURL += "&PPGR=" & PPagerID
                 If strActiveTab = "s" Then strURL += "&T=S"

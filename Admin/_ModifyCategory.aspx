@@ -1,26 +1,22 @@
 ﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="_ModifyCategory.aspx.vb"
     Inherits="Admin_ModifyCategory" MasterPageFile="~/Skins/Admin/Template.master" %>
+
 <%@ Register TagPrefix="_user" TagName="CategoryFilter" Src="~/UserControls/Back/_CategoryFilters.ascx" %>
 <asp:Content ID="cntHead" ContentPlaceHolderID="phdHead" runat="Server">
 </asp:Content>
 <asp:Content ID="cntMain" ContentPlaceHolderID="phdMain" runat="Server">
     <asp:Literal ID="activeTab" runat="server" />
     <a class="linkbutton icon_back floatright" href="javascript:history.back()">
-            <asp:Literal ID="litContentTextBackLink" runat="server" Text='<%$ Resources: _Kartris, ContentText_BackLink %>' /></a><h1>
-        <asp:Literal ID="litBackMenuCategories" runat="server" Text="<%$ Resources: _Category, BackMenu_Categories %>"></asp:Literal>:
+        <asp:Literal ID="litContentTextBackLink" runat="server" Text='<%$ Resources: _Kartris, ContentText_BackLink %>' /></a><h1>
+            <asp:Literal ID="litBackMenuCategories" runat="server" Text="<%$ Resources: _Category, BackMenu_Categories %>"></asp:Literal>:
         <span class="h1_light">
             <asp:Literal ID="litCategoryName" runat="server"></asp:Literal></span></h1>
-                    
-    <asp:PlaceHolder ID="phdBreadCrumbTrail" runat="server">
-        <div class="breadcrumbtrail">
-            <asp:SiteMapPath ID="smpMain" PathSeparator="&nbsp;" SiteMapProvider="_CategorySiteMapProvider"
-                runat="server" />
-        </div>
-    </asp:PlaceHolder>
+
     <asp:UpdatePanel ID="updMain" runat="server" UpdateMode="Conditional">
         <ContentTemplate>
             <_user:ItemIndicator ID="_UC_CategoryIndicator" runat="server" />
             <asp:Literal ID="litCategoryID" runat="server" Visible="false"></asp:Literal>
+            <asp:Literal ID="litSiteID" runat="server" Visible="false"></asp:Literal>
             <ajaxToolkit:TabContainer ID="tabContainerProduct" runat="server" EnableTheming="False"
                 CssClass=".tab" AutoPostBack="false">
                 <%-- Category Main Info. Tab --%>

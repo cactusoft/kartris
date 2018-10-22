@@ -19,12 +19,12 @@ Partial Class Admin_ModifyCategory
     Inherits _PageBaseClass
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-
         Page.Title = GetGlobalResourceObject("_Category", "BackMenu_Categories") & " | " & GetGlobalResourceObject("_Kartris", "ContentText_KartrisName")
 
         litContentTextSubCatsProducts.Text = HttpUtility.HtmlEncode(GetGlobalResourceObject("_Kartris", "ContentText_SubCatsProducts"))
 
         litCategoryID.Text = _GetCategoryID()
+        litSiteID.Text = _GetSiteID()
 
         If _GetCategoryID() = 0 Then
             PrepareNewCategory()
@@ -47,27 +47,16 @@ Partial Class Admin_ModifyCategory
                 t.Enabled = False : t.Visible = False
             End If
         Next
-        If _GetParentCategory() = 0 And _GetCategoryID() = 0 Then
-            phdBreadCrumbTrail.Visible = False
-        End If
-
         Page.Title = GetGlobalResourceObject("_Category", "PageTitle_NewCategory") & " | " & GetGlobalResourceObject("_Kartris", "ContentText_KartrisName")
-
     End Sub
 
     Sub PrepareExistingCategory()
-
         litCategoryName.Text = CategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG"))
         For Each t As AjaxControlToolkit.TabPanel In tabContainerProduct.Tabs
             t.Enabled = True : t.Visible = True
         Next
         _UC_CategoryIndicator.CheckCategoryStatus()
-        If _GetParentCategory() = 0 Then
-            phdBreadCrumbTrail.Visible = False
-        End If
-
         Page.Title = litCategoryName.Text & " | " & GetGlobalResourceObject("_Kartris", "ContentText_KartrisName")
-
     End Sub
 
     Protected Sub _UC_EditCategory_CategoryNotExist() Handles _UC_EditCategory.CategoryNotExist
@@ -94,7 +83,7 @@ Partial Class Admin_ModifyCategory
     End Sub
 
     Sub RedirectToNewCategory()
-        Response.Redirect("~/Admin/_ModifyCategory.aspx?CategoryID=0")
+        Response.Redirect("~/Admin/_ModifyCategory.aspx?CategoryID=0&SiteID" = litSiteID.Text)
     End Sub
 
     Protected Sub Page_LoadComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.LoadComplete

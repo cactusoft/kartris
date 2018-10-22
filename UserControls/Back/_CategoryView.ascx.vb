@@ -305,12 +305,12 @@ Partial Class _CategoryView
         End Select
     End Sub
 
-    Public Function FormatNavURL(ByVal ParentCategoryID As String, ByVal CategoryID As Long) As String
+    Public Function FormatNavURL(ByVal ParentCategoryID As String, ByVal CategoryID As Long, ByVal SiteID As Integer) As String
         Dim strURL As String = IIf(String.IsNullOrEmpty(_GetParentCategory), _GetCategoryID(), _GetParentCategory() & "," & _GetCategoryID())
         If strURL = "0" Then
-            Return "~/Admin/_Category.aspx?CategoryID=" & Eval("CAT_ID")
+            Return "~/Admin/_Category.aspx?CategoryID=" & Eval("CAT_ID") & "&SiteID=" & SiteID
         Else
-            Return "~/Admin/_Category.aspx?CategoryID=" & Eval("CAT_ID") & "&strParent=" & strURL
+            Return "~/Admin/_Category.aspx?CategoryID=" & Eval("CAT_ID") & "&SiteID=" & SiteID & "&strParent=" & strURL
         End If
     End Function
 

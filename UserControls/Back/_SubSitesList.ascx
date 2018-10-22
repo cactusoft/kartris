@@ -43,12 +43,6 @@
                                 <asp:Literal ID="litLiveValue" runat="server" Text='<%#Eval("SUB_Live") %>'> </asp:Literal>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <%--<asp:TemplateField ItemStyle-CssClass="selectfield">
-                        <ItemTemplate>
-                            <a class="linkbutton icon_edit" href="_ModifySubSiteStatus.aspx?SubSiteID=<%#Eval("SUB_ID") %>">
-                                <asp:Literal ID="litOLIndicates" runat="server" EnableViewState="false" Text="<%$ Resources:_Kartris, FormButton_Select %>"></asp:Literal></a>
-                        </ItemTemplate>
-                    </asp:TemplateField>--%>
                         <asp:TemplateField ItemStyle-CssClass="selectfield">
                             <ItemTemplate>
                                 <a class="linkbutton icon_edit" href="_ModifySubSiteStatus.aspx?SubSiteID=<%#Eval("SUB_ID") %>">
@@ -113,7 +107,6 @@
                                                 <li><span class="Kartris-DetailsView-Name">
                                                     <asp:Label ID="lblSubSiteCatSkin" runat="server" Text="Skin"
                                                         AssociatedControlID="ddlistTheme" /></span> <span class="Kartris-DetailsView-Value">
-                                                            <%--<asp:TextBox ReadOnly="true" runat="server" ID="txtSubSiteSkin" Text='<%#Eval("SUB_Skin")%>' />--%>
                                                             <asp:DropDownList ID="ddlistTheme" runat="server" AutoPostBack="False">
                                                                 <asp:ListItem Text="-" Value="" />
                                                             </asp:DropDownList></span>

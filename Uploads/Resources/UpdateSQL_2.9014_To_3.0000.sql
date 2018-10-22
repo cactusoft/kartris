@@ -153,7 +153,7 @@ AS
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[_spKartrisCategories_GetPageByParentID]    Script Date: 15/10/2018 10:47:21 ******/
+/****** Object:  StoredProcedure [dbo].[_spKartrisCategories_Treeview]    Script Date: 15/10/2018 10:47:21 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -233,6 +233,61 @@ BEGIN
 	)
 	ORDER BY SUB_ID, Row ASC;
 
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisCategoryHierarchy_GetByLanguageID]    Script Date: 20/10/2018 22:05:55 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- ======================================================
+-- Author:		Paul
+-- Create date: 2018/10/20
+-- Description:	generate the category menu hierarchy and
+-- including subsites
+-- ======================================================
+ALTER PROCEDURE [dbo].[_spKartrisCategoryHierarchy_GetByLanguageID]
+	(@LANG_ID tinyint)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	WITH CategoryList AS
+	(
+		SELECT
+				tblKartrisCategoryHierarchy.CH_ChildID AS CAT_ID,
+				tblKartrisCategoryHierarchy.CH_ParentID AS ParentID,
+				vKartrisTypeCategories.CAT_Name AS Title, 
+				vKartrisTypeCategories.CAT_Desc AS Description,
+				0 As SUB_ID,
+				tblKartrisCategoryHierarchy.CH_OrderNo AS CH_OrderNo
+		FROM vKartrisTypeCategories INNER JOIN
+						  tblKartrisCategoryHierarchy ON vKartrisTypeCategories.CAT_ID = tblKartrisCategoryHierarchy.CH_ChildID
+		WHERE (vKartrisTypeCategories.LANG_ID = @LANG_ID)
+	)
+
+	SELECT *
+	FROM CategoryList UNION ALL
+	-- subsites below
+	(
+		SELECT
+				tblKartrisCategoryHierarchy.CH_ChildID AS CAT_ID,
+				tblKartrisCategoryHierarchy.CH_ParentID AS ParentID,
+				SUB_Domain AS Title, 
+				vKartrisTypeCategories.CAT_Desc AS Description,
+				SUB_ID,
+				tblKartrisCategoryHierarchy.CH_OrderNo AS CH_OrderNo
+		FROM    
+				vKartrisTypeCategories 
+				INNER JOIN tblKartrisSubSites ON tblKartrisSubSites.SUB_BaseCategoryID = vKartrisTypeCategories.CAT_ID
+				INNER JOIN
+						  tblKartrisCategoryHierarchy ON vKartrisTypeCategories.CAT_ID = tblKartrisCategoryHierarchy.CH_ChildID
+		WHERE   (vKartrisTypeCategories.LANG_ID = @LANG_ID) AND SUB_Live = 1
+	)
+	ORDER BY SUB_ID, CH_OrderNo;
 END
 GO
 
