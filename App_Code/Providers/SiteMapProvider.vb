@@ -164,7 +164,6 @@ Public Class CategorySiteMapProvider
                         parentkey = parentkey & "," & row("parentid")
                     End If
                 End If
-
             Else
                 strParentKey = row("parentid")
                 If row("parentid") = 0 Then parentkey = "0-" & numLANGID Else parentkey = parentkey & "," & row("parentid")
@@ -463,7 +462,7 @@ Public Class SiteMapHelper
         Return node
     End Function
 
-    Public Shared Function CreateURL(ByVal strPageType As Page, ByVal ID As Integer, Optional ByVal strParents As String = "", Optional ByVal ParentID As Integer = 0, _
+    Public Shared Function CreateURL(ByVal strPageType As Page, ByVal ID As Integer, Optional ByVal strParents As String = "", Optional ByVal ParentID As Integer = 0,
                                      Optional ByVal CPagerID As Integer = 0, Optional ByVal PPagerID As Integer = 0, Optional ByVal strActiveTab As String = "p", Optional ByVal strRetrievedName As String = "") As String
 
         Dim numLangID As Integer = GetLanguageIDfromSession()
@@ -576,7 +575,7 @@ Public Class SiteMapHelper
 
                     'Check if URL length is greater than 280
                     If (strURL.Length + WebShopURL.Length - 1) > 280 Then
-                        strURL = String.Format("/{4}{5}{0}__p-{3}-{2}-{1}", FixURLText(Replace(GetCategoryName(ParentID, numLangID, True), " ", "-") & "/" & Replace(GetProductName(ID, numLangID, True), " ", "-")), _
+                        strURL = String.Format("/{4}{5}{0}__p-{3}-{2}-{1}", FixURLText(Replace(GetCategoryName(ParentID, numLangID, True), " ", "-") & "/" & Replace(GetProductName(ID, numLangID, True), " ", "-")),
                                                ID, ParentID, FixURLText(strFriendlyParent), strWebShopFolder, strUserCulture)
                         strURL += ".aspx"
                         strURL = CkartrisDisplayFunctions.CleanURL(strURL)
@@ -877,88 +876,88 @@ Public Class SiteMapHelper
             numLangID = LanguagesBLL.GetDefaultLanguageID
         End If
 
-            If numLangID = 0 Then numLangID = GetLanguageIDfromSession()
+        If numLangID = 0 Then numLangID = GetLanguageIDfromSession()
 
-            If strCurrentPath.Contains(".aspx?") Then
-                strQueryStrings = "&" & Mid(strCurrentPath, strCurrentPath.LastIndexOf("?") + 2)
-                strCurrentPath = Left(strCurrentPath, strCurrentPath.LastIndexOf("?"))
+        If strCurrentPath.Contains(".aspx?") Then
+            strQueryStrings = "&" & Mid(strCurrentPath, strCurrentPath.LastIndexOf("?") + 2)
+            strCurrentPath = Left(strCurrentPath, strCurrentPath.LastIndexOf("?"))
+        End If
+        If Right(strCurrentPath, 5) = ".aspx" Then strCurrentPath = Left(strCurrentPath, Len(strCurrentPath) - 5)
+        'If Right(strCurrentPath, 1) = "/" Then strCurrentPath = Left(strCurrentPath, Len(strCurrentPath) - 1)
+        If (strCurrentPath.Contains("__c-")) Then
+            Dim strParent As String = strCurrentPath.Substring(strCurrentPath.IndexOf("__c-") + 4)
+            arrKeys = Split(strParent, "-")
+            Dim intUpper As Integer = UBound(arrKeys)
+            Dim strOutput As String
+            If intUpper = 3 Then
+                strOutput = "Category.aspx?CategoryID=" + arrKeys(intUpper) + "&CPGR=" + arrKeys(1) + "&PPGR=" + arrKeys(2)
+            ElseIf intUpper = 4 Then
+                strOutput = "Category.aspx?CategoryID=" + arrKeys(4) + "&strParent=" + arrKeys(3) + "&CPGR=" + arrKeys(1) + "&PPGR=" + arrKeys(2)
+            ElseIf intUpper > 4 Then
+                strParent = arrKeys(3)
+                For ctr As Integer = 4 To (intUpper - 1)
+                    strParent += "," & arrKeys(ctr)
+                Next
+                strOutput = "Category.aspx?CategoryID=" + arrKeys(intUpper).ToString + "&strParent=" + strParent + "&CPGR=" + arrKeys(1) + "&PPGR=" + arrKeys(2)
+            Else : strOutput = ""
             End If
-            If Right(strCurrentPath, 5) = ".aspx" Then strCurrentPath = Left(strCurrentPath, Len(strCurrentPath) - 5)
-            'If Right(strCurrentPath, 1) = "/" Then strCurrentPath = Left(strCurrentPath, Len(strCurrentPath) - 1)
-            If (strCurrentPath.Contains("__c-")) Then
-                Dim strParent As String = strCurrentPath.Substring(strCurrentPath.IndexOf("__c-") + 4)
-                arrKeys = Split(strParent, "-")
-                Dim intUpper As Integer = UBound(arrKeys)
-                Dim strOutput As String
-                If intUpper = 3 Then
-                    strOutput = "Category.aspx?CategoryID=" + arrKeys(intUpper) + "&CPGR=" + arrKeys(1) + "&PPGR=" + arrKeys(2)
-                ElseIf intUpper = 4 Then
-                    strOutput = "Category.aspx?CategoryID=" + arrKeys(4) + "&strParent=" + arrKeys(3) + "&CPGR=" + arrKeys(1) + "&PPGR=" + arrKeys(2)
-                ElseIf intUpper > 4 Then
-                    strParent = arrKeys(3)
-                    For ctr As Integer = 4 To (intUpper - 1)
+            If arrKeys(0) = "s" Then strOutput += "&T=S"
+            strOutput += "&L=" & numLangID
+            Return strWebShopFolder & strOutput & strQueryStrings
+        ElseIf (strCurrentPath.Contains("__p-")) Then
+            Dim strOptions As String = ""
+            If strCurrentPath.ToLower.Contains("?stroptions=") Then strOptions = strCurrentPath.Substring(strCurrentPath.ToLower.IndexOf("?stroptions=") + 12)
+            Dim strParent As String
+            Dim intIDstartindex = strCurrentPath.IndexOf("__p-") + 4
+            If String.IsNullOrEmpty(strOptions) Then
+                strParent = strCurrentPath.Substring(intIDstartindex)
+            Else
+                strParent = strCurrentPath.Substring(intIDstartindex, strCurrentPath.LastIndexOf(".aspx") - intIDstartindex)
+            End If
+
+            arrKeys = Split(strParent, "-")
+            Dim intUpper As Integer = UBound(arrKeys)
+            Dim strOutputURL As String
+            If intUpper = 0 Then
+                strOutputURL = strWebShopFolder & "Product.aspx?ProductID=" + arrKeys(intUpper).ToString
+            ElseIf intUpper = 1 Then
+                strOutputURL = strWebShopFolder & "Product.aspx?ProductID=" + arrKeys(1).ToString + "&CategoryID=" + arrKeys(0)
+            ElseIf intUpper > 1 Then
+                strParent = arrKeys(0)
+                If intUpper > 2 Then
+                    For ctr As Integer = 1 To intUpper - 2
                         strParent += "," & arrKeys(ctr)
                     Next
-                    strOutput = "Category.aspx?CategoryID=" + arrKeys(intUpper).ToString + "&strParent=" + strParent + "&CPGR=" + arrKeys(1) + "&PPGR=" + arrKeys(2)
-                Else : strOutput = ""
                 End If
-                If arrKeys(0) = "s" Then strOutput += "&T=S"
-                strOutput += "&L=" & numLangID
-                Return strWebShopFolder & strOutput & strQueryStrings
-            ElseIf (strCurrentPath.Contains("__p-")) Then
-                Dim strOptions As String = ""
-                If strCurrentPath.ToLower.Contains("?stroptions=") Then strOptions = strCurrentPath.Substring(strCurrentPath.ToLower.IndexOf("?stroptions=") + 12)
-                Dim strParent As String
-                Dim intIDstartindex = strCurrentPath.IndexOf("__p-") + 4
-                If String.IsNullOrEmpty(strOptions) Then
-                    strParent = strCurrentPath.Substring(intIDstartindex)
-                Else
-                    strParent = strCurrentPath.Substring(intIDstartindex, strCurrentPath.LastIndexOf(".aspx") - intIDstartindex)
-                End If
-
-                arrKeys = Split(strParent, "-")
-                Dim intUpper As Integer = UBound(arrKeys)
-                Dim strOutputURL As String
-                If intUpper = 0 Then
-                    strOutputURL = strWebShopFolder & "Product.aspx?ProductID=" + arrKeys(intUpper).ToString
-                ElseIf intUpper = 1 Then
-                    strOutputURL = strWebShopFolder & "Product.aspx?ProductID=" + arrKeys(1).ToString + "&CategoryID=" + arrKeys(0)
-                ElseIf intUpper > 1 Then
-                    strParent = arrKeys(0)
-                    If intUpper > 2 Then
-                        For ctr As Integer = 1 To intUpper - 2
-                            strParent += "," & arrKeys(ctr)
-                        Next
-                    End If
-                    strOutputURL = strWebShopFolder & "Product.aspx?ProductID=" + arrKeys(intUpper).ToString + "&CategoryID=" + arrKeys(intUpper - 1) + "&strParent=" + strParent
-                Else
-                    strOutputURL = ""
-                End If
-                strOutputURL += "&L=" & numLangID
-                If Not String.IsNullOrEmpty(strOptions) Then strOutputURL += "&strOptions=" & strOptions
-                Return strOutputURL & strQueryStrings
-            ElseIf (strCurrentPath.Contains("__n-")) Then
-                Dim strParent As String = strCurrentPath.Substring(strCurrentPath.IndexOf("__n-") + 4)
-                strParent = CInt(Replace(strParent, "_", ""))
-                Return strWebShopFolder & "News.aspx?NewsID=" & strParent & strQueryStrings
-            ElseIf (strCurrentPath.Contains("/t-")) Then
-                Dim strParent As String = strCurrentPath.Substring(strCurrentPath.IndexOf("/t-") + 3)
-                strParent = Replace(strParent, "/", "")
-                Return strWebShopFolder & "Page.aspx?strPage=" & strParent & strQueryStrings
-            ElseIf (strCurrentPath.Contains("__k-")) Then
-                Dim strParent As String = strCurrentPath.Substring(strCurrentPath.IndexOf("__k-") + 4)
-                strParent = Replace(strParent, "_", "")
-                Return strWebShopFolder & "Knowledgebase.aspx?kb=" & strParent & strQueryStrings
+                strOutputURL = strWebShopFolder & "Product.aspx?ProductID=" + arrKeys(intUpper).ToString + "&CategoryID=" + arrKeys(intUpper - 1) + "&strParent=" + strParent
             Else
-                Return ""
+                strOutputURL = ""
             End If
+            strOutputURL += "&L=" & numLangID
+            If Not String.IsNullOrEmpty(strOptions) Then strOutputURL += "&strOptions=" & strOptions
+            Return strOutputURL & strQueryStrings
+        ElseIf (strCurrentPath.Contains("__n-")) Then
+            Dim strParent As String = strCurrentPath.Substring(strCurrentPath.IndexOf("__n-") + 4)
+            strParent = CInt(Replace(strParent, "_", ""))
+            Return strWebShopFolder & "News.aspx?NewsID=" & strParent & strQueryStrings
+        ElseIf (strCurrentPath.Contains("/t-")) Then
+            Dim strParent As String = strCurrentPath.Substring(strCurrentPath.IndexOf("/t-") + 3)
+            strParent = Replace(strParent, "/", "")
+            Return strWebShopFolder & "Page.aspx?strPage=" & strParent & strQueryStrings
+        ElseIf (strCurrentPath.Contains("__k-")) Then
+            Dim strParent As String = strCurrentPath.Substring(strCurrentPath.IndexOf("__k-") + 4)
+            strParent = Replace(strParent, "_", "")
+            Return strWebShopFolder & "Knowledgebase.aspx?kb=" & strParent & strQueryStrings
+        Else
+            Return ""
+        End If
     End Function
 
     Private Shared Function GetCategoryName(ByVal numCategoryID As Integer, ByVal numLanguageID As Short, Optional ByVal blnCheckURLName As Boolean = False) As String
         If numCategoryID = 0 Then Return ""
         Dim strCategoryNameInURL As String = ""
         If blnCheckURLName Then
-            strCategoryNameInURL = LanguageElementsBLL.GetElementValue( _
+            strCategoryNameInURL = LanguageElementsBLL.GetElementValue(
             numLanguageID, CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Categories, CkartrisEnumerations.LANG_ELEM_FIELD_NAME.URLName, numCategoryID)
         End If
 
@@ -973,7 +972,7 @@ Public Class SiteMapHelper
     Private Shared Function GetProductName(ByVal numProductID As Integer, ByVal numLanguageID As Short, Optional ByVal blnCheckURLName As Boolean = False) As String
         Dim strProductNameInURL As String = ""
         If blnCheckURLName Then
-            strProductNameInURL = LanguageElementsBLL.GetElementValue( _
+            strProductNameInURL = LanguageElementsBLL.GetElementValue(
             numLanguageID, CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Products, CkartrisEnumerations.LANG_ELEM_FIELD_NAME.URLName, numProductID)
         End If
 
@@ -1034,7 +1033,7 @@ Public Class _CategorySiteMapProvider
 
         MyBase.Initialize(name, attributes)
 
-        ' Get database connection string from config file
+        'Get database connection string from config file
         Dim connectionStringName As String = attributes("connectionStringName")
         If (String.IsNullOrEmpty(connectionStringName)) Then
             Throw New Exception("You must provide a connectionStringName attribute")
@@ -1044,13 +1043,13 @@ Public Class _CategorySiteMapProvider
             Throw New Exception("Could not find connection String " + connectionStringName)
         End If
 
-        ' Get navigateUrl from config file
+        'Get navigateUrl from config file
         _navigateUrl = attributes("navigateUrl")
         If (String.IsNullOrEmpty(_navigateUrl)) Then
             Throw New Exception("You must provide a navigateUrl attribute")
         End If
 
-        ' Get idFieldName from config file
+        'Get idFieldName from config file
         _idFieldName = attributes("idFieldName")
         If String.IsNullOrEmpty(_idFieldName) Then
             _idFieldName = "CategoryID"
@@ -1080,25 +1079,25 @@ Public Class _CategorySiteMapProvider
     ''' records from database table
     ''' </summary>
     Public Overrides Function BuildSiteMap() As SiteMapNode
-        ' Only allow the Site Map to be created by a single thread
+        'Only allow the Site Map to be created by a single thread
         SyncLock Me
             If _rootNode Is Nothing Then
-                ' Show trace for debugging
+                'Show trace for debugging
                 Dim context As HttpContext = HttpContext.Current
                 HttpContext.Current.Trace.Warn("Loading back-end category site map from database")
 
-                ' Clear current Site Map
+                'Clear current Site Map
                 Clear()
 
-                ' Load the database data
+                'Load the database data
                 Dim tblSiteMap As DataTable = GetSiteMapFromDB()
-                ' Set the root node
+                'Set the root node
                 Dim strCategoryLabel As String = HttpContext.GetGlobalResourceObject("Kartris", "ContentText_Categories")
                 _rootNode = New SiteMapNode(Me, "0", "~/Admin/_Category.aspx", strCategoryLabel, strCategoryLabel)
 
                 AddNode(_rootNode)
 
-                ' Build the child nodes 
+                'Build the child nodes 
                 BuildSiteMapRecurse(tblSiteMap, _rootNode, 0, 0)
             End If
             Return _rootNode
@@ -1136,8 +1135,8 @@ Public Class _CategorySiteMapProvider
 
             Dim url As String
             Dim strParentKey As String
-            If numSiteID = 0 Then numSiteID = row("SUB_ID")
-            Dim test As String = ""
+            numSiteID = row("SUB_ID") 'we start top level with zero, increase as we work through to ensure all sub sites included
+
             If Left(parentkey, 2) = "0," Then strParentKey = Mid(parentkey, 3) Else strParentKey = parentkey
             If strParentKey = "0" Then strParentKey = ""
             If strParentKey <> "" Then strParentKey = strParentKey & "," & row("parentid") Else strParentKey = row("parentid")

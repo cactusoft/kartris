@@ -31,12 +31,11 @@ Public Class KartrisHttpModule
     Public Sub Init(ByVal context As HttpApplication) Implements System.Web.IHttpModule.Init
         AddHandler context.BeginRequest, AddressOf Kartris_BeginRequest
         AddHandler context.PreRequestHandlerExecute, AddressOf Kartris_PreRequestExecute
-        'My.Settings.Item("KartrisSQLConnection") = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ConnectionString
 
         If Not HasAppStarted Then
             SyncLock _syncObject
                 If Not HasAppStarted Then
-                    ' Run application StartUp code here
+                    'Run application StartUp code here
                     If context.Application("DBConnected") Then
                         KartSettingsManager.RefreshCache()
                         KartSettingsManager.RefreshCurrencyCache()

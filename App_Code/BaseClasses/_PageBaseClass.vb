@@ -69,7 +69,7 @@ Public MustInherit Class _PageBaseClass
     End Sub
 
     Private Sub Page_Init(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Init
-        'Additional security - this ensures that all of our viewstate are unique and is tied to the user's session
+        'Additional security - this ensures that all of our viewstates are unique and is tied to the user's session
         ViewStateUserKey = Session.SessionID
     End Sub
 
