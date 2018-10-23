@@ -196,12 +196,17 @@ Partial Class _CategoryMenu
         ElseIf strCurrentURL.Contains("_ModifyProduct.aspx") Then
             Dim strParents As String = ""
             Dim aryParents As String() = Split(_GetParentCategory(), "::")
-            strParents = aryParents(1)
-            If String.IsNullOrEmpty(_GetParentCategory()) AndAlso Not String.IsNullOrEmpty(_GetCategoryID) Then
-                FindPageNode("p", _GetCategoryID())
-            ElseIf Not String.IsNullOrEmpty(_GetParentCategory()) AndAlso Not String.IsNullOrEmpty(_GetCategoryID) Then
-                FindPageNode("p", strParents & "," & _GetCategoryID())
-            End If
+            Try
+                strParents = aryParents(1)
+                If String.IsNullOrEmpty(_GetParentCategory()) AndAlso Not String.IsNullOrEmpty(_GetCategoryID) Then
+                    FindPageNode("p", _GetCategoryID())
+                ElseIf Not String.IsNullOrEmpty(_GetParentCategory()) AndAlso Not String.IsNullOrEmpty(_GetCategoryID) Then
+                    FindPageNode("p", strParents & "," & _GetCategoryID())
+                End If
+            Catch ex As Exception
+                'this wasn't what we were hoping for
+            End Try
+
         End If
         If tvwCategory.SelectedNode IsNot Nothing Then
             tvwCategory.SelectedNode.SelectAction = TreeNodeSelectAction.None

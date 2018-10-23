@@ -291,6 +291,131 @@ BEGIN
 END
 GO
 
+/****** GUEST CHECKOUT MODS ******/
+-- In the past we've tended not to see the point of guest checkout, when
+-- the justification was 'quicker'. We need all the same info to process
+-- an order: email, name, street address, phone, etc., so the only time
+-- saving would be in not choosing a password, and Kartris can be set
+-- already to create a random password. But with GDPR, there is a good
+-- argument for a guest checkout being a way to avoid having your personal
+-- details remain on the web site for longer than just the time to process
+-- an order. Therefore, we're going to add a way to let users choose a 
+-- guest checkout option, this will technically still create an account, 
+-- but in a way that can be deleted/anonymized once the order is processed.
+
+-- 1. We need to add a boolean flag to customer records as to whether they
+-- are GUEST or not
+ALTER TABLE tblKartrisUsers
+ADD U_GDPR_IsGuest bit NOT NULL
+CONSTRAINT U_GDPR_IsGuest_0 DEFAULT 0
+WITH VALUES
+
+
+-- 2. Modify SPROC that inserts the customer record on front end with extra
+-- parameter, so we can choose whether to create guest accounts or not
+
+/****** Object:  StoredProcedure [dbo].[spKartrisUsers_Add]    Script Date: 23/10/2018 11:21:32 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[spKartrisUsers_Add]
+(
+		   @U_EmailAddress nvarchar(100),
+		   @U_Password nvarchar(64),
+		   @U_SaltValue nvarchar(64),
+		   @U_GDPR_SignupIP nvarchar(50),
+		   @U_GDPR_IsGuest bit
+)
+AS
+DECLARE @U_ID INT
+	SET NOCOUNT OFF;
+
+
+	INSERT INTO [tblKartrisUsers]
+		   ([U_EmailAddress]
+		   ,[U_Password]
+		   ,[U_LanguageID]
+			,[U_CustomerGroupID]
+			,[U_DefShippingAddressID]
+			,[U_DefBillingAddressID]
+			,[U_CustomerDiscount]
+			,[U_SaltValue]
+			,[U_GDPR_SignupIP]
+			,[U_GDPR_IsGuest])
+	 VALUES
+		   (@U_EmailAddress,
+			@U_Password,
+			1,0,0,0,0,
+			@U_SaltValue,
+			@U_GDPR_SignupIP,
+			@U_GDPR_IsGuest);
+	SET @U_ID = SCOPE_IDENTITY();
+	SELECT @U_ID;
+GO
+
+-- 3. Modify the login and password reset/lookup sprocs so they don't
+-- find guest checkout accounts. This way, guest accounts cannot be 
+-- logged into, or the password recovered, so they essentially don't
+-- exist for the purpose of front end usage, other than to make an order.
+
+/****** Object:  StoredProcedure [dbo].[spKartrisUsers_Validate]    Script Date: 23/10/2018 11:26:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Medz
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisUsers_Validate]
+(
+	@EmailAddress varchar(100),
+	@Password varchar(64)
+)
+AS
+SET NOCOUNT OFF;
+SELECT        TOP 1 U_ID
+FROM            tblKartrisUsers
+WHERE        (U_EmailAddress = @EmailAddress AND U_Password = @Password AND U_GDPR_IsGuest = 0)
+
+/****** Object:  StoredProcedure [dbo].[spKartrisUsers_GetDetails]    Script Date: 23/10/2018 11:36:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Medz
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisUsers_GetDetails]
+(
+	@EmailAddress nvarchar(100)
+)
+AS
+SET NOCOUNT OFF;
+SELECT        TOP 1 
+				U_ID,
+				U_AccountHolderName,
+				U_CustomerDiscount,
+				U_DefBillingAddressID,
+				U_DefShippingAddressID,
+				U_AffiliateID,
+				U_Approved,
+				U_IsAffiliate,
+				U_AffiliateCommission,
+				U_LanguageID,
+				U_CustomerGroupID,
+				U_TempPassword,
+				U_TempPasswordExpiry,
+				U_SupportEndDate,
+				U_CustomerBalance
+				
+FROM            tblKartrisUsers
+WHERE        (U_EmailAddress = @EmailAddress AND U_GDPR_IsGuest = 0)
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

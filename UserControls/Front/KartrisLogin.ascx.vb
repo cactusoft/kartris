@@ -207,8 +207,8 @@ Partial Class KartrisLogin
 
                         Response.Redirect(RedirectTo())
 
-                        Else
-                            popLogin.OkControlID = "btnOk"
+                    Else
+                        popLogin.OkControlID = "btnOk"
                         mvwLoginPopup.ActiveViewIndex = "1"
                         litTitle.Text = GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors")
                         litErrorDetails.Text = GetGlobalResourceObject("Login", "ContentText_NoMatch")
@@ -322,7 +322,7 @@ Partial Class KartrisLogin
             If dtUserDetails.Rows.Count > 0 Then
                 Dim intUserID As Integer = dtUserDetails(0)("U_ID")
                 Dim strTempPassword As String = FixNullFromDB(dtUserDetails(0)("U_TempPassword"))
-                Dim dateExpiry As DateTime = IIf(IsDate(FixNullFromDB(dtUserDetails(0)("U_TempPasswordExpiry"))), dtUserDetails(0)("U_TempPasswordExpiry"), _
+                Dim dateExpiry As DateTime = IIf(IsDate(FixNullFromDB(dtUserDetails(0)("U_TempPasswordExpiry"))), dtUserDetails(0)("U_TempPasswordExpiry"),
                                             CkartrisDisplayFunctions.NowOffset.AddMinutes(-1))
                 If String.IsNullOrEmpty(strTempPassword) Then dateExpiry = Now.AddMinutes(-1)
 
@@ -334,12 +334,12 @@ Partial Class KartrisLogin
                         litRecoveryMessage.Text = GetLocalResourceObject("ContentText_CustomerNumberEmailSent") & " " & strEmailAddress
                         Dim strPasswordResetLink As String = CkartrisBLL.WebShopURL & "CustomerDetails.aspx?ref=" & HttpUtility.UrlEncode(UsersBLL.EncryptSHA256Managed(UsersBLL.EncryptSHA256Managed(strRandomPassword, strOldSalt), strOldSalt))
 
-                        Dim strBodyText As String = GetGlobalResourceObject("Email", "EmailText_CustomerNumberDesc") & " " & _
+                        Dim strBodyText As String = GetGlobalResourceObject("Email", "EmailText_CustomerNumberDesc") & " " &
                             GetGlobalResourceObject("Kartris", "Config_Webshopname") & vbCrLf & vbCrLf
                         strBodyText += GetGlobalResourceObject("Kartris", "FormLabel_EmailAddress") & ": " & strEmailAddress & vbCrLf
                         strBodyText += GetGlobalResourceObject("Kartris", "ContentText_ChangePasswordLink") & vbCrLf & vbCrLf & strPasswordResetLink
 
-                        Dim strSubjectLine As String = GetGlobalResourceObject("Email", "EmailText_CustomerNumberSubject") & " " & _
+                        Dim strSubjectLine As String = GetGlobalResourceObject("Email", "EmailText_CustomerNumberSubject") & " " &
                             GetGlobalResourceObject("Kartris", "Config_Webshopname")
 
                         Dim intCurrentLanguage As Byte = GetLanguageIDfromSession()
