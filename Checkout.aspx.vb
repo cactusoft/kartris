@@ -39,6 +39,7 @@ Partial Class _Checkout
     ''' Page Load
     ''' </summary>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
         If Not Page.IsPostBack Then
 
             '---------------------------------------
@@ -1508,13 +1509,20 @@ Partial Class _Checkout
                     End If
                 End If
 
+                'If this is guest checkout, let's set a boolean value
+                'we can pass to the ordersBLL below, this way, the new
+                'account created is tagged as guest
+                Dim blnIsGuest As Boolean = (Session("_IsGuest") = "YES")
 
                 'Create the order record
                 O_ID = OrdersBLL.Add(C_ID, UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword, UC_BillingAddress.SelectedAddress,
                                          UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket,
                                           arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID,
                                          intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice,
-                                         IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtPurchaseOrderNo.Text, Trim(txtComments.Text))
+                                         IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtPurchaseOrderNo.Text, Trim(txtComments.Text),
+                                        blnIsGuest)
+
+                Session("_IsGuest") = Nothing
 
                 'Mailchimp
                 Dim blnMailChimp As Boolean = KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y"
@@ -1643,7 +1651,7 @@ Partial Class _Checkout
                         If blnSignupCustomer Then
                             Dim strRandomString As String = ""
 
-                            BasketBLL.UpdateCustomerMailingList(UC_KartrisLogin.UserEmailAddress, strRandomString, ddlMailingList.SelectedValue, objOrder.CustomerIPAddress)
+                            BasketBLL.UpdateCustomerMailingList(UC_KartrisLogin.UserEmailAddress, strRandomString, "h", objOrder.CustomerIPAddress)
 
 
                             'If mailchimp is active, we want to add the user to the mailing list

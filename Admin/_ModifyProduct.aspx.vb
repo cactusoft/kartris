@@ -134,17 +134,23 @@ Partial Class Admin_ModifyProduct
         Catch ex As Exception
             '
         End Try
+        Dim numSiteID As Integer = 0
+        Try
+            numSiteID = Request.QueryString("SiteID")
+        Catch ex As Exception
+            '
+        End Try
         Dim strParent As String = Request.QueryString("strParent")
 
-        lnkMainInfo.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent
-        lnkImages.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=images"
-        lnkMedia.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=media"
-        lnkAttributes.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=attributes"
-        lnkReviews.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=reviews"
-        lnkRelatedProducts.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=relatedproducts"
-        lnkProductVersions.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=versions"
-        lnkOptions.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=options"
-        lnkObjectConfig.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=config"
+        lnkMainInfo.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&SiteID=" & numSiteID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent
+        lnkImages.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&SiteID=" & numSiteID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=images"
+        lnkMedia.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&SiteID=" & numSiteID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=media"
+        lnkAttributes.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&SiteID=" & numSiteID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=attributes"
+        lnkReviews.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&SiteID=" & numSiteID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=reviews"
+        lnkRelatedProducts.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&SiteID=" & numSiteID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=relatedproducts"
+        lnkProductVersions.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&SiteID=" & numSiteID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=versions"
+        lnkOptions.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&SiteID=" & numSiteID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=options"
+        lnkObjectConfig.NavigateUrl = "_ModifyProduct.aspx?ProductID=" & intP_ID & "&SiteID=" & numSiteID & "&CategoryID=" & intCAT_ID & "&strParent=" & strParent & "&strTab=config"
     End Sub
 
     Sub PrepareNewProduct()

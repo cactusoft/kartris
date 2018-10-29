@@ -127,16 +127,19 @@ Public Class UsersBLL
     Public Shared Function GetEmailByID(ByVal U_ID As Integer) As String
         Return DetailsAdptr.GetEmailByID(U_ID)
     End Function
-    
-    Public Shared Function Add(ByVal strEmailAddress As String, ByVal strPassword As String) As Integer
+
+    'Now includes details of whether this user is a guest or not
+    'Guest ones are tagged so we can delete/anonymize them later
+    Public Shared Function Add(ByVal strEmailAddress As String, ByVal strPassword As String, ByVal Optional blnIsGuest As Boolean = False) As Integer
         Try
             Dim strRandomSalt As String = Membership.GeneratePassword(20, 0)
-            Return DetailsAdptr.Add(strEmailAddress, EncryptSHA256Managed(strPassword, strRandomSalt), strRandomSalt, CkartrisEnvironment.GetClientIPAddress())
+            Return DetailsAdptr.Add(strEmailAddress, EncryptSHA256Managed(strPassword, strRandomSalt), strRandomSalt, CkartrisEnvironment.GetClientIPAddress(), blnIsGuest)
         Catch ex As Exception
             ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
         End Try
         Return 0
     End Function
+
 
     Public Shared Function ChangePassword(ByVal U_ID As Integer, ByVal U_Password As String, ByVal strNewPassword As String) As Integer
         Try

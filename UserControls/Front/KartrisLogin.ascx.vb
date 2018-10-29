@@ -18,7 +18,6 @@ Imports System.Web.HttpContext
 Imports CkartrisDataManipulation
 Imports CkartrisBLL
 
-
 Partial Class KartrisLogin
     Inherits System.Web.UI.UserControl
 
@@ -38,6 +37,12 @@ Partial Class KartrisLogin
     Public ReadOnly Property UserPassword() As String
         Get
             Return Session("_NewPassword")
+        End Get
+    End Property
+
+    Public ReadOnly Property IsGuest() As String
+        Get
+            Return Session("_IsGuest")
         End Get
     End Property
 
@@ -72,6 +77,9 @@ Partial Class KartrisLogin
         End If
     End Sub
 
+    ''' <summary>
+    ''' Page Load
+    ''' </summary>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
             If Not Page.User.Identity.IsAuthenticated Then
@@ -85,11 +93,26 @@ Partial Class KartrisLogin
                     If Request.QueryString("m") = "u" Then litMessage.Text = "<li><div class=""updatemessage"">" & GetGlobalResourceObject("Login", "ContentText_PasswordUpdated") & "</div></li>"
                     SelectExistingCustomerOption()
                 End If
+
+                'Whether to show the guest checkout
+                Dim strGuestCheckoutEnabled As String = LCase(GetKartConfig("general.gdpr.guestcheckout.enabled"))
+                If strGuestCheckoutEnabled = "y" And Me.ForSection = "checkout" Then
+                    'We're all good
+                    'Set label to bold
+                    rblNeworOld.Items.FindByValue("Guest").Text = "<strong>" & rblNeworOld.Items.FindByValue("Guest").Text & "</strong>"
+                Else
+                    'Remove guest checkout option
+                    rblNeworOld.Items.Remove(rblNeworOld.Items.FindByValue("Guest"))
+                End If
+
                 txtUserPassword.Attributes.Add("onkeydown", "if(event.which || event.keyCode){if ((event.which == 13) || (event.keyCode == 13)) {document.getElementById('" + btnSignIn.ClientID + "').click();return false;}} else {return true}; ")
             End If
         End If
     End Sub
 
+    ''' <summary>
+    ''' Select existing customer
+    ''' </summary>
     Private Sub SelectExistingCustomerOption()
         phdEmail.Visible = True
         phdPassword.Visible = True
@@ -97,6 +120,12 @@ Partial Class KartrisLogin
         rblNeworOld.SelectedValue = "Existing"
     End Sub
 
+    ''' <summary>
+    ''' Check if email exists
+    ''' </summary>
+    ''' <remarks>
+    ''' This should not return accounts tagged as 'IsGuest'
+    ''' </remarks>
     Public Function CheckEmailExist(ByVal strEmailAddress As String) As Boolean
         Dim tblUserDetails As System.Data.DataTable = UsersBLL.GetDetails(strEmailAddress)
         If tblUserDetails.Rows.Count > 0 Then
@@ -106,7 +135,9 @@ Partial Class KartrisLogin
         End If
     End Function
 
-    'Set which page to redirect to after login
+    ''' <summary>
+    ''' Decide where to redirect user to after they login
+    ''' </summary>
     Public Function RedirectTo(Optional ByVal blnNew As Boolean = False) As String
         Dim strRedirectTo As String = ""
 
@@ -129,6 +160,9 @@ Partial Class KartrisLogin
         Return strRedirectTo
     End Function
 
+    ''' <summary>
+    ''' Click submit on customer accounts section of form
+    ''' </summary>
     Protected Sub btnSignIn_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSignIn.Click
         Page.Validate("Checkout")
         If Page.IsValid Then
@@ -214,6 +248,16 @@ Partial Class KartrisLogin
                         litErrorDetails.Text = GetGlobalResourceObject("Login", "ContentText_NoMatch")
                     End If
                 End If
+            ElseIf rblNeworOld.SelectedValue = "Guest" Then
+                'Guest
+                litSubTitleCreateCustomerAccount.Text = GetGlobalResourceObject("GDPR", "ContentText_GuestCheckoutDesc")
+                litTitle.Text = GetGlobalResourceObject("GDPR", "ContentText_GuestCheckout")
+                phdPassword.Visible = False
+                phdNewPassword.Visible = False
+                mvwLoginPopup.ActiveViewIndex = "0"
+                popLogin.OkControlID = ""
+                txtNewEmail.Text = C_Email.Text
+                txtConfirmEmail.Focus()
             Else
                 popLogin.OkControlID = "btnOk"
                 mvwLoginPopup.ActiveViewIndex = "1"
@@ -225,9 +269,19 @@ Partial Class KartrisLogin
 
     End Sub
 
+    ''' <summary>
+    ''' Click continue on creating a new account
+    ''' </summary>
     Protected Sub btnContinue_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnContinue.Click
+
+        'If guest checkout, we only need to do the validation of the emails matching, no check on
+        'passwords. Let's set a boolean value to help us remember.
+        Dim blnIsGuest As Boolean = rblNeworOld.SelectedItem.Value.ToLower = "guest"
+
         Dim strUserPasswordRule As String = GetKartConfig("frontend.users.password.required")
         'check if either password or confirm password field has a value
+
+        If blnIsGuest Then strUserPasswordRule = "optional"
 
         Dim blnValueEntered As Boolean = False
 
@@ -259,12 +313,19 @@ Partial Class KartrisLogin
             Dim strPassword As String = ""
             If strUserPasswordRule.ToLower = "automatic" Or String.IsNullOrEmpty(strNewPassword) Then strPassword = Membership.GeneratePassword(10, 0) Else strPassword = strNewPassword
             Session("_NewPassword") = strPassword
+
+            If blnIsGuest Then
+                Session("_IsGuest") = "YES"
+            Else
+                Session("_IsGuest") = Nothing
+            End If
+
             Session("blnLoginCleared") = True
             litFailureText.Text = ""
             If ForSection = "myaccount" Or ForSection = "support" Then
-                Dim intUserID As Integer = UsersBLL.Add(strEmail, strPassword)
+                Dim intUserID As Integer = UsersBLL.Add(strEmail, strPassword, blnIsGuest)
                 If intUserID > 0 And Membership.ValidateUser(strEmail, strPassword) Then
-                    If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" Then
+                    If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" And Not blnIsGuest Then
                         'Build up email text
                         Dim strSubject As String = GetGlobalResourceObject("Email", "Config_SubjectLine5")
                         Dim sbEmailText As StringBuilder = New StringBuilder
@@ -301,6 +362,9 @@ Partial Class KartrisLogin
 
     End Sub
 
+    ''' <summary>
+    ''' New, guest or existing radio button selection
+    ''' </summary>
     Protected Sub rblNeworOld_Select(ByVal Sender As Object, ByVal e As System.EventArgs) Handles rblNeworOld.SelectedIndexChanged
         If rblNeworOld.SelectedValue = "New" Then
             phdEmail.Visible = True
@@ -310,10 +374,17 @@ Partial Class KartrisLogin
             phdEmail.Visible = True
             phdPassword.Visible = True
             phdSubmitButtons.Visible = True
+        ElseIf rblNeworOld.SelectedValue = "Guest" Then
+            phdEmail.Visible = True
+            phdPassword.Visible = False
+            phdSubmitButtons.Visible = True
         End If
         C_Email.Focus()
     End Sub
 
+    ''' <summary>
+    ''' Recover email button click
+    ''' </summary>
     Protected Sub btnRecover_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         Page.Validate("RecoverPassword")
         Dim strEmailAddress As String = DirectCast(PasswordRecover.UserNameTemplateContainer.FindControl("UserName"), TextBox).Text
@@ -374,6 +445,9 @@ Partial Class KartrisLogin
 
     End Sub
 
+    ''' <summary>
+    ''' Make sure login is secure
+    ''' </summary>
     Protected Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
         If String.IsNullOrEmpty(Current.Session("Back_Auth")) AndAlso Not Request.IsSecureConnection Then
             SSLHandler.RedirectToSecuredPage()

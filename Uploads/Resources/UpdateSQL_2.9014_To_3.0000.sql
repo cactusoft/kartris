@@ -3,6 +3,43 @@ Kartris v3.0.0.0
 Multi-site support
 */
 
+/****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetNewestProducts]    Script Date: 25/10/2018 10:39:03 ******/
+-- start with this fix, it ensures we return distinct
+-- products on the newest products control. Old version
+-- would duplicate products if you updated multiple
+-- versions.
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[spKartrisProducts_GetNewestProducts]
+	(
+	@LANG_ID tinyint
+	)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+	SELECT DISTINCT products.P_ID, products.P_Name, dbo.fnKartrisProduct_GetMinPrice(products.P_ID) As MinPrice, products.P_DateCreated, @LANG_ID LANG_ID
+	FROM (
+		SELECT DISTINCT TOP (10) tblKartrisProducts.P_ID, tblKartrisLanguageElements.LE_Value AS P_Name, tblKartrisProducts.P_DateCreated, @LANG_ID LANG_ID
+		FROM    tblKartrisProducts INNER JOIN
+				  tblKartrisLanguageElements ON tblKartrisProducts.P_ID = tblKartrisLanguageElements.LE_ParentID
+		WHERE   (tblKartrisProducts.P_Live=1) AND (tblKartrisProducts.P_CustomerGroupID IS NULL) AND
+			   (tblKartrisLanguageElements.LE_LanguageID = @LANG_ID) AND (tblKartrisLanguageElements.LE_TypeID = 2) AND (tblKartrisLanguageElements.LE_FieldID = 1) AND 
+			  (NOT (tblKartrisLanguageElements.LE_Value IS NULL))
+		ORDER BY tblKartrisProducts.P_ID DESC
+	) as products
+	INNER JOIN tblKartrisVersions ON products.P_ID = tblKartrisVersions.V_ProductID INNER JOIN
+			  tblKartrisProductCategoryLink ON products.P_ID = tblKartrisProductCategoryLink.PCAT_ProductID INNER JOIN
+			  tblKartrisCategories ON tblKartrisProductCategoryLink.PCAT_CategoryID = tblKartrisCategories.CAT_ID
+	WHERE (tblKartrisCategories.CAT_CustomerGroupID IS NULL) AND (tblKartrisVersions.V_CustomerGroupID IS NULL) 
+	ORDER BY products.P_ID DESC
+END
+GO
+
 /****** Object:  Table [dbo].[tblKartrisSubSites]    Script Date: 28/09/2018 14:27:13 ******/
 SET ANSI_NULLS ON
 GO
@@ -82,10 +119,7 @@ AS
 	INNER JOIN vKartrisTypeCategories Cat ON Cat.CAT_ID = SUB_BaseCategoryID AND LANG_ID = 1
 	ORDER BY SUB_ID
 
-
 GO
-
-
 
 -- =============================================
 -- Author:		Joni
@@ -120,8 +154,6 @@ DECLARE @SS_ID INT
 	SET @SS_ID = SCOPE_IDENTITY();
 	SELECT @SS_ID;
 
-
-	
 GO
 
 -- =============================================
@@ -165,7 +197,7 @@ GO
 -- level (0) then will try to append sub sites
 -- as extra records.
 -- =============================================
-ALTER PROCEDURE [dbo].[_spKartrisCategories_Treeview]
+CREATE PROCEDURE [dbo].[_spKartrisCategories_Treeview]
 (
 	@LANG_ID as tinyint
 )
@@ -310,7 +342,6 @@ ADD U_GDPR_IsGuest bit NOT NULL
 CONSTRAINT U_GDPR_IsGuest_0 DEFAULT 0
 WITH VALUES
 
-
 -- 2. Modify SPROC that inserts the customer record on front end with extra
 -- parameter, so we can choose whether to create guest accounts or not
 
@@ -351,10 +382,21 @@ DECLARE @U_ID INT
 			@U_GDPR_SignupIP,
 			@U_GDPR_IsGuest);
 	SET @U_ID = SCOPE_IDENTITY();
+
+	-- Let's update the new record's email address if it is a guest
+	-- by adding |GUEST|ID# to the end of it. This will ensure the
+	-- email is unique, but also allow us to identify guest accounts
+	-- by username alone.
+	If @U_GDPR_IsGuest = 1
+	BEGIN
+		UPDATE tblKartrisUsers SET U_EmailAddress = U_EmailAddress + '|GUEST|' + Convert(NVARCHAR(50), @U_ID)
+	END
+
 	SELECT @U_ID;
 GO
 
--- 3. Modify the login and password reset/lookup sprocs so they don't
+
+-- 3. Modify the password reset/lookup sprocs so they don't
 -- find guest checkout accounts. This way, guest accounts cannot be 
 -- logged into, or the password recovered, so they essentially don't
 -- exist for the purpose of front end usage, other than to make an order.
@@ -378,7 +420,7 @@ AS
 SET NOCOUNT OFF;
 SELECT        TOP 1 U_ID
 FROM            tblKartrisUsers
-WHERE        (U_EmailAddress = @EmailAddress AND U_Password = @Password AND U_GDPR_IsGuest = 0)
+WHERE        (U_EmailAddress = @EmailAddress AND U_Password = @Password)
 
 /****** Object:  StoredProcedure [dbo].[spKartrisUsers_GetDetails]    Script Date: 23/10/2018 11:36:15 ******/
 SET ANSI_NULLS ON
@@ -415,6 +457,34 @@ SELECT        TOP 1
 				
 FROM            tblKartrisUsers
 WHERE        (U_EmailAddress = @EmailAddress AND U_GDPR_IsGuest = 0)
+
+/****** new config settings ******/
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.gdpr.guestcheckout.enabled', N'y', N's', N'b', 'y|n',N'Whether guest checkout is enabled',3.000, N'y', 0);
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.gdpr.guestcheckout.purgeperiod', N'14', N'n', N't','',N'Period in days after which guest checkout accounts should be anonymized',3.000, N'14', 0);
+
+GO
+
+/*** New language strings  ***/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
+(N'f', N'ContentText_GuestCheckout', N'Guest Checkout', NULL, 3.000, N'Guest Checkout', NULL, N'GDPR',1);
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
+(N'f', N'ContentText_GuestCheckoutDesc', N'Checkout without creating an account', NULL, 3.000, N'Checkout without creating an account', NULL, N'GDPR',1);
+GO
+
+-- back end
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
+(N'b', N'ContentText_GuestAccounts', N'Guest Accounts', NULL, 3.000, N'Guest Accounts', NULL, N'_GDPR',1);
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
+(N'b', N'ContentText_GuestAccountsDesc', N'The following guest accounts can now be anonymized', NULL, 3.000, N'The following guest accounts can now be anonymized', NULL, N'_GDPR',1);
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
+(N'b', N'ContentText_PurgeGuestAccountsTask', N'Purge Guest Accounts', NULL, 3.000, N'Purge Guest Accounts', NULL, N'_GDPR',1);
+GO
 
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';

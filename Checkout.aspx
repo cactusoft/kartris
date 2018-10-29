@@ -258,17 +258,9 @@
                         <div class="inputform">
                             <div>
                                 <span class="checkbox">
-                                    <asp:CheckBox ID="chkMailingList" runat="server" Checked="true" />
+                                    <asp:CheckBox ID="chkMailingList" runat="server" Checked="false" />
                                     <asp:Label ID="lblYesAddMe" Text="<%$ Resources: Checkout, ContentText_YesAddMe %>"
                                         runat="server" AssociatedControlID="chkMailingList" EnableViewState="true" /></span>
-                            </div>
-                            <div class="spacer">
-                            </div>
-                            <div>
-                                <asp:DropDownList ID="ddlMailingList" runat="server">
-                                    <asp:ListItem Text="<%$ Resources: Checkout, ContentText_SendMailsPlain %>" Value="t" />
-                                    <asp:ListItem Text="<%$ Resources: Checkout, ContentText_SendMailsHTML %>" Value="h" />
-                                </asp:DropDownList>
                             </div>
                         </div>
                         <div class="spacer">

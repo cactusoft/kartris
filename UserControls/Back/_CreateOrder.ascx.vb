@@ -918,11 +918,11 @@ Partial Class UserControls_Back_CreateOrder
 
 
                 'Create the order record
-                O_ID = OrdersBLL.Add(C_ID, txtOrderCustomerEmail.Text, txtNewPassword.Text, _UC_BillingAddress.SelectedAddress, _
-                                     _UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket, _
-                                      BasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID, _
-                                     intGatewayCurrency, chkSendOrderUpdateEmail.Checked, _UC_BasketMain.SelectedShippingMethod, numGatewayTotalPrice, _
-                                     IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtOrderPONumber.Text, "")
+                O_ID = OrdersBLL.Add(C_ID, txtOrderCustomerEmail.Text, txtNewPassword.Text, _UC_BillingAddress.SelectedAddress,
+                                     _UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket,
+                                      BasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID,
+                                     intGatewayCurrency, chkSendOrderUpdateEmail.Checked, _UC_BasketMain.SelectedShippingMethod, numGatewayTotalPrice,
+                                     IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtOrderPONumber.Text, "", False)
 
                 'Order Creation successful
                 If O_ID > 0 Then

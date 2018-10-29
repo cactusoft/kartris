@@ -1125,23 +1125,18 @@ Public Class _CategorySiteMapProvider
         Dim arr As Array = Split(parentNode.Key, ",")
         Dim results() As DataRow = siteMapTable.Select("ParentID=" & arr(UBound(arr)))
         For Each row As DataRow In results
-            Try
-                Dim aryParentKey As String() = Split(parentkey, "::")
-                'parentkey = parentkey.Replace(numSiteID & "::", "")
-                parentkey = aryParentKey(1)
-            Catch ex As Exception
-                'erm, oh... this is embarrassing
-            End Try
+            parentkey = StripParents(parentkey)
 
             Dim url As String
             Dim strParentKey As String
-            numSiteID = row("SUB_ID") 'we start top level with zero, increase as we work through to ensure all sub sites included
+            If numSiteID < row("SUB_ID") Then numSiteID = row("SUB_ID")
+            'numSiteID = row("SUB_ID")  'we start top level with zero, increase as we work through to ensure all sub sites included
 
             If Left(parentkey, 2) = "0," Then strParentKey = Mid(parentkey, 3) Else strParentKey = parentkey
             If strParentKey = "0" Then strParentKey = ""
             If strParentKey <> "" Then strParentKey = strParentKey & "," & row("parentid") Else strParentKey = row("parentid")
 
-            url = CreateURL(BackEndPage.Category, row("CAT_ID"), numSiteID, strParentKey)
+            url = CreateURL(BackEndPage.Category, row("CAT_ID"), numSiteID, numSiteID & "::" & strParentKey)
 
             'We add in the numsite ID to the key, this is a unique string we want
             'to insert into the sitemap so each URL has a unique key. It's used
@@ -1157,6 +1152,9 @@ Public Class _CategorySiteMapProvider
         Next
     End Sub
 
+    ''' <summary>
+    ''' Create URL
+    ''' </summary>
     Public Shared Function CreateURL(ByVal strPageType As BackEndPage, ByVal ID As Int64, ByVal numSiteID As Int64, Optional ByVal strParents As String = "", Optional ByVal ParentID As Integer = 0, Optional ByVal CPagerID As Integer = 0, Optional ByVal PPagerID As Integer = 0, Optional ByVal strActiveTab As String = "p") As String
         Dim numLangID As Integer
         If String.IsNullOrEmpty(HttpContext.Current.Session.Item("_LANG")) Then
@@ -1171,6 +1169,8 @@ Public Class _CategorySiteMapProvider
             strUserCulture = CStr(HttpContext.Current.Session.Item("KartrisUserCulture")) & "/"
         End If
 
+        strParents = StripParents(strParents)
+
         Dim strWebShopFolder As String = KartSettingsManager.GetKartConfig("general.webshopfolder")
         Dim strURL As String
         Select Case strPageType
@@ -1178,12 +1178,12 @@ Public Class _CategorySiteMapProvider
                 If Left(strParents, 1) = "," Then strParents = Mid(strParents, 2)
                 Dim strPageName As String = "~/Admin/_Category.aspx"
                 If Not (strParents = "" Or strParents = "0") Then
-                    strURL = String.Format("{0}?CategoryID={1}&SiteID={2}&strParent={3}", strPageName, ID, numSiteID, strParents)
+                    strURL = String.Format("{0}?CategoryID={1}&SiteID={2}&strParent={3}", strPageName, ID, numSiteID, numSiteID & "::" & strParents)
                 Else
                     If ParentID = 0 Then
                         strURL = String.Format("{0}?CategoryID={1}&SiteID={2}", strPageName, ID, numSiteID)
                     Else
-                        strURL = String.Format("{0}?CategoryID={1}SiteID={2}&strParent={3}&", strPageName, ID, numSiteID, ParentID)
+                        strURL = String.Format("{0}?CategoryID={1}SiteID={2}&strParent={3}", strPageName, ID, numSiteID, numSiteID & "::" & ParentID)
                     End If
                 End If
                 If CPagerID <> 0 Then strURL += "&CPGR=" & CPagerID
@@ -1192,7 +1192,7 @@ Public Class _CategorySiteMapProvider
             Case BackEndPage.Product
                 If Left(strParents, 1) = "," Then strParents = Mid(strParents, 2)
                 Dim strPageName As String = "~/Admin/_ModifyProduct.aspx"
-                strURL = String.Format("{0}?ProductID={1}&SiteID={2}&CategoryID={3}&strParent={4}", strPageName, ID, numSiteID, ParentID, strParents)
+                strURL = String.Format("{0}?ProductID={1}&SiteID={2}&CategoryID={3}&strParent={4}", strPageName, ID, numSiteID, ParentID, numSiteID & "::" & strParents)
                 If CPagerID <> 0 Then strURL += "&CPGR=" & CPagerID
                 If PPagerID <> 0 Then strURL += "&PPGR=" & PPagerID
                 If strActiveTab = "s" Then strURL += "&T=S"
@@ -1200,6 +1200,19 @@ Public Class _CategorySiteMapProvider
                 Return Nothing
         End Select
         Return strURL
+    End Function
+
+    ''' <summary>
+    ''' Strip the site ID from parents string
+    ''' </summary>
+    Public Shared Function StripParents(ByVal strParents As String) As String
+        Try
+            Dim aryParentKey As String() = Split(strParents, "::")
+            strParents = aryParentKey(1)
+        Catch ex As Exception
+            'erm, oh... this is embarrassing
+        End Try
+        Return strParents
     End Function
 End Class
 #End Region

@@ -22,6 +22,7 @@
                                             <asp:RadioButtonList runat="server" ID="rblNeworOld" AutoPostBack="true" CssClass="radio">
                                                 <asp:ListItem Text="<%$ Resources: Kartris, ContentText_NewCustomers %>" Value="New" />
                                                 <asp:ListItem Text="<%$ Resources: Kartris, ContentText_AlreadyHaveAccount %>" Value="Existing" />
+                                                <asp:ListItem Text="<%$ Resources: GDPR, ContentText_GuestCheckout %>" Value="Guest" />
                                             </asp:RadioButtonList>
                                             <asp:Literal ID="litMessage" runat="server" />
                                             <br />

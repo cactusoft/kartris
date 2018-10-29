@@ -131,9 +131,17 @@ Partial Class _CategoryMenu
                     strParents = CleanParentsString(strParents)
                 End If
 
+                Try
+                    Dim aryParentKey As String() = Split(strParents, "::")
+                    'parentkey = parentkey.Replace(numSiteID & "::", "")
+                    strParents = aryParentKey(1)
+                Catch ex As Exception
+                    'erm, oh... this is embarrassing
+                End Try
+
                 childNode.NavigateUrl = _CategorySiteMapProvider.CreateURL(
                     _CategorySiteMapProvider.BackEndPage.Category, drwChilds("CAT_ID"), GetIDFromNodeValue(node.Value, True),
-                    strParents)
+                    numSiteID & "::" & strParents)
 
                 If childNode.ChildNodes.Count = 0 Then childNode.PopulateOnDemand = True
                 If CBool(drwChilds("CAT_Live")) Then
@@ -154,6 +162,14 @@ Partial Class _CategoryMenu
                 If strParents.Contains("|") Then
                     strParents = CleanParentsString(strParents)
                 End If
+
+                Try
+                    Dim aryParentKey As String() = Split(strParents, "::")
+                    'parentkey = parentkey.Replace(numSiteID & "::", "")
+                    strParents = aryParentKey(1)
+                Catch ex As Exception
+                    'erm, oh... this is embarrassing
+                End Try
 
                 If strParents.EndsWith("," & GetIDFromNodeValue(node.Value)) Then
                     strParents = Replace(strParents, "," & GetIDFromNodeValue(node.Value), "")
@@ -186,13 +202,21 @@ Partial Class _CategoryMenu
         Dim strCurrentURL As String = Request.Url.AbsoluteUri.ToString
 
         If strCurrentURL.Contains("_Category.aspx") OrElse strCurrentURL.Contains("_ModifyCategory.aspx") Then
-            If Not String.IsNullOrEmpty(Request.QueryString("sub")) AndAlso Not String.IsNullOrEmpty(_GetParentCategory()) Then
-                FindPageNode("c", _GetParentCategory() & "," & Request.QueryString("sub"))
-            ElseIf Not String.IsNullOrEmpty(_GetParentCategory()) Then
-                FindPageNode("c", _GetParentCategory())
+            Dim strParents As String = ""
+            Dim aryParents As String() = Split(_GetParentCategory(), "::")
+            Try
+                strParents = aryParents(1)
+            Catch ex As Exception
+                'this wasn't what we were hoping for
+            End Try
+            If Not String.IsNullOrEmpty(Request.QueryString("sub")) AndAlso Not String.IsNullOrEmpty(strParents) Then
+                FindPageNode("c", strParents & "," & Request.QueryString("sub"))
+            ElseIf Not String.IsNullOrEmpty(strParents) Then
+                FindPageNode("c", strParents)
             Else
                 SelectCategoryNode()
             End If
+
         ElseIf strCurrentURL.Contains("_ModifyProduct.aspx") Then
             Dim strParents As String = ""
             Dim aryParents As String() = Split(_GetParentCategory(), "::")
@@ -289,14 +313,15 @@ Partial Class _CategoryMenu
             'oh dear
         End Try
         If PageType = "c" Then
+            Parents = _CategorySiteMapProvider.StripParents(Parents)
             Dim arrCategories() As String = Split(Parents, ",")
             For i As Integer = 0 To arrCategories.Length - 1
-                Dim CatID As Integer = 0
-                Try
-                    CatID = CLng(arrCategories(i))
-                Catch ex As Exception
-                    '
-                End Try
+
+                'This might come in with the numsite ID for uniqueness, to 
+                'distinguish between same product in different sites
+                Dim strCatContent As String = arrCategories(i)
+
+                Dim CatID As Integer = CLng(strCatContent)
 
                 For Each node As TreeNode In tvwCategory.Nodes
                     If node.NavigateUrl.Contains("_Category.aspx") Then
@@ -324,20 +349,13 @@ Partial Class _CategoryMenu
                 Next
             Next
         ElseIf PageType = "p" Then
+            Parents = _CategorySiteMapProvider.StripParents(Parents)
             Dim arrCategories() As String = Split(Parents, ",")
             For i As Integer = 0 To arrCategories.Length - 1
 
                 'This might come in with the numsite ID for uniqueness, to 
                 'distinguish between same product in different sites
                 Dim strCatContent As String = arrCategories(i)
-                Try
-                    'We use a quick array split to get the category
-                    'ID part from the string
-                    Dim aryCatContent As String() = Split(strCatContent, "::")
-                    strCatContent = aryCatContent(1)
-                Catch ex As Exception
-                    'erm, oh... this is embarrassing
-                End Try
 
                 Dim CatID As Integer = CLng(strCatContent)
                 For Each node As TreeNode In tvwCategory.Nodes

@@ -558,13 +558,14 @@ Public Class OrdersBLL
     ''' can be rolled back.
     ''' </summary>
     ''' <returns>Returns the newly created order ID</returns>
-    Public Shared Function Add(ByVal C_ID As Integer, ByVal strUserEmailAddress As String, ByVal strUserPassword As String, _
-              ByVal BillingAddress As KartrisClasses.Address, ByVal ShippingAddress As KartrisClasses.Address, _
-              ByVal blnSameShippingAsBilling As Boolean, ByVal BasketObject As Kartris.Basket, ByVal BasketArray As List(Of Kartris.BasketItem), _
-              ByVal strOrderDetails As String, ByVal strGatewayName As String, _
-              ByVal intLanguageID As Integer, ByVal intCurrencyID As Integer, ByVal intGatewayCurrencyID As Integer, _
-              ByVal blnOrderEmails As Boolean, ByVal strShippingMethod As String, ByVal numGatewayTotalPrice As Double, _
-              ByVal strEUVATNumber As String, ByVal strPromotionDescription As String, ByVal strPurchaseOrderNo As String, ByVal strComments As String) As Integer
+    Public Shared Function Add(ByVal C_ID As Integer, ByVal strUserEmailAddress As String, ByVal strUserPassword As String,
+              ByVal BillingAddress As KartrisClasses.Address, ByVal ShippingAddress As KartrisClasses.Address,
+              ByVal blnSameShippingAsBilling As Boolean, ByVal BasketObject As Kartris.Basket, ByVal BasketArray As List(Of Kartris.BasketItem),
+              ByVal strOrderDetails As String, ByVal strGatewayName As String,
+              ByVal intLanguageID As Integer, ByVal intCurrencyID As Integer, ByVal intGatewayCurrencyID As Integer,
+              ByVal blnOrderEmails As Boolean, ByVal strShippingMethod As String, ByVal numGatewayTotalPrice As Double,
+              ByVal strEUVATNumber As String, ByVal strPromotionDescription As String, ByVal strPurchaseOrderNo As String, ByVal strComments As String,
+              ByVal blnIsGuest As Boolean) As Integer
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
             Dim cmd As SqlCommand = sqlConn.CreateCommand
@@ -594,7 +595,7 @@ Public Class OrdersBLL
                     cmdAddOrderUser.Parameters.AddWithValue("@U_Password", UsersBLL.EncryptSHA256Managed(strUserPassword, strRandomSalt))
                     cmdAddOrderUser.Parameters.AddWithValue("@U_SaltValue", strRandomSalt)
                     cmdAddOrderUser.Parameters.AddWithValue("@U_GDPR_SignupIP", CkartrisEnvironment.GetClientIPAddress())
-
+                    cmdAddOrderUser.Parameters.AddWithValue("@U_GDPR_IsGuest", blnIsGuest)
                     C_ID = cmdAddOrderUser.ExecuteScalar
                     blnNewUser = True
                 End If
@@ -667,9 +668,9 @@ Public Class OrdersBLL
                 'Build the billing address string to be used in the order record
                 If BillingAddress IsNot Nothing Then
                     With BillingAddress
-                        strBillingAddressText = .FullName & vbCrLf & .Company & vbCrLf & _
-                              .StreetAddress & vbCrLf & .TownCity & vbCrLf & _
-                              .County & vbCrLf & .Postcode & vbCrLf & _
+                        strBillingAddressText = .FullName & vbCrLf & .Company & vbCrLf &
+                              .StreetAddress & vbCrLf & .TownCity & vbCrLf &
+                              .County & vbCrLf & .Postcode & vbCrLf &
                               .Country.Name & vbCrLf & .Phone
                     End With
                 End If
@@ -680,9 +681,9 @@ Public Class OrdersBLL
                 Else
                     If ShippingAddress IsNot Nothing Then
                         With ShippingAddress
-                            strShippingAddressText = .FullName & vbCrLf & .Company & vbCrLf & _
-                                  .StreetAddress & vbCrLf & .TownCity & vbCrLf & _
-                                  .County & vbCrLf & .Postcode & vbCrLf & _
+                            strShippingAddressText = .FullName & vbCrLf & .Company & vbCrLf &
+                                  .StreetAddress & vbCrLf & .TownCity & vbCrLf &
+                                  .County & vbCrLf & .Postcode & vbCrLf &
                                   .Country.Name & vbCrLf & .Phone
                         End With
                     End If
@@ -774,8 +775,8 @@ Public Class OrdersBLL
 
                             cmdAddInvoiceRows.Parameters.AddWithValue("@IR_OrderNumberID", O_ID)
                             cmdAddInvoiceRows.Parameters.AddWithValue("@IR_VersionCode", .VersionCode)
-                            cmdAddInvoiceRows.Parameters.AddWithValue("@IR_VersionName", IIf(.VersionName <> .ProductName Or _
-                                                                                             InStr(.VersionName, .ProductName) = 0, _
+                            cmdAddInvoiceRows.Parameters.AddWithValue("@IR_VersionName", IIf(.VersionName <> .ProductName Or
+                                                                                             InStr(.VersionName, .ProductName) = 0,
                                                                                              .ProductName & " - " & .VersionName, .VersionName))
                             cmdAddInvoiceRows.Parameters.AddWithValue("@IR_Quantity", CSng(.Quantity))
                             cmdAddInvoiceRows.Parameters.AddWithValue("@IR_PricePerItem", .IR_PricePerItem)
