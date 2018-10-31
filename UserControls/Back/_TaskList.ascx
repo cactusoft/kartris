@@ -62,7 +62,7 @@
                             <asp:PlaceHolder ID="phdCustomersToAnonymize" runat="server" Visible="false">
                                 <div>
                                     <a href="_AnonymizeList.aspx">
-                                        <asp:Literal ID="litCustomersToAnonymize" runat="server" Text="To Anonymize" />&nbsp;<asp:Literal ID="litCustomersToAnonymizeCount" runat="server" /></a></div>
+                                        <asp:Literal ID="litCustomersToAnonymize" runat="server" Text="<%$ Resources: _GDPR, ContentText_AnonymizeTask %>" />&nbsp;<asp:Literal ID="litCustomersToAnonymizeCount" runat="server" /></a></div>
                             </asp:PlaceHolder>
                         </div>
                     </div>
