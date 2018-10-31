@@ -81,19 +81,26 @@ Public Class UsersBLL
 
     End Function
 
-    Public Shared Function _Add(ByVal U_AccountHolderName As String, ByVal U_EmailAddress As String, ByVal U_Password As String, ByVal U_LanguageID As Integer, _
-                               ByVal U_CustomerGroupID As Integer, ByVal U_CustomerDiscount As Double, ByVal blnUserApproved As Boolean, _
+    Public Shared Function _Add(ByVal U_AccountHolderName As String, ByVal U_EmailAddress As String, ByVal U_Password As String, ByVal U_LanguageID As Integer,
+                               ByVal U_CustomerGroupID As Integer, ByVal U_CustomerDiscount As Double, ByVal blnUserApproved As Boolean,
                             ByVal blnUserAffiliate As Boolean, ByVal U_AffiliateCommission As Double, ByVal U_SupportEndDate As Date, ByVal U_Notes As String) As Integer
         Try
             Dim dtNull As Nullable(Of DateTime) = Nothing
             Dim strRandomSalt As String = Membership.GeneratePassword(20, 0)
-            Return CustomerDetailsAdptr._Add(U_AccountHolderName, U_EmailAddress, EncryptSHA256Managed(U_Password, strRandomSalt), U_LanguageID, U_CustomerGroupID, U_CustomerDiscount, blnUserApproved, _
+            Return CustomerDetailsAdptr._Add(U_AccountHolderName, U_EmailAddress, EncryptSHA256Managed(U_Password, strRandomSalt), U_LanguageID, U_CustomerGroupID, U_CustomerDiscount, blnUserApproved,
                                             blnUserAffiliate, U_AffiliateCommission, IIf(U_SupportEndDate = Nothing Or U_SupportEndDate = "#12:00:00 AM#", dtNull, U_SupportEndDate), U_Notes, strRandomSalt)
         Catch ex As Exception
             ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
             Return Nothing
         End Try
 
+    End Function
+
+    Public Shared Sub _AnonymizeAll()
+        CustomerDetailsAdptr._AnonymizeAll()
+    End Sub
+    Public Shared Function _GetGuestList() As DataTable
+        Return CustomerDetailsAdptr.GetGuests()
     End Function
 
     Public Shared Function _GetAddressesByUserID(ByVal U_ID As Integer, ByVal ADR_Type As String) As DataTable

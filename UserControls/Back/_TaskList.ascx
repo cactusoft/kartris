@@ -59,6 +59,11 @@
                                         <asp:Literal ID="litCustomersInArrears" runat="server" Text="<%$ Resources: _TaskList, ContentText_CustomersInArrears %>" />&nbsp;<asp:Literal
                                             ID="litCustomersInArrearsCount" runat="server" /></a></div>
                             </asp:PlaceHolder>
+                            <asp:PlaceHolder ID="phdCustomersToAnonymize" runat="server" Visible="false">
+                                <div>
+                                    <a href="_AnonymizeList.aspx">
+                                        <asp:Literal ID="litCustomersToAnonymize" runat="server" Text="To Anonymize" />&nbsp;<asp:Literal ID="litCustomersToAnonymizeCount" runat="server" /></a></div>
+                            </asp:PlaceHolder>
                         </div>
                     </div>
                 </asp:PlaceHolder>

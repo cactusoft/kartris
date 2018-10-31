@@ -56,6 +56,7 @@ Partial Class Admin_CustomersList
             End If
         End If
 
+        CType(Me.Master, Skins_Admin_Template).LoadTaskList()
 
         'Pre-fill search box if we're coming back from
         'a customer and sending back the search term

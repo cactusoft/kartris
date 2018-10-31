@@ -65,10 +65,11 @@ Partial Class UserControls_Back_TaskList
         Dim numWaitingAffiliates As Integer = 0
         Dim numCustomersAwatingRefunds As Integer = 0
         Dim numCustomersInArrears As Integer = 0
+        Dim numCustomersToAnonymize As Integer = 0
         Dim strMessage As String = ""
-        KartrisDBBLL._LoadTaskList(numOrdersToInvoice, numOrdersNeedPayment, numOrdersToDispatch, _
-                                      numStockWarning, numOutOfStock, numWaitingReviews, numWaitingAffiliates, _
-                                      numCustomersAwatingRefunds, numCustomersInArrears, strMessage)
+        KartrisDBBLL._LoadTaskList(numOrdersToInvoice, numOrdersNeedPayment, numOrdersToDispatch,
+                                      numStockWarning, numOutOfStock, numWaitingReviews, numWaitingAffiliates,
+                                      numCustomersAwatingRefunds, numCustomersInArrears, numCustomersToAnonymize, strMessage)
 
         'Orders
         If numOrdersToInvoice > 0 OrElse numOrdersNeedPayment > 0 OrElse numOrdersToDispatch > 0 Then
@@ -83,12 +84,15 @@ Partial Class UserControls_Back_TaskList
         End If
 
         'Awaiting refunds
-        If numCustomersAwatingRefunds > 0 OrElse numCustomersInArrears > 0 Then
+        If numCustomersAwatingRefunds > 0 OrElse numCustomersInArrears > 0 OrElse numCustomersToAnonymize > 0 Then
             phdCustomers.Visible = True
             litCustomersAwaitingRefundsCount.Text = numCustomersAwatingRefunds
             litCustomersInArrearsCount.Text = numCustomersInArrears
             If numCustomersAwatingRefunds = 0 Then phdCustomersAwaitingRefunds.Visible = False Else phdCustomersAwaitingRefunds.Visible = True
             If numCustomersInArrears = 0 Then phdCustomersInArrears.Visible = False Else phdCustomersInArrears.Visible = True
+            phdCustomersToAnonymize.Visible = True
+            litCustomersToAnonymizeCount.Text = numCustomersToAnonymize
+            If numCustomersToAnonymize = 0 Then phdCustomersToAnonymize.Visible = False Else phdCustomersToAnonymize.Visible = True
         Else
             phdCustomers.Visible = False
         End If
