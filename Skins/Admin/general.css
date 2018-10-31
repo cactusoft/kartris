@@ -308,6 +308,9 @@ input.cancelbutton:hover                { background-color: #888; border-color: 
 .topsubmitbuttons input.addbutton,
 .topsubmitbuttons a.addbutton:visited,
 .topsubmitbuttons a.addbutton:link     { background-image: url(Images/button_add.png); }
+.topsubmitbuttons input.anonymizebutton,
+.topsubmitbuttons a.anonymizebutton:visited,
+.topsubmitbuttons a.anonymizebutton:link     { background-image: url(Images/button_anonymous.png); }
 .topsubmitbuttons input.savebutton,
 .topsubmitbuttons a.savebutton:visited,
 .topsubmitbuttons a.savebutton:link     { background-image: url(Images/button_save.png); }
