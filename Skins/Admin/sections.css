@@ -167,6 +167,14 @@ PAGE: LANGUAGE STRINGS
 #page_languagestrings li.detailsfield   { background-color: #eee; padding-left: 10px; }
 #page_languagestrings li.detailsfield  .Kartris-DetailsView-Name
                                         { width: 170px; color: #666; }
+
+/* 
+========================================================================
+PAGE: ANONYMIZE
+========================================================================
+*/
+#page_anonymize input[type=checkbox]    { width: 30px; }
+#page_anonymize label                   { width: 300px; font-weight: normal; }
 /* 
 ========================================================================
 PAGE: ORDER (Single Order)

@@ -142,7 +142,7 @@ DECLARE @SS_ID INT
 	
 	INSERT INTO [tblKartrisSubSites]
 		   (
-		   	[SUB_Name],
+			[SUB_Name],
 			[SUB_Domain],
 			[SUB_BaseCategoryID],
 			[SUB_Skin],
@@ -633,14 +633,11 @@ FROM            tblKartrisUsers
 WHERE        (U_EmailAddress = @EmailAddress AND U_GDPR_IsGuest = 0)
 
 /****** new config settings ******/
-INSERT INTO [tblKartrisConfig]
-(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
-VALUES
-(N'general.gdpr.guestcheckout.enabled', N'y', N's', N'b', 'y|n',N'Whether guest checkout is enabled',3.000, N'y', 0);
-INSERT INTO [tblKartrisConfig]
-(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
-VALUES
-(N'general.gdpr.guestcheckout.purgeperiod', N'14', N'n', N't','',N'Period in days after which guest checkout accounts should be anonymized',3.000, N'14', 0);
+INSERT INTO [tblKartrisConfig] (CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES (N'general.gdpr.guestcheckout.enabled', N'y', N's', N'b', 'y|n',N'Whether guest checkout is enabled',3.000, N'y', 0);
+
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important])
+VALUES (N'general.gdpr.purgeguestaccounts', N'30', N's', N'b', N'number of days', N'Number of days until guest accounts are purged', 3, N'30', 0)
 
 GO
 
@@ -662,12 +659,18 @@ INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value],
 (N'b', N'ContentText_GuestCheckout', N'Guest Checkout', NULL, 3.000, N'Guest Checkout', NULL, N'_GDPR',1);
 GO
 
-/****** Set this to tell Data tool which version of db we have ******/
-UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
+-- Anonymizing
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
+(N'b', N'BackMenu_AnonymizationList', N'Pending Anonymization', NULL, 3.000, N'Pending Anonymization', NULL, N'_GDPR',1);
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
+(N'b', N'FormButton_Anonymize', N'Anonymize', NULL, 3.000, N'Anonymize', NULL, N'_GDPR',1);
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
+(N'b', N'ContentText_AnonymizeTask', N'To Anonymize: ', NULL, 3.000, N'To Anonymize: ', NULL, N'_GDPR',1);
 GO
 
+-- 5. Code to anonymize guest accounts
 
-
+/****** Anonymize by email address ******/
 CREATE PROCEDURE [dbo].[_spKartrisUsers_AnonymizeByEmail]
 (
 		   @U_EmailAddress nvarchar(100)
@@ -688,24 +691,24 @@ DECLARE @U_ID INT
 	WHERE U_EmailAddress = @U_EmailAddress
 	AND U_GDPR_IsGuest = 1
 	AND DATEDIFF(day, O_LastModified,GETDATE()) > @days_purgeguestaccounts
-		AND U_EmailAddress NOT LIKE 'GDPR Anonymized'
+		AND U_EmailAddress NOT LIKE 'GDPR Anonymized | %'
 		AND (O_Shipped = 1 OR O_Cancelled = 1 OR O_Paid = 0)
 
 	UPDATE tblKartrisAddresses 
 	SET [ADR_Label] = 'GDPR Anonymized'
-      ,[ADR_Name] = 'GDPR Anonymized'
-      ,[ADR_Company] = 'GDPR Anonymized'
-      ,[ADR_StreetAddress] = 'GDPR Anonymized'
-      ,[ADR_TownCity] = 'GDPR Anonymized'
-      ,[ADR_County] = 'GDPR Anonymized'
-      ,[ADR_PostCode] = 'GDPR Anonymized'
-      ,[ADR_Country] = 0
-      ,[ADR_Telephone] = 'GDPR Anonymized'
+	  ,[ADR_Name] = 'GDPR Anonymized'
+	  ,[ADR_Company] = 'GDPR Anonymized'
+	  ,[ADR_StreetAddress] = 'GDPR Anonymized'
+	  ,[ADR_TownCity] = 'GDPR Anonymized'
+	  ,[ADR_County] = 'GDPR Anonymized'
+	  ,[ADR_PostCode] = 'GDPR Anonymized'
+	  ,[ADR_Country] = 0
+	  ,[ADR_Telephone] = 'GDPR Anonymized'
 	WHERE ADR_UserID = @U_ID
 
 	UPDATE tblKartrisUsers
 	SET 
-		U_EmailAddress = 'GDPR Anonymized'
+		U_EmailAddress = 'GDPR Anonymized | ' + Convert(varchar(50),@U_ID)
 		,U_Telephone = 'GDPR Anonymized'
 		,U_AccountHolderName = 'GDPR Anonymized'
 	WHERE U_ID = @U_ID
@@ -714,13 +717,13 @@ DECLARE @U_ID INT
 	declare @xmlOrder xml, @xmlRest xml
 	declare @lastBit nvarchar(10), @xmlDataStr nvarchar(max)
 	SELECT @xmlOrder = SUBSTRING(O_Data , 1, CASE CHARINDEX('|||',  O_Data )
-            WHEN 0
-                THEN LEN( O_Data )
-            ELSE CHARINDEX('|||',  O_Data ) - 1
-            END)
+			WHEN 0
+				THEN LEN( O_Data )
+			ELSE CHARINDEX('|||',  O_Data ) - 1
+			END)
 			,@xmlRest = SUBSTRING(O_Data , CHARINDEX('|||',  O_Data ) + 3, LEN( O_Data ) - CHARINDEX('|||',  O_Data ) - 6)
 			,@lastBit = RIGHT(O_Data,3)
-    FROM tblKartrisOrders
+	FROM tblKartrisOrders
 	WHERE O_CustomerID = @U_ID
 
 	IF @xmlOrder IS NOT NULL BEGIN
@@ -742,6 +745,7 @@ END
 
 GO
 
+/****** Anonymize all ******/
 CREATE PROCEDURE [dbo].[_spKartrisUsers_AnonymizeAll]
 AS
 BEGIN
@@ -758,7 +762,7 @@ BEGIN
 		ON O_CustomerID = U_ID
 	WHERE U_GDPR_IsGuest = 1
 	AND DATEDIFF(day, O_LastModified,GETDATE()) > @days_purgeguestaccounts
-		AND U_EmailAddress NOT LIKE 'GDPR Anonymized'
+		AND U_EmailAddress NOT LIKE 'GDPR Anonymized | %'
 		AND (O_Shipped = 1 OR O_Cancelled = 1 OR O_Paid = 0)
 
 	DECLARE @u_email as nvarchar(100)
@@ -775,11 +779,11 @@ BEGIN
 	CLOSE cur_emails  
 	DEALLOCATE cur_emails 
 
-
 END
 
 GO
 
+/****** Get guests ******/
 CREATE PROCEDURE [dbo].[_spKartrisUsers_GetGuests]
 AS
 SET NOCOUNT OFF;
@@ -796,10 +800,11 @@ ON O_CustomerID = U_ID
 WHERE U_GDPR_IsGuest = 1
 AND DATEDIFF(day, O_LastModified,GETDATE()) > @days_purgeguestaccounts
 AND (O_Shipped = 1 OR O_Cancelled = 1 OR O_Paid = 0)
-AND U_EmailAddress NOT LIKE 'GDPR Anonymized'
+AND U_EmailAddress NOT LIKE 'GDPR Anonymized | %'
 
 GO
 
+/****** Pull users ******/
 ALTER PROCEDURE [dbo].[_spKartrisUsers_ListBySearchTerm]
 (
 	@SearchTerm nvarchar(100),
@@ -840,8 +845,6 @@ ELSE
 		SET @intAffiliateCommision = 0
 	END	
 
-
-	
 IF @isMailingList = 0
 	BEGIN
 		SET @isMailingList = NULL 
@@ -878,7 +881,7 @@ WHERE     (U_IsAffiliate = COALESCE (@isAffiliate, U_IsAffiliate))
 			AND (U_ML_SendMail = COALESCE (@isMailingList, U_ML_SendMail))
 			AND (U_CustomerGroupiD = COALESCE (@CustomerGroupID, U_CustomerGroupiD))
 			AND (U_AffiliateCommission = COALESCE (@intAffiliateCommision, U_AffiliateCommission))
-			AND tblKartrisUsers.U_EmailAddress <> 'GDPR Anonymized'
+			AND tblKartrisUsers.U_EmailAddress NOT LIKE 'GDPR Anonymized | %'
 )
 SELECT *
 	FROM UsersList
@@ -891,7 +894,7 @@ IF @SearchTerm = 'ExpiredStudents'
 	BEGIN
 		WITH UsersList AS
 	(
-SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_CustomerGroupID
+SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_CustomerGroupID, U_LanguageID, U_GDPR_IsGuest
 FROM         tblKartrisAddresses RIGHT OUTER JOIN
 					  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
 WHERE     (U_IsAffiliate = COALESCE (@isAffiliate, U_IsAffiliate))
@@ -908,7 +911,7 @@ ELSE
 	BEGIN
 		WITH UsersList AS
 	(
-	SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_CustomerGroupID
+	SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_CustomerGroupID, U_LanguageID, U_GDPR_IsGuest
 	FROM         tblKartrisAddresses RIGHT OUTER JOIN
 						  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
 	WHERE     ((tblKartrisUsers.U_AccountHolderName LIKE '%' + @SearchTerm + '%') OR
@@ -928,13 +931,8 @@ ELSE
 END
 END
 
-
 GO
 
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important])
-VALUES (N'general.gdpr.purgeguestaccounts', N'30', N's', N'b', N'number of days', N'Number of days until guest accounts are purged', 3, N'30', 0)
-
-GO
 /****** Object:  StoredProcedure [dbo].[_spKartrisDB_GetTaskList]    Script Date: 29/10/2018 10:27:39 ******/
 SET ANSI_NULLS ON
 GO
@@ -983,15 +981,13 @@ BEGIN
 		ON O_CustomerID = U_ID
 		WHERE U_GDPR_IsGuest = 1
 		AND DATEDIFF(day, O_LastModified,GETDATE()) > @days_purgeguestaccounts
-		AND U_EmailAddress NOT LIKE 'GDPR Anonymized'
+		AND U_EmailAddress NOT LIKE 'GDPR Anonymized | %'
 		AND (O_Shipped = 1 OR O_Cancelled = 1 OR O_Paid = 0)
 
 END
 
 GO
 
-USE [kartrisSQL_GPL]
-GO
 /****** Object:  StoredProcedure [dbo].[_spKartrisDB_GetTaskList]    Script Date: 31/10/2018 11:56:59 ******/
 SET ANSI_NULLS ON
 GO
@@ -1040,7 +1036,12 @@ BEGIN
 		ON O_CustomerID = U_ID
 		WHERE U_GDPR_IsGuest = 1
 		AND DATEDIFF(day, O_LastModified,GETDATE()) > @days_purgeguestaccounts
-		AND U_EmailAddress NOT LIKE 'GDPR Anonymized'
+		AND U_EmailAddress NOT LIKE 'GDPR Anonymized | %'
 		AND (O_Shipped = 1 OR O_Cancelled = 1 OR O_Paid = 0)
 
 END
+GO
+
+/****** Set this to tell Data tool which version of db we have ******/
+UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
+GO

@@ -229,7 +229,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisUsers_AnonymizeAll]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_AnonymizeAll" Modifier="Public" Name="_AnonymizeAll" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy6" UserSourceName="_AnonymizeAll">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="kartrisSQL_GPL.dbo.[_spKartrisUsers_AnonymizeAll]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_AnonymizeAll" Modifier="Public" Name="_AnonymizeAll" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="_AnonymizeAll">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisUsers_AnonymizeAll]</CommandText>
@@ -239,7 +239,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisUsers_Delete]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_Delete" Modifier="Public" Name="_Delete" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy1" UserSourceName="_Delete">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisUsers_Delete]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_Delete" Modifier="Public" Name="_Delete" QueryType="NoData" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="_Delete">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisUsers_Delete]</CommandText>
@@ -263,7 +263,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisUsers_ListBySearchTermCount]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_GetDataBySearchTermCount" Modifier="Public" Name="_GetDataBySearchTermCount" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy2" UserSourceName="_GetDataBySearchTermCount">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisUsers_ListBySearchTermCount]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_GetDataBySearchTermCount" Modifier="Public" Name="_GetDataBySearchTermCount" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy3" UserSourceName="_GetDataBySearchTermCount">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisUsers_ListBySearchTermCount]</CommandText>
@@ -278,7 +278,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisUsers_Update]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_Update" Modifier="Public" Name="_Update" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy3" UserSourceName="_Update">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.[_spKartrisUsers_Update]" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="_Update" Modifier="Public" Name="_Update" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy4" UserSourceName="_Update">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.[_spKartrisUsers_Update]</CommandText>
@@ -301,7 +301,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisUsers_ChangePassword" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="ChangePassword" Modifier="Public" Name="ChangePassword" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy4" UserSourceName="ChangePassword">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisUsers_ChangePassword" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="ChangePassword" Modifier="Public" Name="ChangePassword" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy5" UserSourceName="ChangePassword">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisUsers_ChangePassword</CommandText>
@@ -325,7 +325,7 @@
                   </DbCommand>
                 </SelectCommand>
               </DbSource>
-              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisUsers_ResetPassword" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="ResetPassword" Modifier="Public" Name="ResetPassword" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy5" UserSourceName="ResetPassword">
+              <DbSource ConnectionRef="KartrisSQLConnection (Web.config)" DbObjectName="KartrisSQL.dbo.spKartrisUsers_ResetPassword" DbObjectType="StoredProcedure" GenerateShortCommands="true" GeneratorSourceName="ResetPassword" Modifier="Public" Name="ResetPassword" QueryType="Scalar" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy6" UserSourceName="ResetPassword">
                 <SelectCommand>
                   <DbCommand CommandType="StoredProcedure" ModifiedByUser="false">
                     <CommandText>dbo.spKartrisUsers_ResetPassword</CommandText>

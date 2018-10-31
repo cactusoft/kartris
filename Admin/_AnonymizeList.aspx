@@ -4,15 +4,15 @@
 <asp:Content ID="cntHead" ContentPlaceHolderID="phdHead" runat="Server">
 </asp:Content>
 <asp:Content ID="cntMain" ContentPlaceHolderID="phdMain" runat="Server">
-    <div id="page_customergroupslist">
+    <div id="page_anonymize">
         <h1>
-            <asp:Literal ID="litCustomersListTitle" runat="server" Text='Anonymization List'></asp:Literal></h1>
+            <asp:Literal ID="litCustomersListTitle" runat="server" Text='<%$ Resources:_GDPR, BackMenu_AnonymizationList %>'></asp:Literal></h1>
         <asp:UpdatePanel ID="updCGDetails" runat="server" UpdateMode="Conditional">
             <ContentTemplate>
 
                 <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
                     <asp:LinkButton CausesValidation="True" CssClass="button anonymizebutton" runat="server" OnClick="btnAnonymize_Click"
-                        ID="btnAnonymize" Text="Anonymize" ToolTip="Anonymize" />
+                        ID="btnAnonymize" Text='<%$ Resources:_GDPR, FormButton_Anonymize %>' ToolTip='<%$ Resources:_GDPR, FormButton_Anonymize %>' />
                 </div>
                 <asp:GridView ID="gvwCustomers" CssClass="kartristable" runat="server" AutoGenerateColumns="False" GridLines="None"
                     AllowPaging="false" DataKeyNames="U_ID">
@@ -23,24 +23,16 @@
                                     <asp:Literal ID="U_EmailAddress" runat="server" Text='<%# Eval("U_EmailAddress") %>'></asp:Literal></a>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText='Order Last Modified Date'>
+                        <asp:TemplateField HeaderText='<%$ Resources:_Orders, ContentText_LastUpdate %>'>
                             <ItemTemplate>
-                                    <asp:Literal ID="O_LastModified" runat="server" Text='<%# Eval("O_LastModified") %>'></asp:Literal>
+                                    <asp:Literal ID="O_LastModified" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(Eval("O_LastModified"), "t", Session("_LANG")) %>'></asp:Literal>
                             </ItemTemplate>
                         </asp:TemplateField>
-                        <asp:TemplateField HeaderText='Order Cancelled'>
+                        <asp:TemplateField>
                             <ItemTemplate>
-                                    <asp:Literal ID="O_Cancelled" runat="server" Text='<%# Eval("O_Cancelled") %>'></asp:Literal>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText='Order Shipped'>
-                            <ItemTemplate>
-                                    <asp:Literal ID="O_Shipped" runat="server" Text='<%# Eval("O_Shipped") %>'></asp:Literal>
-                            </ItemTemplate>
-                        </asp:TemplateField>
-                        <asp:TemplateField HeaderText='Order Paid'>
-                            <ItemTemplate>
-                                    <asp:Literal ID="O_Paid" runat="server" Text='<%# Eval("O_Paid") %>'></asp:Literal>
+                                <asp:CheckBox ID="chkCancelled" runat="server" Text='<%$ Resources:_Orders, ContentText_OrderStatusCancelled %>' Enabled="false" Checked='<%# Eval("O_Cancelled") %>'/><br />
+                                <asp:CheckBox ID="chkShipped" runat="server" Text='<%$ Resources:_Orders, ContentText_OrderStatusShipped %>' Enabled="false" Checked='<%# Eval("O_Shipped") %>'/><br />
+                                <asp:CheckBox ID="chkPaid" runat="server" Text='<%$ Resources:_Orders, ContentText_OrderStatusPaid %>' Enabled="false" Checked='<%# Eval("O_Paid") %>'/>
                             </ItemTemplate>
                         </asp:TemplateField>
                         <asp:BoundField DataField="U_ID" HeaderText="U_ID" SortExpression="U_ID" Visible="False" />
