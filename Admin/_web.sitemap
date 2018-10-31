@@ -26,6 +26,7 @@
           <siteMapNode title="$resources:_Kartris,PageTitle_AffiliateStats" url="~/Admin/_AffiliateReport.aspx" value="orders" />
           <siteMapNode title="$resources:_Kartris,BackMenu_MailingList" url="~/Admin/_CustomersList.aspx?mode=ml" Value="orders" />
         </siteMapNode>
+        <siteMapNode title="Anonymization List" url="~/Admin/_AnonymizeList.aspx" Value="support" />
       </siteMapNode>
 
       <siteMapNode title="$resources:_Kartris,BackMenu_Products " url="~/Admin/_Category.aspx" value="products">

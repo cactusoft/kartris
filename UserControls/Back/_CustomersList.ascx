@@ -19,6 +19,11 @@
                         <asp:Literal ID="U_EmailAddress" runat="server" Text='<%# Eval("U_EmailAddress") %>'></asp:Literal></a>
                 </ItemTemplate>
             </asp:TemplateField>
+            <asp:TemplateField HeaderText='Is Guest'>
+                <ItemTemplate>
+                    <span><asp:Literal ID="U_GDPR_IsGuest" runat="server" Text='<%# Eval("U_GDPR_IsGuest") %>'></asp:Literal></span>
+                </ItemTemplate>
+            </asp:TemplateField>
             <asp:TemplateField HeaderText='<%$ Resources:_Users, ContentText_CustomerBalance%>'>
                 <ItemTemplate>
                     <asp:Label ID="lblCustomerBalance" runat="server" Text='<%# CkartrisDataManipulation.FixNullFromDB(Eval("U_CustomerBalance")) %>'/>

@@ -489,3 +489,382 @@ GO
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
+
+
+
+CREATE PROCEDURE [dbo].[_spKartrisUsers_AnonymizeByEmail]
+(
+		   @U_EmailAddress nvarchar(100)
+)
+AS
+BEGIN
+DECLARE @U_ID INT
+	SET NOCOUNT OFF;
+
+	DECLARE @days_purgeguestaccounts AS INT;
+	SELECT @days_purgeguestaccounts = CFG_Value FROM tblKartrisConfig
+	WHERE CFG_Name = 'general.gdpr.purgeguestaccounts'
+
+	SELECT @U_ID = U_ID 
+	FROM tblKartrisUsers
+	FULL OUTER JOIN tblKartrisOrders 
+		ON O_CustomerID = U_ID
+	WHERE U_EmailAddress = @U_EmailAddress
+	AND U_GDPR_IsGuest = 1
+	AND DATEDIFF(day, O_LastModified,GETDATE()) > @days_purgeguestaccounts
+		AND U_EmailAddress NOT LIKE 'GDPR Anonymized'
+		AND (O_Shipped = 1 OR O_Cancelled = 1 OR O_Paid = 0)
+
+	UPDATE tblKartrisAddresses 
+	SET [ADR_Label] = 'GDPR Anonymized'
+      ,[ADR_Name] = 'GDPR Anonymized'
+      ,[ADR_Company] = 'GDPR Anonymized'
+      ,[ADR_StreetAddress] = 'GDPR Anonymized'
+      ,[ADR_TownCity] = 'GDPR Anonymized'
+      ,[ADR_County] = 'GDPR Anonymized'
+      ,[ADR_PostCode] = 'GDPR Anonymized'
+      ,[ADR_Country] = 0
+      ,[ADR_Telephone] = 'GDPR Anonymized'
+	WHERE ADR_UserID = @U_ID
+
+	UPDATE tblKartrisUsers
+	SET 
+		U_EmailAddress = 'GDPR Anonymized'
+		,U_Telephone = 'GDPR Anonymized'
+		,U_AccountHolderName = 'GDPR Anonymized'
+	WHERE U_ID = @U_ID
+	AND U_GDPR_IsGuest = 1
+
+	declare @xmlOrder xml, @xmlRest xml
+	declare @lastBit nvarchar(10), @xmlDataStr nvarchar(max)
+	SELECT @xmlOrder = SUBSTRING(O_Data , 1, CASE CHARINDEX('|||',  O_Data )
+            WHEN 0
+                THEN LEN( O_Data )
+            ELSE CHARINDEX('|||',  O_Data ) - 1
+            END)
+			,@xmlRest = SUBSTRING(O_Data , CHARINDEX('|||',  O_Data ) + 3, LEN( O_Data ) - CHARINDEX('|||',  O_Data ) - 6)
+			,@lastBit = RIGHT(O_Data,3)
+    FROM tblKartrisOrders
+	WHERE O_CustomerID = @U_ID
+
+	IF @xmlOrder IS NOT NULL BEGIN
+		SET @xmlOrder.modify('delete /objOrder/Billing//text()')
+		SET @xmlOrder.modify('delete /objOrder/CustomerEmail//text()')
+
+		SET @xmlDataStr = CAST(@xmlOrder as nvarchar(max)) + '|||' + CAST(@xmlRest as nvarchar(max)) + '|||' + @lastBit
+
+		UPDATE tblKartrisOrders
+		SET 
+			O_BillingAddress = 'GDPR Anonymized'
+			,O_ShippingAddress = 'GDPR Anonymized'
+			,O_Data = @xmlDataStr
+			,O_Details = 'GDPR Anonymized'
+		WHERE O_CustomerID = @U_ID
+	END 
+
+END
+
+GO
+
+CREATE PROCEDURE [dbo].[_spKartrisUsers_AnonymizeAll]
+AS
+BEGIN
+	SET NOCOUNT OFF;
+
+	DECLARE @days_purgeguestaccounts AS INT;
+	SELECT @days_purgeguestaccounts = CFG_Value FROM tblKartrisConfig
+	WHERE CFG_Name = 'general.gdpr.purgeguestaccounts'
+
+	DECLARE cur_emails CURSOR FOR 
+	SELECT U_EmailAddress 
+	FROM tblKartrisUsers
+	FULL OUTER JOIN tblKartrisOrders 
+		ON O_CustomerID = U_ID
+	WHERE U_GDPR_IsGuest = 1
+	AND DATEDIFF(day, O_LastModified,GETDATE()) > @days_purgeguestaccounts
+		AND U_EmailAddress NOT LIKE 'GDPR Anonymized'
+		AND (O_Shipped = 1 OR O_Cancelled = 1 OR O_Paid = 0)
+
+	DECLARE @u_email as nvarchar(100)
+	OPEN cur_emails  
+	FETCH NEXT FROM cur_emails INTO @u_email  
+
+	WHILE @@FETCH_STATUS = 0  
+	BEGIN  
+		  EXEC _spKartrisUsers_AnonymizeByEmail @U_EmailAddress = @u_email
+
+		  FETCH NEXT FROM cur_emails INTO @u_email 
+	END 
+
+	CLOSE cur_emails  
+	DEALLOCATE cur_emails 
+
+
+END
+
+GO
+
+CREATE PROCEDURE [dbo].[_spKartrisUsers_GetGuests]
+AS
+SET NOCOUNT OFF;
+
+DECLARE @days_purgeguestaccounts AS INT;
+SELECT @days_purgeguestaccounts = CFG_Value FROM tblKartrisConfig
+WHERE CFG_Name = 'general.gdpr.purgeguestaccounts'
+
+
+SELECT *				
+FROM tblKartrisUsers
+FULL OUTER JOIN tblKartrisOrders 
+ON O_CustomerID = U_ID
+WHERE U_GDPR_IsGuest = 1
+AND DATEDIFF(day, O_LastModified,GETDATE()) > @days_purgeguestaccounts
+AND (O_Shipped = 1 OR O_Cancelled = 1 OR O_Paid = 0)
+AND U_EmailAddress NOT LIKE 'GDPR Anonymized'
+
+GO
+
+ALTER PROCEDURE [dbo].[_spKartrisUsers_ListBySearchTerm]
+(
+	@SearchTerm nvarchar(100),
+	@isAffiliate bit,
+	@isMailingList bit,
+	@CustomerGroupID int,
+	@isAffiliateApproved bit,
+	@PageIndex as tinyint, -- 0 Based index
+	@PageSize smallint = 50
+)
+AS
+BEGIN
+	
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+DECLARE @StartRowNumber as int;
+	SET @StartRowNumber = (@PageIndex * @PageSize) + 1;
+	DECLARE @EndRowNumber as int;
+	SET @EndRowNumber = @StartRowNumber + @PageSize - 1;
+	DECLARE @CurrentDate as datetime;
+
+DECLARE @intAffiliateCommision int
+
+IF @isAffiliate = 0
+	BEGIN
+		SET @isAffiliate = NULL
+		SET @isAffiliateApproved = 0
+	END
+
+IF @isAffiliateApproved = 0
+	BEGIN		
+		SET @intAffiliateCommision = NULL
+	END	
+ELSE
+	BEGIN		
+		SET @intAffiliateCommision = 0
+	END	
+
+
+	
+IF @isMailingList = 0
+	BEGIN
+		SET @isMailingList = NULL 
+	END
+
+IF @CustomerGroupID = 0
+	BEGIN
+		SET @CustomerGroupID = NULL 
+	END
+ELSE
+	BEGIN
+		SET @SearchTerm = '?'
+	END;
+
+IF @SearchTerm = 'ExpiredStudents'
+	BEGIN
+		SET @CurrentDate = CURRENT_TIMESTAMP
+		SET @CustomerGroupID = 3
+	END
+ELSE
+	BEGIN
+		SET @CurrentDate = '2099-01-01'
+	END
+
+IF @SearchTerm IS NULL OR @SearchTerm = '?' OR @SearchTerm = ''
+BEGIN
+
+WITH UsersList AS
+	(
+SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_CustomerGroupID, U_LanguageID, U_GDPR_IsGuest
+FROM         tblKartrisAddresses RIGHT OUTER JOIN
+					  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
+WHERE     (U_IsAffiliate = COALESCE (@isAffiliate, U_IsAffiliate))
+			AND (U_ML_SendMail = COALESCE (@isMailingList, U_ML_SendMail))
+			AND (U_CustomerGroupiD = COALESCE (@CustomerGroupID, U_CustomerGroupiD))
+			AND (U_AffiliateCommission = COALESCE (@intAffiliateCommision, U_AffiliateCommission))
+			AND tblKartrisUsers.U_EmailAddress <> 'GDPR Anonymized'
+)
+SELECT *
+	FROM UsersList
+	WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber;
+	
+END
+ELSE
+BEGIN
+IF @SearchTerm = 'ExpiredStudents'
+	BEGIN
+		WITH UsersList AS
+	(
+SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_CustomerGroupID
+FROM         tblKartrisAddresses RIGHT OUTER JOIN
+					  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
+WHERE     (U_IsAffiliate = COALESCE (@isAffiliate, U_IsAffiliate))
+			AND (U_ML_SendMail = COALESCE (@isMailingList, U_ML_SendMail))
+			AND (U_CustomerGroupiD = COALESCE (@CustomerGroupID, U_CustomerGroupiD))
+			AND (U_AffiliateCommission = COALESCE (@intAffiliateCommision, U_AffiliateCommission))
+			AND (@CurrentDate >= COALESCE(U_SupportEndDate,@CurrentDate) AND NOT U_SupportEndDate IS NULL)
+)
+SELECT *
+	FROM UsersList
+	WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber;
+	END
+ELSE
+	BEGIN
+		WITH UsersList AS
+	(
+	SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_CustomerGroupID
+	FROM         tblKartrisAddresses RIGHT OUTER JOIN
+						  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
+	WHERE     ((tblKartrisUsers.U_AccountHolderName LIKE '%' + @SearchTerm + '%') OR
+						(tblKartrisAddresses.ADR_Name LIKE '%' + @SearchTerm + '%') OR 
+						(tblKartrisAddresses.ADR_Company LIKE '%' + @SearchTerm + '%') OR
+						(tblKartrisUsers.U_EmailAddress LIKE '%' + @SearchTerm + '%') OR
+						(tblKartrisAddresses.ADR_StreetAddress LIKE '%' + @SearchTerm + '%') OR
+						(tblKartrisAddresses.ADR_TownCity LIKE '%' + @SearchTerm + '%') OR
+						(tblKartrisAddresses.ADR_County LIKE '%' + @SearchTerm + '%') OR
+						(tblKartrisAddresses.ADR_PostCode LIKE '%' + @SearchTerm + '%'))
+	)
+	SELECT *
+		FROM UsersList
+		WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber;
+	END
+
+END
+END
+
+
+GO
+
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important])
+VALUES (N'general.gdpr.purgeguestaccounts', N'30', N's', N'b', N'number of days', N'Number of days until guest accounts are purged', 3, N'30', 0)
+
+GO
+/****** Object:  StoredProcedure [dbo].[_spKartrisDB_GetTaskList]    Script Date: 29/10/2018 10:27:39 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[_spKartrisDB_GetTaskList]
+(	
+	@NoOrdersToInvoice as int OUTPUT,
+	@NoOrdersNeedPayment as int OUTPUT,
+	@NoOrdersToDispatch as int OUTPUT,
+	@NoStockWarnings as int OUTPUT,
+	@NoOutOfStock as int OUTPUT,
+	@NoEndOfLine as int OUTPUT,
+	@NoReviewsWaiting as int OUTPUT,
+	@NoAffiliatesWaiting as int OUTPUT,
+	@NoCustomersWaitingRefunds as int OUTPUT,
+	@NoCustomersInArrears as int OUTPUT,
+	@NoCustomersToAnonymize as int OUTPUT
+)
+AS
+BEGIN
+	SELECT @NoOrdersToInvoice = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Invoiced = 'False' AND O_Paid = 'False' AND O_Sent = 'True' AND O_Cancelled = 'False';
+	SELECT @NoOrdersNeedPayment = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Paid = 'False' AND O_Invoiced = 'True' AND O_Sent = 'True' AND O_Cancelled = 'False';
+	SELECT @NoOrdersToDispatch = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Sent = 'True' AND O_Paid = 'True' AND O_Shipped = 'False' AND O_Cancelled = 'False';
+	
+	SELECT @NoStockWarnings = Count(V_ID) FROM dbo.tblKartrisVersions WHERE V_QuantityWarnLevel >= V_Quantity AND V_QuantityWarnLevel <> 0
+		AND [dbo].[fnKartrisObjectConfig_GetValueByParent]('K:version.endofline', V_ID) IS NULL;
+	SELECT @NoOutOfStock = Count(V_ID) FROM dbo.tblKartrisVersions WHERE V_Quantity = 0 AND V_QuantityWarnLevel <> 0
+		AND [dbo].[fnKartrisObjectConfig_GetValueByParent]('K:version.endofline', V_ID) IS NULL;
+	
+	SELECT @NoEndOfLine = Count(V_ID) 
+	FROM dbo.tblKartrisVersions INNER JOIN dbo.tblKartrisProducts ON V_ProductID = P_ID 
+	WHERE (V_Quantity = 0) AND (V_QuantityWarnLevel <> 0) AND P_Live = 1 AND V_Live = 1 
+		AND [dbo].[fnKartrisObjectConfig_GetValueByParent]('K:version.endofline', V_ID) = 1;
+
+	SELECT @NoReviewsWaiting = Count(REV_ID) FROM dbo.tblKartrisReviews WHERE REV_Live = 'a';
+	SELECT @NoAffiliatesWaiting  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_IsAffiliate = 'True' AND U_AffiliateCommission = 0;
+	SELECT @NoCustomersWaitingRefunds  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance > 0;
+	SELECT @NoCustomersInArrears  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance < 0;
+	
+	DECLARE @days_purgeguestaccounts AS INT;
+	SELECT @days_purgeguestaccounts = CFG_Value FROM tblKartrisConfig
+	WHERE CFG_Name = 'general.gdpr.purgeguestaccounts'
+	SELECT @NoCustomersToAnonymize  = Count(U_ID) FROM tblKartrisUsers 
+		FULL OUTER JOIN tblKartrisOrders 
+		ON O_CustomerID = U_ID
+		WHERE U_GDPR_IsGuest = 1
+		AND DATEDIFF(day, O_LastModified,GETDATE()) > @days_purgeguestaccounts
+		AND U_EmailAddress NOT LIKE 'GDPR Anonymized'
+		AND (O_Shipped = 1 OR O_Cancelled = 1 OR O_Paid = 0)
+
+END
+
+GO
+
+USE [kartrisSQL_GPL]
+GO
+/****** Object:  StoredProcedure [dbo].[_spKartrisDB_GetTaskList]    Script Date: 31/10/2018 11:56:59 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[_spKartrisDB_GetTaskList]
+(	
+	@NoOrdersToInvoice as int OUTPUT,
+	@NoOrdersNeedPayment as int OUTPUT,
+	@NoOrdersToDispatch as int OUTPUT,
+	@NoStockWarnings as int OUTPUT,
+	@NoOutOfStock as int OUTPUT,
+	--@NoEndOfLine as int OUTPUT,
+	@NoReviewsWaiting as int OUTPUT,
+	@NoAffiliatesWaiting as int OUTPUT,
+	@NoCustomersWaitingRefunds as int OUTPUT,
+	@NoCustomersInArrears as int OUTPUT,
+	@NoCustomersToAnonymize as int OUTPUT
+)
+AS
+BEGIN
+	SELECT @NoOrdersToInvoice = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Invoiced = 'False' AND O_Paid = 'False' AND O_Sent = 'True' AND O_Cancelled = 'False';
+	SELECT @NoOrdersNeedPayment = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Paid = 'False' AND O_Invoiced = 'True' AND O_Sent = 'True' AND O_Cancelled = 'False';
+	SELECT @NoOrdersToDispatch = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Sent = 'True' AND O_Paid = 'True' AND O_Shipped = 'False' AND O_Cancelled = 'False';
+	
+	SELECT @NoStockWarnings = Count(V_ID) FROM dbo.tblKartrisVersions WHERE V_QuantityWarnLevel >= V_Quantity AND V_QuantityWarnLevel <> 0
+		AND [dbo].[fnKartrisObjectConfig_GetValueByParent]('K:version.endofline', V_ID) IS NULL;
+	SELECT @NoOutOfStock = Count(V_ID) FROM dbo.tblKartrisVersions WHERE V_Quantity = 0 AND V_QuantityWarnLevel <> 0
+		AND [dbo].[fnKartrisObjectConfig_GetValueByParent]('K:version.endofline', V_ID) IS NULL;
+	
+	--SELECT @NoEndOfLine = Count(V_ID) 
+	--FROM dbo.tblKartrisVersions INNER JOIN dbo.tblKartrisProducts ON V_ProductID = P_ID 
+	--WHERE (V_Quantity = 0) AND (V_QuantityWarnLevel <> 0) AND P_Live = 1 AND V_Live = 1 
+	--	AND [dbo].[fnKartrisObjectConfig_GetValueByParent]('K:version.endofline', V_ID) = 1;
+
+	SELECT @NoReviewsWaiting = Count(REV_ID) FROM dbo.tblKartrisReviews WHERE REV_Live = 'a';
+	SELECT @NoAffiliatesWaiting  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_IsAffiliate = 'True' AND U_AffiliateCommission = 0;
+	SELECT @NoCustomersWaitingRefunds  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance > 0;
+	SELECT @NoCustomersInArrears  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance < 0;
+	
+	DECLARE @days_purgeguestaccounts AS INT;
+	SELECT @days_purgeguestaccounts = CFG_Value FROM tblKartrisConfig
+	WHERE CFG_Name = 'general.gdpr.purgeguestaccounts'
+	SELECT @NoCustomersToAnonymize  = Count(U_ID) FROM tblKartrisUsers 
+		FULL OUTER JOIN tblKartrisOrders 
+		ON O_CustomerID = U_ID
+		WHERE U_GDPR_IsGuest = 1
+		AND DATEDIFF(day, O_LastModified,GETDATE()) > @days_purgeguestaccounts
+		AND U_EmailAddress NOT LIKE 'GDPR Anonymized'
+		AND (O_Shipped = 1 OR O_Cancelled = 1 OR O_Paid = 0)
+
+END
