@@ -291,7 +291,7 @@ Partial Class _Checkout
             '---------------------------------------
             If GetKartConfig("frontend.users.mailinglist.enabled") <> "n" Then
                 phdMailingList.Visible = True
-                chkMailingList.Checked = True
+                chkMailingList.Checked = False
             Else
                 phdMailingList.Visible = False
                 chkMailingList.Checked = False

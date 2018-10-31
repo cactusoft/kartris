@@ -345,7 +345,7 @@ WITH VALUES
 -- 2. Modify SPROC that inserts the customer record on front end with extra
 -- parameter, so we can choose whether to create guest accounts or not
 
-/****** Object:  StoredProcedure [dbo].[spKartrisUsers_Add]    Script Date: 23/10/2018 11:21:32 ******/
+/****** Object:  StoredProcedure [dbo].[spKartrisUsers_Add]    Script Date: 30/10/2018 10:55:36 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -362,6 +362,15 @@ AS
 DECLARE @U_ID INT
 	SET NOCOUNT OFF;
 
+	-- If is a guest checkout, we're
+	-- going to append |GUEST| to the end
+	-- of the email. This should ensure it
+	-- is unique if there is already an 
+	-- account with the same email.
+	If @U_GDPR_IsGuest = 1
+	BEGIN
+		SET @U_EmailAddress = @U_EmailAddress + '|GUEST|'
+	END
 
 	INSERT INTO [tblKartrisUsers]
 		   ([U_EmailAddress]
@@ -383,25 +392,24 @@ DECLARE @U_ID INT
 			@U_GDPR_IsGuest);
 	SET @U_ID = SCOPE_IDENTITY();
 
-	-- Let's update the new record's email address if it is a guest
-	-- by adding |GUEST|ID# to the end of it. This will ensure the
-	-- email is unique, but also allow us to identify guest accounts
-	-- by username alone.
+	-- Let's update the new record's email address to add the
+	-- db ID. This ensures that multiple guest records for a
+	-- single email can be created, without violating the need
+	-- for unique addresses.
 	If @U_GDPR_IsGuest = 1
 	BEGIN
-		UPDATE tblKartrisUsers SET U_EmailAddress = U_EmailAddress + '|GUEST|' + Convert(NVARCHAR(50), @U_ID)
+		UPDATE tblKartrisUsers SET U_EmailAddress = U_EmailAddress + Convert(NVARCHAR(50), @U_ID)
+		WHERE U_ID=@U_ID;
 	END
 
 	SELECT @U_ID;
+
 GO
 
-
--- 3. Modify the password reset/lookup sprocs so they don't
--- find guest checkout accounts. This way, guest accounts cannot be 
--- logged into, or the password recovered, so they essentially don't
--- exist for the purpose of front end usage, other than to make an order.
-
-/****** Object:  StoredProcedure [dbo].[spKartrisUsers_Validate]    Script Date: 23/10/2018 11:26:42 ******/
+-- 3. Update back end customer update routine so it adds the guest detail
+-- to end of email (which the form removes in back end when viewing
+-- a customer), and customer list to include IsGuest field
+/****** Object:  StoredProcedure [dbo].[_spKartrisUsers_Update]    Script Date: 30/10/2018 12:08:40 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -411,16 +419,182 @@ GO
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
-ALTER PROCEDURE [dbo].[spKartrisUsers_Validate]
+ALTER PROCEDURE [dbo].[_spKartrisUsers_Update]
 (
-	@EmailAddress varchar(100),
-	@Password varchar(64)
+		   @U_ID int,
+			@U_AccountHolderName nvarchar(50),
+		   @U_EmailAddress nvarchar(100),
+		   @U_Password nvarchar(64),
+			@U_LanguageID tinyint,
+			@U_CustomerGroupID int,
+			@U_CustomerDiscount real,
+			@U_Approved bit,
+			@U_IsAffiliate bit,
+			@U_AffiliateCommission real,
+			@U_SupportEndDate datetime,
+			@U_Notes nvarchar(MAX),
+			@U_SaltValue nvarchar(64)
 )
 AS
-SET NOCOUNT OFF;
-SELECT        TOP 1 U_ID
-FROM            tblKartrisUsers
-WHERE        (U_EmailAddress = @EmailAddress AND U_Password = @Password)
+	IF @U_Password = ''
+		BEGIN
+			SET @U_Password = NULL;
+			SET @U_SaltValue = NULL;
+		END;
+	IF @U_AccountHolderName = ''
+		BEGIN
+			SET @U_AccountHolderName = NULL;
+		END;
+		
+	IF @U_Notes = ''
+		BEGIN
+			SET @U_Notes = NULL;
+		END;
+	SET NOCOUNT OFF;
+
+	-- If this is a guest checkout, the email will have
+	-- been cleaned in the form. Therefore, we need to
+	-- restore it to the GUEST format, otherwise we could
+	-- break the unique requirement and have other problems.
+	DECLARE @CheckIsGuest bit
+	SELECT @CheckIsGuest = U_GDPR_IsGuest FROM  tblKartrisUsers WHERE U_ID=@U_ID
+
+	-- Now let's adjust email, if necessary
+	If @CheckIsGuest = 1
+	BEGIN
+		SET @U_EmailAddress = @U_EmailAddress + '|GUEST|' + Convert(NVARCHAR(50), @U_ID)
+	END
+	
+	UPDATE [tblKartrisUsers] SET
+			[U_AccountHolderName] = COALESCE (@U_AccountHolderName, U_AccountHolderName),
+			[U_EmailAddress] = @U_EmailAddress ,
+			[U_Password] = COALESCE (@U_Password, U_Password),
+			[U_LanguageID] = @U_LanguageID ,
+			[U_CustomerGroupID] = @U_CustomerGroupID , 
+			[U_CustomerDiscount] = @U_CustomerDiscount , 
+			[U_Approved] = @U_Approved ,
+			[U_IsAffiliate] = @U_IsAffiliate ,
+			[U_AffiliateCommission] = @U_AffiliateCommission,
+			[U_SupportEndDate] = @U_SupportEndDate,
+			[U_Notes] = COALESCE (@U_Notes, U_Notes),
+			[U_SaltValue] = COALESCE (@U_SaltValue, U_SaltValue)
+			WHERE U_ID = @U_ID;
+
+	SELECT @U_ID;
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisUsers_ListBySearchTerm]    Script Date: 31/10/2018 11:58:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	Updated to include isguest field
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisUsers_ListBySearchTerm]
+(
+	@SearchTerm nvarchar(100),
+	@isAffiliate bit,
+	@isMailingList bit,
+	@CustomerGroupID int,
+	@isAffiliateApproved bit,
+	@PageIndex as tinyint, -- 0 Based index
+	@PageSize smallint = 50
+)
+AS
+BEGIN
+	
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	
+	DECLARE @StartRowNumber as int;
+		SET @StartRowNumber = (@PageIndex * @PageSize) + 1;
+		DECLARE @EndRowNumber as int;
+		SET @EndRowNumber = @StartRowNumber + @PageSize - 1;
+
+
+	DECLARE @intAffiliateCommision int
+
+	IF @isAffiliate = 0
+		BEGIN
+			SET @isAffiliate = NULL
+			SET @isAffiliateApproved = 0
+		END
+
+	IF @isAffiliateApproved = 0
+		BEGIN		
+			SET @intAffiliateCommision = NULL
+		END	
+	ELSE
+		BEGIN		
+			SET @intAffiliateCommision = 0
+		END	
+
+
+	
+	IF @isMailingList = 0
+		BEGIN
+			SET @isMailingList = NULL 
+		END
+
+	IF @CustomerGroupID = 0
+		BEGIN
+			SET @CustomerGroupID = NULL 
+		END
+	ELSE
+		BEGIN
+			SET @SearchTerm = '?'
+		END;
+
+	IF @SearchTerm IS NULL OR @SearchTerm = '?' OR @SearchTerm = ''
+	BEGIN
+
+		WITH UsersList AS
+			(
+		SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_GDPR_IsGuest
+		FROM         tblKartrisAddresses RIGHT OUTER JOIN
+							  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
+		WHERE     (U_IsAffiliate = COALESCE (@isAffiliate, U_IsAffiliate))
+					AND (U_ML_SendMail = COALESCE (@isMailingList, U_ML_SendMail))
+					AND (U_CustomerGroupiD = COALESCE (@CustomerGroupID, U_CustomerGroupiD)
+					AND (U_AffiliateCommission = COALESCE (@intAffiliateCommision, U_AffiliateCommission)))
+		)
+		SELECT *
+			FROM UsersList
+			WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber;
+	
+	END
+	ELSE
+	BEGIN
+		WITH UsersList AS
+			(
+			SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_GDPR_IsGuest
+			FROM         tblKartrisAddresses RIGHT OUTER JOIN
+								  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
+			WHERE     ((tblKartrisUsers.U_AccountHolderName LIKE '%' + @SearchTerm + '%') OR
+								(tblKartrisAddresses.ADR_Name LIKE '%' + @SearchTerm + '%') OR 
+								(tblKartrisAddresses.ADR_Company LIKE '%' + @SearchTerm + '%') OR
+								(tblKartrisUsers.U_EmailAddress LIKE '%' + @SearchTerm + '%') OR
+								(tblKartrisAddresses.ADR_StreetAddress LIKE '%' + @SearchTerm + '%') OR
+								(tblKartrisAddresses.ADR_TownCity LIKE '%' + @SearchTerm + '%') OR
+								(tblKartrisAddresses.ADR_County LIKE '%' + @SearchTerm + '%') OR
+								(tblKartrisAddresses.ADR_PostCode LIKE '%' + @SearchTerm + '%'))
+			)
+			SELECT *
+				FROM UsersList
+				WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber;
+	END
+END
+GO
+
+
+-- 4. Modify the lookup sprocs so they don't
+-- find guest checkout accounts. This way, guest accounts cannot be 
+-- logged into, or the password recovered, so they essentially don't
+-- exist for the purpose of front end usage, other than to make an order.
 
 /****** Object:  StoredProcedure [dbo].[spKartrisUsers_GetDetails]    Script Date: 23/10/2018 11:36:15 ******/
 SET ANSI_NULLS ON
@@ -484,6 +658,8 @@ INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value],
 (N'b', N'ContentText_GuestAccountsDesc', N'The following guest accounts can now be anonymized', NULL, 3.000, N'The following guest accounts can now be anonymized', NULL, N'_GDPR',1);
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
 (N'b', N'ContentText_PurgeGuestAccountsTask', N'Purge Guest Accounts', NULL, 3.000, N'Purge Guest Accounts', NULL, N'_GDPR',1);
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
+(N'b', N'ContentText_GuestCheckout', N'Guest Checkout', NULL, 3.000, N'Guest Checkout', NULL, N'_GDPR',1);
 GO
 
 /****** Set this to tell Data tool which version of db we have ******/
