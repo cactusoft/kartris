@@ -813,9 +813,6 @@ BEGIN
 END
 
 GO
-
-USE [kartrisSQL_GPL]
-GO
 /****** Object:  StoredProcedure [dbo].[_spKartrisDB_GetTaskList]    Script Date: 31/10/2018 11:56:59 ******/
 SET ANSI_NULLS ON
 GO
