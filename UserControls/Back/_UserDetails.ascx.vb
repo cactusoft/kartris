@@ -21,8 +21,6 @@ Partial Class UserControls_Back_UserDetails
 
     Public Event _UCEvent_DataUpdated()
 
-    'Private C_ID As Integer
-
     Protected Function GetCustomerID() As Integer
         Try
             Return CInt(Request.QueryString("CustomerID"))
@@ -136,12 +134,15 @@ Partial Class UserControls_Back_UserDetails
                 Dim blnEmailValid As Boolean = True
                 Dim strOriginalEmail As String = LCase(UsersBLL.GetEmailByID(GetCustomerID()))
                 If strOriginalEmail <> LCase(txtUserEmail.Text) Then
-                    If CheckEmailExist(txtUserEmail.Text) Then
-                        blnEmailValid = False
-                        _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, txtUserEmail.Text & " -->> " & GetGlobalResourceObject("Login", "ContentText_EmailAddressAlreadyExists"))
-                        txtUserEmail.Text = strOriginalEmail
-                        Exit Sub
+                    If hidIsGuest.Value = False Then
+                        If CheckEmailExist(txtUserEmail.Text) Then
+                            blnEmailValid = False
+                            _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, txtUserEmail.Text & " -->> " & GetGlobalResourceObject("Login", "ContentText_EmailAddressAlreadyExists"))
+                            txtUserEmail.Text = strOriginalEmail
+                            Exit Sub
+                        End If
                     End If
+
                 End If
 
                 If blnEmailValid Then

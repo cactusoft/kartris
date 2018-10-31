@@ -13,12 +13,22 @@
         <Columns>
             <asp:BoundField DataField="U_AccountHolderName" HeaderText='<%$ Resources:_Kartris, ContentText_CustomerName%>'
                 ItemStyle-CssClass="itemname"></asp:BoundField>
-            <asp:TemplateField HeaderText='<%$ Resources:_Kartris, ContentText_Email %>'>
+            <asp:TemplateField>
                 <ItemTemplate>
-                    <a class="linkbutton icon_mail normalweight" href='mailto:<%# Eval("U_EmailAddress") %>'>
-                        <asp:Literal ID="U_EmailAddress" runat="server" Text='<%# Eval("U_EmailAddress") %>'></asp:Literal></a>
+                    <asp:PlaceHolder ID="phdGuestCheckout" runat="server" Visible='<%# Eval("U_GDPR_IsGuest") %>'>
+                        <span class="guestcheckouttag"><asp:Literal ID="litIsGuest" runat="server" Text="<%$ Resources: _GDPR, ContentText_GuestCheckout %>" /></span>
+                    </asp:PlaceHolder>
                 </ItemTemplate>
             </asp:TemplateField>
+            <asp:TemplateField HeaderText='<%$ Resources:_Kartris, ContentText_Email %>'>
+                <ItemTemplate>
+                    <a class="linkbutton icon_mail normalweight" href='mailto:<%# UsersBLL.CleanGuestEmailUsername(Eval("U_EmailAddress")) %>'>
+                        <asp:Literal ID="U_EmailAddress" runat="server" Text='<%# UsersBLL.CleanGuestEmailUsername(Eval("U_EmailAddress")) %>'></asp:Literal></a>
+                </ItemTemplate>
+            </asp:TemplateField>
+
+
+
             <asp:TemplateField HeaderText='<%$ Resources:_Users, ContentText_CustomerBalance%>'>
                 <ItemTemplate>
                     <asp:Label ID="lblCustomerBalance" runat="server" Text='<%# CkartrisDataManipulation.FixNullFromDB(Eval("U_CustomerBalance")) %>'/>

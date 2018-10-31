@@ -210,12 +210,71 @@ Public Class UsersBLL
     End Function
 
     Public Shared Function _GetDataBySearchTerm(ByVal strSearchTerm As String, ByVal intPageIndex As Integer, ByVal intPageSize As Integer, Optional ByVal blnIsAffiliates As Boolean = False, Optional ByVal blnIsMailingList As Boolean = False, Optional ByVal intCustomerGroupID As Integer = 0, Optional ByVal blnIsAffiliateApproved As Boolean = False) As DataTable
-        Return CustomerDetailsAdptr._GetDataBySearchTerm(strSearchTerm, blnIsAffiliates, blnIsMailingList, intCustomerGroupID, blnIsAffiliateApproved, intPageIndex, intPageSize)
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Using sqlConn As New SqlConnection(strConnString)
+            Using cmdSQL As New SqlCommand("_spKartrisUsers_ListBySearchTerm")
+                cmdSQL.Connection = sqlConn
+                cmdSQL.CommandType = CommandType.StoredProcedure
+                cmdSQL.Parameters.AddWithValue("@SearchTerm", strSearchTerm)
+                cmdSQL.Parameters.AddWithValue("@PageIndex", intPageIndex)
+                cmdSQL.Parameters.AddWithValue("@PageSize", intPageSize)
+                cmdSQL.Parameters.AddWithValue("@isAffiliate", blnIsAffiliates)
+                cmdSQL.Parameters.AddWithValue("@isMailingList", blnIsMailingList)
+                cmdSQL.Parameters.AddWithValue("@CustomerGroupID", intCustomerGroupID)
+                cmdSQL.Parameters.AddWithValue("@isAffiliateApproved", blnIsAffiliateApproved)
+                Using adpGetData As New SqlDataAdapter(cmdSQL)
+                    Dim tblUserData As New DataTable()
+                    adpGetData.Fill(tblUserData)
+                    Return tblUserData
+                End Using
+            End Using
+        End Using
+
+        'Dim tblUserData As New DataTable
+
+        'Return CustomerDetailsAdptr._GetDataBySearchTerm(strSearchTerm, blnIsAffiliates, blnIsMailingList, intCustomerGroupID, blnIsAffiliateApproved, intPageIndex, intPageSize)
     End Function
     Public Shared Function _GetDataBySearchTermCount(ByVal strSearchTerm As String, Optional ByVal blnIsAffiliates As Boolean = False, Optional ByVal blnisMailingList As Boolean = False, Optional ByVal intCustomerGroupID As Integer = 0, Optional ByVal blnIsAffiliateApproved As Boolean = False) As Integer
         Return CustomerDetailsAdptr._GetDataBySearchTermCount(strSearchTerm, blnisAffiliates, blnisMailingList, intCustomerGroupID, blnIsAffiliateApproved)
     End Function
 
+    ''' <summary>
+    ''' Clean guest email address
+    ''' </summary>
+    ''' <remarks>
+    ''' For guest accounts, the email field contains 
+    ''' extra text at the end to ensure uniqueness. If
+    ''' the admins look at a guest account in the back
+    ''' end, we want to ensure they don't see this.
+    ''' </remarks>  
+    Public Shared Function CleanGuestEmailUsername(ByVal strEmail As String) As String
+        'The email may have |GUEST|[ID] at the end of it. If so,
+        'we want to remove this and return just the email
+        'address.
+        Dim numPipeLast As Byte = 0, numPipePenultimate As Byte = 0
+        Try
+            'Find position of the last pipe char.
+            numPipeLast = strEmail.LastIndexOf("|")
+
+            If numPipeLast > 0 Then 'we have one
+                'Trim last part off
+                strEmail = Left(strEmail, numPipeLast)
+            End If
+
+            'Find position of the last pipe char.
+            numPipePenultimate = strEmail.LastIndexOf("|")
+
+            If numPipePenultimate > 0 Then 'we have one
+                'Trim last part off
+                strEmail = Left(strEmail, numPipePenultimate)
+            End If
+        Catch ex As Exception
+            'Probably not a guest email
+        End Try
+
+
+        Return strEmail
+    End Function
 #End Region
 
 #Region "   Customer Groups"
