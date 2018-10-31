@@ -491,7 +491,7 @@ GO
 -- =============================================
 -- Author:		Paul
 -- Create date: <Create Date,,>
--- Description:	Updated to include isguest field
+-- Description:	Handles guest checkouts now
 -- =============================================
 ALTER PROCEDURE [dbo].[_spKartrisUsers_ListBySearchTerm]
 (
@@ -510,83 +510,84 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 	
-	DECLARE @StartRowNumber as int;
-		SET @StartRowNumber = (@PageIndex * @PageSize) + 1;
-		DECLARE @EndRowNumber as int;
-		SET @EndRowNumber = @StartRowNumber + @PageSize - 1;
+DECLARE @StartRowNumber as int;
+	SET @StartRowNumber = (@PageIndex * @PageSize) + 1;
+	DECLARE @EndRowNumber as int;
+	SET @EndRowNumber = @StartRowNumber + @PageSize - 1;
+	DECLARE @CurrentDate as datetime;
 
+DECLARE @intAffiliateCommision int
 
-	DECLARE @intAffiliateCommision int
-
-	IF @isAffiliate = 0
-		BEGIN
-			SET @isAffiliate = NULL
-			SET @isAffiliateApproved = 0
-		END
-
-	IF @isAffiliateApproved = 0
-		BEGIN		
-			SET @intAffiliateCommision = NULL
-		END	
-	ELSE
-		BEGIN		
-			SET @intAffiliateCommision = 0
-		END	
-
-
-	
-	IF @isMailingList = 0
-		BEGIN
-			SET @isMailingList = NULL 
-		END
-
-	IF @CustomerGroupID = 0
-		BEGIN
-			SET @CustomerGroupID = NULL 
-		END
-	ELSE
-		BEGIN
-			SET @SearchTerm = '?'
-		END;
-
-	IF @SearchTerm IS NULL OR @SearchTerm = '?' OR @SearchTerm = ''
+IF @isAffiliate = 0
 	BEGIN
+		SET @isAffiliate = NULL
+		SET @isAffiliateApproved = 0
+	END
 
-		WITH UsersList AS
-			(
-		SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_GDPR_IsGuest
-		FROM         tblKartrisAddresses RIGHT OUTER JOIN
-							  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
-		WHERE     (U_IsAffiliate = COALESCE (@isAffiliate, U_IsAffiliate))
-					AND (U_ML_SendMail = COALESCE (@isMailingList, U_ML_SendMail))
-					AND (U_CustomerGroupiD = COALESCE (@CustomerGroupID, U_CustomerGroupiD)
-					AND (U_AffiliateCommission = COALESCE (@intAffiliateCommision, U_AffiliateCommission)))
-		)
-		SELECT *
-			FROM UsersList
-			WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber;
-	
-	END
-	ELSE
+IF @isAffiliateApproved = 0
+	BEGIN		
+		SET @intAffiliateCommision = NULL
+	END	
+ELSE
+	BEGIN		
+		SET @intAffiliateCommision = 0
+	END	
+
+IF @isMailingList = 0
 	BEGIN
-		WITH UsersList AS
-			(
-			SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_GDPR_IsGuest
-			FROM         tblKartrisAddresses RIGHT OUTER JOIN
-								  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
-			WHERE     ((tblKartrisUsers.U_AccountHolderName LIKE '%' + @SearchTerm + '%') OR
-								(tblKartrisAddresses.ADR_Name LIKE '%' + @SearchTerm + '%') OR 
-								(tblKartrisAddresses.ADR_Company LIKE '%' + @SearchTerm + '%') OR
-								(tblKartrisUsers.U_EmailAddress LIKE '%' + @SearchTerm + '%') OR
-								(tblKartrisAddresses.ADR_StreetAddress LIKE '%' + @SearchTerm + '%') OR
-								(tblKartrisAddresses.ADR_TownCity LIKE '%' + @SearchTerm + '%') OR
-								(tblKartrisAddresses.ADR_County LIKE '%' + @SearchTerm + '%') OR
-								(tblKartrisAddresses.ADR_PostCode LIKE '%' + @SearchTerm + '%'))
-			)
-			SELECT *
-				FROM UsersList
-				WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber;
+		SET @isMailingList = NULL 
 	END
+
+IF @CustomerGroupID = 0
+	BEGIN
+		SET @CustomerGroupID = NULL 
+	END
+ELSE
+	BEGIN
+		SET @SearchTerm = '?'
+	END;
+
+IF @SearchTerm IS NULL OR @SearchTerm = '?' OR @SearchTerm = ''
+BEGIN
+
+WITH UsersList AS
+	(
+SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_CustomerGroupID, U_LanguageID, U_GDPR_IsGuest
+FROM         tblKartrisAddresses RIGHT OUTER JOIN
+					  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
+WHERE     (U_IsAffiliate = COALESCE (@isAffiliate, U_IsAffiliate))
+			AND (U_ML_SendMail = COALESCE (@isMailingList, U_ML_SendMail))
+			AND (U_CustomerGroupiD = COALESCE (@CustomerGroupID, U_CustomerGroupiD))
+			AND (U_AffiliateCommission = COALESCE (@intAffiliateCommision, U_AffiliateCommission))
+			AND tblKartrisUsers.U_EmailAddress NOT LIKE 'GDPR Anonymized | %'
+)
+SELECT *
+	FROM UsersList
+	WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber;
+	
+END
+ELSE
+BEGIN
+	WITH UsersList AS
+	(
+	SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_CustomerGroupID, U_LanguageID, U_GDPR_IsGuest
+	FROM         tblKartrisAddresses RIGHT OUTER JOIN
+						  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
+	WHERE     ((tblKartrisUsers.U_AccountHolderName LIKE '%' + @SearchTerm + '%') OR
+						(tblKartrisAddresses.ADR_Name LIKE '%' + @SearchTerm + '%') OR 
+						(tblKartrisAddresses.ADR_Company LIKE '%' + @SearchTerm + '%') OR
+						(tblKartrisUsers.U_EmailAddress LIKE '%' + @SearchTerm + '%') OR
+						(tblKartrisAddresses.ADR_StreetAddress LIKE '%' + @SearchTerm + '%') OR
+						(tblKartrisAddresses.ADR_TownCity LIKE '%' + @SearchTerm + '%') OR
+						(tblKartrisAddresses.ADR_County LIKE '%' + @SearchTerm + '%') OR
+						(tblKartrisAddresses.ADR_PostCode LIKE '%' + @SearchTerm + '%'))
+	)
+	SELECT *
+		FROM UsersList
+		WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber;
+
+END
+
 END
 GO
 
@@ -801,135 +802,6 @@ WHERE U_GDPR_IsGuest = 1
 AND DATEDIFF(day, O_LastModified,GETDATE()) > @days_purgeguestaccounts
 AND (O_Shipped = 1 OR O_Cancelled = 1 OR O_Paid = 0)
 AND U_EmailAddress NOT LIKE 'GDPR Anonymized | %'
-
-GO
-
-/****** Pull users ******/
-ALTER PROCEDURE [dbo].[_spKartrisUsers_ListBySearchTerm]
-(
-	@SearchTerm nvarchar(100),
-	@isAffiliate bit,
-	@isMailingList bit,
-	@CustomerGroupID int,
-	@isAffiliateApproved bit,
-	@PageIndex as tinyint, -- 0 Based index
-	@PageSize smallint = 50
-)
-AS
-BEGIN
-	
-	-- SET NOCOUNT ON added to prevent extra result sets from
-	-- interfering with SELECT statements.
-	SET NOCOUNT ON;
-	
-DECLARE @StartRowNumber as int;
-	SET @StartRowNumber = (@PageIndex * @PageSize) + 1;
-	DECLARE @EndRowNumber as int;
-	SET @EndRowNumber = @StartRowNumber + @PageSize - 1;
-	DECLARE @CurrentDate as datetime;
-
-DECLARE @intAffiliateCommision int
-
-IF @isAffiliate = 0
-	BEGIN
-		SET @isAffiliate = NULL
-		SET @isAffiliateApproved = 0
-	END
-
-IF @isAffiliateApproved = 0
-	BEGIN		
-		SET @intAffiliateCommision = NULL
-	END	
-ELSE
-	BEGIN		
-		SET @intAffiliateCommision = 0
-	END	
-
-IF @isMailingList = 0
-	BEGIN
-		SET @isMailingList = NULL 
-	END
-
-IF @CustomerGroupID = 0
-	BEGIN
-		SET @CustomerGroupID = NULL 
-	END
-ELSE
-	BEGIN
-		SET @SearchTerm = '?'
-	END;
-
-IF @SearchTerm = 'ExpiredStudents'
-	BEGIN
-		SET @CurrentDate = CURRENT_TIMESTAMP
-		SET @CustomerGroupID = 3
-	END
-ELSE
-	BEGIN
-		SET @CurrentDate = '2099-01-01'
-	END
-
-IF @SearchTerm IS NULL OR @SearchTerm = '?' OR @SearchTerm = ''
-BEGIN
-
-WITH UsersList AS
-	(
-SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_CustomerGroupID, U_LanguageID, U_GDPR_IsGuest
-FROM         tblKartrisAddresses RIGHT OUTER JOIN
-					  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
-WHERE     (U_IsAffiliate = COALESCE (@isAffiliate, U_IsAffiliate))
-			AND (U_ML_SendMail = COALESCE (@isMailingList, U_ML_SendMail))
-			AND (U_CustomerGroupiD = COALESCE (@CustomerGroupID, U_CustomerGroupiD))
-			AND (U_AffiliateCommission = COALESCE (@intAffiliateCommision, U_AffiliateCommission))
-			AND tblKartrisUsers.U_EmailAddress NOT LIKE 'GDPR Anonymized | %'
-)
-SELECT *
-	FROM UsersList
-	WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber;
-	
-END
-ELSE
-BEGIN
-IF @SearchTerm = 'ExpiredStudents'
-	BEGIN
-		WITH UsersList AS
-	(
-SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_CustomerGroupID, U_LanguageID, U_GDPR_IsGuest
-FROM         tblKartrisAddresses RIGHT OUTER JOIN
-					  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
-WHERE     (U_IsAffiliate = COALESCE (@isAffiliate, U_IsAffiliate))
-			AND (U_ML_SendMail = COALESCE (@isMailingList, U_ML_SendMail))
-			AND (U_CustomerGroupiD = COALESCE (@CustomerGroupID, U_CustomerGroupiD))
-			AND (U_AffiliateCommission = COALESCE (@intAffiliateCommision, U_AffiliateCommission))
-			AND (@CurrentDate >= COALESCE(U_SupportEndDate,@CurrentDate) AND NOT U_SupportEndDate IS NULL)
-)
-SELECT *
-	FROM UsersList
-	WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber;
-	END
-ELSE
-	BEGIN
-		WITH UsersList AS
-	(
-	SELECT      ROW_NUMBER() OVER (ORDER BY U_ID DESC) AS Row,tblKartrisUsers.U_ID, tblKartrisUsers.U_AccountHolderName, tblKartrisUsers.U_EmailAddress, tblKartrisAddresses.ADR_Name,U_IsAffiliate,U_AffiliateCommission, U_CustomerBalance, U_CustomerGroupID, U_LanguageID, U_GDPR_IsGuest
-	FROM         tblKartrisAddresses RIGHT OUTER JOIN
-						  tblKartrisUsers ON tblKartrisAddresses.ADR_ID = tblKartrisUsers.U_DefBillingAddressID
-	WHERE     ((tblKartrisUsers.U_AccountHolderName LIKE '%' + @SearchTerm + '%') OR
-						(tblKartrisAddresses.ADR_Name LIKE '%' + @SearchTerm + '%') OR 
-						(tblKartrisAddresses.ADR_Company LIKE '%' + @SearchTerm + '%') OR
-						(tblKartrisUsers.U_EmailAddress LIKE '%' + @SearchTerm + '%') OR
-						(tblKartrisAddresses.ADR_StreetAddress LIKE '%' + @SearchTerm + '%') OR
-						(tblKartrisAddresses.ADR_TownCity LIKE '%' + @SearchTerm + '%') OR
-						(tblKartrisAddresses.ADR_County LIKE '%' + @SearchTerm + '%') OR
-						(tblKartrisAddresses.ADR_PostCode LIKE '%' + @SearchTerm + '%'))
-	)
-	SELECT *
-		FROM UsersList
-		WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber;
-	END
-
-END
-END
 
 GO
 
