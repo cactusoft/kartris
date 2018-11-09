@@ -55,10 +55,16 @@ Partial Class _VersionView
         End If
         lnkImages.Visible = False
         lnkMedia.Visible = False
-        If (Request.QueryString("strClone") <> "yes") AndAlso ProductsBLL._GetProductType_s(_GetProductID()) = "m" Then
-            lnkImages.Visible = True
-            lnkMedia.Visible = True
-            LoadVersionImages()
+
+        If (Request.QueryString("strClone") <> "yes") Then
+            If ProductsBLL._GetProductType_s(_GetProductID()) = "m"c Then
+                lnkImages.Visible = True
+                lnkMedia.Visible = True
+                LoadVersionImages()
+            ElseIf (ProductsBLL._GetProductType_s(_GetProductID()) = "o"c And _UC_EditVersion.GetVersionType() = "c"c) Then
+                lnkImages.Visible = True
+                LoadVersionImages()
+            End If
         End If
 
     End Sub
