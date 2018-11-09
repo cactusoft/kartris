@@ -776,6 +776,11 @@ Partial Class ProductVersions
         Else
             AddOptionsPrice(pOptionPrice)
         End If
+        CheckCombinationsImages()
+    End Sub
+
+    Sub CheckCombinationsImages()
+
     End Sub
 
     ''' <summary>
