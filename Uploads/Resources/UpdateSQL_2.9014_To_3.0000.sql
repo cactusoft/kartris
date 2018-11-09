@@ -805,61 +805,6 @@ AND U_EmailAddress NOT LIKE 'GDPR Anonymized | %'
 
 GO
 
-/****** Object:  StoredProcedure [dbo].[_spKartrisDB_GetTaskList]    Script Date: 29/10/2018 10:27:39 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
-ALTER PROCEDURE [dbo].[_spKartrisDB_GetTaskList]
-(	
-	@NoOrdersToInvoice as int OUTPUT,
-	@NoOrdersNeedPayment as int OUTPUT,
-	@NoOrdersToDispatch as int OUTPUT,
-	@NoStockWarnings as int OUTPUT,
-	@NoOutOfStock as int OUTPUT,
-	@NoEndOfLine as int OUTPUT,
-	@NoReviewsWaiting as int OUTPUT,
-	@NoAffiliatesWaiting as int OUTPUT,
-	@NoCustomersWaitingRefunds as int OUTPUT,
-	@NoCustomersInArrears as int OUTPUT,
-	@NoCustomersToAnonymize as int OUTPUT
-)
-AS
-BEGIN
-	SELECT @NoOrdersToInvoice = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Invoiced = 'False' AND O_Paid = 'False' AND O_Sent = 'True' AND O_Cancelled = 'False';
-	SELECT @NoOrdersNeedPayment = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Paid = 'False' AND O_Invoiced = 'True' AND O_Sent = 'True' AND O_Cancelled = 'False';
-	SELECT @NoOrdersToDispatch = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Sent = 'True' AND O_Paid = 'True' AND O_Shipped = 'False' AND O_Cancelled = 'False';
-	
-	SELECT @NoStockWarnings = Count(V_ID) FROM dbo.tblKartrisVersions WHERE V_QuantityWarnLevel >= V_Quantity AND V_QuantityWarnLevel <> 0
-		AND [dbo].[fnKartrisObjectConfig_GetValueByParent]('K:version.endofline', V_ID) IS NULL;
-	SELECT @NoOutOfStock = Count(V_ID) FROM dbo.tblKartrisVersions WHERE V_Quantity = 0 AND V_QuantityWarnLevel <> 0
-		AND [dbo].[fnKartrisObjectConfig_GetValueByParent]('K:version.endofline', V_ID) IS NULL;
-	
-	SELECT @NoEndOfLine = Count(V_ID) 
-	FROM dbo.tblKartrisVersions INNER JOIN dbo.tblKartrisProducts ON V_ProductID = P_ID 
-	WHERE (V_Quantity = 0) AND (V_QuantityWarnLevel <> 0) AND P_Live = 1 AND V_Live = 1 
-		AND [dbo].[fnKartrisObjectConfig_GetValueByParent]('K:version.endofline', V_ID) = 1;
-
-	SELECT @NoReviewsWaiting = Count(REV_ID) FROM dbo.tblKartrisReviews WHERE REV_Live = 'a';
-	SELECT @NoAffiliatesWaiting  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_IsAffiliate = 'True' AND U_AffiliateCommission = 0;
-	SELECT @NoCustomersWaitingRefunds  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance > 0;
-	SELECT @NoCustomersInArrears  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance < 0;
-	
-	DECLARE @days_purgeguestaccounts AS INT;
-	SELECT @days_purgeguestaccounts = CFG_Value FROM tblKartrisConfig
-	WHERE CFG_Name = 'general.gdpr.purgeguestaccounts'
-	SELECT @NoCustomersToAnonymize  = Count(U_ID) FROM tblKartrisUsers 
-		FULL OUTER JOIN tblKartrisOrders 
-		ON O_CustomerID = U_ID
-		WHERE U_GDPR_IsGuest = 1
-		AND DATEDIFF(day, O_LastModified,GETDATE()) > @days_purgeguestaccounts
-		AND U_EmailAddress NOT LIKE 'GDPR Anonymized | %'
-		AND (O_Shipped = 1 OR O_Cancelled = 1 OR O_Paid = 0)
-
-END
-
-GO
-
 /****** Object:  StoredProcedure [dbo].[_spKartrisDB_GetTaskList]    Script Date: 31/10/2018 11:56:59 ******/
 SET ANSI_NULLS ON
 GO

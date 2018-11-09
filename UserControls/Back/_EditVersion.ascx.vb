@@ -26,6 +26,9 @@ Partial Class _EditVersion
     Public Event VersionSaved()
     Public Event NeedCategoryRefresh()
 
+    Dim numProductID As Int64 = _GetProductID()
+    Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", numProductID) = "1", True, False) And ProductsBLL._NumberOfCombinations(numProductID) > 0
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         LoadVersionElements()
@@ -425,7 +428,7 @@ Partial Class _EditVersion
     ''' <remarks></remarks>
     Private Sub DisableCombinationControls()
         chkLive.Enabled = False
-        txtPriceIncTax.Enabled = False
+        If blnUseCombinationPrice Then txtPriceIncTax.Enabled = True Else txtPriceIncTax.Enabled = False
         ddlTaxBand.Enabled = False
         ddlTaxBand2.Enabled = False
         txtRRP.Enabled = False
