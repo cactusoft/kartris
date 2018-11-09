@@ -772,6 +772,7 @@ Partial Class ProductVersions
     ''' <remarks></remarks>
     Protected Sub UC_OptionsContainer_Event_OptionPriceChanged(ByVal pOptionPrice As Single) Handles UC_OptionsContainer.Event_OptionPriceChanged
         If UC_OptionsContainer.IsUsingCombinationPrices Then
+            Dim strOptionsList As String = UC_OptionsContainer.GetSelectedOptions()
             GetCombinationPrice()
         Else
             AddOptionsPrice(pOptionPrice)
@@ -805,6 +806,7 @@ Partial Class ProductVersions
         PricePreview(numNewPrice)
         CheckOptionStock(strOptionString)
         updPricePanel.Update()
+        updOptions.Update()
     End Sub
 
     ''' <summary>

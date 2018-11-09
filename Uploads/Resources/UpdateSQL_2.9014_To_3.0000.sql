@@ -859,6 +859,55 @@ BEGIN
 END
 GO
 
+/****** Object:  StoredProcedure [dbo].[spKartrisVersions_GetOptionsStockQuantity]    Script Date: 09/11/2018 17:01:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul/Mohammad
+-- Create date: <Create Date,,>
+-- Description:	Updated so returns base version
+-- stock level if not combinatoins product
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisVersions_GetOptionsStockQuantity]
+(
+	@P_ID as int,
+	@OptionList as nvarchar(1000),
+	@Qty as real OUT
+)
+AS
+BEGIN
+	DECLARE @NoOfCombinations as int;
+	SELECT	@NoOfCombinations = Count(V_ID)
+	FROM    tblKartrisVersions 
+	WHERE   (tblKartrisVersions.V_ProductID = @P_ID) 
+			AND (tblKartrisVersions.V_Type = 'c') 
+			AND (tblKartrisVersions.V_Live = 1);
+	IF @NoOfCombinations = 0
+	BEGIN
+		-- Get stock quanity of the base version, should be only one
+		SELECT @Qty = V_Quantity FROM tblKartrisVersions WHERE V_ProductID = @P_ID AND V_Type='b';
+	END
+	ELSE
+	BEGIN
+		-- need to sort the options' list to match the already sorted options
+		--@OptionsList
+		DECLARE @SortedOptions as nvarchar(max);
+		SELECT @SortedOptions = COALESCE(@SortedOptions + ',', '') + CAST(T._ID as nvarchar(10))
+		FROM (	SELECT DISTINCT Top(5000) _ID
+				FROM dbo.fnTbl_SplitNumbers(@OptionList)
+				ORDER BY _ID) AS T;
+
+		SELECT @Qty = V_Quantity
+		FROM dbo.vKartrisCombinationPrices
+		WHERE V_ProductID = @P_ID AND V_OptionsIDs = @SortedOptions;
+	END
+
+END
+
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
