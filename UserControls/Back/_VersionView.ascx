@@ -171,15 +171,6 @@
         </ContentTemplate>
     </asp:UpdatePanel>
     <script type="text/javascript">
-        var prm = Sys.WebForms.PageRequestManager.getInstance();
-        prm.add_endRequest(function (s, e) {
-            dndEvents();
-        });
-
-        $(function () {
-            dndEvents();
-        });
-    <% If sortByValueBool Then %>
             function dndEvents() {
                 $("[id*=phdMain__UC_VersionView_gvwViewVersions]").sortable({
                     items: 'tr',
@@ -216,7 +207,15 @@
                     }
                 });
             }
-        <%End If %>
+
+        var prm = Sys.WebForms.PageRequestManager.getInstance();
+        prm.add_endRequest(function (s, e) {
+            dndEvents();
+        });
+
+        $(function () {
+            dndEvents();
+        });
 </script>
 </div>
 <_user:PopupMessage ID="_UC_PopupMsg" runat="server" />
