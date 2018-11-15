@@ -60,7 +60,7 @@ Partial Class UserControls_Back_EditCategory
     ''' <remarks></remarks>
     Private Sub AddParentCategory()
 
-        Dim numParentCategoryID As Integer = _GetParentCategory()
+        Dim numParentCategoryID As Integer = _CategorySiteMapProvider.StripParents(_GetParentCategory())
 
         lbxParentCategories.Items.Clear()
 
@@ -320,7 +320,7 @@ Partial Class UserControls_Back_EditCategory
                 RefreshSiteMap()
                 'RemoveImages(IMAGE_TYPE.enum_CategoryImage, _GetCategoryID())
                 If GetKartConfig("backend.files.delete.cleanup") = "y" Then KartrisDBBLL.DeleteNotNeededFiles()
-                Response.Redirect("~/Admin/_Category.aspx?CategoryID=" & _GetParentCategory())
+                Response.Redirect("~/Admin/_Category.aspx?CategoryID=" & _CategorySiteMapProvider.StripParents(_GetParentCategory()))
             Else
                 _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
             End If
@@ -329,7 +329,7 @@ Partial Class UserControls_Back_EditCategory
             If CategoriesBLL._DeleteCategoryCascade(_GetCategoryID(), strMessage) Then
                 RefreshSiteMap()
                 If GetKartConfig("backend.files.delete.cleanup") = "y" Then KartrisDBBLL.DeleteNotNeededFiles()
-                Response.Redirect("~/Admin/_Category.aspx?CategoryID=" & _GetParentCategory())
+                Response.Redirect("~/Admin/_Category.aspx?CategoryID=" & _CategorySiteMapProvider.StripParents(_GetParentCategory()))
             Else
                 _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
             End If
@@ -346,7 +346,7 @@ Partial Class UserControls_Back_EditCategory
 
     Protected Sub lnkBtnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnCancel.Click
         If _GetCategoryID() = 0 Then '' on new 
-            Response.Redirect("~/Admin/_Category.aspx?CategoryID=" & _GetParentCategory())
+            Response.Redirect("~/Admin/_Category.aspx?CategoryID=" & _CategorySiteMapProvider.StripParents(_GetParentCategory()))
         Else                        '' on update
             ResetChanges()
         End If

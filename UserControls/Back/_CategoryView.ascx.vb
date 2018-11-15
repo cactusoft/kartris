@@ -196,7 +196,7 @@ Partial Class _CategoryView
         End Try
     End Sub
 
-    ''Load products
+    'Load products
     Public Sub LoadProducts()
         Dim numProductPageSize As Integer = 1000
         If KartSettingsManager.GetKartConfig("backend.products.paging.enabled") = "y" Then
@@ -258,7 +258,92 @@ Partial Class _CategoryView
         ShowHideUpDownArrowsProducts(numTotalNumberOfProducts)
     End Sub
 
-    ''Whether to show the up/down
+    'Load products in expanded mode
+    Public Sub LoadProductsExpanded()
+        Dim numProductPageSize As Integer = 1000
+        If KartSettingsManager.GetKartConfig("backend.products.paging.enabled") = "y" Then
+            numProductPageSize = KartSettingsManager.GetKartConfig("backend.products.display.pagesize")
+        End If
+        Dim numTotalNumberOfProducts As Integer = 0
+
+        Dim numPageIndx As Short
+        Try
+            If Request.QueryString(c_PROD_PAGER_QUERY_STRING_KEY) Is Nothing Then
+                numPageIndx = 0
+            Else
+                numPageIndx = Request.QueryString(c_PROD_PAGER_QUERY_STRING_KEY)
+            End If
+        Catch ex As Exception
+            numPageIndx = 0
+        End Try
+
+
+        Dim tblProducts As New DataTable
+        If c_ShowPages Then
+            tblProducts = ProductsBLL._GetProductsPageByCategory(_GetCategoryID(), Session("_LANG"), numPageIndx,
+                                                                numProductPageSize, numTotalNumberOfProducts)
+            If tblProducts.Rows.Count <> 0 Then
+                If numTotalNumberOfProducts > numProductPageSize Then
+                    _UC_ItemPager_PROD_Header.LoadPager(numTotalNumberOfProducts, numProductPageSize, c_PROD_PAGER_QUERY_STRING_KEY)
+                    _UC_ItemPager_PROD_Header.DisableLink(numPageIndx)
+                    _UC_ItemPager_PROD_Header.Visible = True
+                End If
+                phdNoProducts2.Visible = False
+            Else
+                dtlProductsExpanded.Visible = False
+                _UC_ItemPager_PROD_Header.Visible = False
+            End If
+        Else
+            tblProducts = ProductsBLL._GetProductsPageByCategory(_GetCategoryID(), Session("_LANG"), 0, 1000, 1000)
+            If tblProducts.Rows.Count <> 0 Then
+                phdNoProducts2.Visible = False
+            End If
+        End If
+
+        dtlProductsExpanded.DataSource = tblProducts
+        dtlProductsExpanded.DataBind()
+        ShowHideUpDownArrowsProducts(numTotalNumberOfProducts)
+    End Sub
+
+    'Each item bound to datalist in expanded view
+    Protected Sub dtlProductsExpanded_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.DataListItemEventArgs) Handles dtlProductsExpanded.ItemDataBound
+        Dim chrProductType As Char = ""
+        Try
+            chrProductType = CChar(CType(e.Item.FindControl("litProductType"), Literal).Text)
+        Catch ex As Exception
+            Return
+        End Try
+
+        Dim numProductID As Integer = CType(e.Item.FindControl("litProductID"), Literal).Text
+        Dim tblVersions As New DataTable
+        tblVersions = VersionsBLL._GetByProduct(numProductID, Session("_LANG"))
+        Dim dtcShowClone As DataColumn = New DataColumn("ShowClone", Type.GetType("System.Boolean"))
+        dtcShowClone.DefaultValue = True
+        tblVersions.Columns.Add(dtcShowClone)
+
+        If chrProductType = "o" Then
+            CType(e.Item.FindControl("phdOptionsLink"), PlaceHolder).Visible = True
+        End If
+        If chrProductType <> "m" _
+                AndAlso tblVersions.Rows.Count > 0 Then
+            CType(e.Item.FindControl("phdNewVersionLink"), PlaceHolder).Visible = False
+            For Each row As DataRow In tblVersions.Rows
+                row("ShowClone") = False
+            Next
+        End If
+
+        CType(e.Item.FindControl("rptVersions"), Repeater).DataSource = tblVersions
+        CType(e.Item.FindControl("rptVersions"), Repeater).DataBind()
+
+        If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem _
+            OrElse e.Item.ItemType = ListItemType.SelectedItem Then
+            If chrProductType = "o" OrElse chrProductType = "b" Then
+                CType(e.Item.FindControl("phdOptionsLink"), PlaceHolder).Visible = True
+            End If
+        End If
+    End Sub
+
+    'Whether to show the up/down
     Private Sub ShowHideUpDownArrowsProducts(ByVal TotalRows As Integer)
         Try
             CType(dtlProducts.Items(0).FindControl("lnkBtnMoveUp"), LinkButton).Enabled = False
@@ -269,6 +354,7 @@ Partial Class _CategoryView
         End Try
     End Sub
 
+    'Clicks on product level elements within the datalist
     Protected Sub dtlProducts_ItemCommand(ByVal source As Object, ByVal e As System.Web.UI.WebControls.DataListCommandEventArgs) Handles dtlProducts.ItemCommand
         Dim strTab As String = ""
         Select Case e.CommandName
@@ -305,6 +391,7 @@ Partial Class _CategoryView
         End Select
     End Sub
 
+    'Format nav links
     Public Function FormatNavURL(ByVal ParentCategoryID As String, ByVal CategoryID As Long, ByVal SiteID As Integer) As String
         Dim strURL As String = IIf(String.IsNullOrEmpty(_GetParentCategory), _GetCategoryID(), _GetParentCategory() & "," & _GetCategoryID())
         If strURL = "0" Then
@@ -314,6 +401,7 @@ Partial Class _CategoryView
         End If
     End Function
 
+    'Each product being bound to datalist
     Protected Sub dtlProducts_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.DataListItemEventArgs) Handles dtlProducts.ItemDataBound
 
         Dim chrProductType As Char = ""
@@ -445,11 +533,25 @@ Partial Class _CategoryView
         End If
     End Sub
 
-    ''Turn all products in a category OFF (live=false)
+    'Turn all products in a category OFF (live=false)
     Protected Sub lnkTurnProductsOff_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkTurnProductsOff.Click
         If ProductsBLL._HideShowAllByCategoryID(_GetCategoryID(), False) Then
             RaiseEvent ShowMasterUpdate()
             LoadProducts()
         End If
+    End Sub
+
+    'Collapse products (switch to normal view)
+    Protected Sub lnkCollapseProducts_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkCollapseProducts.Click
+        phdProductsExpanded.Visible = False
+        phdProducts.Visible = True
+        LoadProducts()
+    End Sub
+
+    'Expand products (switch to expanded view)
+    Protected Sub lnkExpandProducts_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkExpandProducts.Click
+        phdProductsExpanded.Visible = True
+        phdProducts.Visible = False
+        LoadProductsExpanded()
     End Sub
 End Class

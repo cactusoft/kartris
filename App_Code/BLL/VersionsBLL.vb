@@ -418,7 +418,7 @@ Public Class VersionsBLL
                 If Not _AddNewVersionAsCombination(tblLanguageElement, CStr(row("V_CodeNumber")), CInt(row("V_ProductID")), CSng(row("V_Price")),
                  CByte(row("V_Tax")), FixNullFromDB(row("V_Tax2")), "", CSng(row("V_Weight")), CShort(row("V_Quantity")), CInt(row("V_QuantityWarnLevel")),
                  CSng(row("V_RRP")), CChar(row("V_Type")), pSqlConn, pSavePoint, numNewVersionID) Then
-                    Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
+                    Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom") & " Check you have set a tax band for the base version".)
                 End If
 
                 CkartrisFormatErrors.LogError(CStr(row("V_CodeNumber")))

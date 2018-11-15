@@ -414,6 +414,17 @@ PAGE: MARK-UP PRICES
                                         { font-weight: normal; color: #444; font-size: 99%; width: auto; }
 /* 
 ========================================================================
+PAGE: CATEGORIES
+========================================================================
+*/
+#page_categories .expandproductlink     { font-weight: normal; color: #333; display: inline-block; margin: 0 0 0 10px; }
+#page_categories #products_expanded table.kartristable tr td.product-row,
+#page_categories #products_expanded table.kartristable tr.Kartris-GridView-Alternate td.product-row
+                                        { background-color: #fff; padding: 6px 0; }
+#page_categories #products_expanded table.nested
+                                        { margin-left: 20px; }
+/* 
+========================================================================
 SECTION: EDIT COUPON POPUP
 ========================================================================
 */
