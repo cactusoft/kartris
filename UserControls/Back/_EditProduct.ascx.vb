@@ -93,7 +93,7 @@ Partial Class _EditProduct
     Public Sub ReloadProduct()
         If _GetProductID() = 0 Then 'new product
             '' If there is no parent category, we should make sure that we have categories in the db.
-            If _GetParentCategory() = 0 Then
+            If _CategorySiteMapProvider.StripParents(_GetParentCategory()) = 0 Then
                 If CategoriesBLL._GetTotalCategoriesByLanguageID(Session("_LANG")) = 0 Then
                     phdNoCategories.Visible = True
                     phdEditProduct.Visible = False

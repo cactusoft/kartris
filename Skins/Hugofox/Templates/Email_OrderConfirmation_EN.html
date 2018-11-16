@@ -1,6 +1,6 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-    <head>
+	<head>
 		<style type="text/css">
 #mail_container                         { border: solid 1px #999; padding: 20px;  width: 600px; }
 #mail_container p                       { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 13px; font-weight: normal; color: #555; padding: 5px 0; margin: 0; }
@@ -16,98 +16,98 @@
 #mail_container .row_item .col2         { color: #090; }
 #mail_container a                       { font-weight: normal; color: #04d; }
 		 </style>
-	    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	    <title>Order Confirmation</title>
-    </head>
-    <body>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+		<title>Order Confirmation</title>
+	</head>
+	<body>
 		<!--
 		HTML comments are stripped out when the templates are retrieved so
 		you can put a load in and it won't bulk up the size of the emails
 		-->
-        <div id="mail_container">
-            <h1>Order Confirmation</h1>
-            <!-- header added to the store owner email when an order is made, tag is removed in customer emails -->
-            [storeowneremailheader]
-        
-            <p>
-                Thank you for your order!
-            </p>
-            <p>Order Number: [orderid]</p>
-            <!-- additional PO / offline payment info line, automatically removed when PO / offline payment is not used. 
-                You can remove this tag manually if not using this payment method -->
-            [poofflinepaymentdetails]
-        
-            <!-- additional bitcoin payment info line, automatically removed when bitcoin payment is not used. 
-                You can remove this tag manually if not using this payment method -->
-            [bitcoinpaymentdetails]
+		<div id="mail_container">
+			<h1>Order Confirmation</h1>
+			<!-- header added to the store owner email when an order is made, tag is removed in customer emails -->
+			[storeowneremailheader]
+		
+			<p>
+				Thank you for your order!
+			</p>
+			<p>Order Number: [orderid]</p>
+			<!-- additional PO / offline payment info line, automatically removed when PO / offline payment is not used. 
+				You can remove this tag manually if not using this payment method -->
+			[poofflinepaymentdetails]
+		
+			<!-- additional bitcoin payment info line, automatically removed when bitcoin payment is not used. 
+				You can remove this tag manually if not using this payment method -->
+			[bitcoinpaymentdetails]
 
-            <p>
-            <!-- basket contents, shipping, discounts, other adjustments and order total -->
-            [ordercontents]
-            </p>
-            <p>
-            <!-- You saved $$$ by buying from this store -->
-            [totalsavedline]
-            </p>
-            <p>
-            <!-- customer comment line -->
-            [ordercomments]
-            </p>
-            <div class="line"></div>
-            <h2>
-            Customer Details
-            </h2>
-            <p>
-            Carholder's Name: [billingname]<br />
-            [companylabel] [billingcompany]<br />
-            [euvatnumberlabel] [euvatnumbervalue]<br />
-            Email Address: [billingemail]<br />
-            Telephone: [billingphone]
-            </p>
-            <div class="line"></div>
-            <h2>
-            Billing Address
-            </h2>
-            <p>
-            [billingname]<br />
-            [billingcompany]<br />
-            [billingstreetaddress]<br />
-            [billingtowncity]<br />
-            [billingcounty]<br />
-            [billingpostcode]<br />
-            [billingcountry]
-            </p>
-            <div class="line"></div>
-            <h2>
-            Shipping Details
-            </h2>
-            <p>
-            [shippingname]<br />
-            [shippingcompany]<br />
-            [shippingstreetaddress]<br />
-            [shippingtowncity]<br />
-            [shippingcounty]<br />
-            [shippingpostcode]<br />
-            [shippingcountry]<br />
-            [shippingphone]
-            </p>
-            <div class="line"></div>
-            <p>
-            You can log into your account on our website to view your order history at: <a href="[webshopurl]Customer.aspx">[webshopurl]Customer.aspx</a>
-            </p>
-            <p>
-            Kind regards,
-            </p>
-            <p>
-            [websitename]<br/>
-            <a href="[webshopurl]">[webshopurl]</a>
-            </p>
-            <div class="line"></div>
-            <p>
-            The order was placed at: [nowoffset]<br />
-            IP Address: [customerip]<br />
-            [customeruseragent]
-            </p>
-        </div>
-    </body>
+			<p>
+			<!-- basket contents, shipping, discounts, other adjustments and order total -->
+			[ordercontents]
+			</p>
+			<p>
+			<!-- You saved $$$ by buying from this store -->
+			[totalsavedline]
+			</p>
+			<p>
+			<!-- customer comment line -->
+			[ordercomments]
+			</p>
+			<div class="line"></div>
+			<h2>
+			Customer Details
+			</h2>
+			<p>
+			cardholder's Name: [billingname]<br />
+			[companylabel] [billingcompany]<br />
+			[euvatnumberlabel] [euvatnumbervalue]<br />
+			Email Address: [billingemail]<br />
+			Telephone: [billingphone]
+			</p>
+			<div class="line"></div>
+			<h2>
+			Billing Address
+			</h2>
+			<p>
+			[billingname]<br />
+			[billingcompany]<br />
+			[billingstreetaddress]<br />
+			[billingtowncity]<br />
+			[billingcounty]<br />
+			[billingpostcode]<br />
+			[billingcountry]
+			</p>
+			<div class="line"></div>
+			<h2>
+			Shipping Details
+			</h2>
+			<p>
+			[shippingname]<br />
+			[shippingcompany]<br />
+			[shippingstreetaddress]<br />
+			[shippingtowncity]<br />
+			[shippingcounty]<br />
+			[shippingpostcode]<br />
+			[shippingcountry]<br />
+			[shippingphone]
+			</p>
+			<div class="line"></div>
+			<p>
+			You can log into your account on our website to view your order history at: <a href="[webshopurl]Customer.aspx">[webshopurl]Customer.aspx</a>
+			</p>
+			<p>
+			Kind regards,
+			</p>
+			<p>
+			[websitename]<br/>
+			<a href="[webshopurl]">[webshopurl]</a>
+			</p>
+			<div class="line"></div>
+			<p>
+			The order was placed at: [nowoffset]<br />
+			IP Address: [customerip]<br />
+			[customeruseragent]
+			</p>
+		</div>
+	</body>
 </html>

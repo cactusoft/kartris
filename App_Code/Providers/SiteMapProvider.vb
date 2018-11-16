@@ -1209,6 +1209,7 @@ Public Class _CategorySiteMapProvider
         Try
             Dim aryParentKey As String() = Split(strParents, "::")
             strParents = aryParentKey(1)
+            If strParents = "" Then strParents = "0"
         Catch ex As Exception
             'erm, oh... this is embarrassing
         End Try
