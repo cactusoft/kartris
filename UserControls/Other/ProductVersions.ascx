@@ -36,7 +36,7 @@
                                                 <asp:Literal ID="litCalculatedTax_Rows" runat="server" Text='<%# Eval("CalculatedTax") %>'
                                                     Visible="false" EnableViewState="false" />
                                                 <asp:Literal ID="litResultedCalculatedTax_Rows" runat="server" EnableViewState="false" /></span></span>
-                                        <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" and ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then%>
+                                        <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then%>
                                         <span class="inctax">
                                             <asp:Literal ID="litLS_IncTax" runat="server" Text="<%$ Resources: Kartris, ContentText_IncTax %>" EnableViewState="false" />
                                             <span class="figure">
@@ -81,7 +81,7 @@
                                                 If KartSettingsManager.GetKartConfig("frontend.cataloguemode") <> "y" And Not CheckHideAddButton() Then%>
                                             <% 'the div below is hidden if it is a 'call for prices' version %>
                                             <div class="selector" runat="server">
-                                                <asp:PlaceHolder ID="phdNotOutOfStock1" runat="server" Visible='<%# Iif((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) AND (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y"), False, True) %>'>
+                                                <asp:PlaceHolder ID="phdNotOutOfStock1" runat="server" Visible='<%# Iif((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) And (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y"), False, True) %>'>
                                                     <asp:PlaceHolder EnableViewState="false" ID="phdCustomizable" runat="server" Visible='<%# Eval("V_CustomizationType") <> "n" %>'>
                                                         <div class="cancustomizetag" title="<asp:Literal ID='litContentTextCanCustomize1' Text='<%$ Resources: Products, ContentText_CanCustomize %>' runat='server'></asp:Literal>">
                                                         </div>
@@ -89,7 +89,7 @@
                                                     <user:AddPane ID="UC_AddToBasketQty1" runat="server" HasAddButton="True" CanCustomize='<%# Eval("V_CustomizationType") <> "n" %>' OnWrongQuantity="AddWrongQuantity"
                                                         VersionID='<%# Eval("V_ID") %>' visible='<%# Iif( ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) = 1, False, True) %>' />
                                                 </asp:PlaceHolder>
-                                                <asp:PlaceHolder EnableViewState="true" ID="phdOutOfStock1" runat="server" Visible='<%# Iif((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) AND (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y"), True, False) %>'>
+                                                <asp:PlaceHolder EnableViewState="true" ID="phdOutOfStock1" runat="server" Visible='<%# Iif((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) And (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y"), True, False) %>'>
                                                     <div class="outofstock">
                                                         <asp:Literal ID="litOutOfStockMessage1" runat="server" Text="<%$ Resources: Versions, ContentText_AltOutOfStock %>" />
                                                     </div>
@@ -99,7 +99,7 @@
                                                         </div>
                                                     </asp:PlaceHolder>
                                                 </asp:PlaceHolder>
-                                                <asp:PlaceHolder EnableViewState="false" ID="phdCallForPrice1" runat="server" Visible='<%# Iif( NOT((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) AND (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y")) AND ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) = 1, True, False) %>'>
+                                                <asp:PlaceHolder EnableViewState="false" ID="phdCallForPrice1" runat="server" Visible='<%# Iif(Not ((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) And (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y")) And ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) = 1, True, False) %>'>
                                                     <asp:Literal ID="litContentTextCallForPrice" runat="server" Text="<%$ Resources: Versions, ContentText_CallForPrice %>" />
                                                 </asp:PlaceHolder>
                                             </div>
@@ -158,7 +158,7 @@
                                         <!-- RRP -->
                                         <%
                                             If KartSettingsManager.GetKartConfig("frontend.versions.display.showrrp") = "y" AndAlso
-                ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) <> 1 Then
+ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) <> 1 Then
                                         %>
                                         <th class="rrp hide-for-small">
                                             <asp:Literal ID="litLS_RRP" runat="server" Text="<%$ Resources: Versions, ContentText_RRP %>" EnableViewState="false" />
@@ -244,7 +244,7 @@
                                                     <% If KartSettingsManager.GetKartConfig("frontend.versions.display.showextrasku") = "y" Then%>
                                                     <asp:Label ID="lblExtraCode_Rows" runat="server" Text='<%# Eval("V_ExtraCodeNumber") %>' EnableViewState="false" CssClass="codenumber"></asp:Label>
                                                     <% End If %>
-                                                    <asp:Label ID="lblDesc_Rows" runat="server" Text='<%# Eval("V_Desc") %>' Visible='<%# CkartrisDataManipulation.FixNullFromDB(Eval("V_Desc")) IsNot Nothing AndAlso Len(Eval("V_Desc"))> 0 %>' EnableViewState="false" CssClass="description"></asp:Label>
+                                                    <asp:Label ID="lblDesc_Rows" runat="server" Text='<%# Eval("V_Desc") %>' Visible='<%# CkartrisDataManipulation.FixNullFromDB(Eval("V_Desc")) IsNot Nothing AndAlso Len(Eval("V_Desc")) > 0 %>' EnableViewState="false" CssClass="description"></asp:Label>
 
                                                     <%--
                                                         =====================================
@@ -269,7 +269,7 @@
                                                 <%
                                                     'SHOW RRP
                                                     If KartSettingsManager.GetKartConfig("frontend.versions.display.showrrp") = "y" AndAlso
-                ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) <> 1 Then
+ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) <> 1 Then
                                                         intColSpan += 1
                                                 %>
                                                 <td class="rrp hide-for-small">
@@ -523,5 +523,7 @@
         </ContentTemplate>
     </asp:UpdatePanel>
 </div>
+
+
 <user:PopupMessage ID="UC_PopupMessage" runat="server" />
 <user:StockNotification ID="UC_StockNotification" runat="server" />
