@@ -225,9 +225,9 @@ Public Class TaxRegime
                 _Formulas.Add(taxEquation)
             Next
 
-
         Catch ex As Exception
-
+            'We want to write a log entry.
+            CkartrisFormatErrors.LogError(ex.Message & vbCrLf & "This suggests the TaxRegime.config file on the root of the site is either corrupted, or permissions prevent it being read.")
         End Try
 
 
