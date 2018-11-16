@@ -27,6 +27,15 @@
             'oh well
         End Try
 
+        'Run tax regime into system
+        Try
+            TaxRegime.LoadTaxConfigXML()
+        Catch ex As Exception
+            'bad news.. the tax regime code itself should
+            'handle errors now, and log something if the 
+            'XML config file cannot be read or is malformed
+        End Try
+
         'detect application trust
         Try
 
@@ -64,7 +73,6 @@
             AddHandler SiteMap.SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
             AddHandler SiteMap.Providers("BreadCrumbSiteMap").SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
             AddHandler SiteMap.Providers("_CategorySiteMapProvider").SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
-            TaxRegime.LoadTaxConfigXML()
 
             'Clean up expired sessions
             'Originally this was run in the session start, but
