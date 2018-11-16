@@ -85,6 +85,13 @@
                             <ContentTemplate>
                                 <user:ImageViewer ID="UC_ImageView2" runat="server" LargeViewClickable="false" EnableViewState="false" />
                                 <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />
+                                <asp:PlaceHolder ID="phdVersionImages" runat="server" Visible="false">
+                                    <div id="versionimages">
+                                        <p>phdVersionImages</p>
+                                        <user:ImageViewer ID="UC_VersionImageView2" runat="server" LargeViewClickable="false" EnableViewState="false" />
+                                        <user:ImageViewer ID="UC_VersionImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />
+                                    </div>
+                                </asp:PlaceHolder>
                             </ContentTemplate>
                         </asp:UpdatePanel>
                         <asp:UpdatePanel ID="updMedia" runat="server" UpdateMode="Conditional">
