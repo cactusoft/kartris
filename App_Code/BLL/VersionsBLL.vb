@@ -170,8 +170,8 @@ Public Class VersionsBLL
         Return Adptr._GetByProductID(prodID, langID)
     End Function
 
-    Public Shared Function _IsCodeNumberExist(ByVal pCodeNumber As String, Optional ByVal pExecludedProductID As Integer = -1, Optional ByVal pExecludedVersionID As Long = -1) As Boolean
-        Return Adptr._GetByCodeNumber(pCodeNumber, pExecludedProductID, pExecludedVersionID).Rows.Count > 0
+    Public Shared Function _IsCodeNumberExist(ByVal pCodeNumber As String, Optional ByVal pExcludedProductID As Integer = -1, Optional ByVal pExecludedVersionID As Long = -1) As Boolean
+        Return Adptr._GetByCodeNumber(pCodeNumber, pExcludedProductID, pExecludedVersionID).Rows.Count > 0
     End Function
 
     Public Shared Function _GetNoOfVersionsByProductID(ByVal ProductID As Integer) As Integer
@@ -352,12 +352,20 @@ Public Class VersionsBLL
     Public Shared Function _CreateNewCombinations(ByVal ptblNewData As DataTable, ByVal pProductID As Integer,
        ByVal pBasicVersionID As Long, ByRef strMsg As String) As Boolean
 
-        '' 1. Delete Suspended Combinations [_spKartrisVersions_DeleteSuspendedVersions]
-        ''      a. Delete the related records in the VersionLinkOptions
-        ''      b. Delete the related records in the LanguageElements
-        ''      c. Delete the records from Versions
-        '' 2. Add New Combinations with new IDs (Including Addition the newely records in the VersionLinkOptions)
-        '' 3. Update The Basic Version To be of Type "b"
+        '' From Kartris v3, a little different here. We want to keep the version IDs
+        '' the same for combinations that already exist and data gets recovered, rather
+        '' than copying it across to new versions. Therefore, the process is a little
+        '' different now.
+        '' 1. Accept two datatables of data - one for new versions, one for existing
+        '' 2. Unsuspend existing versions that are needed by updating them with the
+        ''    new data, and setting type back to 'c' (from 's')
+        '' 3. Delete suspended combinations (any still left) using
+        ''    [_spKartrisVersions_DeleteSuspendedVersions]
+        ''    a. Delete the related records in the VersionLinkOptions
+        ''    b. Delete the related records in the LanguageElements
+        ''    c. Delete the records from Versions
+        '' 4. Add new combinations with new IDs
+        '' 5. Update the basic version To be of type 'b'
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -414,10 +422,12 @@ Public Class VersionsBLL
                     tblLanguageElement.Rows.Add(CByte(LangRow("LANG_ID")), LANG_ELEM_FIELD_NAME.Description, "")
                 Next
 
-                '' New Version
+                'Dim blnExists As Boolean = FixNullFromDB(row("IsExist"))
+                'New Version
                 If Not _AddNewVersionAsCombination(tblLanguageElement, CStr(row("V_CodeNumber")), CInt(row("V_ProductID")), CSng(row("V_Price")),
                  CByte(row("V_Tax")), FixNullFromDB(row("V_Tax2")), "", CSng(row("V_Weight")), CShort(row("V_Quantity")), CInt(row("V_QuantityWarnLevel")),
                  CSng(row("V_RRP")), CChar(row("V_Type")), pSqlConn, pSavePoint, numNewVersionID) Then
+
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom") & " Check you have set a tax band for the base version.")
                 End If
 

@@ -367,6 +367,7 @@ a.button_expand:hover                   { background-color: #bbb; color: #000; }
 .buttonbar                              { padding: 3px 0px 3px 0px }
 .pagebottom                             { padding: 0 0 20px 0px; width: auto; margin: 60px 0 10px 0; }
 .pagebottom a                           { background-image: url(Images/button_top.png); background-position: center center; background-repeat: no-repeat; width: 48px; height: 48px; display: block; position: fixed; bottom: 5px; right: 270px; }
+.errortextbox                           { background-color: #f00; color: #fff; font-weight: bold; }
 /* 
 ========================================================================
 ERRORS

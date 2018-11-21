@@ -568,6 +568,7 @@ Partial Class _ProductOptionGroups
             tblNewCombinations.Columns.Add(New DataColumn("Quantity"))
             tblNewCombinations.Columns.Add(New DataColumn("QuantityWarnLevel"))
             tblNewCombinations.Columns.Add(New DataColumn("IsExist"))
+            tblNewCombinations.Columns.Add(New DataColumn("OldVersionID"))
             Dim strNewIDs() As String = New String() {""}
             Dim numRowCount As Integer = 0
             For Each drwNewCombination As DataRow In tblNewCombinations.Rows
@@ -577,12 +578,7 @@ Partial Class _ProductOptionGroups
                 drwNewCombination("Quantity") = CInt(txtBasicStockQuantity.Text)
                 drwNewCombination("QuantityWarnLevel") = CInt(txtBasicWarningLevel.Text)
                 drwNewCombination("IsExist") = False
-
-
-                'If tblExistingCombinations.Rows.Count = 0 Then
-                '    drwNewCombination("CodeNumber") = txtBasicCodeNumber.Text & "-" & numRowCount
-                '    Continue For
-                'End If
+                drwNewCombination("OldVersionID") = -1
 
                 strNewIDs = Split(CStr(drwNewCombination("ID_List")), ",")
 
@@ -613,6 +609,8 @@ Partial Class _ProductOptionGroups
                             drwNewCombination("Price") = drwSuspended("V_Price")
                             drwNewCombination("Quantity") = drwSuspended("V_Quantity")
                             drwNewCombination("QuantityWarnLevel") = drwSuspended("V_QuantityWarnLevel")
+                            drwNewCombination("OldVersionID") = drwSuspended("V_ID")
+
                             Exit For
                         Else
                             drwNewCombination("IsExist") = True
@@ -733,9 +731,20 @@ Partial Class _ProductOptionGroups
 
     Function SaveNewCombinations() As Boolean
 
+        'Create datatable for 'new' combinations
         Dim tblNewCombinations As New DataTable
         tblNewCombinations = VersionsBLL._GetSchema()
         tblNewCombinations.Columns.Add(New DataColumn("ID_List", Type.GetType("System.String")))
+
+        'Create datatable for existing combinations
+        Dim tblCurrentCombinations As New DataTable
+        tblCurrentCombinations.Columns.Add(New DataColumn("ID", Type.GetType("System.Int64")))
+        tblCurrentCombinations.Columns.Add(New DataColumn("Name", Type.GetType("System.String")))
+        tblCurrentCombinations.Columns.Add(New DataColumn("CodeNumber", Type.GetType("System.String")))
+        tblCurrentCombinations.Columns.Add(New DataColumn("Price", Type.GetType("System.Single")))
+        tblCurrentCombinations.Columns.Add(New DataColumn("StockQty", Type.GetType("System.Int32")))
+        tblCurrentCombinations.Columns.Add(New DataColumn("QtyWarnLevel", Type.GetType("System.Int32")))
+        tblCurrentCombinations.Columns.Add(New DataColumn("Live", Type.GetType("System.Boolean")))
 
         Dim vPrice As Decimal = FixNullToDB(HandleDecimalValues(txtBasicIncTax.Text), "z")
         Dim vTax As Byte, vTax2 As Byte
@@ -769,6 +778,7 @@ Partial Class _ProductOptionGroups
         Dim blnUseCombinationPrices As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", vProductID) = "1", True, False)
         For Each itm As RepeaterItem In rptNewCombinations.Items
             If itm.ItemType = ListItemType.Item OrElse itm.ItemType = ListItemType.AlternatingItem Then
+                Dim vOldVersionID As Int64 = CLng(FixNullToDB(CType(itm.FindControl("hidOldVersionID"), TextBox).Text))
                 Dim vIDList As String = FixNullToDB(CType(itm.FindControl("litIDList"), Literal).Text, "s")
                 Dim vName As String = FixNullToDB(CType(itm.FindControl("txtCombinationOptionName"), TextBox).Text, "s")
                 Dim vCode As String = FixNullToDB(CType(itm.FindControl("txtCombinationCodeNumber"), TextBox).Text, "s")
@@ -779,18 +789,50 @@ Partial Class _ProductOptionGroups
                 If vQty = "" Then vQty = "0"
                 If vQtyLevel = "" Then vQtyLevel = "0"
 
-                'In v2.9005 added a 'nothing' second from end; this is for the V_BulkUpdateTimeStamp field
-                'which was added to the versions schema that is used to create the datatable above
-                tblNewCombinations.Rows.Add(Nothing, Nothing, vName, Nothing, vCode, vProductID, vPrice,
-                                         FixNullToDB(vTax, "i"), vWeight, 0, CInt(vQty), CInt(vQtyLevel), 1, Nothing, Nothing,
-                                            0, vRRP, "c", Nothing, "n", Nothing, 0, FixNullToDB(vTax2, "i"), Nothing, Nothing, vIDList)
+                'Kartris v3 change
+                'We need to decide whether to update this combination
+                'or create a new one. This way, we can retain the original
+                'version ID if there is a suspended combination recovered,
+                'and the combination image that goes with it, plus any
+                'other things linked to that version (notifications, 
+                'tracking, etc.)
+                If vOldVersionID > 0 Then
+                    'Add to existing combinations table
+                    tblCurrentCombinations.Rows.Add(vOldVersionID, vName, vCode, vPrice, CInt(vQty), CInt(vQtyLevel), True)
+                Else
+                    'Add to new combinations table
+                    tblNewCombinations.Rows.Add(Nothing, Nothing, vName, Nothing, vCode, vProductID, vPrice,
+                                             FixNullToDB(vTax, "i"), vWeight, 0, CInt(vQty), CInt(vQtyLevel), 1, Nothing, Nothing,
+                                                0, vRRP, "c", Nothing, "n", Nothing, 0, FixNullToDB(vTax2, "i"), Nothing, Nothing, vIDList)
+                End If
+
             End If
         Next
 
         Dim strMsg As String = ""
-        If VersionsBLL._CreateNewCombinations(tblNewCombinations, vProductID, _
-                                                          CLng(litBasicVersionID.Text), strMsg) Then
-            RaiseEvent VersionChanged()
+
+        'Update Kartris v3. We want to preserve the combinations with their original
+        'version ID numbers if possible, rather than delete all and recreate. This way
+        'anything linked to the version will be maintained, such as combination images.
+        'What we're going to do is run an update rather than 'create new' first. This
+        'will update the suspended versions with the new data values, since we know
+        'the 'old version ID'. We'll also change the type from 's' (suspended) to 'c'
+        '(combination). After that, we should in theory be able to run the normal
+        'create combinations code which deletes suspended versions and then creates
+        'new versions.
+        'To ensure we only create the combinations of items that were not updated, we're
+        'keeping two tbls instead of one above.
+        'tblNewCombinations
+        'tblUpdatedCombinations
+
+        'First, update existing combinations
+        If VersionsBLL._UpdateCurrentCombinations(tblCurrentCombinations, "") Then
+            If VersionsBLL._CreateNewCombinations(tblNewCombinations, vProductID, CLng(litBasicVersionID.Text), strMsg) Then
+                RaiseEvent VersionChanged()
+            Else
+                _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMsg)
+                Return False
+            End If
         Else
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMsg)
             Return False
@@ -859,14 +901,14 @@ Partial Class _ProductOptionGroups
             If dList.Items(i).ItemType = ListItemType.Item Or _
                 dList.Items(i).ItemType = ListItemType.AlternatingItem Then
                 Dim txtBox1 As TextBox = CType(dList.Items(i).FindControl("txtCombinationCodeNumber"), TextBox)
-                txtBox1.ForeColor = Drawing.Color.Black
+                txtBox1.CssClass = "codenumber"
                 For j As Integer = i + 1 To dList.Items.Count - 1
                     If dList.Items(j).ItemType = ListItemType.Item Or _
                         dList.Items(j).ItemType = ListItemType.AlternatingItem Then
                         Dim txtBox2 As TextBox = CType(dList.Items(j).FindControl("txtCombinationCodeNumber"), TextBox)
-                        txtBox2.ForeColor = Drawing.Color.Black
+                        txtBox2.CssClass = "codenumber"
                         If txtBox1.Text = txtBox2.Text Then
-                            txtBox1.ForeColor = Drawing.Color.Red : txtBox2.ForeColor = Drawing.Color.Red
+                            txtBox1.CssClass = "codenumber errortextbox" : txtBox2.CssClass = "codenumber errortextbox"
                             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_AlreadyExists"))
                             Return False
                         End If
@@ -880,16 +922,16 @@ Partial Class _ProductOptionGroups
             If dList.Items(i).ItemType = ListItemType.Item Or _
                 dList.Items(i).ItemType = ListItemType.AlternatingItem Then
                 Dim txtBox As TextBox = CType(dList.Items(i).FindControl("txtCombinationCodeNumber"), TextBox)
-                txtBox.ForeColor = Drawing.Color.Black
+                txtBox.CssClass = "codenumber"
                 'Need to check the code number, will scan all the versions' table, except the Product's Versions
                 If VersionsBLL._IsCodeNumberExist(txtBox.Text, _GetProductID()) Then
-                    txtBox.ForeColor = Drawing.Color.Red
+                    txtBox.CssClass = "codenumber errortextbox"
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_AlreadyExists"))
                     Return False
                 End If
                 'Checking the BaseVersion
                 If txtBox.Text = txtBasicCodeNumber.Text Then
-                    txtBox.ForeColor = Drawing.Color.Red
+                    txtBox.CssClass = "codenumber errortextbox"
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_AlreadyExists"))
                     Return False
                 End If

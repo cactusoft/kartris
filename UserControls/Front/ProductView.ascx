@@ -83,13 +83,14 @@
                     <div class="main_product_image">
                         <asp:UpdatePanel ID="updImages" runat="server" UpdateMode="Conditional">
                             <ContentTemplate>
-                                <user:ImageViewer ID="UC_ImageView2" runat="server" LargeViewClickable="false" EnableViewState="false" />
-                                <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />
-                                <asp:PlaceHolder ID="phdVersionImages" runat="server" Visible="false">
+                                <asp:PlaceHolder ID="phdMainImages" runat="server" Visible="true">
+                                    <user:ImageViewer ID="UC_ImageView2" runat="server" LargeViewClickable="false" EnableViewState="false" />
+                                    <user:ImageViewer ID="UC_ImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />
+                                </asp:PlaceHolder>
+                                <asp:PlaceHolder ID="phdCombinationImage" runat="server" Visible="false">
                                     <div id="versionimages">
-                                        <p>phdVersionImages</p>
-                                        <user:ImageViewer ID="UC_VersionImageView2" runat="server" LargeViewClickable="false" EnableViewState="false" />
-                                        <user:ImageViewer ID="UC_VersionImageView" runat="server" LargeViewClickable="true" EnableViewState="false" />
+                                        <asp:Literal ID="litTest" runat="server" Visible="false"></asp:Literal>
+                                        <user:ImageViewer ID="UC_CombinationImage" runat="server" LargeViewClickable="false" EnableViewState="false" />
                                     </div>
                                 </asp:PlaceHolder>
                             </ContentTemplate>
@@ -178,7 +179,8 @@
                                 <asp:Literal ID="litContentTextSpecsLabel" runat="server" Text="<%$ Resources:Products, ContentText_SpecTable %>" EnableViewState="false"></asp:Literal>
                             </HeaderTemplate>
                             <ContentTemplate>
-                                <div class="spectable"><asp:Literal ID="litSpecsTable" runat="server" EnableViewState="false"></asp:Literal></div>
+                                <div class="spectable">
+                                    <asp:Literal ID="litSpecsTable" runat="server" EnableViewState="false"></asp:Literal></div>
                             </ContentTemplate>
                         </ajaxToolkit:TabPanel>
                         <%--

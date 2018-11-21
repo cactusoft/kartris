@@ -534,6 +534,7 @@
                                                                 <ItemTemplate>
                                                                     <tr class='<%# GetRowClass(Container.ItemIndex) %>'>
                                                                         <td class="recordnumberfield">
+                                                                            <asp:TextBox ID="hidOldVersionID" runat="server" Text='<%# Eval("OldVersionID") %>' Visible="false" />
                                                                             <asp:Literal ID="litItemIndex" runat="server" Text='<%# Container.ItemIndex + 1 %>' />
                                                                         </td>
                                                                         <!-- Name -->

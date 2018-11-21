@@ -29,6 +29,7 @@ Partial Class ProductVersions
     Private _ProductID As Integer = -1
     Private _LanguageID As Short = -1
     Private _ViewType As Char
+    Private numVersionID As Int64 = -1
 
     Private c_blnHasPrices As Boolean = True
     Private c_blnShowMediaGallery As Boolean = True
@@ -68,8 +69,6 @@ Partial Class ProductVersions
         Catch
             'do nothing
         End Try
-
-
 
         If Request.QueryString("strOptions") & "" = "" Then Session("BasketItemInfo") = ""
 
@@ -381,33 +380,31 @@ Partial Class ProductVersions
 
         lblVID_Options.Text = CStr(FixNullFromDB(ptblVersions.Rows(0)("V_ID")))
 
-        '' Initializes/Loads the OptionsContainer UC to view the Options that are available for the Product.
+        'Initializes/Loads the OptionsContainer UC to view the Options that are available for the Product.
         UC_OptionsContainer.InitializeOption(_ProductID, _LanguageID, blnUseCombinationPrice)
 
         If blnUseCombinationPrice Then
-            '' Call the function to check the selected combination price
+            'Call the function to check the selected combination price
             GetCombinationPrice()
         Else
             AddOptionsPrice(UC_OptionsContainer.GetSelectedPrice())
         End If
-        'CheckCombinationsImages()
 
         ''// set addtobasket control's version id
         'If Not (IsPostBack) Then
         Dim strQuantityControl As String = LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", ProductID))
         If Request.QueryString("strOptions") <> "" AndAlso (strQuantityControl = "dropdown" OrElse strQuantityControl = "textbox") Then
-            ''BasketItemInfo = Session("BasketItemInfo")
-            ''If BasketItemInfo = "" Then BasketItemInfo = Session("BasketItemInfo") & ""
+
             If Session("BasketItemInfo") & "" <> "" Then
                 Dim arrBasketItemInfo() As String = Split(Session("BasketItemInfo") & "", ";")
                 If IsNumeric(lblVID_Options.Text) Then
-                    'If aBasketItemInfo(1) = CLng(lblVID_Options.Text) Then
+
                     BasketItem_VersionID = CLng(lblVID_Options.Text)
                     UC_AddToBasketQty4.VersionID = BasketItem_VersionID
                     UC_AddToBasketQty4.ItemEditVersionID = CDbl(arrBasketItemInfo(1))
                     UC_AddToBasketQty4.ItemEditQty = CDbl(arrBasketItemInfo(2))
                     btnAdd_Options.Text = GetGlobalResourceObject("_Kartris", "FormButton_Update")
-                    ''End If
+
                 End If
             End If
 
@@ -415,9 +412,7 @@ Partial Class ProductVersions
             If IsNumeric(lblVID_Options.Text) Then UC_AddToBasketQty4.VersionID = CLng(lblVID_Options.Text)
             btnAdd_Options.Text = GetGlobalResourceObject("Products", "FormButton_Add")
         End If
-        'End If
-        'UC_OptionsContainer.
-        'show customization tag in case the base version is customized
+
         phdOptionsCustomizable.Visible = VersionsBLL.IsVersionCustomizable(CLng(FixNullFromDB(ptblVersions.Rows(0)("V_ID"))))
 
         If UC_OptionsContainer.GetNoOfRows > 0 Then
@@ -559,7 +554,7 @@ Partial Class ProductVersions
     End Sub
 
     ''' <summary>
-    ''' Singe version product display
+    ''' Single version product display
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub fvwPrice_DataBound(ByVal sender As Object, ByVal e As System.EventArgs) Handles fvwPrice.DataBound
@@ -710,26 +705,6 @@ Partial Class ProductVersions
 
                 If [String].IsNullOrEmpty(strOptionString) Then strOptionString = ""
 
-                '' ------------------------------------------
-                '' Code to remove the duplicate options.
-                Dim arrOptions() As String = strOptionString.Split(",")
-                For i As Integer = 0 To arrOptions.Length - 1
-                    For j As Integer = 0 To i
-                        If i <> j Then
-                            If arrOptions(j) = arrOptions(i) Then arrOptions(j) = ""
-                        End If
-                    Next
-                Next
-                Dim sbdOptions As New StringBuilder("")
-                For i As Integer = 0 To arrOptions.Length - 1
-                    If arrOptions(i) <> "" Then
-                        sbdOptions.Append(arrOptions(i))
-                        If i <> arrOptions.Length - 1 Then sbdOptions.Append(",")
-                    End If
-                Next
-                strOptionString = sbdOptions.ToString()
-                '' ------------------------------------------
-
                 Dim numVersionID As Integer = VersionsBLL.GetCombinationVersionID_s(_ProductID, strOptionString)
                 If numVersionID <> 0 Then
                     lblVID_Options.Text = numVersionID
@@ -778,122 +753,176 @@ Partial Class ProductVersions
         Else
             AddOptionsPrice(pOptionPrice)
         End If
-        'CheckCombinationsImages()
+
     End Sub
 
-    Sub CheckCombinationsImages()
-        Dim strWebShopURL As String = CkartrisBLL.WebShopURL
+    ''' <summary>
+    ''' Check if there is a combination image for the selected item
+    ''' </summary>
+    Sub CheckCombinationsImages(ByVal numVersionID As Int64)
 
-        Dim extensions As New List(Of String)
-        extensions.Add("*.png")
-        extensions.Add("*.jpg")
-        extensions.Add("*.jpeg")
-        ' And so on, until all are in...
+        'Let's find and create some objects we'll need to manipulate
+        Dim updProduct As UpdatePanel
+        Dim updImages As UpdatePanel
+        Dim phdMainImages As PlaceHolder
+        Dim phdCombinationImage As PlaceHolder
+        Dim litTest As Literal
 
-        Try
-            'Reading the values of Options from the OptionsContainer in a muli-dimentional array
-            Dim strOptionsList As String = UC_OptionsContainer.GetSelectedOptions()
-            CleanOptionString(strOptionsList)
-            If Not [String].IsNullOrEmpty(strOptionsList) Then
-                Dim numPrice As Single = VersionsBLL.GetCombinationPrice(ProductID, strOptionsList)
-                Dim numVersionID As Integer = GetCombinationVersionID_s(ProductID, strOptionsList)
+        updProduct = TryCast(Me.Parent.Parent.Parent.Parent.Parent, UpdatePanel)
+        updImages = TryCast(updProduct.FindControl("updImages"), UpdatePanel)
+        phdMainImages = TryCast(updProduct.FindControl("phdMainImages"), PlaceHolder)
+        phdCombinationImage = TryCast(updProduct.FindControl("phdCombinationImage"), PlaceHolder)
 
-                If numVersionID <> 0 Then
+        litTest = TryCast(updProduct.FindControl("litTest"), Literal)
 
-                    Session("numVersionID") = numVersionID
+        'phdCombinationImage.Controls.Clear()
 
-                    Dim versionImagesPath As String = HttpContext.Current.Server.MapPath("~") & "\Images\Products\" & ProductID & "\" & numVersionID
-                    If Directory.Exists(versionImagesPath) Then
+        'Now let's set the image control to find a combination image,
+        'if it exists
+        Dim UC_ImageView As New ImageViewer
 
-                        Dim fileCount As Integer
-                        For i As Integer = 0 To extensions.Count - 1
-                            fileCount += Directory.GetFiles(versionImagesPath, extensions(i), SearchOption.AllDirectories).Length
-                        Next
 
-                        'updImages
+        UC_ImageView = CType(updImages.FindControl("UC_CombinationImage"), ImageViewer)
+        UC_ImageView.ClearImages()
+        UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_VersionImage,
+                          numVersionID,
+                          KartSettingsManager.GetKartConfig("frontend.display.images.normal.height"),
+                          KartSettingsManager.GetKartConfig("frontend.display.images.normal.width"),
+                          "",
+                          _ProductID,
+                          ImageViewer.SmallImagesType.enum_ImageButton)
 
-                        If fileCount > 0 Then
-                            Dim UC_ImageView As New ImageViewer
-                            Dim updProduct As UpdatePanel
-                            updProduct = TryCast(Me.Parent.Parent.Parent.Parent.Parent, UpdatePanel)
-                            Dim updImages As UpdatePanel
-                            Dim phdVersionImages As PlaceHolder
-                            updImages = TryCast(updProduct.FindControl("updImages"), UpdatePanel)
+        'Hide whole image and container if no image available, otherwise can end up
+        'with small square visible if there is a border and background set for the 
+        'image holder in CSS
+        If numVersionID > -1 Then
+            litTest.Text = numVersionID & " --- " & Now()
+            phdCombinationImage.Visible = True
+            phdMainImages.Visible = False
+        Else
+            phdCombinationImage.Visible = False
+            phdMainImages.Visible = True
+        End If
 
-                            updImages.Visible = False
 
-                            phdVersionImages = TryCast(updProduct.FindControl("phdVersionImages"), PlaceHolder)
-                            phdVersionImages.Visible = True
 
-                            'updImages.Visible = False
-                            'updVersionImages.Visible = True
-                            '
-                            Dim UC_versionImageViewer2, UC_versionImageViewer As ImageViewer
-                            'Dim UC_versionMediaGallery As UserControls_Front_MediaGallery
-                            'Dim UC_versionPopupMedia As UserControls_General_PopupMessage
-                            UC_versionImageViewer = TryCast(phdVersionImages.FindControl("UC_VersionImageViewer"), ImageViewer)
-                            UC_versionImageViewer2 = TryCast(phdVersionImages.FindControl("UC_VersionImageViewer2"), ImageViewer)
-                            'UC_versionMediaGallery = TryCast(phdVersionImages.FindControl("UC_VersionMediaGallery"), UserControls_Front_MediaGallery)
-                            'UC_versionPopupMedia = TryCast(phdVersionImages.FindControl("UC_VersionPopUpMedia"), UserControls_General_PopupMessage)
 
-                            UC_versionImageViewer.CreateImageViewer(IMAGE_TYPE.enum_VersionImage, numVersionID,
-                                                                  KartSettingsManager.GetKartConfig("frontend.display.images.normal.height"),
-                                                                  KartSettingsManager.GetKartConfig("frontend.display.images.normal.width"),
-                                                                  "",
-                                                                  "", ,
-                                                                  "")
+        updImages.Update()
 
-                            If KartSettingsManager.GetKartConfig("frontend.display.images.large.linktype") = "n" Then
 
-                            Else
-                                'If tblProducts.Rows(0)("P_Desc").ToString.Contains("<overridelargeimagelinktype>") Then
-                                If CBool(ObjectConfigBLL.GetValue("K:product.showlargeimageinline", ProductID)) Then
-                                    'Override triggered - for MTMC large images
-                                    UC_versionImageViewer.Visible = False
 
-                                    'Need to override the Foundation column widths
-                                    'To make sure both full 12 width, so image
-                                    'stacks over text
-                                    'litImageColumnClasses.Text = "imagecolumn small-12 columns"
-                                    'litTextColumnClasses.Text = "textcolumn small-12 columns"
+        'Dim strWebShopURL As String = CkartrisBLL.WebShopURL
 
-                                    'Set full size image visible
-                                    UC_versionImageViewer2.CreateImageViewer(IMAGE_TYPE.enum_VersionImage,
-                                        numVersionID,
-                                        0,
-                                        0,
-                                        "",
-                                        "rrr")
-                                    UC_versionImageViewer2.Visible = True
-                                End If
+        'Dim extensions As New List(Of String)
+        'extensions.Add("*.png")
+        'extensions.Add("*.jpg")
+        'extensions.Add("*.jpeg")
+        '' And so on, until all are in...
 
-                            End If
+        'Try
+        '    'Reading the values of Options from the OptionsContainer in a muli-dimentional array
+        '    Dim strOptionsList As String = UC_OptionsContainer.GetSelectedOptions()
+        '    CleanOptionString(strOptionsList)
+        '    If Not [String].IsNullOrEmpty(strOptionsList) Then
+        '        Dim numPrice As Single = VersionsBLL.GetCombinationPrice(ProductID, strOptionsList)
+        '        Dim numVersionID As Integer = GetCombinationVersionID_s(ProductID, strOptionsList)
 
-                            '    UC_versionMediaGallery.ParentType = "v"
-                            '    UC_versionMediaGallery.ParentID = numVersionID
+        '        If numVersionID <> 0 Then
 
-                            '    '-------------------------------------
-                            '    'MEDIA POPUP
-                            '    '-------------------------------------
-                            '    'We set width and height later with
-                            '    'javascript, as popup size will vary
-                            '    'depending on the media type
+        '            Session("numVersionID") = numVersionID
 
-                            '    'UC_PopUpMedia.SetTitle = _ProductName 'blank this out to match Foundation popup for large images which has no title
-                            '    UC_versionPopupMedia.SetMediaPath = numVersionID
+        '            Dim versionImagesPath As String = HttpContext.Current.Server.MapPath("~") & "\Images\Products\" & ProductID & "\" & numVersionID
+        '            If Directory.Exists(versionImagesPath) Then
 
-                            '    UC_versionPopupMedia.PreLoadPopup()
+        '                Dim fileCount As Integer
+        '                For i As Integer = 0 To extensions.Count - 1
+        '                    fileCount += Directory.GetFiles(versionImagesPath, extensions(i), SearchOption.AllDirectories).Length
+        '                Next
 
-                            '    updImages.Update()
-                            '    'updVersionImages.Update()
-                        End If
-                    End If
-                End If
-            End If
+        '                'updImages
 
-        Catch ex As Exception
-            Debug.Print(ex.Message)
-        End Try
+        '                If fileCount > 0 Then
+        '                    Dim UC_ImageView As New ImageViewer
+        '                    Dim updProduct As UpdatePanel
+        '                    updProduct = TryCast(Me.Parent.Parent.Parent.Parent.Parent, UpdatePanel)
+        '                    Dim updImages As UpdatePanel
+        '                    Dim phdVersionImages As PlaceHolder
+        '                    updImages = TryCast(updProduct.FindControl("updImages"), UpdatePanel)
+
+        '                    updImages.Visible = False
+
+        '                    phdVersionImages = TryCast(updProduct.FindControl("phdVersionImages"), PlaceHolder)
+        '                    phdVersionImages.Visible = True
+
+        '                    'updImages.Visible = False
+        '                    'updVersionImages.Visible = True
+        '                    '
+        '                    Dim UC_versionImageViewer2, UC_versionImageViewer As ImageViewer
+        '                    'Dim UC_versionMediaGallery As UserControls_Front_MediaGallery
+        '                    'Dim UC_versionPopupMedia As UserControls_General_PopupMessage
+        '                    UC_versionImageViewer = TryCast(phdVersionImages.FindControl("UC_VersionImageViewer"), ImageViewer)
+        '                    UC_versionImageViewer2 = TryCast(phdVersionImages.FindControl("UC_VersionImageViewer2"), ImageViewer)
+        '                    'UC_versionMediaGallery = TryCast(phdVersionImages.FindControl("UC_VersionMediaGallery"), UserControls_Front_MediaGallery)
+        '                    'UC_versionPopupMedia = TryCast(phdVersionImages.FindControl("UC_VersionPopUpMedia"), UserControls_General_PopupMessage)
+
+        '                    UC_versionImageViewer.CreateImageViewer(IMAGE_TYPE.enum_VersionImage, numVersionID,
+        '                                                          KartSettingsManager.GetKartConfig("frontend.display.images.normal.height"),
+        '                                                          KartSettingsManager.GetKartConfig("frontend.display.images.normal.width"),
+        '                                                          "",
+        '                                                          "", ,
+        '                                                          "")
+
+        '                    If KartSettingsManager.GetKartConfig("frontend.display.images.large.linktype") = "n" Then
+
+        '                    Else
+        '                        'If tblProducts.Rows(0)("P_Desc").ToString.Contains("<overridelargeimagelinktype>") Then
+        '                        If CBool(ObjectConfigBLL.GetValue("K:product.showlargeimageinline", ProductID)) Then
+        '                            'Override triggered - for MTMC large images
+        '                            UC_versionImageViewer.Visible = False
+
+        '                            'Need to override the Foundation column widths
+        '                            'To make sure both full 12 width, so image
+        '                            'stacks over text
+        '                            'litImageColumnClasses.Text = "imagecolumn small-12 columns"
+        '                            'litTextColumnClasses.Text = "textcolumn small-12 columns"
+
+        '                            'Set full size image visible
+        '                            UC_versionImageViewer2.CreateImageViewer(IMAGE_TYPE.enum_VersionImage,
+        '                                numVersionID,
+        '                                0,
+        '                                0,
+        '                                "",
+        '                                "rrr")
+        '                            UC_versionImageViewer2.Visible = True
+        '                        End If
+
+        '                    End If
+
+        '                    '    UC_versionMediaGallery.ParentType = "v"
+        '                    '    UC_versionMediaGallery.ParentID = numVersionID
+
+        '                    '    '-------------------------------------
+        '                    '    'MEDIA POPUP
+        '                    '    '-------------------------------------
+        '                    '    'We set width and height later with
+        '                    '    'javascript, as popup size will vary
+        '                    '    'depending on the media type
+
+        '                    '    'UC_PopUpMedia.SetTitle = _ProductName 'blank this out to match Foundation popup for large images which has no title
+        '                    '    UC_versionPopupMedia.SetMediaPath = numVersionID
+
+        '                    '    UC_versionPopupMedia.PreLoadPopup()
+
+        '                    '    updImages.Update()
+        '                    '    'updVersionImages.Update()
+        '                End If
+        '            End If
+        '        End If
+        '    End If
+
+        'Catch ex As Exception
+        '    Debug.Print(ex.Message)
+        'End Try
     End Sub
 
     ''' <summary>
@@ -932,7 +961,7 @@ Partial Class ProductVersions
         If Not [String].IsNullOrEmpty(strOptionsList) Then
 
             Dim numPrice As Single = VersionsBLL.GetCombinationPrice(ProductID, strOptionsList)
-            Dim numVersionID As Integer = GetCombinationVersionID_s(ProductID, strOptionsList)
+            numVersionID = GetCombinationVersionID_s(ProductID, strOptionsList)
 
             numPrice = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), GetPriceWithGroupDiscount(numVersionID, numPrice))
 
@@ -943,8 +972,8 @@ Partial Class ProductVersions
                 PricePreview(numPrice)
                 phdNoValidCombinations.Visible = False 'hide the no-valid-combinations message
                 updPricePanel.Update()
-
-                CheckCombinationsImages()
+                'CheckCombinationsImages(numVersionID)
+                If numVersionID <> -1 Then CheckCombinationsImages(numVersionID)
             Else
                 HidePriceForInvalidCombination()
                 phdNotOutOfStock4.Visible = False
@@ -1116,7 +1145,7 @@ Partial Class ProductVersions
 
             'Set the command argument for this item based
             'We use this for stock notifications popup
-            Dim numVersionID As Int64 = GetCombinationVersionID_s(_ProductID, strOptionString) 'This will find version ID for combination
+            numVersionID = GetCombinationVersionID_s(_ProductID, strOptionString) 'This will find version ID for combination
             If numVersionID = 0 Then numVersionID = UC_AddToBasketQty4.VersionID 'Combination ID will be zero if options product, so just grab base Version ID
             btnNotifyMe4.CommandArgument = FormatStockNotificationDetails(numVersionID, _ProductID, "", Request.RawUrl.ToString.ToLower, Session("LANG"))
         End If
@@ -1144,6 +1173,26 @@ Partial Class ProductVersions
             If strOptionString.EndsWith(",") Then strOptionString = strOptionString.TrimEnd((","))
             If strOptionString.StartsWith(",") Then strOptionString = strOptionString.TrimStart((","))
         End If
+
+        '' ------------------------------------------
+        '' Code to remove the duplicate options.
+        Dim arrOptions() As String = strOptionString.Split(",")
+        For i As Integer = 0 To arrOptions.Length - 1
+            For j As Integer = 0 To i
+                If i <> j Then
+                    If arrOptions(j) = arrOptions(i) Then arrOptions(j) = ""
+                End If
+            Next
+        Next
+        Dim sbdOptions As New StringBuilder("")
+        For i As Integer = 0 To arrOptions.Length - 1
+            If arrOptions(i) <> "" Then
+                sbdOptions.Append(arrOptions(i))
+                If i <> arrOptions.Length - 1 Then sbdOptions.Append(",")
+            End If
+        Next
+        strOptionString = sbdOptions.ToString()
+        '' ------------------------------------------
     End Sub
 
     ''' <summary>
@@ -1198,9 +1247,7 @@ Partial Class ProductVersions
                 UC_StockNotification.VersionName = Server.UrlDecode(aryStockNotificationDetails(2))
                 UC_StockNotification.PageLink = Server.UrlDecode(aryStockNotificationDetails(3))
                 UC_StockNotification.LanguageID = CByte(aryStockNotificationDetails(4))
-
                 UC_StockNotification.ShowStockNotificationsPopup()
-
 
                 Exit Select
         End Select

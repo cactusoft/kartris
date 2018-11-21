@@ -12,6 +12,11 @@ SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
+-- =============================================
+-- Author:		Paul
+-- Create date: 25/10/2018
+-- Description:	Gets newest products
+-- =============================================
 ALTER PROCEDURE [dbo].[spKartrisProducts_GetNewestProducts]
 	(
 	@LANG_ID tinyint
@@ -37,6 +42,47 @@ BEGIN
 			  tblKartrisCategories ON tblKartrisProductCategoryLink.PCAT_CategoryID = tblKartrisCategories.CAT_ID
 	WHERE (tblKartrisCategories.CAT_CustomerGroupID IS NULL) AND (tblKartrisVersions.V_CustomerGroupID IS NULL) 
 	ORDER BY products.P_ID DESC
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_UpdateCombinationVersion]    Script Date: 20/11/2018 12:23:12 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: 20/11/2018
+-- Description:	Updates a combination version
+-- Modified in Kartris v3 to force as type 'c',
+-- so when saving a suspended combination, it 
+-- automatically updates it to live again.
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisVersions_UpdateCombinationVersion]
+(
+	@ID as bigint,
+	@Name as nvarchar(50), 
+	@CodeNumber as nvarchar(50),
+	@Price as real,
+	@StockQty as real,
+	@QtyWarnLevel as real,
+	@Live as bit,
+	@V_BulkUpdateTimeStamp as datetime = NULL
+)
+AS
+BEGIN
+	SET NOCOUNT ON;
+	
+	UPDATE tblKartrisVersions
+	SET V_CodeNumber = @CodeNumber, V_Price = @Price, V_Quantity = @StockQty, V_QuantityWarnLevel = @QtyWarnLevel, V_Live = @Live,
+	V_BulkUpdateTimeStamp = Coalesce(@V_BulkUpdateTimeStamp, GetDate()),
+	V_Type = 'c'
+	WHERE V_ID = @ID;
+
+	UPDATE tblKartrisLanguageElements
+	SET LE_Value = @Name
+
+	WHERE LE_TypeID = 1 AND LE_FieldID = 1 AND LE_ParentID = @ID;
 END
 GO
 
