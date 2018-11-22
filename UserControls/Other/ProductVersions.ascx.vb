@@ -747,19 +747,32 @@ Partial Class ProductVersions
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub UC_OptionsContainer_Event_OptionPriceChanged(ByVal pOptionPrice As Single) Handles UC_OptionsContainer.Event_OptionPriceChanged
+        'Reading the values of Options from the OptionsContainer in a muli-dimentional array
+        Dim strOptionsList As String = UC_OptionsContainer.GetSelectedOptions()
+        CleanOptionString(strOptionsList)
+
         If UC_OptionsContainer.IsUsingCombinationPrices Then
-            Dim strOptionsList As String = UC_OptionsContainer.GetSelectedOptions()
             GetCombinationPrice()
         Else
             AddOptionsPrice(pOptionPrice)
         End If
 
+
+        If Not [String].IsNullOrEmpty(strOptionsList) Then
+            numVersionID = GetCombinationVersionID_s(ProductID, strOptionsList)
+            If numVersionID <> -1 Then CheckCombinationsImages(numVersionID)
+
+        End If
     End Sub
 
     ''' <summary>
     ''' Check if there is a combination image for the selected item
     ''' </summary>
     Sub CheckCombinationsImages(ByVal numVersionID As Int64)
+        Dim extensions As New List(Of String)
+        extensions.Add("*.png")
+        extensions.Add("*.jpg")
+        extensions.Add("*.jpeg")
 
         'Let's find and create some objects we'll need to manipulate
         Dim updProduct As UpdatePanel
@@ -777,39 +790,53 @@ Partial Class ProductVersions
 
         'phdCombinationImage.Controls.Clear()
 
-        'Now let's set the image control to find a combination image,
-        'if it exists
-        Dim UC_ImageView As New ImageViewer
+        Dim versionImagesPath As String = HttpContext.Current.Server.MapPath("~") & "\Images\Products\" & ProductID & "\" & numVersionID
+        If Directory.Exists(versionImagesPath) Then
+
+            Dim fileCount As Integer
+            For i As Integer = 0 To Extensions.Count - 1
+                fileCount += Directory.GetFiles(versionImagesPath, Extensions(i), SearchOption.AllDirectories).Length
+            Next
+
+            'updImages
+
+            If fileCount > 0 Then
+                'Now let's set the image control to find a combination image,
+                'if it exists
+                Dim UC_ImageView As New ImageViewer
 
 
-        UC_ImageView = CType(updImages.FindControl("UC_CombinationImage"), ImageViewer)
-        UC_ImageView.ClearImages()
-        UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_VersionImage,
-                          numVersionID,
-                          KartSettingsManager.GetKartConfig("frontend.display.images.normal.height"),
-                          KartSettingsManager.GetKartConfig("frontend.display.images.normal.width"),
-                          "",
-                          _ProductID,
-                          ImageViewer.SmallImagesType.enum_ImageButton)
+                UC_ImageView = CType(updImages.FindControl("UC_CombinationImage"), ImageViewer)
+                UC_ImageView.ClearImages()
+                UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_VersionImage,
+                                  numVersionID,
+                                  KartSettingsManager.GetKartConfig("frontend.display.images.normal.height"),
+                                  KartSettingsManager.GetKartConfig("frontend.display.images.normal.width"),
+                                  "",
+                                  _ProductID,
+                                  ImageViewer.SmallImagesType.enum_ImageButton)
 
-        'Hide whole image and container if no image available, otherwise can end up
-        'with small square visible if there is a border and background set for the 
-        'image holder in CSS
-        If numVersionID > -1 Then
-            litTest.Text = numVersionID & " --- " & Now()
-            phdCombinationImage.Visible = True
-            phdMainImages.Visible = False
+                'Hide whole image and container if no image available, otherwise can end up
+                'with small square visible if there is a border and background set for the 
+                'image holder in CSS
+                If numVersionID > -1 Then
+                    litTest.Text = numVersionID & " --- " & Now()
+                    phdCombinationImage.Visible = True
+                    phdMainImages.Visible = False
+                Else
+                    phdCombinationImage.Visible = False
+                    phdMainImages.Visible = True
+                End If
+
+                updImages.Update()
+            Else
+                phdCombinationImage.Visible = False
+                phdMainImages.Visible = True
+            End If
         Else
             phdCombinationImage.Visible = False
             phdMainImages.Visible = True
         End If
-
-
-
-
-        updImages.Update()
-
-
 
         'Dim strWebShopURL As String = CkartrisBLL.WebShopURL
 
@@ -972,8 +999,6 @@ Partial Class ProductVersions
                 PricePreview(numPrice)
                 phdNoValidCombinations.Visible = False 'hide the no-valid-combinations message
                 updPricePanel.Update()
-                'CheckCombinationsImages(numVersionID)
-                If numVersionID <> -1 Then CheckCombinationsImages(numVersionID)
             Else
                 HidePriceForInvalidCombination()
                 phdNotOutOfStock4.Visible = False

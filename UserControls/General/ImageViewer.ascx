@@ -27,18 +27,6 @@
                     </ul>
                     <div class="spacer">
                     </div>
-                    <script>
-                        $('.open-clearing').on('click', function (e) {
-                            e.preventDefault();
-                            $('[data-clearing] li img').eq($(this).data('thumb-index')).trigger('click');
-                        });
-                        $(document.body).on("open.fndtn.clearing", function (event) {
-                            $(".updateprogress").show();
-                        });
-                        $(document.body).on("opened.fndtn.clearing", function (event) {
-                            $(".updateprogress").hide();
-                        });
-                    </script>
                     <div class="updateprogress" style="display:none;">
                         <div class="loadingimage"></div>
                     </div>
@@ -55,3 +43,35 @@
         </ContentTemplate>
     </asp:UpdatePanel>
 </div>
+<script>
+    function openClearingEventListeners() {
+        $('.open-clearing').on('click', function (e) {
+            e.preventDefault();
+            $('[data-clearing] li img').eq($(this).data('thumb-index')).trigger('click');
+        });
+        $(document.body).on("open.fndtn.clearing", function (event) {
+            $(".updateprogress").show();
+        });
+        $(document.body).on("opened.fndtn.clearing", function (event) {
+            $(".updateprogress").hide();
+        });
+    }
+
+    $(function () {
+        openClearingEventListeners();
+    });
+
+    var prm = Sys.WebForms.PageRequestManager.getInstance();
+        prm.add_endRequest(function (s, e) {
+
+            // Refreshing foundation after postback
+            // after getting images (solves the problem of images appearing big)
+            if ($('[data-clearing] li img').closest("ul").hasClass("clearing-thumbs")) {
+                $(document).foundation();
+            }
+
+            openClearingEventListeners();
+
+        });
+
+</script>
