@@ -342,6 +342,10 @@ Partial Class ImageViewer
                         '---------------------------------------
                         'IN 'AJAX' LARGE VIEW MODE
                         '---------------------------------------
+                        ' Fixes old big image staying on top of the new one
+                        If Not String.IsNullOrEmpty(litMainImage.Text) Then
+                            litMainImage.Text = ""
+                        End If
                         litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div class=""imageholder hand"" " &
                         "style=""height: " & numImageHeightMax & "px; max-width: 100%; max-height: 100%;"">"
                         litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" & strImageMainViewStart & """ />" & vbCrLf
