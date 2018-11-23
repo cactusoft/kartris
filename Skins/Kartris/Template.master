@@ -45,7 +45,8 @@
 				<asp:ScriptReference Path="~/JavaScript/k29003/modernizr.js" />
 				<asp:ScriptReference Path="~/JavaScript/k29003/jquery.js" />
 				<asp:ScriptReference Path="~/JavaScript/k29003/foundation.min.js" />
-				<asp:ScriptReference Path="~/JavaScript/k29003/fastclick.js" />
+                <%-- Fastclick was breaking DropdownLists in Firefox, we had to double click the dropdowns do trigger them --%>
+				<%--<asp:ScriptReference Path="~/JavaScript/k29003/fastclick.js" />--%>
 			</Scripts>
 		</ajaxToolkit:ToolkitScriptManager>
 		<script type="text/javascript">
