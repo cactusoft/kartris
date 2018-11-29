@@ -24,7 +24,12 @@ Partial Class UserControls_Front_AdminBar
     Inherits System.Web.UI.UserControl
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
- 
+
+
+        If (Not Me.IsPostBack) AndAlso Application("subsiteId") > 0 Then
+            phdExitSubSitePreview.Visible = True
+        End If
+
         If (Not Me.IsPostBack) AndAlso HttpSecureCookie.IsBackendAuthenticated Then
 
             Dim strResolvedFrontEndURL As String = ""
@@ -81,4 +86,13 @@ Partial Class UserControls_Front_AdminBar
 
     End Sub
 
+
+    Protected Sub lnkExitSubsitePreview_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkExitSubsitePreview.Click
+
+        If Application("subsiteId") > 0 Then
+            Application("subsiteId") = 0
+            Response.Redirect("~/Admin/_Default.aspx")
+        End If
+
+    End Sub
 End Class

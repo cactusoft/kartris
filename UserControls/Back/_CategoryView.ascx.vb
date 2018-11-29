@@ -12,6 +12,7 @@
 'overrides the GPL v2.
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
+Imports System.Net
 Imports CkartrisDataManipulation
 Imports CkartrisEnumerations
 
@@ -41,8 +42,10 @@ Partial Class _CategoryView
             If _GetSiteID() <> 0 Then
                 phdCategoryHeader.Visible = False
                 phdEditCategory.Visible = False
+                lnkPreview.Visible = False
                 phdEditSubsite.Visible = True
                 phdSubsiteHeader.Visible = True
+                lnkPreviewSubsite.Visible = True
                 Dim subsiteDT As DataTable = SubSitesBLL.GetSubSiteByID(_GetSiteID)
                 If subsiteDT.Rows.Count = 0 Then
                     RedirectToMainCategory()
@@ -57,11 +60,11 @@ Partial Class _CategoryView
                     LoadProducts() '' Only if its not the main category will show the products
                 End If
             ElseIf _GetCategoryID() <> 0 Then
-                    If CategoriesBLL._GetByID(_GetCategoryID()).Rows.Count = 0 Then RedirectToMainCategory()
-                    litCatName.Text = CategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG"))
-                    LoadProducts() '' Only if its not the main category will show the products
-                Else
-                    phdBreadCrumbTrail.Visible = False
+                If CategoriesBLL._GetByID(_GetCategoryID()).Rows.Count = 0 Then RedirectToMainCategory()
+                litCatName.Text = CategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG"))
+                LoadProducts() '' Only if its not the main category will show the products
+            Else
+                phdBreadCrumbTrail.Visible = False
                 phdEditCategory.Visible = True
                 phdProducts.Visible = False '' if categoryID = 0 then no products under it directly
             End If
@@ -498,6 +501,26 @@ Partial Class _CategoryView
                 Catch ex As Exception
                 End Try
         End Select
+    End Sub
+
+    Protected Sub lnkPreviewSubsite_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkPreviewSubsite.Click
+
+        If _GetCategoryID() <> 0 And _GetSiteID() <> 0 Then
+            Dim cookies As CookieContainer = New CookieContainer()
+            Dim portNumber As String = ""
+            Dim portNumberArray = CkartrisBLL.WebShopURL.Split(":")
+            If portNumberArray.Count > 1 Then
+                portNumber = portNumberArray(2)
+            End If
+
+            Dim subsiteDT As DataTable = SubSitesBLL.GetSubSiteByID(_GetSiteID)
+            Dim stringUrl As String = portNumberArray(0) & "://" & subsiteDT.Rows.Item(0).Item("SUB_Domain") & "/Category.aspx?CategoryID=" & _GetCategoryID() & "&SiteID=" & _GetSiteID()
+
+            Application("subsiteId") = _GetSiteID()
+
+            Response.Redirect(stringUrl)
+
+        End If
     End Sub
 
     Protected Sub lnkBtnModifyPage_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnModifyPage.Click

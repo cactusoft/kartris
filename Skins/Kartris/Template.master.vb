@@ -17,6 +17,9 @@ Partial Public Class Skin_Kartris_Template
         baseTag.Attributes("href") = CkartrisBLL.WebShopURL()
         lnkFavIcon1.Href = CkartrisBLL.WebShopURL() & "favicon.ico"
         If Not Page.IsPostBack Then UC_AdminBar.Visible = HttpSecureCookie.IsBackendAuthenticated
+        If Application("subsiteId") > 0 Then
+            UC_AdminBar.Visible = True
+        End If
     End Sub
 
 End Class

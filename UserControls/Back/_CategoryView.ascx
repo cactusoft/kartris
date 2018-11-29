@@ -432,6 +432,9 @@
                                 <asp:HyperLink ID="lnkPreview" runat="server" CssClass="button previewbutton"
                                     Text='<%$ Resources: _Kartris, FormButton_Preview %>' ToolTip='<%$ Resources: _Kartris, FormButton_Preview %>'
                                     Target="_blank" />
+                                <asp:LinkButton ID="lnkPreviewSubsite" runat="server" visible="false" CssClass="button previewbutton"
+                                    Text='<%$ Resources: _Kartris, FormButton_Preview %>' ToolTip='<%$ Resources: _Kartris, FormButton_Preview %>'
+                                    Target="_blank" />
                             </div>
                         </asp:View>
                         <asp:View ID="viwCategoryDetails" runat="server">
