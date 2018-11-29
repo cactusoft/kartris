@@ -31,19 +31,13 @@
 				<asp:HyperLink ID="lnkMenuMain" runat="server" NavigateUrl="~/Admin/_Default.aspx"
 					Text="" ToolTip="<%$ Resources: AdminBar_ViewBackend %>" CssClass="KartrisMenu-Link"></asp:HyperLink>
 
-                <% 'Extra category links %>
-				<asp:PlaceHolder ID="phdExitSubSitePreview" runat="server" Visible="false">
-					<ul class="KartrisSubMenu">
-						<li class="KartrisMenu-Leaf">
-							<asp:LinkButton ID="lnkExitSubsitePreview" runat="server" ToolTip="Exit Subsite Preview"
-								Text="Exit Subsite Preview"></asp:LinkButton>
-						</li>
-					</ul>
-				</asp:PlaceHolder>
-
 				<% 'Extra category links %>
 				<asp:PlaceHolder ID="phdCategoryLink" runat="server" Visible="false">
 					<ul class="KartrisSubMenu">
+                        <li class="KartrisMenu-Leaf">
+							<asp:LinkButton ID="lnkExitSubsitePreview" runat="server" ToolTip="Exit Subsite Preview"
+								Text="Exit Subsite Preview"></asp:LinkButton>
+						</li>
 						<li class="KartrisMenu-Leaf">
 							<asp:HyperLink ID="lnkNavigateToCategory" runat="server" ToolTip="<%$ Resources: AdminBar_NavigateToCategory %>"
 								Text="<%$ Resources: AdminBar_NavigateToCategory %>"></asp:HyperLink>

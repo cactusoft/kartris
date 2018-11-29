@@ -514,7 +514,7 @@ Partial Class _CategoryView
             End If
 
             Dim subsiteDT As DataTable = SubSitesBLL.GetSubSiteByID(_GetSiteID)
-            Dim stringUrl As String = portNumberArray(0) & "://" & subsiteDT.Rows.Item(0).Item("SUB_Domain") & "/Category.aspx?CategoryID=" & _GetCategoryID() & "&SiteID=" & _GetSiteID()
+            Dim stringUrl As String = "~/Category.aspx?CategoryID=" & _GetCategoryID() & "&SiteID=" & _GetSiteID()
 
             Application("subsiteId") = _GetSiteID()
 
