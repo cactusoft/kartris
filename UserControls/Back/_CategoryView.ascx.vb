@@ -38,12 +38,30 @@ Partial Class _CategoryView
         lnkPreview.NavigateUrl = "~/Category.aspx?CategoryID=" & _GetCategoryID()
 
         If Not Page.IsPostBack Then
-            If _GetCategoryID() <> 0 Then
-                If CategoriesBLL._GetByID(_GetCategoryID()).Rows.Count = 0 Then RedirectToMainCategory()
-                litCatName.Text = CategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG"))
-                LoadProducts() '' Only if its not the main category will show the products
-            Else
-                phdBreadCrumbTrail.Visible = False
+            If _GetSiteID() <> 0 Then
+                phdCategoryHeader.Visible = False
+                phdEditCategory.Visible = False
+                phdEditSubsite.Visible = True
+                phdSubsiteHeader.Visible = True
+                Dim subsiteDT As DataTable = SubSitesBLL.GetSubSiteByID(_GetSiteID)
+                If subsiteDT.Rows.Count = 0 Then
+                    RedirectToMainCategory()
+                Else
+                    litSubsiteName.Text = subsiteDT.Rows.Item(0).Item("SUB_Name") & " Categories"
+                End If
+
+
+                If _GetCategoryID() <> 0 Then
+                    If CategoriesBLL._GetByID(_GetCategoryID()).Rows.Count = 0 Then RedirectToMainCategory()
+                    'litCatName.Text = CategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG"))
+                    LoadProducts() '' Only if its not the main category will show the products
+                End If
+            ElseIf _GetCategoryID() <> 0 Then
+                    If CategoriesBLL._GetByID(_GetCategoryID()).Rows.Count = 0 Then RedirectToMainCategory()
+                    litCatName.Text = CategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG"))
+                    LoadProducts() '' Only if its not the main category will show the products
+                Else
+                    phdBreadCrumbTrail.Visible = False
                 phdEditCategory.Visible = True
                 phdProducts.Visible = False '' if categoryID = 0 then no products under it directly
             End If
@@ -491,6 +509,18 @@ Partial Class _CategoryView
             Response.Redirect("_ModifyCategory.aspx?CategoryID=" & _GetCategoryID() & "&strParent=0")
         Else
             Response.Redirect("_ModifyCategory.aspx?CategoryID=" & _GetCategoryID() & "&strParent=" & _GetParentCategory())
+        End If
+    End Sub
+
+    Protected Sub lnkBtnModifySubsite_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnModifySubsite.Click
+        If _GetSiteID() = 0 Then
+            _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.Categories, False, _GetCategoryID())
+            mvwCategory.SetActiveView(viwCategoryDetails)
+            updCategoryViews.Update()
+            'ElseIf CStr(_GetParentCategory()) = "" Then
+            '    Response.Redirect("_ModifySubSiteStatus.aspx?SubSiteID=" & _GetCategoryID() & "0")
+        Else
+            Response.Redirect("_ModifySubSiteStatus.aspx?SubSiteID=" & _GetSiteID() & "")
         End If
     End Sub
 

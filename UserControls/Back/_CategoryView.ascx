@@ -17,9 +17,19 @@
                                     Text='<%$ Resources: _Kartris, FormButton_Edit %>' />
                             </div>
                         </asp:PlaceHolder>
-                        <h1>
-                            <asp:Literal ID="litCatName" runat="server" Text="<%$ Resources:_Category, BackMenu_Categories %>"
-                                EnableViewState="False" /></h1>
+                        <asp:PlaceHolder ID="phdEditSubsite" runat="server" Visible="false">
+                            <div class="floatright rightpad">
+                                <asp:LinkButton CssClass="linkbutton icon_edit" ID="lnkBtnModifySubsite" runat="server"
+                                    CommandName="ModifySubSite" ToolTip="<%$ Resources:_Category, ContentText_ModifyThePage %>"
+                                    Text='<%$ Resources: _Kartris, FormButton_Edit %>' />
+                            </div>
+                        </asp:PlaceHolder>
+                        <asp:PlaceHolder ID="phdCategoryHeader" runat="server" Visible="true">
+                            <h1><asp:Literal ID="litCatName" runat="server" Text="<%$ Resources:_Category, BackMenu_Categories %>" EnableViewState="False" /></h1>
+                        </asp:PlaceHolder>
+                        <asp:PlaceHolder ID="phdSubsiteHeader" runat="server" Visible="true">
+                            <h1><asp:Literal ID="litSubsiteName" runat="server" Text="<%$ Resources:_Category, BackMenu_Categories %>" EnableViewState="False" /></h1>
+                        </asp:PlaceHolder>
                         <asp:PlaceHolder ID="phdBreadCrumbTrail" runat="server">
                             <div class="breadcrumbtrail">
                                 <asp:SiteMapPath ID="smpMain" PathSeparator="&nbsp;" SiteMapProvider="_CategorySiteMapProvider"
