@@ -957,3 +957,139 @@ GO
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
+
+
+ALTER VIEW [dbo].[vKartrisVersionsStock]
+AS
+SELECT        V_ID, V_Quantity, V_QuantityWarnLevel, V_Type, HasCombinations
+FROM            (SELECT        dbo.tblKartrisVersions.V_ID, dbo.tblKartrisVersions.V_Quantity, dbo.tblKartrisVersions.V_QuantityWarnLevel, dbo.tblKartrisVersions.V_Type, CASE WHEN EXISTS
+                                                        (SELECT        TOP 1 1
+                                                          FROM            tblKartrisVersions MyTableCheck
+                                                          WHERE        MyTableCheck.V_ProductID = tblKartrisVersions.V_ProductID AND MyTableCheck.V_Type = 'c') THEN 1 ELSE 0 END AS HasCombinations
+                          FROM            dbo.tblKartrisCategories INNER JOIN
+                                                    dbo.tblKartrisProductCategoryLink ON dbo.tblKartrisCategories.CAT_ID = dbo.tblKartrisProductCategoryLink.PCAT_CategoryID INNER JOIN
+                                                    dbo.tblKartrisProducts ON dbo.tblKartrisProductCategoryLink.PCAT_ProductID = dbo.tblKartrisProducts.P_ID INNER JOIN
+                                                    dbo.tblKartrisVersions ON dbo.tblKartrisProducts.P_ID = dbo.tblKartrisVersions.V_ProductID
+                          WHERE        (dbo.tblKartrisCategories.CAT_Live = 1) AND (dbo.tblKartrisProducts.P_Live = 1) AND (dbo.tblKartrisVersions.V_Live = 1)) AS viewVersions
+GROUP BY V_ID, V_Quantity, V_QuantityWarnLevel, V_Type, HasCombinations
+GO
+
+
+ALTER PROCEDURE [dbo].[_spKartrisDB_GetTaskList]
+(	
+	@NoOrdersToInvoice as int OUTPUT,
+	@NoOrdersNeedPayment as int OUTPUT,
+	@NoOrdersToDispatch as int OUTPUT,
+	@NoStockWarnings as int OUTPUT,
+	@NoOutOfStock as int OUTPUT,
+	--@NoEndOfLine as int OUTPUT,
+	@NoReviewsWaiting as int OUTPUT,
+	@NoAffiliatesWaiting as int OUTPUT,
+	@NoCustomersWaitingRefunds as int OUTPUT,
+	@NoCustomersInArrears as int OUTPUT,
+	@NoCustomersToAnonymize as int OUTPUT
+)
+AS
+BEGIN
+	SELECT @NoOrdersToInvoice = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Invoiced = 'False' AND O_Paid = 'False' AND O_Sent = 'True' AND O_Cancelled = 'False';
+	SELECT @NoOrdersNeedPayment = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Paid = 'False' AND O_Invoiced = 'True' AND O_Sent = 'True' AND O_Cancelled = 'False';
+	SELECT @NoOrdersToDispatch = Count(O_ID) FROM dbo.tblKartrisOrders WHERE O_Sent = 'True' AND O_Paid = 'True' AND O_Shipped = 'False' AND O_Cancelled = 'False';
+	
+	SELECT @NoStockWarnings = Count(V_ID) FROM dbo.vKartrisVersionsStock WHERE V_QuantityWarnLevel >= V_Quantity AND V_QuantityWarnLevel <> 0 AND NOT (HasCombinations = 1 AND V_Type = 'b') 
+		AND [dbo].[fnKartrisObjectConfig_GetValueByParent]('K:version.endofline', V_ID) IS NULL;
+	SELECT @NoOutOfStock = Count(V_ID) FROM dbo.vKartrisVersionsStock WHERE V_Quantity = 0 AND V_QuantityWarnLevel <> 0  AND NOT (HasCombinations = 1 AND V_Type = 'b') 
+		AND [dbo].[fnKartrisObjectConfig_GetValueByParent]('K:version.endofline', V_ID) IS NULL;
+	
+	--SELECT @NoEndOfLine = Count(V_ID) 
+	--FROM dbo.tblKartrisVersions INNER JOIN dbo.tblKartrisProducts ON V_ProductID = P_ID 
+	--WHERE (V_Quantity = 0) AND (V_QuantityWarnLevel <> 0) AND P_Live = 1 AND V_Live = 1 
+	--	AND [dbo].[fnKartrisObjectConfig_GetValueByParent]('K:version.endofline', V_ID) = 1;
+
+	SELECT @NoReviewsWaiting = Count(REV_ID) FROM dbo.tblKartrisReviews WHERE REV_Live = 'a';
+	SELECT @NoAffiliatesWaiting  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_IsAffiliate = 'True' AND U_AffiliateCommission = 0;
+	SELECT @NoCustomersWaitingRefunds  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance > 0;
+	SELECT @NoCustomersInArrears  = Count(U_ID) FROM dbo.tblKartrisUsers WHERE U_CustomerBalance < 0;
+	
+	DECLARE @days_purgeguestaccounts AS INT;
+	SELECT @days_purgeguestaccounts = CFG_Value FROM tblKartrisConfig
+	WHERE CFG_Name = 'general.gdpr.purgeguestaccounts'
+	SELECT @NoCustomersToAnonymize  = Count(U_ID) FROM tblKartrisUsers 
+		FULL OUTER JOIN tblKartrisOrders 
+		ON O_CustomerID = U_ID
+		WHERE U_GDPR_IsGuest = 1
+		AND DATEDIFF(day, O_LastModified,GETDATE()) > @days_purgeguestaccounts
+		AND U_EmailAddress NOT LIKE 'GDPR Anonymized | %'
+		AND (O_Shipped = 1 OR O_Cancelled = 1 OR O_Paid = 0)
+
+END
+
+GO
+
+
+
+ALTER VIEW [dbo].[vKartrisCategoryProductsVersionsLink]
+AS
+SELECT        P_ID, P_OrderVersionsBy, P_VersionsSortDirection, P_VersionDisplayType, P_Type, T_Taxrate, CAT_ID, P_Live, CAT_Live, V_Live, V_ID, V_CodeNumber, V_Price, V_Tax, V_Weight, V_DeliveryTime, V_Quantity, 
+                         V_QuantityWarnLevel, V_DownLoadInfo, V_DownloadType, V_RRP, V_OrderByValue, V_Type, V_CustomerGroupID, P_Featured, P_SupplierID, P_CustomerGroupID, P_Reviews, P_AverageRating, P_DateCreated, 
+                         V_CustomizationType, V_CustomizationDesc, V_CustomizationCost, T_TaxRate2, CAT_CustomerGroupID, HasCombinations
+FROM            (SELECT        dbo.tblKartrisProducts.P_ID, dbo.tblKartrisProducts.P_OrderVersionsBy, dbo.tblKartrisProducts.P_VersionsSortDirection, dbo.tblKartrisProducts.P_VersionDisplayType, dbo.tblKartrisProducts.P_Type, 
+                                                    tblKartrisTaxRates_1.T_Taxrate, dbo.tblKartrisProductCategoryLink.PCAT_CategoryID AS CAT_ID, dbo.tblKartrisProducts.P_Live, dbo.tblKartrisCategories.CAT_Live, dbo.tblKartrisVersions.V_Live, 
+                                                    dbo.tblKartrisVersions.V_ID, dbo.tblKartrisVersions.V_CodeNumber, dbo.tblKartrisVersions.V_Price, dbo.tblKartrisVersions.V_Tax, dbo.tblKartrisVersions.V_Weight, dbo.tblKartrisVersions.V_DeliveryTime, 
+                                                    dbo.tblKartrisVersions.V_Quantity, dbo.tblKartrisVersions.V_QuantityWarnLevel, dbo.tblKartrisVersions.V_DownLoadInfo, dbo.tblKartrisVersions.V_DownloadType, dbo.tblKartrisVersions.V_RRP, 
+                                                    dbo.tblKartrisVersions.V_OrderByValue, dbo.tblKartrisVersions.V_Type, dbo.tblKartrisVersions.V_CustomerGroupID, dbo.tblKartrisProducts.P_Featured, dbo.tblKartrisProducts.P_SupplierID, 
+                                                    dbo.tblKartrisProducts.P_CustomerGroupID, dbo.tblKartrisProducts.P_Reviews, dbo.tblKartrisProducts.P_AverageRating, dbo.tblKartrisProducts.P_DateCreated, dbo.tblKartrisVersions.V_CustomizationType, 
+                                                    dbo.tblKartrisVersions.V_CustomizationDesc, dbo.tblKartrisVersions.V_CustomizationCost, dbo.tblKartrisTaxRates.T_Taxrate AS T_TaxRate2, dbo.tblKartrisCategories.CAT_CustomerGroupID, 
+                                                    CASE WHEN EXISTS
+                                                        (SELECT        TOP 1 1
+                                                          FROM            tblKartrisVersions MyTableCheck
+                                                          WHERE        MyTableCheck.V_ProductID = tblKartrisVersions.V_ProductID AND MyTableCheck.V_Type = 'c') THEN 1 ELSE 0 END AS HasCombinations
+                          FROM            dbo.tblKartrisCategories INNER JOIN
+                                                    dbo.tblKartrisProductCategoryLink ON dbo.tblKartrisCategories.CAT_ID = dbo.tblKartrisProductCategoryLink.PCAT_CategoryID INNER JOIN
+                                                    dbo.tblKartrisProducts ON dbo.tblKartrisProductCategoryLink.PCAT_ProductID = dbo.tblKartrisProducts.P_ID LEFT OUTER JOIN
+                                                    dbo.tblKartrisVersions LEFT OUTER JOIN
+                                                    dbo.tblKartrisTaxRates AS tblKartrisTaxRates_1 ON dbo.tblKartrisVersions.V_Tax = tblKartrisTaxRates_1.T_ID LEFT OUTER JOIN
+                                                    dbo.tblKartrisTaxRates ON dbo.tblKartrisVersions.V_Tax2 = dbo.tblKartrisTaxRates.T_ID ON dbo.tblKartrisProducts.P_ID = dbo.tblKartrisVersions.V_ProductID
+                          WHERE        (dbo.tblKartrisCategories.CAT_Live = 1) AND (dbo.tblKartrisVersions.V_Live = 1) AND (dbo.tblKartrisProducts.P_Live = 1)) AS viewCategories
+GROUP BY P_ID, P_OrderVersionsBy, P_VersionsSortDirection, P_VersionDisplayType, P_Type, T_Taxrate, CAT_ID, P_Live, CAT_Live, V_Live, V_ID, V_CodeNumber, V_Price, V_Tax, V_Weight, V_DeliveryTime, V_Quantity, 
+                         V_QuantityWarnLevel, V_DownLoadInfo, V_DownloadType, V_RRP, V_OrderByValue, V_Type, V_CustomerGroupID, P_Featured, P_SupplierID, P_CustomerGroupID, P_Reviews, P_AverageRating, P_DateCreated, 
+                         V_CustomizationType, V_CustomizationDesc, V_CustomizationCost, T_TaxRate2, CAT_CustomerGroupID, HasCombinations
+GO
+
+
+
+
+ALTER PROCEDURE [dbo].[_spKartrisVersions_GetStockLevel]
+(
+	@LANG_ID tinyint
+)
+AS
+	SET NOCOUNT ON;
+SELECT DISTINCT V_ID, [dbo].[fnKartrisVersions_GetName](V_ID, @LANG_ID) As V_Name, V_CodeNumber, 
+			V_Quantity, V_QuantityWarnLevel, P_SupplierID, P_ID
+FROM           dbo.vKartrisCategoryProductsVersionsLink
+WHERE       (V_Quantity <= V_QuantityWarnLevel) AND (V_QuantityWarnLevel <> 0) AND NOT (HasCombinations = 1 AND V_Type = 'b')  
+ORDER BY V_Quantity , V_QuantityWarnLevel
+
+GO
+
+
+CREATE PROCEDURE [dbo].[_spKartrisVersions_SearchVersionsByCodeExcludeBase]
+(
+	@Key as nvarchar(50)
+)
+AS
+	SET NOCOUNT ON;
+SELECT * FROM ( SELECT V_ID, V_CodeNumber, V_Type, CASE WHEN EXISTS
+                                                                                  (SELECT        TOP 1 1
+                                                                                    FROM            tblKartrisVersions MyTableCheck
+                                                                                    WHERE        MyTableCheck.V_ProductID = tblKartrisVersions.V_ProductID AND MyTableCheck.V_Type = 'c') THEN 1 ELSE 0 END AS HasCombinations
+
+FROM            dbo.tblKartrisVersions
+WHERE        V_Type <> 's' AND V_CodeNumber LIKE '%' + @Key + '%'
+) as viewVersions
+WHERE NOT (HasCombinations = 1 AND V_Type = 'b')
+GROUP BY  V_ID, V_CodeNumber, V_Type, HasCombinations
+
+
+GO
+

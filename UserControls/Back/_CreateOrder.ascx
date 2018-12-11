@@ -146,7 +146,7 @@
             <h2>
                 <asp:Literal ID="litTabOrderSummary" runat="server" Text="<%$ Resources: _Kartris, ContentText_ItemSummary %>" /></h2>
 
-            <_user:AutoComplete runat="server" ID="_UC_AutoComplete_Item" MethodName="GetVersions" />
+            <_user:AutoComplete runat="server" ID="_UC_AutoComplete_Item" MethodName="GetVersionsExcludeBaseCombinations" />
             <asp:LinkButton CssClass="link2 icon_new" runat="server" ID="lnkBtnAddToBasket" OnClick="lnkBtnAddToBasket_Click"
                 Text="<%$ Resources:_Kartris, FormButton_Add%>" ToolTip="" />
             <_user:BasketView ID="_UC_BasketMain" runat="server" ViewType="CHECKOUT_BASKET" />

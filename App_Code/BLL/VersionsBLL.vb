@@ -138,6 +138,20 @@ Public Class VersionsBLL
         Return tbl
     End Function
 
+    Public Shared Function _SearchVersionByCodeExcludeBaseCombinations(ByVal _Key As String) As DataTable
+        Dim tbl As New DataTable
+        Try
+            tbl = Adptr._SearchByCodeExcludeBaseCombinations(_Key)
+            If tbl.Rows.Count = 0 Then
+                tbl = Adptr._SearchByCodeExcludeBaseCombinations("")
+            End If
+        Catch ex As Exception
+            'hmmm
+        End Try
+
+        Return tbl
+    End Function
+
     Public Shared Function _GetBasicVersionByProduct(ByVal _ProductID As Integer) As DataTable
         Return Adptr._GetBasicVersionByProduct(_ProductID)
     End Function

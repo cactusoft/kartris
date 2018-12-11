@@ -78,5 +78,23 @@ Public Class kartrisServices
     End Function
 
 
+    <WebMethod()>
+    <Script.Services.ScriptMethod()>
+    Public Function GetVersionsExcludeBaseCombinations(ByVal prefixText As String, ByVal count As Integer) As String()
+        Dim tblVersions As New DataTable
+        tblVersions = VersionsBLL._SearchVersionByCodeExcludeBaseCombinations(prefixText)
+
+        Dim items() As String = New String() {""}
+        Dim counter As Integer = 0
+        For Each row As DataRow In tblVersions.Rows
+            ReDim Preserve items(counter)
+            items(counter) = row("V_CodeNumber") + vbTab + "(" + CStr(row("V_ID")) + ")"
+            counter += 1
+        Next
+
+        Return items
+    End Function
+
+
 
 End Class
