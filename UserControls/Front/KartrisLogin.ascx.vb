@@ -169,6 +169,15 @@ Partial Class KartrisLogin
 
             Dim strFldEmailAddress As String = C_Email.Text
             Dim strUserPassword As String = txtUserPassword.Text
+
+            'GDPR opt in,
+            'New EU rules coming May 2018, need to get explicit permission
+            'for what you're doing with customer data.
+            Dim blnGDPR As Boolean = (GetKartConfig("general.gdpr.enabled") = "y")
+            If blnGDPR Then
+                phdGDPROptIn.Visible = True
+            End If
+
             If rblNeworOld.SelectedValue = "New" Then
                 'New Customer
                 If Not CheckEmailExist(strFldEmailAddress) Then
@@ -191,14 +200,6 @@ Partial Class KartrisLogin
                             psNewPassword.Enabled = True
                             lblPasswordOptional.Visible = False
                     End Select
-
-                    'GDPR opt in,
-                    'New EU rules coming May 2018, need to get explicit permission
-                    'for what you're doing with customer data.
-                    Dim blnGDPR As Boolean = (GetKartConfig("general.gdpr.enabled") = "y")
-                    If blnGDPR Then
-                        phdGDPROptIn.Visible = True
-                    End If
 
                     txtConfirmEmail.Focus()
                 Else
@@ -281,7 +282,13 @@ Partial Class KartrisLogin
         Dim strUserPasswordRule As String = GetKartConfig("frontend.users.password.required")
         'check if either password or confirm password field has a value
 
-        If blnIsGuest Then strUserPasswordRule = "optional"
+        If blnIsGuest Then
+            strUserPasswordRule = "optional"
+
+            litSubTitleCreateCustomerAccount.Text = GetGlobalResourceObject("GDPR", "ContentText_GuestCheckoutDesc")
+            litTitle.Text = GetGlobalResourceObject("GDPR", "ContentText_GuestCheckout")
+        End If
+
 
         Dim blnValueEntered As Boolean = False
 
