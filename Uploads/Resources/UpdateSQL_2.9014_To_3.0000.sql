@@ -388,6 +388,8 @@ ADD U_GDPR_IsGuest bit NOT NULL
 CONSTRAINT U_GDPR_IsGuest_0 DEFAULT 0
 WITH VALUES
 
+GO
+
 -- 2. Modify SPROC that inserts the customer record on front end with extra
 -- parameter, so we can choose whether to create guest accounts or not
 
@@ -678,6 +680,8 @@ SELECT        TOP 1
 				
 FROM            tblKartrisUsers
 WHERE        (U_EmailAddress = @EmailAddress AND U_GDPR_IsGuest = 0)
+
+GO
 
 /****** new config settings ******/
 INSERT INTO [tblKartrisConfig] (CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
