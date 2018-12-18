@@ -1034,6 +1034,39 @@ WHERE        V_Type <> 's' AND V_CodeNumber LIKE '%' + @Key + '%'
 WHERE NOT (HasCombinations = 1 AND V_Type = 'b')
 GROUP BY  V_ID, V_CodeNumber, V_Type, HasCombinations
 
+GO
+
+ALTER PROCEDURE [dbo].[_spKartrisCategories_Add]
+(
+	@CAT_Live as bit, 
+	@CAT_ProductDisplayType as char(1),
+	@CAT_SubCatDisplayType as char(1), 
+	@CAT_OrderProductsBy as nvarchar(50),
+	@CAT_ProductsSortDirection as char(1),
+	@CAT_CustomerGroupID as smallint,
+	@CAT_OrderCategoriesBy as nvarchar(50),
+	@CAT_CategoriesSortDirection as char(1),
+	@NewCAT_ID as int OUT
+)
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+
+	INSERT INTO tblKartrisCategories ([CAT_Live], [CAT_ProductDisplayType], 
+	[CAT_SubCatDisplayType],[CAT_OrderProductsBy],[CAT_ProductsSortDirection]
+	,[CAT_CustomerGroupID],[CAT_OrderCategoriesBy],[CAT_CategoriesSortDirection])
+	VALUES (@CAT_Live, @CAT_ProductDisplayType, @CAT_SubCatDisplayType,
+			@CAT_OrderProductsBy, @CAT_ProductsSortDirection, @CAT_CustomerGroupID, 
+			@CAT_OrderCategoriesBy, @CAT_CategoriesSortDirection);
+	
+	SELECT @NewCAT_ID = SCOPE_IDENTITY();
+	
+
+	
+END
+
 
 GO
 
