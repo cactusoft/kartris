@@ -200,7 +200,6 @@ Public Class CategoriesBLL
             cmd.CommandType = CommandType.StoredProcedure
 
             Try
-                cmd.Parameters.AddWithValue("@NewCAT_ID", pCategoryID).Direction = ParameterDirection.Output
                 cmd.Parameters.AddWithValue("@CAT_Live", pLive)
                 cmd.Parameters.AddWithValue("@CAT_ProductDisplayType", pProductDisplayType)
                 cmd.Parameters.AddWithValue("@CAT_SubCatDisplayType", pSubCatDisplayType)
@@ -209,6 +208,7 @@ Public Class CategoriesBLL
                 cmd.Parameters.AddWithValue("@CAT_CustomerGroupID", FixNullToDB(pCustomerGroupID, "i"))
                 cmd.Parameters.AddWithValue("@CAT_OrderCategoriesBy", pOrderSubcatBy)
                 cmd.Parameters.AddWithValue("@CAT_CategoriesSortDirection", pSubcatSortDirection)
+                cmd.Parameters.AddWithValue("@NewCAT_ID", pCategoryID).Direction = ParameterDirection.Output
 
                 sqlConn.Open()
                 savePoint = sqlConn.BeginTransaction()
@@ -217,7 +217,7 @@ Public Class CategoriesBLL
                 '' 1. Add The Main Info.
                 cmd.ExecuteNonQuery()
 
-                If cmd.Parameters("@NewCAT_ID").Value Is Nothing OrElse _
+                If cmd.Parameters("@NewCAT_ID").Value Is Nothing OrElse
                   cmd.Parameters("@NewCAT_ID").Value Is DBNull.Value Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
@@ -225,8 +225,8 @@ Public Class CategoriesBLL
                 pCategoryID = FixNullFromDB(cmd.Parameters("@NewCAT_ID").Value)
 
                 '' 2. Add the Language Elements
-                If Not LanguageElementsBLL._AddLanguageElements( _
-                  ptblElements, LANG_ELEM_TABLE_TYPE.Categories, _
+                If Not LanguageElementsBLL._AddLanguageElements(
+                  ptblElements, LANG_ELEM_TABLE_TYPE.Categories,
                   pCategoryID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If

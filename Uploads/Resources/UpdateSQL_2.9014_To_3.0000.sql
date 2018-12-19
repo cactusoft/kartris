@@ -1037,6 +1037,46 @@ GROUP BY  V_ID, V_CodeNumber, V_Type, HasCombinations
 
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisCategories_Add]    Script Date: 18/12/2018 16:29:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: 
+-- Description:	Update now specifies the field
+-- names in the insert
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisCategories_Add]
+(
+	@CAT_Live as bit, 
+	@CAT_ProductDisplayType as char(1),
+	@CAT_SubCatDisplayType as char(1), 
+	@CAT_OrderProductsBy as nvarchar(50),
+	@CAT_ProductsSortDirection as char(1),
+	@CAT_CustomerGroupID as smallint,
+	@CAT_OrderCategoriesBy as nvarchar(50),
+	@CAT_CategoriesSortDirection as char(1),
+	@NewCAT_ID as int OUT
+)
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	INSERT INTO tblKartrisCategories ([CAT_Live], [CAT_ProductDisplayType], 
+	[CAT_SubCatDisplayType],[CAT_OrderProductsBy],[CAT_ProductsSortDirection]
+	,[CAT_CustomerGroupID],[CAT_OrderCategoriesBy],[CAT_CategoriesSortDirection])
+	VALUES (@CAT_Live, @CAT_ProductDisplayType, @CAT_SubCatDisplayType,
+			@CAT_OrderProductsBy, @CAT_ProductsSortDirection, @CAT_CustomerGroupID, 
+			@CAT_OrderCategoriesBy, @CAT_CategoriesSortDirection);
+	
+	SELECT @NewCAT_ID = SCOPE_IDENTITY();
+	
+END
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO
