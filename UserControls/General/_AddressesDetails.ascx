@@ -6,7 +6,7 @@
         <div class="address">
             <div>
                 <asp:HiddenField ID="hidAddressType" runat="server" value = '<%# Eval("ADR_Type")%>' />
-                <%--<h3><asp:Literal ID="litAddressLabel" runat="server" Text='<%# Eval("ADR_Label")%>' /></h3>--%></div>
+            </div>
             <div>
                 <asp:Literal ID="litName" runat="server" Text='<%# Eval("ADR_Name")%>'/></div>
             <asp:Panel ID="pnlCompany" runat="server">

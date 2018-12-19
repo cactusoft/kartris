@@ -334,7 +334,6 @@ Partial Class _Checkout
                 'web service is unreachable or has
                 'some other issue
                 '---------------------------------------
-
                 Dim blnValid As Boolean = True
                 Dim datCurrent As Date
                 Dim strName As String = String.Empty, strAddress As String = String.Empty
@@ -453,10 +452,6 @@ Partial Class _Checkout
                     End If
                 End If
 
-
-
-
-
                 '---------------------------------------
                 'SELECT DEFAULT ADDRESSES
                 '---------------------------------------
@@ -475,6 +470,14 @@ Partial Class _Checkout
     ''' Page Load Complete
     ''' </summary>
     Protected Sub Page_LoadComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.LoadComplete
+        'Fails for new users
+        Try
+            If txtEUVAT.Text = "" Then
+                txtEUVAT.Text = UsersBLL.GetCustomerEUVATNumber(CurrentLoggedUser.ID)
+            End If
+        Catch ex As Exception
+            'probably a new user
+        End Try
 
         '---------------------------------------
         'ZERO ITEMS IN BASKET!
@@ -638,6 +641,7 @@ Partial Class _Checkout
         'one where store is
         '=======================================
         If Not String.IsNullOrEmpty(GetKartConfig("general.tax.euvatcountry")) Then
+
             Dim adrShipping As KartrisClasses.Address = Nothing
             If chkSameShippingAsBilling.Checked Then
                 'Shipping address same as billing

@@ -21,6 +21,7 @@ Public Class UsersBLL
 
     'Private _Detailsadptr As UserDetailsTblAdptr = Nothing
     Private Shared _CustomerDetailsAdptr As CustomerDetailsTblAdptr = Nothing
+    Private Shared _AddressesAdptr As AddressesTblAdptr = Nothing
     Private Shared _CustomerGroupsAdptr As CustomerGroupsTblAdptr = Nothing
     Private Shared _SuppliersAdptr As SuppliersTblAdptr = Nothing
     Private Shared _UsersTicketsAdptr As UsersTicketsDetailsTblAdptr = Nothing
@@ -36,6 +37,12 @@ Public Class UsersBLL
         Get
             _CustomerDetailsAdptr = New CustomerDetailsTblAdptr
             Return _CustomerDetailsAdptr
+        End Get
+    End Property
+    Protected Shared ReadOnly Property AddressesAdptr() As AddressesTblAdptr
+        Get
+            _AddressesAdptr = New AddressesTblAdptr
+            Return _AddressesAdptr
         End Get
     End Property
     Protected Shared ReadOnly Property SuppliersAdptr() As SuppliersTblAdptr
@@ -104,7 +111,7 @@ Public Class UsersBLL
     End Function
 
     Public Shared Function _GetAddressesByUserID(ByVal U_ID As Integer, ByVal ADR_Type As String) As DataTable
-        Return CustomerDetailsAdptr._GetAddressesByUserID(U_ID, ADR_Type)
+        Return AddressesAdptr._GetData(U_ID, ADR_Type)
     End Function
 
     Public Shared Function ValidateUser(ByVal strEmailAddress As String, ByVal strPassword As String) As Integer
@@ -243,6 +250,26 @@ Public Class UsersBLL
     End Function
     Public Shared Function _GetDataBySearchTermCount(ByVal strSearchTerm As String, Optional ByVal blnIsAffiliates As Boolean = False, Optional ByVal blnisMailingList As Boolean = False, Optional ByVal intCustomerGroupID As Integer = 0, Optional ByVal blnIsAffiliateApproved As Boolean = False) As Integer
         Return CustomerDetailsAdptr._GetDataBySearchTermCount(strSearchTerm, blnisAffiliates, blnisMailingList, intCustomerGroupID, blnIsAffiliateApproved)
+    End Function
+
+
+    ''' <summary>
+    ''' Get customer EU VAT number
+    ''' </summary>
+    ''' <remarks>
+    ''' Can use this to pull through existing one into checkout for repeat
+    ''' orders
+    ''' </remarks>  
+    Public Shared Function GetCustomerEUVATNumber(ByVal U_ID As Integer) As String
+        Dim strEUVATNumber As String = ""
+        Dim tblCustomer As DataTable = _GetCustomerDetails(U_ID)
+        Try
+            strEUVATNumber = CkartrisDataManipulation.FixNullFromDB(tblCustomer.Rows(0).Item("U_CardholderEUVATNum"))
+        Catch ex As Exception
+
+        End Try
+
+        Return strEUVATNumber
     End Function
 
     ''' <summary>
