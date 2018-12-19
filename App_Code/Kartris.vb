@@ -958,6 +958,11 @@ Public NotInheritable Class CkartrisDataManipulation
         Optional ByVal blnSendAsHTML As Boolean = False,
         Optional ByVal sendPriority As MailPriority = MailPriority.Normal, Optional ByVal objBCCAddress As MailAddressCollection = Nothing,
         Optional ByVal objAdditionalToAddresses As MailAddressCollection = Nothing) As Boolean
+
+        'Belt and braces, let's ensure we don't mail the guest
+        'email addresses
+        strTo = UsersBLL.CleanGuestEmailUsername(strTo)
+
         Try
             If LCase(GetKartConfig("general.email.method")) = "write" Then
                 'Write method - use javascript alert box to display email
