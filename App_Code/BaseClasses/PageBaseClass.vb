@@ -307,6 +307,13 @@ Public MustInherit Class PageBaseClass
         'We only run this if section (1) above did not
         'return any value.
         '--------------------------------------------------
+
+        Dim subsiteId = Application("subsiteId")
+        If subsiteId > 0 Then
+            Dim subSiteDataTable = SubSitesBLL.GetSubSiteByID(subsiteId)
+
+            strSkinOverride = "~/Skins/" & subSiteDataTable.Rows.Item(0).Item("SUB_Skin") & "/Template.master"
+        End If
         Dim strSkinMaster As String
         If strSkinOverride <> "" Then
             strSkinMaster = strSkinOverride
