@@ -882,7 +882,7 @@ BEGIN
 			AND (tblKartrisVersions.V_Live = 1);
 	IF @NoOfCombinations = 0
 	BEGIN
-		-- Get stock quanity of the base version, should be only one
+		-- Get stock quantity of the base version, should be only one
 		SELECT @Qty = V_Quantity FROM tblKartrisVersions WHERE V_ProductID = @P_ID AND V_Type='b';
 	END
 	ELSE
@@ -1053,7 +1053,6 @@ BEGIN
 	
 	SET NOCOUNT ON;
 
-
 	INSERT INTO tblKartrisCategories ([CAT_Live], [CAT_ProductDisplayType], 
 	[CAT_SubCatDisplayType],[CAT_OrderProductsBy],[CAT_ProductsSortDirection]
 	,[CAT_CustomerGroupID],[CAT_OrderCategoriesBy],[CAT_CategoriesSortDirection])
@@ -1063,11 +1062,7 @@ BEGIN
 	
 	SELECT @NewCAT_ID = SCOPE_IDENTITY();
 	
-
-	
 END
-
-
 GO
 
 /****** Object:  StoredProcedure [dbo].[_spKartrisCategories_Add]    Script Date: 18/12/2018 16:29:22 ******/
@@ -1107,6 +1102,67 @@ BEGIN
 	
 	SELECT @NewCAT_ID = SCOPE_IDENTITY();
 	
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_Update]    Script Date: 02/01/2019 21:32:03 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author: Mohammad, Paul
+-- Updated: 2019/01/02
+-- Description:	Updated v3.000 to set the 
+-- V_QuantityWarnLevel for combinations when
+-- base version updated
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisVersions_Update]
+(
+	@V_ID as bigint,
+	@V_CodeNumber as nvarchar(25),
+	@V_ProductID as int,
+	@V_Price as DECIMAL(18,4),
+	@V_Tax as tinyint,
+	@V_Weight as real,
+	@V_DeliveryTime as tinyint,
+	@V_Quantity as real,
+	@V_QuantityWarnLevel as real,
+	@V_Live as bit,
+	@V_DownLoadInfo as nvarchar(255),
+	@V_DownloadType as nvarchar(50),
+	@V_RRP as DECIMAL(18,4),
+	@V_Type as char(1),
+	@V_CustomerGroupID as smallint,
+	@V_CustomizationType as char(1),
+	@V_CustomizationDesc as nvarchar(255),
+	@V_CustomizationCost as DECIMAL(18,4),
+	@V_Tax2 as tinyint,
+	@V_TaxExtra as nvarchar(255),
+	@V_BulkUpdateTimeStamp as datetime = NULL
+)
+								
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+	UPDATE tblKartrisVersions
+	SET V_CodeNumber = @V_CodeNumber, V_ProductID = @V_ProductID, V_Price = @V_Price, V_Tax = @V_Tax, V_Weight = @V_Weight, 
+		V_DeliveryTime = @V_DeliveryTime, V_Quantity = @V_Quantity, V_QuantityWarnLevel = @V_QuantityWarnLevel, 
+		V_Live = @V_Live, V_DownLoadInfo = @V_DownLoadInfo, V_DownloadType = @V_DownloadType,
+		V_RRP = @V_RRP, V_Type = @V_Type, V_CustomerGroupID = @V_CustomerGroupID, V_CustomizationType = @V_CustomizationType,
+		V_CustomizationDesc = @V_CustomizationDesc, V_CustomizationCost = @V_CustomizationCost, 
+		V_Tax2 = @V_Tax2, V_TaxExtra = @V_TaxExtra,
+		V_BulkUpdateTimeStamp = Coalesce(@V_BulkUpdateTimeStamp, GetDate())
+	WHERE V_ID = @V_ID;
+	
+	IF @V_Type = 'b' BEGIN
+		UPDATE tblKartrisVersions
+		SET V_DownLoadInfo = @V_DownLoadInfo,
+		V_DownloadType = @V_DownloadType,
+		V_QuantityWarnLevel = @V_QuantityWarnLevel
+		WHERE V_ProductID = @V_ProductID AND V_Type = 'c';
+	END
 END
 GO
 
