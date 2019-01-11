@@ -312,54 +312,7 @@ Partial Class _Checkout
             ConfigureAddressFields()
         Else
 
-            '---------------------------------------
-            'VAT NUMBER WAS SUBMITTED
-            '---------------------------------------
-            Dim strEUVatNumber As String = txtEUVAT.Text
-            Dim strThisUsersCountryCode = litMSCode.Text
-            If Not String.IsNullOrEmpty(txtEUVAT.Text) Then
 
-                'Even though we show the country code part outside
-                'the text field, some users enter it into the text
-                'field too. Rather than cause an error, we want to
-                'just check if they do this and then remove it.
-                If Left(strEUVatNumber, 2).ToUpper = strThisUsersCountryCode.ToUpper Then
-                    txtEUVAT.Text = Replace(strEUVatNumber, strThisUsersCountryCode, "")
-                End If
-
-                '---------------------------------------
-                'We use the official EU web service
-                'to validate EU VAT numbers, but can
-                'fall back on simpler function if the
-                'web service is unreachable or has
-                'some other issue
-                '---------------------------------------
-                Dim blnValid As Boolean = True
-                Dim datCurrent As Date
-                Dim strName As String = String.Empty, strAddress As String = String.Empty
-                If GetKartConfig("general.tax.euvatnumbercheck") = "y" Then
-                    Try
-                        'Try to use web service
-                        Dim svcEUVAT As New eu.europa.ec.checkVatService
-                        datCurrent = svcEUVAT.checkVat(litMSCode.Text, txtEUVAT.Text, blnValid, strName, strAddress)
-                        Session("blnEUVATValidated") = blnValid
-                    Catch ex As Exception
-                        'If web service is unavailable, we fall back
-                        'to our CheckVATNumber function, which just
-                        'checks the format of the submitted number
-                        'against the formats each EU member country
-                        'uses for its VAT numbers
-                        Session("blnEUVATValidated") = CheckVATNumber(litMSCode.Text, litMSCode.Text & txtEUVAT.Text)
-                    End Try
-                Else
-                    Session("blnEUVATValidated") = True
-                End If
-            Else
-
-                'No VAT number submitted, so
-                'not validated
-                Session("blnEUVATValidated") = False
-            End If
 
         End If
 
@@ -472,11 +425,11 @@ Partial Class _Checkout
     Protected Sub Page_LoadComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.LoadComplete
         'Fails for new users
         Try
-            If txtEUVAT.Text = "" Then
+            If txtEUVAT.Text = "" And phdEUVAT.Visible = True Then
                 txtEUVAT.Text = UsersBLL.GetCustomerEUVATNumber(CurrentLoggedUser.ID)
             End If
         Catch ex As Exception
-            'probably a new user
+            'probably a new user or don't need vate
         End Try
 
         '---------------------------------------
@@ -508,6 +461,10 @@ Partial Class _Checkout
         'had issues where sometimes a single shipping method
         'doesn't trigger lookup for shipping price
         'UC_BasketView.RefreshShippingMethods()
+        If Not Me.IsPostBack() Then
+            txtEUVAT_AutoPostback()
+        End If
+
     End Sub
 
     ''' <summary>
@@ -690,6 +647,7 @@ Partial Class _Checkout
         'Reset everything
         txtEUVAT.Text = ""
         Session("blnEUVATValidated") = False
+        txtEUVAT_AutoPostback()
 
         '=======================================================
         'SET SHIPPING DETAILS FROM ADDRESS CONTROL
@@ -2125,7 +2083,57 @@ Partial Class _Checkout
     ''' Post back automatically and refresh
     ''' when EU VAT number is entered
     ''' </summary>
-    Protected Sub txtEUVAT_AutoPostback(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtEUVAT.TextChanged
+    Protected Sub txtEUVAT_AutoPostback() Handles txtEUVAT.TextChanged
+
+        '---------------------------------------
+        'VAT NUMBER WAS SUBMITTED
+        '---------------------------------------
+        Dim strEUVatNumber As String = txtEUVAT.Text
+        Dim strThisUsersCountryCode = litMSCode.Text
+        If Not String.IsNullOrEmpty(txtEUVAT.Text) Then
+
+            'Even though we show the country code part outside
+            'the text field, some users enter it into the text
+            'field too. Rather than cause an error, we want to
+            'just check if they do this and then remove it.
+            If Left(strEUVatNumber, 2).ToUpper = strThisUsersCountryCode.ToUpper Then
+                txtEUVAT.Text = Replace(strEUVatNumber, strThisUsersCountryCode, "")
+            End If
+
+            '---------------------------------------
+            'We use the official EU web service
+            'to validate EU VAT numbers, but can
+            'fall back on simpler function if the
+            'web service is unreachable or has
+            'some other issue
+            '---------------------------------------
+            Dim blnValid As Boolean = True
+            Dim datCurrent As Date
+            Dim strName As String = String.Empty, strAddress As String = String.Empty
+            If GetKartConfig("general.tax.euvatnumbercheck") = "y" Then
+                Try
+                    'Try to use web service
+                    Dim svcEUVAT As New eu.europa.ec.checkVatService
+                    datCurrent = svcEUVAT.checkVat(litMSCode.Text, txtEUVAT.Text, blnValid, strName, strAddress)
+                    Session("blnEUVATValidated") = blnValid
+                Catch ex As Exception
+                    'If web service is unavailable, we fall back
+                    'to our CheckVATNumber function, which just
+                    'checks the format of the submitted number
+                    'against the formats each EU member country
+                    'uses for its VAT numbers
+                    Session("blnEUVATValidated") = CheckVATNumber(litMSCode.Text, litMSCode.Text & txtEUVAT.Text)
+                End Try
+            Else
+                Session("blnEUVATValidated") = True
+            End If
+        Else
+
+            'No VAT number submitted, so
+            'not validated
+            Session("blnEUVATValidated") = False
+        End If
+
         UC_BasketView.RefreshShippingMethods()
     End Sub
 

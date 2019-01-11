@@ -90,7 +90,7 @@
                                 <asp:PlaceHolder ID="phdCombinationImage" runat="server" Visible="false">
                                     <div id="versionimages">
                                         <asp:Literal ID="litTest" runat="server" Visible="false"></asp:Literal>
-                                        <user:ImageViewer ID="UC_CombinationImage" runat="server" LargeViewClickable="false" EnableViewState="false" />
+                                        <user:ImageViewer ID="UC_CombinationImage" runat="server" LargeViewClickable="true" EnableViewState="false" />
                                     </div>
                                 </asp:PlaceHolder>
                             </ContentTemplate>
