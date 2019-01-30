@@ -62,20 +62,7 @@
             sqlconKartris.Open()
             Application("DBConnected") = True
         Catch ex As Exception
-            'This means the db appears offline, or maybe inaccessible because
-            'it is overloaded. We want to shut down the connection so we can
-            'avoid trying to fill language and sitemap providers with empty
-            'content. But we also want to be able to recover when the db
-            'is back online. So let's see if we can set an application
-            'variable indicating the db connection is down, and the time it was
-            'down, then we can check that in BeginRequest and if it is more than
-            '30 seconds ago, we can try to restart the app (unload it).
             Application("DBConnected") = False
-            System.Threading.Thread.Sleep(10000) 'wait for 10 seconds
-            'unload domain, we hope next request will trigger entire startup
-            'process again. If db is back online, it will run correctly, if not
-            'it will sleep another 10 seconds and then try again.
-            System.Web.HttpRuntime.UnloadAppDomain()
         Finally
             If sqlconKartris.State = ConnectionState.Open Then sqlconKartris.Close()
         End Try
@@ -86,6 +73,7 @@
             AddHandler SiteMap.SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
             AddHandler SiteMap.Providers("BreadCrumbSiteMap").SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
             AddHandler SiteMap.Providers("_CategorySiteMapProvider").SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
+            TaxRegime.LoadTaxConfigXML()
 
             'Clean up expired sessions
             'Originally this was run in the session start, but
