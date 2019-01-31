@@ -140,8 +140,13 @@ Public Class MailChimpBLL
         Catch ex As Exception
             'Debug.Print(ex.Message)
             'Log the error
-            CkartrisFormatErrors.LogError("MailchimpBLL AddCartToCustomerToStore(1): ")
-            CkartrisFormatErrors.LogError("MailchimpBLL AddCartToCustomerToStore(2): " & ex.Message)
+            Try
+                CkartrisFormatErrors.LogError("MailchimpBLL AddCartToCustomerToStore(1): ")
+                CkartrisFormatErrors.LogError("MailchimpBLL AddCartToCustomerToStore(2): " & ex.Message)
+            Catch ex2 As Exception
+                'don't want another error
+            End Try
+
         End Try
         Return toReturn
     End Function
@@ -189,7 +194,12 @@ Public Class MailChimpBLL
             Return taskResult
         Catch ex As Exception
             'Log the error
-            CkartrisFormatErrors.LogError("MailchimpBLL AddCustomer: " & ex.Message)
+            Try
+                CkartrisFormatErrors.LogError("MailchimpBLL AddCustomer: " & ex.Message)
+            Catch ex2 As Exception
+                'maybe errors if no valid response from mailchimp
+            End Try
+
 
             'Avoid warnings when building, they tend to confuse people
             Return Nothing
@@ -278,7 +288,12 @@ Public Class MailChimpBLL
         Catch ex As Exception
             'Debug.Print(ex.Message)
             'Log the error
-            CkartrisFormatErrors.LogError("MailchimpBLL AddProduct: " & ex.Message)
+            Try
+                CkartrisFormatErrors.LogError("MailchimpBLL AddProduct: " & ex.Message)
+            Catch ex2 As Exception
+                'maybe errors if no valid mailchimp response
+            End Try
+
             Return Nothing
         End Try
     End Function
@@ -330,8 +345,13 @@ Public Class MailChimpBLL
             'Debug.Print(ex.Message)
             'Log the error
             Dim trace = New System.Diagnostics.StackTrace(ex, True)
-            CkartrisFormatErrors.LogError("MailchimpBLL AddCart stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddCart - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
-            CkartrisFormatErrors.LogError("MailchimpBLL AddCart: " & ex.Message)
+            Try
+                CkartrisFormatErrors.LogError("MailchimpBLL AddCart stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddCart - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
+                CkartrisFormatErrors.LogError("MailchimpBLL AddCart: " & ex.Message)
+            Catch ex2 As Exception
+                'maybe errors if no valid info
+            End Try
+
 
             'Avoid build warnings
             Return Nothing
@@ -374,7 +394,12 @@ Public Class MailChimpBLL
             End If
             'Debug.Print(ex.Message)
             'Log the error
-            CkartrisFormatErrors.LogError("MailchimpBLL DeleteCart: " & ex.Message)
+            Try
+                CkartrisFormatErrors.LogError("MailchimpBLL DeleteCart: " & ex.Message)
+            Catch ex2 As Exception
+                'Just in case, don't want to create more errors
+            End Try
+
         End Try
         Return result
     End Function
@@ -395,7 +420,12 @@ Public Class MailChimpBLL
             End If
             'Debug.Print(ex.Message)
             'Log the error
-            CkartrisFormatErrors.LogError("MailchimpBLL DeleteOrder: " & ex.Message)
+            Try
+                CkartrisFormatErrors.LogError("MailchimpBLL DeleteOrder: " & ex.Message)
+            Catch ex2 As Exception
+                'Just in case, don't want more errors
+            End Try
+
         End Try
         Return result
     End Function
@@ -475,9 +505,14 @@ Public Class MailChimpBLL
             Return taskResult
         Catch ex As Exception
             'Log the error
-            CkartrisFormatErrors.LogError("MailchimpBLL AddOrder: " & ex.Message)
-            Dim trace = New System.Diagnostics.StackTrace(ex, True)
-            CkartrisFormatErrors.LogError("MailchimpBLL AddOrder stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddOrder - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
+            Try
+                CkartrisFormatErrors.LogError("MailchimpBLL AddOrder: " & ex.Message)
+                Dim trace = New System.Diagnostics.StackTrace(ex, True)
+                CkartrisFormatErrors.LogError("MailchimpBLL AddOrder stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddOrder - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
+            Catch ex2 As Exception
+                'Just in case, don't want more errors
+            End Try
+
         End Try
     End Function
 
@@ -595,9 +630,14 @@ Public Class MailChimpBLL
         Catch ex As Exception
             'Debug.Print(ex.Message)
             'Log the error
-            CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId: " & ex.Message)
-            Dim trace = New System.Diagnostics.StackTrace(ex, True)
-            CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddOrder - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
+            Try
+                CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId: " & ex.Message)
+                Dim trace = New System.Diagnostics.StackTrace(ex, True)
+                CkartrisFormatErrors.LogError("MailchimpBLL AddOrderByCustomerId stacktrace: " & ex.StackTrace & vbCrLf & "Error in AddOrder - Line number:" & trace.GetFrame(0).GetFileLineNumber().ToString)
+            Catch ex2 As Exception
+                'Just in case more errors
+            End Try
+
         End Try
     End Function
 
@@ -619,8 +659,13 @@ Public Class MailChimpBLL
         Catch ex As Exception
             'Debug.Print(ex.Message)
             'Log the error
-            CkartrisFormatErrors.LogError("MailchimpBLL AddStore: " & ex.Message)
-            Throw ex
+            Try
+                CkartrisFormatErrors.LogError("MailchimpBLL AddStore: " & ex.Message)
+                Throw ex
+            Catch ex2 As Exception
+                'Just in case more errors
+            End Try
+
         End Try
     End Function
 
@@ -638,8 +683,13 @@ Public Class MailChimpBLL
         Catch ex As Exception
             'Debug.Print(ex.Message)
             'Log the error
-            CkartrisFormatErrors.LogError("MailchimpBLL AddListSubscriber: " & ex.Message)
-            Throw ex
+            Try
+                CkartrisFormatErrors.LogError("MailchimpBLL AddListSubscriber: " & ex.Message)
+                Throw ex
+            Catch ex2 As Exception
+                'Just in case more errors
+            End Try
+
         End Try
     End Function
 
