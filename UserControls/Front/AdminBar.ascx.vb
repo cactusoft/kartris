@@ -38,6 +38,9 @@ Partial Class UserControls_Front_AdminBar
                 Response.Cookies.Add(subsiteCookie)
             End If
 
+
+            phdSiteSelect.Visible = True
+
             'We use the FindItemBackEndURL function, which is
             'developed from the SEORewrite one in the
             'SiteMapProvider to transform the friendly

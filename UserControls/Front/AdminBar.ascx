@@ -30,6 +30,16 @@
 			<li class="KartrisMenu-WithChildren">
 				<asp:HyperLink ID="lnkMenuMain" runat="server" NavigateUrl="~/Admin/_Default.aspx"
 					Text="" ToolTip="<%$ Resources: AdminBar_ViewBackend %>" CssClass="KartrisMenu-Link"></asp:HyperLink>
+				<% 'site selection for multi site installations %>
+				<asp:PlaceHolder ID="phdSiteSelect" runat="server" Visible="false">
+					<ul class="KartrisSubMenu">
+						<li class="KartrisMenu-Leaf">
+							<asp:DropDownList ID="ddlSites" runat="server">
+							</asp:DropDownList>
+						</li>
+					</ul>
+				</asp:PlaceHolder>
+
 				<% 'Extra category links %>
 				<asp:PlaceHolder ID="phdCategoryLink" runat="server" Visible="false">
 					<ul class="KartrisSubMenu">
@@ -52,14 +62,14 @@
 						</li>
 					</ul>
 				</asp:PlaceHolder>
-                <asp:PlaceHolder ID="phdExitSubsiteLink" runat="server" Visible="false">
-                    <ul class="KartrisSubMenu">
+				<asp:PlaceHolder ID="phdExitSubsiteLink" runat="server" Visible="false">
+					<ul class="KartrisSubMenu">
 						<li class="KartrisMenu-Leaf">
-                            <asp:LinkButton ID="lnkExitSubsitePreview" runat="server" ToolTip="Exit Subsite Preview"
-					            Text="Exit Subsite Preview"></asp:LinkButton>
-                        </li>
-                    </ul>
-                </asp:PlaceHolder>
+							<asp:LinkButton ID="lnkExitSubsitePreview" runat="server" ToolTip="Exit Subsite Preview"
+								Text="Exit Subsite Preview"></asp:LinkButton>
+						</li>
+					</ul>
+				</asp:PlaceHolder>
 			</li>
 		</ul>
 	</div>
@@ -67,14 +77,14 @@
 <% 'Close the site %>
 
 <script>
-    $(document).ready(function () {
-        console.log("ready");
-        console.log("test " + getCookie("subsiteId"));
-    });
+	$(document).ready(function () {
+		console.log("ready");
+		console.log("test " + getCookie("subsiteId"));
+	});
 
-    function getCookie(name) {
-        var value = "; " + document.cookie;
-        var parts = value.split("; " + name + "=");
-        if (parts.length == 2) return parts.pop().split(";").shift();
-    }
+	function getCookie(name) {
+		var value = "; " + document.cookie;
+		var parts = value.split("; " + name + "=");
+		if (parts.length == 2) return parts.pop().split(";").shift();
+	}
 </script>

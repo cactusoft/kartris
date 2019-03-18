@@ -1024,12 +1024,12 @@ CREATE PROCEDURE [dbo].[_spKartrisVersions_SearchVersionsByCodeExcludeBase]
 AS
 	SET NOCOUNT ON;
 SELECT * FROM ( SELECT V_ID, V_CodeNumber, V_Type, CASE WHEN EXISTS
-																				  (SELECT        TOP 1 1
-																					FROM            tblKartrisVersions MyTableCheck
-																					WHERE        MyTableCheck.V_ProductID = tblKartrisVersions.V_ProductID AND MyTableCheck.V_Type = 'c') THEN 1 ELSE 0 END AS HasCombinations
+ (SELECT TOP 1 1
+ FROM tblKartrisVersions MyTableCheck
+ WHERE MyTableCheck.V_ProductID = tblKartrisVersions.V_ProductID AND MyTableCheck.V_Type = 'c') THEN 1 ELSE 0 END AS HasCombinations
 
-FROM            dbo.tblKartrisVersions
-WHERE        V_Type <> 's' AND V_CodeNumber LIKE '%' + @Key + '%'
+FROM dbo.tblKartrisVersions
+WHERE V_Type <> 's' AND V_CodeNumber LIKE '%' + @Key + '%'
 ) as viewVersions
 WHERE NOT (HasCombinations = 1 AND V_Type = 'b')
 GROUP BY  V_ID, V_CodeNumber, V_Type, HasCombinations
@@ -1163,6 +1163,67 @@ BEGIN
 		V_QuantityWarnLevel = @V_QuantityWarnLevel
 		WHERE V_ProductID = @V_ProductID AND V_Type = 'c';
 	END
+END
+GO
+
+/****** Object:  UserDefinedFunction [dbo].[fnKartrisBasket_GetItemWeight]    Script Date: 18/03/2019 14:31:04 ******/
+/* update stops issue where all option modifier weights are null, and function ends up returning null or zero */
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date, ,>
+-- Description:	<Description, ,>
+-- =============================================
+ALTER FUNCTION [dbo].[fnKartrisBasket_GetItemWeight]
+(
+	@BasketValueID as bigint,
+	@VersionID as bigint,
+	@ProductID as int
+)
+RETURNS decimal(18,4)
+AS
+BEGIN
+	-- Declare the return variable here
+	DECLARE @Weight as decimal(18,4);
+	DECLARE @WeightBase as decimal(18,4);
+
+	DECLARE @ProductType as char(1);
+	
+	SELECT @ProductType = P_Type
+	FROM tblKartrisProducts 
+	WHERE P_ID = @ProductID;
+	
+	IF @ProductType IN ('s','m') BEGIN
+		SELECT @Weight = V_Weight
+		FROM tblKartrisVersions
+		WHERE V_ID = @VersionID;
+	END ELSE BEGIN
+		DECLARE @OptionsList as nvarchar(max);
+		SELECT @OptionsList = COALESCE(@OptionsList + ',', '') + CAST(T.BSKTOPT_OptionID As nvarchar(10))
+		FROM (SELECT BSKTOPT_OptionID FROM dbo.tblKartrisBasketOptionValues WHERE  BSKTOPT_BasketValueID = @BasketValueID) AS T;
+		
+		SELECT @Weight = SUM(Coalesce(P_OPT_WeightChange, 0))
+		FROM dbo.tblKartrisProductOptionLink
+		WHERE P_OPT_ProductID = @ProductID AND P_OPT_OptionID IN (SELECT * FROM dbo.fnTbl_SplitNumbers(@OptionsList));
+		
+		-- If weight = 0, then no weight change for the options, we need to use the base version.
+		IF @Weight = 0 BEGIN
+			SELECT @Weight = V_Weight FROM tblKartrisVersions WHERE V_ID = @VersionID;
+			END
+		ELSE
+			-- Get weight of options and weight of base version, add together
+			BEGIN
+				SELECT @WeightBase = V_Weight FROM tblKartrisVersions WHERE V_ID = @VersionID;
+				SET @Weight = @Weight + @WeightBase;
+			END
+	END
+	
+	-- Return the result of the function
+	RETURN Round(@Weight, 6);
+
 END
 GO
 
