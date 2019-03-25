@@ -82,6 +82,7 @@ Partial Class UserControls_Back_ObjectConfig
 
     Protected Sub btnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCancel.Click
         LoadObjectConfig()
+        updMain.Update()
     End Sub
 
     Sub SaveConfig()
@@ -97,7 +98,7 @@ Partial Class UserControls_Back_ObjectConfig
                 Else
                     strValue = CType(itmObjectConfig.FindControl("txtValue"), TextBox).Text
                 End If
-                'If String.IsNullOrEmpty(strValue) Then Continue For
+
                 If Not ObjectConfigBLL._SetConfigValue(numConfigID, _ItemID, strValue, strMessage) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     blnHasErrors = True
