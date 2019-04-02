@@ -6706,6 +6706,7 @@ INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_Fie
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 13, 1, 13, N'Brazilian Real')
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 13, 1, 14, N'Singapore Dollar')
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 13, 1, 15, N'Bitcoin')
+INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 13, 1, 16, N'New Zealand Dollar')
 
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 15, 6, 1, N'Buy [X] of version [V]')
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 15, 6, 2, N'Buy [X] of items from category [C]')

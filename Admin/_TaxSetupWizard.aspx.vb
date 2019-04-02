@@ -74,6 +74,16 @@ Partial Class Admin_Destinations
 
         Dim strActiveTaxRegime As String = TaxRegime.Name
         Select Case strActiveTaxRegime
+            Case "VAT"
+                mvwRegionalSetupWizard.SetActiveView(viwVAT)
+                ddlCountries.Items.Clear()
+                ddlCountries.Items.Add(New ListItem(GetGlobalResourceObject("_Kartris", "ContentText_DropDownSelect"), "noselection"))
+
+                Dim tblAllCountries As DataTable = ShippingBLL._GetDestinationsByLanguage(Session("_LANG"))
+                For Each drwCountry As DataRow In tblAllCountries.Rows
+                    ddlCountries.Items.Add(New ListItem(drwCountry("D_Name"), drwCountry("D_ID")))
+                Next
+
             Case "EU"
                 mvwRegionalSetupWizard.SetActiveView(viwEU)
             Case "US"
@@ -113,6 +123,43 @@ Partial Class Admin_Destinations
 
     ''' <summary>
     ''' Handle 'VAT registered?' dropdown
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub ddlVATRegistered_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlVatRegistered.SelectedIndexChanged
+        If ddlVatRegistered.SelectedValue = "y" Then
+            'Yes
+            phdBaseCountry.Visible = True
+        ElseIf ddlVatRegistered.SelectedValue = "n" Then
+            'No
+            phdBaseCountry.Visible = False
+            phdVATRate.Visible = False
+            pnlSummary.Visible = True
+        Else
+            'No selection
+            phdBaseCountry.Visible = False
+            phdVATRate.Visible = False
+            pnlSummary.Visible = False
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Handle VAT country dropdown selection
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub ddlCountries_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlCountries.SelectedIndexChanged
+        If ddlCountries.SelectedValue = "noselection" Then
+            'No country selected, hide bits below
+            phdVATRate.Visible = False
+            pnlSummary.Visible = False
+        Else
+            'Country selected, show VAT rate field
+            txtVATRate.Text = ""
+            phdVATRate.Visible = True
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Handle EU 'VAT registered?' dropdown
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub ddlQVATRegistered_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlEUVatRegistered.SelectedIndexChanged
@@ -216,17 +263,16 @@ Partial Class Admin_Destinations
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub txtQVatRate_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtQVatRate.TextChanged, txtUSStateTaxRate.TextChanged,
-                                                                                                        txtSimpleTaxRate.TextChanged, txtCanadaPST.TextChanged
+                                                                                                        txtSimpleTaxRate.TextChanged, txtCanadaPST.TextChanged, txtVATRate.TextChanged
 
         'If tax rate is blank (we total all boxes
         'so we can do check on one line) then we
         'hide next section
-        If txtQVatRate.Text & txtUSStateTaxRate.Text & txtSimpleTaxRate.Text & txtCanadaPST.Text = "" Then
+        If txtQVatRate.Text & txtUSStateTaxRate.Text & txtSimpleTaxRate.Text & txtCanadaPST.Text & txtVATRate.Text = "" Then
             pnlSummary.Visible = False
         Else
             pnlSummary.Visible = True
         End If
-
     End Sub
 
     Protected Sub btnConfirmSetup_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnConfirmSetup.Click
@@ -246,6 +292,38 @@ Partial Class Admin_Destinations
         lnkCurrencyLink.Visible = True
 
         Select Case TaxRegime.Name
+            Case "VAT"
+                'VAT Registered?
+                If ddlVatRegistered.SelectedValue = "y" Then
+                    'Yes - turn off tax for everything else, except this country
+
+                    For Each drwCountry As DataRow In dtbAllCountries.Rows
+                        Dim intCountryID As Integer = drwCountry("D_ID")
+                        Dim sngD_Tax As Single
+
+                        If ddlCountries.SelectedValue = intCountryID Then
+
+                            'charge tax and set to live
+                            ShippingBLL._UpdateDestinationForTaxWizard(intCountryID, drwCountry("D_ShippingZoneID"), 1, FixNullFromDB(drwCountry("D_Tax2")),
+                                                               drwCountry("D_ISOCode"), drwCountry("D_ISOCode3Letter"), drwCountry("D_ISOCodeNumeric"),
+                                                               FixNullFromDB(drwCountry("D_Region")), True, "", FixNullFromDB(drwCountry("D_TaxExtra")))
+                        Else
+                            'just don't charge tax
+                            ShippingBLL._UpdateDestinationForTaxWizard(intCountryID, drwCountry("D_ShippingZoneID"), 0, FixNullFromDB(drwCountry("D_Tax2")),
+                                                               drwCountry("D_ISOCode"), drwCountry("D_ISOCode3Letter"), drwCountry("D_ISOCodeNumeric"),
+                                                               FixNullFromDB(drwCountry("D_Region")), drwCountry("D_Live"), "", FixNullFromDB(drwCountry("D_TaxExtra")))
+                        End If
+                    Next
+
+                Else
+                    'No - Don't charge tax for all countries
+                    For Each drwCountry As DataRow In dtbAllCountries.Rows
+                        ShippingBLL._UpdateDestinationForTaxWizard(drwCountry("D_ID"), drwCountry("D_ShippingZoneID"), 0, FixNullFromDB(drwCountry("D_Tax2")),
+                                           drwCountry("D_ISOCode"), drwCountry("D_ISOCode3Letter"), drwCountry("D_ISOCodeNumeric"),
+                                           FixNullFromDB(drwCountry("D_Region")), drwCountry("D_Live"), "", FixNullFromDB(drwCountry("D_TaxExtra")))
+                    Next
+                End If
+                KartSettingsManager.SetKartConfig("general.tax.euvatcountry", "", False)
             Case "EU"
                 'VAT Registered?
                 If ddlEUVatRegistered.SelectedValue = "y" Then

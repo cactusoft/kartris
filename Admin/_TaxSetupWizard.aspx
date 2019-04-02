@@ -42,6 +42,48 @@
 			<!-- Use different set of questions based on selected tax regime in web.config -->
 					
 			<asp:MultiView ID="mvwRegionalSetupWizard" runat="server" Visible="false" >
+
+
+				<asp:View ID="viwVAT" runat="server">
+				<!-- VAT, non EU -->
+				<ul>
+					<li>
+						<span class="Kartris-DetailsView-Name"><asp:Literal runat="server" ID="litVatRegistered" Text="<%$ Resources: _RegionalWizard, ContentText_TaxWizEUVATRegisteredQuestion %>" /></span>
+						<span class="Kartris-DetailsView-Value"><asp:DropDownList ID="ddlVatRegistered" runat="server" AutoPostBack="True" CssClass="midtext">
+							<asp:ListItem Text="<%$ Resources: _Kartris, ContentText_DropDownSelect%>"></asp:ListItem>
+							<asp:ListItem Text="<%$ Resources: _Kartris, ContentText_Yes%>" Value="y"></asp:ListItem>
+							<asp:ListItem Text="<%$ Resources: _Kartris, ContentText_No %>" Value="n"></asp:ListItem>
+						</asp:DropDownList></span>
+					</li>
+
+
+					<asp:PlaceHolder ID="phdBaseCountry" runat="server" Visible="false">
+					<li>
+					<!-- Country selection -->
+						<span class="Kartris-DetailsView-Name"><asp:Literal runat="server" ID="litBaseCountry2" Text="<%$ Resources: _RegionalWizard, ContentText_TaxWizEUBaseCountryQuestion %>" /></span>
+						<span class="Kartris-DetailsView-Value"><asp:DropDownList ID="ddlCountries" runat="server" AutoPostBack="True">
+						</asp:DropDownList></span>
+					</li>
+					</asp:PlaceHolder>
+
+					<asp:PlaceHolder ID="phdVATRate" runat="server" Visible="false">                   
+					<li>
+					<!-- VAT rate -->
+						<span class="Kartris-DetailsView-Name"><asp:Literal runat="server" ID="litVATRate" Text="<%$ Resources: _RegionalWizard, ContentText_TaxWizEUVATRateQuestion %>" /></span>
+						<span class="Kartris-DetailsView-Value"><asp:TextBox runat="server" ID="txtVATRate" AutoPostBack="true" CssClass="shorttext" /> %
+							<asp:RegularExpressionValidator ID="valRegexTaxRate" runat="server" Display="Dynamic"
+								SetFocusOnError="true" ErrorMessage="<%$ Resources: _Kartris, ContentText_InvalidValue %>"
+								CssClass="error" ForeColor="" ControlToValidate="txtQVatRate" ValidationExpression="<%$ AppSettings:PercentageRegex %>" />
+							<ajaxToolkit:FilteredTextBoxExtender ID="filTaxRate" runat="server" TargetControlID="txtVatRate"
+								FilterType="Numbers, Custom" ValidChars=".," /></span>
+					</li>
+					</asp:PlaceHolder>
+				</ul>
+				</asp:View>
+
+
+
+
 				<asp:View ID="viwEU" runat="server">
 				<!-- EU -->
 				<ul>
