@@ -26,6 +26,13 @@ Partial Class Admin_ModifyCategory
         litCategoryID.Text = _GetCategoryID()
         litSiteID.Text = _GetSiteID()
 
+        'v3 mod
+        'Object config now available for categories
+        _UC_ObjectConfig.ItemID = _GetCategoryID()
+        If Not IsPostBack Then
+            _UC_ObjectConfig.LoadObjectConfig()
+        End If
+
         If _GetCategoryID() = 0 Then
             PrepareNewCategory()
         Else
@@ -63,9 +70,10 @@ Partial Class Admin_ModifyCategory
         RedirectToNewCategory()
     End Sub
 
-    Protected Sub ShowMasterUpdateMessage() Handles _UC_EditCategory.ShowMasterUpdate, _
-                                                    _UC_CategoryView.ShowMasterUpdate, _
-                                                    _UC_CategoryFilter.ShowMasterUpdate
+    Protected Sub ShowMasterUpdateMessage() Handles _UC_EditCategory.ShowMasterUpdate,
+                                                    _UC_CategoryView.ShowMasterUpdate,
+                                                    _UC_CategoryFilter.ShowMasterUpdate,
+                                                    _UC_ObjectConfig.ShowMasterUpdate
         CType(Me.Master, Skins_Admin_Template).DataUpdated()
     End Sub
 

@@ -1,6 +1,7 @@
 ﻿<%@ Page Language="VB" AutoEventWireup="false" CodeFile="_ModifyCategory.aspx.vb"
     Inherits="Admin_ModifyCategory" MasterPageFile="~/Skins/Admin/Template.master" %>
 
+<%@ Register TagPrefix="_user" TagName="ObjectConfig" Src="~/UserControls/Back/_ObjectConfig.ascx" %>
 <%@ Register TagPrefix="_user" TagName="CategoryFilter" Src="~/UserControls/Back/_CategoryFilters.ascx" %>
 <asp:Content ID="cntHead" ContentPlaceHolderID="phdHead" runat="Server">
 </asp:Content>
@@ -54,6 +55,19 @@
                                 <_user:CategoryView ID="_UC_CategoryView" runat="server" ShowHeader="False" />
                             </ContentTemplate>
                         </asp:UpdatePanel>
+                    </ContentTemplate>
+                </ajaxToolkit:TabPanel>
+                <%-- Object Config Tab --%>
+                <ajaxToolkit:TabPanel ID="tblObjectConfig" runat="server">
+                    <HeaderTemplate>
+                        <asp:Literal ID="litObjectConfig" runat="server" Text="<%$ Resources: _Kartris, ContentText_ObjectConfig %>" />
+                    </HeaderTemplate>
+                    <ContentTemplate>
+                        <div class="subtabsection">
+                            <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9996')" style="margin-bottom: 20px;">?</a>
+                            <_user:ObjectConfig ID="_UC_ObjectConfig" runat="server" ItemType="Category" />
+                        </div>
+
                     </ContentTemplate>
                 </ajaxToolkit:TabPanel>
                 <%-- Category's Xml Filters Tab --%>

@@ -17,6 +17,11 @@ Partial Class UserControls_Skin_LoginStatus
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
+        'Hide support tickets if not activated from config
+        If KartSettingsManager.GetKartConfig("frontend.supporttickets.enabled") <> "y" Then
+            lnkSupportTickets.Visible = False
+        End If
+
         'Show main login and status links
         If Page.User.Identity.IsAuthenticated Then
             phdLoggedIn.Visible = True

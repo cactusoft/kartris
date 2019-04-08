@@ -73,6 +73,7 @@
             AddHandler SiteMap.SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
             AddHandler SiteMap.Providers("BreadCrumbSiteMap").SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
             AddHandler SiteMap.Providers("_CategorySiteMapProvider").SiteMapResolve, AddressOf SiteMapHelper.ExpandPathForUnmappedPages
+            TaxRegime.LoadTaxConfigXML()
 
             'Clean up expired sessions
             'Originally this was run in the session start, but

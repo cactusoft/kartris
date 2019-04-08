@@ -1024,12 +1024,12 @@ CREATE PROCEDURE [dbo].[_spKartrisVersions_SearchVersionsByCodeExcludeBase]
 AS
 	SET NOCOUNT ON;
 SELECT * FROM ( SELECT V_ID, V_CodeNumber, V_Type, CASE WHEN EXISTS
-																				  (SELECT        TOP 1 1
-																					FROM            tblKartrisVersions MyTableCheck
-																					WHERE        MyTableCheck.V_ProductID = tblKartrisVersions.V_ProductID AND MyTableCheck.V_Type = 'c') THEN 1 ELSE 0 END AS HasCombinations
+ (SELECT TOP 1 1
+ FROM tblKartrisVersions MyTableCheck
+ WHERE MyTableCheck.V_ProductID = tblKartrisVersions.V_ProductID AND MyTableCheck.V_Type = 'c') THEN 1 ELSE 0 END AS HasCombinations
 
-FROM            dbo.tblKartrisVersions
-WHERE        V_Type <> 's' AND V_CodeNumber LIKE '%' + @Key + '%'
+FROM dbo.tblKartrisVersions
+WHERE V_Type <> 's' AND V_CodeNumber LIKE '%' + @Key + '%'
 ) as viewVersions
 WHERE NOT (HasCombinations = 1 AND V_Type = 'b')
 GROUP BY  V_ID, V_CodeNumber, V_Type, HasCombinations
@@ -1163,6 +1163,483 @@ BEGIN
 		V_QuantityWarnLevel = @V_QuantityWarnLevel
 		WHERE V_ProductID = @V_ProductID AND V_Type = 'c';
 	END
+END
+GO
+
+/****** Object:  UserDefinedFunction [dbo].[fnKartrisBasket_GetItemWeight]    Script Date: 18/03/2019 14:31:04 ******/
+/* update stops issue where all option modifier weights are null, and function ends up returning null or zero */
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date, ,>
+-- Description:	<Description, ,>
+-- =============================================
+ALTER FUNCTION [dbo].[fnKartrisBasket_GetItemWeight]
+(
+	@BasketValueID as bigint,
+	@VersionID as bigint,
+	@ProductID as int
+)
+RETURNS decimal(18,4)
+AS
+BEGIN
+	-- Declare the return variable here
+	DECLARE @Weight as decimal(18,4);
+	DECLARE @WeightBase as decimal(18,4);
+
+	DECLARE @ProductType as char(1);
+	
+	SELECT @ProductType = P_Type
+	FROM tblKartrisProducts 
+	WHERE P_ID = @ProductID;
+	
+	IF @ProductType IN ('s','m') BEGIN
+		SELECT @Weight = V_Weight
+		FROM tblKartrisVersions
+		WHERE V_ID = @VersionID;
+	END ELSE BEGIN
+		DECLARE @OptionsList as nvarchar(max);
+		SELECT @OptionsList = COALESCE(@OptionsList + ',', '') + CAST(T.BSKTOPT_OptionID As nvarchar(10))
+		FROM (SELECT BSKTOPT_OptionID FROM dbo.tblKartrisBasketOptionValues WHERE  BSKTOPT_BasketValueID = @BasketValueID) AS T;
+		
+		SELECT @Weight = SUM(Coalesce(P_OPT_WeightChange, 0))
+		FROM dbo.tblKartrisProductOptionLink
+		WHERE P_OPT_ProductID = @ProductID AND P_OPT_OptionID IN (SELECT * FROM dbo.fnTbl_SplitNumbers(@OptionsList));
+		
+		-- If weight = 0, then no weight change for the options, we need to use the base version.
+		IF @Weight = 0 BEGIN
+			SELECT @Weight = V_Weight FROM tblKartrisVersions WHERE V_ID = @VersionID;
+			END
+		ELSE
+			-- Get weight of options and weight of base version, add together
+			BEGIN
+				SELECT @WeightBase = V_Weight FROM tblKartrisVersions WHERE V_ID = @VersionID;
+				SET @Weight = @Weight + @WeightBase;
+			END
+	END
+	
+	-- Return the result of the function
+	RETURN Round(@Weight, 6);
+
+END
+GO
+
+/****** PERFORMANCE UPGRADE FOR FILTERING AND VIEWING CATEGORIES WITH LARGE NUMBERS OF PRODUCTS ******/
+/****** Object:  UserDefinedFunction [dbo].[fnKartrisLanguageElement_GetItemValue]    Script Date: 07/04/2019 15:56:47 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date, ,>
+-- Description:	Added schemabinding
+-- =============================================
+ALTER FUNCTION [dbo].[fnKartrisLanguageElement_GetItemValue]
+(
+	-- Add the parameters for the function here
+	@LE_LANGID as tinyint,
+	@LE_TypeID as tinyint,
+	@LE_FieldID as tinyint,
+	@LE_ParentID as int
+)
+RETURNS nvarchar(MAX)
+WITH SCHEMABINDING
+AS
+BEGIN
+	-- Declare the return variable here
+	DECLARE @Result nvarchar(MAX);
+	SET @Result = '';
+	
+	SELECT @Result = LE_Value
+	FROM dbo.tblKartrisLanguageElements 
+	WHERE LE_LanguageID = @LE_LANGID AND
+			LE_TypeID = @LE_TypeID AND
+			LE_FieldID = @LE_FieldID AND
+			LE_ParentID = @LE_ParentID;
+
+	
+	-- Return the result of the function
+	RETURN @Result
+
+END
+GO
+
+/****** Object:  View [dbo].[vKartrisTypeProductsLite]    Script Date: 07/04/2019 15:58:12 ******/
+-- New view, this only includes P_Name. This way we don't link
+-- to the Language Elements table multiple times, and can therefore
+-- index this view.
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[vKartrisTypeProductsLite] WITH SCHEMABINDING
+AS
+SELECT     dbo.tblKartrisProducts.P_ID, dbo.tblKartrisLanguages.LANG_ID, CAST(dbo.tblKartrisLanguageElements.LE_Value AS NVARCHAR(255)) AS P_Name, 
+					  dbo.tblKartrisProducts.P_Live, dbo.tblKartrisProducts.P_Featured, 
+					  dbo.tblKartrisProducts.P_OrderVersionsBy, dbo.tblKartrisProducts.P_VersionsSortDirection, dbo.tblKartrisProducts.P_VersionDisplayType, 
+					  dbo.tblKartrisProducts.P_Reviews, dbo.tblKartrisProducts.P_SupplierID, dbo.tblKartrisProducts.P_Type, dbo.tblKartrisProducts.P_CustomerGroupID, 
+					  dbo.tblKartrisProducts.P_AverageRating, dbo.tblKartrisProducts.P_DateCreated, dbo.tblKartrisProducts.P_LastModified
+FROM         dbo.tblKartrisLanguageElements INNER JOIN
+					  dbo.tblKartrisLanguages ON dbo.tblKartrisLanguageElements.LE_LanguageID = dbo.tblKartrisLanguages.LANG_ID INNER JOIN
+					  dbo.tblKartrisProducts ON dbo.tblKartrisLanguageElements.LE_ParentID = dbo.tblKartrisProducts.P_ID
+WHERE     (dbo.tblKartrisLanguageElements.LE_FieldID = 1) AND 
+					  (NOT (dbo.tblKartrisLanguageElements.LE_Value IS NULL)) AND
+					  (dbo.tblKartrisLanguageElements.LE_TypeID = 2) 
+GO
+
+-- Add indexes to this view. Removing the other language element fields
+-- so we only have name means we can index it, should be much faster
+CREATE UNIQUE CLUSTERED INDEX P_LANG_ID
+ON [vKartrisTypeProductsLite] (P_ID, LANG_ID);
+
+CREATE NONCLUSTERED INDEX LANG_ID
+ON [vKartrisTypeProductsLite] (LANG_ID);
+
+CREATE NONCLUSTERED INDEX P_Name
+ON [vKartrisTypeProductsLite] (P_Name);
+
+CREATE NONCLUSTERED INDEX P_Live
+ON [vKartrisTypeProductsLite] (P_Live);
+GO
+
+/****** DELETE THE FilterByCatID sproc *******/
+IF OBJECT_ID('spKartrisProducts_FilterByCatID') IS NOT NULL
+	DROP PROC [dbo].[spKartrisProducts_FilterByCatID]
+GO
+
+/****** Object:  StoredProcedure [dbo].[spKartrisProducts_FilterByCatID]    Script Date: 07/04/2019 16:27:02 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+
+-- v1.012 Update
+-- Author: Paul
+-- Speed improvement using new
+-- vKartrisTypeProductsLite, an indexed view.
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisProducts_FilterByCatID]
+(
+	@LANG_ID as tinyint,
+	@CAT_ID as int,
+	@PageIndex as tinyint, -- 0 Based index
+	@RowsPerPage as smallint,
+	@CGroupID as smallint,
+	@keyWordsList as nvarchar(100),
+	@MinPrice as real,
+	@MaxPrice as real,
+	@AttributeValues as nvarchar(max),
+	@OrderBy as nvarchar(10),
+	@OrderDirection as char(1),
+	@TotalResultProducts as int OUTPUT	
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	DECLARE @StartRowNumber as int;
+	SET @StartRowNumber = (@PageIndex * @RowsPerPage) + 1;
+	DECLARE @EndRowNumber as int;
+	SET @EndRowNumber = @StartRowNumber + @RowsPerPage - 1;
+	
+	DECLARE @WantedProducts AS nvarchar(max);
+	SET @WantedProducts = '';
+
+	DECLARE @AttNames as nvarchar(max), @AttValues as nvarchar(max);
+
+
+	IF @AttributeValues IS NOT NULL AND LEN(@AttributeValues) > 0 BEGIN
+		SET @AttValues = '';
+		SET @AttNames = '';
+
+		CREATE TABLE #AttValuesList(NameValue nvarchar(500) COLLATE DATABASE_DEFAULT);
+		INSERT INTO #AttValuesList
+		SELECT _ID FROM dbo.fnTbl_SplitStrings(@AttributeValues);
+
+		DECLARE AttCursor CURSOR
+		FOR SELECT * FROM #AttValuesList;
+
+		DECLARE @CursorRecord as nvarchar(500);
+
+		OPEN AttCursor
+		FETCH NEXT FROM AttCursor 
+		INTO @CursorRecord;
+
+		WHILE @@FETCH_STATUS = 0
+		BEGIN
+			SET @AttValues = @AttValues + SUBSTRING(@CursorRecord, 1, CHARINDEX('|||', @CursorRecord) - 1) + ','
+			SET @AttNames = @AttNames + SUBSTRING(@CursorRecord, CHARINDEX('|||', @CursorRecord) + 3, LEN(@CursorRecord) - (CHARINDEX('|||', @CursorRecord) + 2)) + ','
+
+			FETCH NEXT FROM AttCursor 
+			INTO @CursorRecord;
+		END
+		CLOSE AttCursor
+		DEALLOCATE AttCursor
+
+		DROP TABLE #AttValuesList;
+
+		SET @AttValues = SUBSTRING(@AttValues, 1, LEN(@AttValues) - 1)
+		SET @AttNames = SUBSTRING(@AttNames, 1, LEN(@AttNames) - 1)
+	
+
+		-- Filter Attributes
+
+		CREATE TABLE #Att ( _ID int, _AV nvarchar(max) COLLATE DATABASE_DEFAULT, _AID int, _Total int)
+
+		CREATE TABLE #AttValues (ATTVALUE nvarchar(500) COLLATE DATABASE_DEFAULT)
+		INSERT INTO #AttValues 
+		SELECT AV._ID
+		FROM [dbo].[fnTbl_SplitStrings](@AttValues) AV
+
+		CREATE TABLE #AttNames (ATTNAME nvarchar(500) COLLATE DATABASE_DEFAULT)
+		INSERT INTO #AttNames
+		SELECT AT._ID
+		FROM [dbo].[fnTbl_SplitStrings](@AttNames) AT
+
+		CREATE TABLE #NeededAtt (ATTNAME nvarchar(500) COLLATE DATABASE_DEFAULT, ATTVALUE nvarchar(500) COLLATE DATABASE_DEFAULT)
+
+		--------------------------------
+		DECLARE @cmd as nvarchar(max);
+		DECLARE @NoOfAttributeRecords as int;
+		SELECT @NoOfAttributeRecords = COUNT(*) FROM #AttNames;
+
+		DECLARE @TCounter as int, @Dummy as int;
+		SET @TCounter = 1;
+		DECLARE @A_V as nvarchar(500), @A_N as nvarchar(500);
+		WHILE @TCounter <= @NoOfAttributeRecords
+		BEGIN
+		;
+			WITH AVV as (
+			SELECT #AttValues.ATTVALUE Val, ROW_NUMBER() OVER (ORDER BY (SELECT 0)) As Row
+			FROM #AttValues
+			)
+			SELECT @A_V = Val
+			FROM AVV
+			WHERE Row = @TCounter ;
+			
+			WITH ATTT as (
+			SELECT  #AttNames.ATTNAME Nam1, ROW_NUMBER() OVER (ORDER BY (SELECT 0)) As Row
+			FROM #AttNames
+			)
+			SELECT @A_N = Nam1
+			FROM ATTT
+			WHERE Row = @TCounter;
+
+			INSERT INTO #NeededAtt VALUES (@A_N, @A_V)
+
+			SET @TCounter = @TCounter + 1
+		END
+
+		INSERT INTO #Att
+		SELECT [ATTRIBV_ProductID], NA.ATTVALUE, [ATTRIBV_AttributeID], 1
+		FROM [dbo].[vKartrisTypeAttributes] A INNER JOIN [dbo].[vKartrisTypeAttributeValues]
+			ON [ATTRIBV_AttributeID] = A.[ATTRIB_ID] INNER JOIN #NeededAtt NA 
+			ON NA.ATTVALUE = [ATTRIBV_Value] 
+				AND NA.ATTNAME = [ATTRIB_Name] INNER JOIN tblKartrisProductCategoryLink
+			ON [ATTRIBV_ProductID] = PCAT_ProductID AND PCAT_CategoryID = @CAT_ID
+		
+		SELECT @WantedProducts = COALESCE(@WantedProducts + ',', '') + CAST(T2._ID as nvarchar(12))
+		FROM ( SELECT _ID FROM #Att
+			   GROUP BY _ID
+			   HAVING SUM(_Total) = (SELECT COUNT(DISTINCT _AID) FROM #Att)
+			   ) T2
+			 
+		DROP TABLE #Att;
+		DROP TABLE #NeededAtt;
+		DROP TABLE #AttValues;
+		DROP TABLE #AttNames;
+	END ELSE BEGIN
+		SELECT @WantedProducts = COALESCE(@WantedProducts + ',', '') + CAST(PCAT_ProductID as nvarchar(12))
+		FROM tblKartrisProductCategoryLink
+		WHERE PCAT_CategoryID = @CAT_ID
+	END
+	
+	-- Price Filters
+	--IF LEN(@WantedProducts) > 0 BEGIN
+	IF @MinPrice <> -1 AND @MaxPrice <> -1	BEGIN
+		DECLARE @TempPricedProducts AS nvarchar(max);
+		SELECT @TempPricedProducts = COALESCE(@TempPricedProducts + ',', '') + CAST(_ID as nvarchar(12))
+		FROM [dbo].[fnTbl_SplitNumbers](@WantedProducts)
+		WHERE dbo.fnKartrisProduct_GetMinPriceWithCG(_ID, @CGroupID) BETWEEN @MinPrice AND @MaxPrice;
+		SET @WantedProducts = @TempPricedProducts;
+	END
+
+	IF @keyWordsList IS NOT NULL AND LEN(@keyWordsList) > 0 BEGIN
+		DECLARE @TempSearchedProducts AS nvarchar(max);
+		DECLARE @SIndx as int;
+		DECLARE @CIndx as int;
+		DECLARE @Keyword as nvarchar(150);
+		DECLARE @Counter as int;
+
+		SET @SIndx = 0;	SET @Counter = 0;
+		WHILE @SIndx <= LEN(@keyWordsList)	BEGIN
+			SET @Counter = @Counter + 1;	-- keywords counter
+			SET @CIndx = CHARINDEX(',', @keyWordsList, @SIndx)	-- Next keyword starting index (1-Based Index)
+			IF @CIndx = 0 BEGIN SET @CIndx = LEN(@keyWordsList)+ 1 END	-- If no more keywords, set next starting index to not exist
+			SET @KeyWord = SUBSTRING(@keyWordsList, @SIndx, @CIndx - @SIndx)
+			-- The next starting index
+			SET @SIndx = @CIndx + 1;
+			
+			SELECT @TempSearchedProducts = COALESCE(@TempSearchedProducts + ',', '') + CAST([dbo].[vKartrisTypeProductsLite].[P_ID] as nvarchar(12))
+			FROM [dbo].[vKartrisTypeProductsLite]
+			WHERE [dbo].[vKartrisTypeProductsLite].[P_ID] IN (SELECT _ID FROM [dbo].[fnTbl_SplitNumbers](@WantedProducts))
+				AND ([dbo].[vKartrisTypeProductsLite].[P_Name] LIKE '%' + @KeyWord + '%');
+
+		END
+		SET @WantedProducts = @TempSearchedProducts;
+	END
+	
+	-- Get Total Records
+	SELECT @TotalResultProducts = Count(DISTINCT P_ID)
+	FROM	[dbo].[vKartrisTypeProductsLite] 
+			INNER JOIN tblKartrisVersions 
+				ON [dbo].[vKartrisTypeProductsLite].[P_ID] = tblKartrisVersions.V_ProductID
+	WHERE	[dbo].[vKartrisTypeProductsLite].[P_ID] IN (SELECT _ID FROM [dbo].[fnTbl_SplitNumbers](@WantedProducts))
+			AND tblKartrisVersions.V_Live = 1
+			AND (tblKartrisVersions.V_Type = 'b' OR tblKartrisVersions.V_Type = 'v')
+			AND [dbo].[vKartrisTypeProductsLite].[LANG_ID] = @LANG_ID
+			AND [dbo].[vKartrisTypeProductsLite].[P_Live] = 1
+			AND ([dbo].[vKartrisTypeProductsLite].[P_CustomerGroupID] IS NULL OR [dbo].[vKartrisTypeProductsLite].[P_CustomerGroupID] = @CGroupID);
+				 
+	WITH FilteredProducts AS
+	(
+		SELECT	CASE
+				WHEN (LOWER(@OrderBy) = 'p_price' AND LOWER(@OrderDirection) = 'a') THEN	ROW_NUMBER() OVER (ORDER BY dbo.fnKartrisProduct_GetMinPriceWithCG([dbo].[vKartrisTypeProductsLite].[P_ID], @CGroupID) ASC) 
+				WHEN (LOWER(@OrderBy) = 'p_price' AND LOWER(@OrderDirection) = 'd') THEN	ROW_NUMBER() OVER (ORDER BY dbo.fnKartrisProduct_GetMinPriceWithCG([dbo].[vKartrisTypeProductsLite].[P_ID], @CGroupID) DESC) 
+				WHEN (LOWER(@OrderBy) = 'p_name' AND LOWER(@OrderDirection) = 'a') THEN ROW_NUMBER() OVER (ORDER BY P_Name ASC) 
+				WHEN (LOWER(@OrderBy) = 'p_name' AND LOWER(@OrderDirection) = 'd') THEN ROW_NUMBER() OVER (ORDER BY P_Name DESC)
+				WHEN (@OrderBy = '') THEN ROW_NUMBER() OVER (ORDER BY [dbo].[vKartrisTypeProductsLite].[P_ID] ASC)
+				END As Row,
+				[dbo].[vKartrisTypeProductsLite].[P_ID], 
+				[dbo].[vKartrisTypeProductsLite].[P_Name], 
+				dbo.fnKartrisProduct_GetMinPriceWithCG([dbo].[vKartrisTypeProductsLite].[P_ID], @CGroupID) AS MinPrice,
+				MIN(tblKartrisTaxRates.T_Taxrate) AS MinTaxRate, 
+				[dbo].[vKartrisTypeProductsLite].[P_VersionDisplayType], 
+				[dbo].[vKartrisTypeProductsLite].[P_DateCreated], 
+				[dbo].[vKartrisTypeProductsLite].[P_LastModified]
+		FROM	[dbo].[vKartrisTypeProductsLite] 
+				INNER JOIN tblKartrisVersions 
+					ON [dbo].[vKartrisTypeProductsLite].[P_ID] = tblKartrisVersions.V_ProductID
+				LEFT OUTER JOIN tblKartrisTaxRates 
+					ON tblKartrisTaxRates.T_ID = tblKartrisVersions.V_Tax
+		WHERE	[dbo].[vKartrisTypeProductsLite].[P_ID] IN (SELECT _ID FROM [dbo].[fnTbl_SplitNumbers](@WantedProducts))
+				AND tblKartrisVersions.V_Live = 1
+				AND (tblKartrisVersions.V_Type = 'b' OR tblKartrisVersions.V_Type = 'v')
+				AND [dbo].[vKartrisTypeProductsLite].LANG_ID = @LANG_ID
+				AND [dbo].[vKartrisTypeProductsLite].[P_Live] = 1
+				AND ([dbo].[vKartrisTypeProductsLite].[P_CustomerGroupID] IS NULL OR [dbo].[vKartrisTypeProductsLite].P_CustomerGroupID = @CGroupID)
+		GROUP BY [dbo].[vKartrisTypeProductsLite].[P_ID], 
+				[dbo].[vKartrisTypeProductsLite].[P_Name], 
+				[dbo].[vKartrisTypeProductsLite].[P_VersionDisplayType],
+				[dbo].[vKartrisTypeProductsLite].[P_DateCreated],
+				[dbo].[vKartrisTypeProductsLite].[P_LastModified]
+				
+	)
+	SELECT * ,
+	dbo.fnKartrisDB_TruncateDescription(dbo.fnKartrisLanguageElement_GetItemValue(@LANG_ID, 2, 2, FilteredProducts.P_ID)) AS P_Desc,
+	dbo.fnKartrisLanguageElement_GetItemValue(@LANG_ID, 2, 7, FilteredProducts.P_ID) AS P_Strapline
+	FROM FilteredProducts
+	WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber
+	ORDER BY Row ASC;
+	
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetRowsBetweenByCatID]    Script Date: 07/04/2019 16:59:49 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	Replaces "spKartris_PROD_SelectByCAT"
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisProducts_GetRowsBetweenByCatID]
+	(
+	@LANG_ID as tinyint,
+	@CAT_ID as int,
+	@PageIndex as tinyint, -- 0 Based index
+	@RowsPerPage as smallint,
+	@CGroupID as smallint
+	)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	
+	-- Insert statements for procedure here
+
+	DECLARE @StartRowNumber as int;
+	SET @StartRowNumber = (@PageIndex * @RowsPerPage) + 1;
+	DECLARE @EndRowNumber as int;
+	SET @EndRowNumber = @StartRowNumber + @RowsPerPage - 1;
+	
+	DECLARE @OrderBy as nvarchar(50), @OrderDirection as char(1)
+	SELECT @OrderBy = CAT_OrderProductsBy, @OrderDirection = CAT_ProductsSortDirection
+	FROM dbo.tblKartrisCategories
+	WHERE CAT_ID = @CAT_ID;
+
+	IF @OrderBy is NULL OR @OrderBy = 'd'
+	BEGIN 
+		SELECT @OrderBy = CFG_Value FROM tblKartrisConfig WHERE CFG_Name = 'frontend.products.display.sortdefault';
+	END;
+	IF @OrderDirection is NULL OR @OrderDirection = '' BEGIN 
+		SELECT @OrderDirection = CFG_Value FROM tblKartrisConfig WHERE CFG_Name = 'frontend.products.display.sortdirection';
+	END;
+	
+		With ProductList AS 
+		(
+			SELECT	CASE 
+					WHEN (@OrderBy = 'P_ID' AND @OrderDirection = 'A') THEN	ROW_NUMBER() OVER (ORDER BY P_ID ASC) 
+					WHEN (@OrderBy = 'P_ID' AND @OrderDirection = 'D') THEN	ROW_NUMBER() OVER (ORDER BY P_ID DESC) 
+					WHEN (@OrderBy = 'P_Name' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY P_Name ASC) 
+					WHEN (@OrderBy = 'P_Name' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY P_Name DESC) 
+					WHEN (@OrderBy = 'P_DateCreated' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY P_DateCreated ASC) 
+					WHEN (@OrderBy = 'P_DateCreated' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY P_DateCreated DESC) 
+					WHEN (@OrderBy = 'P_LastModified' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY P_LastModified ASC) 
+					WHEN (@OrderBy = 'P_LastModified' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY P_LastModified DESC) 
+					WHEN (@OrderBy = 'PCAT_OrderNo' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY PCAT_OrderNo ASC) 
+					WHEN (@OrderBy = 'PCAT_OrderNo' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY PCAT_OrderNo DESC) 
+					END AS Row,
+					vKartrisTypeProducts.P_ID, dbo.fnKartrisProduct_GetMinPriceWithCG(vKartrisTypeProducts.P_ID, @CGroupID) AS MinPrice, MIN(tblKartrisTaxRates.T_Taxrate) AS MinTaxRate, vKartrisTypeProducts.P_Name, 
+										  dbo.fnKartrisDB_TruncateDescription(vKartrisTypeProducts.P_Desc) AS P_Desc, vKartrisTypeProducts.P_StrapLine, vKartrisTypeProducts.P_VersionDisplayType, 
+										  vKartrisTypeProducts.P_DateCreated, vKartrisTypeProducts.P_LastModified, tblKartrisProductCategoryLink.PCAT_OrderNo
+					FROM         tblKartrisProductCategoryLink INNER JOIN
+										  vKartrisTypeProducts ON tblKartrisProductCategoryLink.PCAT_ProductID = vKartrisTypeProducts.P_ID INNER JOIN
+										  tblKartrisVersions ON vKartrisTypeProducts.P_ID = tblKartrisVersions.V_ProductID LEFT OUTER JOIN
+										  tblKartrisTaxRates ON tblKartrisTaxRates.T_ID = tblKartrisVersions.V_Tax
+					WHERE     (tblKartrisVersions.V_Live = 1) AND (tblKartrisVersions.V_Type = 'b' OR tblKartrisVersions.V_Type = 'v' ) AND (vKartrisTypeProducts.LANG_ID = @LANG_ID) AND (vKartrisTypeProducts.P_Live = 1) AND 
+										  (tblKartrisProductCategoryLink.PCAT_CategoryID = @CAT_ID) AND (vKartrisTypeProducts.P_CustomerGroupID IS NULL OR
+										  vKartrisTypeProducts.P_CustomerGroupID = @CGroupID)
+					GROUP BY vKartrisTypeProducts.P_Name, vKartrisTypeProducts.P_Desc, vKartrisTypeProducts.P_StrapLine, vKartrisTypeProducts.P_ID, 
+										  vKartrisTypeProducts.P_VersionDisplayType, vKartrisTypeProducts.P_DateCreated, vKartrisTypeProducts.P_LastModified, 
+										  tblKartrisProductCategoryLink.PCAT_OrderNo
+			
+		)
+
+		SELECT *
+		FROM ProductList
+		WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber
+		ORDER BY Row ASC
+	
 END
 GO
 

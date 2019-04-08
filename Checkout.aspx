@@ -151,7 +151,7 @@
                                         <div class="small-10 large-3 columns">
                                             <asp:TextBox ID="txtEUVAT" runat="server" EnableViewState="true" AutoPostBack="true"></asp:TextBox>
                                         </div>
-                                        <div class="small-1 large-8 columns">&nbsp;</div>
+                                        <div class="small-1 large-8 columns">&nbsp;<asp:Literal ID="litValidationOfVATNumber" runat="server"></asp:Literal></div>
                                     </div>
                                 </div>
                             </asp:PlaceHolder>

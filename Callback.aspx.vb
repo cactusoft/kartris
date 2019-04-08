@@ -194,7 +194,7 @@ Partial Class Callback
 
                                     'Need to create a temp user for the code below to work
                                     Dim tempKartrisUser As KartrisMemberShipUser = New KartrisMemberShipUser(O_CustomerID, UsersBLL.GetEmailByID(O_CustomerID), 0, 0, 0, 0, 1, True)
-                                    Dim kartrisBasket As Basket = Session("Basket")
+                                    Dim kartrisBasket As Kartris.Basket = Session("Basket")
 
                                     CkartrisFormatErrors.LogError("Get Session Basket")
                                     CkartrisFormatErrors.LogError("Get Session Basket: " + kartrisBasket.ToString())

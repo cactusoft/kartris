@@ -21,17 +21,24 @@ Imports CkartrisFormatErrors
 
 Public Class PowerpackBLL
 
-    Public Shared Sub LoadCategoryFilters(ByVal intCategoryID As Integer, ByVal Request As HttpRequest, _
+    Public Shared Sub LoadCategoryFilters(ByVal intCategoryID As Integer, ByVal Request As HttpRequest,
                                           ByRef xmlDoc As XmlDocument, ByRef arrSelectedValues() As String,
-                                               ByVal numCurrencyID As Short, ByRef phdCategoryFilters As PlaceHolder, _
-                                               ByRef phdPriceRange As PlaceHolder, ByRef ddlPriceRange As DropDownList, _
-                                               ByRef txtFromPrice As TextBox, ByRef txtToPrice As TextBox, _
-                                               ByRef litFromSymbol As Literal, ByRef litToSymbol As Literal, _
-                                               ByRef phdCustomPrice As PlaceHolder, ByRef txtSearch As TextBox, _
-                                               ByRef ddlOrderBy As DropDownList, ByRef phdAttributes As PlaceHolder, _
+                                               ByVal numCurrencyID As Short, ByRef phdCategoryFilters As PlaceHolder,
+                                               ByRef phdPriceRange As PlaceHolder, ByRef ddlPriceRange As DropDownList,
+                                               ByRef txtFromPrice As TextBox, ByRef txtToPrice As TextBox,
+                                               ByRef litFromSymbol As Literal, ByRef litToSymbol As Literal,
+                                               ByRef phdCustomPrice As PlaceHolder, ByRef txtSearch As TextBox,
+                                               ByRef ddlOrderBy As DropDownList, ByRef phdAttributes As PlaceHolder,
                                                ByRef rptAttributes As Repeater)
         phdCategoryFilters.Visible = False
     End Sub
+
+    'This function is used to check if there are any filters active
+    'In the default Kartris, without powerpack, this always returns false
+    Public Shared Function CategoryHasFilters(ByVal intCategoryID As Integer) As Boolean
+        Return False
+    End Function
+
     Public Shared Sub BoundRepeaterAttributeItem(xmlDoc As XmlDocument, arrSelectedValues() As String, ByRef itm As RepeaterItem)
         
     End Sub
@@ -63,4 +70,6 @@ Public Class PowerpackBLL
     Private Shared Function _GetMaxPriceByCategory_s(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As Integer
         Return Nothing
     End Function
+
+
 End Class

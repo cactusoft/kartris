@@ -424,13 +424,15 @@ Partial Class _Checkout
     ''' </summary>
     Protected Sub Page_LoadComplete(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.LoadComplete
         'Fails for new users
-        Try
-            If txtEUVAT.Text = "" And phdEUVAT.Visible = True Then
-                txtEUVAT.Text = UsersBLL.GetCustomerEUVATNumber(CurrentLoggedUser.ID)
-            End If
-        Catch ex As Exception
-            'probably a new user or don't need vate
-        End Try
+        If Not Me.IsPostBack Then
+            Try
+                If txtEUVAT.Text = "" And phdEUVAT.Visible = True Then
+                    txtEUVAT.Text = UsersBLL.GetCustomerEUVATNumber(CurrentLoggedUser.ID)
+                End If
+            Catch ex As Exception
+                'probably a new user or don't need vate
+            End Try
+        End If
 
         '---------------------------------------
         'ZERO ITEMS IN BASKET!
@@ -631,7 +633,9 @@ Partial Class _Checkout
                 Else
                     'Country of user is same as store
                     'Hide VAT box
+                    txtEUVAT.Text = ""
                     phdEUVAT.Visible = False
+                    Call txtEUVAT_AutoPostback()
                 End If
             Else
                 'No shipping address
@@ -643,11 +647,6 @@ Partial Class _Checkout
             'support turned off
             phdEUVAT.Visible = False
         End If
-
-        'Reset everything
-        txtEUVAT.Text = ""
-        Session("blnEUVATValidated") = False
-        txtEUVAT_AutoPostback()
 
         '=======================================================
         'SET SHIPPING DETAILS FROM ADDRESS CONTROL
@@ -2079,11 +2078,12 @@ Partial Class _Checkout
         mvwCheckout.ActiveViewIndex = 1
     End Sub
 
+
     ''' <summary>
     ''' Post back automatically and refresh
     ''' when EU VAT number is entered
     ''' </summary>
-    Protected Sub txtEUVAT_AutoPostback() Handles txtEUVAT.TextChanged
+    Protected Sub txtEUVAT_AutoPostback() Handles txtEUVAT.TextChanged, chkSameShippingAsBilling.CheckedChanged
 
         '---------------------------------------
         'VAT NUMBER WAS SUBMITTED
@@ -2131,10 +2131,31 @@ Partial Class _Checkout
 
             'No VAT number submitted, so
             'not validated
+            'Reset everything
+            txtEUVAT.Text = ""
             Session("blnEUVATValidated") = False
         End If
 
+        If Session("blnEUVATValidated") = True Then
+            'Show VAT number as valid
+            'is blank, hide validation info
+            litValidationOfVATNumber.Text = "&#x2705;"
+            litValidationOfVATNumber.Visible = True
+        Else
+            If strEUVatNumber = "" Then
+                'is blank, hide validation info
+                litValidationOfVATNumber.Text = ""
+                litValidationOfVATNumber.Visible = False
+            Else
+                'really is invalid
+                litValidationOfVATNumber.Text = "&#x274C;"
+                litValidationOfVATNumber.Visible = True
+            End If
+            'Show VAT number as invalid
+        End If
+
         UC_BasketView.RefreshShippingMethods()
+
     End Sub
 
     ''' <summary>
