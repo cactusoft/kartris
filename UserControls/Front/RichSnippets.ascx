@@ -17,12 +17,14 @@
   }</asp:Literal><asp:Literal ID="litOffer" runat="server">,
   "offers": {
 	"@type": "Offer",
+	"url": "[url]",
 	"priceCurrency": "[currency]",
 	"price": "[price]"
 	}</asp:Literal>
   <asp:Literal ID="litOfferAggregate" runat="server">,
   "offers": {
 	"@type": "AggregateOffer",
+	"url": "[url]",
 	"lowPrice": "[lowprice]",
 	"highPrice": "[highprice]",
 	"priceCurrency": "[currency]"

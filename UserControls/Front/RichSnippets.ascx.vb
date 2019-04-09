@@ -33,6 +33,9 @@ Partial Class UserControls_Front_RichSnippets
     Sub LoadSnippets()
         Dim dr As DataRow = ProductsBLL.GetRichSnippetProperties(_ProductID, Session("LANG"))(0)
 
+        Dim strURL As String = CkartrisBLL.WebShopURL.ToLower & "======" & SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, _ProductID) ' added the === bit to make it easier to remove the double slash from joining webshopURL with the page URL local
+        strURL = Replace(strURL, "/======/", "/")
+
         '' Name, SKU and Category
         litProductMain.Text = litProductMain.Text.Replace("[product_name]", Replace(CkartrisDisplayFunctions.StripHTML(FixNullFromDB(dr("P_Name"))), """", "\"""))
         litProductMain.Text = litProductMain.Text.Replace("[product_desc]", Replace(CkartrisDisplayFunctions.StripHTML(FixNullFromDB(dr("P_Desc"))), """", "\"""))
@@ -67,25 +70,32 @@ Partial Class UserControls_Front_RichSnippets
         If FixNullFromDB(dr("P_Type")) = "s" Then
             '' Single Version
             litOffer.Text = litOffer.Text.Replace("[currency]", CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
-            litOffer.Text = litOffer.Text.Replace("[price]", FixNullFromDB(dr("P_Price")))
+            litOffer.Text = litOffer.Text.Replace("[price]", CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), FixNullFromDB(dr("P_Price")), False))
+            litOffer.Text = litOffer.Text.Replace("[url]", strURL)
             litOfferAggregate.Visible = False
 
         ElseIf FixNullFromDB(dr("P_MinPrice")) = FixNullFromDB(dr("P_MaxPrice")) Then
             litOffer.Text = litOffer.Text.Replace("[currency]", CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
-            litOffer.Text = litOffer.Text.Replace("[price]", FixNullFromDB(dr("P_MinPrice")))
+            litOffer.Text = litOffer.Text.Replace("[price]", CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), FixNullFromDB(dr("P_MinPrice")), False))
+            litOffer.Text = litOffer.Text.Replace("[url]", strURL)
             litOfferAggregate.Visible = False
         Else
             litOfferAggregate.Text = litOfferAggregate.Text.Replace("[currency]", CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
             litOfferAggregate.Text = litOfferAggregate.Text.Replace("[lowprice]", CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), FixNullFromDB(dr("P_MinPrice"))), False))
             litOfferAggregate.Text = litOfferAggregate.Text.Replace("[highprice]", CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), FixNullFromDB(dr("P_MaxPrice"))), False))
+            litOfferAggregate.Text = litOfferAggregate.Text.Replace("[url]", strURL)
             litOffer.Visible = False
         End If
 
-        '' Disable Offer if Call for Price is set
-        If FixNullFromDB(dr("P_CallForPrice")) = 1 Then
-            litOffer.Visible = False
-            litOfferAggregate.Visible = False
-        End If
+
+
+
+        ''' Disable Offer if Call for Price is set
+        'If FixNullFromDB(dr("P_CallForPrice")) = 1 Then
+        '    litOffer.Visible = False
+        '    litOfferAggregate.Visible = False
+        'End If
 
     End Sub
 End Class
+
