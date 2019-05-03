@@ -1643,6 +1643,30 @@ BEGIN
 END
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisCategories_SearchTopLevelCategoriesByName]    Script Date: 13/04/2019 09:54:52 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+CREATE PROCEDURE [dbo].[_spKartrisCategories_SearchTopLevelCategoriesByName]
+(
+	@Key nvarchar(50),
+	@LANG_ID tinyint
+)
+AS
+	SET NOCOUNT ON;
+SELECT        CAT_ID, CAT_Name
+FROM            tblKartrisCategoryHierarchy INNER JOIN
+						 vKartrisTypeCategories ON tblKartrisCategoryHierarchy.CH_ChildID = vKartrisTypeCategories.CAT_ID
+WHERE        (CAT_ID <> 0) AND (LANG_ID = @LANG_ID) AND (CAT_Name LIKE @Key + '%') AND (CH_ParentID = 0)
+
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

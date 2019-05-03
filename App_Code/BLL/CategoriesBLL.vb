@@ -43,6 +43,12 @@ Public Class CategoriesBLL
         Return Adptr._GetWithProductsOnly(_LanguageID)
     End Function
 
+    Public Shared Function _SearchTopLevelCategoryByName(ByVal _Key As String, ByVal _LanguageID As Byte) As DataTable
+        Dim tbl As New DataTable
+        tbl = Adptr._SearchTopLevelByName(_Key, _LanguageID)
+        Return tbl
+    End Function
+
     Public Shared Function _SearchCategoryByName(ByVal _Key As String, ByVal _LanguageID As Byte) As DataTable
         Dim tbl As New DataTable
         tbl = Adptr._SearchByName(_Key, _LanguageID)

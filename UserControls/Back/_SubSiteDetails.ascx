@@ -51,7 +51,7 @@
                                                         <asp:ListBox ID="lbxCategory" runat="server"></asp:ListBox>
                                                         <asp:LinkButton ID="lnkBtnRemoveCategory" CssClass="linkbutton icon_delete" runat="server"
                                                             Text='<%$ Resources:_Kartris, ContentText_RemoveSelected %>' /><br />
-                                                        <_user:AutoComplete ID="_UC_AutoComplete" runat="server" MethodName="GetCategories" />
+                                                        <_user:AutoComplete ID="_UC_AutoComplete" runat="server" MethodName="GetTopLevelCategories" />
                                                         <asp:LinkButton ID="lnkBtnAddCategory" CssClass="linkbutton icon_new" runat="server"
                                                             Text='Select' /><br />
                                                         <asp:RequiredFieldValidator ID="RequiredLbxCategory" runat="server" CssClass="error"

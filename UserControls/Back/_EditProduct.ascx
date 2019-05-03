@@ -181,6 +181,7 @@
                             ToolTip='<%$ Resources: _Kartris, FormButton_Save %>' />
                         <asp:LinkButton ID="btnCloneProduct" runat="server" CssClass="button clonebutton" Text='<%$ Resources: _Kartris, FormButton_Clone %>'
                             ToolTip='<%$ Resources: _Kartris, FormButton_Clone %>' />
+                        <asp:TextBox ID="txtCloneQty" runat="server" CssClass="submitareatext" value="1" ToolTip='<%$ Resources: _Kartris, ContentText_PleaseEnterValue %>'></asp:TextBox>
                         <asp:LinkButton ID="btnCancel" runat="server" CssClass="button cancelbutton" Text='<%$ Resources: _Kartris, FormButton_Cancel %>'
                             ToolTip='<%$ Resources: _Kartris, FormButton_Cancel %>' />
                         <asp:HyperLink ID="hlinkPreview" runat="server" CssClass="button previewbutton"

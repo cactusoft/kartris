@@ -3,7 +3,9 @@
 <div id="loginstatus" class="hovermenu_holder">
     <% '----------Logged in--------- %>
     <asp:PlaceHolder ID="phdLoggedIn" runat="server" Visible="False">
-        <asp:HyperLink NavigateUrl="~/Customer.aspx?action=home" ID="lnkMyAccount" runat="server" CssClass="loginbutton loggedin" ToolTip="<%$ Resources: Kartris, PageTitle_MyAccount %>"></asp:HyperLink>
+        <asp:HyperLink NavigateUrl="~/Customer.aspx?action=home" ID="lnkMyAccount" runat="server" CssClass="loginbutton loggedin" ToolTip="<%$ Resources: Kartris, PageTitle_MyAccount %>">
+            <i class="fas fa-user-check"></i>
+        </asp:HyperLink>
         <span id="username"><strong>
             <asp:LoginName ID="KartrisLoginName" FormatString="{0}" runat="server" />
         </strong></span>
@@ -28,7 +30,10 @@
     <% '---------Not logged in--------- %>
     <asp:PlaceHolder ID="phdLoggedOut" runat="server" Visible="False">
         <asp:HyperLink ID="lnkLogin" runat="server" NavigateUrl="~/CustomerAccount.aspx" CssClass="loginbutton loggedout">
-            <asp:Literal ID="litContentTextLogin" runat="server" Text='<%$ Resources: Kartris, PageTitle_LogInToSite %>' />
+            <i class="fas fa-user"></i>
+            <span class="icontext">
+                <asp:Literal ID="litContentTextLogin" runat="server" Text='<%$ Resources: Kartris, PageTitle_LogInToSite %>' />
+            </span>
         </asp:HyperLink>
         <span id="statuslabel">
         <asp:Literal ID="litContentTextNotLoggedIn" runat="server" Text="<%$ Resources: Kartris, ContentText_NotLoggedIn %>"></asp:Literal>

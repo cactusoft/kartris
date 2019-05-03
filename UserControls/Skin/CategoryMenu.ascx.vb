@@ -56,6 +56,19 @@ Partial Class UserControls_Skin_CategoryMenu
         'This allows the possibility of having two
         'or more menus, each starting from a top
         'level category.
+
+        'From Kartris v3.0 onwards, we need multi-site support
+        'This means the category control can be doing double-duty, 
+        'both for the main site skin, but also subsites which will
+        'have their categories with a separate root category.
+
+        'First, are we viewing a subsite?
+        Dim numSubSiteID As Integer = SubSitesBLL.ViewingSubSite(Session("SUB_ID")) 'Return 0 if default skin
+        If numSubSiteID > 0 Then
+            Dim tblSubSites = SubSitesBLL.GetSubSiteByID(numSubSiteID)
+            _lngCategoryID = tblSubSites.Rows.Item(0).Item("SUB_BaseCategoryID")
+        End If
+
         If _lngCategoryID > 0 Then
             Dim nodeCategory As SiteMapNode = SiteMap.Providers("CategorySiteMapProvider").FindSiteMapNodeFromKey("0-" &
                         CkartrisBLL.GetLanguageIDfromSession & "," & IIf(_strParent <> "", _strParent & ",", "") & _lngCategoryID)

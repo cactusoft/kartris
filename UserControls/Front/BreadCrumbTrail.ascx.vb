@@ -37,6 +37,14 @@ Partial Class BreadCrumbTrail
             smpTrail.SiteMapProvider = "BreadCrumbSiteMap"
         End If
 
+        'First, are we viewing a subsite?
+        'Dim _lngCategoryID As Integer = 0
+        Dim numSubSiteID As Integer = SubSitesBLL.ViewingSubSite(Session("SUB_ID")) 'Return 0 if default skin
+        If numSubSiteID > 0 Then
+            'Dim tblSubSites = SubSitesBLL.GetSubSiteByID(numSubSiteID)
+            '_lngCategoryID = tblSubSites.Rows.Item(0).Item("SUB_BaseCategoryID")
+            'smpTrail.
+        End If
 
     End Sub
 

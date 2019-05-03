@@ -297,7 +297,7 @@ MAIN BASKET
                                     <td class="remove">
                                         <asp:LinkButton CssClass="basket_delete_button" ID="lnkBtnRemoveItem" OnCommand="RemoveItem_Click"
                                             CommandName="RemoveItem" CommandArgument='<%#Eval("ID") & ";" & Eval("VersionID")%>'
-                                            runat="server" ToolTip='<%$Resources:Basket,FormButton_Remove%>' Text=""></asp:LinkButton>
+                                            runat="server" ToolTip='<%$Resources:Basket,FormButton_Remove%>' Text=""><i class="fas fa-trash-alt"></i></asp:LinkButton>
                                     </td>
                                 </tr>
                             </ItemTemplate>
@@ -661,18 +661,18 @@ MAIN BASKET
                     <% End If%>
                     <!-- Grand totals -->
                     <%
-                        Dim vFinalPriceExTax, vFinalPriceTaxAmount, vFinalPriceIncTax, vFinalPriceTaxRate As Double
-     	
-                        If ViewType <> BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then
-                            vFinalPriceExTax = Basket.FinalPriceExTax - Basket.ShippingPrice.ExTax - Basket.OrderHandlingPrice.ExTax
-                            vFinalPriceTaxAmount = Basket.FinalPriceTaxAmount - Basket.ShippingPrice.TaxAmount - Basket.OrderHandlingPrice.TaxAmount
-                            vFinalPriceIncTax = Basket.FinalPriceIncTax - Basket.ShippingPrice.IncTax - Basket.OrderHandlingPrice.IncTax
-                        Else
-                            vFinalPriceExTax = Basket.FinalPriceExTax
-                            vFinalPriceTaxAmount = Basket.FinalPriceTaxAmount
-                            vFinalPriceIncTax = Basket.FinalPriceIncTax
-                            vFinalPriceTaxRate = Math.Round(Basket.D_Tax * 100, 3)
-                        End If
+    Dim vFinalPriceExTax, vFinalPriceTaxAmount, vFinalPriceIncTax, vFinalPriceTaxRate As Double
+
+    If ViewType <> BasketBLL.VIEW_TYPE.CHECKOUT_BASKET Then
+        vFinalPriceExTax = Basket.FinalPriceExTax - Basket.ShippingPrice.ExTax - Basket.OrderHandlingPrice.ExTax
+        vFinalPriceTaxAmount = Basket.FinalPriceTaxAmount - Basket.ShippingPrice.TaxAmount - Basket.OrderHandlingPrice.TaxAmount
+        vFinalPriceIncTax = Basket.FinalPriceIncTax - Basket.ShippingPrice.IncTax - Basket.OrderHandlingPrice.IncTax
+    Else
+        vFinalPriceExTax = Basket.FinalPriceExTax
+        vFinalPriceTaxAmount = Basket.FinalPriceTaxAmount
+        vFinalPriceIncTax = Basket.FinalPriceIncTax
+        vFinalPriceTaxRate = Math.Round(Basket.D_Tax * 100, 3)
+    End If
 
                     %>
 
@@ -730,7 +730,7 @@ MAIN BASKET
                                 <span class="value"><%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceExTax)%></span>
                             <% Else %>
                                 <span class="value"><%=CurrenciesBLL.FormatCurrencyPrice(SESS_CurrencyID, vFinalPriceIncTax)%></span>
-                            <% End if %>
+                            <% End If %>
                             </td>
                         <td class="hide-for-small">&nbsp;</td>
                     </tr>
@@ -740,10 +740,7 @@ MAIN BASKET
                 <asp:Literal ID="litShippingTotal" runat="server"></asp:Literal>
                 <asp:PlaceHolder ID="phdControls" runat="server" Visible="false"></asp:PlaceHolder>
             </div>
-            <% If ViewType = BasketBLL.VIEW_TYPE.MAIN_BASKET Then%>
-                <!-- shipping estimate -->
-                <user:ShippingMethodsEstimate ID="UC_ShippingMethodsEstimate" runat="server" />
-            <% End If %>
+
             <asp:PlaceHolder ID="phdBasketButtons" runat="server" Visible="false">
                 <div class="controls">
                     <div>
@@ -800,6 +797,11 @@ MAIN BASKET
         </div>
         <!-- end basket links -->
         <% End If%>
+            <% If ViewType = BasketBLL.VIEW_TYPE.MAIN_BASKET Then%>
+                <!-- shipping estimate -->
+                <user:ShippingMethodsEstimate ID="UC_ShippingMethodsEstimate" runat="server" />
+            <% End If %>
+
         <% If Basket.BasketItems.Count > 0 Then%>
         <asp:PlaceHolder ID="phdPromotions" runat="server" Visible="false">
             <div class="section section_promotions">

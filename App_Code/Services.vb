@@ -26,6 +26,23 @@ Imports System.Data
 Public Class kartrisServices
     Inherits System.Web.Services.WebService
 
+    <WebMethod(EnableSession:=True)>
+    <Script.Services.ScriptMethod()>
+    Public Function GetTopLevelCategories(ByVal prefixText As String, ByVal count As Integer) As String()
+        Dim tblCategories As New DataTable
+        tblCategories = CategoriesBLL._SearchTopLevelCategoryByName(prefixText, Session("_LANG"))
+
+        Dim items() As String = New String() {""}
+        Dim counter As Integer = 0
+        For Each row As DataRow In tblCategories.Rows
+            ReDim Preserve items(counter)
+            items(counter) = row("CAT_Name") + vbTab + "(" + CStr(row("CAT_ID")) + ")"
+            counter += 1
+        Next
+
+        Return items
+    End Function
+
     <WebMethod(EnableSession:=True)> _
     <Script.Services.ScriptMethod()> _
     Public Function GetCategories(ByVal prefixText As String, ByVal count As Integer) As String()

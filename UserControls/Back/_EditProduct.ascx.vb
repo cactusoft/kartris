@@ -473,23 +473,59 @@ Partial Class _EditProduct
                     Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intProductID)
                 End If
             Case DML_OPERATION.CLONE
-                Dim intNewProductID As Integer = ProductsBLL._AddProduct(
-                                tblLanguageContents, sbdParentsList.ToString, 0, blnLive, numFeatured,
-                                 strOrderVersionsBy, chrVersionsSortDirection, chrReviews, chrVersionDisplayType, numSupplier, chrType, numCustomerGroup, strMessage, True)
-                If Not intNewProductID > 0 Then
-                    _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
-                    Exit Sub
-                End If
-                RefreshNewestProductsCache()
+                Try
+                    'Put everything in a try catch, we can skip out if error occurs
+                    Dim intNumClones As Integer = txtCloneQty.Text
 
-                'Now we need to create the associated records, versions,
-                'related products, attribute values, etc.
-                If Not ProductsBLL._CloneProductRecords(intProductID, intNewProductID) Then
-                    _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, "Error cloning product linked records")
-                    'Exit Sub
-                End If
+                    If intNumClones = 1 Then
+                        'same old as before
+                        Dim intNewProductID As Integer = ProductsBLL._AddProduct(
+                                    tblLanguageContents, sbdParentsList.ToString, 0, blnLive, numFeatured,
+                                     strOrderVersionsBy, chrVersionsSortDirection, chrReviews, chrVersionDisplayType, numSupplier, chrType, numCustomerGroup, strMessage, True)
+                        If Not intNewProductID > 0 Then
+                            _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
+                            Exit Sub
+                        End If
+                        RefreshNewestProductsCache()
 
-                Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intNewProductID & "&CategoryID=" & Request.QueryString("CategoryID") & "&strParent=" & Request.QueryString("strParent"))
+                        'Now we need to create the associated records, versions,
+                        'related products, attribute values, etc.
+                        If Not ProductsBLL._CloneProductRecords(intProductID, intNewProductID) Then
+                            _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, "Error cloning product linked records")
+                            'Exit Sub
+                        End If
+                        Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intNewProductID & "&CategoryID=" & Request.QueryString("CategoryID") & "&strParent=" & Request.QueryString("strParent"))
+                    Else
+                        'Let's loop through. In this case, we don't redirect to
+                        'the new item, because there are multiple
+                        'Note that for these new products, we set them to not live. This way
+                        'admin has a chance to tweak and change them before setting them live.
+                        For i = 1 To intNumClones
+                            Dim intNewProductID As Integer = ProductsBLL._AddProduct(
+                                tblLanguageContents, sbdParentsList.ToString, 0, 0, numFeatured,
+                                strOrderVersionsBy, chrVersionsSortDirection, chrReviews, chrVersionDisplayType, numSupplier, chrType, numCustomerGroup, strMessage, True)
+                            If Not intNewProductID > 0 Then
+                                _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
+                                Exit Sub
+                            End If
+
+
+                            'Now we need to create the associated records, versions,
+                            'related products, attribute values, etc.
+                            If Not ProductsBLL._CloneProductRecords(intProductID, intNewProductID) Then
+                                _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, "Error cloning product linked records")
+                                'Exit Sub
+                            End If
+                        Next
+                        RefreshNewestProductsCache()
+                        Response.Redirect("~/Admin/_Category.aspx?CategoryID=" & Request.QueryString("CategoryID"))
+
+                    End If
+
+
+                Catch ex As Exception
+                    'whoops, this shouldn't happen
+                End Try
         End Select
         RefreshFeaturedProductsCache()
 
@@ -562,7 +598,7 @@ Partial Class _EditProduct
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Protected Sub btnCloneProduct_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCloneProduct.Click
-        Dim strMessage As String = GetGlobalResourceObject("_Kartris", "FormButton_Clone") & ": <strong>" & ProductsBLL._GetNameByProductID(_GetProductID(), Session("_LANG")) & "</strong> ?"
+        Dim strMessage As String = GetGlobalResourceObject("_Kartris", "FormButton_Clone") & ": <strong>" & ProductsBLL._GetNameByProductID(_GetProductID(), Session("_LANG")) & "</strong> (x" & txtCloneQty.Text & ")?"
         _UC_PopupMsg_Clone.ShowConfirmation(MESSAGE_TYPE.Confirmation, strMessage)
     End Sub
 

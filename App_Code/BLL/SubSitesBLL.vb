@@ -35,6 +35,44 @@ Public Class SubSitesBLL
     End Property
 
     ''' <summary>
+    ''' Function to return subsite ID.
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Shared Function ViewingSubSite(ByVal SUB_ID As Integer) As Integer
+        'We will return 0 if not viewing a subsite, otherwise we'll return the site ID
+
+        Dim strCurrentDomain As String = ""
+        Dim strMainDomainConfigWebShopURL = ""
+
+        If SUB_ID > 0 Then
+            'We are in preview mode
+            Return SUB_ID
+        Else
+            'We need to look at URL and see if it matches the webshopURL config setting
+            strCurrentDomain = Replace(Replace(Current.Request.Url.AbsoluteUri.ToLower, "https://", ""), "http://", "")
+            strCurrentDomain = Left(strCurrentDomain, strCurrentDomain.IndexOf("/"))
+            strMainDomainConfigWebShopURL = Replace(Replace(KartSettingsManager.GetKartConfig("general.webshopurl").ToLower(), "http://", ""), "/", "")
+
+            'Now we should have two domains
+            'If they match, we're looking at the main site URL and since
+            'no SUB_ID was found, we're not previewing a subsite. So we can
+            'basically return 0.
+            If strCurrentDomain = strMainDomainConfigWebShopURL Then
+                Return 0
+            Else
+                'Different URLs, let's look up which subsite this is
+                Dim tblSubSitesList As DataTable = Nothing
+                tblSubSitesList = SubSitesBLL.GetSubSites()
+                For Each drwSubSite In tblSubSitesList.Rows
+                    If drwSubSite("SUB_Domain") = strCurrentDomain Then
+                        Return drwSubSite("SUB_ID")
+                    End If
+                Next
+            End If
+        End If
+    End Function
+
+    ''' <summary>
     ''' Get all subsites
     ''' </summary>
     ''' <remarks></remarks>
@@ -81,5 +119,6 @@ Public Class SubSitesBLL
         End Try
 
     End Function
+
 
 End Class

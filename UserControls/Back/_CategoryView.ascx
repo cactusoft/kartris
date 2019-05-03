@@ -137,6 +137,9 @@
                                                                                 <asp:Literal ID="litRelatedProductsLink" Text='<%$ Resources:_Product, ContentText_RelatedProducts %>'
                                                                                     runat="server"></asp:Literal></a>
 
+                                                            <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=images">
+                                                            <asp:Literal ID="litImagesLink" Text='<%$ Resources:_Kartris, ContentText_Images %>'
+                                                                runat="server"></asp:Literal></a>
                                                             <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;SiteID=<% =_GetSiteID() %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=versions">
                                                                 <asp:Literal ID="litVersionsLink" Text='<%$ Resources:_Kartris, BackMenu_Versions %>'
                                                                     runat="server"></asp:Literal></a>
@@ -282,6 +285,10 @@
                                                                         runat="server"></asp:Literal></a> <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;SiteID=<% =_GetSiteID() %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;strParent=<% =_GetSiteID() %>::<% =_CategorySiteMapProvider.StripParents(Request.Querystring("strParent")) %>&amp;strTab=relatedproducts">
                                                                             <asp:Literal ID="litRelatedProductsLink" Text='<%$ Resources:_Product, ContentText_RelatedProducts %>'
                                                                                 runat="server"></asp:Literal></a>
+
+                                                        <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=images">
+                                                            <asp:Literal ID="litImagesLink" Text='<%$ Resources:_Kartris, ContentText_Images %>'
+                                                                runat="server"></asp:Literal></a>
                                                         <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;SiteID=<% =_GetSiteID() %>&amp;strParent=<% =_GetSiteID() %>::<% =_CategorySiteMapProvider.StripParents(Request.Querystring("strParent")) %>&amp;strTab=versions">
                                                             <asp:Literal ID="litVersionsLink" Text='<%$ Resources:_Kartris, BackMenu_Versions %>'
                                                                 runat="server"></asp:Literal></a>
@@ -321,6 +328,10 @@
                                                                         runat="server"></asp:Literal></a> <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;SiteID=<% =_GetSiteID() %>&amp;CategoryID=<% =_GetCategoryID() %>&amp;strParent=<% =_GetSiteID() %>::<% =_CategorySiteMapProvider.StripParents(Request.Querystring("strParent")) %>&amp;strTab=relatedproducts">
                                                                             <asp:Literal ID="litRelatedProductsLink" Text='<%$ Resources:_Product, ContentText_RelatedProducts %>'
                                                                                 runat="server"></asp:Literal></a>
+
+                                                        <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;strParent=<% =IIF(String.IsNullorEmpty(Request.Querystring("strParent")),0,Request.Querystring("strParent")) %>&amp;strTab=images">
+                                                            <asp:Literal ID="litImagesLink" Text='<%$ Resources:_Kartris, ContentText_Images %>'
+                                                                runat="server"></asp:Literal></a>
                                                         <a class="linkbutton icon_edit normalweight" href="_ModifyProduct.aspx?ProductID=<%# Eval("P_ID") %>&amp;CategoryID=<% =Request.Querystring("CategoryID") %>&amp;SiteID=<% =_GetSiteID() %>&amp;strParent=<% =_GetSiteID() %>::<% =_CategorySiteMapProvider.StripParents(Request.Querystring("strParent")) %>&amp;strTab=versions">
                                                             <asp:Literal ID="litVersionsLink" Text='<%$ Resources:_Kartris, BackMenu_Versions %>'
                                                                 runat="server"></asp:Literal></a>

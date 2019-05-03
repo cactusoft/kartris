@@ -500,7 +500,7 @@ Partial Class Templates_BasketView
         End If
 
         'Build up string for compact basket, if enabled
-        litCompactShoppingBasket.Text = "<a href=""" & CkartrisBLL.WebShopURL & "Basket.aspx" & """><span id=""compactbasket_title"">" & GetGlobalResourceObject("Basket", "PageTitle_ShoppingBasket") & "</span>" & vbCrLf
+        litCompactShoppingBasket.Text = "<a href=""" & CkartrisBLL.WebShopURL & "Basket.aspx" & """><i class=""fas fa-shopping-basket""></i><span id=""compactbasket_title"">" & GetGlobalResourceObject("Basket", "PageTitle_ShoppingBasket") & "</span>" & vbCrLf
         litCompactShoppingBasket.Text &= "<span id=""compactbasket_noofitems"" class=""basket-items-" & numTotalItems.ToString & """><span class=""bracket"">(</span>" & numTotalItems.ToString & "<span class=""bracket"">)</span></span>" & vbCrLf
 
         If Basket.PricesIncTax Then

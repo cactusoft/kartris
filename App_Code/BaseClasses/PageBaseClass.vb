@@ -242,78 +242,95 @@ Public MustInherit Class PageBaseClass
         '==================================================
         Dim strSkinOverride As String = ""
 
+
         '--------------------------------------------------
-        '1. Look for skin config rules
-
-        'The skin.config file is cached by
-        'LoadSkinConfigToCache in the kartris.vb file to
-        '"tblSkinRules"... if this exists, then we look
-        'to implement those rules here.
+        '1. SubSites
+        'This is a new feature from v3.0 onwards. A subsite
+        'has its own URL and can have a different skin
+        'set for it.
         '--------------------------------------------------
-        If HttpRuntime.Cache("tblSkinRules") IsNot Nothing Then
-            Dim strScriptName As String = Path.GetFileName(Request.PhysicalPath).ToLower
-            Dim intProductID As Integer = 0, intCategoryID As Integer = 0, intCustomerID As Integer = 0, intCustomerGroupID As Integer = 0
+        Dim numSubSiteID As Integer = 0
+        Try
+            numSubSiteID = SubSitesBLL.ViewingSubSite(Session("SUB_ID")) 'Return 0 if default skin
+        Catch ex As Exception
+            numSubSiteID = 0
+        End Try
+
+        If numSubSiteID > 0 Then
+            Dim tblSubSites = SubSitesBLL.GetSubSiteByID(numSubSiteID)
+
+            strSkinOverride = "~/Skins/" & tblSubSites.Rows.Item(0).Item("SUB_Skin") & "/Template.master"
+        Else
 
             '--------------------------------------------------
-            '1a. Look for product or category ID
+            '2. Look for skin config rules
 
-            'Need this so can implement product or category
-            'skin.
+            'The skin.config file is cached by
+            'LoadSkinConfigToCache in the kartris.vb file to
+            '"tblSkinRules"... if this exists, then we look
+            'to implement those rules here.
             '--------------------------------------------------
-            Try
-                Dim strCurrentPath As String = Request.RawUrl.ToString.ToLower
-                If Not (InStr(strCurrentPath, "/skins/") > 0 Or InStr(strCurrentPath, "/javascript/") > 0 Or InStr(strCurrentPath, "/images/") > 0) Then
-                    Select Case strScriptName
-                        Case "product.aspx"
-                            intProductID = Request.QueryString("ProductID")
-                        Case "category.aspx"
-                            intCategoryID = Request.QueryString("CategoryID")
-                    End Select
-                End If
-            Catch ex As Exception
+            If HttpRuntime.Cache("tblSkinRules") IsNot Nothing Then
+                Dim strScriptName As String = Path.GetFileName(Request.PhysicalPath).ToLower
+                Dim intProductID As Integer = 0, intCategoryID As Integer = 0, intCustomerID As Integer = 0, intCustomerGroupID As Integer = 0
 
-            End Try
+                '--------------------------------------------------
+                '2a. Look for product or category ID
 
-            '--------------------------------------------------
-            '1b. Look for user ID
-
-            'Need this so can implement customer-specific
-            'skin.
-            '--------------------------------------------------
-            If User.Identity.IsAuthenticated Then
+                'Need this so can implement product or category
+                'skin.
+                '--------------------------------------------------
                 Try
-                    intCustomerID = CurrentLoggedUser.ID
-                    intCustomerGroupID = CurrentLoggedUser.CustomerGroupID
+                    Dim strCurrentPath As String = Request.RawUrl.ToString.ToLower
+                    If Not (InStr(strCurrentPath, "/skins/") > 0 Or InStr(strCurrentPath, "/javascript/") > 0 Or InStr(strCurrentPath, "/images/") > 0) Then
+                        Select Case strScriptName
+                            Case "product.aspx"
+                                intProductID = Request.QueryString("ProductID")
+                            Case "category.aspx"
+                                intCategoryID = Request.QueryString("CategoryID")
+                        End Select
+                    End If
                 Catch ex As Exception
 
                 End Try
+
+                '--------------------------------------------------
+                '2b. Look for user ID
+
+                'Need this so can implement customer-specific
+                'skin.
+                '--------------------------------------------------
+                If User.Identity.IsAuthenticated Then
+                    Try
+                        intCustomerID = CurrentLoggedUser.ID
+                        intCustomerGroupID = CurrentLoggedUser.CustomerGroupID
+                    Catch ex As Exception
+
+                    End Try
+                End If
+
+                '--------------------------------------------------
+                '2c. Determine which skin to use
+
+                'Use the SkinMasterConfig function in kartris.vb,
+                'pass in the product ID, category IDs, customer
+                'ID, customer group ID and page/script name, and
+                'then this looks up which skin to use.
+                '--------------------------------------------------
+                strSkinOverride = CkartrisBLL.SkinMasterConfig(Page, intProductID, intCategoryID, intCustomerID, intCustomerGroupID, strScriptName)
             End If
 
-            '--------------------------------------------------
-            '1c. Determine which skin to use
 
-            'Use the SkinMasterConfig function in kartris.vb,
-            'pass in the product ID, category IDs, customer
-            'ID, customer group ID and page/script name, and
-            'then this looks up which skin to use.
-            '--------------------------------------------------
-            strSkinOverride = CkartrisBLL.SkinMasterConfig(Page, intProductID, intCategoryID, intCustomerID, intCustomerGroupID, strScriptName)
         End If
 
+
         '--------------------------------------------------
-        '2. Check if skin specified for this language
+        '3. Check if skin specified for this language
 
         'This uses the SkinMaster function in kartris.vb.
         'We only run this if section (1) above did not
         'return any value.
         '--------------------------------------------------
-
-        Dim subsiteId = Application("subsiteId")
-        If subsiteId > 0 Then
-            Dim subSiteDataTable = SubSitesBLL.GetSubSiteByID(subsiteId)
-
-            strSkinOverride = "~/Skins/" & subSiteDataTable.Rows.Item(0).Item("SUB_Skin") & "/Template.master"
-        End If
         Dim strSkinMaster As String
         If strSkinOverride <> "" Then
             strSkinMaster = strSkinOverride
@@ -325,7 +342,7 @@ Public MustInherit Class PageBaseClass
         End If
 
         '--------------------------------------------------
-        '3a. Check if using HomePage master page
+        '4a. Check if using HomePage master page
 
         'Often sites will want to use a different layout on
         'the home (default/index) page of the site. If we
@@ -357,7 +374,7 @@ Public MustInherit Class PageBaseClass
         End If
 
         '--------------------------------------------------
-        '3b. Is this a customer invoice page (front end)?
+        '4b. Is this a customer invoice page (front end)?
 
         'If so, we look in the present skin folder for an
         'Invoice.master. If there is one, we use it, if not,
@@ -377,7 +394,7 @@ Public MustInherit Class PageBaseClass
         End If
 
         '--------------------------------------------------
-        '4. Is visitor on version of IE lower than IE9?
+        '5. Is visitor on version of IE lower than IE9?
 
         'If so, the Foundation responsive interface won't
         'work, so we can fall back to an alternative

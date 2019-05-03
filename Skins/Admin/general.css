@@ -343,6 +343,8 @@ input.cancelbutton:hover                { background-color: #888; border-color: 
 .topsubmitbuttons a:hover,
 .squarebuttons input:hover,
 .squarebuttons a:hover                  { background-color: #fc5; cursor: pointer; }
+.submitareatext                         { cursor:text !important; float: left; margin: 7px 20px 0 0 !important; padding: 3px !important; height: 21px !important; width: 30px; text-align: right; }
+.submitareatext:hover                   { background-color: none; }
 .bluebuttons input:hover,
 .bluebuttons a:hover					{ z-index: 201; background-color: #888; }
 .blackbuttons input:hover,
