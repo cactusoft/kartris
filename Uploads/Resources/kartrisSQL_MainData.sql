@@ -16306,6 +16306,7 @@ CREATE NONCLUSTERED INDEX [PC_ProductID] ON [dbo].[tblKartrisProductCategoryLink
 	[PCAT_ProductID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
+
 /****** Object:  View [dbo].[vKartrisTypeProducts]    Script Date: 01/23/2013 21:59:09 ******/
 SET ANSI_NULLS ON
 GO
@@ -16533,6 +16534,48 @@ End
 GO
 EXEC sys.sp_addextendedproperty @name=N'MS_DiagramPaneCount', @value=2 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'VIEW',@level1name=N'vKartrisTypeProducts'
 GO
+
+
+/****** Object:  View [dbo].[vKartrisTypeProductsLite]    Script Date: 07/04/2019 15:58:12 ******/
+-- New view, this only includes P_Name. This way we don't link
+-- to the Language Elements table multiple times, and can therefore
+-- index this view.
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[vKartrisTypeProductsLite] WITH SCHEMABINDING
+AS
+SELECT     dbo.tblKartrisProducts.P_ID, dbo.tblKartrisLanguages.LANG_ID, CAST(dbo.tblKartrisLanguageElements.LE_Value AS NVARCHAR(255)) AS P_Name, 
+					  dbo.tblKartrisProducts.P_Live, dbo.tblKartrisProducts.P_Featured, 
+					  dbo.tblKartrisProducts.P_OrderVersionsBy, dbo.tblKartrisProducts.P_VersionsSortDirection, dbo.tblKartrisProducts.P_VersionDisplayType, 
+					  dbo.tblKartrisProducts.P_Reviews, dbo.tblKartrisProducts.P_SupplierID, dbo.tblKartrisProducts.P_Type, dbo.tblKartrisProducts.P_CustomerGroupID, 
+					  dbo.tblKartrisProducts.P_AverageRating, dbo.tblKartrisProducts.P_DateCreated, dbo.tblKartrisProducts.P_LastModified
+FROM         dbo.tblKartrisLanguageElements INNER JOIN
+					  dbo.tblKartrisLanguages ON dbo.tblKartrisLanguageElements.LE_LanguageID = dbo.tblKartrisLanguages.LANG_ID INNER JOIN
+					  dbo.tblKartrisProducts ON dbo.tblKartrisLanguageElements.LE_ParentID = dbo.tblKartrisProducts.P_ID
+WHERE     (dbo.tblKartrisLanguageElements.LE_FieldID = 1) AND 
+					  (NOT (dbo.tblKartrisLanguageElements.LE_Value IS NULL)) AND
+					  (dbo.tblKartrisLanguageElements.LE_TypeID = 2) 
+GO
+
+-- Add indexes to this view. Removing the other language element fields
+-- so we only have name means we can index it, should be much faster
+CREATE UNIQUE CLUSTERED INDEX P_LANG_ID
+ON [vKartrisTypeProductsLite] (P_ID, LANG_ID);
+
+CREATE NONCLUSTERED INDEX LANG_ID
+ON [vKartrisTypeProductsLite] (LANG_ID);
+
+CREATE NONCLUSTERED INDEX P_Name
+ON [vKartrisTypeProductsLite] (P_Name);
+
+CREATE NONCLUSTERED INDEX P_Live
+ON [vKartrisTypeProductsLite] (P_Live);
+GO
+
 /****** Object:  View [dbo].[vKartrisTypePages]    Script Date: 01/23/2013 21:59:09 ******/
 SET ANSI_NULLS ON
 GO
@@ -22593,9 +22636,9 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Author:		Mohammad
+-- Author:		Paul
 -- Create date: <Create Date,,>
--- Description:	Get the total no. of Products in Category "used for ItemPager"
+-- Description:	Uses lite products view
 -- =============================================
 CREATE PROCEDURE [dbo].[_spKartrisProducts_GetTotalByCatID]
 			(
@@ -22609,15 +22652,13 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
-	SELECT     @Return_Value = COUNT(vKartrisTypeProducts.P_ID)
-	FROM         vKartrisTypeProducts INNER JOIN
-					  tblKartrisProductCategoryLink ON vKartrisTypeProducts.P_ID = tblKartrisProductCategoryLink.PCAT_ProductID
-	WHERE     (vKartrisTypeProducts.LANG_ID = @LANG_ID) 
+	SELECT     @Return_Value = COUNT(vKartrisTypeProductsLite.P_ID)
+	FROM         vKartrisTypeProductsLite INNER JOIN
+					  tblKartrisProductCategoryLink ON vKartrisTypeProductsLite.P_ID = tblKartrisProductCategoryLink.PCAT_ProductID
+	WHERE     (vKartrisTypeProductsLite.LANG_ID = @LANG_ID) 
 				AND (tblKartrisProductCategoryLink.PCAT_CategoryID = @CAT_ID);
 	-- Insert statements for procedure here
 
-	
-	
 END
 GO
 /****** Object:  StoredProcedure [dbo].[_spKartrisProducts_GetStatus]    Script Date: 01/23/2013 21:59:10 ******/
@@ -22673,56 +22714,16 @@ BEGIN
 END
 GO
 
-
-/****** Object:  View [dbo].[vKartrisTypeProductsLite]    Script Date: 07/04/2019 15:58:12 ******/
--- New view, this only includes P_Name. This way we don't link
--- to the Language Elements table multiple times, and can therefore
--- index this view.
-SET ANSI_NULLS ON
-GO
-
-SET QUOTED_IDENTIFIER ON
-GO
-
-CREATE VIEW [dbo].[vKartrisTypeProductsLite] WITH SCHEMABINDING
-AS
-SELECT     dbo.tblKartrisProducts.P_ID, dbo.tblKartrisLanguages.LANG_ID, CAST(dbo.tblKartrisLanguageElements.LE_Value AS NVARCHAR(255)) AS P_Name, 
-					  dbo.tblKartrisProducts.P_Live, dbo.tblKartrisProducts.P_Featured, 
-					  dbo.tblKartrisProducts.P_OrderVersionsBy, dbo.tblKartrisProducts.P_VersionsSortDirection, dbo.tblKartrisProducts.P_VersionDisplayType, 
-					  dbo.tblKartrisProducts.P_Reviews, dbo.tblKartrisProducts.P_SupplierID, dbo.tblKartrisProducts.P_Type, dbo.tblKartrisProducts.P_CustomerGroupID, 
-					  dbo.tblKartrisProducts.P_AverageRating, dbo.tblKartrisProducts.P_DateCreated, dbo.tblKartrisProducts.P_LastModified
-FROM         dbo.tblKartrisLanguageElements INNER JOIN
-					  dbo.tblKartrisLanguages ON dbo.tblKartrisLanguageElements.LE_LanguageID = dbo.tblKartrisLanguages.LANG_ID INNER JOIN
-					  dbo.tblKartrisProducts ON dbo.tblKartrisLanguageElements.LE_ParentID = dbo.tblKartrisProducts.P_ID
-WHERE     (dbo.tblKartrisLanguageElements.LE_FieldID = 1) AND 
-					  (NOT (dbo.tblKartrisLanguageElements.LE_Value IS NULL)) AND
-					  (dbo.tblKartrisLanguageElements.LE_TypeID = 2) 
-GO
-
--- Add indexes to this view. Removing the other language element fields
--- so we only have name means we can index it, should be much faster
-CREATE UNIQUE CLUSTERED INDEX P_LANG_ID
-ON [vKartrisTypeProductsLite] (P_ID, LANG_ID);
-
-CREATE NONCLUSTERED INDEX LANG_ID
-ON [vKartrisTypeProductsLite] (LANG_ID);
-
-CREATE NONCLUSTERED INDEX P_Name
-ON [vKartrisTypeProductsLite] (P_Name);
-
-CREATE NONCLUSTERED INDEX P_Live
-ON [vKartrisTypeProductsLite] (P_Live);
-GO
-
 /****** Object:  StoredProcedure [dbo].[_spKartrisProducts_GetRowsBetweenByCatID]    Script Date: 01/23/2013 21:59:10 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Author:		Mohammad
+-- Author:		Paul
 -- Create date: <Create Date,,>
--- Description:	
+-- Description:	Same as above, uses lite
+-- products view for speed
 -- =============================================
 CREATE PROCEDURE [dbo].[_spKartrisProducts_GetRowsBetweenByCatID]
 (
@@ -22776,15 +22777,15 @@ BEGIN
 				WHEN (@OrderBy = 'PCAT_OrderNo' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY PCAT_OrderNo ASC) 
 				WHEN (@OrderBy = 'PCAT_OrderNo' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY PCAT_OrderNo DESC) 
 				END AS Row,
-				vKartrisTypeProducts.P_ID, vKartrisTypeProducts.P_Name, dbo.fnKartrisDB_TruncateDescription(vKartrisTypeProducts.P_Desc) AS P_Desc, vKartrisTypeProducts.P_StrapLine,
-				vKartrisTypeProducts.P_VersionDisplayType, vKartrisTypeProducts.P_DateCreated, vKartrisTypeProducts.P_LastModified, 
-				tblKartrisProductCategoryLink.PCAT_OrderNo, vKartrisTypeProducts.P_Type, @SortByValue AS SortByValue, vKartrisTypeProducts.P_Live
+				vKartrisTypeProductsLite.P_ID, vKartrisTypeProductsLite.P_Name,
+				vKartrisTypeProductsLite.P_VersionDisplayType, vKartrisTypeProductsLite.P_DateCreated, vKartrisTypeProductsLite.P_LastModified, 
+				tblKartrisProductCategoryLink.PCAT_OrderNo, vKartrisTypeProductsLite.P_Type, @SortByValue AS SortByValue, vKartrisTypeProductsLite.P_Live
 		FROM    tblKartrisProductCategoryLink INNER JOIN
-				vKartrisTypeProducts ON tblKartrisProductCategoryLink.PCAT_ProductID = vKartrisTypeProducts.P_ID 
-		WHERE   (vKartrisTypeProducts.LANG_ID = @LANG_ID) AND (tblKartrisProductCategoryLink.PCAT_CategoryID = @CAT_ID)
-		GROUP BY vKartrisTypeProducts.P_Name, vKartrisTypeProducts.P_Desc, vKartrisTypeProducts.P_StrapLine, vKartrisTypeProducts.P_ID,
-					vKartrisTypeProducts.P_VersionDisplayType, vKartrisTypeProducts.P_DateCreated, vKartrisTypeProducts.P_LastModified, 
-				tblKartrisProductCategoryLink.PCAT_OrderNo, vKartrisTypeProducts.P_Type, vKartrisTypeProducts.P_Live
+				vKartrisTypeProductsLite ON tblKartrisProductCategoryLink.PCAT_ProductID = vKartrisTypeProductsLite.P_ID 
+		WHERE   (vKartrisTypeProductsLite.LANG_ID = @LANG_ID) AND (tblKartrisProductCategoryLink.PCAT_CategoryID = @CAT_ID)
+		GROUP BY vKartrisTypeProductsLite.P_Name, vKartrisTypeProductsLite.P_ID,
+					vKartrisTypeProductsLite.P_VersionDisplayType, vKartrisTypeProductsLite.P_DateCreated, vKartrisTypeProductsLite.P_LastModified, 
+				tblKartrisProductCategoryLink.PCAT_OrderNo, vKartrisTypeProductsLite.P_Type, vKartrisTypeProductsLite.P_Live
 		
 	)
 
@@ -23636,9 +23637,9 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- ========================================================
--- Author:		Medz
--- Create date: 03/19/2008 17:45:30
--- Description:	Get the product name for the SiteMap trail.
+-- Author:		Paul
+-- Create date: 2019/08/30
+-- Description:	Uses lite products view
 -- ========================================================
 CREATE PROCEDURE [dbo].[spKartrisProducts_GetNameByProductID]
 (
@@ -23651,7 +23652,7 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 	SELECT P_Name
-	FROM   vKartrisTypeProducts
+	FROM   vKartrisTypeProductsLite
 	WHERE  (P_ID = @P_ID) AND (LANG_ID = @LANG_ID) AND (P_Live = 1)
 END
 GO
@@ -23661,9 +23662,9 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Author:		Mohammad
--- Create date: <Create Date,,>
--- Description:	Get the total no. of Products in Category "used for ItemPager"
+-- Author:		Paul
+-- Create date: 2019/08/30
+-- Description:	Uses lite products view
 -- =============================================
 CREATE PROCEDURE [dbo].[spKartrisProducts_GetTotalByCatID]
 			(
@@ -23678,15 +23679,15 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
-		SELECT	@TotalProducts = Count(DISTINCT vKartrisTypeProducts.P_ID)
+		SELECT	@TotalProducts = Count(DISTINCT vKartrisTypeProductsLite.P_ID)
 		FROM    tblKartrisProductCategoryLink INNER JOIN
-			  vKartrisTypeProducts ON tblKartrisProductCategoryLink.PCAT_ProductID = vKartrisTypeProducts.P_ID INNER JOIN
-			  tblKartrisVersions ON vKartrisTypeProducts.P_ID = tblKartrisVersions.V_ProductID LEFT OUTER JOIN
+			  vKartrisTypeProductsLite ON tblKartrisProductCategoryLink.PCAT_ProductID = vKartrisTypeProductsLite.P_ID INNER JOIN
+			  tblKartrisVersions ON vKartrisTypeProductsLite.P_ID = tblKartrisVersions.V_ProductID LEFT OUTER JOIN
 			  tblKartrisTaxRates ON tblKartrisTaxRates.T_ID = tblKartrisVersions.V_Tax
 		WHERE   (tblKartrisVersions.V_Live = 1) AND (tblKartrisVersions.V_Type = 'b' OR tblKartrisVersions.V_Type = 'v' ) 
-				AND (vKartrisTypeProducts.LANG_ID = @LANG_ID) AND (vKartrisTypeProducts.P_Live = 1) 
+				AND (vKartrisTypeProductsLite.LANG_ID = @LANG_ID) AND (vKartrisTypeProductsLite.P_Live = 1) 
 				AND (tblKartrisProductCategoryLink.PCAT_CategoryID = @CAT_ID) 
-				AND (vKartrisTypeProducts.P_CustomerGroupID IS NULL OR vKartrisTypeProducts.P_CustomerGroupID = @CGroupID)
+				AND (vKartrisTypeProductsLite.P_CustomerGroupID IS NULL OR vKartrisTypeProductsLite.P_CustomerGroupID = @CGroupID)
 		
 END
 GO
@@ -26688,9 +26689,9 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Author:		Mohammad
+-- Author:		Paul
 -- Create date: <Create Date,,>
--- Description:	Replaces "spKartris_PROD_SelectByCAT"
+-- Description:	Update uses lite products view
 -- =============================================
 CREATE PROCEDURE [dbo].[spKartrisProducts_GetRowsBetweenByCatID]
 	(
@@ -26741,23 +26742,25 @@ BEGIN
 					WHEN (@OrderBy = 'PCAT_OrderNo' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY PCAT_OrderNo ASC) 
 					WHEN (@OrderBy = 'PCAT_OrderNo' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY PCAT_OrderNo DESC) 
 					END AS Row,
-					vKartrisTypeProducts.P_ID, dbo.fnKartrisProduct_GetMinPriceWithCG(vKartrisTypeProducts.P_ID, @CGroupID) AS MinPrice, MIN(tblKartrisTaxRates.T_Taxrate) AS MinTaxRate, vKartrisTypeProducts.P_Name, 
-										  dbo.fnKartrisDB_TruncateDescription(vKartrisTypeProducts.P_Desc) AS P_Desc, vKartrisTypeProducts.P_StrapLine, vKartrisTypeProducts.P_VersionDisplayType, 
-										  vKartrisTypeProducts.P_DateCreated, vKartrisTypeProducts.P_LastModified, tblKartrisProductCategoryLink.PCAT_OrderNo
+					vKartrisTypeProductsLite.P_ID, dbo.fnKartrisProduct_GetMinPriceWithCG(vKartrisTypeProductsLite.P_ID, @CGroupID) AS MinPrice, MIN(tblKartrisTaxRates.T_Taxrate) AS MinTaxRate, vKartrisTypeProductsLite.P_Name, 
+										  vKartrisTypeProductsLite.P_VersionDisplayType, 
+										  vKartrisTypeProductsLite.P_DateCreated, vKartrisTypeProductsLite.P_LastModified, tblKartrisProductCategoryLink.PCAT_OrderNo
 					FROM         tblKartrisProductCategoryLink INNER JOIN
-										  vKartrisTypeProducts ON tblKartrisProductCategoryLink.PCAT_ProductID = vKartrisTypeProducts.P_ID INNER JOIN
-										  tblKartrisVersions ON vKartrisTypeProducts.P_ID = tblKartrisVersions.V_ProductID LEFT OUTER JOIN
+										  vKartrisTypeProductsLite ON tblKartrisProductCategoryLink.PCAT_ProductID = vKartrisTypeProductsLite.P_ID INNER JOIN
+										  tblKartrisVersions ON vKartrisTypeProductsLite.P_ID = tblKartrisVersions.V_ProductID LEFT OUTER JOIN
 										  tblKartrisTaxRates ON tblKartrisTaxRates.T_ID = tblKartrisVersions.V_Tax
-					WHERE     (tblKartrisVersions.V_Live = 1) AND (tblKartrisVersions.V_Type = 'b' OR tblKartrisVersions.V_Type = 'v' ) AND (vKartrisTypeProducts.LANG_ID = @LANG_ID) AND (vKartrisTypeProducts.P_Live = 1) AND 
-										  (tblKartrisProductCategoryLink.PCAT_CategoryID = @CAT_ID) AND (vKartrisTypeProducts.P_CustomerGroupID IS NULL OR
-										  vKartrisTypeProducts.P_CustomerGroupID = @CGroupID)
-					GROUP BY vKartrisTypeProducts.P_Name, vKartrisTypeProducts.P_Desc, vKartrisTypeProducts.P_StrapLine, vKartrisTypeProducts.P_ID, 
-										  vKartrisTypeProducts.P_VersionDisplayType, vKartrisTypeProducts.P_DateCreated, vKartrisTypeProducts.P_LastModified, 
+					WHERE     (tblKartrisVersions.V_Live = 1) AND (tblKartrisVersions.V_Type = 'b' OR tblKartrisVersions.V_Type = 'v' ) AND (vKartrisTypeProductsLite.LANG_ID = @LANG_ID) AND (vKartrisTypeProductsLite.P_Live = 1) AND 
+										  (tblKartrisProductCategoryLink.PCAT_CategoryID = @CAT_ID) AND (vKartrisTypeProductsLite.P_CustomerGroupID IS NULL OR
+										  vKartrisTypeProductsLite.P_CustomerGroupID = @CGroupID)
+					GROUP BY vKartrisTypeProductsLite.P_Name, vKartrisTypeProductsLite.P_ID, 
+										  vKartrisTypeProductsLite.P_VersionDisplayType, vKartrisTypeProductsLite.P_DateCreated, vKartrisTypeProductsLite.P_LastModified, 
 										  tblKartrisProductCategoryLink.PCAT_OrderNo
 			
 		)
 
-		SELECT *
+		SELECT *,
+	dbo.fnKartrisDB_TruncateDescription(dbo.fnKartrisLanguageElement_GetItemValue(@LANG_ID, 2, 2, ProductList.P_ID)) AS P_Desc,
+	dbo.fnKartrisLanguageElement_GetItemValue(@LANG_ID, 2, 7, ProductList.P_ID) AS P_Strapline
 		FROM ProductList
 		WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber
 		ORDER BY Row ASC

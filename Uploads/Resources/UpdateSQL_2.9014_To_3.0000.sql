@@ -1310,6 +1310,99 @@ CREATE NONCLUSTERED INDEX P_Live
 ON [vKartrisTypeProductsLite] (P_Live);
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisProducts_GetTotalByCatID]    Script Date: 01/23/2013 21:59:10 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	Uses lite products view
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisProducts_GetTotalByCatID]
+			(
+			@LANG_ID as tinyint,
+			@CAT_ID as int,
+			@Return_Value as int OUTPUT
+			)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	SELECT     @Return_Value = COUNT(vKartrisTypeProductsLite.P_ID)
+	FROM         vKartrisTypeProductsLite INNER JOIN
+					  tblKartrisProductCategoryLink ON vKartrisTypeProductsLite.P_ID = tblKartrisProductCategoryLink.PCAT_ProductID
+	WHERE     (vKartrisTypeProductsLite.LANG_ID = @LANG_ID) 
+				AND (tblKartrisProductCategoryLink.PCAT_CategoryID = @CAT_ID);
+	-- Insert statements for procedure here
+
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetNameByProductID]    Script Date: 01/23/2013 21:59:11 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- ========================================================
+-- Author:		Paul
+-- Create date: 2019/08/30
+-- Description:	Uses lite products view
+-- ========================================================
+ALTER PROCEDURE [dbo].[spKartrisProducts_GetNameByProductID]
+(
+	@P_ID int,
+	@LANG_ID tinyint
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+	SELECT P_Name
+	FROM   vKartrisTypeProductsLite
+	WHERE  (P_ID = @P_ID) AND (LANG_ID = @LANG_ID) AND (P_Live = 1)
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetTotalByCatID]    Script Date: 01/23/2013 21:59:11 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: 2019/08/30
+-- Description:	Uses lite products view
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisProducts_GetTotalByCatID]
+			(
+			@LANG_ID as tinyint,
+			@CAT_ID as int,	
+			@CGroupID as smallint,
+			@TotalProducts as int OUTPUT
+			)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+		SELECT	@TotalProducts = Count(DISTINCT vKartrisTypeProductsLite.P_ID)
+		FROM    tblKartrisProductCategoryLink INNER JOIN
+			  vKartrisTypeProductsLite ON tblKartrisProductCategoryLink.PCAT_ProductID = vKartrisTypeProductsLite.P_ID INNER JOIN
+			  tblKartrisVersions ON vKartrisTypeProductsLite.P_ID = tblKartrisVersions.V_ProductID LEFT OUTER JOIN
+			  tblKartrisTaxRates ON tblKartrisTaxRates.T_ID = tblKartrisVersions.V_Tax
+		WHERE   (tblKartrisVersions.V_Live = 1) AND (tblKartrisVersions.V_Type = 'b' OR tblKartrisVersions.V_Type = 'v' ) 
+				AND (vKartrisTypeProductsLite.LANG_ID = @LANG_ID) AND (vKartrisTypeProductsLite.P_Live = 1) 
+				AND (tblKartrisProductCategoryLink.PCAT_CategoryID = @CAT_ID) 
+				AND (vKartrisTypeProductsLite.P_CustomerGroupID IS NULL OR vKartrisTypeProductsLite.P_CustomerGroupID = @CGroupID)
+		
+END
+GO
 /****** DELETE THE FilterByCatID sproc *******/
 IF OBJECT_ID('spKartrisProducts_FilterByCatID') IS NOT NULL
 	DROP PROC [dbo].[spKartrisProducts_FilterByCatID]
@@ -1560,15 +1653,15 @@ BEGIN
 END
 GO
 
-/****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetRowsBetweenByCatID]    Script Date: 07/04/2019 16:59:49 ******/
+/****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetRowsBetweenByCatID]    Script Date: 30/08/2019 11:56:55 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Author:		Mohammad
+-- Author:		Paul
 -- Create date: <Create Date,,>
--- Description:	Replaces "spKartris_PROD_SelectByCAT"
+-- Description:	Update uses lite products view
 -- =============================================
 ALTER PROCEDURE [dbo].[spKartrisProducts_GetRowsBetweenByCatID]
 	(
@@ -1619,27 +1712,111 @@ BEGIN
 					WHEN (@OrderBy = 'PCAT_OrderNo' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY PCAT_OrderNo ASC) 
 					WHEN (@OrderBy = 'PCAT_OrderNo' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY PCAT_OrderNo DESC) 
 					END AS Row,
-					vKartrisTypeProducts.P_ID, dbo.fnKartrisProduct_GetMinPriceWithCG(vKartrisTypeProducts.P_ID, @CGroupID) AS MinPrice, MIN(tblKartrisTaxRates.T_Taxrate) AS MinTaxRate, vKartrisTypeProducts.P_Name, 
-										  dbo.fnKartrisDB_TruncateDescription(vKartrisTypeProducts.P_Desc) AS P_Desc, vKartrisTypeProducts.P_StrapLine, vKartrisTypeProducts.P_VersionDisplayType, 
-										  vKartrisTypeProducts.P_DateCreated, vKartrisTypeProducts.P_LastModified, tblKartrisProductCategoryLink.PCAT_OrderNo
+					vKartrisTypeProductsLite.P_ID, dbo.fnKartrisProduct_GetMinPriceWithCG(vKartrisTypeProductsLite.P_ID, @CGroupID) AS MinPrice, MIN(tblKartrisTaxRates.T_Taxrate) AS MinTaxRate, vKartrisTypeProductsLite.P_Name, 
+										  vKartrisTypeProductsLite.P_VersionDisplayType, 
+										  vKartrisTypeProductsLite.P_DateCreated, vKartrisTypeProductsLite.P_LastModified, tblKartrisProductCategoryLink.PCAT_OrderNo
 					FROM         tblKartrisProductCategoryLink INNER JOIN
-										  vKartrisTypeProducts ON tblKartrisProductCategoryLink.PCAT_ProductID = vKartrisTypeProducts.P_ID INNER JOIN
-										  tblKartrisVersions ON vKartrisTypeProducts.P_ID = tblKartrisVersions.V_ProductID LEFT OUTER JOIN
+										  vKartrisTypeProductsLite ON tblKartrisProductCategoryLink.PCAT_ProductID = vKartrisTypeProductsLite.P_ID INNER JOIN
+										  tblKartrisVersions ON vKartrisTypeProductsLite.P_ID = tblKartrisVersions.V_ProductID LEFT OUTER JOIN
 										  tblKartrisTaxRates ON tblKartrisTaxRates.T_ID = tblKartrisVersions.V_Tax
-					WHERE     (tblKartrisVersions.V_Live = 1) AND (tblKartrisVersions.V_Type = 'b' OR tblKartrisVersions.V_Type = 'v' ) AND (vKartrisTypeProducts.LANG_ID = @LANG_ID) AND (vKartrisTypeProducts.P_Live = 1) AND 
-										  (tblKartrisProductCategoryLink.PCAT_CategoryID = @CAT_ID) AND (vKartrisTypeProducts.P_CustomerGroupID IS NULL OR
-										  vKartrisTypeProducts.P_CustomerGroupID = @CGroupID)
-					GROUP BY vKartrisTypeProducts.P_Name, vKartrisTypeProducts.P_Desc, vKartrisTypeProducts.P_StrapLine, vKartrisTypeProducts.P_ID, 
-										  vKartrisTypeProducts.P_VersionDisplayType, vKartrisTypeProducts.P_DateCreated, vKartrisTypeProducts.P_LastModified, 
+					WHERE     (tblKartrisVersions.V_Live = 1) AND (tblKartrisVersions.V_Type = 'b' OR tblKartrisVersions.V_Type = 'v' ) AND (vKartrisTypeProductsLite.LANG_ID = @LANG_ID) AND (vKartrisTypeProductsLite.P_Live = 1) AND 
+										  (tblKartrisProductCategoryLink.PCAT_CategoryID = @CAT_ID) AND (vKartrisTypeProductsLite.P_CustomerGroupID IS NULL OR
+										  vKartrisTypeProductsLite.P_CustomerGroupID = @CGroupID)
+					GROUP BY vKartrisTypeProductsLite.P_Name, vKartrisTypeProductsLite.P_ID, 
+										  vKartrisTypeProductsLite.P_VersionDisplayType, vKartrisTypeProductsLite.P_DateCreated, vKartrisTypeProductsLite.P_LastModified, 
 										  tblKartrisProductCategoryLink.PCAT_OrderNo
 			
 		)
 
-		SELECT *
+		SELECT *,
+	dbo.fnKartrisDB_TruncateDescription(dbo.fnKartrisLanguageElement_GetItemValue(@LANG_ID, 2, 2, ProductList.P_ID)) AS P_Desc,
+	dbo.fnKartrisLanguageElement_GetItemValue(@LANG_ID, 2, 7, ProductList.P_ID) AS P_Strapline
 		FROM ProductList
 		WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber
 		ORDER BY Row ASC
 	
+END
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisProducts_GetRowsBetweenByCatID]    Script Date: 8/30/2019 12:01:10 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	Same as above, uses lite
+-- products view for speed
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisProducts_GetRowsBetweenByCatID]
+(
+	@LANG_ID as tinyint,
+	@CAT_ID as int,
+	@PageIndex as tinyint, -- 0 Based index
+	@RowsPerPage as smallint
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	
+	-- Insert statements for procedure here
+
+	DECLARE @StartRowNumber as int;
+	SET @StartRowNumber = (@PageIndex * @RowsPerPage) + 1;
+	DECLARE @EndRowNumber as int;
+	SET @EndRowNumber = @StartRowNumber + @RowsPerPage - 1;
+	
+	DECLARE @OrderBy as nvarchar(50), @OrderDirection as char(1)
+	SELECT @OrderBy = CAT_OrderProductsBy, @OrderDirection = CAT_ProductsSortDirection
+	FROM dbo.tblKartrisCategories
+	WHERE CAT_ID = @CAT_ID;
+
+	IF @OrderBy is NULL OR @OrderBy = 'd'
+	BEGIN 
+		SELECT @OrderBy = CFG_Value FROM tblKartrisConfig WHERE CFG_Name = 'frontend.products.display.sortdefault';
+	END;
+	IF @OrderDirection is NULL OR @OrderDirection = '' BEGIN 
+		SELECT @OrderDirection = CFG_Value FROM tblKartrisConfig WHERE CFG_Name = 'frontend.products.display.sortdirection';
+	END;
+
+	DECLARE @SortByValue as bit;
+	SET @SortByValue = 0;
+	IF @OrderBy = 'PCAT_OrderNo' BEGIN SET @SortByValue = 1 END;
+
+	With ProductList AS 
+	(
+		SELECT	CASE 
+				WHEN (@OrderBy = 'P_ID' AND @OrderDirection = 'A') THEN	ROW_NUMBER() OVER (ORDER BY P_ID ASC) 
+				WHEN (@OrderBy = 'P_ID' AND @OrderDirection = 'D') THEN	ROW_NUMBER() OVER (ORDER BY P_ID DESC) 
+				WHEN (@OrderBy = 'P_Name' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY P_Name ASC) 
+				WHEN (@OrderBy = 'P_Name' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY P_Name DESC) 
+				WHEN (@OrderBy = 'P_DateCreated' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY P_DateCreated ASC) 
+				WHEN (@OrderBy = 'P_DateCreated' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY P_DateCreated DESC) 
+				WHEN (@OrderBy = 'P_LastModified' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY P_LastModified ASC) 
+				WHEN (@OrderBy = 'P_LastModified' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY P_LastModified DESC) 
+				WHEN (@OrderBy = 'PCAT_OrderNo' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY PCAT_OrderNo ASC) 
+				WHEN (@OrderBy = 'PCAT_OrderNo' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY PCAT_OrderNo DESC) 
+				END AS Row,
+				vKartrisTypeProductsLite.P_ID, vKartrisTypeProductsLite.P_Name,
+				vKartrisTypeProductsLite.P_VersionDisplayType, vKartrisTypeProductsLite.P_DateCreated, vKartrisTypeProductsLite.P_LastModified, 
+				tblKartrisProductCategoryLink.PCAT_OrderNo, vKartrisTypeProductsLite.P_Type, @SortByValue AS SortByValue, vKartrisTypeProductsLite.P_Live
+		FROM    tblKartrisProductCategoryLink INNER JOIN
+				vKartrisTypeProductsLite ON tblKartrisProductCategoryLink.PCAT_ProductID = vKartrisTypeProductsLite.P_ID 
+		WHERE   (vKartrisTypeProductsLite.LANG_ID = @LANG_ID) AND (tblKartrisProductCategoryLink.PCAT_CategoryID = @CAT_ID)
+		GROUP BY vKartrisTypeProductsLite.P_Name, vKartrisTypeProductsLite.P_ID,
+					vKartrisTypeProductsLite.P_VersionDisplayType, vKartrisTypeProductsLite.P_DateCreated, vKartrisTypeProductsLite.P_LastModified, 
+				tblKartrisProductCategoryLink.PCAT_OrderNo, vKartrisTypeProductsLite.P_Type, vKartrisTypeProductsLite.P_Live
+		
+	)
+
+	SELECT *
+	FROM ProductList
+	WHERE Row BETWEEN @StartRowNumber AND @EndRowNumber
+	ORDER BY Row ASC
 END
 GO
 
