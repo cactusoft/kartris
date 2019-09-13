@@ -242,9 +242,10 @@ Partial Class Admin_GenerateFeeds
         Dim strDesc As String
         Dim strProductName As String
         Dim strVersionName As String
-        Dim dblPrice As Double
+        Dim strPrice As String
         Dim strLink As String
         Dim strImageLink As String
+        Dim strAvailability As String = ""
 
         Dim objFileStream As FileStream = Nothing
         Dim objStreamWriter As StreamWriter = Nothing
@@ -314,7 +315,7 @@ Partial Class Admin_GenerateFeeds
 
                                 strVersionName = FixNullFromDB(drwVersion("V_Name"))
                                 strDesc = Replace(Replace(FixNullFromDB(drwVersion("V_Desc")), vbTab, ""), vbCrLf, "")
-                                dblPrice = CurrenciesBLL.FormatCurrencyPrice(1, CDbl(FixNullFromDB((drwVersion("V_Price")))), False)
+                                strPrice = CurrenciesBLL.FormatCurrencyPrice(1, CDbl(FixNullFromDB((drwVersion("V_Price")))), False)
                                 strLink = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, drwProduct("P_ID"), , , , , , drwProduct("P_Name"))
 
                                 'Format image link
@@ -333,11 +334,14 @@ Partial Class Admin_GenerateFeeds
                                 If String.IsNullOrEmpty(strDesc) Then strDesc = FixNullFromDB(drwProduct("P_Desc"))
 
                                 If ddlXMLorTXT.SelectedValue = "txt" Then
-                                    AddFroogleTextLine(objStreamWriter, FixNullFromDB(drwVersion("V_CodeNumber")), strProductName, strDesc, dblPrice, strLink, strImageLink)
+                                    AddFroogleTextLine(objStreamWriter, FixNullFromDB(drwVersion("V_CodeNumber")), strProductName, strDesc, strPrice, strLink, strImageLink)
                                 ElseIf ddlXMLorTXT.SelectedValue = "csv" Then
-                                    AddFroogleCSVLine(objStreamWriter, FixNullFromDB(drwVersion("V_CodeNumber")), strProductName, strDesc, dblPrice, strLink, strImageLink)
+                                    AddFroogleCSVLine(objStreamWriter, FixNullFromDB(drwVersion("V_CodeNumber")), strProductName, strDesc, strPrice, strLink, strImageLink)
                                 Else
                                     With xmlGoogleBase
+                                        '====================================
+                                        'BASIC DETAILS
+                                        '====================================
                                         .WriteWhitespace(vbCrLf)
                                         .WriteStartElement("item")
                                         .WriteWhitespace(vbCrLf)
@@ -351,12 +355,42 @@ Partial Class Admin_GenerateFeeds
                                         .WriteElementString("description", CkartrisDisplayFunctions.StripHTML(strDesc))
                                         .WriteWhitespace(vbCrLf)
                                         .WriteWhitespace("   ")
-                                        .WriteElementString("g:price", dblPrice)
+                                        .WriteElementString("g:price", strPrice & " " & CurrenciesBLL.CurrencyCode(CurrenciesBLL.GetDefaultCurrency)) 'v3, now format currency with ISO code after it
                                         .WriteWhitespace(vbCrLf)
                                         .WriteWhitespace("   ")
                                         .WriteElementString("link", strLink)
                                         .WriteWhitespace(vbCrLf)
                                         .WriteWhitespace("   ")
+
+                                        '====================================
+                                        'GTIN, MPN or Brand
+                                        '====================================
+                                        'Google wants one of MPN, GTIN or Brand
+                                        'Many stores use MPN as their SKU/VersionCode
+                                        'If so, uncommented section below to take care of this
+
+                                        '.WriteElementString("g:mpn", FixNullFromDB(drwVersion("V_CodeNumber")))
+                                        '.WriteWhitespace(vbCrLf)
+                                        '.WriteWhitespace("   ")
+
+                                        '====================================
+                                        'STOCK AVAILABILITY
+                                        '====================================
+                                        'Need to check if out of stock
+                                        If drwVersion("V_Quantity") < 1.0F And drwVersion("V_QuantityWarnLevel") > 0.0F Then
+                                            'out of stock
+                                            strAvailability = "out of stock"
+                                        Else
+                                            'in stock
+                                            strAvailability = "in stock"
+                                        End If
+                                        .WriteElementString("g:availability", strAvailability) 'v3, in or out of stock
+                                        .WriteWhitespace(vbCrLf)
+                                        .WriteWhitespace("   ")
+
+                                        '====================================
+                                        'IMAGE LINK
+                                        '====================================
                                         If strImageLink <> "" Then
                                             .WriteElementString("g:image_link", strImageLink)
                                             .WriteWhitespace(vbCrLf)
@@ -364,6 +398,12 @@ Partial Class Admin_GenerateFeeds
                                         End If
                                         .WriteElementString("g:condition", UCase(ddlCondition.SelectedValue))
                                         .WriteWhitespace(vbCrLf)
+
+                                        '====================================
+                                        'OTHER GOOGLE ATTRIBUTES
+                                        '====================================
+                                        'Next, we loop through all the special Google attributes that have
+                                        'been setup 
                                         For Each drwGoogle As DataRow In dtGoogleAttributes.Rows
                                             If FixNullFromDB(drwGoogle("ATTRIBV_Value")) IsNot Nothing Then
                                                 .WriteWhitespace("   ")

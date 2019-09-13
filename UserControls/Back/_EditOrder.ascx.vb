@@ -102,7 +102,7 @@ Partial Class UserControls_Back_EditOrder
                             Dim intOrderCurrencyID As Int16 = CShort(dtOrderRecord.Rows(0)("O_CurrencyID"))
                             Dim strOrderPaymentGateway As String = dtOrderRecord.Rows(0)("O_PaymentGateway")
                             litOrderCustomerID.Text = CInt(dtOrderRecord.Rows(0)("O_CustomerID"))
-                            txtOrderCustomerEmail.Text = UsersBLL.GetEmailByID(litOrderCustomerID.Text)
+                            txtOrderCustomerEmail.Text = UsersBLL.CleanGuestEmailUsername(UsersBLL.GetEmailByID(litOrderCustomerID.Text))
                             txtOrderPONumber.Text = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_PurchaseOrderNo"))
                             chkOrderSent.Checked = CBool(dtOrderRecord.Rows(0)("O_Sent"))
                             chkOrderInvoiced.Checked = CBool(dtOrderRecord.Rows(0)("O_Invoiced"))
@@ -376,12 +376,17 @@ Partial Class UserControls_Back_EditOrder
     Protected Sub _UC_PopupMsg_Confirmed() Handles _UC_PopupMsg.Confirmed
         Dim CUR_ID As Integer = CInt(Session("CUR_ID"))
 
-        Dim strBillingAddressText As String, strShippingAddressText As String
         Dim blnUseHTMLOrderEmail As Boolean = (GetKartConfig("general.email.enableHTML") = "y")
+        Dim sbdHTMLOrderEmail As StringBuilder = New StringBuilder
+        Dim sbdHTMLOrderContents As StringBuilder = New StringBuilder
+        Dim sbdHTMLOrderBasket As StringBuilder = New StringBuilder
 
         Dim sbdNewCustomerEmailText As StringBuilder = New StringBuilder
         Dim sbdBodyText As StringBuilder = New StringBuilder
         Dim sbdBasketItems As StringBuilder = New StringBuilder
+
+        Dim strSubject As String = ""
+        Dim strTempEmailTextHolder As String = ""
 
         Dim arrBasketItems As List(Of Kartris.BasketItem)
         Dim objBasket As kartris.Basket = Session("Basket")
@@ -403,6 +408,13 @@ Partial Class UserControls_Back_EditOrder
 
         Dim intGatewayCurrency As Int16 = 0
 
+        'Get the order confirmation template if HTML email is enabled
+        If blnUseHTMLOrderEmail Then
+            sbdHTMLOrderEmail.Append(RetrieveHTMLEmailTemplate("OrderConfirmation"))
+            'switch back to normal text email if the template can't be retrieved
+            If sbdHTMLOrderEmail.Length < 1 Then blnUseHTMLOrderEmail = False
+        End If
+
         'try to get the gateway currency and details from the old order
         Dim intO_ID As Integer = ViewState("numOrderID")
         Dim dtOrderRecord As DataTable = OrdersBLL.GetOrderByID(intO_ID)
@@ -417,33 +429,28 @@ Partial Class UserControls_Back_EditOrder
             Exit Sub
         End If
 
-        'THIS CODE IS MAINLY FROM THE CHECKOUT || GENERATES THE BASKET DETAILS, SHIPPING AND ORDER TOTAL LINES
-        With UC_BillingAddress.SelectedAddress
-            strBillingAddressText = .FullName & vbCrLf & .Company & vbCrLf & _
-                          .StreetAddress & vbCrLf & .TownCity & vbCrLf & _
-                          .County & vbCrLf & .Postcode & vbCrLf & _
-                          .Country.Name
-        End With
-        If chkSameShippingAsBilling.Checked Then
-            strShippingAddressText = strBillingAddressText
-        Else
-            With UC_ShippingAddress.SelectedAddress
-                strShippingAddressText = .FullName & vbCrLf & .Company & vbCrLf & _
-                              .StreetAddress & vbCrLf & .TownCity & vbCrLf & _
-                              .County & vbCrLf & .Postcode & vbCrLf & _
-                              .Country.Name
-            End With
-        End If
+        '============================================
+        'FORMAT ORDER EMAIL
+        '============================================
 
-        Dim blnDifferentGatewayCurrency As Boolean = CUR_ID <> intGatewayCurrency
-        Dim blnDifferentOrderCurrency As Boolean = CurrenciesBLL.GetDefaultCurrency <> CUR_ID
+        'Handle Promotion Coupons
+        If Not String.IsNullOrEmpty(objBasket.CouponName) And objBasket.CouponDiscount.IncTax = 0 Then
+            strTempEmailTextHolder = GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf & " " & GetGlobalResourceObject("Basket", "ContentText_ApplyCouponCode") & vbCrLf & " " & objBasket.CouponName & vbCrLf
+            sbdBodyText.AppendLine(strTempEmailTextHolder)
+            If blnUseHTMLOrderEmail Then
+                sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.CouponDiscount, GetGlobalResourceObject("Kartris", "ContentText_CouponDiscount"), objBasket.CouponName))
+            End If
+        End If
 
         'Promotion discount
         Dim strPromotionDescription As String = ""
         If objBasket.PromotionDiscount.IncTax < 0 Then
             For Each objPromotion As PromotionBasketModifier In UC_BasketMain.GetPromotionsDiscount
                 With objPromotion
-                    sbdBodyText.Append(GetItemEmailText(GetGlobalResourceObject("Kartris", "ContentText_PromotionDiscount"), .Name, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
+                    sbdBodyText.AppendLine(GetItemEmailText(.Quantity & " x " & GetGlobalResourceObject("Kartris", "ContentText_PromotionDiscount"), .Name, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
+                    If blnUseHTMLOrderEmail Then
+                        sbdHTMLOrderContents.Append(GetHTMLEmailRowText(.Quantity & " x " & GetGlobalResourceObject("Kartris", "ContentText_PromotionDiscount"), .Name, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
+                    End If
                     If strPromotionDescription <> "" Then strPromotionDescription += vbCrLf & .Name Else strPromotionDescription += .Name
                 End With
             Next
@@ -451,124 +458,344 @@ Partial Class UserControls_Back_EditOrder
 
         'Coupon discount
         If objBasket.CouponDiscount.IncTax < 0 Then
-            sbdBodyText.Append(GetBasketModifierEmailText(objBasket.CouponDiscount, GetGlobalResourceObject("Kartris", "ContentText_CouponDiscount"), "strCouponName"))
+            sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.CouponDiscount, GetGlobalResourceObject("Kartris", "ContentText_CouponDiscount"), objBasket.CouponName))
+            If blnUseHTMLOrderEmail Then
+                sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.CouponDiscount, GetGlobalResourceObject("Kartris", "ContentText_CouponDiscount"), objBasket.CouponName))
+            End If
         End If
 
         'Customer discount
-        If objBasket.CustomerDiscount.IncTax < 0 Then
-            sbdBodyText.Append(GetBasketModifierEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount"), ""))
+        'We need to show this line if the discount exists (i.e. not zero) but
+        'also if zero but there are items that are exempt from the discount, so
+        'it's clear why the discount is zero.
+        If objBasket.CustomerDiscount.IncTax < 0 Or objBasket.HasCustomerDiscountExemption Then
+            sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount"), "[customerdiscountexempttext]"))
+            If blnUseHTMLOrderEmail Then
+                sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.CustomerDiscount, GetGlobalResourceObject("Basket", "ContentText_Discount"), "[customerdiscountexempttext]"))
+            End If
         End If
 
-        sbdBodyText.Append(GetBasketModifierEmailText(objBasket.ShippingPrice, GetGlobalResourceObject("Address", "ContentText_Shipping"), IIf(String.IsNullOrEmpty(objBasket.ShippingDescription), objBasket.ShippingName, objBasket.ShippingDescription)))
+        'Shipping
+        sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.ShippingPrice, GetGlobalResourceObject("Address", "ContentText_Shipping"), IIf(String.IsNullOrEmpty(objBasket.ShippingDescription), objBasket.ShippingName, objBasket.ShippingDescription)))
+        If blnUseHTMLOrderEmail Then
+            sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.ShippingPrice, GetGlobalResourceObject("Address", "ContentText_Shipping"), IIf(String.IsNullOrEmpty(objBasket.ShippingDescription), objBasket.ShippingName, objBasket.ShippingDescription)))
+        End If
 
         'Order handling charge
         If objBasket.OrderHandlingPrice.ExTax > 0 Then
-            sbdBodyText.Append(GetBasketModifierEmailText(objBasket.OrderHandlingPrice, GetGlobalResourceObject("Kartris", "ContentText_OrderHandlingCharge"), ""))
+            sbdBodyText.AppendLine(GetBasketModifierEmailText(objBasket.OrderHandlingPrice, GetGlobalResourceObject("Kartris", "ContentText_OrderHandlingCharge"), ""))
+            If blnUseHTMLOrderEmail Then
+                sbdHTMLOrderContents.Append(GetBasketModifierHTMLEmailText(objBasket.OrderHandlingPrice, GetGlobalResourceObject("Kartris", "ContentText_OrderHandlingCharge"), ""))
+            End If
         End If
-        sbdBodyText.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
+
+        sbdBodyText.AppendLine(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
 
         'Order totals
         If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
-            sbdBodyText.Append(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & vbCrLf)
-            sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
-                 IIf(blnAppUSmultistatetax, " (" & (objBasket.D_Tax * 100) & "%)", "") & vbCrLf)
+            sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & vbCrLf)
+            sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) &
+                         IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & vbCrLf)
         End If
-        sbdBodyText.Append(" " & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) & vbCrLf)
-        sbdBodyText.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
+        sbdBodyText.Append(" " & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
+                                   " (" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
+                                        LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                        CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
+                                        CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, CUR_ID) &
+                                    ")" & vbCrLf)
+        sbdBodyText.AppendLine(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
+        If blnUseHTMLOrderEmail Then
+            sbdHTMLOrderContents.Append("<tr class=""row_totals""><td colspan=""2"">")
+            If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
+                sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & "<br/>")
+                sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) &
+                             IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & "<br/>")
+            End If
+            sbdHTMLOrderContents.Append("(" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
+                                                    LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                                    CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
+                                                    CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, CUR_ID) &
+                                                ") <strong>" & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
+                                                "</strong></td></tr>")
+        End If
 
-
+        'Handle order total conversion to different currency.
+        'Some payment systems only accept one currency, e.g.
+        'USD. In this case, if you have multiple currencies
+        'on your site, the amount needs to be converted to
+        'this one currency in order to process the payment on
+        'the payment gateway.
         Dim numGatewayTotalPrice As Double
-        If blnDifferentGatewayCurrency Then
-            numGatewayTotalPrice = CurrenciesBLL.ConvertCurrency(intGatewayCurrency, objBasket.FinalPriceIncTax, CUR_ID)
 
-            sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & vbCrLf)
-            sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) & vbCrLf)
+
+        Dim blnDifferentGatewayCurrency As Boolean = CUR_ID <> intGatewayCurrency
+        Dim blnDifferentOrderCurrency As Boolean = CurrenciesBLL.GetDefaultCurrency <> CUR_ID
+
+        If blnDifferentGatewayCurrency Then
+            numGatewayTotalPrice = CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, CurrenciesBLL.ConvertCurrency(intGatewayCurrency, objBasket.FinalPriceIncTax, CUR_ID), False, False)
+            'If clsPlugin.GatewayName.ToLower = "bitcoin" Then numGatewayTotalPrice = Math.Round(numGatewayTotalPrice, 8)
+
+            sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & vbCrLf)
+            sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) &
+                                       " (" & CurrenciesBLL.CurrencyCode(intGatewayCurrency) & " - " &
+                                           LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                           CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
+                                           CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
+                                         ")" & vbCrLf)
             sbdBodyText.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
+
+            If blnUseHTMLOrderEmail Then
+                sbdHTMLOrderContents.Append("<tr class=""row_processcurrency""><td colspan=""2"">")
+                sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & "<br/>")
+                sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) &
+                                                    " (" & CurrenciesBLL.CurrencyCode(intGatewayCurrency) & " - " &
+                                                       LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                                       CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
+                                                       CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
+                                                     ")" & "<br/>")
+                sbdHTMLOrderContents.Append("</td></tr>")
+            End If
         Else
+            'User was using same currency as the gateway requires, or
+            'the gateway supports multiple currencies... no conversion
+            'needed.
             numGatewayTotalPrice = objBasket.FinalPriceIncTax
         End If
 
         'Total Saved
         If objBasket.TotalAmountSaved > 0 And KartSettingsManager.GetKartConfig("frontend.checkout.confirmation.showtotalsaved") = "y" Then
-            sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_TotalSaved1") & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.TotalAmountSaved, , False) & GetGlobalResourceObject("Email", "EmailText_TotalSaved2") & vbCrLf)
+            strTempEmailTextHolder = " " & GetGlobalResourceObject("Email", "EmailText_TotalSaved1") & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.TotalAmountSaved, , False) & GetGlobalResourceObject("Email", "EmailText_TotalSaved2") & vbCrLf
+            sbdBodyText.AppendLine(strTempEmailTextHolder)
             sbdBodyText.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker"))
+            If blnUseHTMLOrderEmail Then
+                sbdHTMLOrderEmail.Replace("[totalsavedline]", strTempEmailTextHolder.Replace(vbCrLf, "<br/>"))
+            End If
+        Else
+            sbdHTMLOrderEmail.Replace("[totalsavedline]", "")
         End If
 
         'Customer billing information
         sbdBodyText.Append(vbCrLf)
         With UC_BillingAddress.SelectedAddress
-            sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_PurchaseContactDetails") & vbCrLf & _
-                 " " & GetGlobalResourceObject("Address", "FormLabel_CardHolderName") & ": " & .FullName & vbCrLf & _
-                 " " & GetGlobalResourceObject("Email", "EmailText_Company") & ": " & .Company & vbCrLf & _
-                 IIf(Not String.IsNullOrEmpty(txtEUVAT.Text), " " & GetGlobalResourceObject("Invoice", "FormLabel_CardholderEUVatNum") & ": " & txtEUVAT.Text & vbCrLf, "") & _
-                 " " & GetGlobalResourceObject("Kartris", "FormLabel_EmailAddress") & ": " & txtOrderCustomerEmail.Text & vbCrLf & _
-                 " " & GetGlobalResourceObject("Address", "FormLabel_Telephone") & ": " & .Phone & vbCrLf & vbCrLf & _
-                 " " & GetGlobalResourceObject("Email", "EmailText_Address") & ":" & vbCrLf & _
-                 " " & .StreetAddress & vbCrLf & _
-                 " " & .TownCity & vbCrLf & _
-                 " " & .County & vbCrLf & _
-                 " " & .Postcode & vbCrLf & _
-                 " " & .Country.Name & vbCrLf & vbCrLf)
-            sbdBodyText.Append(GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
+            sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_PurchaseContactDetails") & vbCrLf)
+
+            sbdBodyText.Append(" " & GetGlobalResourceObject("Address", "FormLabel_CardHolderName") & ": " & .FullName & vbCrLf &
+                                             " " & GetGlobalResourceObject("Email", "EmailText_Company") & ": " & .Company & vbCrLf &
+                                             IIf(Not String.IsNullOrEmpty(txtEUVAT.Text), " " & GetGlobalResourceObject("Invoice", "FormLabel_CardholderEUVatNum") & ": " & txtEUVAT.Text & vbCrLf, ""))
+
+
+            sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "FormLabel_EmailAddress") & ": " & txtOrderCustomerEmail.Text & vbCrLf)
+
+            sbdBodyText.Append(" " & GetGlobalResourceObject("Address", "FormLabel_Telephone") & ": " & .Phone & vbCrLf & vbCrLf)
+
+            sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_Address") & ":" & vbCrLf)
+
+            sbdBodyText.Append(" " & .StreetAddress & vbCrLf &
+                            " " & .TownCity & vbCrLf &
+                            " " & .County & vbCrLf &
+                            " " & .Postcode & vbCrLf &
+                            " " & .Country.Name)
+
+            sbdBodyText.Append(vbCrLf & vbCrLf & GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
+
+            If blnUseHTMLOrderEmail Then
+
+                sbdHTMLOrderEmail.Replace("[billingname]", Server.HtmlEncode(.FullName))
+                'retrieve the company label text and value if present, otherwise hide both placeholders from the template
+                If Not String.IsNullOrEmpty(.Company) Then
+                    sbdHTMLOrderEmail.Replace("[companylabel]", GetGlobalResourceObject("Email", "EmailText_Company") & ": ")
+                    sbdHTMLOrderEmail.Replace("[billingcompany]", Server.HtmlEncode(.Company))
+                Else
+                    sbdHTMLOrderEmail.Replace("[companylabel]", "")
+                    sbdHTMLOrderEmail.Replace("[billingcompany]<br />", "")
+                    sbdHTMLOrderEmail.Replace("[billingcompany]", "")
+                End If
+                'do the same for EUVAT number
+                If Not String.IsNullOrEmpty(txtEUVAT.Text) Then
+                    sbdHTMLOrderEmail.Replace("[euvatnumberlabel]", GetGlobalResourceObject("Invoice", "FormLabel_CardholderEUVatNum") & ": ")
+                    sbdHTMLOrderEmail.Replace("[euvatnumbervalue]", Server.HtmlEncode(txtEUVAT.Text))
+                Else
+                    sbdHTMLOrderEmail.Replace("[euvatnumberlabel]", "")
+                    sbdHTMLOrderEmail.Replace("[euvatnumbervalue]<br />", "")
+                    sbdHTMLOrderEmail.Replace("[euvatnumbervalue]", "")
+                End If
+                sbdHTMLOrderEmail.Replace("[billingemail]", Server.HtmlEncode(txtOrderCustomerEmail.Text))
+                sbdHTMLOrderEmail.Replace("[billingphone]", Server.HtmlEncode(.Phone))
+                sbdHTMLOrderEmail.Replace("[billingstreetaddress]", Server.HtmlEncode(.StreetAddress))
+                sbdHTMLOrderEmail.Replace("[billingtowncity]", Server.HtmlEncode(.TownCity))
+                sbdHTMLOrderEmail.Replace("[billingcounty]", Server.HtmlEncode(.County))
+                sbdHTMLOrderEmail.Replace("[billingpostcode]", Server.HtmlEncode(.Postcode))
+                sbdHTMLOrderEmail.Replace("[billingcountry]", Server.HtmlEncode(.Country.Name))
+
+            End If
         End With
 
         'Shipping info
         sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_ShippingDetails") & vbCrLf)
         Dim strShippingAddressEmailText As String = ""
 
+
         If chkSameShippingAsBilling.Checked Then
             With UC_BillingAddress.SelectedAddress
-                strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf & _
-                              " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf & _
-                              " " & .County & vbCrLf & " " & .Postcode & vbCrLf & _
-                              " " & .Country.Name & vbCrLf & vbCrLf
+                strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf &
+                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf &
+                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf &
+                                          " " & .Country.Name & vbCrLf & vbCrLf
+                sbdHTMLOrderEmail.Replace("[shippingname]", Server.HtmlEncode(.FullName))
+                sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", Server.HtmlEncode(.StreetAddress))
+                sbdHTMLOrderEmail.Replace("[shippingtowncity]", Server.HtmlEncode(.TownCity))
+                sbdHTMLOrderEmail.Replace("[shippingcounty]", Server.HtmlEncode(.County))
+                sbdHTMLOrderEmail.Replace("[shippingpostcode]", Server.HtmlEncode(.Postcode))
+                sbdHTMLOrderEmail.Replace("[shippingcountry]", Server.HtmlEncode(.Country.Name))
+                sbdHTMLOrderEmail.Replace("[shippingphone]", Server.HtmlEncode(.Phone))
+                If Not String.IsNullOrEmpty(.Company) Then
+                    sbdHTMLOrderEmail.Replace("[shippingcompany]", Server.HtmlEncode(.Company))
+                Else
+                    sbdHTMLOrderEmail.Replace("[shippingcompany]<br />", "")
+                    sbdHTMLOrderEmail.Replace("[shippingcompany]", "")
+                End If
             End With
-        Else
-            With UC_ShippingAddress.SelectedAddress
-                strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf & _
-                              " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf & _
-                              " " & .County & vbCrLf & " " & .Postcode & vbCrLf & _
-                              " " & .Country.Name & vbCrLf & vbCrLf
-            End With
+
         End If
 
         sbdBodyText.Append(strShippingAddressEmailText & GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
 
+        'Comments and additional info
+        sbdHTMLOrderEmail.Replace("[ordercomments]", "")
+
+        sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_OrderTime2") & ": " & CkartrisDisplayFunctions.NowOffset & vbCrLf)
+        sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_IPAddress") & ": " & CkartrisEnvironment.GetClientIPAddress() & vbCrLf)
+        sbdBodyText.Append(" " & Request.ServerVariables("HTTP_USER_AGENT") & vbCrLf)
+        If blnUseHTMLOrderEmail Then
+            sbdHTMLOrderEmail.Replace("[nowoffset]", CkartrisDisplayFunctions.NowOffset)
+            sbdHTMLOrderEmail.Replace("[customerip]", CkartrisEnvironment.GetClientIPAddress())
+            sbdHTMLOrderEmail.Replace("[customeruseragent]", Request.ServerVariables("HTTP_USER_AGENT"))
+            sbdHTMLOrderEmail.Replace("[webshopurl]", CkartrisBLL.WebShopURL)
+            sbdHTMLOrderEmail.Replace("[websitename]", Server.HtmlEncode(GetGlobalResourceObject("Kartris", "Config_Webshopname")))
+        End If
 
         sbdBodyText.Insert(0, sbdBasketItems.ToString)
 
         arrBasketItems = UC_BasketMain.GetBasketItems
         If Not (arrBasketItems Is Nothing) Then
             Dim BasketItem As New BasketItem
-            For i As Integer = 0 To arrBasketItems.Count - 1
-                BasketItem = arrBasketItems(i)
-                With BasketItem
+            'final check if basket items are still there
+            If arrBasketItems.Count = 0 Then
+                CkartrisFormatErrors.LogError("Basket items were lost in the middle of saving this order! Customer redirected to main Basket page." & vbCrLf &
+                                                      "Details: " & sbdBodyText.ToString)
+                Response.Redirect("~/Basket.aspx")
+            End If
+
+            'Get customer discount, we need this to decide whether to mark items
+            'exempt from it
+            Dim BSKT_CustomerDiscount As Double = 0
+            Try
+                BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(litOrderCustomerID.Text)
+            Catch ex As Exception
+                'New user, just defaults to zero as no customer discount in this case
+            End Try
+
+
+            'We need to mark items that are exempt from customer discounts
+            Dim strMark As String = ""
+            Dim blnHasExemptCustomerDiscountItems As Boolean = False
+
+            'Loop through basket items
+            For Each Item As Kartris.BasketItem In arrBasketItems
+                With Item
+                    Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", Item.ProductID)
+                    Dim strCustomText As String = ""
+
                     Dim sbdOptionText As New StringBuilder("")
                     If Not String.IsNullOrEmpty(.OptionText) Then sbdOptionText.Append(vbCrLf & " " & .OptionText().Replace("<br>", vbCrLf & " ").Replace("<br />", vbCrLf & " "))
-                    sbdBasketItems.Append( _
-                                GetItemEmailText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ")" & _
-                                                 sbdOptionText.ToString, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
-                    If .CustomText <> "" Then
+
+                    'Set string to blank or **, to mark items exempt from customer discount
+                    If .ExcludeFromCustomerDiscount And BSKT_CustomerDiscount > 0 Then
+                        strMark = " **"
+                        blnHasExemptCustomerDiscountItems = True
+                    Else
+                        strMark = ""
+                    End If
+
+                    'Append line for this item
+                    sbdBasketItems.AppendLine(
+                                        GetItemEmailText(.Quantity & " x " & .ProductName & strMark, .VersionName & " (" & .CodeNumber & ")" &
+                                                         sbdOptionText.ToString, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
+
+                    If .CustomText <> "" AndAlso String.IsNullOrEmpty(strCustomControlName) Then
                         'Add custom text to mail
-                        sbdBasketItems.Append(" [ " & .CustomText & " ]" & vbCrLf)
+                        strCustomText = " [ " & .CustomText & " ]" & vbCrLf
+                        sbdBasketItems.Append(strCustomText)
+                    End If
+                    If blnUseHTMLOrderEmail Then
+                        'this line builds up the individual rows of the order contents table in the HTML email
+                        sbdHTMLOrderBasket.AppendLine(GetHTMLEmailRowText(.Quantity & " x " & .ProductName & strMark, .VersionName & " (" & .CodeNumber & ") " &
+                                                         sbdOptionText.ToString & strCustomText, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate, 0, .VersionID, .ProductID))
                     End If
                 End With
             Next
+
+            'Now we know if there are customer discount exempt items, can replace
+            '[customerdiscountexempttext] which was inserted with the customer discount
+            'line further above.
+            If blnHasExemptCustomerDiscountItems Then
+                sbdBodyText.Replace("[customerdiscountexempttext]", GetGlobalResourceObject("Basket", "ContentText_SomeItemsExcludedFromDiscount"))
+                sbdHTMLOrderContents.Replace("[customerdiscountexempttext]", GetGlobalResourceObject("Basket", "ContentText_SomeItemsExcludedFromDiscount"))
+            Else
+                sbdBodyText.Replace("[customerdiscountexempttext]", "")
+                sbdHTMLOrderContents.Replace("[customerdiscountexempttext]", "")
+            End If
         End If
 
         sbdBodyText.Insert(0, sbdBasketItems.ToString)
 
-        'Extract IP/User Agent info from the original order
-        strOrderDetails = Mid(strOrderDetails, InStr(strOrderDetails, " " & GetGlobalResourceObject("Email", "EmailText_OrderTime2")))
+        If blnUseHTMLOrderEmail Then
+            'build up the table and the header tags, insert basket contents
+            sbdHTMLOrderContents.Insert(0, "<table id=""orderitems""><thead><tr>" & vbCrLf &
+                                                "<th class=""col1"">" & GetGlobalResourceObject("Kartris", "ContentText_Item") & "</th>" & vbCrLf &
+                                                "<th class=""col2"">" & GetGlobalResourceObject("Kartris", "ContentText_Price") & "</th></thead><tbody>" & vbCrLf &
+                                                sbdHTMLOrderBasket.ToString)
+            'finally close the order contents HTML table
+            sbdHTMLOrderContents.Append("</tbody></table>")
+            'and append the order contents to the main HTML email
+            sbdHTMLOrderEmail.Replace("[ordercontents]", sbdHTMLOrderContents.ToString)
+        End If
 
-        'then try to append the updated basket and order total lines from the new basket
-        strOrderDetails = sbdBodyText.ToString & strOrderDetails
+        'check if shippingdestinationid is initialized, if not then reload checkout page
+        If UC_BasketMain.ShippingDestinationID = 0 Then
+            CkartrisFormatErrors.LogError("Basket was reset in edit order (back end). Shipping info lost." & vbCrLf & "BasketView Shipping Destination ID: " &
+                                                      UC_BasketMain.ShippingDestinationID & vbCrLf)
+            'Response.Redirect("~/Checkout.aspx")
+        End If
 
-        Dim intNewOrderID As Integer = OrdersBLL._CloneAndCancel(intO_ID, strOrderDetails, UC_BillingAddress.SelectedAddress, UC_ShippingAddress.SelectedAddress, _
-                                                                 chkSameShippingAsBilling.Checked, chkOrderSent.Checked, chkOrderInvoiced.Checked, chkOrderPaid.Checked, _
-                                                                 chkOrderShipped.Checked, objBasket, arrBasketItems, _
-                                                                UC_BasketMain.SelectedShippingMethod, txtOrderNotes.Text, numGatewayTotalPrice, txtOrderPONumber.Text, _
+
+        'Decide which email version to use
+        If blnUseHTMLOrderEmail Then
+
+            'Last few replacements
+            strOrderDetails = sbdHTMLOrderEmail.ToString
+
+            strOrderDetails = strOrderDetails.Replace("[storeowneremailheader]", "")
+            strOrderDetails = strOrderDetails.Replace("[poofflinepaymentdetails]", "")
+            strOrderDetails = strOrderDetails.Replace("[bitcoinpaymentdetails]", "")
+        Else
+            strOrderDetails = sbdBodyText.ToString
+        End If
+
+        'Create the order record
+        Dim intNewOrderID As Integer = OrdersBLL._CloneAndCancel(intO_ID, strOrderDetails, UC_BillingAddress.SelectedAddress, UC_ShippingAddress.SelectedAddress,
+                                                                 chkSameShippingAsBilling.Checked, chkOrderSent.Checked, chkOrderInvoiced.Checked, chkOrderPaid.Checked,
+                                                                 chkOrderShipped.Checked, objBasket, arrBasketItems,
+                                                                UC_BasketMain.SelectedShippingMethod, txtOrderNotes.Text, numGatewayTotalPrice, txtOrderPONumber.Text,
                                                                 strPromotionDescription, CUR_ID, chkSendOrderUpdateEmail.Checked)
+
+        'Now we have new order ID, let's put this into the email
+        strOrderDetails = strOrderDetails.Replace("[orderid]", intNewOrderID)
+
+        'Send email of new order to the customer
+        Dim strFromEmail As String = LanguagesBLL.GetEmailFrom(CInt(ddlOrderLanguage.SelectedValue))
+        SendEmail(strFromEmail, txtOrderCustomerEmail.Text, GetGlobalResourceObject("Email", "Config_Subjectline") & " (#" & intNewOrderID & ")", strOrderDetails, , , , , blnUseHTMLOrderEmail)
+
         'if we got a new order id then that means the order was successfully cloned and cancelled - lets now redirect the user to the new order details page
         If intNewOrderID > 0 Then
             If chkOrderPaid.Checked Then
@@ -578,15 +805,6 @@ Partial Class UserControls_Back_EditOrder
                     LoadBasket(True)
 
                     objBasket = Session("Basket")
-
-                    Dim kartrisUser As KartrisMemberShipUser = Membership.GetUser(UsersBLL.GetEmailByID(litOrderCustomerID.Text))
-                    Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(kartrisUser, objBasket, CurrenciesBLL.CurrencyCode(CUR_ID))
-                    Dim result As Boolean = mailChimpLib.DeleteOrder("order_" & intO_ID).Result
-                    If result Then
-                        Dim mcOrder As MailChimp.Net.Models.Order = mailChimpLib.AddOrder(mailChimpLib.GetCustomer(kartrisUser.ID).Result, intNewOrderID).Result
-                        ' Not creating the order, it's missing Basket
-                        mailChimpLib.DeleteCart("cart_" & intO_ID)
-                    End If
 
                     UC_BasketMain.EmptyBasket_Click(Nothing, Nothing)
                 Catch ex As Exception

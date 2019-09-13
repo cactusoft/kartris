@@ -1342,6 +1342,27 @@ BEGIN
 END
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisProducts_Get]    Script Date: 13/09/2019 00:16:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisProducts_Get]
+(
+	@LANG_ID tinyint
+)
+AS
+	SET NOCOUNT ON;
+SELECT        vKartrisTypeProductsLite.P_ID, vKartrisTypeProductsLite.P_Name
+FROM            vKartrisTypeProductsLite
+WHERE        (LANG_ID = @LANG_ID)
+GO
+
 /****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetNameByProductID]    Script Date: 01/23/2013 21:59:11 ******/
 SET ANSI_NULLS ON
 GO
