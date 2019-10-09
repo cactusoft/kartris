@@ -148,6 +148,9 @@
                                                         </span></li>
                                                 </asp:PlaceHolder>
                                                 <li><span class="Kartris-DetailsView-Name">
+                                                    <asp:Label ID="lblComments" runat="server" Text="<%$ Resources: Checkout, SubTitle_Comments%>" /></span> <span class="Kartris-DetailsView-Value">
+                                                        <asp:Literal ID="litComments" runat="server" Text='<%#Eval("O_Comments") %>'></asp:Literal></span></li>
+                                                <li><span class="Kartris-DetailsView-Name">
                                                     <asp:Label ID="lblOrderNotes" runat="server" Text="<%$ Resources: _Kartris, ContentText_Notes%>"
                                                     AssociatedControlID="txtOrderNotes" /></span> <span class="Kartris-DetailsView-Value">
                                                         <asp:TextBox runat="server" ID="txtOrderNotes" TextMode="MultiLine" Text='<%#Bind("O_Notes") %>' /></span></li>

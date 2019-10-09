@@ -374,9 +374,9 @@ Partial Class Admin_Install
                 End If
             End If
         Catch ex As Exception
-            litError.Text = " Database Sample Creation Failed - " & ex.Message
-            phdError.Visible = True
-            wizInstallation.ActiveStepIndex = 2
+            'litError.Text = " Database Sample Creation Failed - " & ex.Message
+            'phdError.Visible = True
+            'wizInstallation.ActiveStepIndex = 2
         Finally
             If objSQLConnection.State = ConnectionState.Open Then objSQLConnection.Close()
         End Try

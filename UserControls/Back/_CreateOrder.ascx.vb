@@ -808,19 +808,14 @@ Partial Class UserControls_Back_CreateOrder
 
                 sbdBodyText.Append(strShippingAddressEmailText & GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
 
-                'WE'RE OVERRIDING THE CUSTOMER COMMENTS CODE HERE AS THE ORDER IS BEING DONE THROUGH THE BACKEND BY THE ADMIN
                 'Comments and additional info
-                'If Trim(txtComments.Text) <> "" Then
                 Dim arrAuth As String() = HttpSecureCookie.DecryptValue(Session("Back_Auth"), "Create New Order")
                 strTempEmailTextHolder = " " & GetGlobalResourceObject("Email", "EmailText_Comments") & ": " & vbCrLf & vbCrLf &
-                                         " " & GetGlobalResourceObject("_Orders", "ContentText_OrderCreatedByAdmin") & arrAuth(0) & vbCrLf & vbCrLf
+                                         " " & txtOrderNotes.Text & arrAuth(0) & vbCrLf & vbCrLf
                 sbdBodyText.Append(strTempEmailTextHolder)
                 If blnUseHTMLOrderEmail Then
                     sbdHTMLOrderEmail.Replace("[ordercomments]", Server.HtmlEncode(strTempEmailTextHolder).Replace(vbCrLf, "<br/>"))
                 End If
-                'Else
-                'sbdHTMLOrderEmail.Replace("[ordercomments]", "")
-                'End If
 
                 sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_OrderTime2") & ": " & CkartrisDisplayFunctions.NowOffset & vbCrLf)
                 sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_IPAddress") & ": " & CkartrisEnvironment.GetClientIPAddress() & vbCrLf)
@@ -922,7 +917,7 @@ Partial Class UserControls_Back_CreateOrder
                                      _UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket,
                                       BasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID,
                                      intGatewayCurrency, chkSendOrderUpdateEmail.Checked, _UC_BasketMain.SelectedShippingMethod, numGatewayTotalPrice,
-                                     IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtOrderPONumber.Text, "", False)
+                                     IIf(String.IsNullOrEmpty(txtEUVAT.Text), "", txtEUVAT.Text), strPromotionDescription, txtOrderPONumber.Text, txtOrderNotes.Text, False)
 
                 'Order Creation successful
                 If O_ID > 0 Then
@@ -1302,7 +1297,8 @@ Partial Class UserControls_Back_CreateOrder
                         Session("Basket") = Nothing
                         Session("BasketObject") = Nothing
                         BasketBLL.DeleteBasket()
-                        Response.Redirect("_OrdersList.aspx?callmode=payment")
+                        'Response.Redirect("_OrdersList.aspx?callmode=payment")
+                        Response.Redirect("_ModifyOrderStatus.aspx?OrderID=" & O_ID)
                     End If
                 End If
             End If

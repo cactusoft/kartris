@@ -35,8 +35,6 @@
                             <li><span class="Kartris-DetailsView-Name">
                                 <asp:Label ID="lblPassword" runat="server" Text="<%$ Resources: Kartris, FormLabel_Password %>"
                                     EnableViewState="false" AssociatedControlID="txtNewPassword" CssClass="requiredfield"></asp:Label>
-                                <%--                                            <asp:Label ID="lblPasswordOptional" runat="server" Text="<%$ Resources: Kartris, ContentText_PasswordOptional %>"
-                                            AssociatedControlID="txtNewPassword" CssClass="requiredfield"></asp:Label>--%>
                             </span>
                                 <span class="Kartris-DetailsView-Value">
                                     <asp:TextBox ID="txtNewPassword" runat="server" TextMode="Password" EnableViewState="true" />
@@ -85,7 +83,7 @@
                                 <asp:TextBox ID="txtOrderPONumber" runat="server"></asp:TextBox>
                             </span></li>
                         <li><span class="Kartris-DetailsView-Name">
-                            <asp:Label ID="lblOrderNotes" runat="server" Text="<%$ Resources: _Kartris, ContentText_Notes%>"
+                            <asp:Label ID="lblOrderNotes" runat="server" Text="<%$ Resources: Checkout, SubTitle_Comments%>"
                                 AssociatedControlID="txtOrderNotes" /></span> <span class="Kartris-DetailsView-Value">
                                     <asp:TextBox runat="server" ID="txtOrderNotes" TextMode="MultiLine" /></span></li>
 

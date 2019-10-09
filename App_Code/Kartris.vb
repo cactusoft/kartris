@@ -21,6 +21,9 @@ Imports System.Web.HttpContext
 Imports System.Web.UI
 Imports System.Text
 Imports System.Xml
+Imports MailKit.Net.Smtp 'new in v3, mail now uses MailKit (nuget)
+Imports MailKit 'new in v3, mail now uses MailKit (nuget)
+Imports MimeKit 'new in v3, mail now uses MailKit (nuget)
 
 ''' <summary>
 ''' Various types and values
@@ -950,13 +953,30 @@ Public NotInheritable Class CkartrisDataManipulation
     End Function
 
     ''' <summary>
-    ''' Send email
+    ''' Send Email using Mailkit
     ''' </summary>
+    ''' <param name="strFrom">From address</param>
+    ''' <param name="strTo">To address</param>
+    ''' <param name="strSubject">Subject line</param>
+    ''' <param name="strBody">Body text</param>
+    ''' <param name="strReplyTo">Reply To address (OPTIONAL)</param>
+    ''' <param name="strFromName">From name (OPTIONAL)</param>
+    ''' <param name="sendEncoding">Encoding (OPTIONAL)</param>
+    ''' <param name="strAttachment">Path to attachment(OPTIONAL)</param>
+    ''' <param name="blnSendAsHTML">Boolean to send as HTML (OPTIONAL)</param>
+    ''' <param name="sendPriority">Priority (OPTIONAL)</param>
+    ''' <param name="objBCCAddress">BCC address (OPTIONAL)</param>
+    ''' <param name="objAdditionalToAddresses">Additional 'To' addresses (OPTIONAL)</param>
+    ''' <returns>boolean, true if function runs without error</returns>
+    ''' <remarks></remarks>
     Public Shared Function SendEmail(ByVal strFrom As String, ByVal strTo As String, ByVal strSubject As String, ByVal strBody As String,
-        Optional ByVal strReplyTo As String = "", Optional ByVal strFromName As String = "",
-        Optional ByVal sendEncoding As Encoding = Nothing, Optional ByVal strAttachment As String = "",
+        Optional ByVal strReplyTo As String = "",
+        Optional ByVal strFromName As String = "",
+        Optional ByVal sendEncoding As Encoding = Nothing,
+        Optional ByVal strAttachment As String = "",
         Optional ByVal blnSendAsHTML As Boolean = False,
-        Optional ByVal sendPriority As MailPriority = MailPriority.Normal, Optional ByVal objBCCAddress As MailAddressCollection = Nothing,
+        Optional ByVal sendPriority As MailPriority = MailPriority.Normal,
+        Optional ByVal objBCCAddress As MailAddressCollection = Nothing,
         Optional ByVal objAdditionalToAddresses As MailAddressCollection = Nothing) As Boolean
 
         'Belt and braces, let's ensure we don't mail the guest
@@ -965,6 +985,7 @@ Public NotInheritable Class CkartrisDataManipulation
 
         Try
             If LCase(GetKartConfig("general.email.method")) = "write" Then
+
                 'Write method - use javascript alert box to display email
                 Dim pagCurrentPage As Page = HttpContext.Current.Handler
                 If pagCurrentPage IsNot Nothing Then
@@ -980,10 +1001,10 @@ Public NotInheritable Class CkartrisDataManipulation
                         Next
                         strBCCString += "\n"
                     End If
+
                     'Do replacements so HTML will display properly in the JS alert popup
                     If blnSendAsHTML Then
-                        strBody = "*HTML AND BODY TAGS are stripped when using WRITE emailmethod*" & vbCrLf &
-                                     CkartrisBLL.ExtractHTMLBodyContents(strBody)
+                        strBody = "*HTML AND BODY TAGS are stripped when using WRITE emailmethod*" & vbCrLf & CkartrisBLL.ExtractHTMLBodyContents(strBody)
                     End If
                     strBody = strBody.Replace("\", "\\")
                     strBody = strBody.Replace("<", "\<")
@@ -993,69 +1014,70 @@ Public NotInheritable Class CkartrisDataManipulation
                     strBody = strBody.Replace("&", "\&")
                     strBody = strBody.Replace(vbCrLf, "\n")
                     strBody = strBody.Replace(vbLf, "\n")
-                    Dim strBodyText As String = (String.Format("alert('FROM: " & strFrom & "\nTO: " & strTo & "\n" & strBCCString &
-                    "SUBJECT: " & strSubject & "\n\nBODY:\n {0}');", strBody))
+                    Dim strBodyText As String = (String.Format("alert('FROM: " & strFrom & "\nTO: " & strTo & "\n" & strBCCString & "SUBJECT: " & strSubject & "\n\nBODY:\n {0}');", strBody))
                     ScriptManager.RegisterStartupScript(pagCurrentPage, pagCurrentPage.GetType, "WriteEmail", strBodyText, True)
+
                     'CurrentPage.ClientScript.RegisterStartupScript(CurrentPage.GetType, "WriteEmail", strBodyText, True)
                 End If
             Else
                 If LCase(GetKartConfig("general.email.method")) <> "off" Then
-                    'Send the Email via the built in System.Net.Mail.SmtpClient
-                    Dim objEmailFrom As MailAddress
+
+                    'Send the Email via MailKit & MimeKit
+                    Dim objEmailFrom As MailboxAddress
                     If Not String.IsNullOrEmpty(strFromName) Then
-                        objEmailFrom = New MailAddress(strFrom, strFromName)
+                        objEmailFrom = New MailboxAddress(strFromName, strFrom)
                     Else
-                        objEmailFrom = New MailAddress(strFrom)
+                        objEmailFrom = New MailboxAddress(strFrom)
                     End If
-
-                    'New test mode; if mail is set to TEST, this
-                    'will send mail to the value set in
-                    If LCase(GetKartConfig("general.email.method")) = "test" Then
-                        If LCase(GetKartConfig("general.email.testaddress")) <> "" Then
-                            strSubject &= " {" & strTo & "}" 'change subject by adding the 'To' address the mail would go to if not in test mode
-                            strTo = LCase(GetKartConfig("general.email.testaddress")) 'change the 'To' address, need to do this after subject
-                            objBCCAddress = Nothing 'Don't want any BCC
-                            objAdditionalToAddresses = Nothing 'Don't want any additional addresses
-                        End If
+                    Dim objEmailTo As MailboxAddress = New MailboxAddress(strTo)
+                    Dim objMailMessage As New MimeMessage()
+                    objMailMessage.From.Add(objEmailFrom)
+                    objMailMessage.To.Add(objEmailTo)
+                    If Not String.IsNullOrEmpty(strReplyTo) Then
+                        objMailMessage.ReplyTo.Add(New MailboxAddress(strReplyTo))
                     End If
-
-                    Dim objEmailTo As MailAddress = New MailAddress(strTo)
-                    Dim objMailMessage As MailMessage = New MailMessage(objEmailFrom, objEmailTo)
-
-                    objMailMessage.Subject = strSubject
-                    objMailMessage.Body = strBody
-                    If Not String.IsNullOrEmpty(strReplyTo) Then objMailMessage.ReplyToList.Add(New MailAddress(strReplyTo))
-                    objMailMessage.BodyEncoding = IIf(sendEncoding Is Nothing, System.Text.Encoding.UTF8, sendEncoding)
-                    objMailMessage.IsBodyHtml = blnSendAsHTML
-                    objMailMessage.Priority = sendPriority
-
                     If objAdditionalToAddresses IsNot Nothing Then
                         For Each objItem As MailAddress In objAdditionalToAddresses
-                            objMailMessage.To.Add(objItem)
+                            objMailMessage.To.Add(New MailboxAddress(objItem.Address))
                         Next
                     End If
-
                     If objBCCAddress IsNot Nothing Then
                         For Each objItem As MailAddress In objBCCAddress
-                            objMailMessage.Bcc.Add(objItem)
+                            objMailMessage.Bcc.Add(New MailboxAddress(objItem.Address))
                         Next
                     End If
-
+                    objMailMessage.Subject = strSubject
+                    objMailMessage.Priority = 1 'normal (0=non urgent, 1 normal, 2 urgent)
+                    Dim builder = New BodyBuilder()
+                    builder.TextBody = strBody 'plain
+                    If blnSendAsHTML Then
+                        builder.HtmlBody = strBody 'html
+                    End If
                     If Not String.IsNullOrEmpty(strAttachment) Then
                         For Each strAttachmentPath As String In strAttachment.Split(",")
-                            objMailMessage.Attachments.Add(New Attachment(strAttachmentPath))
+                            builder.Attachments.Add(strAttachmentPath)
                         Next
                     End If
-
-                    Dim objMail As System.Net.Mail.SmtpClient = New System.Net.Mail.SmtpClient(GetKartConfig("general.email.mailserver"), CInt(GetKartConfig("general.email.smtpportnumber")))
+                    objMailMessage.Body = builder.ToMessageBody()
+                    Dim Sso = Security.SecureSocketOptions.None
+                    Select Case CInt(GetKartConfig("general.email.smtpportnumber"))
+                        Case 25, 587, 110, 143
+                            Sso = Security.SecureSocketOptions.None
+                        Case 465, 995, 993
+                            Sso = Security.SecureSocketOptions.SslOnConnect
+                        Case Else
+                            Sso = Security.SecureSocketOptions.None
+                    End Select
+                    Dim objMail = New MailKit.Net.Smtp.SmtpClient()
+                    objMail.Connect(GetKartConfig("general.email.mailserver"), CInt(GetKartConfig("general.email.smtpportnumber")), Sso)
                     Dim strUserName As String = GetKartConfig("general.email.smtpauthusername")
                     If Not String.IsNullOrEmpty(strUserName) Then
-                        objMail.Credentials = New System.Net.NetworkCredential(strUserName, GetKartConfig("general.email.smtpauthpassword"))
+                        objMail.Authenticate(strUserName, GetKartConfig("general.email.smtpauthpassword"))
                     End If
                     objMail.Send(objMailMessage)
+                    objMail.Disconnect(True)
                 End If
             End If
-
             Return True
         Catch ex As Exception
             CkartrisFormatErrors.ReportHandledError(ex, System.Reflection.MethodBase.GetCurrentMethod)

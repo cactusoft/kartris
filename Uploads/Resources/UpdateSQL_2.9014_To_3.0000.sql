@@ -1275,6 +1275,10 @@ GO
 -- to the Language Elements table multiple times, and can therefore
 -- index this view.
 SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ARITHABORT ON
+SET CONCAT_NULL_YIELDS_NULL ON
+SET NUMERIC_ROUNDABORT OFF
 GO
 
 SET QUOTED_IDENTIFIER ON

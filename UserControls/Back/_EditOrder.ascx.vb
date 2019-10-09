@@ -107,6 +107,13 @@ Partial Class UserControls_Back_EditOrder
                             chkOrderSent.Checked = CBool(dtOrderRecord.Rows(0)("O_Sent"))
                             chkOrderInvoiced.Checked = CBool(dtOrderRecord.Rows(0)("O_Invoiced"))
                             chkSendOrderUpdateEmail.Checked = CBool(dtOrderRecord.Rows(0)("O_SendOrderUpdateEmail"))
+
+                            Try
+                                litComments.Text = dtOrderRecord.Rows(0)("O_Comments")
+                            Catch ex As Exception
+                                'Probably edited order
+                            End Try
+
                             Session("LANG") = intOrderLanguageID
                             Session("CUR_ID") = intOrderCurrencyID
 
