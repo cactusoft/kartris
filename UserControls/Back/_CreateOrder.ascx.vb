@@ -81,7 +81,8 @@ Partial Class UserControls_Back_CreateOrder
                 If ddlPaymentGateways.Items.Count = 1 Then
                     Throw New Exception("No valid payment gateways")
                 ElseIf ddlPaymentGateways.Items.Count > 1 Then
-                    ddlPaymentGateways.SelectedIndex = 1
+                    'ddlPaymentGateways.SelectedIndex = 1
+                    ddlPaymentGateways.SelectedValue = "PO_OfflinePayment"
                 End If
 
                 ddlOrderLanguage.Items.Clear()
