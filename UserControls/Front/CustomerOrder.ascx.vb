@@ -119,8 +119,15 @@ Partial Class UserControls_Front_CustomerOrder
             imgCancelled.ImageUrl = IIf(tblBasket.Rows(0).Item("O_Cancelled"), "~/Images/Kartris/tick.gif", "~/Images/Kartris/tick_empty.gif")
 
             If Len(tblBasket.Rows(0).Item("O_Status")) > 0 Then
-                litOrderStatus.Text = tblBasket.Rows(0).Item("O_Status") & ""
-                phdStatus.Visible = True
+                Dim strOrderStatus As String = tblBasket.Rows(0).Item("O_Status")
+
+                'We don't want to show it if still includes the XML 
+                If strOrderStatus.ToLower.Contains("<basket") Then
+                    'Is XML text, ignore it
+                Else
+                    litOrderStatus.Text = strOrderStatus & ""
+                    phdStatus.Visible = True
+                End If
             End If
 
             'Sort the basket items so items excluded from customer
