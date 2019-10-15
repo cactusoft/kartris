@@ -483,6 +483,7 @@ Partial Class Admin_Install
                 element = CType(ModifiedConfig.AppSettings.Settings("TaxRegime"), KeyValueConfigurationElement)
                 If element IsNot Nothing And ddlTaxRegime.SelectedValue <> "Select One" Then
                     If strTaxRegime = "European Union" Then strTaxRegime = "EU"
+                    If strTaxRegime = "VAT (non EU)" Then strTaxRegime = "VAT"
                     If strTaxRegime = "Other" Then strTaxRegime = "SIMPLE"
                     element.Value = strTaxRegime
                 End If

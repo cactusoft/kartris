@@ -566,8 +566,9 @@ PROGRESS LOADING
                                     <asp:DropDownList runat="server" ID="ddlTaxRegime" Width="200">
                                         <asp:ListItem Text="-" Value="" Selected="True" />
                                         <asp:ListItem Value="European Union" />
+                                        <asp:ListItem Value="VAT (non EU)" />
                                         <asp:ListItem Value="US" />
-                                        <asp:ListItem Value="Canada" />
+                                        <asp:ListItem Value="Canada" />                                
                                         <asp:ListItem Value="Other" />
                                     </asp:DropDownList>
                                     <asp:RequiredFieldValidator ID="valTaxRegime" ForeColor="" CssClass="error" runat="server"

@@ -1869,6 +1869,59 @@ WHERE        (CAT_ID <> 0) AND (LANG_ID = @LANG_ID) AND (CAT_Name LIKE @Key + '%
 
 GO
 
+/**** MODS TO TWO SPROCS BELOW LET US SPECIFICALLY ADD CATS TO ROOT, WHILE KEEPING LINKS TO OTHER CAT PARENTS ****/
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisCategories_SearchCategoriesByName]    Script Date: 13/10/2019 08:57:01 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisCategories_SearchCategoriesByName]
+(
+	@Key nvarchar(50),
+	@LANG_ID tinyint
+)
+AS
+	SET NOCOUNT ON;
+SELECT CAT_ID, CAT_Name FROM vKartrisTypeCategories WHERE CAT_ID=0
+UNION
+SELECT        CAT_ID, CAT_Name
+FROM            vKartrisTypeCategories
+WHERE        (LANG_ID = @LANG_ID) AND (CAT_Name LIKE @Key + '%')
+
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisCategoryHierarchy_GetParentsByID]    Script Date: 13/10/2019 10:43:27 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[_spKartrisCategoryHierarchy_GetParentsByID]
+(
+	@LANG_ID as tinyint,
+	@ChildID as int
+)
+AS
+	SET NOCOUNT ON;
+SELECT tblKartrisCategoryHierarchy.CH_ChildID AS CAT_ID, tblKartrisCategoryHierarchy.CH_ParentID AS ParentID, tblKartrisLanguageElements.LE_Value AS ParentName
+FROM         tblKartrisCategoryHierarchy LEFT OUTER JOIN
+					  tblKartrisLanguageElements ON tblKartrisCategoryHierarchy.CH_ParentID = tblKartrisLanguageElements.LE_ParentID
+WHERE     (tblKartrisLanguageElements.LE_LanguageID = @LANG_ID) AND (tblKartrisLanguageElements.LE_TypeID = 3) 
+		AND (tblKartrisLanguageElements.LE_FieldID = 1) AND (tblKartrisCategoryHierarchy.CH_ChildID = @ChildID)
+		ORDER BY ParentName
+GO
+
+/**** ADD ROOT RECORD LANGUAGE ELEMENTS ****/
+INSERT INTO [tblKartrisLanguageElements] ([LE_LanguageID],[LE_TypeID],[LE_FieldID],[LE_ParentID],[LE_Value])VALUES(1,3,1,0,'- root -')
+INSERT INTO [tblKartrisLanguageElements] ([LE_LanguageID],[LE_TypeID],[LE_FieldID],[LE_ParentID],[LE_Value])VALUES(1,3,2,0,'')
+INSERT INTO [tblKartrisLanguageElements] ([LE_LanguageID],[LE_TypeID],[LE_FieldID],[LE_ParentID],[LE_Value])VALUES(1,3,3,0,'')
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.0000', CFG_VersionAdded=3.0000 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

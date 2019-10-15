@@ -6132,6 +6132,14 @@ CREATE TABLE [dbo].[tblKartrisLanguageElements](
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
+
+/**** ADD ROOT RECORD LANGUAGE ELEMENTS ****/
+
+/* New in v3, markup root category (0) so we can have it in the parent cats selection which means we can map categories to root and other cats */
+INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 3, 1, 0, '- root -')
+INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 3, 2, 0, '')
+INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 3, 3, 0, '')
+
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 9, 1, 1, N'Standard Post')
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 9, 1, 2, N'Express Post')
 INSERT [dbo].[tblKartrisLanguageElements] ([LE_LanguageID], [LE_TypeID], [LE_FieldID], [LE_ParentID], [LE_Value]) VALUES (1, 9, 1, 3, N'Express Air Overnight')
@@ -19642,8 +19650,9 @@ FROM         tblKartrisCategoryHierarchy LEFT OUTER JOIN
 					  tblKartrisLanguageElements ON tblKartrisCategoryHierarchy.CH_ParentID = tblKartrisLanguageElements.LE_ParentID
 WHERE     (tblKartrisLanguageElements.LE_LanguageID = @LANG_ID) AND (tblKartrisLanguageElements.LE_TypeID = 3) 
 		AND (tblKartrisLanguageElements.LE_FieldID = 1) AND (tblKartrisCategoryHierarchy.CH_ChildID = @ChildID)
-		AND (tblKartrisCategoryHierarchy.CH_ParentID <> 0)
+		ORDER BY ParentName
 GO
+
 /****** Object:  StoredProcedure [dbo].[_spKartrisCategoryHierarchy_GetOtherParents]    Script Date: 01/23/2013 21:59:09 ******/
 SET ANSI_NULLS ON
 GO
@@ -19878,7 +19887,7 @@ BEGIN
 --	WHERE [PCAT_ProductID] = @ProductID;
 END
 GO
-/****** Object:  StoredProcedure [dbo].[_spKartrisCategories_SearchCategoriesByName]    Script Date: 01/23/2013 21:59:09 ******/
+/****** Object:  StoredProcedure [dbo].[_spKartrisCategories_SearchCategoriesByName]    Script Date: 13/10/2019 08:57:01 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -19895,9 +19904,12 @@ CREATE PROCEDURE [dbo].[_spKartrisCategories_SearchCategoriesByName]
 )
 AS
 	SET NOCOUNT ON;
+SELECT CAT_ID, CAT_Name FROM vKartrisTypeCategories WHERE CAT_ID=0
+UNION
 SELECT        CAT_ID, CAT_Name
 FROM            vKartrisTypeCategories
-WHERE        (CAT_ID <> 0) AND (LANG_ID = @LANG_ID) AND (CAT_Name LIKE @Key + '%')
+WHERE        (LANG_ID = @LANG_ID) AND (CAT_Name LIKE @Key + '%')
+
 GO
 /****** Object:  StoredProcedure [dbo].[_spKartrisCategories_SearchTopLevelCategoriesByName]    Script Date: 13/04/2019 09:54:52 ******/
 SET ANSI_NULLS ON
@@ -19916,11 +19928,14 @@ CREATE PROCEDURE [dbo].[_spKartrisCategories_SearchTopLevelCategoriesByName]
 )
 AS
 	SET NOCOUNT ON;
+SELECT CAT_ID, CAT_Name FROM vKartrisTypeCategories WHERE CAT_ID=0
+UNION
 SELECT        CAT_ID, CAT_Name
 FROM            tblKartrisCategoryHierarchy INNER JOIN
-                         vKartrisTypeCategories ON tblKartrisCategoryHierarchy.CH_ChildID = vKartrisTypeCategories.CAT_ID
-WHERE        (CAT_ID <> 0) AND (LANG_ID = @LANG_ID) AND (CAT_Name LIKE @Key + '%') AND (CH_ParentID = 0)
+						 vKartrisTypeCategories ON tblKartrisCategoryHierarchy.CH_ChildID = vKartrisTypeCategories.CAT_ID
+WHERE        (LANG_ID = @LANG_ID) AND (CAT_Name LIKE @Key + '%') AND (CH_ParentID = 0)
 
+		ORDER BY CAT_Name
 GO
 /****** Object:  StoredProcedure [dbo].[_spKartrisCategories_GetWithProductsOnly]    Script Date: 01/23/2013 21:59:09 ******/
 SET ANSI_NULLS ON

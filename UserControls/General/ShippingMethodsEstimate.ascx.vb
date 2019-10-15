@@ -33,7 +33,7 @@ Partial Class UserControls_ShippingMethodsEstimate
         'Hide this control if not turned on from config settings
         If GetKartConfig("frontend.minibasket.shippingestimate") <> "y" Then
             Me.Visible = False
-            Response.End()
+            'Response.End()
         End If
 
         Dim strPickupAvailable As String = ""
