@@ -64,7 +64,7 @@ All rights reserved.
 		<trace enabled="true" localOnly="false" pageOutput="false" requestLimit="20" mostRecent="true" traceMode="SortByTime" />
 		<trust level="Full" originUrl=".*" processRequestInApplicationTrust="true" />
 		<!-- IMPORTANT!!  UNCOMMENT THE GLOBALIZATION TAG BELOW IF YOU WANT TO SKIP THE INSTALLATION SCRIPT-->
-		<globalization resourceProviderFactoryType="SqlResourceProviderFactory" culture="auto" uiCulture="auto" enableClientBasedCulture="true" />
+		<!--<globalization resourceProviderFactoryType="SqlResourceProviderFactory" culture="auto" uiCulture="auto" enableClientBasedCulture="true" />-->
 		<identity impersonate="false" />
 		<!-- 
 		Set compilation debug="true" to insert debugging 
