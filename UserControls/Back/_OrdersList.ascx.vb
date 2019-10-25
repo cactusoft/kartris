@@ -128,6 +128,8 @@ Partial Class UserControls_Back_OrdersList
         'See if date passed to page by querystring
         Dim strDateQS As String = Request.QueryString("strDate")
 
+        If strDateQS = "" Then strDateQS = txtFilterDate.Text
+
         'If date passed by querystring, set up page
         If IsDate(strDateQS) And Not Me.IsPostBack Then
             ViewState("_Callmode") = OrdersBLL.ORDERS_LIST_CALLMODE.BYDATE
@@ -209,10 +211,10 @@ Partial Class UserControls_Back_OrdersList
             End If
         End If
 
-        If Not blnTableCopied Then
-            ViewState("originalValuesDataTable") = tblOrdersList
+        'If Not blnTableCopied Then
+        ViewState("originalValuesDataTable") = tblOrdersList
             blnTableCopied = True
-        End If
+        'End If
         _UC_ItemPager.TotalItems = ViewState("intTotalRowCount")
         _UC_ItemPager.ItemsPerPage = intRowsPerPage
         _UC_ItemPager.PopulatePagerControl()
@@ -368,7 +370,7 @@ Partial Class UserControls_Back_OrdersList
     Protected Sub btnUpdate_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnUpdate.Click
         Dim tblOriginal As DataTable = DirectCast(ViewState("originalValuesDataTable"), DataTable)
         For Each rowOrder As GridViewRow In gvwOrders.Rows
-            If IsRowModified(rowOrder) Then
+            If IsRowModified(rowOrder, tblOriginal) Then
                 gvwOrders.UpdateRow(rowOrder.RowIndex, False)
             End If
         Next
@@ -422,7 +424,7 @@ Partial Class UserControls_Back_OrdersList
         Response.Redirect(strLink)
     End Sub
 
-    Protected Function IsRowModified(ByVal r As GridViewRow) As Boolean
+    Protected Function IsRowModified(ByVal r As GridViewRow, ByVal tblOriginal As DataTable) As Boolean
         Dim currentID As Integer = Convert.ToInt32(gvwOrders.DataKeys(r.RowIndex).Value)
         Dim rowOrders As DataRow = tblOriginal.Select(String.Format("O_ID = {0}", currentID))(0)
 
@@ -442,6 +444,7 @@ Partial Class UserControls_Back_OrdersList
 
     Protected Sub gvwOrders_RowUpdating(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewUpdateEventArgs) Handles gvwOrders.RowUpdating
         Dim intCurrentID As Integer = Convert.ToInt32(gvwOrders.DataKeys(e.RowIndex).Value)
+        Dim tblOriginal As DataTable = DirectCast(ViewState("originalValuesDataTable"), DataTable)
         Dim rowOrders As DataRow = tblOriginal.Select(String.Format("O_ID = {0}", intCurrentID))(0)
         Dim rowGridView As GridViewRow = gvwOrders.Rows(e.RowIndex)
 

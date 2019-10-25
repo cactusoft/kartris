@@ -671,6 +671,7 @@ SECTION: CHANGE LOG / REVISIONS / SOFTWARE UPDATE
 */
 .section_revisions div                  { padding-left: 160px; margin-bottom: 2px; }
 .section_revisions div div              { padding-left: 0 }
+.revisions_Beta                         { background-color: #ff7cb0; color: #fff; display: inline-block; }
 .revisions_Prerelease                   { background-color: #04d; color: #fff; display: inline-block; }
 .revisions_Minor                        { background-color: #aaa; color: #fff; display: inline-block; }
 .revisions_Recommended                  { background-color: #090; color: #fff; display: inline-block; }

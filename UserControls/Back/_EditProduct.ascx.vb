@@ -84,8 +84,10 @@ Partial Class _EditProduct
         'that just has a single version.
         If ddlProductType.SelectedValue = "s" Or (ddlProductType.SelectedValue = "m") Then
             btnCloneProduct.Visible = True
+            txtCloneQty.Visible = True
         Else
             btnCloneProduct.Visible = False
+            txtCloneQty.Visible = False
         End If
 
     End Sub
