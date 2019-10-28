@@ -566,6 +566,13 @@ Public Class OrdersBLL
               ByVal blnOrderEmails As Boolean, ByVal strShippingMethod As String, ByVal numGatewayTotalPrice As Double,
               ByVal strEUVATNumber As String, ByVal strPromotionDescription As String, ByVal strPurchaseOrderNo As String, ByVal strComments As String,
               ByVal blnIsGuest As Boolean) As Integer
+
+        'Could be possible for shipping method to be blank. Seen it happen.
+        'Let's bounce user back to checkout if that happens.
+        If strShippingMethod = "" Then
+            Current.Response.Redirect("~/Checkout.aspx")
+        End If
+
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
             Dim cmd As SqlCommand = sqlConn.CreateCommand

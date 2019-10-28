@@ -65,14 +65,23 @@ Public Class Image : Implements IHttpHandler, System.Web.SessionState.IReadOnlyS
 
             'if whole directory, scan for suitable image
             If strFileName = "" Then
-                For i = 0 To UBound(aryFileTypes)
-                    strImagePathToTry = strImagesPath & strFolderPath & numItem & Trim(aryFileTypes(i))
-                    If System.IO.File.Exists(strImagePathToTry) Then
-                        strImagePath = strImagePathToTry
-                        ' We have a value, let's exit early.
+                Try
+                    For i = 0 To UBound(aryFileTypes)
+                        strImagePathToTry = strImagesPath & strFolderPath & numItem & Trim(aryFileTypes(i))
+                        If System.IO.File.Exists(strImagePathToTry) Then
+                            strImagePath = strImagePathToTry
+                            ' We have a value, let's exit early.
+                            Exit For
+                        End If
+                    Next
+                    Dim dirFolder As New DirectoryInfo(strImagesPath & strFolderPath)
+                    For Each objFile In dirFolder.GetFiles()
+                        strImagePath = strImagesPath & strFolderPath & objFile.Name
                         Exit For
-                    End If
-                Next
+                    Next
+                Catch ex As Exception
+                    'could happen I guess
+                End Try
             Else
                 strImagePath = strImagesPath & strFolderPath & strFileName
             End If
