@@ -99,20 +99,20 @@ Public MustInherit Class PageBaseClass
         Dim strReplacement As String = ""
         Dim sbdLink As New StringBuilder
 
-        'Newest code as of 2014-05-14
-        If InStr(Request.RawUrl.ToLower, "/callback.aspx") = 0 AndAlso InStr(Request.RawUrl.ToLower, "/checkout.aspx") = 0 Then
-            sbdLink.Append("<script>" & vbCrLf)
-            sbdLink.Append("(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){" & vbCrLf)
-            sbdLink.Append("(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o)," & vbCrLf)
-            sbdLink.Append("m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)" & vbCrLf)
-            sbdLink.Append("})(window,document,'script','//www.google-analytics.com/analytics.js','ga');" & vbCrLf)
-            sbdLink.Append("ga('create', '" & strGoogleWebPropertyID & "', 'auto'); ga('send', 'pageview');" & vbCrLf)
-            sbdLink.Append("</script>" & vbCrLf)
-        End If
+        'Newest code as of 2019-11-28
+        'If InStr(Request.RawUrl.ToLower, "/callback.aspx") = 0 AndAlso InStr(Request.RawUrl.ToLower, "/checkout.aspx") = 0 Then
+        sbdLink.Append("<script Async src=""https://www.googletagmanager.com/gtag/js?id=" & strGoogleWebPropertyID & """></script>" & vbCrLf)
+        sbdLink.Append("<script>" & vbCrLf)
+        sbdLink.Append("  window.dataLayer = window.dataLayer || [];" & vbCrLf)
+        sbdLink.Append("  function gtag(){dataLayer.push(arguments);}" & vbCrLf)
+        sbdLink.Append("  gtag('js', new Date());" & vbCrLf)
+        sbdLink.Append("  gtag('config', '" & strGoogleWebPropertyID & "');" & vbCrLf)
+        sbdLink.Append("</script>" & vbCrLf)
+        'End If
 
         'Google Analytics works in head tag, not close body
         Try
-            sbdPageSource.Replace("</head", sbdLink.ToString & vbCrLf & "</head")
+            sbdPageSource.Replace("<head id=""Head1"">", "<head id=""Head1"">" & vbCrLf & sbdLink.ToString & vbCrLf)
             blnReplacedTag = True
         Catch ex As Exception
             'Oh dear

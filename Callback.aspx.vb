@@ -312,17 +312,6 @@ Partial Class Callback
                             strBodyText = strBodyText.Replace("[bitcoinpaymentdetails]", "")
                         End If
 
-                        Try
-                            'This handles setting the order and customer ID
-                            'for Google Analytics tracking
-                            UC_EcommerceTracking.OrderID = O_ID
-                            UC_EcommerceTracking.UserID = CurrentLoggedUser.ID
-                        Catch ex As Exception
-                            'If that errors for some reason, turn off
-                            'the ecommerce tracking
-                            UC_EcommerceTracking.Visible = False
-                        End Try
-
                     End If
                 Else
                     'Record error

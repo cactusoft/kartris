@@ -25,13 +25,6 @@ Partial Class CheckoutComplete
                 litOrderDetails.Text = Replace(strOrderDetails, vbCrLf, "<br/>")
             End If
 
-            Try
-                UC_EcommerceTracking.OrderID = CInt(Session("OrderID"))
-                UC_EcommerceTracking.UserID = CurrentLoggedUser.ID
-            Catch ex As Exception
-                'Fails
-                UC_EcommerceTracking.Visible = False
-            End Try
             Session("OrderID") = Nothing
             Session("OrderDetails") = Nothing
         End If

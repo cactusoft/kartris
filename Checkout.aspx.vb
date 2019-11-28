@@ -1499,6 +1499,8 @@ Partial Class _Checkout
 
                 'Order Creation successful
                 If O_ID > 0 Then
+                    Session("OrderID") = O_ID 'Google analytics needs this later
+
                     objOrder = New Kartris.Interfaces.objOrder
                     'Create the Order object and fill in the property values.
                     objOrder.ID = O_ID
@@ -2024,6 +2026,7 @@ Partial Class _Checkout
                                 Dim strCallbackMessage As String = clsPlugin.CallbackMessage
                                 clsPlugin = Nothing
                                 Session("_NewPassword") = Nothing
+
                                 If String.IsNullOrEmpty(strCallbackMessage) Then
                                     Response.Redirect(strPostBackURL)
                                 Else

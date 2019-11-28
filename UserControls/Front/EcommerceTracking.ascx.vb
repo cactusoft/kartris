@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2018 CACTUSOFT
+'Copyright 2019 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -26,119 +26,86 @@ Imports CkartrisDataManipulation
 Partial Class UserControls_Front_EcommerceTracking
     Inherits System.Web.UI.UserControl
 
-    'Declare parameters
-    Public _OrderID As Long
-    Public _UserID As Long
-    Private objBasket As New kartris.Basket
-
-    'Order ID
-    Public Property OrderID() As Long
-        Get
-            Return _OrderID
-        End Get
-        Set(ByVal value As Long)
-            _OrderID = value
-        End Set
-    End Property
-
-    'User ID - security measure
-    Public Property UserID() As Long
-        Get
-            Return _UserID
-        End Get
-        Set(ByVal value As Long)
-            _UserID = value
-        End Set
-    End Property
+    Private objBasket As New Kartris.Basket
 
     ''' <summary>
     ''' Page Load
     ''' </summary>
     ''' <remarks>By Paul</remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If Page.User.Identity.IsAuthenticated Then
 
-            'Only need ecommerce tracking if there is a 
-            'webproperty ID (site identifier) set in 
-            'the config settings of Kartris
-            If KartSettingsManager.GetKartConfig("general.googleanalytics.webpropertyid") <> "" Then
-                'Declare variables
-                Dim tblOrder As System.Data.DataTable
+        Dim _OrderID As Integer = CInt(Session("OrderID"))
 
-                'Fill datatable width basket items
-                tblOrder = BasketBLL.GetCustomerOrderDetails(_OrderID)
+        Dim _UserID As Integer = 0
 
-                'Examine data of order, if exists
-                If tblOrder.Rows.Count > 0 Then
+        'Only need ecommerce tracking if there is a 
+        'webproperty ID (site identifier) set in 
+        'the config settings of Kartris
+        If KartSettingsManager.GetKartConfig("general.googleanalytics.webpropertyid") <> "" Then
+            'Declare variables
+            Dim tblOrder As System.Data.DataTable
 
-                    If tblOrder.Rows(0).Item("O_CustomerID") = _UserID Then
+            'Fill datatable width basket items
+            tblOrder = BasketBLL.GetCustomerOrderDetails(_OrderID)
 
-                        '================================
-                        'ORDER FOUND AND OK
-                        'Order exists, and belongs to the
-                        'logged in user, and tracking is
-                        'enabled.
-                        '================================
-                        phdEcommerceTracking.Visible = True
+            'Examine data of order, if exists
+            If tblOrder.Rows.Count > 0 Then
 
-                        'Fill out the items in the javascript
-                        litOrderID.Text = _OrderID
-                        litGoogleWebPropertyID.Text = KartSettingsManager.GetKartConfig("general.googleanalytics.webpropertyid")
-                        litWebShopName.Text = GetGlobalResourceObject("Kartris", "Config_Webshopname")
-
-                        Dim numShippingTotal As Single = tblOrder.Rows(0).Item("O_ShippingPrice") + tblOrder.Rows(0).Item("O_OrderHandlingCharge")
-                        Dim numTotalItems As Single = tblOrder.Rows(0).Item("O_AffiliateTotalPrice")
-                        Dim numTax As Single = tblOrder.Rows(0).Item("O_TotalPrice") - numTotalItems - numShippingTotal
-
-                        'Set currency ID, need to use this
-                        'elsewhere
-                        hidCurrencyID.Value = tblOrder.Rows(0).Item("O_CurrencyID")
-
-                        'Order detail amounts
-                        litShipping.Text = CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numShippingTotal, False))
-                        litTotal.Text = CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numTotalItems, False))
-                        litTax.Text = CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numTax, False))
-
-                        'Clear order details
-                        tblOrder.Dispose()
-
-                        'Fill order with details of customer invoice,
-                        'so we can loop through individual item
-                        'records
-                        tblOrder = BasketBLL.GetCustomerInvoice(_OrderID, _UserID, 1)
-
-                        'Bind data to repeater control
-                        rptOrderItems.DataSource = tblOrder
-                        rptOrderItems.DataBind()
+                _UserID = tblOrder.Rows(0).Item("O_CustomerID")
 
 
-                    Else
-                        'Trying to call an order that does
-                        'not belong to this user. Fail!
-                        'Or if no analytics web site ID set
-                        'up - fail!
-                        phdEcommerceTracking.Visible = False
+                '================================
+                'ORDER FOUND AND OK
+                'Order exists, and belongs to the
+                'logged in user, and tracking is
+                'enabled.
+                '================================
+                phdEcommerceTracking.Visible = True
 
-                    End If
+                Dim numShippingTotal As Single = tblOrder.Rows(0).Item("O_ShippingPrice") + tblOrder.Rows(0).Item("O_OrderHandlingCharge")
+                Dim numTotalItems As Single = tblOrder.Rows(0).Item("O_AffiliateTotalPrice")
+                Dim numTax As Single = tblOrder.Rows(0).Item("O_TotalPrice") - numTotalItems - numShippingTotal
 
-                Else
-                    'Order not found - hide code
-                    phdEcommerceTracking.Visible = False
-                End If
+                'Set currency ID, need to use this
+                'elsewhere
+                hidCurrencyID.Value = tblOrder.Rows(0).Item("O_CurrencyID")
+
+                litHeader.Text = vbCrLf & vbCrLf & "<script type=""text/javascript"">" & vbCrLf
+                litHeader.Text &= "gtag('event', 'purchase', {" & vbCrLf
+
+                'Fill out the items in the javascript
+                litOrderID.Text = ("""transaction_id"": """ & _OrderID & """")
+                litWebShopName.Text = ("""affiliation"": """ & GetGlobalResourceObject("Kartris", "Config_Webshopname") & """")
+                litTotal.Text = ("""value"": " & CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numTotalItems, False)))
+                litCurrencyIsoCode.Text = ("""currency"": """ & CurrenciesBLL.CurrencyCode(hidCurrencyID.Value) & """")
+                litTax.Text = ("""tax"": " & CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numTax, False)))
+                litShipping.Text = ("""shipping"": " & CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numShippingTotal, False)))
+
+                'Clear order details
+                tblOrder.Dispose()
+
+                'Fill order with details of customer invoice,
+                'so we can loop through individual item
+                'records
+                tblOrder = BasketBLL.GetCustomerInvoice(_OrderID, _UserID, 1)
+
+                'Bind data to repeater control
+                rptOrderItems.DataSource = tblOrder
+                rptOrderItems.DataBind()
+
+                litFooter.Text = "});" & vbCrLf
+                litFooter.Text &= "</script>"
             Else
-                'Ecommerce tracking not enabled
+                'Order not found - hide code
                 phdEcommerceTracking.Visible = False
+                litHiddenBecause.Text = "<!-- GOOGLE ANALYTICS: _OrderID " & _OrderID & " was not found in db -->"
             End If
-
         Else
-            'If user is not authenticated, then
-            'we assume this control is on a page
-            'being called by a remote server, so
-            'no point adding all this client side
-            'javascript code
+            'Ecommerce tracking not enabled
             phdEcommerceTracking.Visible = False
-
+            litHiddenBecause.Text = "<!-- GOOGLE ANALYTICS: general.googleanalytics.webpropertyid is not set -->"
         End If
+
     End Sub
 
     ''' <summary>
@@ -147,28 +114,31 @@ Partial Class UserControls_Front_EcommerceTracking
     ''' <remarks>By Paul</remarks>
     Protected Sub rptOrderItems_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptOrderItems.ItemDataBound
 
-        'Declare variables
-        Dim strVersionCode, strItemName, strItemOptions As String
-        Dim numOrderID As Long
-        Dim numItemPrice, numItemQuantity As Single
+        Try
+            'Declare variables
+            Dim strVersionCode, strItemName, strItemOptions As String
+            Dim numItemPrice, numItemQuantity As Single
 
-        'Set variable values from data in
-        'invoice row records of this order
-        numOrderID = e.Item.DataItem("IR_OrderNumberID")
-        strVersionCode = e.Item.DataItem("IR_VersionCode")
-        strItemName = e.Item.DataItem("IR_VersionName")
-        strItemOptions = e.Item.DataItem("IR_OptionsText")
-        numItemPrice = CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, e.Item.DataItem("IR_PricePerItem"), False)
-        numItemQuantity = e.Item.DataItem("IR_Quantity")
+            'Set variable values from data in
+            'invoice row records of this order
+            strVersionCode = e.Item.DataItem("IR_VersionCode")
+            strItemName = e.Item.DataItem("IR_VersionName")
+            strItemOptions = e.Item.DataItem("IR_OptionsText")
+            numItemPrice = CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, e.Item.DataItem("IR_PricePerItem"), False)
+            numItemQuantity = e.Item.DataItem("IR_Quantity")
 
-        'Find the controls within the repeater
-        'and set their values
-        CType(e.Item.FindControl("litOrderID"), Literal).Text = numOrderID
-        CType(e.Item.FindControl("litVersionCode"), Literal).Text = strVersionCode
-        CType(e.Item.FindControl("litItemName"), Literal).Text = strItemName
-        CType(e.Item.FindControl("litItemOptions"), Literal).Text = Replace(strItemOptions, "<br />", "/")
-        CType(e.Item.FindControl("litItemPrice"), Literal).Text = CkartrisDataManipulation.HandleDecimalValuesString(numItemPrice.ToString)
-        CType(e.Item.FindControl("litItemQuantity"), Literal).Text = numItemQuantity
+            'Find the controls within the repeater
+            'and set their values
+            CType(e.Item.FindControl("litVersionCode"), Literal).Text = ("""id"": """ & strVersionCode & """")
+            CType(e.Item.FindControl("litItemName"), Literal).Text = ("""name"": """ & strItemName & """")
+            CType(e.Item.FindControl("litItemOptions"), Literal).Text = ("""variant"": """ & Replace(strItemOptions, "<br />", "/") & """")
+            CType(e.Item.FindControl("litItemQuantity"), Literal).Text = ("""quantity"": " & numItemQuantity)
+            CType(e.Item.FindControl("litItemPrice"), Literal).Text = ("""price"": " & CkartrisDataManipulation.HandleDecimalValuesString(numItemPrice.ToString))
+        Catch ex As Exception
+            'Catch the error
+        End Try
+
+
     End Sub
 
 
