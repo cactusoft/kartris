@@ -93,47 +93,53 @@ Partial Class UserControls_ShippingMethodsDropdown
         'so we must add it to find total number of shipping
         'methods - basically set to 1 or zero then add to
         'shipping methods count below
-        Dim numPickUp As Integer = 0
-        If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then numPickUp = 1
+        Dim blnPickUp As Boolean = False
+        If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then blnPickUp = True
+
+        'Let's figure out how many shipping methods
+        Dim numShippingMethods As Integer = 0
+        If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then numShippingMethods += 1 'Add one for customer pickup
 
         If lstShippingMethods IsNot Nothing Then
+
+            numShippingMethods &= lstShippingMethods.Count
             'Determine menu based on number of shipping options
             '(from shipping system) plus the pickup option which
             'is set in config setting
-            If lstShippingMethods.Count < 1 And numPickUp = 1 Then
-                'Customer pickup is only shipping option
-                ddlShippingMethods.Visible = True
-                litContentTextShippingAvailableAfterAddress.Visible = False
-                If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then
-                    ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
-                End If
-                ddlShippingMethods.SelectedIndex = 0
+            'If lstShippingMethods.Count < 1 And blnPickUp Then
+            '    'Customer pickup is only shipping option
+            '    ddlShippingMethods.Visible = True
+            '    litContentTextShippingAvailableAfterAddress.Visible = False
+            '    If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then
+            '        ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
+            '    End If
+            '    ddlShippingMethods.SelectedIndex = 0
 
-                Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, "|||||")
-                Session("_selectedShippingID") = CInt(999)
-                Session("_selectedShippingAmount") = CDbl(0)
-                ViewState("PreviouslySelected") = 999 & "||||||" & GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
-                Dim lstSelected As ListItem = ddlShippingMethods.SelectedItem
-                lstSelected.Text = GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
-                RaiseEvent ShippingSelected(Nothing, Nothing)
+            '    Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, "|||||")
+            '    Session("_selectedShippingID") = CInt(999)
+            '    Session("_selectedShippingAmount") = CDbl(0)
+            '    ViewState("PreviouslySelected") = 999 & "||||||" & GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
+            '    Dim lstSelected As ListItem = ddlShippingMethods.SelectedItem
+            '    lstSelected.Text = GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup")
+            '    RaiseEvent ShippingSelected(Nothing, Nothing)
 
-            ElseIf lstShippingMethods.Count + numPickUp > 1 Then
+            If numShippingMethods > 0 Then
 
                 'More than one option including ship options and customer pickup
                 ddlShippingMethods.Visible = True
                 litContentTextShippingAvailableAfterAddress.Visible = False
-                If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then
+                If blnPickUp Then
                     ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
                 End If
                 ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Kartris", "ContentText_DropdownSelectDefault"), ""))
                 Session("_selectedShippingID") = 0
                 Session("_selectedShippingAmount") = 0
 
-            ElseIf lstShippingMethods.Count = 1 Then
+            ElseIf numShippingMethods = 1 Then
                 'One shipping option other than customer pickup
                 ddlShippingMethods.Visible = True
                 litContentTextShippingAvailableAfterAddress.Visible = False
-                If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then
+                If blnPickUp Then
                     ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
                 End If
                 ddlShippingMethods.SelectedIndex = 0
@@ -145,8 +151,6 @@ Partial Class UserControls_ShippingMethodsDropdown
                 Dim lstSelected As ListItem = ddlShippingMethods.SelectedItem
                 lstSelected.Text = CStr(arrSM(2))
                 RaiseEvent ShippingSelected(Nothing, Nothing)
-
-
             Else
                 If ddlShippingMethods.Items.Count = 0 Then
                     ddlShippingMethods.Visible = False
@@ -156,13 +160,11 @@ Partial Class UserControls_ShippingMethodsDropdown
 
             End If
         Else
-            If numPickUp = 1 Then
+            If blnPickUp Then
                 'Customer pickup is only shipping option
                 ddlShippingMethods.Visible = True
                 litContentTextShippingAvailableAfterAddress.Visible = False
-                If GetKartConfig("frontend.checkout.shipping.pickupoption") = "y" Then
-                    ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
-                End If
+                ddlShippingMethods.Items.Insert(0, New ListItem(GetGlobalResourceObject("Shipping", "ContentText_ShippingPickup"), "999"))
                 ddlShippingMethods.SelectedIndex = 0
 
                 Dim arrSM As String() = Split(ddlShippingMethods.SelectedValue, "|||||")
