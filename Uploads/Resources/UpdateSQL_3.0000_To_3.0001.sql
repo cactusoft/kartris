@@ -96,3 +96,85 @@ BEGIN
 END
 
 GO
+
+/****** Object:  Index [OrderID]    Script Date: 20/12/2019 10:12:50 ******/
+CREATE NONCLUSTERED INDEX [OrderID] ON [dbo].[tblKartrisOrdersPromotions]
+(
+	[OrderID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Object:  Index [OP_OrderID]    Script Date: 20/12/2019 10:25:49 ******/
+CREATE NONCLUSTERED INDEX [OP_OrderID] ON [dbo].[tblKartrisOrderPaymentLink]
+(
+	[OP_OrderID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/* Add delay of a second after creating user, before updating for guest account */
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE [dbo].[spKartrisUsers_Add]
+(
+		   @U_EmailAddress nvarchar(100),
+		   @U_Password nvarchar(64),
+		   @U_SaltValue nvarchar(64),
+		   @U_GDPR_SignupIP nvarchar(50),
+		   @U_GDPR_IsGuest bit
+)
+AS
+DECLARE @U_ID INT
+	SET NOCOUNT OFF;
+
+	-- If is a guest checkout, we're
+	-- going to append |GUEST| to the end
+	-- of the email. This should ensure it
+	-- is unique if there is already an 
+	-- account with the same email.
+	If @U_GDPR_IsGuest = 1
+	BEGIN
+		SET @U_EmailAddress = @U_EmailAddress + '|GUEST|'
+	END
+
+	INSERT INTO [tblKartrisUsers]
+		   ([U_EmailAddress]
+		   ,[U_Password]
+		   ,[U_LanguageID]
+			,[U_CustomerGroupID]
+			,[U_DefShippingAddressID]
+			,[U_DefBillingAddressID]
+			,[U_CustomerDiscount]
+			,[U_SaltValue]
+			,[U_GDPR_SignupIP]
+			,[U_GDPR_IsGuest])
+	 VALUES
+		   (@U_EmailAddress,
+			@U_Password,
+			1,0,0,0,0,
+			@U_SaltValue,
+			@U_GDPR_SignupIP,
+			@U_GDPR_IsGuest);
+	SET @U_ID = SCOPE_IDENTITY();
+
+	-- Let's update the new record's email address to add the
+	-- db ID. This ensures that multiple guest records for a
+	-- single email can be created, without violating the need
+	-- for unique addresses.
+	If @U_GDPR_IsGuest = 1
+	BEGIN
+		WAITFOR DELAY '00:00:01'; -- one second delay, should ensure record is there before we update
+		UPDATE tblKartrisUsers SET U_EmailAddress = U_EmailAddress + Convert(NVARCHAR(50), @U_ID)
+		WHERE U_ID=@U_ID;
+	END
+
+	SELECT @U_ID;
+
+GO
+
+/****** Set this to tell Data tool which version of db we have ******/
+UPDATE tblKartrisConfig SET CFG_Value='3.0001', CFG_VersionAdded=3.0001 WHERE CFG_Name='general.kartrisinfo.versionadded';
+GO
+
+

@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2018 CACTUSOFT
+'Copyright 2020 CACTUSOFT
 
 'Mods for multiple file upload - August 2014:
 'Craig Moore

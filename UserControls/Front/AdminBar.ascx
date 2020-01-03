@@ -69,7 +69,7 @@
         </ul>
     </div>
 </div>
-<asp:PlaceHolder ID="phdPreviewWarning" runat="server">
+<asp:PlaceHolder ID="phdPreviewWarning" runat="server" Visible="false">
     <div id="preview-warning">
         Previewing<br />
         <asp:Literal ID="litPreviewSiteURL" runat="server"></asp:Literal>

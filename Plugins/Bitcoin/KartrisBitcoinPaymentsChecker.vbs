@@ -1,6 +1,6 @@
 '========================================================================
 'Kartris Bitcoin Payments Checker Script - www.kartris.com
-'Copyright 2018 CACTUSOFT
+'Copyright 2020 CACTUSOFT
 'www.cactusoft.com
 
 'GNU GENERAL PUBLIC LICENSE v2

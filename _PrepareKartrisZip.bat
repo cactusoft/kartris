@@ -27,8 +27,8 @@ ECHO **
 ECHO REMOVING TFS CACHE FILES (now we're on github, probably no need, but whatever)...
 IF EXIST "c:\CleanKartris\Kartris\$tf" rd "c:\CleanKartris\Kartris\$tf" /S /Q
 IF EXIST "c:\CleanKartris\Kartris\$tf1" rd "c:\CleanKartris\Kartris\$tf1" /S /Q
-IF EXIST "c:\CleanKartris\Kartris\$tf2" rd "c:\CleanKartris\Kartris\$tf1" /S /Q
-IF EXIST "c:\CleanKartris\Kartris\$tf3" rd "c:\CleanKartris\Kartris\$tf1" /S /Q
+IF EXIST "c:\CleanKartris\Kartris\$tf2" rd "c:\CleanKartris\Kartris\$tf2" /S /Q
+IF EXIST "c:\CleanKartris\Kartris\$tf3" rd "c:\CleanKartris\Kartris\$tf3" /S /Q
 ECHO DONE!
 ECHO REMOVING GIT AND VS FILES...
 IF EXIST "c:\CleanKartris\Kartris\.git" rd "c:\CleanKartris\Kartris\.git" /S /Q
@@ -39,6 +39,7 @@ ECHO REMOVING OTHER CRUFT...
 IF EXIST "c:\CleanKartris\Kartris\kartris.sln" del "c:\CleanKartris\Kartris\kartris.sln" /Q
 IF EXIST "c:\CleanKartris\Kartris\WebEssentials2015-Settings.json" del "c:\CleanKartris\Kartris\WebEssentials2015-Settings.json" /Q
 IF EXIST "c:\CleanKartris\Kartris\packages.config" del "c:\CleanKartris\Kartris\packages.config" /Q
+IF EXIST "c:\CleanKartris\Kartris\packages" rd "c:\CleanKartris\Kartris\packages" /S /Q
 ECHO DONE!
 ECHO **
 ECHO REMOVING SAMPLE MEDIA FILES...

@@ -4584,7 +4584,7 @@ CREATE TABLE [dbo].[tblKartrisUsers](
 	[U_Card_SecurityNumber] [nvarchar](5) NULL,
 	[U_AffiliateID] [int] NULL,
 	[U_Approved] [bit] NULL,
-	[U_CustomerGroupiD] [int] NULL,
+	[U_CustomerGroupID] [int] NULL,
 	[U_IsAffiliate] [bit] NULL,
 	[U_AffiliateCommission] [real] NULL,
 	[U_LanguageID] [int] NULL,
@@ -4602,42 +4602,37 @@ CREATE TABLE [dbo].[tblKartrisUsers](
 	[U_SaltValue] [nvarchar](64) NULL,
 	[U_GDPR_OptIn] [datetime] NULL,
 	[U_GDPR_SignupIP] [nvarchar](50) NULL,
- CONSTRAINT [aaaaatblKartrisCustomers_PK] PRIMARY KEY NONCLUSTERED 
+ CONSTRAINT [U_ID] PRIMARY KEY NONCLUSTERED 
 (
 	[U_ID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-CREATE UNIQUE CLUSTERED INDEX [idxU_ID] ON [dbo].[tblKartrisUsers] 
+
+CREATE NONCLUSTERED INDEX [U_CustomerGroupID] ON [dbo].[tblKartrisUsers] 
 (
-	[U_ID] ASC
+	[U_CustomerGroupID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
-CREATE NONCLUSTERED INDEX [C_CustomerGroupiD] ON [dbo].[tblKartrisUsers] 
-(
-	[U_CustomerGroupiD] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-GO
-CREATE NONCLUSTERED INDEX [C_LanguageID] ON [dbo].[tblKartrisUsers] 
+
+CREATE NONCLUSTERED INDEX [U_LanguageID] ON [dbo].[tblKartrisUsers] 
 (
 	[U_LanguageID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
-CREATE NONCLUSTERED INDEX [CD_AffiliateID] ON [dbo].[tblKartrisUsers] 
+
+CREATE NONCLUSTERED INDEX [U_AffiliateID] ON [dbo].[tblKartrisUsers] 
 (
 	[U_AffiliateID] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
-CREATE NONCLUSTERED INDEX [CD_CardholderEUVATNum] ON [dbo].[tblKartrisUsers] 
+
+CREATE NONCLUSTERED INDEX [U_CardholderEUVATNum] ON [dbo].[tblKartrisUsers] 
 (
 	[U_CardholderEUVATNum] ASC
 )WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
 GO
-CREATE NONCLUSTERED INDEX [CD_ID] ON [dbo].[tblKartrisUsers] 
-(
-	[U_ID] ASC
-)WITH (PAD_INDEX  = OFF, STATISTICS_NORECOMPUTE  = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS  = ON, ALLOW_PAGE_LOCKS  = ON) ON [PRIMARY]
-GO
+
 CREATE UNIQUE NONCLUSTERED INDEX [U_EmailAddress] ON [dbo].[tblKartrisUsers]
 (
 	[U_EmailAddress] ASC
@@ -13701,6 +13696,7 @@ DECLARE @U_ID INT
 	-- for unique addresses.
 	If @U_GDPR_IsGuest = 1
 	BEGIN
+		WAITFOR DELAY '00:00:01'; -- one second delay, should ensure record is there before we update
 		UPDATE tblKartrisUsers SET U_EmailAddress = U_EmailAddress + Convert(NVARCHAR(50), @U_ID)
 		WHERE U_ID=@U_ID;
 	END
@@ -28224,8 +28220,22 @@ VALUES
 
 GO
 
+/****** Object:  Index [OrderID]    Script Date: 20/12/2019 10:12:50 ******/
+CREATE NONCLUSTERED INDEX [OrderID] ON [dbo].[tblKartrisOrdersPromotions]
+(
+	[OrderID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Object:  Index [OP_OrderID]    Script Date: 20/12/2019 10:25:49 ******/
+CREATE NONCLUSTERED INDEX [OP_OrderID] ON [dbo].[tblKartrisOrderPaymentLink]
+(
+	[OP_OrderID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'3.0000', N's', N's', N'kartris version', N'', 3.0000, N'2.9014', 0)
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'3.0001', N's', N's', N'kartris version', N'', 3.0000, N'2.9014', 0)
 GO
 
 
