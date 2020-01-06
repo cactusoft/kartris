@@ -21,6 +21,11 @@ Partial Class UserControls_Back_UserDetails
 
     Public Event _UCEvent_DataUpdated()
 
+    Protected Sub _UC_AddressDetails__UCEvent_DataUpdated() Handles _UC_Billing._UCEvent_DataUpdated, _UC_Shipping._UCEvent_DataUpdated
+        RaiseEvent _UCEvent_DataUpdated()
+        updUser.Update()
+    End Sub
+
     Protected Function GetCustomerID() As Integer
         Try
             Return CInt(Request.QueryString("CustomerID"))

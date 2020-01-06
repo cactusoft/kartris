@@ -65,8 +65,7 @@
                         </div>
                         <asp:PlaceHolder runat="server" ID="phdDefaultAddresses">
                             <div class="section">
-                                <p>
-                                    <asp:Literal ID="Literal1" runat="server" Text='' /></p>
+                                <p></p>
                                 <div class="Kartris-DetailsView">
                                     <div class="Kartris-DetailsView-Data">
                                         <ul>

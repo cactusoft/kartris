@@ -13,21 +13,34 @@
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
 Imports KartrisClasses
+Imports CkartrisEnumerations
 
 Partial Class UserControls_General_AddressesDetails
     Inherits System.Web.UI.UserControl
+
+    ''' <summary>
+    ''' Event to indicate data updated, channelled upwards to show the 'updated' animation
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Event _UCEvent_DataUpdated()
+
+    ''' <summary>
+    ''' Page load
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Trim(Request.QueryString("CustomerID")) <> "" Then
             Try
-                Dim C_ID As Integer = CInt(Request.QueryString("CustomerID"))
+                Dim U_ID As Integer = CInt(Request.QueryString("CustomerID"))
+                hidUserID.Value = U_ID
                 'retrieve address list based on the current customer ID and the set adddress type
-                Dim dtUserDetails As DataTable = UsersBLL._GetAddressesByUserID(C_ID, hidDisplayAddressType.Value)
+                Dim dtUserDetails As DataTable = UsersBLL._GetAddressesByUserID(U_ID, hidDisplayAddressType.Value)
                 rptrUserAddresses.DataSource = dtUserDetails
                 rptrUserAddresses.DataBind()
             Catch ex As Exception
 
             End Try
-         
+
         End If
     End Sub
 
@@ -42,6 +55,10 @@ Partial Class UserControls_General_AddressesDetails
         End Set
     End Property
 
+    ''' <summary>
+    ''' Binding addresses to repeater
+    ''' </summary>
+    ''' <remarks></remarks>
     Private Sub rptrUserAddresses_ItemDataBound(ByVal Sender As Object, ByVal e As RepeaterItemEventArgs) Handles rptrUserAddresses.ItemDataBound
         If (e.Item.ItemType = ListItemType.Item) Or (e.Item.ItemType = ListItemType.AlternatingItem) Then
             Dim litCountry As Literal = CType(e.Item.FindControl("litCountry"), Literal)
@@ -54,5 +71,70 @@ Partial Class UserControls_General_AddressesDetails
                 End Try
             End If
         End If
+    End Sub
+
+    ''' <summary>
+    ''' Handles clicks on Edit or Delete links on addresses
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub LinkButton_Command(ByVal Sender As Object, ByVal e As CommandEventArgs)
+        Dim strCommandName = e.CommandName
+        Dim numCommandArgument As Integer = e.CommandArgument
+        If strCommandName.ToLower = "edit" Then
+            ResetAddressInput()
+            Dim objAddress As KartrisClasses.Address = KartrisClasses.Address.Get(numCommandArgument)
+            UC_NewEditAddress.InitialAddressToDisplay = objAddress
+            'pnlNewAddress.Visible = True
+            popExtender.Show()
+        ElseIf strCommandName.ToLower = "delete" Then
+            hidAddressToDeleteID.Value = numCommandArgument
+            _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.Confirmation, GetGlobalResourceObject("_Kartris", "ContentText_ConfirmDeleteItemUnspecified"))
+
+        Else
+            'Erm, something up?
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Submit/save address 
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub btnSaveNewAddress_Click() Handles btnSaveNewAddress.Click
+        Dim intGeneratedAddressID As Integer = Address.AddUpdate(UC_NewEditAddress.EnteredAddress, hidUserID.Value, , UC_NewEditAddress.EnteredAddress.ID)
+        Dim dtUserDetails As DataTable = UsersBLL._GetAddressesByUserID(hidUserID.Value, hidDisplayAddressType.Value)
+        rptrUserAddresses.DataSource = dtUserDetails
+        rptrUserAddresses.DataBind()
+        RaiseEvent _UCEvent_DataUpdated()
+    End Sub
+
+    ''' <summary>
+    ''' Confirms deleting an address
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub _UC_PopupMsg_Confirmed() Handles _UC_PopupMsg.Confirmed
+        KartrisClasses.Address.Delete(hidAddressToDeleteID.Value, hidUserID.Value)
+        Dim dtUserDetails As DataTable = UsersBLL._GetAddressesByUserID(hidUserID.Value, hidDisplayAddressType.Value)
+        rptrUserAddresses.DataSource = dtUserDetails
+        rptrUserAddresses.DataBind()
+        RaiseEvent _UCEvent_DataUpdated()
+    End Sub
+
+    ''' <summary>
+    ''' Cancel popup
+    ''' </summary>
+    ''' <remarks>Need this for the delete popup, because the popExtender is linked to the edit address panel cancel</remarks>
+    Protected Sub _UC_PopupMsg_Cancelled() Handles _UC_PopupMsg.Cancelled
+        'Dim dtUserDetails As DataTable = UsersBLL._GetAddressesByUserID(hidUserID.Value, hidDisplayAddressType.Value)
+        'rptrUserAddresses.DataSource = dtUserDetails
+        'rptrUserAddresses.DataBind()
+        'updAddresses.Update()
+    End Sub
+
+    ''' <summary>
+    ''' Resets the address form
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub ResetAddressInput()
+        UC_NewEditAddress.Clear()
     End Sub
 End Class

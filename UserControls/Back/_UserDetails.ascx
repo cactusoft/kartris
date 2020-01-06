@@ -31,7 +31,8 @@
                                     <ul>
                                         <asp:PlaceHolder runat="server" ID="phdGuestTag" Visible='<%# Eval("U_GDPR_IsGuest") %>'>
                                             <li>
-                                                <span class="guestcheckouttag"><asp:Literal ID="litIsGuest" runat="server" Text="<%$ Resources: _GDPR, ContentText_GuestCheckout %>" /></span></li>
+                                                <span class="guestcheckouttag">
+                                                    <asp:Literal ID="litIsGuest" runat="server" Text="<%$ Resources: _GDPR, ContentText_GuestCheckout %>" /></span></li>
                                         </asp:PlaceHolder>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserID" runat="server" Text="<%$ Resources: _Customers, FormLabel_CustomerID %>" /></span>
@@ -125,16 +126,21 @@
                             <asp:Literal ID="litTabAddresses" runat="server" Text="<%$ Resources: _Customers, ContentText_Addresses %>" />
                         </HeaderTemplate>
                         <ContentTemplate>
-                            <div class="halfwidth" id="billingaddress">
-                                <h2>
-                                    <asp:Literal ID="litBillingAddress" runat="server" Text="<%$ Resources: _Address, FormLabel_BillingAddress %>" /></h2>
-                                <user:AddressesDetails ID="_UC_Billing" runat="server" AddressType="b" />
-                            </div>
-                            <div class="halfwidth" id="shippingaddress">
-                                <h2>
-                                    <asp:Literal ID="litShippingAddress" runat="server" Text="<%$ Resources: _Address, FormLabel_ShippingAddress %>" /></h2>
-                                <user:AddressesDetails ID="_UC_Shipping" runat="server" AddressType="s" />
-                            </div>
+                            <asp:UpdatePanel ID="updAddresses" runat="server" UpdateMode="always">
+                                <ContentTemplate>
+                                    <div class="halfwidth" id="billingaddress">
+                                        <h2>
+                                            <asp:Literal ID="litBillingAddress" runat="server" Text="<%$ Resources: _Address, FormLabel_BillingAddress %>" /></h2>
+                                        <user:AddressesDetails ID="_UC_Billing" runat="server" AddressType="b" />
+                                    </div>
+                                    <div class="halfwidth" id="shippingaddress">
+                                        <h2>
+                                            <asp:Literal ID="litShippingAddress" runat="server" Text="<%$ Resources: _Address, FormLabel_ShippingAddress %>" /></h2>
+                                        <user:AddressesDetails ID="_UC_Shipping" runat="server" AddressType="s" />
+                                    </div>
+                                </ContentTemplate>
+                            </asp:UpdatePanel>
+
                         </ContentTemplate>
                     </ajaxToolkit:TabPanel>
                     <%-- Order/Payment History tab --%>

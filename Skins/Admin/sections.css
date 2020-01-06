@@ -255,7 +255,15 @@ PAGES: MODIFY & CREATE ORDER (Editing and Creating)
 PAGE: CUSTOMERS
 ========================================================================
 */
-span.guestcheckouttag { background-color: #994fed; color: #fff; font-size: 11px; text-transform: uppercase; display: inline-block; padding: 1px 5px; border-radius: 3px; margin: 3px 0 0 0; }
+span.guestcheckouttag                   { background-color: #994fed; color: #fff; font-size: 11px; text-transform: uppercase; display: inline-block; padding: 1px 5px; border-radius: 3px; margin: 3px 0 0 0; }
+.customeraddress span.Kartris-DetailsView-Name
+                                        { width: 150px; }
+.customeraddress span.Kartris-DetailsView-Value
+                                        { width: 255px; }
+.customeraddress span.Kartris-DetailsView-Value textarea,
+.customeraddress span.Kartris-DetailsView-Value input
+                                        { width: 250px; }
+.customeraddress select                 { width: 250px; }
 
 /* 
 ========================================================================
