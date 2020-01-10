@@ -32,37 +32,37 @@ Partial Class UserControls_Front_AdminBar
 
             'Sub sites 
             'We want to see if
-            Dim tblSubSitesList As DataTable = Nothing
-            tblSubSitesList = SubSitesBLL.GetSubSites()
+            'Dim tblSubSitesList As DataTable = Nothing
+            'tblSubSitesList = SubSitesBLL.GetSubSites()
 
-            If tblSubSitesList.Rows.Count > 0 Then
-                'We have sub sites
-                Dim strBaseURL As String = Replace(CkartrisBLL.WebShopURLhttp.ToLower, "http://", "")
-                strBaseURL = Replace(strBaseURL, "/", "")
-                ddlSites.DataSource = tblSubSitesList
-                ddlSites.DataTextField = "SUB_Domain"
-                ddlSites.DataValueField = "SUB_ID"
-                ddlSites.DataBind()
-                ddlSites.Items.Insert(0, New ListItem(strBaseURL, "0"))
-                ddlSites.Items.Insert(0, New ListItem("-", "-1"))
-                phdSiteSelect.Visible = True
+            'If tblSubSitesList.Rows.Count > 0 Then
+            '    'We have sub sites
+            '    Dim strBaseURL As String = Replace(CkartrisBLL.WebShopURLhttp.ToLower, "http://", "")
+            '    strBaseURL = Replace(strBaseURL, "/", "")
+            '    ddlSites.DataSource = tblSubSitesList
+            '    ddlSites.DataTextField = "SUB_Domain"
+            '    ddlSites.DataValueField = "SUB_ID"
+            '    ddlSites.DataBind()
+            '    ddlSites.Items.Insert(0, New ListItem(strBaseURL, "0"))
+            '    ddlSites.Items.Insert(0, New ListItem("-", "-1"))
+            '    phdSiteSelect.Visible = True
 
-                'Try to set to present value from session
-                Try
-                    ddlSites.SelectedValue = Session("SUB_ID")
+            '    'Try to set to present value from session
+            '    Try
+            '        ddlSites.SelectedValue = Session("SUB_ID")
 
-                    If Len(Session("SUB_ID")) > 0 Then
-                        'We have a sub site preview selected, let's show a warning
-                        'on screen
-                        litPreviewSiteURL.Text = ddlSites.SelectedItem.Text
-                        phdPreviewWarning.Visible = True
-                    Else
-                        phdPreviewWarning.Visible = False
-                    End If
-                Catch ex As Exception
-                    'probably nothing set yet
-                End Try
-            End If
+            '        If Len(Session("SUB_ID")) > 0 Then
+            '            'We have a sub site preview selected, let's show a warning
+            '            'on screen
+            '            litPreviewSiteURL.Text = ddlSites.SelectedItem.Text
+            '            phdPreviewWarning.Visible = True
+            '        Else
+            '            phdPreviewWarning.Visible = False
+            '        End If
+            '    Catch ex As Exception
+            '        'probably nothing set yet
+            '    End Try
+            'End If
 
 
             'We use the FindItemBackEndURL function, which is

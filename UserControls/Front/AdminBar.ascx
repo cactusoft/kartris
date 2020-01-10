@@ -32,6 +32,7 @@
             <li class="KartrisMenu-WithChildren">
                 <asp:HyperLink ID="lnkMenuMain" runat="server" NavigateUrl="~/Admin/_Default.aspx"
                     Text="" ToolTip="<%$ Resources: AdminBar_ViewBackend %>" CssClass="KartrisMenu-Link"></asp:HyperLink>
+
                 <ul class="KartrisSubMenu">
 
                     <% 'site selection for multi site installations %>
@@ -65,6 +66,7 @@
 
                     </asp:PlaceHolder>
                 </ul>
+
             </li>
         </ul>
     </div>

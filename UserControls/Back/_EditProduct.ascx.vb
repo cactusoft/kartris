@@ -520,7 +520,7 @@ Partial Class _EditProduct
                             End If
                         Next
                         RefreshNewestProductsCache()
-                        If Request.QueryString("strParent") = 0 Then
+                        If _CategorySiteMapProvider.StripParents(_GetParentCategory()) = 0 Then
                             Response.Redirect("~/Admin/_Category.aspx?CategoryID=" & Request.QueryString("CategoryID"))
                         Else
                             Response.Redirect("~/Admin/_Category.aspx?CategoryID=" & Request.QueryString("CategoryID") & "&strParent=" & Request.QueryString("strParent"))
@@ -546,7 +546,8 @@ Partial Class _EditProduct
         If ProductsBLL._DeleteProduct(_GetProductID(), strMessage) Then
             RefreshFeaturedProductsCache()
             If GetKartConfig("backend.files.delete.cleanup ") = "y" Then KartrisDBBLL.DeleteNotNeededFiles()
-            If Request.QueryString("strParent") = 0 Then
+
+            If _CategorySiteMapProvider.StripParents(_GetParentCategory()) = 0 Then
                 Response.Redirect("~/Admin/_Category.aspx?CategoryID=" & Request.QueryString("CategoryID"))
             Else
                 Response.Redirect("~/Admin/_Category.aspx?CategoryID=" & Request.QueryString("CategoryID") & "&strParent=" & Request.QueryString("strParent"))
