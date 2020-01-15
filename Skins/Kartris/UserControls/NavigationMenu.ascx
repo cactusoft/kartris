@@ -8,7 +8,7 @@
     'in the root of the web
     '------------------------------------
 %>
-<div id="menubar">
+<div id="menubar" class="loadspinner">
 
     <asp:SiteMapDataSource ID="MenuSitemap" SiteMapProvider="MenuSitemap" runat="server"
         ShowStartingNode="false"></asp:SiteMapDataSource>

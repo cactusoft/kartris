@@ -29,7 +29,7 @@ Partial Class UserControls_Front_AdminBar
 
             Dim strResolvedFrontEndURL As String = ""
             Dim strResolvedBackEndURL As String = ""
-
+            Dim blnShowMenu As Boolean = False
             'Sub sites 
             'We want to see if
             'Dim tblSubSitesList As DataTable = Nothing
@@ -79,38 +79,51 @@ Partial Class UserControls_Front_AdminBar
                 lnkNavigateToCategory.NavigateUrl = Replace(strResolvedBackEndURL, "_ModifyCategory.aspx", "_Category.aspx")
                 lnkNewProductHere.NavigateUrl = Replace(strResolvedBackEndURL, "_ModifyCategory.aspx?", "_ModifyProduct.aspx?ProductID=0&")
                 phdCategoryLink.Visible = True
+                blnShowMenu = True
             End If
 
             'Product Page
             If strResolvedBackEndURL.ToLower.Contains("_modifyproduct.aspx") Then
                 lnkMenuMain.NavigateUrl = strResolvedBackEndURL
-                phdCategoryLink.Visible = False
+                lnkNavigateToProduct.NavigateUrl = strResolvedBackEndURL
+                phdProductLink.Visible = True
+                blnShowMenu = True
             End If
 
             'News Page
             If strResolvedBackEndURL.ToLower.Contains("_sitenews.aspx") Then
                 lnkMenuMain.NavigateUrl = strResolvedBackEndURL
                 phdCategoryLink.Visible = False
+                blnShowMenu = True
             End If
 
             'KB Page
             If strResolvedBackEndURL.ToLower.Contains("_knowledgebase.aspx") Then
                 lnkMenuMain.NavigateUrl = strResolvedBackEndURL
                 phdCategoryLink.Visible = False
+                blnShowMenu = True
             End If
 
             'custom CMS page
             If strResolvedBackEndURL.ToLower.Contains("_custompages.aspx") Then
                 lnkMenuMain.NavigateUrl = strResolvedBackEndURL
                 phdCategoryLink.Visible = False
+                blnShowMenu = True
             End If
 
             'home page
             If lnkMenuMain.NavigateUrl.ToLower.Contains("default.aspx") Then
-                If strResolvedFrontEndURL.ToLower.Contains("default.aspx") Then
+                If strResolvedFrontEndURL.ToLower.Contains("default.aspx") Or
+                    strResolvedFrontEndURL.ToLower = "/" Then
                     phdEditHomePageLink.Visible = True
                 End If
                 lnkEditHomePage.NavigateUrl = "~/Admin/_CustomPages.aspx?strPage=Default"
+                blnShowMenu = True
+            End If
+
+            'Showing a menu
+            If blnShowMenu = True Then
+                phdMenu.Visible = True
             End If
         End If
 

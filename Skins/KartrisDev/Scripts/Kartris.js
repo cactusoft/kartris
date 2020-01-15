@@ -1,37 +1,53 @@
-﻿// Jquery code to power the Suburban Griller Kartris skin
-
-// Start foundation
-$(document).ready(function () {
+﻿$(document).ready(function () {
     $(document).foundation();
-    //$('.loadspinner').find('a').click(function () {
-    //    $(".page-loading-container").fadeIn("20");
-    //});
 });
 $(document).foundation({
     offcanvas: {
         open_method: 'overlap_single'
     }
 });
-
-// Handle page height issues
 $(window)
     .load(function () {
         SetOffCanvasHeight();
-        $(".page-loading-container").fadeOut("500");
     })
     .resize(function () {
-        // SetOffCanvasHeight();
+        SetOffCanvasHeight();
     });
 
 function SetOffCanvasHeight() {
     var height = $(window).height();
     var footerheight = $("#footer").height();
     var contentHeight = $(".inner-wrap").height();
+    //alert($(window).height() + ' - ' + $("#footer").height() + ' - ' + $(".inner-wrap").height())
     if (contentHeight < height) {
         $(".off-canvas-wrap").height(height);
         $(".inner-wrap").height(height - footerheight);
         $(".left-off-canvas-menu").height(height - footerheight);
     }
+}
+
+// ==== MEGA MENU ================================================================
+
+
+// Open categories menu
+function menuCategories() {
+    if ($("#menuCategories").is(':visible')) {
+        $("#menuCategories").fadeOut(340);
+        $("#menuBackOverlay").fadeOut(340);
+        $("#menuCategoriesLink").removeClass("taller");
+    }
+    else {
+        $("#menuBackOverlay").fadeIn(340); // back area to capture clicks away, so we can hide menu
+        $("#menuCategories").fadeIn(340);
+        $("#menuCategoriesLink").addClass("taller");
+    }
+}
+
+// Close all menus
+function menuBackOverlay() {
+    $("#menuCategories").fadeOut(340);
+    $("#menuCategoriesLink").removeClass("taller")
+    $("#menuBackOverlay").fadeOut(340);
 }
 
 // Opening and closing the off-canvas seems to fire
@@ -54,36 +70,5 @@ function closeOffCanvas() {
 function pageLoad() { // this gets fired when the UpdatePanel completes
     SetOffCanvasHeight();
 }
-
-/// Show search box
-function openSearchBox() {
-    $("#searchbox_popup").fadeIn(200);
-    $('#searchbox2').focus();
-    return true;
-}
-
-/// Close search box
-function closeSearchBox() {
-    $("#searchbox_popup").fadeOut(200);
-    return true;
-}
-
-
-// ====================================================
-/// Open megamenu
-function openMegaMenu(catID) {
-        $("#mm_" + catID).fadeIn(10);
-        $("#mml_" + catID).addClass("selectedmenulink");
-        //alert("#mm_" + catID);
-}
-
-// handles closing megamenu when hover away
-$(document).ready(function () {
-    $("li.megamenu_linkholder, div.megamenu_tab").mouseleave(function () {
-        $(".megamenu_tab").fadeOut(0);
-        $(".megamenu_linkholder").removeClass("selectedmenulink");
-    });
-});
-
 
 

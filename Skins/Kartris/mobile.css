@@ -1,0 +1,104 @@
+
+/* 
+========================================================================
+BIG SCREENS
+========================================================================
+*/
+@media only screen and (min-width: 930px) {
+  .row { max-width: 100%; }
+  }
+
+/* 
+========================================================================
+CATEGORY MENU
+========================================================================
+*/
+@media only screen and (max-width: 1200px) {
+
+    #header                                 { height: 50px; border-bottom: solid 1px #333; position: fixed; width: 100%; z-index: 2; }
+    #header_inner                           { height: 50px; }
+    #header .logo                           { width: 230px; margin: 12px 0 0 0; }
+    #header #second_logo_bar                { display: block; }
+    #centre_container                       { min-height: calc(100% - 50px); padding: 60px 0 0 0; }
+    #h_bottom                               { display: none; }
+    #compactbasket_totalprice               { display: none; }
+
+    #searchbox_holder                       { display: none; }
+    #searchlink                             { display: inline-block; margin: 16px 16px 0 0; }
+    #minibasket                             { width: 40px; display: inline-block; margin: 12px 0 0 0; height: 41px; float: right; }
+    #compactbasket_noofitems                { top: 10px; }
+
+    .left-off-canvas-menu #categorymenu     { display: block; }
+
+    #loginstatus                            { margin-left: 10px; }
+    #loginstatus span                       { display: none !important; }
+  }
+
+/* 
+========================================================================
+MEDIUM SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 930px) {
+
+    /* Products*/
+    .products_shortened .item,
+    .subcategories_shortened .item          { width: calc(33% - 6px); }
+    .products_tabular .item                 { width: calc(50% - 10px); }
+    .versions td.info                       { max-width: 200px; overflow: hidden; }
+
+    /* Misc*/
+    .Kartris-DetailsView-Value              { width: 270px; }
+    #pagecontent_pad                        { min-height: 200px; padding-bottom: 15px; }
+    .basket td.quantity input               { width: 32px; text-align: right; }
+    select,
+    input                                   { width: 100%; }
+    #footer_inside                          { margin: 0; }
+
+    /* Basket */
+    #compactbasket_totalprice               { display: none; }
+
+
+  }
+
+/* 
+========================================================================
+SMALL SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 640px) {
+
+
+    .breadcrumbtrail                        { display: none; }
+
+    /* Products*/
+    .products_shortened .item,
+    .subcategories_shortened .item          { width: calc(50% - 6px); }
+    .products_tabular .item                 { width: 100%; }
+    .versions td.info                       { max-width: 200px; overflow: hidden; }
+    .versions .addtobasket .textbox         { margin-top: 5px; }
+    /* Misc*/
+
+
+    /* Header */ 
+    #header .logo                           { min-width: 200px; width: 200px; position: absolute; left: calc(50% - 100px); }
+    #header #toplinks                       { display: none; }
+    #header #menu_launcher                  { margin: 15px 0 0 0; padding: 0; }
+    #header i.fas                           { font-size: 19px; }
+    #minibasket                             { margin: 9px 0 0 0; width: 25px; height: 30px; }
+    #searchlink                             { margin: 15px 10px 0 0; }
+    #loginstatus                            { margin-left: 3px; }
+
+    h1                                      { font-size: 190%; line-height: 1.1em; }
+    h2                                      { font-size: 130%; line-height: 1.1em; }
+
+    .addtobasket .button                    { width: 100%; margin-left: -2px; margin-top: 5px; font-size: 18px; }
+
+    /* footer */
+    #footer #paymentlogos #trustlogo        { max-width: 100px; margin: 5px 0; display: inline-block; }
+    #footer #paymentlogos .pay360           { max-width: 100px; margin: 5px 0; }
+    #footer #paymentlogos .paypal           { max-width: 100px; margin: 5px 0; }
+    #footer #paymentlogos .cards            { max-width: 100px; margin: 5px 0; }
+    #footer #paymentlogos .verified         { max-width: 100px; margin: 5px 0; }
+  }
+

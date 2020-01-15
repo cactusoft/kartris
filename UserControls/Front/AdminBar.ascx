@@ -33,40 +33,50 @@
                 <asp:HyperLink ID="lnkMenuMain" runat="server" NavigateUrl="~/Admin/_Default.aspx"
                     Text="" ToolTip="<%$ Resources: AdminBar_ViewBackend %>" CssClass="KartrisMenu-Link"></asp:HyperLink>
 
-                <ul class="KartrisSubMenu">
+                <asp:PlaceHolder ID="phdMenu" runat="server" Visible="false">
+                    <ul class="KartrisSubMenu">
 
-                    <% 'site selection for multi site installations %>
-                    <asp:PlaceHolder ID="phdSiteSelect" runat="server" Visible="false">
+                        <% 'site selection for multi site installations %>
+                        <asp:PlaceHolder ID="phdSiteSelect" runat="server" Visible="false">
 
-                        <li class="KartrisMenu-Leaf">
-                            <asp:DropDownList ID="ddlSites" runat="server" AutoPostBack="true">
-                            </asp:DropDownList>
-                        </li>
-                    </asp:PlaceHolder>
+                            <li class="KartrisMenu-Leaf">
+                                <asp:DropDownList ID="ddlSites" runat="server" AutoPostBack="true">
+                                </asp:DropDownList>
+                            </li>
+                        </asp:PlaceHolder>
 
-                    <% 'Extra category links %>
-                    <asp:PlaceHolder ID="phdCategoryLink" runat="server" Visible="false">
+                        <% 'Extra category links %>
+                        <asp:PlaceHolder ID="phdCategoryLink" runat="server" Visible="false">
 
-                        <li class="KartrisMenu-Leaf">
-                            <asp:HyperLink ID="lnkNavigateToCategory" runat="server" ToolTip="<%$ Resources: AdminBar_NavigateToCategory %>"
-                                Text="<%$ Resources: AdminBar_NavigateToCategory %>"></asp:HyperLink>
-                        </li>
-                        <li class="KartrisMenu-Leaf">
-                            <asp:HyperLink ID="lnkNewProductHere" runat="server" ToolTip="<%$ Resources: AdminBar_AddNewProductHere %>"
-                                Text="<%$ Resources: AdminBar_AddNewProductHere %>"></asp:HyperLink>
-                        </li>
+                            <li class="KartrisMenu-Leaf">
+                                <asp:HyperLink ID="lnkNavigateToCategory" runat="server" ToolTip="<%$ Resources: AdminBar_NavigateToCategory %>"
+                                    Text="<%$ Resources: AdminBar_NavigateToCategory %>"></asp:HyperLink>
+                            </li>
+                            <li class="KartrisMenu-Leaf">
+                                <asp:HyperLink ID="lnkNewProductHere" runat="server" ToolTip="<%$ Resources: AdminBar_AddNewProductHere %>"
+                                    Text="<%$ Resources: AdminBar_AddNewProductHere %>"></asp:HyperLink>
+                            </li>
 
-                    </asp:PlaceHolder>
-                    <% 'Edit home page link %>
-                    <asp:PlaceHolder ID="phdEditHomePageLink" runat="server" Visible="False">
-                        <li class="KartrisMenu-Leaf">
-                            <asp:HyperLink ID="lnkEditHomePage" runat="server" ToolTip="<%$ Resources: AdminBar_EditThisPage %>"
-                                Text="<%$ Resources: AdminBar_EditThisPage %>"></asp:HyperLink>
-                        </li>
+                        </asp:PlaceHolder>
+                        <% 'Extra product link %>
+                        <asp:PlaceHolder ID="phdProductLink" runat="server" Visible="false">
 
-                    </asp:PlaceHolder>
-                </ul>
+                            <li class="KartrisMenu-Leaf">
+                                <asp:HyperLink ID="lnkNavigateToProduct" runat="server" ToolTip="<%$ Resources: AdminBar_EditThisPage %>"
+                                    Text="<%$ Resources: AdminBar_EditThisPage %>"></asp:HyperLink>
+                            </li>
 
+                        </asp:PlaceHolder>
+                        <% 'Edit home page link %>
+                        <asp:PlaceHolder ID="phdEditHomePageLink" runat="server" Visible="False">
+                            <li class="KartrisMenu-Leaf">
+                                <asp:HyperLink ID="lnkEditHomePage" runat="server" ToolTip="<%$ Resources: AdminBar_EditThisPage %>"
+                                    Text="<%$ Resources: AdminBar_EditThisPage %>"></asp:HyperLink>
+                            </li>
+
+                        </asp:PlaceHolder>
+                    </ul>
+                </asp:PlaceHolder>
             </li>
         </ul>
     </div>

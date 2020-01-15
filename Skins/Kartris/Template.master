@@ -1,8 +1,10 @@
-﻿<%@ Master Language="VB" CodeFile="Template.master.vb" Inherits="Skin_Kartris_Template" %>
+﻿<%@ Master Language="VB" CodeFile="Template.master.vb" Inherits="Skin_JustSew_v3_Template" %>
 
 <%@ Register TagPrefix="user" TagName="AdminBar" Src="~/UserControls/Front/AdminBar.ascx" %>
 <%@ Register TagPrefix="user" TagName="NavigationMenu" Src="UserControls/NavigationMenu.ascx" %>
-<%@ Register TagPrefix="user" TagName="CustomMegaMenu" Src="UserControls/CustomMegaMenu.ascx" %>
+<%@ Register TagPrefix="user" TagName="CategoryMenuSimple" Src="UserControls/CategoryMenuSimple.ascx" %>
+<%@ Register TagPrefix="user" TagName="MegaMenu" Src="UserControls/MegaMenu.ascx" %>
+
 <!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" ><![endif]-->
 <!--[if gt IE 8]><!-->
@@ -23,7 +25,6 @@
 	-->
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
 
 	<link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
 	<link href="normalize.css" rel="stylesheet" type="text/css" />
@@ -31,10 +32,12 @@
 	<link href="general.css" rel="stylesheet" type="text/css" />
 	<link href="sections.css" rel="stylesheet" type="text/css" />
 	<link href="template.css" rel="stylesheet" type="text/css" />
-	<link href="custom.css" rel="stylesheet" type="text/css" />
+	<link href="mobile.css" rel="stylesheet" type="text/css" />
 	<link href="powerpack.css" rel="stylesheet" type="text/css" />
+	<link href="print.css" rel="stylesheet" type="text/css" media="print" />
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-	<link href='//fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+	<link href="https://fonts.googleapis.com/css?family=Heebo:700&display=swap" rel="stylesheet">
+	<meta name="google-site-verification" content="Z9u0mBdK11fYYqrPQ9bOWBq1uC35b25mVi22R3clEW8" />
 	<title>Kartris v1</title>
 </head>
 <body class="main">
@@ -43,14 +46,13 @@
 			EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"
 			CombineScripts="true" EnableViewState="True">
 			<Scripts>
-				<asp:ScriptReference Path="~/JavaScript/k30000/modernizr.js" />
-				<asp:ScriptReference Path="~/JavaScript/k30000/jquery-2.2.4.min.js" />
-				<asp:ScriptReference Path="~/JavaScript/k30000/foundation.min.js" />
+				<asp:ScriptReference Path="~/JavaScript/k29003/modernizr.js" />
+				<asp:ScriptReference Path="~/JavaScript/k29003/jquery.js" />
+				<asp:ScriptReference Path="~/JavaScript/k29003/foundation.min.js" />
 				<asp:ScriptReference Path="Scripts/Kartris.js" />
 			</Scripts>
 		</ajaxToolkit:ToolkitScriptManager>
 
-		<!-- This goes here so can be full width, not confined to shop link cell -->
 		<div id="container">
 			<div class="off-canvas-wrap" data-offcanvas>
 				<div class="inner-wrap">
@@ -61,49 +63,62 @@
 								<asp:Literal ID="litCloseButton"
 									runat="server" Text="×"
 									EnableViewState="False"></asp:Literal></span></a>
+							<br />
+							<user:CategoryMenuSimple ID="UC_CategoryMenuSimple" runat="server" EnableViewState="False"
+								Visible="True" />
 
+							<br />
+							<br />
 							<user:NavigationMenu ID="UC_NavigationMenu" runat="server" EnableViewState="False"
 								Visible="True" />
 						</div>
 					</aside>
-					<div id="headerboxshadow"></div>
 					<div id="header">
-						<div class="row">
-							<div id="hcol-left" class="medium-7 small-6 column">
+						<div id="header_inner">
 
-								<a onclick="openOffCanvas()" class="left-off-canvas-toggle off-canvas-open show-for-medium-down" href="#">
-									<i class="fas fa-bars"></i>
-								</a>
-								<asp:HyperLink ID="lnkHome" NavigateUrl="~/" runat="server">
-									<asp:Image ID="imgLogo" runat="server" ImageUrl="Images/logo.png"
-										CssClass="logo" AlternateText="logo" />
-								</asp:HyperLink>
-								<div id="menus" class="hide-for-medium-down">
-									<a onclick="menuCategories()" class="big-menu-link" id="menuCategoriesLink">Products <span class="chevron"></span></a>
-									<a onclick="menuFurther()" class="big-menu-link" id="menuFurtherLink">More Information <span class="chevron"></span></a>
+							<div class="row" id="h_top">
+
+								<div class="medium-3 small-4 columns" id="h_left">
+
+									<a id="menu_launcher" onclick="openOffCanvas()" class="left-off-canvas-toggle off-canvas-open" href="#">
+										<i class="fas fa-bars"></i>
+									</a>
+
+									<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
+									<div id="toplinks" class="hide-for-large-down">
+										
+									</div>
+								</div>
+
+								<div class="medium-6 small-4 columns" id="h_centre">
+									<asp:HyperLink ID="lnkHome" NavigateUrl="~/" runat="server">
+										<asp:Image ID="imgLogo" runat="server" ImageUrl="Images/logo.png"
+											CssClass="logo" AlternateText="logo" />
+									</asp:HyperLink>
+								</div>
+								<div class="medium-3 small-4 columns" id="h_right">
+									<div class="row" id="right_icons">
+										<div class="small-12 column" id="right_icons_cell">
+											<user:BasketView ID="UC_MiniBasket" runat="server" ViewType="MINI_BASKET" />
+											<a onclick="openSearchBox()" id="searchlink"><i class="fas fa-search"></i></a>
+										</div>
+										<div id="searchbox_holder" class="small-12 column">
+											<div id="search_main">
+												<user:SearchBox runat="server" ID="UC_SearchBox" EnableViewState="False" />
+											</div>
+										</div>
+
+									</div>
 								</div>
 							</div>
-							<div id="hcol-right" class="medium-5 small-6 column">
-								<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
-								<user:BasketView ID="UC_MiniBasket" runat="server" ViewType="MINI_BASKET" />
-								<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
-								<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
-							</div>
-							<div class="spacer"></div>
+
 						</div>
-					</div>
-					<div id="menuCategories" class="menuSpecial">
-						<user:CustomMegaMenu runat="server" ID="UC_CustomMegaMenu" EnableViewState="False" />
+						<div class="row" id="h_bottom">
+							<user:MegaMenu ID="UC_MegaMenu" runat="server" EnableViewState="False"
+								Visible="True" />
+						</div>
 					</div>
 					<div id="centre_container">
-
-						<div class="row">
-							<div class="small-6 medium-8 columns">
-							</div>
-							<div class="small-6 medium-4 columns">
-								<user:SearchBox runat="server" ID="UC_SearchBox" EnableViewState="False" />
-							</div>
-						</div>
 						<div class="row" id="pagebody">
 							<div class="small-12 columns" id="pagecontent_pad">
 								<asp:ContentPlaceHolder ID="cntMain" runat="server">
@@ -118,66 +133,87 @@
 					<div id="footer">
 						<div id="footer_inside">
 							<div class="row">
-								<div class="small-12 large-3 columns">
-									<h2>Section</h2>
-									<ul>
-										<li>
-											<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-										<li>
-											<asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-										<li>
-											<asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-									</ul>
+								<div class="small-7 large-5 columns">
+									<div class="row">
+										<div class="small-12 large-6 columns">
+											<ul>
+												<li>
+													<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/t-About-Us.aspx">About Us</asp:HyperLink></li>
+												<li>
+													<asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/t-Privacy-Policy.aspx">Privacy Policy</asp:HyperLink></li>
+												<li>
+													<asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/t-Opening-Hours.aspx">Opening Hours</asp:HyperLink></li>
+												<li>
+													<asp:HyperLink ID="lnkContactUsFooter" runat="server" NavigateUrl="~/Contact.aspx">Contact Us</asp:HyperLink></li>
+											</ul>
+										</div>
+										<div class="small-12 large-6 columns">
+											<ul>
+												<li>
+													<asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/t-Terms.aspx">Terms &amp; Conditions</asp:HyperLink></li>
+												<li>
+													<asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/t-Delivery.aspx">Delivery Information</asp:HyperLink></li>
+												<li>
+													<asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/t-Delivery-Costs.aspx">Delivery Costs</asp:HyperLink></li>
+												<li>
+													<asp:HyperLink ID="HyperLink7" runat="server" NavigateUrl="~/t-Returns.aspx">Returns</asp:HyperLink></li>
+												<li>
+													<asp:HyperLink ID="HyperLink8" runat="server" NavigateUrl="~/t-Payments.aspx">Methods of Payment</asp:HyperLink></li>
+												<li>
+													<asp:HyperLink ID="HyperLink9" runat="server" NavigateUrl="~/CustomerTickets.aspx">Support Tickets</asp:HyperLink></li>
+											</ul>
+										</div>
+
+									</div>
 								</div>
-								<div class="small-12 large-3 columns">
-									<h2>Section</h2>
-									<ul>
-										<li>
-											<asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-										<li>
-											<asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-										<li>
-											<asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-									</ul>
+								<div class="small-5 large-7 columns">
+									<div id="paymentlogos">
+										
+									</div>
 								</div>
-								<div class="small-12 large-3 columns">
-									<h2>Section</h2>
-									<ul>
-										<li>
-											<asp:HyperLink ID="HyperLink10" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-										<li>
-											<asp:HyperLink ID="HyperLink11" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-										<li>
-											<asp:HyperLink ID="HyperLink12" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-									</ul>
-								</div>
-								<div class="small-12 large-3 columns">
-									<h2>Section</h2>
-									<ul>
-										<li>
-											<asp:HyperLink ID="HyperLink7" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-										<li>
-											<asp:HyperLink ID="HyperLink8" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-										<li>
-											<asp:HyperLink ID="HyperLink9" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
-									</ul>
-								</div>
+
 								<div class="small-12 large-12 columns" id="copyright">
-									&copy;2018 CACTUSOFT
+									&copy;2020 Cactusoft Ltd. 
 								</div>
 							</div>
 						</div>
 					</div>
-
 				</div>
-
 				<a class="exit-off-canvas" onclick="closeOffCanvas()"></a>
 			</div>
 		</div>
 		<user:AdminBar ID="UC_AdminBar" runat="server" />
+		<div id="searchbox_popup">
+			<div class="padding" id="section_searchbox">
+				<h1>
+					<asp:Literal ID="litContentText_Search" runat="server" Text="<%$ Resources: Kartris, ContentText_Search%>" /></h1>
+				<div class="row collapse">
+					<span class="small-10 columns">
+						<input type="search" size="40" class="textbox" id="searchbox2" onkeypress="javascript:presssearchkey2(event);" /></span>
+					<span class="small-2 columns">
+						<input id="searchbutton2" type="button" value='Search'
+							class="button prefix" onclick="javascript: submitsearchbox2()" /></span>
+					<div class="spacer">
+					</div>
+					<script type="text/javascript">
+						function submitsearchbox2() {
+							window.location.href = document.getElementById('baseTag').href + 'Search.aspx?strSearchText=' + document.getElementById('searchbox2').value.replace(/ /gi, "+");
+						}
+						function presssearchkey2(e) {
+							if (typeof e == 'undefined' && window.event) { e = window.event; }
+							if (e.keyCode == 13) {
+								document.getElementById('searchbutton2').click();
+								return false;
+							}
+						}
+					</script>
+				</div>
+			</div>
+
+			<a class="searchclosebutton" onclick="closeSearchBox()">×</a>
+		</div>
 	</form>
 
-	<div id="menuBackOverlay" style="display: none;" onclick="menuBackOverlay()"></div>
 	<!-- Load up javascript -->
 
 	<script>

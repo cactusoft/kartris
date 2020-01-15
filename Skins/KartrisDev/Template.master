@@ -1,0 +1,188 @@
+﻿<%@ Master Language="VB" CodeFile="Template.master.vb" Inherits="Skin_Kartris_Template" %>
+
+<%@ Register TagPrefix="user" TagName="AdminBar" Src="~/UserControls/Front/AdminBar.ascx" %>
+<%@ Register TagPrefix="user" TagName="NavigationMenu" Src="UserControls/NavigationMenu.ascx" %>
+<%@ Register TagPrefix="user" TagName="CustomMegaMenu" Src="UserControls/CustomMegaMenu.ascx" %>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" ><![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head id="Head1" runat="server" enableviewstate="true">
+	<base id="baseTag" runat="server" />
+	<!--
+	========================================================================
+	KARTRIS by cactusoft
+	Copyright 2020 CACTUSOFT - www.kartris.com
+	This skin is licensed under a
+	Creative Commons Attribution-ShareAlike 3.0 Unported License
+
+	http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
+	========================================================================
+	-->
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+
+	<link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
+	<link href="normalize.css" rel="stylesheet" type="text/css" />
+	<link href="foundation.css" rel="stylesheet" type="text/css" />
+	<link href="general.css" rel="stylesheet" type="text/css" />
+	<link href="sections.css" rel="stylesheet" type="text/css" />
+	<link href="template.css" rel="stylesheet" type="text/css" />
+	<link href="custom.css" rel="stylesheet" type="text/css" />
+	<link href="powerpack.css" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+	<link href='//fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+	<title>Kartris v1</title>
+</head>
+<body class="main">
+	<form id="frmMain" runat="server" class="container">
+		<ajaxToolkit:ToolkitScriptManager ID="scrManager" runat="server" ScriptMode="Release"
+			EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"
+			CombineScripts="true" EnableViewState="True">
+			<Scripts>
+				<asp:ScriptReference Path="~/JavaScript/k30000/modernizr.js" />
+				<asp:ScriptReference Path="~/JavaScript/k30000/jquery-2.2.4.min.js" />
+				<asp:ScriptReference Path="~/JavaScript/k30000/foundation.min.js" />
+				<asp:ScriptReference Path="Scripts/Kartris.js" />
+			</Scripts>
+		</ajaxToolkit:ToolkitScriptManager>
+
+		<!-- This goes here so can be full width, not confined to shop link cell -->
+		<div id="container">
+			<div class="off-canvas-wrap" data-offcanvas>
+				<div class="inner-wrap">
+					<!-- Off Canvas Menu -->
+					<aside class="left-off-canvas-menu offcanvas-overlap-left">
+						<div class="content">
+							<a onclick="closeOffCanvas()" class="left-off-canvas-toggle off-canvas-close" href="#"><span>
+								<asp:Literal ID="litCloseButton"
+									runat="server" Text="×"
+									EnableViewState="False"></asp:Literal></span></a>
+
+							<user:NavigationMenu ID="UC_NavigationMenu" runat="server" EnableViewState="False"
+								Visible="True" />
+						</div>
+					</aside>
+					<div id="headerboxshadow"></div>
+					<div id="header">
+						<div class="row">
+							<div id="hcol-left" class="medium-7 small-6 column">
+
+								<a onclick="openOffCanvas()" class="left-off-canvas-toggle off-canvas-open show-for-medium-down" href="#">
+									<i class="fas fa-bars"></i>
+								</a>
+								<asp:HyperLink ID="lnkHome" NavigateUrl="~/" runat="server">
+									<asp:Image ID="imgLogo" runat="server" ImageUrl="Images/logo.png"
+										CssClass="logo" AlternateText="logo" />
+								</asp:HyperLink>
+								<div id="menus" class="hide-for-medium-down">
+									<a onclick="menuCategories()" class="big-menu-link" id="menuCategoriesLink">Products <span class="chevron"></span></a>
+									<a onclick="menuFurther()" class="big-menu-link" id="menuFurtherLink">More Information <span class="chevron"></span></a>
+								</div>
+							</div>
+							<div id="hcol-right" class="medium-5 small-6 column">
+								<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
+								<user:BasketView ID="UC_MiniBasket" runat="server" ViewType="MINI_BASKET" />
+								<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
+								<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
+							</div>
+							<div class="spacer"></div>
+						</div>
+					</div>
+					<div id="menuCategories" class="menuSpecial">
+						<user:CustomMegaMenu runat="server" ID="UC_CustomMegaMenu" EnableViewState="False" />
+					</div>
+					<div id="centre_container">
+
+						<div class="row">
+							<div class="small-6 medium-8 columns">
+							</div>
+							<div class="small-6 medium-4 columns">
+								<user:SearchBox runat="server" ID="UC_SearchBox" EnableViewState="False" />
+							</div>
+						</div>
+						<div class="row" id="pagebody">
+							<div class="small-12 columns" id="pagecontent_pad">
+								<asp:ContentPlaceHolder ID="cntMain" runat="server">
+								</asp:ContentPlaceHolder>
+							</div>
+							<div class="small-12 columns">
+								<user:ViewedProducts ID="UC_RecentlyViewedProducts" runat="server" EnableViewState="False" />
+							</div>
+						</div>
+						<div class="spacer"></div>
+					</div>
+					<div id="footer">
+						<div id="footer_inside">
+							<div class="row">
+								<div class="small-12 large-3 columns">
+									<h2>Section</h2>
+									<ul>
+										<li>
+											<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									</ul>
+								</div>
+								<div class="small-12 large-3 columns">
+									<h2>Section</h2>
+									<ul>
+										<li>
+											<asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									</ul>
+								</div>
+								<div class="small-12 large-3 columns">
+									<h2>Section</h2>
+									<ul>
+										<li>
+											<asp:HyperLink ID="HyperLink10" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink11" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink12" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									</ul>
+								</div>
+								<div class="small-12 large-3 columns">
+									<h2>Section</h2>
+									<ul>
+										<li>
+											<asp:HyperLink ID="HyperLink7" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink8" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink9" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									</ul>
+								</div>
+								<div class="small-12 large-12 columns" id="copyright">
+									&copy;2018 CACTUSOFT
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<a class="exit-off-canvas" onclick="closeOffCanvas()"></a>
+			</div>
+		</div>
+		<user:AdminBar ID="UC_AdminBar" runat="server" />
+	</form>
+
+	<div id="menuBackOverlay" style="display: none;" onclick="menuBackOverlay()"></div>
+	<!-- Load up javascript -->
+
+	<script>
+		$(document).foundation();
+	</script>
+
+</body>
+</html>
