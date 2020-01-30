@@ -26673,13 +26673,13 @@ DECLARE @V_ID_NEW int
 DECLARE @tblKartrisVersions_MEMORY_OLD TABLE (
 	idx smallint Primary Key IDENTITY(1,1), V_ID int)
 INSERT INTO @tblKartrisVersions_MEMORY_OLD(V_ID)
-SELECT DISTINCT V_ID FROM tblKartrisVersions WHERE V_ProductID=@P_ID_OLD
+SELECT DISTINCT V_ID FROM tblKartrisVersions WHERE V_ProductID=@P_ID_OLD ORDER BY V_ID
 
 -- create and populate table with new product's versions
 DECLARE @tblKartrisVersions_MEMORY_NEW TABLE (
 	idx smallint Primary Key IDENTITY(1,1), V_ID int)
 INSERT INTO @tblKartrisVersions_MEMORY_NEW(V_ID)
-SELECT DISTINCT V_ID FROM tblKartrisVersions WHERE V_ProductID=@P_ID_NEW
+SELECT DISTINCT V_ID FROM tblKartrisVersions WHERE V_ProductID=@P_ID_NEW ORDER BY V_ID
 
 SET @i = 1
 

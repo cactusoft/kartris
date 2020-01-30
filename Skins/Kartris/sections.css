@@ -169,23 +169,20 @@ PRODUCTS - SHORTENED FORMAT
 ------------------------------------------------------------------------
 */
 .products_shortened                     {  }
-.products_shortened .item               { position: relative; border: solid 1px #ddd; box-shadow: 1px 1px 3px rgba(0,0,0,0.2); text-align: center; width: calc(25% - 6px); display: inline-block; float: left; margin: 5px 3px 5px 3px;  }
-.products_shortened .item .box          { height: 350px; }
+.products_shortened .item               { position: relative; text-align: center; width: calc(25% - 6px); display: inline-block; float: left; margin: 5px 3px 5px 3px;  }
+.products_shortened .item .box          { max-height: 400px; }
 .products_shortened .item:hover .box    { }
-.products_shortened .item .box .pad     { overflow: hidden; padding: 1px; text-align: center; }
+.products_shortened .item .box .pad     { overflow: hidden; padding: 0; text-align: center; }
 .products_shortened .item .topsec       { height: 65px; }
-.products_shortened .item h2            { margin: 0; padding: 0 20px; line-height: 15px; font-weight: bold; }
-.products_shortened .item h2 a          { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 90%; }
+.products_shortened .item h2            { margin: 0; padding: 0 20px; line-height: 15px; font-weight: normal; font-size: 12px; }
 .products_shortened .item .details      { } 
 .products_shortened .item .strapline    { display: none; }
-.products_shortened .item .imageblock   { height: 200px; box-shadow: none; background-color: #fff; display: block; margin: 0 auto 20px auto; padding: 15px; border: solid 1px #fff; }
+.products_shortened .item .imageblock   { height: 300px; box-shadow: none; background-color: #fff; display: block; margin: 0 auto 20px auto; padding: 0; border: none; }
+.products_shortened .item .imageblock img { object-fit: cover; }
 .products_shortened .item:hover         { box-shadow: 1px 1px 6px rgba(0,0,0,0.5); }
-.products_shortened .item .imageholder  { display: block; }
+.products_shortened .item .imageholder  { display: block; height: 300px; }
 .products_shortened .imagelink          { display: block; float: left; margin: 0 10px 10px 0; text-align: center; }
-.products_shortened .minprice           { font-weight: bold; font-size: 100%; }
-.products_shortened .salepromotext      { position: absolute; bottom: -1px; right: 0; left: 0; width: 100%; background-color: #f00; color: #fff; font-weight: bold; text-align: center; padding: 5px; vertical-align: baseline; width: auto; display: inline-block; }
-.products_shortened .infotext           { position: absolute; bottom: -1px; right: 0; left: 0; width: 100%; background-color: #eae2d6; color: #000; font-weight: normal; text-align: center; padding: 5px; vertical-align: baseline; width: auto; display: inline-block; }
-
+.products_shortened .minprice           { font-weight: bold; font-size: 100%; display: inline-block; background-color: #000; color: #fff; padding: 1px 5px; margin: 10px 0 0 0; }
 /* 
 ------------------------------------------------------------------------
 PRODUCTS - TABULAR FORMAT

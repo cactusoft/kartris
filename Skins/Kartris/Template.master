@@ -36,7 +36,7 @@
 	<link href="powerpack.css" rel="stylesheet" type="text/css" />
 	<link href="print.css" rel="stylesheet" type="text/css" media="print" />
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-	<link href="https://fonts.googleapis.com/css?family=Heebo:700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Heebo:300,400,500,700&display=swap" rel="stylesheet">
 	<meta name="google-site-verification" content="Z9u0mBdK11fYYqrPQ9bOWBq1uC35b25mVi22R3clEW8" />
 	<title>Kartris v1</title>
 </head>
