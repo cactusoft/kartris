@@ -132,7 +132,7 @@ Partial Class UserControls_Back_UserDetails
 
     Protected Sub btnCustomerUpdate_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         If GetCustomerID() > 0 Then
-            Page.Validate()
+            Page.Validate("User")
             If Page.IsValid Then
                 Dim strPassword As String
                 If txtPassword.Visible Then strPassword = txtPassword.Text Else strPassword = ""

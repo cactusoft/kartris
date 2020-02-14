@@ -17,6 +17,7 @@ Imports CkartrisEnumerations
 Imports CkartrisDisplayFunctions
 Imports CkartrisImages
 Imports KartSettingsManager
+Imports System.Web.UI.WebControls
 
 Partial Class UserControls_Back_ObjectConfig
     Inherits System.Web.UI.UserControl

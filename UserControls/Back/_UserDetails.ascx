@@ -42,15 +42,15 @@
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="litContentTextCustomerName" runat="server" Text="<%$ Resources: _Kartris, ContentText_CustomerName %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:TextBox ID="txtAccountHolderName" runat="server" Text='<%# Eval("U_AccountHolderName")%>'></asp:TextBox></span>
+                                                <asp:TextBox ValidationGroup="User" ID="txtAccountHolderName" runat="server" Text='<%# Eval("U_AccountHolderName")%>'></asp:TextBox></span>
                                         </li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserEmail" runat="server" Text="<%$ Resources: _Kartris, ContentText_Email %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:TextBox ID="txtUserEmail" runat="server" Text='<%# UsersBLL.CleanGuestEmailUsername(Eval("U_EmailAddress"))%>'></asp:TextBox>
-                                                <asp:RequiredFieldValidator ID="valEmailAddress1" runat="server" ControlToValidate="txtUserEmail"
+                                                <asp:TextBox ValidationGroup="User" ID="txtUserEmail" runat="server" Text='<%# UsersBLL.CleanGuestEmailUsername(Eval("U_EmailAddress"))%>'></asp:TextBox>
+                                                <asp:RequiredFieldValidator ValidationGroup="User" ID="valEmailAddress1" runat="server" ControlToValidate="txtUserEmail"
                                                     CssClass="error" ForeColor="" Display="Dynamic" Text="<%$ Resources: _Kartris, ContentText_RequiredField %>" />
-                                                <asp:RegularExpressionValidator ID="valEmailAddress2" runat="server" ControlToValidate="txtUserEmail"
+                                                <asp:RegularExpressionValidator ValidationGroup="User" ID="valEmailAddress2" runat="server" ControlToValidate="txtUserEmail"
                                                     CssClass="error" ForeColor="" Display="Dynamic" ErrorMessage="<%$ Resources: _Kartris, ContentText_BadEmail %>"
                                                     ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" />
                                             </span></li>
@@ -58,25 +58,25 @@
                                             <asp:Label ID="lblUserPassword" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Password %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
                                                 <asp:Label ID="lblPassword" runat="server" Text="{encrypted}" />
-                                                <asp:TextBox ID="txtPassword" runat="server" TextMode="Password" Visible="false" />
+                                                <asp:TextBox ValidationGroup="User" ID="txtPassword" runat="server" TextMode="Password" Visible="false" />
                                                 <asp:LinkButton ID="btnChangePassword" OnClick="btnChangePassword_Click" Text="<%$ Resources: _Kartris, ContentText_ConfigChange2 %>"
                                                     runat="server" CausesValidation="false" />
-                                                <asp:RequiredFieldValidator ID="valRequiredUserPassword" runat="server" ControlToValidate="txtPassword"
+                                                <asp:RequiredFieldValidator ValidationGroup="User" ID="valRequiredUserPassword" runat="server" ControlToValidate="txtPassword"
                                                     Enabled="false" CssClass="error" ForeColor="" Display="Dynamic" Text="<%$ Resources: _Kartris, ContentText_RequiredField %>" />
                                             </span></li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserDiscount" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Discount %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:TextBox ID="txtUserDiscount" runat="server" Text='<%# Eval("U_CustomerDiscount")%>'
+                                                <asp:TextBox ValidationGroup="User" ID="txtUserDiscount" runat="server" Text='<%# Eval("U_CustomerDiscount")%>'
                                                     CssClass="shorttext"></asp:TextBox>
-                                                <asp:RegularExpressionValidator ID="valRegExUserDiscount" runat="server" ControlToValidate="txtUserDiscount"
+                                                <asp:RegularExpressionValidator ValidationGroup="User" ID="valRegExUserDiscount" runat="server" ControlToValidate="txtUserDiscount"
                                                     CssClass="error" ForeColor="" ErrorMessage="0-100!" Display="Dynamic" EnableClientScript="true"
                                                     ValidationExpression="<%$ AppSettings:PercentageRegex %>" />
                                             </span></li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserGroup" runat="server" Text="<%$ Resources: _Customers, FormLabel_CustomerGroup %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:DropDownList ID="ddlUserGroups" runat="server" DataSourceID="objUserGroups"
+                                                <asp:DropDownList ValidationGroup="User" ID="ddlUserGroups" runat="server" DataSourceID="objUserGroups"
                                                     DataTextField="CG_Name" DataValueField="CG_ID" />
                                                 <asp:ObjectDataSource ID="objUserGroups" runat="server" OldValuesParameterFormatString="original_{0}"
                                                     SelectMethod="_GetCustomerGroups" TypeName="UsersBLL">
@@ -89,12 +89,12 @@
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserApproved" runat="server" Text="<%$ Resources: _Customers, FormLabel_Approved %>" /></span>
                                             <span class="Kartris-DetailsView-Value"><span class="checkbox">
-                                                <asp:CheckBox ID="chkUserApproved" runat="server" Checked='<%# Bind("U_Approved") %>' />
+                                                <asp:CheckBox ValidationGroup="User" ID="chkUserApproved" runat="server" Checked='<%# Bind("U_Approved") %>' />
                                             </span></span></li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserLanguage" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Language %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:DropDownList ID="ddlLanguages" runat="server" DataSourceID="objLanguages" DataTextField="Lang_FrontName"
+                                                <asp:DropDownList ValidationGroup="User" ID="ddlLanguages" runat="server" DataSourceID="objLanguages" DataTextField="Lang_FrontName"
                                                     DataValueField="Lang_ID" />
                                                 <asp:ObjectDataSource ID="objLanguages" runat="server" OldValuesParameterFormatString="original_{0}"
                                                     SelectMethod="GetData" TypeName="kartrisLanguageDataTableAdapters.LanguagesTblAdptr" />
@@ -103,7 +103,7 @@
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserSupportEndDate" runat="server" Text="<%$ Resources: _Customers, FormLabel_SupportEndDate %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:TextBox ID="txtUserSupportEndDate" runat="server" Text='<%# Cdate(CkartrisDataManipulation.FixNullFromDB(Eval("U_SupportEndDate"))).ToString("yyyy/MM/dd") %>'></asp:TextBox>
+                                                <asp:TextBox ValidationGroup="User" ID="txtUserSupportEndDate" runat="server" Text='<%# Cdate(CkartrisDataManipulation.FixNullFromDB(Eval("U_SupportEndDate"))).ToString("yyyy/MM/dd") %>'></asp:TextBox>
                                                 <asp:ImageButton ID="btnCalendar" runat="server" AlternateText="" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
                                                     Width="16" Height="16" CssClass="calendarbutton" />
                                                 <ajaxToolkit:CalendarExtender
@@ -114,7 +114,7 @@
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserNotes" runat="server" Text="<%$ Resources: _Kartris, ContentText_Notes%>"
                                                 AssociatedControlID="txtUserNotes" /></span> <span class="Kartris-DetailsView-Value">
-                                                    <asp:TextBox runat="server" ID="txtUserNotes" TextMode="MultiLine" Text='<%#Bind("U_Notes") %>' /></span></li>
+                                                    <asp:TextBox ValidationGroup="User" runat="server" ID="txtUserNotes" TextMode="MultiLine" Text='<%#Bind("U_Notes") %>' /></span></li>
                                     </ul>
                                 </div>
                             </div>
@@ -131,12 +131,12 @@
                                     <div class="halfwidth" id="billingaddress">
                                         <h2>
                                             <asp:Literal ID="litBillingAddress" runat="server" Text="<%$ Resources: _Address, FormLabel_BillingAddress %>" /></h2>
-                                        <user:AddressesDetails ID="_UC_Billing" runat="server" AddressType="b" />
+                                        <user:AddressesDetails ValidationGroup="Address" ID="_UC_Billing" runat="server" AddressType="b" />
                                     </div>
                                     <div class="halfwidth" id="shippingaddress">
                                         <h2>
                                             <asp:Literal ID="litShippingAddress" runat="server" Text="<%$ Resources: _Address, FormLabel_ShippingAddress %>" /></h2>
-                                        <user:AddressesDetails ID="_UC_Shipping" runat="server" AddressType="s" />
+                                        <user:AddressesDetails ValidationGroup="Address" ID="_UC_Shipping" runat="server" AddressType="s" />
                                     </div>
                                 </ContentTemplate>
                             </asp:UpdatePanel>
@@ -240,14 +240,14 @@
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblOrderStatus" runat="server" Text="<%$ Resources: _Customers, FormLabel_IsAffiliate %>" /></span>
                                             <span class="Kartris-DetailsView-Value"><span class="checkbox">
-                                                <asp:CheckBox runat="server" ID="chkUserisAffialite" Checked='<%# Bind("U_IsAffiliate")%>' /></span></span>
+                                                <asp:CheckBox ValidationGroup="User" runat="server" ID="chkUserisAffialite" Checked='<%# Bind("U_IsAffiliate")%>' /></span></span>
                                         </li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblOrderLanguage" runat="server" Text="<%$ Resources: _Customers, FormLabel_Commission %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:TextBox ID="txtAffiliateCommission" runat="server" Text='<%# Eval("U_AffiliateCommission") %>'
+                                                <asp:TextBox ValidationGroup="User" ID="txtAffiliateCommission" runat="server" Text='<%# Eval("U_AffiliateCommission") %>'
                                                     CssClass="shorttext"></asp:TextBox>
-                                                <asp:RegularExpressionValidator ID="valRegExAffiliateCommission" runat="server" ControlToValidate="txtAffiliateCommission"
+                                                <asp:RegularExpressionValidator ValidationGroup="User" ID="valRegExAffiliateCommission" runat="server" ControlToValidate="txtAffiliateCommission"
                                                     ErrorMessage="0-100!" Display="Dynamic" CssClass="error" ForeColor="" EnableClientScript="true"
                                                     ValidationExpression="<%$ AppSettings:PercentageRegex %>" />
                                             </span></li>
@@ -303,17 +303,17 @@
 
                 </ajaxToolkit:TabContainer>
                 <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
-                    <asp:LinkButton CausesValidation="True" CssClass="button savebutton" runat="server" OnClick="btnCustomerUpdate_Click"
+                    <asp:LinkButton ValidationGroup="User" CausesValidation="True" CssClass="button savebutton" runat="server" OnClick="btnCustomerUpdate_Click"
                         ID="btnCustomerUpdate" Text="<%$ Resources: _Kartris, FormButton_Save %>" ToolTip="<%$ Resources: _Kartris, FormButton_Save %>" />
                     <asp:HyperLink CausesValidation="False" CssClass="button exportbutton" runat="server"
                         ID="btnGDPRExport" Text="<%$ Resources: _GDPR, ContentText_GDPRExport %>" ToolTip="<%$ Resources: _GDPR, ContentText_GDPRExport %>"
                         NavigateUrl="<%# FormatExportURL(Request.RawUrl) %>" />
 
-                    <asp:LinkButton CssClass="button deletebutton" runat="server" ID="btnCustomerDelete"
+                    <asp:LinkButton CausesValidation="false" CssClass="button deletebutton" runat="server" ID="btnCustomerDelete"
                         OnClick="btnCustomerDelete_Click" Text="<%$ Resources: ContentText_DeleteThisCustomer %>"
                         ToolTip="<%$ Resources: ContentText_DeleteThisCustomer %>" />
 
-                    <asp:ValidationSummary CausesValidation="True" ID="valSummary" runat="server" ForeColor=""
+                    <asp:ValidationSummary ValidationGroup="User" CausesValidation="True" ID="valSummary" runat="server" ForeColor=""
                         CssClass="valsummary" DisplayMode="BulletList" HeaderText="<%$ Resources: _Kartris, ContentText_Errors %>" />
 
                 </div>
@@ -338,37 +338,37 @@
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="litContentTextCustomerName2" runat="server" Text="<%$ Resources: _Kartris, ContentText_CustomerName %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:TextBox ID="txtAccountHolderName2" runat="server" Text=''></asp:TextBox></span>
+                                                <asp:TextBox ValidationGroup="User" ID="txtAccountHolderName2" runat="server" Text=''></asp:TextBox></span>
                                         </li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserEmail2" runat="server" Text="<%$ Resources: _Kartris, ContentText_Email %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:TextBox ID="txtUserEmail2" runat="server" Text=''></asp:TextBox>
-                                                <asp:RequiredFieldValidator ID="valEmailAddress3" runat="server" ControlToValidate="txtUserEmail2"
+                                                <asp:TextBox ValidationGroup="User" ID="txtUserEmail2" runat="server" Text=''></asp:TextBox>
+                                                <asp:RequiredFieldValidator ValidationGroup="User" ID="valEmailAddress3" runat="server" ControlToValidate="txtUserEmail2"
                                                     CssClass="error" ForeColor="" Display="Dynamic" Text="<%$ Resources: _Kartris, ContentText_RequiredField %>" />
-                                                <asp:RegularExpressionValidator ID="valEmailAddress4" runat="server" ControlToValidate="txtUserEmail2"
+                                                <asp:RegularExpressionValidator ValidationGroup="User" ID="valEmailAddress4" runat="server" ControlToValidate="txtUserEmail2"
                                                     Display="Dynamic" ErrorMessage="<%$ Resources: _Kartris, ContentText_BadEmail %>"
                                                     CssClass="error" ForeColor="" ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" />
                                             </span></li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserPassword2" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Password %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:TextBox ID="txtUserPassword2" runat="server" Text=''></asp:TextBox>
-                                                <asp:RequiredFieldValidator ID="valRequiredUserPassword2" runat="server" ControlToValidate="txtUserPassword2"
+                                                <asp:TextBox ValidationGroup="User" ID="txtUserPassword2" runat="server" Text=''></asp:TextBox>
+                                                <asp:RequiredFieldValidator ValidationGroup="User" ID="valRequiredUserPassword2" runat="server" ControlToValidate="txtUserPassword2"
                                                     CssClass="error" ForeColor="" Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>" />
                                             </span></li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserDiscount2" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Discount %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:TextBox ID="txtUserDiscount2" runat="server" Text='0'></asp:TextBox>
-                                                <asp:RegularExpressionValidator ID="valRegExUserDiscount2" runat="server" ControlToValidate="txtUserDiscount2"
+                                                <asp:TextBox ValidationGroup="User" ID="txtUserDiscount2" runat="server" Text='0'></asp:TextBox>
+                                                <asp:RegularExpressionValidator ValidationGroup="User" ID="valRegExUserDiscount2" runat="server" ControlToValidate="txtUserDiscount2"
                                                     CssClass="error" ForeColor="" ErrorMessage="0-100!" Display="Dynamic" EnableClientScript="true"
                                                     ValidationExpression="<%$ AppSettings:PercentageRegex %>" />
                                             </span></li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserGroup2" runat="server" Text="<%$ Resources: _Customers, FormLabel_CustomerGroup %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:DropDownList ID="ddlUserGroups2" runat="server" DataSourceID="objUserGroups2"
+                                                <asp:DropDownList ValidationGroup="User" ID="ddlUserGroups2" runat="server" DataSourceID="objUserGroups2"
                                                     DataTextField="CG_Name" DataValueField="CG_ID" />
                                                 <asp:ObjectDataSource ID="objUserGroups2" runat="server" OldValuesParameterFormatString="original_{0}"
                                                     SelectMethod="_GetCustomerGroups" TypeName="UsersBLL">
@@ -381,12 +381,12 @@
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserApproved2" runat="server" Text="<%$ Resources: _Customers, FormLabel_Approved %>" /></span>
                                             <span class="Kartris-DetailsView-Value"><span class="checkbox">
-                                                <asp:CheckBox ID="chkUserApproved2" runat="server" Checked='false' />
+                                                <asp:CheckBox ValidationGroup="User" ID="chkUserApproved2" runat="server" Checked='false' />
                                             </span></span></li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserLanguage2" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Language %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:DropDownList ID="ddlLanguages2" runat="server" DataSourceID="objLanguages2"
+                                                <asp:DropDownList ValidationGroup="User" ID="ddlLanguages2" runat="server" DataSourceID="objLanguages2"
                                                     DataTextField="Lang_FrontName" DataValueField="Lang_ID" />
                                                 <asp:ObjectDataSource ID="objLanguages2" runat="server" OldValuesParameterFormatString="original_{0}"
                                                     SelectMethod="GetData" TypeName="kartrisLanguageDataTableAdapters.LanguagesTblAdptr" />
@@ -395,7 +395,7 @@
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserSupportEndDate2" runat="server" Text="<%$ Resources: _Customers, FormLabel_SupportEndDate %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:TextBox ID="txtUserSupportEndDate2" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(CkartrisDataManipulation.FixNullFromDB(Eval("U_SupportEndDate")), "d", Session("_LANG")) %>'></asp:TextBox>
+                                                <asp:TextBox ValidationGroup="User" ID="txtUserSupportEndDate2" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(CkartrisDataManipulation.FixNullFromDB(Eval("U_SupportEndDate")), "d", Session("_LANG")) %>'></asp:TextBox>
                                                 <asp:ImageButton ID="btnCalendar2" runat="server" AlternateText="" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
                                                     Width="16" Height="16" CssClass="calendarbutton" />
                                                 <ajaxToolkit:CalendarExtender Format="dd MMM yy" Animated="true" PopupButtonID="btnCalendar2"
@@ -405,7 +405,7 @@
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserNotes2" runat="server" Text="<%$ Resources: _Kartris, ContentText_Notes%>"
                                                 AssociatedControlID="txtUserNotes2" /></span> <span class="Kartris-DetailsView-Value">
-                                                    <asp:TextBox runat="server" ID="txtUserNotes2" TextMode="MultiLine" Text='' /></span></li>
+                                                    <asp:TextBox ValidationGroup="User" runat="server" ID="txtUserNotes2" TextMode="MultiLine" Text='' /></span></li>
                                     </ul>
                                 </div>
                             </div>
@@ -423,13 +423,13 @@
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblOrderStatus2" runat="server" Text="<%$ Resources: _Customers, FormLabel_IsAffiliate %>" /></span>
                                             <span class="Kartris-DetailsView-Value"><span class="checkbox">
-                                                <asp:CheckBox runat="server" ID="chkUserisAffialite2" Checked='false' /></span></span>
+                                                <asp:CheckBox ValidationGroup="User" runat="server" ID="chkUserisAffialite2" Checked='false' /></span></span>
                                         </li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblOrderLanguage2" runat="server" Text="<%$ Resources: _Customers, FormLabel_Commission %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:TextBox ID="txtAffiliateCommission2" runat="server" Text='0'></asp:TextBox>
-                                                <asp:RegularExpressionValidator ID="valRegExAffiliateCommission2" runat="server"
+                                                <asp:TextBox ValidationGroup="User" ID="txtAffiliateCommission2" runat="server" Text='0'></asp:TextBox>
+                                                <asp:RegularExpressionValidator ValidationGroup="User" ID="valRegExAffiliateCommission2" runat="server"
                                                     ControlToValidate="txtAffiliateCommission2" ErrorMessage="0-100!" Display="Dynamic"
                                                     CssClass="error" ForeColor="" EnableClientScript="true" ValidationExpression="<%$ AppSettings:PercentageRegex %>" />
                                             </span></li>
@@ -440,9 +440,9 @@
                     </ajaxToolkit:TabPanel>
                 </ajaxToolkit:TabContainer>
                 <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
-                    <asp:LinkButton CausesValidation="True" CssClass="button savebutton" runat="server" OnClick="btnCustomerAdd_Click"
+                    <asp:LinkButton ValidationGroup="User" CausesValidation="True" CssClass="button savebutton" runat="server" OnClick="btnCustomerAdd_Click"
                         ID="btnCustomerAdd" Text="<%$ Resources: _Kartris, FormButton_Save %>" ToolTip="<%$ Resources: _Kartris, FormButton_Save %>" />
-                    <asp:ValidationSummary CausesValidation="True" ID="valSummary" runat="server" ForeColor=""
+                    <asp:ValidationSummary ValidationGroup="User" CausesValidation="True" ID="valSummary" runat="server" ForeColor=""
                         CssClass="valsummary" DisplayMode="BulletList" HeaderText="<%$ Resources: _Kartris, ContentText_Errors %>" />
                 </div>
             </InsertItemTemplate>
