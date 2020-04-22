@@ -208,7 +208,7 @@ INSERT INTO tblKartrisVersions
 		V_CustomerGroupID, V_CustomizationType, V_CustomizationDesc, V_CustomizationCost, V_Tax2, V_TaxExtra)
 SELECT dbo.fnKartrisVersions_CreateCloneName(V_CodeNumber), @P_ID_NEW, V_Price, V_Tax, V_Weight, V_DeliveryTime, V_Quantity, V_QuantityWarnLevel, V_Live, V_DownLoadInfo, V_DownloadType, V_OrderByValue, V_RRP, V_Type, 
 		V_CustomerGroupID, V_CustomizationType, V_CustomizationDesc, V_CustomizationCost, V_Tax2, V_TaxExtra
-FROM tblKartrisVersions WHERE V_ProductID=@P_ID_OLD
+FROM tblKartrisVersions WHERE V_ProductID=@P_ID_OLD ORDER BY V_ID
 
 -- CREATE RELATED PRODUCTS
 INSERT INTO tblKartrisRelatedProducts(RP_ParentID, RP_ChildID)

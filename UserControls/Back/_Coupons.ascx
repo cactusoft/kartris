@@ -6,28 +6,30 @@
     </h1>
     <asp:UpdatePanel ID="updCouponsList" runat="server" UpdateMode="Conditional">
         <ContentTemplate>
+            <div id="searchboxrow">
+                <asp:Panel ID="pnlFind" runat="server" DefaultButton="btnSearchCoupon">
+                    <asp:TextBox ID="txtSearchCouponCode" runat="server" MaxLength="10" />
+                    <asp:Button ID="btnSearchCoupon" runat="server" Text="<%$ Resources: _Kartris, FormButton_Search %>"
+                        CssClass="button" />
+                    <asp:Button ID="btnClear" runat="server" CssClass="button cancelbutton" Text='<%$ Resources:_Kartris, ContentText_Clear %>' />
+                    <br />
+                    <br />
+                    <asp:Literal ID="litContentTextEnterCouponCode" runat="server" Text="<%$ Resources: _Coupons, ContentText_EnterCouponCode %>" />
+                    <br />
+                    <br />
+                    <asp:HiddenField ID="hidIsSearch" runat="server" Value="0" />
+                </asp:Panel>
+            </div>
             <asp:MultiView ID="mvwCoupons" runat="server">
                 <asp:View ID="viwCouponGroups" runat="server">
                     <asp:LinkButton ID="lnkAddCouponGroup" runat="server" Text="<%$ Resources: _Kartris, FormButton_New %>"
-                                        CssClass="linkbutton icon_new floatright" /><br />
+                        CssClass="linkbutton icon_new floatright" /><br />
                     <asp:MultiView ID="mvwCouponGroups" runat="server" ActiveViewIndex="0">
                         <asp:View ID="viwCouponGroupsData" runat="server">
-                            <div id="searchboxrow">
-                                <asp:Panel ID="pnlFind" runat="server" DefaultButton="btnSearchCoupon">
-                                    <asp:TextBox ID="txtSearchCouponCode" runat="server" MaxLength="10" />
-                                    <asp:Button ID="btnSearchCoupon" runat="server" Text="<%$ Resources: _Kartris, FormButton_Search %>"
-                                        CssClass="button" />
-                                    <asp:Button ID="btnClear" runat="server" CssClass="button cancelbutton" Text='<%$ Resources:_Kartris, ContentText_Clear %>' />
-                                    <br />
-                                    <br />
-                                    <asp:Literal ID="litContentTextEnterCouponCode" runat="server" Text="<%$ Resources: _Coupons, ContentText_EnterCouponCode %>" />
-                                    <br />
-                                    <br />
-                                </asp:Panel>
-                            </div>
-                            <asp:GridView CssClass="kartristable stats" ID="gvwCouponGroups" runat="server" AllowPaging="True" PageSize="10"
+
+                            <asp:GridView CssClass="kartristable stats" ID="gvwCouponGroups" runat="server" AllowPaging="True" PageSize="25"
                                 AutoGenerateColumns="False" AutoGenerateEditButton="False" DataKeyNames="CreatedTime"
-                                GridLines="None" >
+                                GridLines="None">
                                 <Columns>
                                     <asp:TemplateField>
                                         <HeaderTemplate>
@@ -58,11 +60,12 @@
                 </asp:View>
                 <asp:View ID="viwCoupons" runat="server">
                     <asp:GridView CssClass="kartristable" ID="gvwCoupons" runat="server" AllowPaging="True" DataKeyNames="CP_ID"
-                        AutoGenerateColumns="False" AutoGenerateEditButton="False" GridLines="None" PageSize="15">
+                        AutoGenerateColumns="False" AutoGenerateEditButton="False" GridLines="None" PageSize="25">
                         <Columns>
                             <asp:TemplateField>
                                 <HeaderTemplate>
-                                    <asp:Literal ID="litContentTextCouponCode" runat="server" Text="<%$ Resources: _Coupons, ContentText_CouponCode %>" /></HeaderTemplate>
+                                    <asp:Literal ID="litContentTextCouponCode" runat="server" Text="<%$ Resources: _Coupons, ContentText_CouponCode %>" />
+                                </HeaderTemplate>
                                 <ItemStyle CssClass="column1" />
                                 <ItemTemplate>
                                     <asp:Literal ID="CP_CouponCode" runat="server" Text='<%# Eval("CP_CouponCode") %>' />
@@ -70,7 +73,8 @@
                             </asp:TemplateField>
                             <asp:TemplateField>
                                 <HeaderTemplate>
-                                    <asp:Literal ID="litFormLabelCouponValue" runat="server" Text="<%$ Resources: _Coupons, ContentText_CouponValue %>" /></HeaderTemplate>
+                                    <asp:Literal ID="litFormLabelCouponValue" runat="server" Text="<%$ Resources: _Coupons, ContentText_CouponValue %>" />
+                                </HeaderTemplate>
                                 <ItemStyle CssClass="column2" />
                                 <ItemTemplate>
                                     <asp:Literal ID="litCouponValue" runat="server" Text='<%# Eval("CouponValue") %>' />
@@ -78,7 +82,8 @@
                             </asp:TemplateField>
                             <asp:TemplateField>
                                 <HeaderTemplate>
-                                    <asp:Literal ID="litFormLabelStartDate" runat="server" Text="<%$ Resources: _Kartris, FormLabel_StartDate %>" /></HeaderTemplate>
+                                    <asp:Literal ID="litFormLabelStartDate" runat="server" Text="<%$ Resources: _Kartris, FormLabel_StartDate %>" />
+                                </HeaderTemplate>
                                 <ItemStyle CssClass="column3" />
                                 <ItemTemplate>
                                     <asp:Literal ID="litStartDate" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(Eval("StartDate"), "d", Session("_LANG")) %>' />
@@ -86,7 +91,8 @@
                             </asp:TemplateField>
                             <asp:TemplateField>
                                 <HeaderTemplate>
-                                    <asp:Literal ID="litFormLabelEndDate" runat="server" Text="<%$ Resources: _Kartris, FormLabel_EndDate %>" /></HeaderTemplate>
+                                    <asp:Literal ID="litFormLabelEndDate" runat="server" Text="<%$ Resources: _Kartris, FormLabel_EndDate %>" />
+                                </HeaderTemplate>
                                 <ItemStyle CssClass="column4" />
                                 <ItemTemplate>
                                     <asp:Literal ID="litEndDate" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(Eval("EndDate"), "d", Session("_LANG")) %>' />
@@ -94,7 +100,8 @@
                             </asp:TemplateField>
                             <asp:TemplateField>
                                 <HeaderTemplate>
-                                    <asp:Literal ID="litFormLabelReusable" runat="server" Text="<%$ Resources: _Coupons, FormLabel_Reusable %>" /></HeaderTemplate>
+                                    <asp:Literal ID="litFormLabelReusable" runat="server" Text="<%$ Resources: _Coupons, FormLabel_Reusable %>" />
+                                </HeaderTemplate>
                                 <ItemStyle CssClass="column5" />
                                 <ItemTemplate>
                                     <asp:CheckBox ID="chkReusable" runat="server" CssClass="checkbox" Checked='<%# Eval("CP_Reusable") %>'
@@ -103,7 +110,8 @@
                             </asp:TemplateField>
                             <asp:TemplateField>
                                 <HeaderTemplate>
-                                    <asp:Literal ID="litFormLabelUsed" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Used %>" /></HeaderTemplate>
+                                    <asp:Literal ID="litFormLabelUsed" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Used %>" />
+                                </HeaderTemplate>
                                 <ItemStyle CssClass="column6" />
                                 <ItemTemplate>
                                     <asp:CheckBox ID="chkUsed" runat="server" CssClass="checkbox" Checked='<%# Eval("CP_Used") %>'
@@ -112,7 +120,8 @@
                             </asp:TemplateField>
                             <asp:TemplateField>
                                 <HeaderTemplate>
-                                    <asp:Literal ID="litFormLabelLive" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Live %>" /></HeaderTemplate>
+                                    <asp:Literal ID="litFormLabelLive" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Live %>" />
+                                </HeaderTemplate>
                                 <ItemStyle CssClass="column7" />
                                 <ItemTemplate>
                                     <asp:CheckBox ID="chkLive" runat="server" CssClass="checkbox" Checked='<%# Eval("CP_Enabled") %>'
@@ -163,10 +172,10 @@
                                             ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                             Display="Dynamic" ControlToValidate="txtDiscountValue" ValidationGroup="grpNewCoupon" />
                                         <asp:RegularExpressionValidator ID="valRegexCouponValue" runat="server" ControlToValidate="txtDiscountValue"
-                                            CssClass="error" Display="Dynamic" ValidationGroup="grpNewCoupon" ErrorMessage="*" ForeColor="" 
+                                            CssClass="error" Display="Dynamic" ValidationGroup="grpNewCoupon" ErrorMessage="*" ForeColor=""
                                             SetFocusOnError="true" ValidationExpression="<%$ AppSettings:DecimalRegex %>" />
                                         <ajaxToolkit:FilteredTextBoxExtender ID="filDiscountValue" runat="server" TargetControlID="txtDiscountValue"
-                                                    FilterType="Numbers, Custom" ValidChars=".," />
+                                            FilterType="Numbers, Custom" ValidChars=".," />
                                     </asp:PlaceHolder>
                                     <asp:PlaceHolder ID="phdPromotionType" runat="server" Visible="false">
                                         <asp:DropDownList ID="ddlPromotions" runat="server" CssClass="midtext">
@@ -175,10 +184,10 @@
                                             ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>" ControlToValidate="ddlPromotions"
                                             Operator="NotEqual" ValueToCompare="0" Display="Dynamic" SetFocusOnError="true"
                                             ValidationGroup="grpNewCoupon" Enabled="false" />
-                                    </asp:PlaceHolder>            
+                                    </asp:PlaceHolder>
                                     <asp:DropDownList ID="ddlDiscountType" runat="server" CssClass="midtext" AutoPostBack="true">
                                     </asp:DropDownList>
-                                    
+
                                 </span></li>
                             </ul>
                         </div>
@@ -289,7 +298,8 @@
                     <asp:LinkButton ID="lnkBtnBack" runat="server" Text='<%$ Resources: _Kartris, ContentText_BackLink %>'
                         CssClass="linkbutton floatright" />
                     <asp:Panel ID="pnlNoResult" runat="server" CssClass="noresults">
-                        <asp:Literal ID="litNoResult" runat="server" Text="<%$ Resources: _Kartris, ContentText_NoItemsFound %>" /></asp:Panel>
+                        <asp:Literal ID="litNoResult" runat="server" Text="<%$ Resources: _Kartris, ContentText_NoItemsFound %>" />
+                    </asp:Panel>
                 </asp:View>
             </asp:MultiView>
             <_user:PopupMessage ID="_UC_PopupMsg" runat="server" />

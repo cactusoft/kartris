@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2020 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -84,7 +84,12 @@ Partial Class UserControls_Back_KartrisCoupons
 
     Protected Sub gvwCoupons_PageIndexChanging(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewPageEventArgs) Handles gvwCoupons.PageIndexChanging
         gvwCoupons.PageIndex = e.NewPageIndex
-        LoadCoupons()
+        If hidIsSearch.Value = 1 Then
+            SearchCoupons()
+        Else
+            LoadCoupons()
+        End If
+
     End Sub
 
     Protected Sub gvwCoupons_RowCommand(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.GridViewCommandEventArgs) Handles gvwCoupons.RowCommand
@@ -263,6 +268,7 @@ Partial Class UserControls_Back_KartrisCoupons
     End Sub
 
     Sub SearchCoupons()
+        hidIsSearch.Value = 1
         Dim tblCoupons As DataTable
         tblCoupons = CouponsBLL._SearchByCouponCode(txtSearchCouponCode.Text)
         If tblCoupons.Rows.Count = 0 Then mvwCoupons.SetActiveView(viwNoResult) : Exit Sub
@@ -288,6 +294,7 @@ Partial Class UserControls_Back_KartrisCoupons
     End Sub
 
     Protected Sub btnClear_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnClear.Click
+        hidIsSearch.Value = 0
         txtSearchCouponCode.Text = ""
         LoadCouponsGroups()
     End Sub
