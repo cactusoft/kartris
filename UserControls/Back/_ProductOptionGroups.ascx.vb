@@ -994,4 +994,14 @@ Partial Class _ProductOptionGroups
         CheckForCombination()
         updCombinations.Update()
     End Sub
+
+    Public Function FixNull(ByVal numPrice As Object) As Decimal
+        Try
+            Return CDec(numPrice)
+
+        Catch ex As Exception
+            Return 0
+        End Try
+
+    End Function
 End Class

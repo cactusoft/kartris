@@ -419,7 +419,7 @@
                                                                         <asp:PlaceHolder ID="phdPrice" runat="server" Visible='<%# Eval("UseCombinationPrices") %>'>
                                                                             <!-- Price -->
                                                                             <td>
-                                                                                <asp:TextBox ID="txtCombinationPrice" CssClass="midtext" MaxLength="8" runat="server" Text='<%# CurrenciesBLL.FormatCurrencyPrice(HttpContext.Current.Session("CUR_ID"), CStr(Eval("V_Price")), False) %>' />
+                                                                                <asp:TextBox ID="txtCombinationPrice" CssClass="midtext" MaxLength="8" runat="server" Text='<%# CurrenciesBLL.FormatCurrencyPrice(HttpContext.Current.Session("CUR_ID"), FixNull(Eval("V_Price")), False) %>' />
                                                                                 <asp:RequiredFieldValidator ID="valRequiredCombinationPrice" runat="server" ControlToValidate="txtCombinationPrice"
                                                                                     CssClass="error" ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                                                                     ValidationGroup="CurrentCombinationsGrp" Display="Dynamic" Enabled='<%# Eval("UseCombinationPrices") %>' />
