@@ -769,10 +769,11 @@ Partial Class ProductVersions
     ''' Check if there is a combination image for the selected item
     ''' </summary>
     Sub CheckCombinationsImages(ByVal numVersionID As Int64)
+
         Dim extensions As New List(Of String)
         extensions.Add("*.png")
         extensions.Add("*.jpg")
-        extensions.Add("*.jpeg")
+            extensions.Add("*.jpeg")
 
         'Let's find and create some objects we'll need to manipulate
         Dim updProduct As UpdatePanel
@@ -790,53 +791,60 @@ Partial Class ProductVersions
 
         'phdCombinationImage.Controls.Clear()
 
-        Dim versionImagesPath As String = HttpContext.Current.Server.MapPath("~") & "\Images\Products\" & ProductID & "\" & numVersionID
-        If Directory.Exists(versionImagesPath) Then
+        Try
 
-            Dim fileCount As Integer
-            For i As Integer = 0 To Extensions.Count - 1
-                fileCount += Directory.GetFiles(versionImagesPath, Extensions(i), SearchOption.AllDirectories).Length
-            Next
+            Dim versionImagesPath As String = HttpContext.Current.Server.MapPath("~") & "\Images\Products\" & ProductID & "\" & numVersionID
+            If Directory.Exists(versionImagesPath) Then
 
-            'updImages
+                Dim fileCount As Integer
+                For i As Integer = 0 To extensions.Count - 1
+                    fileCount += Directory.GetFiles(versionImagesPath, extensions(i), SearchOption.AllDirectories).Length
+                Next
 
-            If fileCount > 0 Then
-                'Now let's set the image control to find a combination image,
-                'if it exists
-                Dim UC_ImageView As New ImageViewer
+                'updImages
+
+                If fileCount > 0 Then
+                    'Now let's set the image control to find a combination image,
+                    'if it exists
+                    Dim UC_ImageView As New ImageViewer
 
 
-                UC_ImageView = CType(updImages.FindControl("UC_CombinationImage"), ImageViewer)
-                UC_ImageView.ClearImages()
-                UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_VersionImage,
-                                  numVersionID,
-                                  KartSettingsManager.GetKartConfig("frontend.display.images.normal.height"),
-                                  KartSettingsManager.GetKartConfig("frontend.display.images.normal.width"),
-                                  "",
-                                  _ProductID,
-                                  ImageViewer.SmallImagesType.enum_ImageButton)
+                    UC_ImageView = CType(updImages.FindControl("UC_CombinationImage"), ImageViewer)
+                    UC_ImageView.ClearImages()
+                    UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_VersionImage,
+                                      numVersionID,
+                                      KartSettingsManager.GetKartConfig("frontend.display.images.normal.height"),
+                                      KartSettingsManager.GetKartConfig("frontend.display.images.normal.width"),
+                                      "",
+                                      _ProductID,
+                                      ImageViewer.SmallImagesType.enum_ImageButton)
 
-                'Hide whole image and container if no image available, otherwise can end up
-                'with small square visible if there is a border and background set for the 
-                'image holder in CSS
-                If numVersionID > -1 Then
-                    litTest.Text = numVersionID & " --- " & Now()
-                    phdCombinationImage.Visible = True
-                    phdMainImages.Visible = False
+                    'Hide whole image and container if no image available, otherwise can end up
+                    'with small square visible if there is a border and background set for the 
+                    'image holder in CSS
+                    If numVersionID > -1 Then
+                        litTest.Text = numVersionID & " --- " & Now()
+                        phdCombinationImage.Visible = True
+                        phdMainImages.Visible = False
+                    Else
+                        phdCombinationImage.Visible = False
+                        phdMainImages.Visible = True
+                    End If
+
+                    updImages.Update()
                 Else
                     phdCombinationImage.Visible = False
                     phdMainImages.Visible = True
                 End If
-
-                updImages.Update()
             Else
                 phdCombinationImage.Visible = False
                 phdMainImages.Visible = True
             End If
-        Else
-            phdCombinationImage.Visible = False
-            phdMainImages.Visible = True
-        End If
+        Catch ex As Exception
+            'if failure, probably no combination images, so let's hide anyway
+            'phdCombinationImage.Visible = False
+            'phdMainImages.Visible = True
+        End Try
 
     End Sub
 

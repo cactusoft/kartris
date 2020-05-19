@@ -51,8 +51,26 @@ Public MustInherit Class PageBaseClass
         'of a copyright notification message
         RunGlobalReplacements(sbdPageSource)
 
-        'Output replacements
-        writer.Write(sbdPageSource.ToString())
+        'Move viewstate to end of page
+        'Could give SEO benefit, depending on who you listen to.
+        'You might think a regex is more efficient, but this seems
+        'to be marginally faster
+        Dim strPageHTML As String = sbdPageSource.ToString()
+        Dim numStartPoint As Integer = strPageHTML.IndexOf("<input type=""hidden"" name=""__VIEWSTATE""")
+
+        If numStartPoint >= 0 Then
+            Dim numEndPoint As Integer = strPageHTML.IndexOf("/>", numStartPoint) + 2
+            Dim strViewstateInput As String = strPageHTML.Substring(numStartPoint, numEndPoint - numStartPoint)
+            strPageHTML = strPageHTML.Remove(numStartPoint, numEndPoint - numStartPoint)
+            Dim numFormEndStart As Integer = strPageHTML.IndexOf("</form>") - 1
+
+            If numFormEndStart >= 0 Then
+                strPageHTML = strPageHTML.Insert(numFormEndStart, strViewstateInput)
+            End If
+        End If
+
+        'Output HTML with replacements and render changes
+        writer.Write(strPageHTML)
     End Sub
 
     'This creates the 'powered by kartris' tag in bottom right.

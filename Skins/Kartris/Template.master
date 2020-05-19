@@ -46,10 +46,7 @@
 			EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"
 			CombineScripts="true" EnableViewState="True">
 			<Scripts>
-				<asp:ScriptReference Path="~/JavaScript/k29003/modernizr.js" />
-				<asp:ScriptReference Path="~/JavaScript/k29003/jquery.js" />
-				<asp:ScriptReference Path="~/JavaScript/k29003/foundation.min.js" />
-				<asp:ScriptReference Path="Scripts/Kartris.js" />
+
 			</Scripts>
 		</ajaxToolkit:ToolkitScriptManager>
 
@@ -215,7 +212,10 @@
 	</form>
 
 	<!-- Load up javascript -->
-
+	<script src="/JavaScript/k29003/modernizr.js" type="text/javascript"></script>
+	<script src="/JavaScript/k29003/jquery.js" type="text/javascript"></script>
+	<script src="/JavaScript/k29003/foundation.min.js" type="text/javascript"></script>
+	<script src="Scripts/Kartris.js" type="text/javascript"></script>
 	<script>
 		$(document).foundation();
 	</script>

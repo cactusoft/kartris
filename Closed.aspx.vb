@@ -19,7 +19,7 @@ Partial Class _Closed
 
         'If this page is called or hit by anyone when store is open, send
         'them to home page.
-        If KartSettingsManager.GetKartConfig("general.storestatus") = "open" Then Response.Redirect("~/Default.aspx")
+        If KartSettingsManager.GetKartConfig("general.storestatus") = "open" Then Response.Redirect("~/")
 
     End Sub
 End Class
