@@ -632,6 +632,36 @@ Public Class ProductsBLL
         Return False
     End Function
 
+    Public Shared Function _DeleteRelatedProducts(ByVal intParentProduct As Integer, ByRef strMsg As String) As Boolean
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Using sqlConn As New SqlConnection(strConnString)
+            Dim cmdDeleteRelatedProducts As SqlCommand = sqlConn.CreateCommand
+            cmdDeleteRelatedProducts.CommandText = "_spKartrisRelatedProducts_DeleteByParentID"
+
+            Dim savePoint As SqlTransaction = Nothing
+            cmdDeleteRelatedProducts.CommandType = CommandType.StoredProcedure
+
+            Try
+                cmdDeleteRelatedProducts.Parameters.AddWithValue("@ParentID", intParentProduct)
+
+                sqlConn.Open()
+                savePoint = sqlConn.BeginTransaction()
+                cmdDeleteRelatedProducts.Transaction = savePoint
+                cmdDeleteRelatedProducts.ExecuteNonQuery()
+                savePoint.Commit()
+                Return True
+            Catch ex As Exception
+                ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod(), strMsg)
+                If Not savePoint Is Nothing Then savePoint.Rollback()
+            Finally
+                If sqlConn.State = ConnectionState.Open Then sqlConn.Close() : savePoint.Dispose()
+            End Try
+
+        End Using
+
+        Return False
+    End Function
+
     Public Shared Sub _ChangeSortValue(ByVal numCategoryID As Integer, ByVal numProductID As Integer, ByVal chrDirection As Char)
         ProductCategoryLinkAdptr._ChangeSortValue(numProductID, numCategoryID, chrDirection)
     End Sub

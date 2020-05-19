@@ -76,6 +76,15 @@ Partial Class UserControls_Back_RelatedProducts
         End If
     End Sub
 
+    Protected Sub btnDeleteAll_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnDeleteAll.Click
+        Dim strMessage As String = ""
+        ProductsBLL._DeleteRelatedProducts(_GetProductID(), strMessage)
+        LoadRelatedProducts()
+        gvwRelatedProducts.DataBind()
+        updRelatedProducts.Update()
+        RaiseEvent ShowMasterUpdate()
+    End Sub
+
     Sub CheckAutoCompleteData()
         Dim strAutoCompleteText As String = ""
         Dim numItemID As Integer = 0

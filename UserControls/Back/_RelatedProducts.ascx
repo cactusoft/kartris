@@ -61,6 +61,7 @@
                 <asp:PlaceHolder ID="phdProductsList" runat="server" Visible="false">
                     <br />
                     <br />
+                    <asp:Button ID="btnDeleteAll" runat="server" Text="<%$ Resources: _Kartris, ContentText_DeleteAll %>" Style="float: right;" class="button"/>
                     <h2>
                         <asp:Literal ID="litContentTextSelectedRelations" runat="server" Text="<%$ Resources: _Product, ContentText_SelectedRelations %>" /></h2>
                     <div class="minheight">
