@@ -20499,8 +20499,8 @@ CREATE PROCEDURE [dbo].[_spKartrisProducts_SearchProductsByName]
 )
 AS
 	SET NOCOUNT ON;
-SELECT        P_ID, P_Name
-FROM            vKartrisTypeProducts
+SELECT        TOP(50) P_ID, P_Name
+FROM            vKartrisTypeProductsLite
 WHERE        (LANG_ID = @LANG_ID) AND P_Name LIKE @Key + '%'
 GO
 /****** Object:  StoredProcedure [dbo].[_spKartrisProducts_GetTotalByCatID]    Script Date: 01/23/2013 21:59:10 ******/

@@ -333,6 +333,29 @@ IF @numrows > 0
 END
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisProducts_SearchProductsByName]    Script Date: 20/05/2020 12:39:55 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Mohammad
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisProducts_SearchProductsByName]
+(
+	@Key as nvarchar(50),
+	@LANG_ID tinyint
+)
+AS
+	SET NOCOUNT ON;
+SELECT        TOP(50) P_ID, P_Name
+FROM            vKartrisTypeProductsLite
+WHERE        (LANG_ID = @LANG_ID) AND P_Name LIKE @Key + '%'
+
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.0001', CFG_VersionAdded=3.0001 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

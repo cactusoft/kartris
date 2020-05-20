@@ -60,20 +60,24 @@ Public Class kartrisServices
         Return items
     End Function
 
-    <WebMethod(EnableSession:=True)> _
-    <Script.Services.ScriptMethod()> _
+    <WebMethod(EnableSession:=True)>
+    <Script.Services.ScriptMethod()>
     Public Function GetProducts(ByVal prefixText As String, ByVal count As Integer) As String()
         Dim tblProducts As New DataTable
         tblProducts = ProductsBLL._SearchProductByName(prefixText, Session("_LANG"))
 
         Dim items() As String = New String() {""}
         Dim counter As Integer = 0
-        For Each row As DataRow In tblProducts.Rows
-            ReDim Preserve items(counter)
-            items(counter) = row("P_Name") + vbTab + "(" + CStr(row("P_ID")) + ")"
-            counter += 1
-        Next
+        Try
+            For Each row As DataRow In tblProducts.Rows
+                ReDim Preserve items(counter)
+                items(counter) = row("P_Name") + vbTab + "(" + CStr(row("P_ID")) + ")"
+                counter += 1
+            Next
 
+        Catch ex As Exception
+            'just don't do anything
+        End Try
         Return items
     End Function
 
