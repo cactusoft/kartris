@@ -39,7 +39,7 @@ Partial Class Category
 
                     UC_CategoryView.LoadCategory(intCategoryID, Session("LANG"))
                     If UC_CategoryView.IsCategoryExist OrElse intCategoryID = 0 Then
-                        Me.CanonicalTag = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalCategory, intCategoryID)
+                        Me.CanonicalTag = CkartrisBLL.WebShopURL & Mid(SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalCategory, intCategoryID), 2)
                         Me.MetaDescription = CategoriesBLL.GetMetaDescriptionByCategoryID(intCategoryID, numLangID)
                         Me.MetaKeywords = CategoriesBLL.GetMetaKeywordsByCategoryID(intCategoryID, numLangID)
 

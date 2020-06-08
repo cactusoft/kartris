@@ -52,7 +52,7 @@ Partial Class Product
 
                         'Above we use four hashes or pipes because these should not occur naturally in product names
                         If intProductID > 0 Then
-                            Me.CanonicalTag = SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, intProductID)
+                            Me.CanonicalTag = CkartrisBLL.WebShopURL & Mid(SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, intProductID), 2)
                             Me.MetaDescription = ProductsBLL.GetMetaDescriptionByProductID(intProductID, numLangID)
                             Me.MetaKeywords = ProductsBLL.GetMetaKeywordsByProductID(intProductID, numLangID)
                         End If
