@@ -2,7 +2,7 @@
 
 <%@ Register TagPrefix="user" TagName="AdminBar" Src="~/UserControls/Front/AdminBar.ascx" %>
 <%@ Register TagPrefix="user" TagName="NavigationMenu" Src="UserControls/NavigationMenu.ascx" %>
-<%@ Register TagPrefix="user" TagName="CustomMegaMenu" Src="UserControls/CustomMegaMenu.ascx" %>
+<%@ Register TagPrefix="user" TagName="MegaMenu" Src="UserControls/MegaMenuCatSub.ascx" %>
 <!DOCTYPE html>
 <!--[if IE 8]><html class="no-js lt-ie9" lang="en" ><![endif]-->
 <!--[if gt IE 8]><!-->
@@ -31,10 +31,10 @@
 	<link href="general.css" rel="stylesheet" type="text/css" />
 	<link href="sections.css" rel="stylesheet" type="text/css" />
 	<link href="template.css" rel="stylesheet" type="text/css" />
-	<link href="custom.css" rel="stylesheet" type="text/css" />
+	<link href="mobile.css" rel="stylesheet" type="text/css" />
 	<link href="powerpack.css" rel="stylesheet" type="text/css" />
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-	<link href='//fonts.googleapis.com/css?family=Open+Sans:300' rel='stylesheet' type='text/css'>
+	<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
 	<title>Kartris v1</title>
 </head>
 <body class="main">
@@ -44,7 +44,8 @@
 			CombineScripts="true" EnableViewState="True">
 			<Scripts>
 				<asp:ScriptReference Path="~/JavaScript/k30000/modernizr.js" />
-				<asp:ScriptReference Path="~/JavaScript/k30000/jquery-2.2.4.min.js" />
+				<asp:ScriptReference Path="~/JavaScript/k30001/jquery-3.5.1.min.js" />
+				<asp:ScriptReference Path="~/JavaScript/k30001/jquery-migrate-1.4.1.min.js" />
 				<asp:ScriptReference Path="~/JavaScript/k30000/foundation.min.js" />
 				<asp:ScriptReference Path="Scripts/Kartris.js" />
 			</Scripts>
@@ -57,19 +58,15 @@
 					<!-- Off Canvas Menu -->
 					<aside class="left-off-canvas-menu offcanvas-overlap-left">
 						<div class="content">
-							<a onclick="closeOffCanvas()" class="left-off-canvas-toggle off-canvas-close" href="#"><span>
-								<asp:Literal ID="litCloseButton"
-									runat="server" Text="×"
-									EnableViewState="False"></asp:Literal></span></a>
+							<a onclick="closeOffCanvas()" class="left-off-canvas-toggle off-canvas-close" href="#"><span>×</span></a>
 
 							<user:NavigationMenu ID="UC_NavigationMenu" runat="server" EnableViewState="False"
 								Visible="True" />
 						</div>
 					</aside>
-					<div id="headerboxshadow"></div>
 					<div id="header">
-						<div class="row">
-							<div id="hcol-left" class="medium-7 small-6 column">
+						<div class="row fullwidth collapse">
+							<div id="hcol-left" class="small-5 medium-6 large-2 column">
 
 								<a onclick="openOffCanvas()" class="left-off-canvas-toggle off-canvas-open show-for-medium-down" href="#">
 									<i class="fas fa-bars"></i>
@@ -78,32 +75,52 @@
 									<asp:Image ID="imgLogo" runat="server" ImageUrl="Images/logo.png"
 										CssClass="logo" AlternateText="logo" />
 								</asp:HyperLink>
-								<div id="menus" class="hide-for-medium-down">
-									<a onclick="menuCategories()" class="big-menu-link" id="menuCategoriesLink">Products <span class="chevron"></span></a>
-									<a onclick="menuFurther()" class="big-menu-link" id="menuFurtherLink">More Information <span class="chevron"></span></a>
+
+							</div>
+							<div id="hcol-centre" class="large-8 hide-for-medium-down column">
+								<div id="menus">
+									<a onclick="menuCategories()" class="big-menu-link" id="menuCategoriesLink">Products</a>
+									<a onclick="menuAbout()" class="big-menu-link" id="menuAboutLink">About Us</a>
+									<a onclick="menuFurther()" class="big-menu-link" id="menuFurtherLink2">More Information</a>
+									<a onclick="menuFurther()" class="big-menu-link" id="menuFurtherLink3">More Information</a>
+									<a onclick="menuFurther()" class="big-menu-link" id="menuFurtherLink4">More Information</a>
 								</div>
 							</div>
-							<div id="hcol-right" class="medium-5 small-6 column">
-								<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
-								<user:BasketView ID="UC_MiniBasket" runat="server" ViewType="MINI_BASKET" />
-								<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
-								<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
+							<div id="hcol-right" class="small-7 medium-6 large-2 column">
+								<div id="icons">
+									<a onclick="menuSearch()" id="menuSearchLink"><i class="fas fa-search"></i></a>
+
+									<user:BasketView ID="UC_MiniBasket" runat="server" ViewType="MINI_BASKET" />
+
+									<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
+								</div>
 							</div>
 							<div class="spacer"></div>
 						</div>
-					</div>
-					<div id="menuCategories" class="menuSpecial">
-						<user:CustomMegaMenu runat="server" ID="UC_CustomMegaMenu" EnableViewState="False" />
-					</div>
-					<div id="centre_container">
-
-						<div class="row">
-							<div class="small-6 medium-8 columns">
-							</div>
-							<div class="small-6 medium-4 columns">
-								<user:SearchBox runat="server" ID="UC_SearchBox" EnableViewState="False" />
-							</div>
+						<!-- menus -->
+						<div id="menuCategories" class="menuSpecial">
+							<user:MegaMenu runat="server" ID="UC_MegaMenu" EnableViewState="False" />
 						</div>
+						<div id="menuAbout" class="menuSpecial">
+						</div>
+						<div id="menuSettings" class="menuSpecial">
+							<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
+							<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
+						</div>
+						<div id="menuSearch" class="menuSpecial">
+							<user:SearchBox runat="server" ID="UC_SearchBox" EnableViewState="False" />
+						</div>
+						<!-- /menus -->
+					</div>
+
+					
+					<!-- don't want the breadcrumbtrail on home page. Could use CSS, but this is better -->
+					<% If PageName(Request.ServerVariables("SCRIPT_NAME")) <> "default" %>
+					<user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
+					<% End if %>
+
+					<!-- we add a dynamic class here, this lets us style home page differently, full width -->
+					<div id="centre_container" class='page-<% =PageName(Request.ServerVariables("SCRIPT_NAME")) %>'>
 						<div class="row" id="pagebody">
 							<div class="small-12 columns" id="pagecontent_pad">
 								<asp:ContentPlaceHolder ID="cntMain" runat="server">

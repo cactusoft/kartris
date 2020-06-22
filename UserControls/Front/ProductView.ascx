@@ -65,7 +65,6 @@
 </script>
 
 <div class="product">
-    <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" SiteMapProvider="CategorySiteMapProvider" />
     <h1>
         <asp:Literal ID="litProductName" runat="server"></asp:Literal></h1>
     <div id="strapline">

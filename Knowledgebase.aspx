@@ -4,7 +4,6 @@
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
 	<asp:MultiView ID="mvwMain" runat="server" ActiveViewIndex="0">
 		<asp:View ID="viwExist" runat="server">
-			<user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
 			<div id="knowledgebase">
 				<asp:Panel ID="pnlSearch" runat="server">
 					<h1>

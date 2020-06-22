@@ -4,7 +4,6 @@
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
     <asp:MultiView ID="mvwMain" runat="server" ActiveViewIndex="0">
         <asp:View ID="viwExist" runat="server">
-            <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
             <h1>
                 <asp:Literal ID="litSubHeaderPromotions" runat="server" Text="<%$ Resources:Kartris, SubHeading_Promotions %>" /></h1>
             <user:ProductPromotions ID="UC_Promotions" runat="server" PageOwner="Promotions.aspx" />

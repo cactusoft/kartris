@@ -2,7 +2,6 @@
     CodeFile="News.aspx.vb" Inherits="News" %>
 
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
-    <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
     <div id="news">
         <asp:Repeater ID="rptSiteNews" runat="server" EnableViewState="False">
             <ItemTemplate>

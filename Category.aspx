@@ -3,7 +3,6 @@
 
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
     <div class="page_category">
-    <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" SiteMapProvider="CategorySiteMapProvider" />
         <asp:MultiView ID="mvwCategory" runat="server" ActiveViewIndex="0">
             <asp:View ID="viwCategoryDetails" runat="server">
 

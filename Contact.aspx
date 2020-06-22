@@ -3,7 +3,6 @@
 
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
     <div id="contact">
-        <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
         <h1>
             <asp:Literal ID="litPageTitleContactUs" runat="server" Text="<%$ Resources: Kartris, PageTitle_ContactUs %>" /></h1>
         <!-- ALTERNATIVE POSITION FOR CONTACT TEXT -->

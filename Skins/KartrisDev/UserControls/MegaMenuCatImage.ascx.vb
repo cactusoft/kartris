@@ -1,6 +1,6 @@
 '========================================================================
 'Kartris - www.kartris.com
-'Copyright 2020 CACTUSOFT
+'Copyright 2018 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -12,7 +12,7 @@
 'overrides the GPL v2.
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
-Partial Class CustomMegaMenu
+Partial Class MegaMenuCatImage
 
     Inherits System.Web.UI.UserControl
 
@@ -48,7 +48,6 @@ Partial Class CustomMegaMenu
     ''' <remarks></remarks>
     Private Sub rptTopCats_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptTopCats.ItemDataBound
         If e.Item.ItemType = ListItemType.AlternatingItem OrElse e.Item.ItemType = ListItemType.Item Then
-            'Dim lnkCat As HyperLink = e.Item.FindControl("lnkCat")
             Dim lnkTopLevel As HyperLink = e.Item.FindControl("lnkTopLevel")
             Dim rptMegaMenu As Repeater = e.Item.FindControl("rptMegaMenu")
             Dim numCAT_ID As Integer = lnkTopLevel.NavigateUrl
@@ -58,9 +57,6 @@ Partial Class CustomMegaMenu
 
             'Create the submenu
             FormatSubMenu(numCAT_ID, rptMegaMenu)
-
-            'Hyperlink for image
-            'lnkCat.NavigateUrl = SiteMapHelper.CreateURL(SiteMapHelper.Page.Category,numCAT_ID, 0)
         End If
     End Sub
 
@@ -89,19 +85,6 @@ Partial Class CustomMegaMenu
         End If
     End Sub
 
-    '''' <summary>
-    '''' Format the category big image
-    '''' </summary>
-    '''' <remarks></remarks>
-    'Public Shared Function FormatCatImage(ByVal numCatID As Integer) As String
-    '    Try
-    '        Return "~/Image.ashx?strFileName=0.jpg&strItemType=c&numMaxHeight=300&numMaxWidth=700&numItem=" & numCatID
-    '    Catch ex As Exception
-    '        Return ""
-    '    End Try
-
-    'End Function
-
     ''' <summary>
     ''' Format the category menu friendly links
     ''' </summary>
@@ -113,8 +96,7 @@ Partial Class CustomMegaMenu
             'Find and create controls
             Dim lnkSubCat As HyperLink = e.Item.FindControl("lnkSubCat")
             Dim hidParentID As HiddenField = e.Item.FindControl("hidParentID")
-            'Dim imgSubCat As Image = e.Item.FindControl("imgSubCat")
-            'Dim imgSubCatLrg As Image = e.Item.FindControl("imgSubCatLrg")
+            Dim imgSubCat As Image = e.Item.FindControl("imgSubCat")
 
             'Pull values 
             Dim numSubCAT_ID As Integer = lnkSubCat.NavigateUrl
@@ -123,8 +105,8 @@ Partial Class CustomMegaMenu
             'Set properties for links, etc.
             lnkSubCat.NavigateUrl = SiteMapHelper.CreateURL(SiteMapHelper.Page.Category,
                                         numSubCAT_ID, numParentID)
-            'imgSubCat.ImageUrl = "~/Image.ashx?strFileName=0.jpg&strItemType=c&numMaxHeight=40&numMaxWidth=40&numItem=" & numSubCAT_ID
-            'imgSubCatLrg.ImageUrl = "~/Image.ashx?strFileName=0.jpg&strItemType=c&numMaxHeight=100&numMaxWidth=100&numItem=" & numSubCAT_ID
+            imgSubCat.ImageUrl = "~/Image.ashx?strItemType=c&numMaxHeight=50&numMaxWidth=50&numItem=" & numSubCAT_ID
+
         End If
     End Sub
 End Class

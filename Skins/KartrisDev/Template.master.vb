@@ -22,4 +22,23 @@ Partial Public Class Skin_Kartris_Template
         End If
     End Sub
 
+    ''' <summary>
+    ''' Return name of script
+    ''' </summary>
+    ''' <returns></returns>
+    ''' <remarks>We embed a css class with the name of the script,
+    ''' this lets us make page specific changes such as for the home page
+    ''' if we want full width, without needing server side diddling. We
+    ''' can have custom CSS for particular pages like Default.</remarks>
+    Public Shared Function PageName(ByVal strRawScriptName As String) As String
+        Dim strPageName As String = ""
+        Try
+            strPageName = Replace(strRawScriptName.ToLower, ".aspx", "")
+            strPageName = Replace(strPageName, "/", "")
+        Catch ex As Exception
+            'Guess it stays blank
+        End Try
+        Return strPageName
+    End Function
+
 End Class

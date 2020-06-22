@@ -3,7 +3,6 @@
 
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
     <div id="affiliates">
-        <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
         <h1>
             <asp:Literal ID="litPageTitleAffiliates" runat="server" Text='<%$ Resources: Kartris, PageTitle_Affiliates %>' /></h1>
         <div class="affiliatestats">

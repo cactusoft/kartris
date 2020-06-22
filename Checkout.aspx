@@ -8,11 +8,7 @@
 <%@ Register TagPrefix="user" Namespace="Kartris" Assembly="KartrisCheckboxValidator" %>
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
 
-
-
     <div id="checkout">
-
-        <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
         <h1>
             <asp:Literal ID="litCheckoutTitle" runat="server" Text="<%$ Resources: PageTitle_CheckOut%>"
                 EnableViewState="false" /></h1>
@@ -53,8 +49,7 @@
 
                             </div>
                         </asp:PlaceHolder>
-                        <asp:PlaceHolder ID="phdCustomerChoicesInfo" runat="server" Visible="false">
-                            Some info
+                        <asp:PlaceHolder ID="phdCustomerChoicesInfo" runat="server" Visible="false">Some info
                         </asp:PlaceHolder>
                     </ContentTemplate>
                 </asp:UpdatePanel>
@@ -209,7 +204,8 @@
                 ===============================
                 -->
                 <asp:PlaceHolder ID="phdCustomerComments" runat="server">
-                    <h2><asp:Literal ID="litComments" runat="server" Text="<%$ Resources: Checkout, SubTitle_Comments %>"
+                    <h2>
+                        <asp:Literal ID="litComments" runat="server" Text="<%$ Resources: Checkout, SubTitle_Comments %>"
                             EnableViewState="false" /></h2>
                     <div id="comments" style="margin-top: 10px;">
                         <asp:TextBox ID="txtComments" runat="server" TextMode="MultiLine"></asp:TextBox>
@@ -300,13 +296,13 @@
                 -->
                 <script type="text/javascript">
                 <!--
-                function toggle_visibility(id) {
-                    var e = document.getElementById(id);
-                    if (e.style.display == 'block')
-                        e.style.display = 'none';
-                    else
-                        e.style.display = 'block';
-                }
+    function toggle_visibility(id) {
+        var e = document.getElementById(id);
+        if (e.style.display == 'block')
+            e.style.display = 'none';
+        else
+            e.style.display = 'block';
+    }
                 //-->
                 </script>
                 <asp:PlaceHolder ID="phdTermsAndConditions" runat="server">
@@ -437,7 +433,7 @@
                             <user:CreditCardInput runat="server" ID="UC_CreditCardInput" />
                         </div>
                     </asp:PlaceHolder>
-                    
+
                     <!--
                     -------------------------------
                     BrainTree Module Section
@@ -447,17 +443,17 @@
                     -------------------------------
                     -->
 
-                    <asp:UpdatePanel ID="upBrainTree" runat="server" >
+                    <asp:UpdatePanel ID="upBrainTree" runat="server">
                         <ContentTemplate>
                             <asp:PlaceHolder ID="phdBrainTree" runat="server" Visible="false">
-                                    <div class="section">
-                                        <asp:HiddenField ID="tbClientToken" runat="server" ClientIDMode="Static"/>
-                                        <asp:HiddenField ID="tbPaymentMethodNonce" runat="server" ClientIDMode="Static"/>
-                                        <asp:HiddenField ID="tbAmount" runat="server" ClientIDMode="Static"/>
-                                        <div class="bt-drop-in-wrapper">
-                                            <div id="bt-dropin"></div>
-                                        </div>
+                                <div class="section">
+                                    <asp:HiddenField ID="tbClientToken" runat="server" ClientIDMode="Static" />
+                                    <asp:HiddenField ID="tbPaymentMethodNonce" runat="server" ClientIDMode="Static" />
+                                    <asp:HiddenField ID="tbAmount" runat="server" ClientIDMode="Static" />
+                                    <div class="bt-drop-in-wrapper">
+                                        <div id="bt-dropin"></div>
                                     </div>
+                                </div>
                             </asp:PlaceHolder>
                         </ContentTemplate>
                     </asp:UpdatePanel>
@@ -473,13 +469,13 @@
                                 __doPostBack('ctl00$cntMain$btnBack', 'OnClick');
                             });
                         });
-                        
+
                         function clientTokenChanged() {
                             var client_token = $("input[name*='tbClientToken']")[0].value;
                             braintree.setup(client_token, "dropin", {
                                 container: "bt-dropin",
                                 form: "frmMain",
-                                onReady: function(integration){
+                                onReady: function (integration) {
                                     checkoutBT = integration;
                                 },
                                 onError: function (payload) {
@@ -508,7 +504,7 @@
                                 }
                             }
                         }
-                    
+
                     </script>
                 </div>
             </asp:View>

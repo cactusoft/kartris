@@ -2,9 +2,10 @@
     CodeFile="Basket.aspx.vb" Inherits="Basket" %>
 
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
-    <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
-    <h1>
-        <asp:Literal ID="litTitle" runat="server" Text='<% $Resources: Basket, PageTitle_ShoppingBasket %>'></asp:Literal></h1>
-    <user:BasketView ID="UC_BasketMain" runat="server" ViewType="MAIN_BASKET" />
-    <user:PopupMessage ID="UC_PopUpErrors" runat="server" />
+    <div id="page_category">
+        <h1>
+            <asp:Literal ID="litTitle" runat="server" Text='<% $Resources: Basket, PageTitle_ShoppingBasket %>'></asp:Literal></h1>
+        <user:BasketView ID="UC_BasketMain" runat="server" ViewType="MAIN_BASKET" />
+        <user:PopupMessage ID="UC_PopUpErrors" runat="server" />
+    </div>
 </asp:Content>

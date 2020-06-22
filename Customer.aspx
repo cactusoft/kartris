@@ -4,7 +4,6 @@
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
     <div id="customer">
         <user:PopupMessage ID="UC_PopUpInfo" runat="server" />
-        <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
         <asp:UpdatePanel ID="updPanelCustomer" runat="server">
             <ContentTemplate>
                 <!-- start of save basket -->

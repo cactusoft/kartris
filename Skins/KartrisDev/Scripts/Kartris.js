@@ -32,22 +32,45 @@ function SetOffCanvasHeight() {
 // Open categories menu
 function menuCategories() {
     if ($("#menuCategories").is(':visible')) {
-        $("#menuCategories").fadeOut(340);
-        $("#menuBackOverlay").fadeOut(340);
+        $("#menuCategories").fadeOut(140);
+        menuBackOverlay();
         $("#menuCategoriesLink").removeClass("taller");
     }
     else {
-        $("#menuBackOverlay").fadeIn(340); // back area to capture clicks away, so we can hide menu
-        $("#menuCategories").fadeIn(340);
+        closeAllMenus();
+        $("#menuBackOverlay").fadeIn(140); // back area to capture clicks away, so we can hide menu
+        $("#menuCategories").fadeIn(140);
         $("#menuCategoriesLink").addClass("taller");
+    }
+}
+
+// Open search menu
+function menuSearch() {
+    if ($("#menuSearch").is(':visible')) {
+        $("#menuSearch").fadeOut(140);
+        menuBackOverlay();
+        $("#menuSearchLink").removeClass("taller");
+    }
+    else {
+        closeAllMenus();
+        $("#menuBackOverlay").fadeIn(140); // back area to capture clicks away, so we can hide menu
+        $("#menuSearch").fadeIn(140);
+        $("#menuSearchLink").addClass("taller");
+        // put cursor focus in searchbox
+        $("#searchbox").focus();
+        $("#searchbox").attr('placeholder', 'Search...');
     }
 }
 
 // Close all menus
 function menuBackOverlay() {
-    $("#menuCategories").fadeOut(340);
-    $("#menuCategoriesLink").removeClass("taller")
-    $("#menuBackOverlay").fadeOut(340);
+    $(".menuSpecial").fadeOut(140);
+    $(".menuSpecial").removeClass("taller");
+    $("#menuBackOverlay").fadeOut(140);
+}
+function closeAllMenus() {
+    $(".menuSpecial").fadeOut(140);
+    $(".menuSpecial").removeClass("taller");
 }
 
 // Opening and closing the off-canvas seems to fire
@@ -70,5 +93,18 @@ function closeOffCanvas() {
 function pageLoad() { // this gets fired when the UpdatePanel completes
     SetOffCanvasHeight();
 }
+
+// add 'header--fixed' class to header when we scroll 
+// away from top
+$(document).ready(function () {
+    $(window).bind("scroll",
+        function () {
+            var e = 90;
+            $(window).scrollTop() > e
+                ? $("div#header").addClass("header--fixed")
+                : $("div#header").removeClass("header--fixed");
+        });
+
+});
 
 

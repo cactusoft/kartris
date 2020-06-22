@@ -65,7 +65,7 @@ Partial Class Category
                             StatisticsBLL.AddNewStatsRecord("C", _
                                             GetIntegerQS("CategoryID"), GetIntegerQS("strParent"))
                         End If
-                        If intCategoryID = 0 Then UC_BreadCrumbTrail.SiteMapProvider = "BreadCrumbSitemap"
+                        'If intCategoryID = 0 Then UC_BreadCrumbTrail.SiteMapProvider = "BreadCrumbSitemap"
                     Else
                         'An item was called with correctly formatted URL, but
                         'the ID doesn't appear to pull out an item, so it's

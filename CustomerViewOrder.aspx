@@ -6,7 +6,6 @@
     <user:PopupMessage ID="UC_PopUp" runat="server" />
     <asp:PlaceHolder ID="phdOrderStatus" runat="server">
         <div id="customer">
-            <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
             <h1>
                 <asp:Literal ID="litPageTitleOrderStatus" runat="server" Text='<%$ Resources: Kartris, PageTitle_OrderStatus %>' /></h1>
             <user:CustomerOrder ID="UC_CustomerOrder" runat="server" CustomerID="0" OrderID="0" />

@@ -1,5 +1,5 @@
-<%@ Control Language="VB" AutoEventWireup="false" EnableViewState="false" CodeFile="CustomMegaMenu.ascx.vb"
-    Inherits="CustomMegaMenu" %>
+<%@ Control Language="VB" AutoEventWireup="false" EnableViewState="false" CodeFile="MegaMenuCatSub.ascx.vb"
+    Inherits="MegaMenuCatSub" %>
 <%@ OutputCache Duration="1" VaryByCustom="culture;user" VaryByParam="*" Shared="true" %>
 <%
 '-----------------------------------

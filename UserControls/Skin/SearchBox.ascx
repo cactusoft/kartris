@@ -13,8 +13,7 @@
                 function presssearchkey(e) {
                     if (typeof e == 'undefined' && window.event) { e = window.event; }
                     if (e.keyCode == 13) {
-                        document.getElementById('searchbutton').click();
-                        return false;
+                        window.location.href = document.getElementById('baseTag').href + 'Search.aspx?strSearchText=' + document.getElementById('searchbox').value.replace(/ /gi, "+");
                     }
                 }
             </script>

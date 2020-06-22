@@ -7,41 +7,43 @@ p,
 td,
 th,
 select,
-body                                    { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; line-height: 1.2em; font-size: 1em; font-weight: normal; color: #333; padding: 0; margin: 0; }
+body                                    { font-family: 'Heebo', Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 400; line-height: 1.2; font-size: 0.91em; color: #333; padding: 0; margin: 0; }
 p                                       { margin: 5px 0 10px 0 }
-h1                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 210%; letter-spacing: 1px; color: #000; margin: 0; padding: 15px 0 30px 0; display: block; font-weight: 700; line-height: 33px; text-align: center; display: block; }
-h2                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 130%; color: #000; margin: 5px 0 5px 0; padding: 0; font-weight: 700; letter-spacing: 1px; }
+h1                                      { font-family: 'Heebo', Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 700; text-align: center; font-size: 210%; letter-spacing: 0; color: #000; margin: 0; padding: 25px 0 30px 0; display: block; line-height: 33px; }
+h2                                      { font-family: 'Heebo', Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 700; letter-spacing: 0; font-size: 130%; color: #000; margin: 5px 0 5px 0; padding: 0;  }
 .h2_light_extra                         { color: #aaa; font-weight: bold; }
-h3                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 95%; font-weight: normal; margin: 0 0 5px 0; padding: 0; }
+h3                                      { font-family: 'Heebo', Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 700; font-size: 135%; margin: 0 0 5px 0; padding: 0; }
 h4,
-h2.blockheader                          { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 700; font-size: 140%; color: #000; letter-spacing: 1px; margin: 0; padding: 0 0 15px 0; }
-h5                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0px 0px 5px 0px; color: #f30; text-transform: uppercase; padding: 2px 2px 2px 0px; text-align: left; }
+h2.blockheader                          { overflow: hidden; text-align: center; font-family: 'Neuton', sans-serif; font-weight: 300; font-size: 180%; color: #000; margin: 0; padding: 0 0 15px 0; }
+h4:before,
+h2.blockheader:before,
+h4:after,
+h2.blockheader:after                    { background-color: #333; content: ""; display: inline-block; height: 1px; position: relative; vertical-align: middle; width: 50%; }
+h4:before,
+h2.blockheader:before                   { right: 0.5em; margin-left: -50%; }
+h4:after,
+h2.blockheader:after                    { left: 0.5em; margin-right: -50%; }
+
+h5                                      { font-family: 'Heebo', Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 700; margin: 0px 0px 5px 0px; color: #000; text-transform: uppercase; padding: 2px 2px 2px 0px; text-align: left; }
 pre                                     { color: #008800 }
 iframe                                  { border: none; overflow: hidden; display: inline;}
 iframe body                             { padding: 5px 0 0 0;  overflow: hidden; }
 .strong                                 { font-weight: bold }
 .floatright                             { float: right }
 ul, ol, dl                              { font-size: inherit; }
-/* 
-========================================================================
-BREADCRUMBS
-========================================================================
-*/
-.breadcrumbtrail                        { font-size: 0.7em; border-bottom: solid 1px transparent; padding: 15px 17px 5px 0; display: block; font-weight: normal; text-decoration: none; margin: 15px 0 29px 0px; text-transform: uppercase; text-align: center; letter-spacing: 2px; }
-.breadcrumbtrail span span              { font-weight: bold; color: #000; display: inline-block; padding: 0 0 0 6px; }
-.breadcrumbtrail span span a            { color: #000; padding: 0 17px 0 0; display: inline-block; font-weight: normal; margin: 0; background-image: url(Images/breadcrumb_back.png); background-position: right center; background-repeat: no-repeat; }
+
 /* 
 ========================================================================
 HYPERLINKS
 ========================================================================
 */
 a:link,
-a:visited                               { text-decoration: none; color: #000; outline: 0; }
-a:hover                                 { text-decoration: none; color: #000; }
+a:visited                               { text-decoration: none; color: #333; outline: 0; }
+a:hover                                 { text-decoration: none; color: #888; }
 a.link2,
-span.link2 a                            { padding: 2px 8px; letter-spacing: 2px; text-transform: uppercase; font-size: 0.7em; font-weight: normal; text-decoration: none; color: #fff; background-color: #5376fe; margin-right: 10px; border: none; }
+span.link2 a                            { padding: 2px 8px; text-transform: uppercase; font-size: 11px; font-weight: normal; letter-spacing: 1px; text-decoration: none; color: #000; background-color: #ddd; margin-right: 10px; border-radius: 0; }
 a.link2:hover,
-span.link2:hover a                      { background-color: #c0d8f3; color: #000; }
+span.link2:hover a                      { background-color: #444; color: #fff; }
 /* 
 ========================================================================
 GENERAL
@@ -59,20 +61,18 @@ TABLES
 ========================================================================
 */
 table                                   { border: none; background-color: transparent; border-collapse: separate; width: 100%; max-width: 100%; }
-table tr td                             { background-color: transparent; border-bottom: none; vertical-align: top; padding: 5px 10px 5px 5px; }
+table tr td                             { background-color: #fff; border-bottom: solid 1px #ddd; vertical-align: top; padding: 5px 10px 5px 5px; }
 table tr.even,
 table tr.alt,
 table tr:nth-of-type(2n)                { background-color: transparent; }
-table tr:nth-child(even)                { background: transparent; }
-table tr:nth-child(odd)                 { background: transparent; }
 table thead,
 table tfoot,
 table tr.headrow,
-table thead tr                          { background-color: transparent !important; }
+table thead tr                          { background-color: transparent; }
 table tr.headrow th,
-table thead tr th                       { border-bottom: solid 1px #5376fe; line-height: 12px; padding: 5px 10px 4px 5px; font-weight: normal; color: #000; text-align: left; text-transform: uppercase; font-size: 0.7em; letter-spacing: 2px; }
+table thead tr th                       { background-color: transparent; border-bottom: solid 2px #ddd; padding: 5px 10px 4px 5px; font-weight: normal; color: #888; text-align: left; text-transform: uppercase; font-size: 85%;}
 table td,
-table th                                { padding: 3px; }
+table th                                { padding: 3px }
 table td strong                         { color: #000 }
 table td.itemname                       { font-weight: bold }
 table td.select,
@@ -80,7 +80,7 @@ table th.select                         { text-align: right }
 table.filled                            { border-collapse: collapse; margin-bottom: 10px; }
 table.filled td                         { color: #000; vertical-align: top; }
 table tr.totalsrow td                   { background-color: transparent }
-table tr.totalsrow td.total             { background-color: transparent; color: #000; font-weight: bold; }
+table tr.totalsrow td.total             { background-color: transparent; color: #f00; font-weight: bold; }
 .nowrap                                 { white-space: nowrap }
 /* 
 ========================================================================
@@ -91,7 +91,7 @@ DETAILS VIEW / SECTIONS
 .Kartris-DetailsView-Data               { margin-bottom: 10px }
 .Kartris-DetailsView-Data ul            { list-style-type: none; padding: 0; margin-left: 0;  }
 .Kartris-DetailsView-Data ul li         { padding-top: 5px }
-.Kartris-DetailsView-Name               { font-size: 90%; display: inline-block; color: #666; margin-bottom: 3px; width: 150px; font-weight: normal; vertical-align: top; padding-right: 10px; }
+.Kartris-DetailsView-Name               { font-size: 90%; display: inline-block; color: #333; margin-bottom: 3px; width: 150px; font-weight: normal; vertical-align: top; padding-right: 10px; }
 .Kartris-DetailsView-Value              { font-size: 90%; display: inline-block; width: 350px; max-width: 100%; vertical-align: top; color: #000; overflow: visible; }
 .Kartris-DetailsView-Value label        { white-space: nowrap; max-width: 100%; }
 /* 
@@ -110,19 +110,20 @@ select.fullwidth,
 input.fullwidth                         { width: 100% }
 select:focus,
 input:focus,
-textarea:focus                          { color: #000; background-color: #fff; border: solid 1px #c00; }
-.button                                 { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 13px; border: solid 1px #5376fe; background-color: #5376fe; color: #fff; font-size: 1.0em; letter-spacing: 1px; font-weight: bold; margin: 1px 0px 1px 2px; width: auto; display: inline-block; padding: 5px 22px; }
+textarea:focus                          { color: #000; background-color: #fff; border: solid 1px #444; }
+.button                                 { font-family: 'Heebo', Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 400; font-size: 85%; letter-spacing: 1px;  text-transform: uppercase; border: solid 1px #ccc; background-color: #ccc; color: #000; padding: 5px 17px; margin: 1px 0px 1px 2px; width: auto; display: inline-block; }
 .button:focus,
-.button:hover                           { background-color: #c0d8f3; color: #000; border: solid 1px #c0d8f3;  }
+.button:hover                           { background-color: #444; color: #fff; border: solid 1px #444;  }
 input.cancelbutton                      { background-color: #ddd; border-color: #bbb; color: #666; }
 input.highpriority                      { }
 .inputform p                            { margin: 5px 0 15px 0 }
 .inputform div                          { margin-bottom: 5px; }
 .inputform .submitbuttons div           { float: none }
 .inputform br                           { display: block; clear: both; }
+.checkbox label                         { text-transform: none; font-size: 13px; }
 .checkbox input,
 .radio input                            { border-style: none; background-color: transparent; display: inline-block; width: 20px; float: left; margin-right: 1px; }
-label                                   { font-size: 0.9em; display: inline-block; letter-spacing: 0px; color: #333; margin-bottom: 3px; font-weight: normal; vertical-align: top; }
+label                                   { font-size: 11px; text-transform: uppercase; display: inline-block; letter-spacing: 0px; color: #333; margin-bottom: 3px; font-weight: normal; vertical-align: top; }
 .inputform .column2                     { padding: 0px; margin-left: 130px; }
 .inputform .column2 label               { width: auto }
 div.formdivider                         { display: block; border-top: dotted 1px #bbb; width: 100%; }
@@ -143,7 +144,7 @@ input[type="search"],
 input[type="tel"],
 input[type="time"],
 input[type="url"],
-textarea                                { font-size: 1.2em; border: none; background-color: transparent; box-shadow: none; height: auto; color: #555; box-shadow: rgba(0,0,0,0.2) 1px 1px 4px inset; padding: 3px; }
+textarea                                { border: solid 1px #ccc; background-color: #f5f5f5; box-shadow: inset 3px 3px 3px #ccc; height: auto; min-height: 20px; padding: 3px !important; color: #333; }
 select:focus,
 input[type="text"]:focus,
 input[type="password"]:focus,
@@ -158,7 +159,7 @@ input[type="search"]:focus,
 input[type="tel"]:focus,
 input[type="time"]:focus,
 input[type="url"]:focus,
-textarea:focus                          { background-color: #fff; color: #000; box-shadow: rgba(0,0,0,0.3) 0 0 4px; border: none; }
+textarea:focus                          { background-color: #fff; color: #000; border: solid 1px #333; box-shadow: rgba(0,0,0,0.3) 1px 1px 5px; }
 
 /* 
 ========================================================================
@@ -175,7 +176,7 @@ div.errortext                           { font-style: normal; font-size: 13px; d
 IMAGES
 ========================================================================
 */
-.imageholder                            { display: flex !important; text-align: center; justify-content: center; align-items: center; }
+.imageholder                            { display: block; text-align: center; max-width: 90vw; max-height: 90vw; }
 .imageholder img                        { margin: 0; padding: 0; max-width: 100%; max-height: 100%; }
 .imageviewer                            { text-align: center; }
 .imageviewer .gallery                   { padding: 0; width: 100%; text-align: left; }
@@ -199,14 +200,13 @@ LIGHTBOX (FOUNDATION 'CLEARING')
 v2.9 This replaces the popup we used to use
 ========================================================================
 */
-.clearing-blackout                                          { background-color: rgba(0,0,0,0.1)}
-.clearing-assembled .clearing-container                     { background: #fff; z-index: 9999; }
+.clearing-assembled .clearing-container                     { background: #fff; }
 .clearing-assembled .clearing-container .visible-img        { background: #fff; }
-.main_product_image .clearing-assembled .carousel           { text-align: center; }
+.main_product_image .clearing-assembled .carousel           { }
 .clearing-assembled .clearing-container .carousel           { margin-top: 10px; background: #fff; }
-.carousel > ul                                              { display: inline-block; width: auto !important; margin: 0 auto; } /* centre the thumbs */
-.carousel > ul li                                           { background-color: #fff; list-style: none; height: 70px; width: 70px; padding: 3px; margin: 8px 4px 20px 0; border: solid 1px #ccc; box-shadow: 1px 1px 6px rgba(0,0,0,0.1); overflow: hidden; }
-.clearing-assembled .clearing-container .carousel > ul li   { list-style: none; border: solid 1px #444; display: block; height: 70px; width: 70px; margin-right: 4px; overflow: hidden; }
+.clearing-assembled .clearing-container .carousel > ul      { width: auto !important; } /* centre the thumbs */
+.carousel > ul li                                           { background-color: #fff; list-style: none; height: 110px; width: 110px; padding: 3px; margin: 8px 4px 20px 0; border: solid 1px #ccc; box-shadow: 1px 1px 6px rgba(0,0,0,0.1); overflow: hidden; }
+.clearing-assembled .clearing-container .carousel > ul li   { list-style: none; border: solid 1px #444; display: block; height: 110px; width: 110px; margin-right: 4px; overflow: hidden; }
 .clearing-assembled .clearing-container .carousel > ul li:hover { border: solid 1px #000; }
 .clearing-assembled .clearing-container .carousel > ul li.fix-height img
 															{ height: auto; }
@@ -217,36 +217,10 @@ a.clearing-close                                            { font-size: 27pt; f
 
 /* 
 ========================================================================
-MEDIA (Video, audio, etc.)
-========================================================================
-*/
-/* media gallery for product */
-.imagecolumn .media_gallery             { padding: 45px 0 0 0 }
-.imagecolumn .media_gallery h2			{ font-size: 100%; margin: 0; padding: 3px 0 5px 0; color: #000; font-weight: bold; }
-.imagecolumn .media_gallery_inner       { margin: 1px 0 1px 0 }
-/* media links, new styles (v2.8006 and earlier) */
-.media_links .mediaholder a             { text-align: center; padding: 0px; display: block; margin: auto auto auto auto; height: 52px; }
-.media_links .mediaholder:hover			{ border: solid 1px #fc5 }
-.media_links .mediaholder img           { vertical-align: middle; margin: 5px; height: 50px; width: 50px; }
-.media_links .mediaholder               { display: inline-block; float: left; margin: 0 1px 2px 0; vertical-align: middle; border: solid 1px #aaa; width: 60px; height: 60px; overflow: visible; }
-/* media links, new styles (v2.8006 onwards) */
-.media_links .mediaholder_horiz a       { text-align: left; padding: 1px; display: block; font-weight: normal; }
-.media_links .mediaholder_horiz a:hover { color: #000; text-decoration: none; }
-.media_links .mediaholder_horiz img     { vertical-align: middle; margin-right: 5px; }
-.media_links .mediaholder_horiz         { display: block; margin: 0 1px 2px 0; vertical-align: middle; overflow: visible;}                { }
-.media_links .mp3player                 { border: solid 1px #888; background-color: #888; margin: 2px 1px; border-radius: 3px; }
-.media_links .customthumb img           { width: 100px; }
-/* media gallery for versions, hide title */
-.versions .media_gallery h2             { display: none }
-/* v2.9 we apply a new class to popups for media, so can make them full screen, hide border and match Foundation lightbox look and feel */
-.popup.popup_media                      { border: none; min-height: 100%; min-width: 100%; }
-.popup.popup_media .closebutton         { font-size: 27pt; font-weight: bold; color: #000; top: 18px; right: 14px; }
-/* 
-========================================================================
 TABS AJAX CONTROL
 ========================================================================
 */
-.ajax__tab_default .ajax__tab_header    { border-bottom: solid 1px #000; margin: 8px 0 10px 0; font-weight: normal; height: 26px; letter-spacing: 1px; }
+.ajax__tab_default .ajax__tab_header    { border-bottom: solid 1px #333; margin: 8px 0 10px 0; font-weight: normal; height: 26px; }
 .ajax__tab_default .ajax__tab_header .total
 										{ font-weight: normal }
 .ajax__tab_default .ajax__tab_active .ajax__tab_outer,
@@ -257,33 +231,36 @@ TABS AJAX CONTROL
 .ajax__tab_default .ajax__tab_header .ajax__tab_inner,
 .ajax__tab_default .ajax__tab_hover .ajax__tab_inner
 										{ padding: 0; margin-left: 3px; /* offset the width of the left image */ }
-.ajax__tab_tab                          { margin: 2px 3px 1px 2px; padding: 1px 3px 0 3px; font-weight: normal; font-size: 13px; text-transform: none; font-weight: bold; }
+.ajax__tab_tab                          { margin: 2px 3px 1px 2px; padding: 1px 3px 0 3px; font-weight: normal; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
 .ajax__tab_default .ajax__tab_header .ajax__tab_inner a
-										{ color: #fff; }
+										{ color: #fff }
 .ajax__tab_default .ajax__tab_hover .ajax__tab_inner a
-										{ color: #000 }
+										{ color: #fff }
 .ajax__tab_default .ajax__tab_active .ajax__tab_inner a
-										{ color: #000; font-weight: bold; }
+										{ color: #000 }
 .ajax__tab_default .ajax__tab_hover .ajax__tab_tab strong,
 .ajax__tab_default .ajax__tab_active .ajax__tab_tab strong
 										{ font-weight: bold }
 .ajax__tab_default .ajax__tab_body      { background-color: transparent }
 .ajax__tab_header                       { }
-.ajax__tab_outer                        { height: 24px; background-color: #000; margin-top: -3px; }
-.ajax__tab_hover .ajax__tab_outer       { height: 24px; background-color: #eee; }
-.ajax__tab_active .ajax__tab_outer      { margin-top: 0; height: 26px; border: solid 1px #000; background-color: transparent; border-bottom: solid 1px #fcf9f9; color: #000; font-weight: bold; }
+.ajax__tab_outer                        { height: 24px; background-color: #a0a0a0; border-bottom: none; color: #333; margin-top: -3px; }
+.ajax__tab_hover .ajax__tab_outer       { height: 24px; background-color: #555; }
+.ajax__tab_active .ajax__tab_outer      { margin-top: 0; height: 26px; border: solid 1px #333; background-color: #fff; border-bottom: solid 1px #fff; color: #000; font-weight: bold; }
+#cntMain_UC_ProductView_tbcProduct_tabSample_tab .ajax__tab_outer
+										{ background-color: #83a60a; border-bottom: none; color: #fff; }
+#cntMain_UC_ProductView_tbcProduct_tabSample_tab.ajax__tab_active .ajax__tab_outer
+										{ background-color: #fff; border-bottom: none; color: #000; }
 /* 
 ========================================================================
 ACCORDION AJAX CONTROL
 ========================================================================
 */
 .accordionHeader,
-.accordionHeaderSelected                { border-top: solid 1px #ccc; cursor: pointer; }
+.accordionHeaderSelected                { border-top: solid 1px #ddd; cursor: pointer; }
 .accordionHeader h2,
 .accordionHeaderSelected h2             { cursor: pointer; margin-bottom: 10px; padding: 3px 0 0 0; }
 .accordionHeader h2:before              { content: "[+]"; color: #666; font-size: 70%; width: 25px; display: inline-block; }
 .accordionHeaderSelected h2:before      { content: "-"; color: #666; font-size: 70%; width: 25px; display: inline-block; }
-.accordionContent                       { padding: 5px 0 50px 0; }
 /* 
 ========================================================================
 UPDATE MESSAGE ('the record was updated')
@@ -296,14 +273,14 @@ PAGE LINKS
 ========================================================================
 */
 .itempager                              { display: block; font-weight: normal; text-decoration: none; padding: 12px 5px 22px 0px; }
-.itempager a                            { border-radius: 4px; display: inline-block; padding: 4px 9px; font-weight: bold; margin: 0 6px 5px 0; color: #fff; background-color: #5376fe; }
-.itempager a:hover                      { background-color: #c0d8f3; color: #000; text-decoration: none; }
+.itempager a                            { display: inline-block; padding: 2px 7px 2px 7px; font-weight: normal; margin: 0 3px 5px 0; color: #333; background-color: #ddd; }
+.itempager a:hover                      { background-color: #ccc; color: #000; text-decoration: none; }
 .itempager a.arrow                      { text-align: center }
-.itempager a.currentpage                { background-color: #fff; background-image: none; color: #000; font-weight: bold; box-shadow: rgba(0,0,0,0.6) 0 0 3px; }
-.itempager .previous                    { padding: 4px 9px }
-.itempager .next                        { padding: 4px 9px }
+.itempager a.currentpage                { background-color: #fff; background-image: none; color: #000; font-weight: bold; }
+.itempager .previous                    { padding: 2px 7px 2px 7px }
+.itempager .next                        { padding: 2px 7px 2px 7px }
 .itempager a.disabled,
-.itempager a.disabled:hover             { background-color: #ddd; color: #999; padding: 4px 9px; }
+.itempager a.disabled:hover             { background-color: #fff; color: #999; padding: 2px 7px 2px 7px; }
 /* 
 ========================================================================
 POPUP MESSAGE
@@ -311,7 +288,7 @@ POPUP MESSAGE
 */
 #largeimagepopup                        { overflow-y: hidden; overflow: hidden; background-image: none; }
 .popup_background                       { background-color: #000; filter: alpha(opacity=30); opacity: 0.3; }
-.popup                                  { background-color: #fff; border: solid 1px #222; padding: 45px 10px 13px 10px; width: 650px; max-width: 100%; max-height: 100%; min-height: 150px; text-align: left; top: 0px; left: 0px; overflow-x: hidden; }
+.popup                                  { background-color: #fff; border: solid 2px #222; padding: 45px 10px 13px 10px; width: 650px; max-width: 100%; max-height: 100%; min-height: 150px; text-align: left; top: 0px; left: 0px; overflow-x: hidden; }
 .popup h2                               { position: absolute; left: 10px; top: 0; padding: 10px 0 10px 0; margin: 0px; font-size: 125%; }
 .popup p                                { padding: 10px 0 0 0; margin: 0; }
 .popup strong                           { color: #000 }
@@ -348,4 +325,15 @@ CALLOUT VALIDATOR EXTENDER POPUP EXTENDER
 ========================================================================
 */
 .vcHighlight                            { border: solid 1px #000; background-color: #FFFACD; width: auto; }
+/* 
+========================================================================
+PRINT BUTTON
+========================================================================
+*/
+.squarebuttons a:visited,
+.squarebuttons a:link                   { cursor: pointer; font-weight: normal; display: inline-block; height: 28px; overflow: hidden; padding: 5px 10px 15px 31px; margin: 0 1px 0 0; color: #000; background-color: #ddd; background-position: left -1px; background-repeat: no-repeat;  }
+.squarebuttons a.printbutton:visited,
+.squarebuttons a.printbutton:link       { background-image: url(Images/button_print.png); }
+.squarebuttons input:hover,
+.squarebuttons a:hover                  { background-color: #fc5; cursor: pointer; }
 

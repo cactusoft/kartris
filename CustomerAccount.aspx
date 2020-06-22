@@ -3,7 +3,6 @@
 
 <%@ Register TagPrefix="user" TagName="KartrisLogin" Src="~/UserControls/Front/KartrisLogin.ascx" %>
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
-    <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
     <h1>
         <asp:Literal ID="litTitle" runat="server" Text="<%$ Resources:Kartris, PageTitle_MyAccount %>" /></h1>
     <p>

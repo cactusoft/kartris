@@ -17,6 +17,9 @@ PAGE - Home page and custom page (CMS)
 #homepage .news ul div.news_datecreated { display: block; margin: 5px 0 0 0; color: #090; font-size: 12px; }
 #homepage .news ul div.news_link a      { font-size: 14px; font-weight: bold; color: #000; margin: 5px 0 5px 0; }
 #homepage .news ul div.news_text        { line-height: 15px; font-size: 13px; }
+
+.orbit-container						{ background-color: #d5d5e6; height: 500px; }
+.orbit-container ul li div				{ max-width: 100%; width: 1400px; margin: 0 auto; }
 /* 
 ========================================================================
 CATEGORY - Single page category
@@ -108,6 +111,7 @@ SUBCATEGORIES - TEXT FORMAT
 PRODUCT - Single page product
 ========================================================================
 */
+.product								{ width: 1280px; max-width: 100%; margin: 0 auto; }
 .product #strapline                     { display: block; margin: 0 0 32px 0px; padding: 0; color: #111; font-weight: bold; font-size: 110%; font-style: italic; text-align: center; }
 .product #description                   { margin: 0 0 15px 0px }
 .product div.imagecolumn                { margin: 0 0 40px 0; padding: 10px 20px 0 0 !important; }
@@ -321,7 +325,7 @@ QUANTITY DISCOUNTS
 #section_quantitydiscounts th.price,
 #section_quantitydiscounts td.quantity,
 #section_quantitydiscounts th.quantity  { text-align: right }
-#section_quantitydiscounts td.price     { color: #090; font-weight: bold; }
+#section_quantitydiscounts td.price     { color: #000; font-weight: bold; }
 #section_quantitydiscounts p            { margin: 0 0 20px 0 }
 /* 
 ========================================================================
@@ -406,7 +410,7 @@ REVIEWS AND CROSS-SELLING
 .reviews .review .pad                   { padding: 0 0 10px 0 }
 .reviews .review .stars                 { display: block; margin-right: 2px; width: 100%; }
 .reviews .review .reviewer              { padding: 2px 0 5px 0; font-style: italic; color: #888; }
-.reviews .review .date                  { float: right; color: #090; }
+.reviews .review .date                  { float: right; color: #000; }
 .reviews .review strong                 { font-size: 110%; font-style: italic; color: #333; }
 /* Review add page */
 .addreview                              { margin: -2px 0 10px 0 }
@@ -523,7 +527,7 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket .total                          { text-align: right; white-space: nowrap; }
 .basket table.baskettable tr td div.name strong a,
 .basket table.baskettable tr td div.name strong
-										{ display: block; width: 100%; font-weight: bold; padding: 0; font-size: 1.0em; color: #000; letter-spacing: 0px; }
+										{ display: block; width: 100%; font-weight: bold; padding: 0; font-size: 108%; color: #000; letter-spacing: 0px; }
 .basket table.baskettable tr td div.details
 										{ display: block; width: 100%; margin: 0; }
 .basket table.baskettable tr td div.details div.info
@@ -581,8 +585,8 @@ BASKET (and ORDER DISPLAY in MY ACCOUNT)
 .basket table.baskettable tr.footerrow td span.totallabel
 										{ }
  
-#shippingestimate                       { margin: 45px 0 60px 0; padding: 20px 0 40px 0; }
-#shippingestimate select                { margin-bottom: 20px; }
+#shippingestimate                       { margin: 85px auto 90px auto; padding: 20px 0 40px 0; border: solid 3px #eee; padding: 30px; background-color: #fff; max-width: 900px; }
+#shippingestimate select                { margin-bottom: 2px; }
 #shippingestimate table                 { margin: 10px 0 0 0 }
 #shippingestimate table td.name         { font-weight: bold; color: #000; padding-right: 16px; }
 #shippingestimate table td.datafield    { padding-right: 12px }
@@ -592,6 +596,7 @@ CHECKOUT
 ========================================================================
 */
 /* shipping */
+#checkout								{ width: 1280px; margin: 0 auto; }
 #checkout .basket table.baskettable tr.product_row td div.info
 										{ }
 #checkout span.ship_currency            { display: block; padding: 5px; text-align: left; color: #bbb; font-weight: bold; padding: 5px 0 5px 0; }
@@ -689,7 +694,7 @@ POPUPS - customization, add to basket, etc.
 ========================================================================
 */
 .popup_customization textarea           { width: 100% }
-.popup_customization .price             { font-weight: bold; color: #090; }
+.popup_customization .price             { font-weight: bold; color: #000; }
 .popup_addtobasket                      { width: 350px; height: 120px; max-width: 100%; }
 .popup_addtobasket p                    { margin: 0 0 15px 0 }
 /* 

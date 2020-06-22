@@ -6,7 +6,6 @@
         <asp:UpdatePanel ID="updWishlist" runat="server" UpdateMode="Conditional">
             <ContentTemplate>
                 <user:PopupMessage ID="popMessage" runat="server" />
-                <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
                 <h1>
                     <asp:Literal ID="litTitle" runat="server" Text='<%$ Resources: Kartris, PageTitle_WishListLogin %>' /></h1>
                 <asp:Panel ID="pnlLogin" runat="server" DefaultButton="lnkWistListLogin">

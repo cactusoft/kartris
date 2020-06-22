@@ -7,7 +7,6 @@
     <div id="supporttickets">
         <asp:MultiView ID="mvwMain" runat="server" ActiveViewIndex="0">
             <asp:View ID="viwExist" runat="server">
-                <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
                 <asp:UpdatePanel ID="updMain" runat="server" UpdateMode="Conditional">
                     <ContentTemplate>
                         <h1>

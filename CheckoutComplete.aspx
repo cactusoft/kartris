@@ -10,10 +10,12 @@
             <asp:Label ID="lblResult" Text="<%$ Resources: Callback, ContentText_TransactionSuccess %>"
                 runat="server" /></h2>
         <p>
-            <asp:Literal ID="litOrderDetails" runat="server" /></p>
+            <asp:Literal ID="litOrderDetails" runat="server" />
+        </p>
         <p>
             <asp:Literal ID="litContentTextConfirmEmail" Text="<%$ Resources: Checkout, ContentText_ConfirmEmail %>"
-                runat="server" /></p>
+                runat="server" />
+        </p>
     </div>
     <user:EcommerceTracking runat="server" ID="UC_EcommerceTracking" />
 </asp:Content>

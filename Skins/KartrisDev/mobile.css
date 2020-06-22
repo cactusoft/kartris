@@ -5,7 +5,8 @@ BIG SCREENS
 ========================================================================
 */
 @media only screen and (min-width: 930px) {
-  .row { max-width: 100%; }
+  .row                      { max-width: 100%; }
+  table tr td               { padding: 11px 16px 15px 10px; }
   }
 
 /* 
@@ -24,13 +25,10 @@ MEDIUM SCREENS
     #header .row { padding: 5px 0; }
     #header .logo { width: 90px; }
     #compactbasket_totalprice  { display: none; }
-    #currencymenu { margin: 7px 7px 0 0; }
-    #languagemenu { margin: 10px 10px 0 0; }
-    #header i.fa-bars { font-size: 1.2em; margin: 3px 8px 0 0; }
 
     /* General */
-    h1 { font-size: 150%; letter-spacing: 1px; }
-    h2 { font-size: 110%; letter-spacing: 1px; }
+    h1 { font-size: 150%; }
+    h2 { font-size: 110%; }
 }
 
 /* 
@@ -72,5 +70,4 @@ GENERAL
 ========================================================================
 */
 table tr td                             { font-size: 100%; }
-table thead,
-table tfoot                             { background: #fff; }
+

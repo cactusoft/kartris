@@ -2,7 +2,6 @@
 	CodeFile="Search.aspx.vb" Inherits="Search" %>
 
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
-	<user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
 	<div class="search">
 		<h1>
 			<asp:Literal ID="litHeader" runat="server" Text="<%$ Resources: Search, PageTitle_ProductSearch %>"></asp:Literal>

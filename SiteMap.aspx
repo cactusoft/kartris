@@ -2,7 +2,6 @@
     CodeFile="SiteMap.aspx.vb" Inherits="SiteMap" %>
 
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
-    <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
     <div>
         <h2>
             <asp:Literal EnableViewState="False" ID="litContentTextProducts" runat="server" Text="<%$ Resources: Products, ContentText_Products %>" /></h2>

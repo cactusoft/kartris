@@ -4,7 +4,6 @@
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
     <asp:MultiView ID="mvwMain" runat="server" ActiveViewIndex="0">
         <asp:View ID="viwExist" runat="server">
-            <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
             <div class="comparison">
                 <h1>
                     <asp:Literal ID="litProductComparisonHeader" runat="server" Text="<%$ Resources:Products, PageTitle_ProductComparision  %>"></asp:Literal></h1>

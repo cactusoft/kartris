@@ -5,7 +5,6 @@
 <%@ Register TagPrefix="user" TagName="AddressInput" Src="~/UserControls/General/CustomerAddress.ascx" %>
 <%@ Register TagPrefix="user" TagName="AnimatedText" Src="~/UserControls/General/AnimatedText.ascx" %>
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
-    <user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
     <h1>
         <asp:Literal ID="litContentTextChangeCustomerCode" runat="server" Text='<%$ Resources: Kartris, ContentText_ChangeCustomerCode %>' /></h1>
     <div>

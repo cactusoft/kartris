@@ -4,25 +4,59 @@ MAIN LAYOUT
 ========================================================================
 */
 html                                    { height:100%; overflow-y:scroll; overflow-x: hidden; overflow:-moz-scrollbars-vertical; }
-body									{ background-color: #fff; }
-body.main                               { min-height: 100%; background: #ccc; padding: 0; }
-#container                              { background: #f9f9f8; position: relative; width: 100%; margin: 0 auto; min-height: 100%;}
-#centre_container                       { position: relative; min-height: 100%; display: block; padding: 40px 20px 90px 20px; width: 1400px; max-width: 100%; margin: 0 auto; }
+body									{ background-color: #f5f5f5; }
+body.main                               { min-height: 100%; padding: 0; }
+#container                              { position: relative; width: 100%; margin: 0 auto; min-height: 100%;}
+#centre_container                       { min-height: 100%; display: block; padding: 90px 20px 90px 20px; width: 100%; max-width: 100%; margin: 0 auto; }
+#centre_container.page-default          { width: 100% !important; padding: 90px 0 90px 0 !important; } /* this page-default style is applied dynamically in Template.master, we can use it to make home page full width*/
+#centre_container.page-default #pagecontent_pad     { padding: 0; } /* this page-default style is applied dynamically in Template.master, we can use it to make home page full width*/
+#centre_container.page-default #custompagetext      { margin: 0 0 10px 0; }
+
 /* 
 ========================================================================
-SECTIONS
+HEADER
 ========================================================================
 */
-#headerboxshadow                        { top: 0; left: 0; width: 100%; height: 80px; box-shadow: rgba(0,0,0,0.1) 0 2px 2px; position: fixed; z-index: 80; }
-#header                                 { top: 0; left: 0; max-width: 100%; padding: 20px 20px 0 20px; border-bottom: solid 1px #fff; background-color: #fff; position: fixed; width: 100%; z-index: 99; height: 80px; }
-#header .row                            { width: 1400px; max-width: 100%; margin: 0 auto; padding: 0 20px; }
+#header                                 { top: 0; background-color: #fff; position: absolute; width: 100%; max-width: 100%; z-index: 99; height: 90px; }
+#header .row                            { width: 100%; max-width: 100%; margin: 0 auto; padding: 30px 30px 30px 30px; }
 #header #hcol-left                      { text-align: left; }
 #header #hcol-centre                    { text-align: center; }
-#header .logo                           { margin: 5px 0 0 0; width: 120px; max-width: 30vw; float: left; }
-#header i.fas                           { font-size: 25px; color: #000; }
-#header #menus                          { white-space: nowrap; display: inline-block; width: 300px; float: left; padding: 10px 0 0 20px; }
-#header .big-menu-link                  { display: inline-block; color: #000; letter-spacing: 1px; padding: 5px 5px; font-size: 0.9em; font-weight: normal;  }
+#header #hcol-right                     { }
+#header .logo                           { margin: 8px 0 0 0; width: 160px; float: left; }
+#header i.fas                           { font-size: 21px; color: #000; }
+#header #menus                          { white-space: nowrap; display: inline-block; padding: 6px 0 0 0; margin: 0 auto; text-align: center; }
+#header #icons                          { width: 120px; float: right; }
+#header #icons #menuSearchLink          { display: inline-block; position: absolute; top: 10px; }
+#header .big-menu-link                  { display: inline-block; color: #000; padding: 5px 5px; font-size: 15px; font-weight: normal; margin: 0 5px; }
 #header a.big-menu-link:hover           { color: #777; }
+
+.header--fixed                          { transition: filter 0.3s, height 0.1s; position: fixed !important; z-index: 999; height: 55px !important; padding: 10px 10px !important; }
+
+#header .menuSpecial                    { top: 90px; left: 0; width: 100%; background-color: #fff; display: none; z-index: 90; height: auto; position: absolute; padding: 10px 8px 8px 8px; box-shadow: rgba(0,0,0,0.1) 0 5px 5px; } 
+#header.header--fixed .menuSpecial      { top: 55px; position: absolute; } 
+#header.header--fixed .row              { padding: 0 20px; }
+
+/* menus */
+#header .custommegamenu                 { text-align: center; }
+#header #categorymenu                   { width: 1400px; max-width: 100%; margin: 0 auto; }
+#header #categorymenu h2                { color: #000; font-size: 90%; text-transform: uppercase; font-weight: bold; }
+#header #categorymenu .custom-submenu   { width: 180px; display: inline-block; padding: 20px; text-align: left; vertical-align: top; } /* submenu formatting (columns) */
+#header #categorymenu ul                { margin: 0 auto 20px auto; padding: 0; }
+#header #categorymenu ul li             { list-style: none; text-align: left; margin: 0; padding: 0; line-height: 1.2; }
+#header #categorymenu ul li a           { font-size: 90%; margin: 0; }
+
+/* this is an invisible overlay we show when menu shows, use it to close mega menu if user clicks away from menu */
+#menuBackOverlay                        { position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(199,199,199,0.0); z-index: 15; } /* z-index must be less than menu link */
+
+/* 
+========================================================================
+BREADCRUMB NAVIGATION TRAIL
+========================================================================
+*/
+.breadcrumbtrail                        { margin: 130px 0 0 0; width: 100%; font-size: 80%; padding: 0 30px; display: block; text-decoration: none; font-size: 80%; }
+.breadcrumbtrail span span              { color: #000; text-transform: uppercase; display: inline-block; padding: 0 0 0 0;  }
+.breadcrumbtrail span span a            { color: #888; padding: 0 10px 0 0; display: inline-block; font-weight: normal; margin: 0; }
+.breadcrumbtrail span span a:after		{ content: "//"; margin: 0 0 0 10px; } /* breadcrumb separator */
 /* 
 ========================================================================
 FADE IN FADE OUT
@@ -36,34 +70,6 @@ FADE IN FADE OUT
     from { opacity: 1; }
     to   { opacity: 0; }
 }
-/* 
-========================================================================
-CHEVRON CLASS TO USE IN MENU LINKS, POINTS DOWN
-========================================================================
-*/
-.chevron                { border: solid 3px transparent; position:relative; display:inline-block; height:12px; width: 20px; }
-.chevron:before,
-.chevron:after          { position:absolute; display:block; content:""; border:6px solid transparent; }
-.chevron:before         { top:0; border-top-color:#666; }
-.chevron:after          { top:-2px; border-top-color:#fff; }
-/* 
-========================================================================
-CATEGORY NAVIGATION MENU
-The primary styles are created by foundation.css. We override some here.
-========================================================================
-*/
-.menuSpecial                            { width: 100%; box-shadow: 0 1px 3px rgba(0,0,0,0.2); background-color: #fff; border-bottom: solid 1px #5376fe; border-bottom: solid 1px #ccc; display: none; z-index: 90; height: auto; position: fixed; padding: 10px 8px 8px 8px; margin: 80px 0 0 0; } 
-.big-menu-link .chevron:before          { border-top-color:#000; }
-.big-menu-link .chevron:after           { border-top-color:#fff; }
-.big-menu-link:hover .chevron:before    { border-top-color:#777; }
-.big-menu-link:hover .chevron:after     { border-top-color:#fff; }
-#categorymenu                           { width: 1360px; display: inline-block; margin: 0 calc(50% - 680px); }
-#categorymenu .custom-submenu           { width: 220px; display: inline-block; float: left; padding: 20px; text-align: left; } /* submenu formatting (columns) */
-#categorymenu ul                        { margin: 0; padding: 0; }
-#categorymenu ul li                     { list-style: none; text-align: left; margin: 0; padding: 0; }
-
-/* this is an invisible overlay we show when menu shows, use it to close mega menu if user clicks away from menu */
-#menuBackOverlay                        { position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.7); z-index: 15; } /* z-index must be less than menu link */
 
 /* 
 ========================================================================
@@ -87,36 +93,33 @@ a.toggleswitch                          { display: inline-block; margin-top: 15p
 LOGIN STATUS
 ========================================================================
 */
-#loginstatus                            { float: right; display: inline-block; color: #000; padding: 5px 0 3px 0; height: 51px; }
+#loginstatus                            { float: right; display: inline-block; color: #000; padding: 5px 0 9px 9px; margin: 5px 10px 0 0; }
 #loginstatus strong                     { font-weight: normal; font-size: 0.9em; text-transform: none; }
 #loginstatus .loginbutton               { float: left; }
 #loginstatus .loginbutton span.icontext { display: none; }
 #loginstatus .loginbutton.loggedin      { }
 #loginstatus #username,
 #loginstatus #statuslabel               { padding: 5px 0 0 5px; float: left; color: #000; display: none; }
-#loginstatus:hover #account_menu        { width: 230px; margin: 40px 0 0 -170px; }
+#loginstatus:hover #account_menu        { width: 230px; margin: 30px 0 0 -170px; }
 /* 
 ========================================================================
 SEARCH BOX
 ========================================================================
 */
-#section_searchbox                      { margin: 3px 0 0 0; display: block; }
-#section_searchbox input.button         { width: 100%; float: right; background-position: right; background-image: url(Images/icon_search.png); background-repeat: no-repeat; background-color: #eee; color: transparent; font-weight: bold; margin: 0; height: 26px; }
-#section_searchbox input.button:hover   { border: none; }
+#section_searchbox                      { background-color: #f6f6f6; position: relative; margin: 3px 0 0 0; display: block; margin: 0 auto; width: 400px; max-width: 100%; height: 50px; }
+#section_searchbox .row                 { padding: 0; }
+#section_searchbox i.fas                { font-size: 160% !important; margin: 13px 0 0 6px; }
 #section_searchbox input[type="text"],
-#section_searchbox input[type="search"]   { box-shadow: none; height: 26px; background-color: #eee; border: none; }
-#section_searchbox input[type="text"]:focus,
-#section_searchbox input[type="search"]:focus
-                                        { background-color: #ddd; border: none; }
+#section_searchbox input[type="search"]   { box-shadow: none; border: none;  font-size: 200%; background-color: transparent; }
 /* 
 ========================================================================
 OTHER CONTROLS language, currency, etc.
 ========================================================================
 */
-#currencymenu                           { margin: 7px 20px 0 20px; width: 50px; overflow: hidden; float: right; }
+#currencymenu                           { margin: 7px 20px 0 20px; width: 90px; overflow: hidden; float: right; }
 #currencymenu select					{ color: #000; border: none; background-color: #fff; font-size: 0.9em; box-shadow: none; min-width: 70px; }
-#languagemenu                           { margin: 10px 30px 0 0; float: right; text-align: left; display: block; max-width: 110px; border: none; }
-#languagemenu .language-link            { display: inline-block; border: none; padding: 1px 3px; color: #000; text-transform: uppercase; font-size: 0.9em; }
+#languagemenu                           { font-size: 0.8em; margin: 8px 0 0 20px; float: right; text-align: left; display: block; max-width: 110px; border: none; border: solid 1px #000; }
+#languagemenu .language-link            { display: inline-block; border: none; padding: 1px 3px; color: #000; text-transform: uppercase; }
 #languagemenu .lang-selected            { background-color: #000; color: #fff; }
 #recentlyviewed                         { padding: 50px 0 40px 0; }
 /* 
@@ -124,11 +127,11 @@ OTHER CONTROLS language, currency, etc.
 TEMPLATE HOVERMENU
 ========================================================================
 */
-.hovermenu                      { display: none; font-size: 1.0em; }
+.hovermenu                      { display: none; font-size: 0.8em; }
 .hovermenu ul                   { margin: 0; padding: 0; }
 .hovermenu ul li                { list-style: none; float: none; clear: both; margin: 0 0 0 0; padding: 2px 0 0 0; }
 .hovermenu_holder:hover .hovermenu
-                                { animation-name: fadein; animation-duration: 0.54s; min-height: 50px; box-shadow: 0 1px 3px rgba(0,0,0,0.2); width: 270px; background-color: #fff; border: solid 1px #ddd; display: block; z-index: 999; text-align: left; height: auto; position: absolute; padding: 10px 8px 8px 8px; margin: 60px 0 0 -2px; border-radius: 5px; }     
+                                { animation-name: fadein; animation-duration: 0.54s; min-height: 50px; box-shadow: 0 1px 3px rgba(0,0,0,0.2); width: 270px; background-color: #fff; border: solid 1px #ddd; display: block; z-index: 999; text-align: left; height: auto; position: absolute; padding: 10px 8px 8px 8px; margin: 40px 0 0 -2px; border-radius: 5px; }     
 .hovermenu ul li a              { line-height: 1.0em; color: #000; padding: 3px 5px 3px 5px; margin: 2px 0; display: block; }
 .hovermenu ul li a:hover        { background-color: #000; color: #fff; }
 .hovermenu .button              { text-align: left; border-color: transparent; background-color: transparent; color: #000; width: 100%; font-weight: normal; letter-spacing: 1px; }
@@ -140,20 +143,20 @@ BASKET SUMMARY
 */
 #minibasketholder                       { position: relative; }
 .compactminibasket,
-#minibasket                             { float: right; width: auto; padding: 0; margin: 2px 0 0 0; height: 51px; }
-#minibasket #minibasket_header          { min-width: 32px; background-color: transparent; }
+#minibasket                             { float: right; width: auto; padding: 0; margin: 5px 0 0 0; }
+#minibasket #minibasket_header          { background-color: transparent; padding: 5px 0 9px 9px;  }
 #compactbasket_title                    { display: none; }
-#compactbasket_totalprice               { display: inline-block; font-size: 1.3em; color: #000; font-weight: bold; padding-left: 10px; z-index: 20; }
+#compactbasket_totalprice               { display: none; font-size: 1.3em; color: #000; font-weight: bold; padding-left: 10px; z-index: 20; }
 #compactbasket_noofitems span.bracket   { display: none; }
-#minibasket h4                          { margin: 0; padding: 0; }
+#minibasket h4                          { margin: 0; padding: 0; line-height: 0.8; vertical-align: top; letter-spacing: 0; }
 #minibasket h4 strong                   { color: #999; font-weight: bold; }
 
 .compactminibasket a,
 #minibasket h4 a                        { font-size: 12px; }
 #minibasket h4 a:hover                  { font-size: 12px; }
-#compactbasket_noofitems                { font-size: 15px; display: inline-block; position: absolute; background-color: #f00; color: #fff; border: solid 1px #fff; font-size: 1.0em; font-weight: bold; padding: 0 4px 1px 3px; margin: 15px 0 0 -13px; border-radius: 0; }
+#compactbasket_noofitems                { font-size: 15px; display: inline-block; position: absolute; background-color: #000; color: #fff; font-size: 1.0em; font-weight: bold; padding: 0 4px 1px 3px; margin: -6px 0 0 -6px; border-radius: 9px; line-height: 1.2; }
 #compactbasket_noofitems.basket-items-0 { visibility: hidden; }
-#minibasket:hover #minibasket_main      { margin: 12px 0 0 -185px; width: 280px; }
+#minibasket:hover #minibasket_main      { margin: 0 0 0 -235px; width: 280px; }
 #minibasket:hover                       { }
 #minibasket:hover h4 strong             { color: #000; }
 #minibasket:hover h4 a                  { color: #000; }
@@ -174,8 +177,8 @@ BASKET SUMMARY
 FOOTER
 ========================================================================
 */
-#footer                                 { background-color: #333; padding: 0; min-height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; }
-#footer_inside                          { min-height: 232px; max-width: 980px; margin: 0 auto; color: #555; padding: 10px 20px 0 20px; }
+#footer                                 { background-color: #fff; padding: 0; min-height: 332px; /*change this size depending on the height of the footer image you're using*/ width: 100%; }
+#footer_inside                          { min-height: 332px; max-width: 980px; margin: 0 auto; color: #555; padding: 10px 20px 0 20px; }
 #footer a                               { color: #ddd; font-weight: normal; }
 #footer #copyright                      { font-size: 90%; margin: 45px 0 20px 0; }
 #footer h2                              { color: #fff }
