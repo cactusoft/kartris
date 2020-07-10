@@ -31,12 +31,11 @@ Partial Class Back_BasketView
     Protected APP_PricesIncTax, APP_ShowTaxDisplay, APP_USMultiStateTax As Boolean
 
     Private arrPromotions As New List(Of Kartris.Promotion)
-    Private numCustomerID As Integer
     Private _objShippingDetails As Interfaces.objShippingDetails
 
     Private _ViewType As BasketBLL.VIEW_TYPE = BasketBLL.VIEW_TYPE.MAIN_BASKET
     Private _ViewOnly As Boolean
-
+    Private _UserID As Integer 'we send in the customer ID
     Private blnShowPromotion As Boolean = True
 
     Public Shared ReadOnly Property Basket() As kartris.Basket
@@ -89,6 +88,12 @@ Partial Class Back_BasketView
         End Get
         Set(ByVal value As Boolean)
             _ViewOnly = value
+        End Set
+    End Property
+
+    Public WriteOnly Property UserID() As Integer
+        Set(ByVal value As Integer)
+            _UserID = value
         End Set
     End Property
 
@@ -168,10 +173,11 @@ Partial Class Back_BasketView
     Public Event ItemQuantityChanged()
 
     Sub LoadBasket()
+
         SESS_CurrencyID = Session("CUR_ID")
         Dim blnIsInCheckout As Boolean = True
-        
-        Basket.DB_C_CustomerID = numCustomerID
+
+        Basket.DB_C_CustomerID = _UserID
 
         Call Basket.LoadBasketItems()
         BasketItems = Basket.BasketItems
@@ -193,7 +199,7 @@ Partial Class Back_BasketView
         Dim strCouponError As String = ""
         Call BasketBLL.CalculateCoupon(Basket, CouponCode & "", strCouponError, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
 
-        BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(numCustomerID)
+        BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(_UserID)
         Call BasketBLL.CalculateCustomerDiscount(Basket, BSKT_CustomerDiscount)
         Call BasketBLL.CalculateOrderHandlingCharge(Basket, Session("numShippingCountryID"))
 
@@ -238,6 +244,7 @@ Partial Class Back_BasketView
             If Basket.OrderHandlingPrice.IncTax = 0 Then phdOrderHandling.Visible = False Else phdOrderHandling.Visible = True
         End If
 
+        updPnlMainBasket.Update()
     End Sub
 
     Protected Sub Page_PreRender(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.PreRender
@@ -341,7 +348,7 @@ Partial Class Back_BasketView
         Session("CouponCode") = ""
         Call BasketBLL.CalculateCoupon(Basket, "", strCouponError, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
 
-        BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(numCustomerID)
+        BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(_UserID)
         Call BasketBLL.CalculateCustomerDiscount(Basket, BSKT_CustomerDiscount)
 
         Call BasketBLL.CalculateOrderHandlingCharge(Basket, Session("numShippingCountryID"))
@@ -432,7 +439,7 @@ Partial Class Back_BasketView
             Session("CouponCode") = Trim(txtCouponCode.Text)
         End If
 
-        BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(numCustomerID)
+        BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(_UserID)
         Call BasketBLL.CalculateCustomerDiscount(Basket, BSKT_CustomerDiscount)
 
         Call BasketBLL.CalculateOrderHandlingCharge(Basket, Session("numShippingCountryID"))
@@ -502,7 +509,7 @@ Partial Class Back_BasketView
         Dim strCouponError As String = ""
         Call BasketBLL.CalculateCoupon(Basket, Session("CouponCode") & "", strCouponError, (APP_PricesIncTax = False And APP_ShowTaxDisplay = False))
 
-        BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(numCustomerID)
+        BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(_UserID)
         Call BasketBLL.CalculateCustomerDiscount(Basket, BSKT_CustomerDiscount)
 
 
@@ -780,4 +787,5 @@ Partial Class Back_BasketView
         End If
 
     End Sub
+
 End Class

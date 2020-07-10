@@ -35,6 +35,12 @@ Partial Class UserControls_Back_CreateOrder
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        'Try to set User ID
+        Try
+            _UC_BasketMain.UserID = ReturnUserID()
+        Catch ex As Exception
+
+        End Try
         If Not Page.IsPostBack Then
 
             Session("OrderID") = 0
@@ -129,7 +135,7 @@ Partial Class UserControls_Back_CreateOrder
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub LoadBasket()
-        Dim objBasket As kartris.Basket = _UC_BasketMain.GetBasket
+        Dim objBasket As Kartris.Basket = _UC_BasketMain.GetBasket
         Dim sessionID As Long = Session("SessionID")
 
         objBasket = Session("Basket")
@@ -146,6 +152,7 @@ Partial Class UserControls_Back_CreateOrder
         'recalculate and refresh display
         _UC_BasketMain.LoadBasket()
         If chkSameShippingAsBilling.Checked Then RefreshShippingInfo("billing") Else RefreshShippingInfo()
+
     End Sub
 
     ''' <summary>
@@ -258,6 +265,16 @@ Partial Class UserControls_Back_CreateOrder
 
             If chkSameShippingAsBilling.Checked Then RefreshShippingInfo("billing") Else RefreshShippingInfo()
             _UC_AutoComplete_Item.SetFoucs()
+
+
+            'Try to set User ID
+            Try
+                _UC_BasketMain.UserID = ReturnUserID()
+            Catch ex As Exception
+
+            End Try
+
+            LoadBasket()
         Else
             _UC_BillingAddress.Clear()
             _UC_ShippingAddress.Clear()
@@ -1359,4 +1376,14 @@ Partial Class UserControls_Back_CreateOrder
         If Not chkSameShippingAsBilling.Checked And _UC_ShippingAddress.SelectedAddress IsNot Nothing Then RefreshShippingInfo("shipping")
         RefreshShippingInfo("shipping")
     End Sub
+
+    Public Function ReturnUserID() As Integer
+        Dim strUserID As String = ""
+        Try
+            strUserID = litOrderCustomerID.Text
+            Return CInt(strUserID)
+        Catch ex As Exception
+            Return 0
+        End Try
+    End Function
 End Class
