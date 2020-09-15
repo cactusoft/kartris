@@ -88,7 +88,11 @@ Public Class Image : Implements IHttpHandler, System.Web.SessionState.IReadOnlyS
         Else
             'We got full path, let's just tweak it for use
             'here
-            strImagePath = HttpContext.Current.Server.MapPath((Replace(strFullPath, "~/", "")))
+            Try
+                strImagePath = HttpContext.Current.Server.MapPath((Replace(strFullPath, "~/", "")))
+            Catch ex As Exception
+                'Folder for product or cat images doesn't exist
+            End Try
         End If
 
         'If strImagePath is blank, must have no image so show holder
