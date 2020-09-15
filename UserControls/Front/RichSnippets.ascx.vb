@@ -41,6 +41,7 @@ Partial Class UserControls_Front_RichSnippets
         litProductMain.Text = litProductMain.Text.Replace("[product_desc]", Replace(CkartrisDisplayFunctions.StripHTML(FixNullFromDB(dr("P_Desc"))), """", "\"""))
         litProductMain.Text = litProductMain.Text.Replace("[sku]", FixNullFromDB(dr("P_SKU")))
         litProductMain.Text = litProductMain.Text.Replace("[category]", FixNullFromDB(dr("P_Category")))
+        litProductMain.Text = litProductMain.Text.Replace("/", "\/") 'JSON needs forward slashes escaped, could be in product name, description or SKU, or even category
 
         '' Image
         Dim dirFolder As New DirectoryInfo(Server.MapPath(CkartrisImages.strProductImagesPath & "/" & _ProductID & "/"))
@@ -49,6 +50,7 @@ Partial Class UserControls_Front_RichSnippets
                 For Each objFile In dirFolder.GetFiles()
                     litImage.Text = litImage.Text.Replace(
                         "[image_source]", Replace(CkartrisImages.strProductImagesPath, "~/", CkartrisBLL.WebShopURL()) & "/" & _ProductID & "/" & objFile.Name)
+                    litImage.Text = litImage.Text.Replace("/", "\/") 'JSON needs forward slashes escaped
                     Exit For
                 Next
             Else

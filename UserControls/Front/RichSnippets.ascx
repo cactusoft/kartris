@@ -6,7 +6,8 @@
   "@type": "Product",
   "name": "[product_name]",
   "description": "[product_desc]",
-  "mpn": "[sku]"</asp:Literal><asp:Literal ID="litImage" runat="server">,
+  "mpn": "[sku]",
+  "sku": "[sku]",</asp:Literal><asp:Literal ID="litImage" runat="server">
   "image": [
 	"[image_source]"
   ]</asp:Literal><asp:Literal ID="litReview" runat="server">,
