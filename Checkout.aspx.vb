@@ -1684,7 +1684,8 @@ Partial Class _Checkout
                         'User not logged in
                     End Try
 
-                    objOrder.WebShopURL = Page.Request.Url.ToString.Replace("?new=y", "")
+                    'objOrder.WebShopURL = Page.Request.Url.ToString.Replace("?new=y", "")
+                    objOrder.WebShopURL = WebShopURL() & "Checkout.aspx"
 
                     'serialize order object and store it as a session value
                     Session("objOrder") = Payment.Serialize(objOrder)
