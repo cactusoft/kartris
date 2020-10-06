@@ -7,38 +7,32 @@ p,
 td,
 th,
 select,
-body                                    { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; line-height: 17px; font-size: 13px; font-weight: normal; color: #333; padding: 0; margin: 0; }
-p                                       { margin: 5px 0 10px 0 }
-h1                                      { font-family: Heebo, Segoe UI, Arial, Helvetica, Sans-Serif; letter-spacing: 0 !important; text-align: left; font-size: 230%; letter-spacing: 0; color: #000; margin: 0; padding: 15px 0 10px 0; display: block; font-weight: 700; line-height: 33px; }
-h2                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; letter-spacing: 1px; font-size: 130%; color: #000; margin: 5px 0 5px 0; padding: 0; font-weight: 700; }
+body                                    { font-family: Arial, Segoe UI, Helvetica, Sans-Serif; font-weight: 400; line-height: 1.5; font-size: 0.91em; color: #333; padding: 0; margin: 0; }
+p                                       { margin: 5px 0 10px 0; }
+h1                                      { font-family: 'Heebo', Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 700; text-align: left; font-size: 210%; letter-spacing: 0; color: #000; margin: 0; padding: 25px 0 30px 0; display: block; line-height: 33px; }
+h2                                      { font-family: 'Heebo', Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 700; letter-spacing: 0; font-size: 130%; color: #000; margin: 5px 0 5px 0; padding: 0;  }
 .h2_light_extra                         { color: #aaa; font-weight: bold; }
-h3                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 135%; font-weight: normal; margin: 0 0 5px 0; padding: 0; }
+h3                                      { font-weight: 400; font-size: 100%; margin: 0 0 5px 0; padding: 0; }
 h4,
-h2.blockheader                          { overflow: hidden; text-align: center; font-family: Heebo, sans-serif; font-weight: 400; letter-spacing: 2px; text-transform: uppercase; font-size: 100%; color: #000; margin: 0; padding: 0 0 15px 0; }
+h2.blockheader                          { font-family: 'Heebo', Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 400; letter-spacing: 2px; font-size: 90%; color: #000; overflow: hidden; text-align: center; padding: 0 0 15px 0; }
 h4:before,
 h2.blockheader:before,
 h4:after,
-h2.blockheader:after                    { background-color: #333; content: ""; display: inline-block; height: 1px; position: relative; vertical-align: middle; width: 50%; }
+h2.blockheader:after                    { background-color: #ddd; content: ""; display: inline-block; height: 1px; position: relative; vertical-align: middle; width: 50%; }
 h4:before,
 h2.blockheader:before                   { right: 0.5em; margin-left: -50%; }
 h4:after,
 h2.blockheader:after                    { left: 0.5em; margin-right: -50%; }
 
-h5                                      { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; margin: 0px 0px 5px 0px; color: #000; text-transform: uppercase; padding: 2px 2px 2px 0px; text-align: left; }
+
+h5                                      { font-family: 'Heebo', Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 700; margin: 0px 0px 5px 0px; color: #000; text-transform: uppercase; padding: 2px 2px 2px 0px; text-align: left; }
 pre                                     { color: #008800 }
 iframe                                  { border: none; overflow: hidden; display: inline;}
 iframe body                             { padding: 5px 0 0 0;  overflow: hidden; }
 .strong                                 { font-weight: bold }
 .floatright                             { float: right }
 ul, ol, dl                              { font-size: inherit; }
-/* 
-========================================================================
-BREADCRUMBS
-========================================================================
-*/
-.breadcrumbtrail                        { padding: 5px 17px 5px 0; display: block; font-weight: normal; text-decoration: none; margin: 15px 0 9px 0px; font-size: 100%; }
-.breadcrumbtrail span span              { color: #000; display: inline-block; padding: 0 0 0 6px; }
-.breadcrumbtrail span span a            { color: #888; padding: 0 17px 0 0; display: inline-block; font-weight: normal; margin: 0; background-image: url(Images/breadcrumb_back.png); background-position: right center; background-repeat: no-repeat; }
+
 /* 
 ========================================================================
 HYPERLINKS
@@ -48,9 +42,9 @@ a:link,
 a:visited                               { text-decoration: none; color: #333; outline: 0; }
 a:hover                                 { text-decoration: none; color: #888; }
 a.link2,
-span.link2 a                            { padding: 2px 8px; text-transform: uppercase; font-size: 11px; font-weight: normal; letter-spacing: 1px; text-decoration: none; color: #000; background-color: #ccc; margin-right: 10px; border-radius: 0; }
+span.link2 a                            { padding: 2px 8px; text-transform: uppercase; font-size: 11px; font-weight: normal; letter-spacing: 1px; text-decoration: none; color: #000; background-color: #ddd; margin-right: 10px; border-radius: 0; }
 a.link2:hover,
-span.link2:hover a                      { background-color: #000; color: #fff; }
+span.link2:hover a                      { background-color: #444; color: #fff; }
 /* 
 ========================================================================
 GENERAL
@@ -68,7 +62,7 @@ TABLES
 ========================================================================
 */
 table                                   { border: none; background-color: transparent; border-collapse: separate; width: 100%; max-width: 100%; }
-table tr td                             { background-color: transparent; border-bottom: none; vertical-align: top; padding: 5px 10px 5px 5px; }
+table tr td                             { background-color: #fff; border-bottom: solid 1px #ddd; vertical-align: top; padding: 5px 10px 5px 5px; }
 table tr.even,
 table tr.alt,
 table tr:nth-of-type(2n)                { background-color: transparent; }
@@ -77,7 +71,7 @@ table tfoot,
 table tr.headrow,
 table thead tr                          { background-color: transparent; }
 table tr.headrow th,
-table thead tr th                       { background-color: transparent; border-bottom: solid 1px #333; line-height: 12px; padding: 5px 10px 4px 5px; font-weight: normal; color: #888; text-align: left; text-transform: uppercase; font-size: 85%;}
+table thead tr th                       { background-color: transparent; border-bottom: solid 1px #000; padding: 5px 10px 4px 5px; font-weight: normal; color: #888; text-align: left; text-transform: uppercase; font-size: 85%;}
 table td,
 table th                                { padding: 3px }
 table td strong                         { color: #000 }
@@ -117,10 +111,10 @@ select.fullwidth,
 input.fullwidth                         { width: 100% }
 select:focus,
 input:focus,
-textarea:focus                          { color: #000; background-color: #fff; border: solid 1px #c00; }
-.button                                 { font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; text-transform: uppercase; border: solid 1px #ccc; background-color: #ccc; color: #000; font-weight: normal; letter-spacing: 1px; padding: 5px 17px; margin: 1px 0px 1px 2px; width: auto; display: inline-block; }
+textarea:focus                          { color: #000; background-color: #fff; border: solid 1px #444; }
+.button                                 { font-family: 'Heebo', Segoe UI, Arial, Helvetica, Sans-Serif; font-weight: 400; font-size: 85%; letter-spacing: 1px;  text-transform: uppercase; border: solid 1px #ccc; background-color: #ccc; color: #000; padding: 5px 17px; margin: 1px 0px 1px 2px; width: auto; display: inline-block; }
 .button:focus,
-.button:hover                           { background-color: #000; color: #fff; border: solid 1px #000;  }
+.button:hover                           { background-color: #444; color: #fff; border: solid 1px #444;  }
 input.cancelbutton                      { background-color: #ddd; border-color: #bbb; color: #666; }
 input.highpriority                      { }
 .inputform p                            { margin: 5px 0 15px 0 }
@@ -151,7 +145,7 @@ input[type="search"],
 input[type="tel"],
 input[type="time"],
 input[type="url"],
-textarea                                { font-size: 14px; border: solid 1px #bbb; background-color: #f5f5f5; box-shadow: inset 3px 3px 3px #ccc; height: auto; padding: 3px; color: #333; }
+textarea                                { border: solid 1px #ccc; background-color: #f5f5f5; box-shadow: inset 3px 3px 3px #ccc; height: auto; min-height: 20px; padding: 3px !important; color: #333; }
 select:focus,
 input[type="text"]:focus,
 input[type="password"]:focus,
@@ -212,7 +206,7 @@ v2.9 This replaces the popup we used to use
 .main_product_image .clearing-assembled .carousel           { }
 .clearing-assembled .clearing-container .carousel           { margin-top: 10px; background: #fff; }
 .clearing-assembled .clearing-container .carousel > ul      { width: auto !important; } /* centre the thumbs */
-.carousel > ul li                                           { background-color: #fff; list-style: none; height: 110px; width: 110px; padding: 3px; margin: 8px 4px 20px 0; border: solid 1px #ccc; box-shadow: 1px 1px 6px rgba(0,0,0,0.1); overflow: hidden; }
+.carousel > ul li                                           { background-color: #fff; list-style: none; height: 110px; width: 110px; margin: 0 4px 20px 0; overflow: hidden; }
 .clearing-assembled .clearing-container .carousel > ul li   { list-style: none; border: solid 1px #444; display: block; height: 110px; width: 110px; margin-right: 4px; overflow: hidden; }
 .clearing-assembled .clearing-container .carousel > ul li:hover { border: solid 1px #000; }
 .clearing-assembled .clearing-container .carousel > ul li.fix-height img
@@ -263,7 +257,7 @@ ACCORDION AJAX CONTROL
 ========================================================================
 */
 .accordionHeader,
-.accordionHeaderSelected                { cursor: pointer; }
+.accordionHeaderSelected                { border-top: solid 1px #ddd; cursor: pointer; }
 .accordionHeader h2,
 .accordionHeaderSelected h2             { cursor: pointer; margin-bottom: 10px; padding: 3px 0 0 0; }
 .accordionHeader h2:before              { content: "[+]"; color: #666; font-size: 70%; width: 25px; display: inline-block; }
@@ -294,8 +288,8 @@ POPUP MESSAGE
 ========================================================================
 */
 #largeimagepopup                        { overflow-y: hidden; overflow: hidden; background-image: none; }
-.popup_background                       { background-color: #000; filter: alpha(opacity=30); opacity: 0.3; }
-.popup                                  { background-color: #fff; border: solid 2px #222; padding: 45px 10px 13px 10px; width: 650px; max-width: 100%; max-height: 100%; min-height: 150px; text-align: left; top: 0px; left: 0px; overflow-x: hidden; }
+.popup_background                       { background-color: #fff; filter: alpha(opacity=80); opacity: 0.8; }
+.popup                                  { box-shadow: rgba(0,0,0,0.3) 1px 1px 8px; background-color: #fff ; border: solid 1px #222; padding: 45px 10px 13px 10px; width: 650px; max-width: 100%; max-height: 100%; min-height: 150px; text-align: left; top: 0px; left: 0px; overflow-x: hidden; }
 .popup h2                               { position: absolute; left: 10px; top: 0; padding: 10px 0 10px 0; margin: 0px; font-size: 125%; }
 .popup p                                { padding: 10px 0 0 0; margin: 0; }
 .popup strong                           { color: #000 }

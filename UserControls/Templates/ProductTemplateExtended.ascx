@@ -35,9 +35,7 @@
                         <user:ProductVersions ID="UC_ProductVersions" runat="server" ShowMediaGallery="False" />
                     </ContentTemplate>
                 </asp:UpdatePanel>
-
             </div>
-
         </div>
     </div>
 </div>

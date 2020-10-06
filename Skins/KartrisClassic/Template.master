@@ -14,7 +14,7 @@
 	<!--
 	========================================================================
 	KARTRIS by cactusoft
-	Copyright 2020 CACTUSOFT - www.kartris.com
+	Copyright 2018 CACTUSOFT - www.kartris.com
 	This skin is licensed under a
 	Creative Commons Attribution-ShareAlike 3.0 Unported License
 
@@ -42,9 +42,11 @@
 			EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"
 			CombineScripts="true" EnableViewState="True">
 			<Scripts>
-				<asp:ScriptReference Path="~/JavaScript/k30000/modernizr.js" />
-				<asp:ScriptReference Path="~/JavaScript/k30000/jquery-2.2.4.min.js" />
-				<asp:ScriptReference Path="~/JavaScript/k30000/foundation.min.js" />
+				<asp:ScriptReference Path="~/JavaScript/k29003/modernizr.js" />
+				<asp:ScriptReference Path="~/JavaScript/k29003/jquery.js" />
+				<asp:ScriptReference Path="~/JavaScript/k29003/foundation.min.js" />
+				<%-- Fastclick was breaking DropdownLists in Firefox, we had to double click the dropdowns do trigger them --%>
+				<%--<asp:ScriptReference Path="~/JavaScript/k29003/fastclick.js" />--%>
 			</Scripts>
 		</ajaxToolkit:ToolkitScriptManager>
 		<script type="text/javascript">

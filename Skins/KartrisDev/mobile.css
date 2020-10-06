@@ -17,18 +17,37 @@ MEDIUM SCREENS
 @media only screen and (max-width: 930px) {
 
     /* page layout */
-    #centre_container { padding: 10px 20px 90px 20px; }
+    #centre_container               { padding: 5px 5px 5px 5px; }
+    #centre_container.page-default  { padding: 50px 0 50px 0 !important; } 
+    #pagecontent_pad                { min-height: 200px; padding: 5px; }
 
     /* header */
-    #headerboxshadow { height: 50px; }
-    #header { padding: 0; height: 50px; }
-    #header .row { padding: 5px 0; }
-    #header .logo { width: 90px; }
-    #compactbasket_totalprice  { display: none; }
+    #header                         { padding: 3px 10px; height: 50px; }
+    .page-loading-container         { top: 50px; height: calc(100% - 50px); /* 51px = header height plus little for dropshadow */ }
+
+    #header .row                    { padding: 5px; }
+    #header .logo                   { width: 110px; }
+    .header--fixed                  { height: 45px !important; padding: 8px 8px !important; }
+    #header.header--fixed .row      { padding: 0 3px; }
+    #loginstatus                    { margin: 1px 0 0 0; }
+    #header #icons #menuSearchLink  { top: 6px; }
+    #minibasket                     { margin: 2px 0 0 0; }
+    #header .menuSpecial            { top: 49px; } 
+    #header.header--fixed .menuSpecial
+                                    { top: 44px;  } 
+    .breadcrumbtrail                { margin: 60px auto 0 auto; padding: 0 13px; }
+
+    /* Products*/
+    .products_tabular .item         { width: calc(25% - 20px); }
+    .product div.imagecolumn .imageholder
+                                    { margin-left: 0; width: 100%; }
 
     /* General */
     h1 { font-size: 150%; }
     h2 { font-size: 110%; }
+
+    /* sections */
+    .products_shortened .item { width: calc(50% - 20px); }
 }
 
 /* 
@@ -42,27 +61,19 @@ SMALL SCREENS
 
     /* Products*/
     .products_shortened .item,
-    .subcategories_shortened .item          { width: 100%; }
-    .products_tabular .item                 { width: 100%; }
+    .subcategories_shortened .item          { width: 100%; max-width: 100%; }
+    .products_tabular .item                 { width: calc(50% - 10px); }
     .versions td.info                       { max-width: 200px; overflow: hidden; }
 
     .Kartris-DetailsView-Value { width: 270px; }
     ul { max-width: 100%; }
-    #pagecontent_pad { min-height: 200px; padding-bottom: 15px; }
+
     .versions td.info { max-width: 200px; overflow: hidden; }
     .basket td.quantity input { width: 32px; text-align: right; }
     select,
     input { width: 100%; }
     #footer_inside { margin: 0; }
 }
-
-/* 
-========================================================================
-ORBIT SLIDESHOW
-========================================================================
-*/
-#front-slideshow                        { background-color: #e5e5e5; z-index: 0; }
-#front-slideshow li                     { padding: 10px 80px; min-height: 200px; }
 
 /* 
 ========================================================================

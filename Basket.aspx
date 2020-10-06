@@ -2,7 +2,7 @@
     CodeFile="Basket.aspx.vb" Inherits="Basket" %>
 
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
-    <div id="page_category">
+    <div id="page_basket">
         <h1>
             <asp:Literal ID="litTitle" runat="server" Text='<% $Resources: Basket, PageTitle_ShoppingBasket %>'></asp:Literal></h1>
         <user:BasketView ID="UC_BasketMain" runat="server" ViewType="MAIN_BASKET" />

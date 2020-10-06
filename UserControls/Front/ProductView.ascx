@@ -78,7 +78,7 @@
                 IMAGE COLUMN
                 =====================================
                 --%>
-                <div class="<asp:Literal runat='server' id='litImageColumnClasses' text='imagecolumn small-12 medium-4 large-6 columns'/>">
+                <div class="<asp:Literal runat='server' id='litImageColumnClasses' text='imagecolumn small-12 medium-12 large-6 columns'/>">
                     <div class="main_product_image">
                         <asp:UpdatePanel ID="updImages" runat="server" UpdateMode="Conditional">
                             <ContentTemplate>
@@ -113,7 +113,7 @@
                 TEXT/DETAILS COLUMN
                 =====================================
                 --%>
-                <div class="<asp:Literal runat='server' id='litTextColumnClasses' text='textcolumn small-12 medium-8 large-6 columns'/>">
+                <div class="<asp:Literal runat='server' id='litTextColumnClasses' text='textcolumn small-12 medium-12 large-6 columns'/>">
                     <ajaxToolkit:TabContainer CssClass=".tab" ID="tbcProduct" runat="server" OnDemand="false" OnClientActiveTabChanged="" AutoPostBack="false" EnableTheming="False">
                         <%--
                 =====================================

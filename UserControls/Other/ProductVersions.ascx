@@ -74,13 +74,13 @@
                                 <!-- single price -->
                                 <div class="boxinset line">
                                     <div class="addtobasket">
-
                                         <asp:UpdatePanel ID="updVersionQty1" runat="server" UpdateMode="Conditional" RenderMode="Block">
                                             <ContentTemplate>
                                                 <%  'Hide 'add' button and selector if in cataloguemode or for partial access
                                                     '(hidden prices unless user logged in)
                                                     If KartSettingsManager.GetKartConfig("frontend.cataloguemode") <> "y" And Not CheckHideAddButton() Then%>
                                                 <% 'the div below is hidden if it is a 'call for prices' version %>
+                                                
                                                 <div class="selector" runat="server">
                                                     <asp:PlaceHolder ID="phdNotOutOfStock1" runat="server" Visible='<%# Iif((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) And (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y"), False, True) %>'>
                                                         <asp:PlaceHolder EnableViewState="false" ID="phdCustomizable" runat="server" Visible='<%# Eval("V_CustomizationType") <> "n" %>'>
@@ -253,7 +253,7 @@ ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) <> 1 Then
                                                         MEDIA GALLERY
                                                         =====================================
                                                     --%>
-                                                    <asp:PlaceHolder ID="phdMediaGallery" runat="server">
+                                                    <asp:PlaceHolder ID="phdMediaGallery" runat="server" Visible="false">
                                                         <user:MediaGallery ID="UC_VersionMediaGallery" ParentID='<%# Eval("V_ID") %>' ParentType="v"
                                                             runat="server" />
                                                     </asp:PlaceHolder>

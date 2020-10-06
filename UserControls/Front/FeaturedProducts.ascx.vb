@@ -103,6 +103,10 @@ Partial Class UserControls_Skin_FeaturedProducts
                 rptTabular.DataSource = tblFeaturedProducts
                 rptTabular.DataBind()
                 mvwFeaturedProducts.SetActiveView(viwTabular)
+            Case "c"
+                rptCarousel.DataSource = tblFeaturedProducts
+                rptCarousel.DataBind()
+                mvwFeaturedProducts.SetActiveView(viwCarousel)
             Case Else
                 'litGroupName.Visible = False
         End Select

@@ -1,19 +1,13 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="SubCategoryTemplateShortened.ascx.vb" Inherits="SubCategoryTemplateShortened" %>
 <!-- subcat shortened template start -->
-<div class="item loadspinner">
-    <div class="box">
-        <div class="pad">
-            <asp:Literal ID="litCategoryID" runat="server" Visible="false" Text='<%# Eval("CAT_ID") %>'></asp:Literal>
-            <user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="False" />      
-            <h2><asp:HyperLink ID="lnkCategoryName" runat="server" Text='<%# Server.HtmlEncode(Eval("CAT_Name")) %>'></asp:HyperLink></h2>
+<div class="box item loadspinner">
+    <div class="pad">
+        <asp:Literal ID="litCategoryID" runat="server" Visible="false" Text='<%# Eval("CAT_ID") %>'></asp:Literal>
+        
+        <div class="imageblock"><user:ImageViewer ID="UC_ImageView" runat="server" EnableViewState="False" /></div>
+        <asp:HyperLink ID="lnkCategoryName" runat="server" Text='<%# "<h2>" & Server.HtmlEncode(Eval("CAT_Name")) & "</h2>" %>' CssClass="details"></asp:HyperLink>
 
-            <asp:Literal ID="litCategoryDescHidden" runat="server" Text='<%# Eval("CAT_Desc") %>' Visible="false"></asp:Literal>
-<%--            <% If Len(litCategoryDesc.Text) > 0 Then%>
-                <div class="description">
-                <asp:Literal ID="litCategoryDesc" runat="server"></asp:Literal>
-                </div>
-            <% End if %>--%>
-        </div>
+        <asp:Literal ID="litCategoryDescHidden" runat="server" Text='<%# Eval("CAT_Desc") %>' Visible="false"></asp:Literal>
     </div>
 </div>
 <!-- subcat shortened template end -->

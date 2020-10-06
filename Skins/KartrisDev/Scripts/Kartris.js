@@ -1,5 +1,11 @@
-﻿$(document).ready(function () {
+﻿
+$(document).ready(function () {
     $(document).foundation();
+    // page loading spinner
+    $(window)
+        .load(function () {
+            $(".page-loading-container").fadeOut("500");
+        });
 });
 $(document).foundation({
     offcanvas: {
@@ -105,6 +111,17 @@ $(document).ready(function () {
                 : $("div#header").removeClass("header--fixed");
         });
 
+});
+
+// Home page featured products carousel
+// Make sure your template references
+// JavaScript/k30001/filmroll.jquery.min.js
+$(function () {
+    fr = new FilmRoll({
+        container: '#cntMain_UC_FeaturedProducts_updMain',
+        height: 540,
+        pager: false
+    });
 });
 
 

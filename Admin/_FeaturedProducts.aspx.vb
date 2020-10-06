@@ -128,7 +128,7 @@ Partial Class Admin_FeaturedProducts
         strAutoCompleteText = txtProduct.Text
         Dim numIndex = strAutoCompleteText.LastIndexOf("(")
 
-        If txtFeaturedLevel.Text > 0 Then
+        If Len(txtFeaturedLevel.Text) > 0 Then
             If strAutoCompleteText <> "" AndAlso strAutoCompleteText.Contains("(") _
                 AndAlso strAutoCompleteText.Contains(")") Then
                 Try

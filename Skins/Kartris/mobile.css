@@ -5,33 +5,12 @@ BIG SCREENS
 ========================================================================
 */
 @media only screen and (min-width: 930px) {
-  .row { max-width: 100%; }
-  }
+    .row                      { max-width: 100%; }
+    table tr td               { padding: 4px 16px 7px 10px; }
 
-/* 
-========================================================================
-CATEGORY MENU
-========================================================================
-*/
-@media only screen and (max-width: 1200px) {
-
-    #header                                 { height: 50px; border-bottom: solid 1px #333; position: fixed; width: 100%; z-index: 2; }
-    #header_inner                           { height: 50px; }
-    #header .logo                           { width: 230px; margin: 12px 0 0 0; }
-    #header #second_logo_bar                { display: block; }
-    #centre_container                       { min-height: calc(100% - 50px); padding: 60px 0 0 0; }
-    #h_bottom                               { display: none; }
-    #compactbasket_totalprice               { display: none; }
-
-    #searchbox_holder                       { display: none; }
-    #searchlink                             { display: inline-block; margin: 16px 16px 0 0; }
-    #minibasket                             { width: 40px; display: inline-block; margin: 12px 0 0 0; height: 41px; float: right; }
-    #compactbasket_noofitems                { top: 10px; }
-
-    .left-off-canvas-menu #categorymenu     { display: block; }
-
-    #loginstatus                            { margin-left: 10px; }
-    #loginstatus span                       { display: none !important; }
+    /* Products*/
+    .products_shortened .item .details,
+    .subcategories_shortened .item .details { height: 35%; }
   }
 
 /* 
@@ -41,64 +20,104 @@ MEDIUM SCREENS
 */
 @media only screen and (max-width: 930px) {
 
+    /* page layout */
+    #centre_container               { padding: 5px 5px 5px 5px; }
+    #centre_container.page-default  { padding: 50px 0 50px 0 !important; } 
+    #pagecontent_pad                { min-height: 200px; padding: 5px; }
+
+    /* header */
+    #header                         { padding: 3px 10px; height: 50px; }
+    .page-loading-container         { top: 50px; height: calc(100% - 50px); /* 51px = header height plus little for dropshadow */ }
+
+    #header .row                    { padding: 5px; }
+    #header .logo                   { width: 110px; }
+    .header--fixed                  { height: 45px !important; padding: 8px 8px !important; }
+    #header.header--fixed .row      { padding: 0 3px; }
+    #loginstatus                    { margin: 1px 0 0 0; }
+    #header #icons #menuSearchLink  { top: 6px; }
+    #minibasket                     { margin: 2px 0 0 0; }
+    #header .menuSpecial            { top: 49px; } 
+    #header.header--fixed .menuSpecial
+                                    { top: 44px;  } 
+    .breadcrumbtrail                { margin: 60px auto 0 auto; padding: 0 13px; }
+
     /* Products*/
     .products_shortened .item,
-    .subcategories_shortened .item          { width: calc(33% - 6px); }
-    .products_tabular .item                 { width: calc(50% - 10px); }
-    .versions td.info                       { max-width: 200px; overflow: hidden; }
+    .subcategories_shortened .item  { width: calc(25% - 20px); }
+    .products_shortened .item .details,
+    .subcategories_shortened .item .details { height: 25%; }
+    .products_shortened .item .details h2,
+    .subcategories_shortened .item .details h2   { padding: 0 0 0 0; }
+    .product div.imagecolumn .imageholder
+                                    { margin-left: 0; width: 100%; }
 
-    /* Misc*/
-    .Kartris-DetailsView-Value              { width: 270px; }
-    #pagecontent_pad                        { min-height: 200px; padding-bottom: 15px; }
-    .basket td.quantity input               { width: 32px; text-align: right; }
-    select,
-    input                                   { width: 100%; }
-    #footer_inside                          { margin: 0; }
+    .products_tabular .item                 { width: calc(25% - 10px); }
+    .product div.imagecolumn .media_gallery { width: 100%; float: right; }
 
-    /* Basket */
-    #compactbasket_totalprice               { display: none; }
+    /* General */
+    h1 { font-size: 150%; }
+    h2 { font-size: 110%; }
 
+}
 
-  }
+/* 
+========================================================================
+MEDIUM SMALL SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 768px) {
+
+    .products_shortened .item .details,
+    .subcategories_shortened .item .details { height: 35%; }
+
+}
 
 /* 
 ========================================================================
 SMALL SCREENS
 ========================================================================
 */
-@media only screen and (max-width: 640px) {
+@media only screen and (max-width: 530px) {
 
+    html { zoom: 0.9; }
 
-    .breadcrumbtrail                        { display: none; }
+    .product div.imagecolumn { padding: 10px 0 0 0 !important; }
 
     /* Products*/
     .products_shortened .item,
-    .subcategories_shortened .item          { width: calc(50% - 6px); }
-    .products_tabular .item                 { width: 100%; }
+    .subcategories_shortened .item          { width: calc(50% - 20px); max-width: calc(50% - 20px); }
+    .products_shortened .item .details,
+    .subcategories_shortened .item .details { height: 35%; }
+    .products_shortened .item .details h2,
+    .subcategories_shortened .item .details h2   { padding: 0 0 0 0; }
+
+    .products_tabular .item                 { width: calc(50% - 10px); }
     .versions td.info                       { max-width: 200px; overflow: hidden; }
-    .versions .addtobasket .textbox         { margin-top: 5px; }
-    /* Misc*/
 
+    .Kartris-DetailsView-Value { width: 270px; }
+    ul { max-width: 100%; }
 
-    /* Header */ 
-    #header .logo                           { min-width: 200px; width: 200px; position: absolute; left: calc(50% - 100px); }
-    #header #toplinks                       { display: none; }
-    #header #menu_launcher                  { margin: 15px 0 0 0; padding: 0; }
-    #header i.fas                           { font-size: 19px; }
-    #minibasket                             { margin: 9px 0 0 0; width: 25px; height: 30px; }
-    #searchlink                             { margin: 15px 10px 0 0; }
-    #loginstatus                            { margin-left: 3px; }
+    .versions td.info { max-width: 200px; overflow: hidden; }
+    .basket td.quantity input { width: 32px; text-align: right; }
+    select,
+    input { width: 100%; }
+    #footer_inside { margin: 0; }
+}
 
-    h1                                      { font-size: 190%; line-height: 1.1em; }
-    h2                                      { font-size: 130%; line-height: 1.1em; }
+/* 
+========================================================================
+EXTRA SMALL SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 320px) {
 
-    .addtobasket .button                    { width: 100%; margin-left: -2px; margin-top: 5px; font-size: 18px; }
+    html { zoom: 0.7; }
+}
 
-    /* footer */
-    #footer #paymentlogos #trustlogo        { max-width: 100px; margin: 5px 0; display: inline-block; }
-    #footer #paymentlogos .pay360           { max-width: 100px; margin: 5px 0; }
-    #footer #paymentlogos .paypal           { max-width: 100px; margin: 5px 0; }
-    #footer #paymentlogos .cards            { max-width: 100px; margin: 5px 0; }
-    #footer #paymentlogos .verified         { max-width: 100px; margin: 5px 0; }
-  }
+/* 
+========================================================================
+GENERAL 
+========================================================================
+*/
+table tr td                             { font-size: 100%; }
 

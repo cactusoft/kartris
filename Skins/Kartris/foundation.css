@@ -1730,8 +1730,8 @@ meta.foundation-mq-topbar {
 
 .top-bar {
   background: #333333;
-  height: 1.8rem;
-  line-height: 1.8rem;
+  height: 2.8125rem;
+  line-height: 2.8125rem;
   margin-bottom: 0;
   overflow: hidden;
   position: relative; }
@@ -1764,7 +1764,7 @@ meta.foundation-mq-topbar {
     position: relative; }
   .top-bar .name {
     font-size: 16px;
-    height: 1.8rem;
+    height: 2.8125rem;
     margin: 0; }
     .top-bar .name h1, .top-bar .name h2, .top-bar .name h3, .top-bar .name h4, .top-bar .name p, .top-bar .name span {
       font-size: 1.0625rem;

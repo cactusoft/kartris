@@ -3,19 +3,67 @@
 MAIN LAYOUT
 ========================================================================
 */
-html                                    { height:100%; overflow-y:scroll; overflow-x: hidden; }
+html                                    { height:100%; overflow-y:scroll; overflow-x: hidden; overflow:-moz-scrollbars-vertical; }
 body									{ background-color: #fff; }
-body.main                               { min-height: 100%; background: #fff; padding: 0; }
-form.container                          { position: absolute; width: 100%; margin: 0 auto; min-height: 100%; padding: 0; }
-#container                              { position: relative; margin: 0 auto; }
-#centre_container                       { max-width: 1220px; position: relative; min-height: calc(100% - 145px); display: block; padding: 15px 10px 0 10px; margin: 0 auto; }
+body.main                               { padding: 0; }
+#container                              { position: relative; width: 100%; margin: 0 auto; }
+#centre_container                       { min-height: calc(100% - 200px); display: block; padding: 20px 20px 90px 20px; width: 1200px; max-width: 100%; margin: 0 auto; }
+#centre_container.page-default          { width: 100% !important; padding: 90px 0 90px 0 !important; } /* this page-default style is applied dynamically in Template.master, we can use it to make home page full width*/
+#centre_container.page-default #pagecontent_pad     { padding: 0; } /* this page-default style is applied dynamically in Template.master, we can use it to make home page full width*/
+#centre_container.page-default #custompagetext      { margin: 0 0 10px 0; }
+
+/* 
+========================================================================
+HEADER
+========================================================================
+*/
+#header                                 { top: 0; background-color: #fff; border-bottom: solid 1px #ccc; position: absolute; width: 100%; max-width: 100%; z-index: 99; height: 90px; }
+#header .row                            { width: 1200px; max-width: 100%; margin: 0 auto; padding: 30px 30px 30px 30px; }
+#header #hcol-left                      { text-align: left; }
+#header #hcol-centre                    { text-align: center; }
+#header #hcol-right                     { }
+#header .logo                           { margin: 8px 0 0 0; width: 160px; float: left; }
+#header i.fas                           { font-size: 21px; color: #000; }
+#header #menus                          { white-space: nowrap; display: inline-block; padding: 6px 0 0 0; margin: 0 auto; text-align: center; }
+#header #icons                          { width: 112px; float: right; }
+#header #icons #menuSearchLink          { display: inline-block; position: absolute; top: 10px; }
+#header .big-menu-link                  { display: inline-block; color: #000; padding: 5px 5px; font-size: 15px; font-weight: normal; margin: 0 5px; }
+#header a.big-menu-link:hover           { color: #777; }
+
+.header--fixed                          { transition: filter 0.3s, height 0.1s; position: fixed !important; z-index: 999; height: 55px !important; padding: 10px 10px !important; }
+
+#header .menuSpecial                    { top: 89px; left: 0; width: 100%; background-color: #fff; display: none; z-index: 90; height: auto; position: absolute; padding: 10px 8px 8px 8px; border-bottom: solid 1px #ccc; box-shadow: rgba(0,0,0,0.1) 0 2px 2px; } 
+#header.header--fixed .menuSpecial      { top: 54px; position: absolute; } 
+#header.header--fixed .row              { padding: 0 30px; }
+
+/* menus */
+#header .custommegamenu                 { text-align: center; }
+#header #categorymenu                   { width: 1400px; max-width: 100%; margin: 0 auto; }
+#header #categorymenu h3                { font-weight: bold; margin-bottom: 25px; }
+#header #categorymenu .custom-submenu   { width: 180px; display: inline-block; padding: 20px; text-align: left; vertical-align: top; } /* submenu formatting (columns) */
+#header #categorymenu ul                { margin: 0 auto 20px auto; padding: 0; }
+#header #categorymenu ul li             { list-style: none; text-align: left; margin: 0; padding: 0; line-height: 1.2; }
+#header #categorymenu ul li a           { font-size: 100%; margin: 2px 0; display: inline-block;  }
+
+/* this is an invisible overlay we show when menu shows, use it to close mega menu if user clicks away from menu */
+#menuBackOverlay                        { position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(255,255,255,0.0); z-index: 15; } /* z-index must be less than menu link */
+
+/* 
+========================================================================
+BREADCRUMB NAVIGATION TRAIL
+========================================================================
+*/
+.breadcrumbtrail                        { margin: 130px auto 0 auto; width: 1200px; max-width: 100%; font-size: 80%; padding: 0 30px; display: block; text-decoration: none; font-size: 80%; }
+.breadcrumbtrail span span              { color: #000; display: inline-block; padding: 0 0 0 0; letter-spacing: 1px; font-weight: bold; }
+.breadcrumbtrail span span a            { color: #888; padding: 0 10px 0 0; display: inline-block; font-weight: normal; margin: 0; }
+.breadcrumbtrail span span a:after		{ content: "/"; margin: 0 0 0 10px; } /* breadcrumb separator */
 
 /* 
 ========================================================================
 PAGE LOADING SPINNER
 ========================================================================
 */
-.page-loading-container                 { position: fixed; left: 0px; top: 0px; width: 100%; height: 100%; z-index: 9999; background-color: white; text-align: center; opacity: 1; }
+.page-loading-container                 { position: fixed; left: 0px; top: 90px; height: calc(100% - 90px); /* 90px = header height plus little for dropshadow */ width: 100%; z-index: 9999; background-color: #fff; text-align: center; opacity: 1; }
 .page-loading-container .spinner        { position: absolute; top: 40%; left: calc(50% - 25px); transform: translate(-50%, -50%); }
 @keyframes spinner {
     to { transform: rotate(360deg); }
@@ -38,163 +86,94 @@ FADE IN FADE OUT
 
 /* 
 ========================================================================
-SECTIONS
-========================================================================
-*/
-#header                                 { background-color: #fff; height: 145px; }
-#header #menu_launcher                  { width: 30px; float: left; margin: 15px 0 0 0; }
-#header_inner                           { height: 110px; border-left: solid 1px transparent; border-right: solid 1px transparent; background-color: #fff; max-width: 1200px; margin: 0 auto; box-shadow: rgba(0,0,0,0.4) 0 0 0px; }
-#header .logo                           { margin: 30px 10px 12px 10px; max-width: 100%; width: 280px; }
-#header #second_logo_bar                { display: none; }
-#header i.fas                           { color: #000; font-size: 25px; }
-#header #toplinks                       { padding: 0px 0 10px 0; }
-#header #toplinks a                     { display: inline-block; padding: 3px; font-size: 16px; font-weight: normal; color: #000; }
-#header #h_centre                       { text-align: center; }
-#header #h_bottom                       { text-align: center; height: 34px; background-color: #fff; box-shadow: rgba(0,0,0,0.1) 0 3px 2px; }
-#header #right_icons #right_icons_cell  { text-align: right; }
-#pagecontent_pad                        { min-height: 300px; padding-bottom: 15px; }
-/* 
-========================================================================
 OFF CANVAS MENU
 ========================================================================
 */
 a.off-canvas-open                       { color: transparent; }
 a.off-canvas-open::before               { }
-a.off-canvas-close                      { color: #000; font-size: 25px; font-weight: bold; display: block; padding: 1px 3px; position: absolute; top: 2px; right: 20px; }
+a.off-canvas-close                      { color: #000; font-size: 35px; font-weight: bold; display: block; padding: 1px 3px; position: absolute; top: 2px; right: 20px; }
 a.left-off-canvas-toggle                { float: left; display: inline-block; margin: 5px 10px 0 0; }
 .off-canvas-wrap                        { min-height: 100%; }
-.left-off-canvas-menu                   { padding: 0; background: none repeat scroll 0% 0% transparent;  }
-.left-off-canvas-menu #categorymenu     { display: none; }
-.left-off-canvas-menu .content          { position: fixed; border-right: solid 1px #777; margin-right: 10px; padding: 30px 10px 10px 10px; background: #eee; height: 100%; box-shadow: 1px 1px 10px #333; }
+.left-off-canvas-menu                   { padding: 0; background: none repeat scroll 0% 0% transparent; }
+.left-off-canvas-menu .content          { min-width: 290px; position: fixed; border-right: solid 1px #777; margin-right: 10px; padding: 50px 10px 10px 10px; background: #eee; height: 100%; box-shadow: 1px 1px 10px #333; }
 .left-off-canvas-menu ul li             { list-style-type:none; }
-.left-off-canvas-menu ul li a           { min-width: 200px; text-align: left; color: #000; font-size: 90%; width: 100%; text-transform: uppercase; font-weight: normal; letter-spacing: 1px; line-height: 1.1em; padding: 3px 5px 3px 5px; margin: 0 0 1px 0; display: block; }
+.left-off-canvas-menu ul li a           { text-align: left; color: #000; font-size: 90%; width: 100%; text-transform: uppercase; font-weight: normal; letter-spacing: 1px; line-height: 1.1em; padding: 3px 5px 3px 5px; margin: 0 0 1px 0; display: block; }
 .left-off-canvas-menu ul li a:hover     { background-color: #000; color: #fff; }
 a.toggleswitch                          { display: inline-block; margin-top: 15px; }
 .move-left .exit-off-canvas             { box-shadow: none; }
-
-/* 
-========================================================================
-CATEGORY NAVIGATION MENU
-The primary styles are created by foundation.css. We override some here.
-========================================================================
-*/
-#categorymenu .megamenu                 { display: table; text-align: center; background-color: transparent; width: 100%; max-width: 1180px; margin: 0 auto; height: 34px; line-height: 34px; text-align: left; }
-#menubar ul.KartrisMenu                 { margin: 0; }
-#categorymenu ul                        { margin: 0 auto; display: table; width: 100%; }
-#categorymenu .megamenu li              { display: table-cell; height: 100%; }
-#categorymenu .megamenu li a.mm_toplevel
-                                        { text-align: center; display: block; color: #000; background: transparent; text-transform: uppercase; font-size: 14px; font-weight: normal; letter-spacing: 2px; padding: 7px 14px 3px 14px; line-height: 1.1em; height: 34px; }
-#categorymenu .megamenu li a.mm_toplevel:hover
-                                        { background: #000; color: #fff; text-shadow: none;  }
-#categorymenu .megamenu li a.mm_sublevel
-                                        { display: inline-block; width: 360px; padding: 5px; border: solid 1px #fff; }
-#categorymenu .megamenu li a.mm_sublevel:hover
-                                        { border-color: #a73752; }
-#categorymenu .megamenu li div.megamenu_tab
-                                        { top: 140px; left: calc(50% - 590px); width: 1180px; border: solid 1px #333; padding: 10px 20px 20px 20px; position: absolute; z-index: 1000; background-color: #fff; box-shadow: rgba(0,0,0,0.3) 3px 3px 3px; }
-#categorymenu .megamenu li div.megamenu_tab img.mm_image
-                                        { display: inline-block; }
-#categorymenu .megamenu li div.megamenu_tab span.mm_text
-                                        { display: inline-block; width: 220px; line-height: 1.1em; font-size: 15px; font-weight: bold; padding: 10px 0 0 5px; }
-#categorymenu .megamenu li a.mm_sublevel:hover span.mm_text
-                                        { color: #000; }
-#categorymenu .megamenu li.selectedmenulink a.mm_toplevel
-                                        { background: #000; color: #fff; text-shadow: none; }
 /* 
 ========================================================================
 LOGIN STATUS
 ========================================================================
 */
-#loginstatus                            { float: left; white-space: nowrap; margin: 9px 5px 0 20px; display: inline-block; font-size: 14px; font-weight: normal; letter-spacing: 1px; color: #000; padding: 5px 0 3px 0px; }
-#loginstatus #UC_LoginStatus_KartrisLoginName
-                                        { display: inline-block; max-width: 160px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-#loginstatus strong                     { font-weight: normal; font-size: 15px; text-transform: none; }
-#loginstatus .loginbutton               { float: left; display: block; width: 22px; height: 22px; border: none; color: transparent; display: inline-block; }
-#loginstatus .loginbutton.loggedin      {  }
+#loginstatus                            { float: right; display: inline-block; color: #000; padding: 5px 0 9px 15px; margin: 5px 0 0 0; }
+#loginstatus i.fas                      { display: inline-block; width: 28px; }
+#loginstatus strong                     { font-weight: normal; font-size: 0.9em; text-transform: none; }
+#loginstatus .loginbutton               { float: right; }
+#loginstatus .loginbutton span.icontext { display: none; }
+#loginstatus .loginbutton.loggedin      { }
 #loginstatus #username,
-#loginstatus #statuslabel               { display: inline-block; margin: 5px 0 0 11px; color: #000; }
-#loginstatus #statuslabel a             { color: #000; }
-#loginstatus:hover #account_menu        { width: 350px; margin: 2px 0 0 -18px; }
+#loginstatus #statuslabel               { display: none; }
+#loginstatus:hover #account_menu        { width: 230px; margin: 27px 0 0 -170px; }
 /* 
 ========================================================================
 SEARCH BOX
 ========================================================================
 */
-#section_searchbox                      { min-width: 320px; max-width: 99%; height: 42px; border: solid 2px #fff; position: absolute; top: 40%; left: calc(50%); transform: translate(-50%, -50%); }
-#section_searchbox .small-10            { padding-left: 5px; }
-#section_searchbox .small-2             { text-align: right; }
-#section_searchbox .small-2 i.fas       { cursor: pointer; }
-#searchlink                             { cursor: pointer; margin: 12px 5px 0 5px; display: inline-block; float: none; width: 20px; height: 20px; border: none; background-position: 0; background-image: none; background-repeat: no-repeat; background-size: contain; background-color: transparent; color: transparent; display: none; }
-
-#searchbox_popup                        { display: none; z-index: 9999; background-color: rgba(0, 0, 0, 0.7); height: 100%; width: 100%; position: fixed; top: 0; left: 0; }
-#searchbox_popup .searchclosebutton     { cursor: pointer; color: #fff; font-weight: bold; font-size: 50px; float: right; margin: 30px; }
-#searchbox_popup h1                     { color: #fff; font-weight: bold; font-size: 40px; width: auto; height: 42px; display: block; position: absolute; top: calc(40% - 90px); left: calc(50%); transform: translate(-50%, -50%); }
-
-#searchbox_popup input.button           { position: absolute; top: 3px; right: 5px; border: none; color: transparent !important; height: 30px; width: 28px; padding: 3px; font-size: 11px; background-color: transparent; background-position: 0; background-image: url(Images/icon_search_light.png); background-repeat: no-repeat; background-size: contain; }
-#searchbox_popup input[type="text"],
-#searchbox_popup input[type="search"]   { background: none; background-color: transparent; color: #fff; font-size: 19px; border: none; box-shadow: none; margin-top: 3px; }
-
-/* main search */
-#search_main                            { margin-top: 10px; }
-#search_main  #section_searchbox        { float: right; min-width: 1px; width: 250px; border: none; position: relative; transform: none; top: 0; left: 0; }
-#search_main input.button               { position: absolute; top: 0; right: 5px; border: none; color: transparent !important; height: 26px; width: 20px; padding: 3px; font-size: 11px; background-color: transparent; background-position: 0; background-image: url(Images/icon_search.png); background-repeat: no-repeat; background-size: contain; }
-#search_main input[type="text"],
-#search_main input[type="search"]       { margin-top: 1px; padding: 3px; border: solid 1px #333;box-shadow: none; height: 26px; background-color: #ddd; color: #000; font-size: 14px; }
-#search_main input[type="text"]:focus,
-#search_main input[type="search"]:focus
-                                        { background-color: #fff; border: solid 1px #333; box-shadow: rgba(0,0,0,0.3) 3px 5px 5px; }
+#section_searchbox                      { border-bottom: solid 1px #333; position: relative; margin: 3px 0 0 0; display: block; margin: 0 auto; width: 400px; max-width: 100%; height: 45px; }
+#section_searchbox .row                 { padding: 0; }
+#section_searchbox i.fas                { font-size: 160% !important; margin: 13px 0 0 6px; color: #000; }
+#section_searchbox input[type="text"],
+#section_searchbox input[type="search"]   { margin: 4px 0 15px 0; box-shadow: none; border: none; color: #000; font-size: 160%; background-color: transparent; }
 /* 
 ========================================================================
 OTHER CONTROLS language, currency, etc.
 ========================================================================
 */
-#currencymenu                           { margin: 10px 5px 0 5px; width: 50px; overflow: hidden; }
-#currencymenu select					{ font-family: Courier New, Courier, monospace; color: #333; border: none; background-color: #fff; font-size: 13px; box-shadow: none; min-width: 70px; }
-#currencymenu select:hover              { cursor: pointer; }
-#languagemenu                           { font-family: Courier New, Courier, monospace; margin: 10px 5px 0 5px; float: right; text-align: left; display: block; max-width: 110px; border: none; }
-#languagemenu .language-link            { display: inline-block; border: none; padding: 1px 3px; color: #333; text-transform: uppercase; font-size: 12px; }
-#languagemenu .lang-selected            { background-color: #333; color: #fff; }
-#recentlyviewed                         { padding: 10px 0 20px 0; text-align: center; }
-#recentlyviewed .item                   { float: none; }
+#currencymenu                           { margin: 7px 20px 0 20px; width: 90px; overflow: hidden; float: right; }
+#currencymenu select					{ color: #000; border: none; background-color: #fff; font-size: 0.9em; box-shadow: none; min-width: 70px; }
+#languagemenu                           { font-size: 0.8em; margin: 8px 0 0 20px; float: right; text-align: left; display: block; max-width: 110px; border: none; border: solid 1px #000; }
+#languagemenu .language-link            { display: inline-block; border: none; padding: 1px 3px; color: #000; text-transform: uppercase; }
+#languagemenu .lang-selected            { background-color: #000; color: #fff; }
+#recentlyviewed                         { padding: 50px 0 40px 0; text-align: center; }
 /* 
 ========================================================================
 TEMPLATE HOVERMENU
 ========================================================================
 */
-.hovermenu                      { display: none; font-size: 1.0em; }
+.hovermenu                      { display: none; font-size: 100%; }
 .hovermenu ul                   { margin: 0; padding: 0; }
 .hovermenu ul li                { list-style: none; float: none; clear: both; margin: 0 0 0 0; padding: 2px 0 0 0; }
 .hovermenu_holder:hover .hovermenu
-                                { animation-name: fadein; animation-duration: 0.54s; min-height: 50px; box-shadow: rgba(0,0,0,0.3) 3px 3px 3px; width: 270px; background-color: #fff; border: solid 1px #333; display: block; z-index: 999; text-align: left; height: auto; position: absolute; padding: 10px 8px 8px 8px; margin: 60px 0 0 -2px; }     
-.hovermenu ul li a              { line-height: 1.0em; color: #000 !important; padding: 3px 5px 3px 5px; margin: 2px 0; display: block; }
-.hovermenu ul li a:hover        { background-color: #000; color: #fff !important; }
-.hovermenu .button              { text-align: left; border-color: transparent; background-color: transparent; color: #000 !important; width: 100%; font-weight: normal; letter-spacing: 1px; }
-.hovermenu .button:hover        { background-color: #000; color: #fff !important; }
+                                { animation-name: fadein; animation-duration: 0.54s; min-height: 50px; box-shadow: rgba(0,0,0,0.1) 0 5px 5px; width: 270px; background-color: #fff; border: solid 1px #777; display: block; z-index: 999; text-align: left; height: auto; position: absolute; padding: 10px 8px 8px 8px; margin: 40px 0 0 -2px; }     
+.hovermenu ul li a              { line-height: 1.0em; color: #000; padding: 3px 5px 3px 5px; margin: 2px 0; display: block; }
+.hovermenu ul li a:hover        { background-color: #000; color: #fff; }
+.hovermenu .button              { text-align: left; border-color: transparent; background-color: transparent; color: #000; width: 100%; font-weight: normal; letter-spacing: 1px; }
+.hovermenu .button:hover        { background-color: #000; color: #fff; }
 /* 
 ========================================================================
 BASKET SUMMARY
 ========================================================================
 */
 #minibasketholder                       { position: relative; }
-.compactminibasket,
-#minibasket                             { float: right; width: auto; padding: 0; margin: 12px 0 0 0; height: 41px; }
-#minibasket #minibasket_header          { min-width: 32px; background-color: transparent; }
+.compactminibasket                      { float: right; width: auto; padding: 0; margin: 8px 0 0 11px; }
+#minibasket                             { float: right; width: auto; padding: 0; margin: 5px 2px 0 0; }
+#minibasket #minibasket_header          { background-color: transparent; padding: 5px 0 9px 9px;  }
 #compactbasket_title                    { display: none; }
-#compactbasket_totalprice               { display: inline-block; font-size: 1.3em; color: #000; font-weight: normal; padding-left: 10px; z-index: 20; }
-#compactbasket_totalprice               { display: none; } /* this hides the price, remove this line to show it next to basket on large screens */
+#compactbasket_totalprice               { display: none; font-size: 1.3em; color: #000; font-weight: bold; padding-left: 10px; z-index: 20; }
 #compactbasket_noofitems span.bracket   { display: none; }
-#minibasket h4                          { margin: 0; padding: 0; }
+#minibasket h4                          { margin: 0; padding: 0; line-height: 0.8; vertical-align: top; letter-spacing: 0; }
 #minibasket h4 strong                   { color: #999; font-weight: bold; }
 
 .compactminibasket a,
-#minibasket h4 a                        { font-family: Segoe UI, Arial, Helvetica, Sans-Serif; font-size: 12px; }
+#minibasket h4 a                        { font-size: 12px; }
 #minibasket h4 a:hover                  { font-size: 12px; }
-#compactbasket_noofitems                { display: inline-block; position: absolute; background-color: #f00; color: #fff; border: solid 1px #fff; font-size: 1.1em; font-weight: bold; padding: 0 4px 1px 3px; margin: 15px 0 0 -13px; border-radius: 0; }
+#compactbasket_noofitems                { font-size: 15px; display: inline-block; position: absolute; background-color: #000; color: #fff; font-size: 1.0em; font-weight: bold; padding: 0 4px 1px 3px; margin: -6px 0 0 -6px; border-radius: 9px; line-height: 1.2; }
 #compactbasket_noofitems.basket-items-0 { visibility: hidden; }
-#minibasket:hover #minibasket_main      { margin: 2px 0 0 -230px; width: 280px; }
+#minibasket:hover #minibasket_main      { margin: -3px 0 0 -235px; width: 280px; }
 #minibasket:hover                       { }
-#minibasket:hover h4 strong             { color: #fff; }
-#minibasket:hover h4 a                  { color: #fff; }
+#minibasket:hover h4 strong             { color: #000; }
+#minibasket:hover h4 a                  { color: #000; }
 #minibasket #contents                   { width: 100%; }
 #minibasket #contents #orderinprogress,
 #minibasket #contents #basketisempty    { padding: 1px 5px 12px 5px; font-weight: normal; color: #000; }
@@ -212,21 +191,16 @@ BASKET SUMMARY
 FOOTER
 ========================================================================
 */
-#footer                                 { background-color: #000; padding: 0; min-height: 232px; /*change this size depending on the height of the footer image you're using*/ width: 100%; }
-#footer_inside                          { min-height: 232px; max-width: 1220px; margin: 0 auto; color: #888; padding: 10px 10px 0 10px; }
-#footer a                               { color: #ccc; font-weight: normal; }
-#footer #copyright                      { margin: 45px 0 20px 0; }
+#footer                                 { background-color: #eee; padding: 0; min-height: 332px; /*change this size depending on the height of the footer image you're using*/ width: 100%; }
+#footer_inside                          { min-height: 332px; width: 1200px; max-width: 100%; margin: 0 auto; color: #999; padding: 10px 20px 0 20px; }
+#footer .alignright                     { text-align: right; }
+#footer a                               { color: #999; font-weight: normal; }
+#footer a .fab                          { font-size: 2em; margin: 5px 0 0 10px; }
+#footer a:hover                         { color: #000; }
+#footer #copyright                      { font-size: 90%; margin: 45px 0 20px 0; }
 #footer h2                              { color: #000 }
-#footer ul                              { margin: 0; padding: 0; list-style-type: none; }
+#footer ul                              { margin: 0; font-size: 90%; padding: 0; list-style-type: none; }
 #footer ul li                           { padding: 0; }
-#footer ul li a                         { padding: 2px; font-size: 1.2em; }
-#footer ul li a:hover                   { color: #ddd; }
-#footer #paymentlogos                   { text-align: right; }
-#footer #paymentlogos #securedby        { color: #888; letter-spacing: 1px; font-size: 90%; padding: 0 0 5px 0; }
-#footer #paymentlogos #trustlogo        { max-width: 130px; margin: 5px 0 0 30px; display: inline-block; }
-#footer #paymentlogos .pay360           { max-width: 120px; margin: 10px 0 0 30px; }
-#footer #paymentlogos .paypal           { max-width: 150px; margin: 5px 0 0 30px; }
-#footer #paymentlogos .cards            { max-width: 300px; margin: 15px 0 0 0; }
-#footer #paymentlogos .verified         { max-width: 180px; margin: 15px 0 0 10px; }
-
+#footer ul li a                         {  }
+#footer ul li a:hover                   { color: #000; }
 

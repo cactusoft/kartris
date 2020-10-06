@@ -1,1 +1,0 @@
-﻿<%@ Page Language="VB" Buffer="true" ValidateRequest="false" AutoEventWireup="false" CodeFile="CallbackMoneta.aspx.vb" Inherits="CallbackMoneta" %>

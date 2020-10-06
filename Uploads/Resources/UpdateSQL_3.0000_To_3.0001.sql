@@ -356,6 +356,10 @@ WHERE        (LANG_ID = @LANG_ID) AND P_Name LIKE @Key + '%'
 
 GO
 
+/* Change config setting */
+UPDATE tblKartrisConfig SET CFG_DisplayInfo = 'n|e|s|t|c', CFG_Value='c', CFG_Description='The display type for the featured products (front page specials) - [n]ormal/[e]xtended/[s]hortened/[t]abular/[c]arousel' WHERE CFG_Name='frontend.featuredproducts.display.default';
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.0001', CFG_VersionAdded=3.0001 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

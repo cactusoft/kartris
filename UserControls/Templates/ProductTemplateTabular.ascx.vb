@@ -33,7 +33,7 @@ Partial Class ProductTemplateTabular
             litProductID.Text,
             KartSettingsManager.GetKartConfig("frontend.display.images.thumb.height"),
             KartSettingsManager.GetKartConfig("frontend.display.images.thumb.width"),
-            strNavigateURL, , , lnkProductName.Text)
+            strNavigateURL, , , litProductName.Text)
 
         'Determine what to show for 'from' price
         Select Case GetKartConfig("frontend.products.display.fromprice").ToLower

@@ -147,7 +147,7 @@ Partial Class ProductView
                 'Need to override the Foundation column widths
                 'To make sure both full 12 width, so image
                 'stacks over text
-                litImageColumnClasses.Text = "imagecolumn small-12 columns"
+                litImageColumnClasses.Text = "imagecolumn small-12 columns showlargeimageinline"
                 litTextColumnClasses.Text = "textcolumn small-12 columns"
 
                 'Set full size image visible
@@ -156,7 +156,7 @@ Partial Class ProductView
                     0,
                     0,
                     "",
-                    "rrr")
+                    "", , _ProductName)
                 UC_ImageView2.Visible = True
             End If
 
