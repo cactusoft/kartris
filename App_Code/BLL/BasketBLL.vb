@@ -912,12 +912,18 @@ Public Class BasketBLL
     End Sub
 
     ''' <summary>
-    ''' Calculate the handling charge for the order inside the current basket. 
+    ''' Calculate the handling charge for the order inside the current basket and set which
+    ''' destination (shipping or billing) should be used for tax
     ''' </summary>
     ''' <param name="numShippingCountryID">Country that the items will be shipped to.</param>
     ''' <remarks></remarks>
     Public Shared Sub CalculateOrderHandlingCharge(ByRef Basket As Kartris.Basket, ByVal numShippingCountryID As Integer)
         Dim numOrderHandlingPriceValue As Double, numOrderHandlingTaxBand1 As Double = 0, numOrderHandlingTaxBand2 As Double = 0
+
+        'Calculate tax based on billing address
+        If KartSettingsManager.GetKartConfig("general.tax.shipping") = "billing" Then
+            numShippingCountryID = Current.Session("_ShippingDestinationID")
+        End If
 
         If numShippingCountryID = 0 Then Exit Sub
 
@@ -964,8 +970,6 @@ Public Class BasketBLL
                 .OrderHandlingPrice.TaxRate = TaxRegime.CalculateTaxRate(TaxBLL.GetTaxRate(numOrderHandlingTaxBand1), TaxBLL.GetTaxRate(numOrderHandlingTaxBand2), DestinationCountry.TaxRate1, DestinationCountry.TaxRate2, DestinationCountry.TaxExtra)
 
             End If
-
-
 
             If .PricesIncTax Then
                 .OrderHandlingPrice.ExTax = Math.Round(numOrderHandlingPriceValue * (1 / (1 + .OrderHandlingPrice.TaxRate)), CurrencyRoundNumber)

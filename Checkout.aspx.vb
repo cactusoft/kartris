@@ -540,7 +540,7 @@ Partial Class _Checkout
     ''' shipping methods
     ''' </summary>
     Protected Sub BillingCountryUpdated(ByVal sender As Object, ByVal e As System.EventArgs) Handles UC_BillingAddress.CountryUpdated
-        If chkSameShippingAsBilling.Checked Then RefreshShippingMethods("billing")
+        RefreshShippingMethods("billing")
     End Sub
 
     ''' <summary>
