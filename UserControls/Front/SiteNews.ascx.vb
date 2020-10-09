@@ -44,7 +44,12 @@ Partial Class UserControls_Front_SiteNews
             phdNews.Visible = False
             litDisabledCommentMessage.Text = "<!-- News Disabled - frontend.navigationmenu.sitenews is set to 'n' -->"
         ElseIf Not Page.IsPostBack Then
-            LoadLatestNews(_MaxItems)
+            If _MaxItems > 0 Then
+                LoadLatestNews(_MaxItems)
+            Else
+                phdNews.Visible = False
+                litDisabledCommentMessage.Text = "<!-- News Disabled - frontend.news.max set to zero or lower -->"
+            End If
         End If
     End Sub
 
