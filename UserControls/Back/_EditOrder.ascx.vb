@@ -662,7 +662,25 @@ Partial Class UserControls_Back_EditOrder
                     sbdHTMLOrderEmail.Replace("[shippingcompany]", "")
                 End If
             End With
-
+        Else
+            With UC_ShippingAddress.SelectedAddress
+                strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf &
+                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf &
+                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf &
+                                          " " & .Country.Name & vbCrLf & vbCrLf
+                sbdHTMLOrderEmail.Replace("[shippingname]", Server.HtmlEncode(.FullName))
+                sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", Server.HtmlEncode(.StreetAddress))
+                sbdHTMLOrderEmail.Replace("[shippingtowncity]", Server.HtmlEncode(.TownCity))
+                sbdHTMLOrderEmail.Replace("[shippingcounty]", Server.HtmlEncode(.County))
+                sbdHTMLOrderEmail.Replace("[shippingpostcode]", Server.HtmlEncode(.Postcode))
+                sbdHTMLOrderEmail.Replace("[shippingcountry]", Server.HtmlEncode(.Country.Name))
+                sbdHTMLOrderEmail.Replace("[shippingphone]", Server.HtmlEncode(.Phone))
+                If Not String.IsNullOrEmpty(.Company) Then
+                    sbdHTMLOrderEmail.Replace("[shippingcompany]", Server.HtmlEncode(.Company))
+                Else
+                    sbdHTMLOrderEmail.Replace("[shippingcompany]", "")
+                End If
+            End With
         End If
 
         sbdBodyText.Append(strShippingAddressEmailText & GetGlobalResourceObject("Email", "EmailText_OrderEmailBreaker") & vbCrLf)
@@ -802,6 +820,9 @@ Partial Class UserControls_Back_EditOrder
         'Send email of new order to the customer
         Dim strFromEmail As String = LanguagesBLL.GetEmailFrom(CInt(ddlOrderLanguage.SelectedValue))
         SendEmail(strFromEmail, txtOrderCustomerEmail.Text, GetGlobalResourceObject("Email", "Config_Subjectline") & " (#" & intNewOrderID & ")", strOrderDetails, , , , , blnUseHTMLOrderEmail)
+
+        'Email to store owner
+        SendEmail(strFromEmail, LanguagesBLL.GetEmailTo(1), GetGlobalResourceObject("Email", "Config_Subjectline2") & " (#" & intNewOrderID & ")", strOrderDetails, , , , , blnUseHTMLOrderEmail)
 
         'if we got a new order id then that means the order was successfully cloned and cancelled - lets now redirect the user to the new order details page
         If intNewOrderID > 0 Then
