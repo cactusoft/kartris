@@ -2,7 +2,7 @@
 <%@ OutputCache Duration="3600" VaryByParam="*" VaryByCustom="culture" Shared="true" %>
 <script type="application/ld+json">
 {
-  <asp:Literal ID="litProductMain" runat="server">"@context": "http://schema.org/",
+  <asp:Literal ID="litProductMain" runat="server">"@context": "https://schema.org/",
   "@type": "Product",
   "name": "[product_name]",
   "description": "[product_desc]",

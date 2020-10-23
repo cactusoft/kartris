@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="SiteLinksSearch.ascx.vb" Inherits="UserControls_Front_SiteLinksSearch" %>
 <script type="application/ld+json">
 {
-  "@context": "http://schema.org",
+  "@context": "https://schema.org",
   "@type": "WebSite",
   "url": "<% =CkartrisBLL.WebShopURL.ToLower %>",
   "potentialAction": {
