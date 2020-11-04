@@ -1,11 +1,6 @@
 ﻿
 $(document).ready(function () {
     $(document).foundation();
-    // page loading spinner
-    $(window)
-        .load(function () {
-            $(".page-loading-container").fadeOut("500");
-        });
 });
 $(document).foundation({
     offcanvas: {
@@ -14,6 +9,8 @@ $(document).foundation({
 });
 $(window)
     .load(function () {
+    // page loading spinner
+        $(".page-loading-container").fadeOut("500");
         SetOffCanvasHeight();
     })
     .resize(function () {
