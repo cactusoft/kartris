@@ -69,7 +69,7 @@
                                 Text="<%$ Resources:Kartris, FormButton_Submit %>" />
                             <asp:ValidationSummary ValidationGroup="ContactForm" ID="valSummary" runat="server"
                                 CssClass="valsummary" DisplayMode="BulletList" ForeColor="" HeaderText="<%$ Resources: Kartris, ContentText_Errors %>" />
-                            <ajaxToolkit:NoBot ID="ajaxNoBotContact" runat="server" 
+                            <ajaxToolkit:NoBot ID="ajaxNoBotContact" runat="server" ValidationGroup="ContactForm"
                                 ResponseMinimumDelaySeconds="2"
                                 CutoffWindowSeconds="60"
                                 CutoffMaximumInstances="5" />
