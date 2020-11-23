@@ -42,7 +42,7 @@ Partial Class contact
             Dim strBody As String = CreateMessageBody()
             Dim strFrom As String = ""
             If GetKartConfig("general.email.spoofcontactmail") = "y" Then strFrom = txtEmail.Text Else strFrom = LanguagesBLL.GetEmailFrom(GetLanguageIDfromSession)
-            If SendEmail(strFrom, strTo, GetGlobalResourceObject("Kartris", "PageTitle_ContactUs") & " - " & txtName.Text, strBody, strFrom, txtName.Text) Then
+            If SendEmail(strFrom, strTo, GetGlobalResourceObject("Kartris", "PageTitle_ContactUs") & " - " & txtName.Text, strBody, txtEmail.Text, txtName.Text) Then
                 litResult.Text = GetGlobalResourceObject("Kartris", "ContentText_MailWasSent")
                 ClearForm()
             Else
