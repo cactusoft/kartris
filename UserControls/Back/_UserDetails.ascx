@@ -37,7 +37,7 @@
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserID" runat="server" Text="<%$ Resources: _Customers, FormLabel_CustomerID %>" /></span>
                                             <span class="Kartris-DetailsView-Value">
-                                                <asp:Literal ID="litUserID" runat="server" Text='<%#Eval("U_ID") %>'></asp:Literal></span>
+                                                <asp:Hyperlink ID="litUserID" runat="server" Text='<%#Eval("U_ID") %>' NavigateUrl='<%# FormatCustomerLink(Eval("U_ID")) %>'></asp:Hyperlink></span>
                                         </li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="litContentTextCustomerName" runat="server" Text="<%$ Resources: _Kartris, ContentText_CustomerName %>" /></span>
@@ -86,6 +86,11 @@
                                                 </asp:ObjectDataSource>
                                                 <asp:HiddenField ID="hidUserGroup" runat="server" Value='<%# Eval("U_CustomerGroupID")%>'></asp:HiddenField>
                                             </span></li>
+                                        <li><span class="Kartris-DetailsView-Name">
+                                            <asp:Label ID="lblEUVatNumber" runat="server" Text="<%$ Resources: _Orders, FormLabel_CardholderEUVatNum %>" /></span>
+                                            <span class="Kartris-DetailsView-Value">
+                                                <asp:TextBox ValidationGroup="User" ID="txtVATNumber" runat="server" Text='<%# Eval("U_CardholderEUVATNum")%>'></asp:TextBox></span>
+                                        </li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserApproved" runat="server" Text="<%$ Resources: _Customers, FormLabel_Approved %>" /></span>
                                             <span class="Kartris-DetailsView-Value"><span class="checkbox">
@@ -378,6 +383,11 @@
                                                 </asp:ObjectDataSource>
                                                 <asp:HiddenField ID="hidUserGroup2" runat="server" Value=''></asp:HiddenField>
                                             </span></li>
+                                        <li><span class="Kartris-DetailsView-Name">
+                                            <asp:Label ID="lblEUVatNumber2" runat="server" Text="<%$ Resources: _Orders, FormLabel_CardholderEUVatNum %>" /></span>
+                                            <span class="Kartris-DetailsView-Value">
+                                                <asp:TextBox ValidationGroup="User" ID="txtVATNumber2" runat="server" Text='<%# Eval("U_CardholderEUVATNum")%>'></asp:TextBox></span>
+                                        </li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserApproved2" runat="server" Text="<%$ Resources: _Customers, FormLabel_Approved %>" /></span>
                                             <span class="Kartris-DetailsView-Value"><span class="checkbox">

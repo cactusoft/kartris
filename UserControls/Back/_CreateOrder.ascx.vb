@@ -204,7 +204,8 @@ Partial Class UserControls_Back_CreateOrder
         Dim lngCustomerID As Long = CheckEmailExist(txtOrderCustomerEmail.Text)
         If lngCustomerID > 0 Then
             phdExistingCustomer.Visible = True
-            litOrderCustomerID.Text = lngCustomerID
+            lnkOrderCustomerID.Text = lngCustomerID
+            lnkOrderCustomerID.NavigateUrl = FormatCustomerLink(lngCustomerID)
             phdNewPassword.Visible = False
             _UC_BillingAddress.CustomerID = lngCustomerID
             _UC_ShippingAddress.CustomerID = lngCustomerID
@@ -541,8 +542,8 @@ Partial Class UserControls_Back_CreateOrder
                 'Determine if is existing user, if
                 'so set Customer ID to the logged in
                 'user
-                If Not String.IsNullOrEmpty(Trim(litOrderCustomerID.Text)) Then
-                    C_ID = CLng(litOrderCustomerID.Text)
+                If Not String.IsNullOrEmpty(Trim(lnkOrderCustomerID.Text)) Then
+                    C_ID = CLng(lnkOrderCustomerID.Text)
                     blnNewUser = False
                 End If
 
@@ -605,7 +606,7 @@ Partial Class UserControls_Back_CreateOrder
                 'Order totals
                 If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
                     sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & vbCrLf)
-                    sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
+                    sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) &
                          IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & vbCrLf)
                 End If
                 sbdBodyText.Append(" " & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
@@ -619,7 +620,7 @@ Partial Class UserControls_Back_CreateOrder
                     sbdHTMLOrderContents.Append("<tr class=""row_totals""><td colspan=""2"">")
                     If blnAppPricesIncTax = False Or blnAppShowTaxDisplay Then
                         sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Checkout", "ContentText_OrderValue") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceExTax, , False) & "<br/>")
-                        sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) & _
+                        sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) &
                              IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & "<br/>")
                     End If
                     sbdHTMLOrderContents.Append("(" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
@@ -686,8 +687,8 @@ Partial Class UserControls_Back_CreateOrder
                     sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_PurchaseContactDetails") & vbCrLf)
 
                     If Not _blnAnonymousCheckout Then
-                        sbdBodyText.Append(" " & GetGlobalResourceObject("Address", "FormLabel_CardHolderName") & ": " & .FullName & vbCrLf & _
-                                             " " & GetGlobalResourceObject("Email", "EmailText_Company") & ": " & .Company & vbCrLf & _
+                        sbdBodyText.Append(" " & GetGlobalResourceObject("Address", "FormLabel_CardHolderName") & ": " & .FullName & vbCrLf &
+                                             " " & GetGlobalResourceObject("Email", "EmailText_Company") & ": " & .Company & vbCrLf &
                                              IIf(Not String.IsNullOrEmpty(txtEUVAT.Text), " " & GetGlobalResourceObject("Invoice", "FormLabel_CardholderEUVatNum") & ": " & txtEUVAT.Text & vbCrLf, ""))
                     End If
 
@@ -700,10 +701,10 @@ Partial Class UserControls_Back_CreateOrder
                     sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "EmailText_Address") & ":" & vbCrLf)
 
                     If Not _blnAnonymousCheckout Then
-                        sbdBodyText.Append(" " & .StreetAddress & vbCrLf & _
-                            " " & .TownCity & vbCrLf & _
-                            " " & .County & vbCrLf & _
-                            " " & .Postcode & vbCrLf & _
+                        sbdBodyText.Append(" " & .StreetAddress & vbCrLf &
+                            " " & .TownCity & vbCrLf &
+                            " " & .County & vbCrLf &
+                            " " & .Postcode & vbCrLf &
                             " " & .Country.Name)
                     Else
                         sbdBodyText.Append(GetGlobalResourceObject("Kartris", "ContentText_NotApplicable"))
@@ -770,9 +771,9 @@ Partial Class UserControls_Back_CreateOrder
                 If Not blnBasketAllDigital Then
                     If chkSameShippingAsBilling.Checked Then
                         With _UC_BillingAddress.SelectedAddress
-                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf & _
-                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf & _
-                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf & _
+                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf &
+                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf &
+                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf &
                                           " " & .Country.Name & vbCrLf & vbCrLf
                             sbdHTMLOrderEmail.Replace("[shippingname]", Server.HtmlEncode(.FullName))
                             sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", Server.HtmlEncode(.StreetAddress))
@@ -790,9 +791,9 @@ Partial Class UserControls_Back_CreateOrder
                         End With
                     Else
                         With _UC_ShippingAddress.SelectedAddress
-                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf & _
-                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf & _
-                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf & _
+                            strShippingAddressEmailText = " " & .FullName & vbCrLf & " " & .Company & vbCrLf &
+                                          " " & .StreetAddress & vbCrLf & " " & .TownCity & vbCrLf &
+                                          " " & .County & vbCrLf & " " & .Postcode & vbCrLf &
                                           " " & .Country.Name & vbCrLf & vbCrLf
                             sbdHTMLOrderEmail.Replace("[shippingname]", Server.HtmlEncode(.FullName))
                             sbdHTMLOrderEmail.Replace("[shippingstreetaddress]", Server.HtmlEncode(.StreetAddress))
@@ -873,9 +874,9 @@ Partial Class UserControls_Back_CreateOrder
                     Dim BasketItem As New BasketItem
                     'final check if basket items are still there
                     If BasketItems.Count = 0 Then
-                        CkartrisFormatErrors.LogError("Basket items were lost in the middle of Checkout! Customer redirected to main Basket page." & vbCrLf & _
-                                                      "Details: " & vbCrLf & "C_ID:" & IIf(Not String.IsNullOrEmpty(Trim(litOrderCustomerID.Text)), litOrderCustomerID.Text, " New User") & vbCrLf & _
-                                                        "Payment Gateway: " & clsPlugin.GatewayName & vbCrLf & _
+                        CkartrisFormatErrors.LogError("Basket items were lost in the middle of Checkout! Customer redirected to main Basket page." & vbCrLf &
+                                                      "Details: " & vbCrLf & "C_ID:" & IIf(Not String.IsNullOrEmpty(Trim(lnkOrderCustomerID.Text)), lnkOrderCustomerID.Text, " New User") & vbCrLf &
+                                                        "Payment Gateway: " & clsPlugin.GatewayName & vbCrLf &
                                                         "Generated Body Text: " & sbdBodyText.ToString)
                         'Response.Redirect("~/Basket.aspx")
                     End If
@@ -887,8 +888,8 @@ Partial Class UserControls_Back_CreateOrder
                             Dim sbdOptionText As New StringBuilder("")
                             If Not String.IsNullOrEmpty(.OptionText) Then sbdOptionText.Append(vbCrLf & " " & .OptionText().Replace("<br>", vbCrLf & " ").Replace("<br />", vbCrLf & " "))
 
-                            sbdBasketItems.AppendLine( _
-                                        GetItemEmailText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ")" & _
+                            sbdBasketItems.AppendLine(
+                                        GetItemEmailText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ")" &
                                                          sbdOptionText.ToString, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
 
 
@@ -899,7 +900,7 @@ Partial Class UserControls_Back_CreateOrder
                             End If
                             If blnUseHTMLOrderEmail Then
                                 'this line builds up the individual rows of the order contents table in the HTML email
-                                sbdHTMLOrderBasket.AppendLine(GetHTMLEmailRowText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ") " & _
+                                sbdHTMLOrderBasket.AppendLine(GetHTMLEmailRowText(.Quantity & " x " & .ProductName, .VersionName & " (" & .CodeNumber & ") " &
                                                          sbdOptionText.ToString & strCustomText, .ExTax, .IncTax, .TaxAmount, .ComputedTaxRate))
                             End If
                         End With
@@ -909,8 +910,8 @@ Partial Class UserControls_Back_CreateOrder
                 sbdBodyText.Insert(0, sbdBasketItems.ToString)
                 If blnUseHTMLOrderEmail Then
                     'build up the table and the header tags, insert basket contents
-                    sbdHTMLOrderContents.Insert(0, "<table id=""orderitems""><thead><tr>" & vbCrLf & _
-                                                "<th class=""col1"">" & GetGlobalResourceObject("Kartris", "ContentText_Item") & "</th>" & vbCrLf & _
+                    sbdHTMLOrderContents.Insert(0, "<table id=""orderitems""><thead><tr>" & vbCrLf &
+                                                "<th class=""col1"">" & GetGlobalResourceObject("Kartris", "ContentText_Item") & "</th>" & vbCrLf &
                                                 "<th class=""col2"">" & GetGlobalResourceObject("Kartris", "ContentText_Price") & "</th></thead><tbody>" & vbCrLf &
                                                 sbdHTMLOrderBasket.ToString)
                     'finally close the order contents HTML table
@@ -922,8 +923,8 @@ Partial Class UserControls_Back_CreateOrder
                 'check if shippingdestinationid is initialized, if not then reload checkout page
                 If Not blnBasketAllDigital Then
                     If _UC_BasketMain.ShippingDestinationID = 0 Or _UC_BasketMain.ShippingDestinationID = 0 Then
-                        CkartrisFormatErrors.LogError("Basket was reset. Shipping info lost." & vbCrLf & "BasketView Shipping Destination ID: " & _
-                                                      _UC_BasketMain.ShippingDestinationID & vbCrLf & "BasketSummary Shipping Destination ID: " & _
+                        CkartrisFormatErrors.LogError("Basket was reset. Shipping info lost." & vbCrLf & "BasketView Shipping Destination ID: " &
+                                                      _UC_BasketMain.ShippingDestinationID & vbCrLf & "BasketSummary Shipping Destination ID: " &
                                                       _UC_BasketMain.ShippingDestinationID)
                         Response.Redirect("~/Checkout.aspx")
                     End If
@@ -1182,10 +1183,10 @@ Partial Class UserControls_Back_CreateOrder
                                         '---------------------------------------
                                         'UPDATE THE ORDER RECORD
                                         '---------------------------------------
-                                        Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True, _
-                                                                                                  blnCheckInvoicedOnPayment, _
-                                                                                                  blnCheckReceivedOnPayment, _
-                                                                                                  strOrderTimeText, _
+                                        Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True,
+                                                                                                  blnCheckInvoicedOnPayment,
+                                                                                                  blnCheckReceivedOnPayment,
+                                                                                                  strOrderTimeText,
                                                                                                   O_CouponCode, O_WishListID, 0, 0, "", 0)
                                         'If intUpdateResult = O_ID Then
                                         Dim strCustomerEmailText As String = ""
@@ -1207,8 +1208,8 @@ Partial Class UserControls_Back_CreateOrder
 
                                         'Add in email header above that
                                         If Not blnUseHTMLOrderEmail Then
-                                            strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderReceived") & vbCrLf & vbCrLf & _
-                                                            GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf & _
+                                            strCustomerEmailText = GetGlobalResourceObject("Email", "EmailText_OrderReceived") & vbCrLf & vbCrLf &
+                                                            GetGlobalResourceObject("Kartris", "ContentText_OrderNumber") & ": " & O_ID & vbCrLf & vbCrLf &
                                                             strCustomerEmailText
                                         Else
                                             strCustomerEmailText = strCustomerEmailText.Replace("[storeowneremailheader]", "")
@@ -1302,10 +1303,10 @@ Partial Class UserControls_Back_CreateOrder
                         '---------------------------------------
                         'UPDATE THE ORDER RECORD
                         '---------------------------------------
-                        Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, "", CkartrisDisplayFunctions.NowOffset, True, _
-                                                                                  True, _
-                                                                                  False, _
-                                                                                  Payment.Serialize(objBasket), _
+                        Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, "", CkartrisDisplayFunctions.NowOffset, True,
+                                                                                  True,
+                                                                                  False,
+                                                                                  Payment.Serialize(objBasket),
                                                                                   objBasket.CouponCode, 0, 0, 0, "", 0)
 
                         '---------------------------------------
@@ -1354,7 +1355,7 @@ Partial Class UserControls_Back_CreateOrder
         If Not String.IsNullOrEmpty(litOptionsVersion.Text) AndAlso litOptionsVersion.Text = numVersionID Then
             _UC_OptionsPopup.ClearIDs() '' reset product id and version id for the options popup
             litOptionsVersion.Text = Nothing
-            Dim objBasket As kartris.Basket = _UC_BasketMain.GetBasket
+            Dim objBasket As Kartris.Basket = _UC_BasketMain.GetBasket
             Dim sessionID As Long = Session("SessionID")
             BasketBLL.AddNewBasketValue(objBasket.BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, numVersionID, 1, "", strOptions)
             LoadBasket()
@@ -1380,10 +1381,18 @@ Partial Class UserControls_Back_CreateOrder
     Public Function ReturnUserID() As Integer
         Dim strUserID As String = ""
         Try
-            strUserID = litOrderCustomerID.Text
+            strUserID = lnkOrderCustomerID.Text
             Return CInt(strUserID)
         Catch ex As Exception
             Return 0
         End Try
+    End Function
+
+    ''' <summary>
+    ''' Create a link to customer, useful if need to edit
+    ''' details before placing a new order
+    ''' </summary>
+    Public Function FormatCustomerLink(ByVal numCustomerID As Integer) As String
+        Return "~/Admin/_ModifyCustomerStatus.aspx?CustomerID=" & numCustomerID
     End Function
 End Class

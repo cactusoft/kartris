@@ -101,8 +101,9 @@ Partial Class UserControls_Back_EditOrder
                             Dim intOrderLanguageID As Int16 = CShort(dtOrderRecord.Rows(0)("O_LanguageID"))
                             Dim intOrderCurrencyID As Int16 = CShort(dtOrderRecord.Rows(0)("O_CurrencyID"))
                             Dim strOrderPaymentGateway As String = dtOrderRecord.Rows(0)("O_PaymentGateway")
-                            litOrderCustomerID.Text = CInt(dtOrderRecord.Rows(0)("O_CustomerID"))
-                            txtOrderCustomerEmail.Text = UsersBLL.CleanGuestEmailUsername(UsersBLL.GetEmailByID(litOrderCustomerID.Text))
+                            lnkOrderCustomerID.Text = CInt(dtOrderRecord.Rows(0)("O_CustomerID"))
+                            lnkOrderCustomerID.NavigateUrl = FormatCustomerLink(dtOrderRecord.Rows(0)("O_CustomerID"))
+                            txtOrderCustomerEmail.Text = UsersBLL.CleanGuestEmailUsername(UsersBLL.GetEmailByID(lnkOrderCustomerID.Text))
                             txtOrderPONumber.Text = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_PurchaseOrderNo"))
                             chkOrderSent.Checked = CBool(dtOrderRecord.Rows(0)("O_Sent"))
                             chkOrderInvoiced.Checked = CBool(dtOrderRecord.Rows(0)("O_Invoiced"))
@@ -134,8 +135,8 @@ Partial Class UserControls_Back_EditOrder
 
                             With objOrder
                                 With .Billing
-                                    addBilling = New Address(.Name, .Company, .StreetAddress, .TownCity, .CountyState, .Postcode, _
-                                                                          Country.GetByIsoCode(.CountryIsoCode).CountryId, .Phone, , , _
+                                    addBilling = New Address(.Name, .Company, .StreetAddress, .TownCity, .CountyState, .Postcode,
+                                                                          Country.GetByIsoCode(.CountryIsoCode).CountryId, .Phone, , ,
                                                                           IIf(objOrder.SameShippingAsBilling, "u", "b"))
                                 End With
                                 If .SameShippingAsBilling Then
@@ -143,8 +144,8 @@ Partial Class UserControls_Back_EditOrder
                                     ViewState("intShippingDestinationID") = Country.GetByIsoCode(.Billing.CountryIsoCode).CountryId
                                 Else
                                     With .Shipping
-                                        addShipping = New Address(.Name, .Company, .StreetAddress, .TownCity, .CountyState, .Postcode, _
-                                                                          Country.GetByIsoCode(.CountryIsoCode).CountryId, .Phone, , , _
+                                        addShipping = New Address(.Name, .Company, .StreetAddress, .TownCity, .CountyState, .Postcode,
+                                                                          Country.GetByIsoCode(.CountryIsoCode).CountryId, .Phone, , ,
                                                                           IIf(objOrder.SameShippingAsBilling, "u", "s"))
                                         ViewState("intShippingDestinationID") = Country.GetByIsoCode(.CountryIsoCode).CountryId
                                     End With
@@ -358,7 +359,7 @@ Partial Class UserControls_Back_EditOrder
                     _UC_OptionsPopup.ShowPopup(intVersionID, FixNullFromDB(dr("V_ProductID")), FixNullFromDB(dr("V_CodeNumber"))) '' Show options for selected product
                 Case Else           '' Normal Product
                     litOptionsVersion.Text = ""
-                    Dim objBasket As kartris.Basket = UC_BasketMain.GetBasket
+                    Dim objBasket As Kartris.Basket = UC_BasketMain.GetBasket
                     Dim sessionID As Long = Session("SessionID")
                     BasketBLL.AddNewBasketValue(objBasket.BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, intVersionID, 1, "", "")
                     _UC_AutoComplete_Item.SetText("")
@@ -396,7 +397,7 @@ Partial Class UserControls_Back_EditOrder
         Dim strTempEmailTextHolder As String = ""
 
         Dim arrBasketItems As List(Of Kartris.BasketItem)
-        Dim objBasket As kartris.Basket = Session("Basket")
+        Dim objBasket As Kartris.Basket = Session("Basket")
         Dim objOrder As Kartris.Interfaces.objOrder = Nothing
         Dim strOrderDetails As String = ""
 
@@ -715,7 +716,7 @@ Partial Class UserControls_Back_EditOrder
             'exempt from it
             Dim BSKT_CustomerDiscount As Double = 0
             Try
-                BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(litOrderCustomerID.Text)
+                BSKT_CustomerDiscount = BasketBLL.GetCustomerDiscount(lnkOrderCustomerID.Text)
             Catch ex As Exception
                 'New user, just defaults to zero as no customer discount in this case
             End Try
@@ -927,4 +928,12 @@ Partial Class UserControls_Back_EditOrder
             LoadBasket()
         End If
     End Sub
+
+    ''' <summary>
+    ''' Create a link to customer, useful if need to edit
+    ''' details before placing a new order
+    ''' </summary>
+    Public Function FormatCustomerLink(ByVal numCustomerID As Integer) As String
+        Return "~/Admin/_ModifyCustomerStatus.aspx?CustomerID=" & numCustomerID
+    End Function
 End Class

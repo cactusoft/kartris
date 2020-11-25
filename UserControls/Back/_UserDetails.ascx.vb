@@ -159,6 +159,14 @@ Partial Class UserControls_Back_UserDetails
                         valRequiredUserPassword.Enabled = False
                         lblPassword.Visible = True
                         btnChangePassword.Text = GetGlobalResourceObject("_Kartris", "ContentText_ConfigChange2")
+
+                        'Update VAT number
+                        Try
+                            Dim strUpdateVAT As String = UsersBLL.UpdateNameandEUVAT(GetCustomerID(), txtAccountHolderName.Text, txtVATNumber.Text)
+                        Catch ex As Exception
+
+                        End Try
+
                         RaiseEvent _UCEvent_DataUpdated()
                     End If
                 End If
@@ -183,8 +191,16 @@ Partial Class UserControls_Back_UserDetails
             If blnEmailValid Then
                 Dim datSupportEnd As Date = Nothing
                 If IsDate(txtUserSupportEndDate2.Text) Then datSupportEnd = CDate(txtUserSupportEndDate2.Text)
-                intNewUserID = UsersBLL._Add(txtAccountHolderName2.Text, txtUserEmail2.Text, txtUserPassword2.Text, ddlLanguages2.SelectedValue, ddlUserGroups2.SelectedValue, HandleDecimalValues(txtUserDiscount2.Text), _
+                intNewUserID = UsersBLL._Add(txtAccountHolderName2.Text, txtUserEmail2.Text, txtUserPassword2.Text, ddlLanguages2.SelectedValue, ddlUserGroups2.SelectedValue, HandleDecimalValues(txtUserDiscount2.Text),
                              chkUserApproved2.Checked, chkUserisAffialite2.Checked, HandleDecimalValues(txtAffiliateCommission2.Text), datSupportEnd, txtUserNotes2.Text)
+
+                'Update VAT number
+                Try
+                    Dim strUpdateVAT As String = UsersBLL.UpdateNameandEUVAT(intNewUserID, txtAccountHolderName2.Text, txtVATNumber2.Text)
+                Catch ex As Exception
+
+                End Try
+
             End If
             If intNewUserID > 0 Then
                 ViewState("isNewUser") = True
@@ -261,5 +277,13 @@ Partial Class UserControls_Back_UserDetails
     ''' </summary>
     Public Function FormatExportURL(ByVal strRawURL As String) As String
         Return strRawURL & "&Export=y"
+    End Function
+
+    ''' <summary>
+    ''' Create a link to customer, useful if need to edit
+    ''' details before placing a new order
+    ''' </summary>
+    Public Function FormatCustomerLink(ByVal numCustomerID As Integer) As String
+        Return "~/Admin/_ModifyCustomerStatus.aspx?CustomerID=" & numCustomerID
     End Function
 End Class

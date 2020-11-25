@@ -25,7 +25,7 @@
                                 <li><span class="Kartris-DetailsView-Name">
                                     <asp:Label ID="lblOrderCustomerID" runat="server" Text="<%$ Resources: _Customers, FormLabel_CustomerID %>" /></span>
                                     <span class="Kartris-DetailsView-Value">
-                                        <asp:Literal ID="litOrderCustomerID" runat="server"></asp:Literal>
+                                        <asp:Hyperlink ID="lnkOrderCustomerID" runat="server"></asp:Hyperlink>
                                     </span></li>
                                 <li><span class="Kartris-DetailsView-Name">
                                     <asp:Label ID="lblOrderCustomerEmail" runat="server" Text="<%$ Resources: _Kartris, ContentText_Email %>" /></span>
