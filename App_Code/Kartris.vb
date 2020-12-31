@@ -1,6 +1,6 @@
 '========================================================================
 'Kartris - www.kartris.com
-'Copyright 2020 CACTUSOFT
+'Copyright 2021 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -34,7 +34,7 @@ Imports MimeKit 'new in v3, mail now uses MailKit (nuget)
 Public NotInheritable Class CkartrisEnumerations
 
     Public Const KARTRIS_VERSION As Decimal = 3.0001
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #12/29/2019# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #01/01/2021# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1

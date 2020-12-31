@@ -10,7 +10,7 @@ PAGE - Home page and custom page (CMS)
 ========================================================================
 */
 #custompagetext                         { margin: 10px 0 10px 0 }
-#homepage .chunks.row					{ width: 1200px; max-width: 100%; margin: 0 auto; }
+#homepage .chunks.row					{ width: 1200px; max-width: 100%; margin: 0 auto; padding: 10px 30px; }
 #homepage div.chunk ul                  { list-style: none; margin: 0; padding: 0; }
 #homepage div.chunk ul li               { padding: 0 0 5px 0 }
 #homepage .news ul li                   { width: 205px; margin: 0 20px 30px 0; float: left; }
@@ -490,7 +490,7 @@ PRODUCT COMPARISON
 .comparison .item .removelink           { text-align: left }
 /* 
 ========================================================================
-LOGIN / MY ACCOUNT
+LOGIN
 ========================================================================
 */
 #login .recoverpassword                 { margin-top: 30px; padding-top: 10px; }
@@ -499,7 +499,6 @@ LOGIN / MY ACCOUNT
 #login .radio strong                    { color: #000; }
 #login .Kartris-DetailsView-Data        { width: 100% }
 #login .GDPR .checkbox                  { width: 30px; }
-
 
 /* 
 ========================================================================
@@ -675,6 +674,10 @@ MY ACCOUNT / CUSTOMER AREA
 										{ margin-right: 5px }
 #customer .basket .baskettable          { border-bottom: none; margin-top: 20px; }
 #customer .Kartris-LoginStatus.button   {  }
+
+#customer #customer-balance				{ width: 200px; border: solid 1px #f3f3f3; padding: 10px 20px; float: right; margin-top: 40px; background-color: #f3f3f3; text-align: center; }
+#customer #customer-balance	span.label	{ font-size: 13px; color: #333; background-color: transparent; }
+#customer #customer-balance	span.figure { display: block; color: #090; font-size: 140%; font-weight: bold; }
 /* 
 ========================================================================
 ORDER HISTORY / MY ACCOUNT

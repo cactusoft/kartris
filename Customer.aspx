@@ -1,6 +1,6 @@
 ﻿<%@ Page Language="VB" MasterPageFile="~/Skins/Kartris/Template.master" AutoEventWireup="false"
     CodeFile="Customer.aspx.vb" Inherits="Customer" %>
-
+<%@ Register TagPrefix="user" TagName="CustomerBalance" Src="~/UserControls/Front/CustomerBalance.ascx" %>
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
     <div id="customer">
         <user:PopupMessage ID="UC_PopUpInfo" runat="server" />
@@ -52,6 +52,7 @@
                 <asp:UpdatePanel ID="updHome" runat="server" UpdateMode="Conditional">
                     <ContentTemplate>
                         <asp:PlaceHolder ID="phdHome" runat="server" Visible="false">
+                            <user:CustomerBalance runat="server" ID="UC_CustomerBalance" />
                             <h1>
                                 <asp:Literal ID="litPageTitleMyAccount" runat="server" Text='<%$ Resources: Kartris, PageTitle_MyAccount %>'></asp:Literal></h1>
                             <asp:LoginStatus ID="KartrisLoginStatus2" runat="server" CssClass="button"

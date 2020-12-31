@@ -356,8 +356,14 @@ WHERE        (LANG_ID = @LANG_ID) AND P_Name LIKE @Key + '%'
 
 GO
 
+/*** New language strings  ***/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
+(N'f', N'ContentText_AccountBalance', N'Account Balance', NULL, 3.0001, N'Account Balance', NULL, N'Kartris',1);
+
+GO
+
 /* Change config setting */
-UPDATE tblKartrisConfig SET CFG_DisplayInfo = 'n|e|s|t|c', CFG_Value='c', CFG_Description='The display type for the featured products (front page specials) - [n]ormal/[e]xtended/[s]hortened/[t]abular/[c]arousel' WHERE CFG_Name='frontend.featuredproducts.display.default';
+UPDATE tblKartrisConfig SET CFG_DisplayInfo = 'n|e|s|t|c', CFG_Description='The display type for the featured products (front page specials) - [n]ormal/[e]xtended/[s]hortened/[t]abular/[c]arousel' WHERE CFG_Name='frontend.featuredproducts.display.default';
 GO
 
 /****** Set this to tell Data tool which version of db we have ******/

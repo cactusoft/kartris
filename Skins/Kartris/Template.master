@@ -106,9 +106,21 @@
 						<div id="menuCategories" class="menuSpecial">
 							<user:MegaMenu runat="server" ID="UC_MegaMenu" EnableViewState="False" />
 						</div>
-						<div id="menuFurther1" class="menuSpecial">
-							More information menu
-						</div>
+                        <div id="menuFurther1" class="menuSpecial">
+							<div class="custommegamenu">
+								Edit "menuFurther1" in /Skins/Kartris/Template.master
+							</div>
+                        </div>
+                        <div id="menuFurther2" class="menuSpecial">
+							<div class="custommegamenu">
+								Edit "menuFurther2" in /Skins/Kartris/Template.master
+							</div>
+                        </div>
+                        <div id="menuFurther3" class="menuSpecial">
+							<div class="custommegamenu">
+								Edit "menuFurther3" in /Skins/Kartris/Template.master
+							</div>
+                        </div>
 						<div id="menuSettings" class="menuSpecial">
 							<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
 							<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />

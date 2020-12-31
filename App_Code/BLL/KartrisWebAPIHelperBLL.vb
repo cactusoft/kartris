@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2020 CACTUSOFT
+'Copyright 2021 CACTUSOFT
 'Copyright 2014 POLYCHROME (additions and changes related to Web API)
 
 'GNU GENERAL PUBLIC LICENSE v2
