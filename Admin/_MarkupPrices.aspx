@@ -144,7 +144,8 @@
                             </asp:GridView>
                             <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
                                 <asp:LinkButton ID="btnSave" runat="server" Text="<%$ Resources: _Kartris, FormButton_Save %>"
-                                    ToolTip="<%$ Resources: _Kartris, FormButton_Save %>" CssClass="button savebutton" /></div>
+                                    ToolTip="<%$ Resources: _Kartris, FormButton_Save %>" CssClass="button savebutton" />
+                            </div>
                     </asp:View>
                 </asp:MultiView>
                 <_user:PopupMessage ID="_UC_PopupMsg" runat="server" />
@@ -163,7 +164,7 @@
         </div>
         <h2>
             <asp:Literal ID="litImportPriceTitle" runat="server" Text="<%$ Resources: _MarkupPrices, ContentText_ImportPriceList %>"></asp:Literal></h2>
-            <asp:Literal ID="litImportListDescription" runat="server" Text="<%$ Resources: _MarkupPrices, ContentText_ImportPriceListInfo %>"></asp:Literal>
+        <asp:Literal ID="litImportListDescription" runat="server" Text="<%$ Resources: _MarkupPrices, ContentText_ImportPriceListInfo %>"></asp:Literal>
         <div class="Kartris-DetailsView">
             <div class="Kartris-DetailsView-Data">
                 <ul>
@@ -233,12 +234,18 @@
                         <asp:LinkButton ID="btnUploadCustomerGroupPriceList" runat="server" Text="<%$ Resources: _Kartris, ContentText_Upload %>"
                             CssClass="linkbutton icon_upload icon_upload" />
                     </span></li>
+                    <li><span class="Kartris-DetailsView-Name">Version Identifier</span><span class="Kartris-DetailsView-Value">
+                        <asp:DropDownList ID="ddlVersionIdentifier" runat="server" AppendDataBoundItems="true">
+                            <asp:ListItem Text="V_ID" Value="V_ID"></asp:ListItem>
+                            <asp:ListItem Text="V_CodeNumber" Value="V_CodeNumber"></asp:ListItem>
+                        </asp:DropDownList>
+                    </span></li>
                 </ul>
             </div>
         </div>
         <br />
         <asp:UpdatePanel ID="updSubmitCustomerGroupPriceList" runat="server" UpdateMode="Conditional">
-            
+
             <ContentTemplate>
                 <asp:Button ID="btnSubmitCustomerGroupPriceList" runat="server" Text="<%$ Resources: _Kartris, FormButton_Submit %>"
                     CssClass="button" ValidationGroup="CustomerGroupPriceList" />
@@ -284,7 +291,7 @@
         </div>
         <br />
         <asp:UpdatePanel ID="updSubmitQuantityDiscounts" runat="server" UpdateMode="Conditional">
-            
+
             <ContentTemplate>
                 <asp:Button ID="btnSubmitQuantityDiscounts" runat="server" Text="<%$ Resources: _Kartris, FormButton_Submit %>"
                     CssClass="button" ValidationGroup="QuantityDiscounts" />

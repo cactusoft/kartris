@@ -3049,7 +3049,11 @@ INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value],
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_Images', N'Images', NULL, 1, NULL, NULL, N'_Kartris',1)
 --Insert Language Strings - Jóni Silva - 11/01/2016 BEGIN
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ImportCustomerGroupPrices', N'Import Customer Group Prices', NULL, 2.9003, N'', NULL, N'_MarkupPrices',1)
-INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ImportCustomerGroupPricesInfo', N'This is custom functionality, use the CustomerGroupPrices data export to obtain a file in suitable format', NULL, 2.9003, N'This is custom functionality, use the CustomerGroupPrices data export to obtain a file in suitable format', NULL, N'_MarkupPrices',1)
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ImportCustomerGroupPricesInfo', N'Format depending on Version Identity selection:<br />
+CustomerGroupName, CustomerGroupID, VersionID, Price<br />
+or<br />
+CustomerGroupName, CustomerGroupID, VersionCodeNumber/SKU, Price<br />
+etc...', NULL, 2.9003, N'This is custom functionality, use the CustomerGroupPrices data export to obtain a file in suitable format', NULL, N'_MarkupPrices',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ImportQuantityDiscounts', N'Import Quantity Discounts', NULL, 2.9003, N'Import Quantity Discounts', NULL, N'_MarkupPrices',1)
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'b', N'ContentText_ImportQuantityDiscountsInfo', N'This is custom functionality, use the QuantityDiscounts data export to obtain a file in suitable format', NULL, 2.9003, N'', NULL, N'_MarkupPrices',1)
 --Insert Language Strings - Jóni Silva - 11/01/2016 END
@@ -26446,9 +26450,15 @@ BEGIN
 	
 	SET NOCOUNT ON;
 
-
-	UPDATE dbo.tblKartrisCustomerGroupPrices
-	SET CGP_Price = @CGP_Price WHERE CGP_VersionID = @CGP_VersionID AND CGP_CustomerGroupID = @CG_ID;
+	if EXISTS(SELECT CGP_VersionID FROM dbo.tblKartrisCustomerGroupPrices WHERE CGP_VersionID = @CGP_VersionID AND CGP_CustomerGroupID = @CG_ID)
+		BEGIN
+			UPDATE dbo.tblKartrisCustomerGroupPrices
+			SET CGP_Price = @CGP_Price WHERE CGP_VersionID = @CGP_VersionID AND CGP_CustomerGroupID = @CG_ID;
+		END
+	ELSE
+	  BEGIN
+		INSERT INTO dbo.tblKartrisCustomerGroupPrices (CGP_CustomerGroupID, CGP_VersionID, CGP_Price) VALUES (@CG_ID, @CGP_VersionID, @CGP_Price);
+	  END
 
 END
 GO

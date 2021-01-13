@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2021 CACTUSOFT
+'Copyright 2020 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -337,7 +337,11 @@ Partial Class Admin_MarkupPrices
     Protected Sub btnSubmitCustomerGroupPriceList_Click(sender As Object, e As System.EventArgs) Handles btnSubmitCustomerGroupPriceList.Click
         Dim numLines As Integer = 0, strMessage As String = String.Empty
 
-        If VersionsBLL._UpdateCustomerGroupPriceList(txtCustomerGroupPriceList.Text.Replace(Chr(10), "#"), numLines, strMessage) Then
+        'Paul mod 2021/01/13
+        Dim blnUseVersionCode As Boolean = False
+        If ddlVersionIdentifier.SelectedValue = "V_CodeNumber" Then blnUseVersionCode = True
+
+        If VersionsBLL._UpdateCustomerGroupPriceList(txtCustomerGroupPriceList.Text.Replace(Chr(10), "#"), numLines, strMessage, blnUseVersionCode) Then
             txtCustomerGroupPriceList.Text = Nothing : updCustomerGroupPriceList.Update() '' clear the list for new entry
             CType(Me.Master, Skins_Admin_Template).DataUpdated()
         Else

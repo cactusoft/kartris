@@ -356,6 +356,44 @@ WHERE        (LANG_ID = @LANG_ID) AND P_Name LIKE @Key + '%'
 
 GO
 
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisVersions_UpdateCustomerGroupPriceList]    Script Date: 13/01/2021 11:09:22 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisVersions_UpdateCustomerGroupPriceList]
+(
+	@CG_ID as bigint,
+	@CGP_VersionID as bigint,
+	@CGP_Price as DECIMAL(18,4)
+)								
+AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	if EXISTS(SELECT CGP_VersionID FROM dbo.tblKartrisCustomerGroupPrices WHERE CGP_VersionID = @CGP_VersionID AND CGP_CustomerGroupID = @CG_ID)
+		BEGIN
+			UPDATE dbo.tblKartrisCustomerGroupPrices
+			SET CGP_Price = @CGP_Price WHERE CGP_VersionID = @CGP_VersionID AND CGP_CustomerGroupID = @CG_ID;
+		END
+	ELSE
+	  BEGIN
+		INSERT INTO dbo.tblKartrisCustomerGroupPrices (CGP_CustomerGroupID, CGP_VersionID, CGP_Price) VALUES (@CG_ID, @CGP_VersionID, @CGP_Price);
+	  END
+
+
+
+END
+
+GO
+
 /*** New language strings  ***/
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
 (N'f', N'ContentText_AccountBalance', N'Account Balance', NULL, 3.0001, N'Account Balance', NULL, N'Kartris',1);

@@ -188,6 +188,10 @@ Public Class VersionsBLL
         Return Adptr._GetByCodeNumber(pCodeNumber, pExcludedProductID, pExecludedVersionID).Rows.Count > 0
     End Function
 
+    Public Shared Function _GetVersionIDByCodeNumber(ByVal pCodeNumber As String) As Int64
+        Return Adptr._GetVersionIDByCodeNumber(pCodeNumber)
+    End Function
+
     Public Shared Function _GetNoOfVersionsByProductID(ByVal ProductID As Integer) As Integer
         Return CInt(Adptr._GetTotalByProductID(ProductID).Rows(0)("TotalVersions"))
     End Function
@@ -1129,13 +1133,14 @@ Public Class VersionsBLL
         Adptr._ChangeSortValue(numVersionID, numProductID, chrDirection)
     End Sub
 
-    Public Shared Function _UpdateCustomerGroupPriceList(strPriceList As String, ByRef numLineNumber As Integer, ByRef strMsg As String) As Boolean
+    Public Shared Function _UpdateCustomerGroupPriceList(strPriceList As String, ByRef numLineNumber As Integer, ByRef strMsg As String, ByRef blnUseVersionCode As Boolean) As Boolean
 
         'We want to parse the price list row here first, identify the parameters and 
         'then send these to sproc, rather than try to do the parsing there which seems
         'to be far more complicated.
         Dim numCG_ID As Integer = 0
         Dim numCGP_VersionID As Int64 = 0
+        Dim strVersionCode As String = ""
         Dim numCGP_Price As Double = 0
         Dim numCounter As Int64 = 0
 
@@ -1145,7 +1150,12 @@ Public Class VersionsBLL
             Dim aryThisLine As String() = aryGroupPriceLines(numCounter).Split(New Char() {","c})
             Try
                 numCG_ID = CInt(aryThisLine(1))
-                numCGP_VersionID = CInt(aryThisLine(2))
+                If blnUseVersionCode Then
+                    'We need to lookup the version ID from the code
+                    numCGP_VersionID = VersionsBLL._GetVersionIDByCodeNumber(aryThisLine(2))
+                Else
+                    numCGP_VersionID = CInt(aryThisLine(2))
+                End If
                 numCGP_Price = Convert.ToDouble(aryThisLine(3))
 
                 'CG_Name','CG_ID','CGP_VersionID','CGP_Price'
