@@ -9208,7 +9208,7 @@ BEGIN
 				substring(O_BillingAddress,0,charindex(char(13)+char(10),O_BillingAddress)) as O_BillingName,O_LanguageID, tblKartrisClonedOrders.CO_OrderID
 		  FROM         tblKartrisOrders LEFT OUTER JOIN
 				tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
-		  WHERE     (O_Sent = 1) AND (O_Paid = 1) AND (O_Shipped = 0)
+		  WHERE     (O_Sent = 1) AND (O_Paid = 1) AND (O_Shipped = 0) AND (O_Cancelled = 0)
 		  )
 		  SELECT *
 		  FROM OrdersList
@@ -9396,7 +9396,7 @@ BEGIN
 			  SELECT count(1) 
 			  FROM         tblKartrisOrders LEFT OUTER JOIN
 					tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
-			  WHERE (O_Sent = 1) AND (O_Invoiced = 0) AND (O_Paid = 0)
+			  WHERE     (O_Sent = 1) AND (O_Paid = 1) AND (O_Shipped = 0) AND (O_Cancelled = 0)
 			END
 		  IF @Callmode = 'COMPLETE'
 			BEGIN
