@@ -349,26 +349,28 @@
                             <asp:Literal ID="litReviewOrder" runat="server" Text="<%$ Resources: PageTitle_ReviewYourOrder %>"
                                 EnableViewState="false" /></strong>
                     </p>
-                    <!--
-                    -------------------------------
-                    BILLING ADDRESS
-                    -------------------------------
-                    -->
-                    <div class="checkoutaddress small-12 large-6 columns">
-                        <h2>
-                            <asp:Literal ID="litBillingDetails" runat="server" Text="<%$ Resources: Address, ContentText_BillingAddress %>" EnableViewState="true" /></h2>
-                        <user:AddressDetails ID="UC_Billing" runat="server" ShowLabel="false" ShowButtons="false" />
-                    </div>
-                    <!--
-                    -------------------------------
-                    SHIPPING ADDRESS
-                    -------------------------------
-                    -->
-                    <div class="checkoutaddress small-12 large-6 columns">
-                        <h2>
-                            <asp:Literal ID="litShippingDetails" runat="server" Text="<%$ Resources: Address, ContentText_Shipping %>"
-                                EnableViewState="true" /></h2>
-                        <user:AddressDetails ID="UC_Shipping" runat="server" ShowLabel="false" ShowButtons="false" />
+                    <div class="row collapse">
+                        <!--
+                        -------------------------------
+                        BILLING ADDRESS
+                        -------------------------------
+                        -->
+                        <div class="checkoutaddress small-12 large-6 columns">
+                            <h2>
+                                <asp:Literal ID="litBillingDetails" runat="server" Text="<%$ Resources: Address, ContentText_BillingAddress %>" EnableViewState="true" /></h2>
+                            <user:AddressDetails ID="UC_Billing" runat="server" ShowLabel="false" ShowButtons="false" />
+                        </div>
+                        <!--
+                        -------------------------------
+                        SHIPPING ADDRESS
+                        -------------------------------
+                        -->
+                        <div class="checkoutaddress small-12 large-6 columns">
+                            <h2>
+                                <asp:Literal ID="litShippingDetails" runat="server" Text="<%$ Resources: Address, ContentText_Shipping %>"
+                                    EnableViewState="true" /></h2>
+                            <user:AddressDetails ID="UC_Shipping" runat="server" ShowLabel="false" ShowButtons="false" />
+                        </div>
                     </div>
                     <div class="spacer">
                     </div>
