@@ -28168,6 +28168,12 @@ VALUES
 
 GO
 
+/*** New language strings  ***/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
+(N'f', N'ContentText_AccountBalance', N'Account Balance', NULL, 3.0001, N'Account Balance', NULL, N'Kartris',1);
+
+GO
+
 /****** Object:  Index [OrderID]    Script Date: 20/12/2019 10:12:50 ******/
 CREATE NONCLUSTERED INDEX [OrderID] ON [dbo].[tblKartrisOrdersPromotions]
 (
