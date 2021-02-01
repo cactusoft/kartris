@@ -7,7 +7,7 @@ BIG SCREENS
 @media only screen and (min-width: 930px) {
   .row                      { max-width: 100%; }
   table tr td               { padding: 11px 16px 15px 10px; }
-  }
+}
 
 /* 
 ========================================================================
@@ -48,6 +48,8 @@ MEDIUM SCREENS
 
     /* sections */
     .products_shortened .item { width: calc(50% - 20px); }
+    #homepage .chunks.row { padding: 5px; }
+    #homepage .news ul li { width: 100% !important; }
 }
 
 /* 
@@ -73,6 +75,7 @@ SMALL SCREENS
     select,
     input { width: 100%; }
     #footer_inside { margin: 0; }
+
 }
 
 /* 

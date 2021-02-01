@@ -1,0 +1,146 @@
+
+/* 
+========================================================================
+BIG SCREENS
+========================================================================
+*/
+@media only screen and (min-width: 1024px) {
+	.row                      { max-width: 100%; }
+	table tr td               { padding: 4px 16px 7px 10px; }
+
+	/* Products*/
+	.products_shortened .item .details,
+	.subcategories_shortened .item .details { height: 35%; }
+}
+
+/* 
+========================================================================
+MEDIUM SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 1024px) {
+
+	/* page layout */
+	#centre_container               { padding: 5px 5px 5px 5px; }
+	#centre_container.page-default  { padding: 50px 0 50px 0 !important; } 
+	#pagecontent_pad                { min-height: 200px; padding: 5px; }
+
+	/* header */
+	#header                         { padding: 3px 10px; height: 50px; }
+	.page-loading-container         { top: 50px; height: calc(100% - 50px); /* 51px = header height plus little for dropshadow */ }
+
+	#header .row                    { padding: 5px; }
+	#header .logo                   { width: 110px; }
+	.header--fixed                  { height: 45px !important; padding: 8px 8px !important; }
+	#header.header--fixed .row      { padding: 0 3px; }
+	#loginstatus                    { margin: 1px 0 0 0; }
+	#header #icons #menuSearchLink  { top: 6px; }
+	#minibasket                     { margin: 2px 0 0 0; }
+	#header .menuSpecial            { top: 49px; } 
+	#header.header--fixed .menuSpecial
+									{ top: 44px;  } 
+	.breadcrumbtrail                { margin: 60px auto 0 auto; padding: 0 13px; }
+
+	/* Products*/
+	.products_shortened .item,
+	.subcategories_shortened .item  { width: calc(25% - 10px); }
+	.products_shortened .item .details,
+	.subcategories_shortened .item .details { height: 35%; margin: 10px 0 0 0 ; }
+	.products_shortened .item .details h2,
+	.subcategories_shortened .item .details h2   { padding: 0 0 0 0; }
+	.product div.imagecolumn .imageholder
+									{ margin-left: 0; width: 100%; }
+
+	.products_tabular .item                 { width: calc(25% - 10px); }
+	.product div.imagecolumn .media_gallery { width: 100%; float: right; }
+
+	/* Checkout*/
+	#checkout .row .checkoutaddress:nth-child(1) .address {
+	  margin: 0 0 5px 0;
+	}
+	#checkout .row .checkoutaddress:nth-child(2) .address {
+	  margin: 5px 0 0 0;
+	}
+	#checkout .row .checkoutaddress:nth-child(2) h2 {
+	  margin-left: 0;
+	}
+
+	/* General */
+	h1 { font-size: 150%; }
+	h2 { font-size: 110%; }
+
+	/* sections */
+	#homepage .chunks.row { padding: 5px; }
+	#homepage .news ul li { width: 100% !important; }
+
+}
+
+/* 
+========================================================================
+MEDIUM SMALL SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 768px) {
+
+	/* Products*/
+	.products_shortened .item,
+	.subcategories_shortened .item          { width: calc(50% - 20px); max-width: calc(50% - 10px); }
+	.products_shortened .item .details,
+	.subcategories_shortened .item .details { height: 35%; }
+
+	/* Basket*/
+	.basket .controls input					{ float: none; width: calc(50% - 2px); margin: 1px; }
+	.basket .controls input.highpriority	{ margin-top: 10px; float: none; width: 100%; }
+
+	/* Checkout*/
+	#checkout .submitbuttons #cntMain_btnProceed
+											{ margin-top: 10px; float: none; width: 100%; }
+}
+
+/* 
+========================================================================
+SMALL SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 530px) {
+
+	html { zoom: 0.9; }
+
+	.product div.imagecolumn { padding: 10px 0 0 0 !important; }
+
+	/* Products*/
+	.products_shortened .item .details,
+	.subcategories_shortened .item .details { height: 35%; }
+	.products_shortened .item .details h2,
+	.subcategories_shortened .item .details h2   { padding: 0 0 0 0; }
+
+	.products_tabular .item                 { width: calc(50% - 10px); }
+	.versions td.info                       { max-width: 200px; overflow: hidden; }
+
+	.Kartris-DetailsView-Value { width: 270px; }
+	ul { max-width: 100%; }
+
+	.versions td.info { max-width: 200px; overflow: hidden; }
+	.basket td.quantity input { width: 32px; text-align: right; }
+	select,
+	input { width: 100%; }
+	#footer_inside { margin: 0; }
+}
+
+/* 
+========================================================================
+EXTRA SMALL SCREENS
+========================================================================
+*/
+@media only screen and (max-width: 320px) {
+
+	html { zoom: 0.7; }
+}
+
+/* 
+========================================================================
+GENERAL 
+========================================================================
+*/
+table tr td                             { font-size: 100%; }
+

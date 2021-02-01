@@ -750,6 +750,10 @@ END
 
 GO
 
+/*** DELETE FLASH MEDIA TYPES  ***/
+DELETE FROM [dbo].[tblKartrisMediaTypes] WHERE MT_ID =1 OR MT_ID=4
+GO
+
 /*** New language strings  ***/
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
 (N'f', N'ContentText_AccountBalance', N'Account Balance', NULL, 3.0001, N'Account Balance', NULL, N'Kartris',1);

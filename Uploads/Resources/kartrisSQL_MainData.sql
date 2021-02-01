@@ -2328,10 +2328,10 @@ CREATE TABLE [dbo].[tblKartrisMediaTypes](
 ) ON [PRIMARY]
 GO
 SET IDENTITY_INSERT [dbo].[tblKartrisMediaTypes] ON
-INSERT [dbo].[tblKartrisMediaTypes] ([MT_ID], [MT_Extension], [MT_DefaultHeight], [MT_DefaultWidth], [MT_DefaultParameters], [MT_DefaultisDownloadable], [MT_Embed], [MT_Inline]) VALUES (1, N'swf', 600, 800, NULL, 1, 0, 0)
+--INSERT [dbo].[tblKartrisMediaTypes] ([MT_ID], [MT_Extension], [MT_DefaultHeight], [MT_DefaultWidth], [MT_DefaultParameters], [MT_DefaultisDownloadable], [MT_Embed], [MT_Inline]) VALUES (1, N'swf', 600, 800, NULL, 1, 0, 0)
 INSERT [dbo].[tblKartrisMediaTypes] ([MT_ID], [MT_Extension], [MT_DefaultHeight], [MT_DefaultWidth], [MT_DefaultParameters], [MT_DefaultisDownloadable], [MT_Embed], [MT_Inline]) VALUES (2, N'mp3', 25, 400, N'autostart=0;autoreplay=1;showtime=1;randomplay=1;nopointer=1', 0, 0, 1)
 INSERT [dbo].[tblKartrisMediaTypes] ([MT_ID], [MT_Extension], [MT_DefaultHeight], [MT_DefaultWidth], [MT_DefaultParameters], [MT_DefaultisDownloadable], [MT_Embed], [MT_Inline]) VALUES (3, N'youtube', 410, 640, NULL, 0, 1, 0)
-INSERT [dbo].[tblKartrisMediaTypes] ([MT_ID], [MT_Extension], [MT_DefaultHeight], [MT_DefaultWidth], [MT_DefaultParameters], [MT_DefaultisDownloadable], [MT_Embed], [MT_Inline]) VALUES (4, N'flv', 600, 800, NULL, 0, 0, 0)
+--INSERT [dbo].[tblKartrisMediaTypes] ([MT_ID], [MT_Extension], [MT_DefaultHeight], [MT_DefaultWidth], [MT_DefaultParameters], [MT_DefaultisDownloadable], [MT_Embed], [MT_Inline]) VALUES (4, N'flv', 600, 800, NULL, 0, 0, 0)
 INSERT [dbo].[tblKartrisMediaTypes] ([MT_ID], [MT_Extension], [MT_DefaultHeight], [MT_DefaultWidth], [MT_DefaultParameters], [MT_DefaultisDownloadable], [MT_Embed], [MT_Inline]) VALUES (5, N'pdf', 10, 10, NULL, 1, 0, 0)
 INSERT [dbo].[tblKartrisMediaTypes] ([MT_ID], [MT_Extension], [MT_DefaultHeight], [MT_DefaultWidth], [MT_DefaultParameters], [MT_DefaultisDownloadable], [MT_Embed], [MT_Inline]) VALUES (6, N'doc', 10, 10, NULL, 1, 0, 0)
 INSERT [dbo].[tblKartrisMediaTypes] ([MT_ID], [MT_Extension], [MT_DefaultHeight], [MT_DefaultWidth], [MT_DefaultParameters], [MT_DefaultisDownloadable], [MT_Embed], [MT_Inline]) VALUES (7, N'html5video', 480, 640, NULL, 0, 0, 0)

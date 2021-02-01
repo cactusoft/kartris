@@ -224,13 +224,13 @@ Partial Class UserControls_Back_EditMedia
         Dim blnFileExist As Boolean = File.Exists(Server.MapPath(strMediaLinksFolder & strFileName))
         lnkUploadFile.Visible = Not blnFileExist : lnkRemoveFile.Visible = blnFileExist
 
-        If strMT_Extension = "html5video" Then
-            Dim blnFileExist2 As Boolean = File.Exists(Server.MapPath(strMediaLinksFolder & strFileName2))
-            lnkUploadFile2.Visible = Not blnFileExist2 : lnkRemoveFile2.Visible = blnFileExist2
-            litMediaFileName2.Text = strFileName2
-        Else
-            lnkUploadFile2.Visible = False : lnkRemoveFile2.Visible = False
-        End If
+        'If strMT_Extension = "html5video" Then
+        '    Dim blnFileExist2 As Boolean = File.Exists(Server.MapPath(strMediaLinksFolder & strFileName2))
+        '    lnkUploadFile2.Visible = Not blnFileExist2 : lnkRemoveFile2.Visible = blnFileExist2
+        '    litMediaFileName2.Text = strFileName2
+        'Else
+        '    lnkUploadFile2.Visible = False : lnkRemoveFile2.Visible = False
+        'End If
 
         litMediaFileName.Text = strFileName
         litTempThumbName.Text = Nothing
@@ -245,7 +245,11 @@ Partial Class UserControls_Back_EditMedia
 
         litMediaLinkID.Text = numMediaID
         ddlMediaType.SelectedValue = FixNullFromDB(drwLink("ML_MediaTypeID"))
+        ddlMediaType.Enabled = False
         CheckType()
+
+        litImageIcon.Visible = False
+
         txtEmbedSource.Text = FixNullFromDB(drwLink("ML_EmbedSource"))
 
         'Set height and width from media link values passed through
@@ -342,7 +346,11 @@ Partial Class UserControls_Back_EditMedia
     End Function
 
     Protected Sub ddlMediaType_TextChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlMediaType.TextChanged
-        If ddlMediaType.SelectedValue <> 0 Then CheckType(True) Else phdMediaDetails.Visible = False
+        If ddlMediaType.SelectedValue <> 0 Then
+            CheckType(True)
+        Else
+            phdMediaDetails.Visible = False
+        End If
     End Sub
 
     Sub CheckType(Optional ByVal blnSetDefaultValues As Boolean = False)
@@ -380,25 +388,25 @@ Partial Class UserControls_Back_EditMedia
             valRequiredHeight.Enabled = Not chkDefaultHeight.Checked
             valRequiredWidth.Enabled = Not chkDefaultWidth.Checked
 
-            If FixNullFromDB(drwType("MT_Extension")) = "html5video" Then
-                lblUploadFile2.Visible = True
-                lblUploadFile2.Text = GetGlobalResourceObject("_Media", "ContentText_MediaFile") & " (WebM)"
-                lblUploadFile.Text = GetGlobalResourceObject("_Media", "ContentText_MediaFile") & " (MP4)"
-                If Not String.IsNullOrEmpty(litMediaFileName2.Text) Then
-                    lnkUploadFile2.Visible = False
-                    lnkRemoveFile2.Visible = True
-                Else
-                    lnkUploadFile2.Visible = True
-                    lnkRemoveFile2.Visible = False
-                End If
-                cvMediaFile2.Enabled = True
-            Else
-                lblUploadFile2.Visible = False
-                lnkRemoveFile2.Visible = False
-                lnkUploadFile2.Visible = False
-                lblUploadFile.Text = GetGlobalResourceObject("_Media", "ContentText_MediaFile")
-                cvMediaFile2.Enabled = False
-            End If
+            'If FixNullFromDB(drwType("MT_Extension")) = "html5video" Then
+            '    lblUploadFile2.Visible = True
+            '    lblUploadFile2.Text = GetGlobalResourceObject("_Media", "ContentText_MediaFile") & " (WebM)"
+            '    lblUploadFile.Text = GetGlobalResourceObject("_Media", "ContentText_MediaFile") & " (MP4)"
+            '    If Not String.IsNullOrEmpty(litMediaFileName2.Text) Then
+            '        lnkUploadFile2.Visible = False
+            '        lnkRemoveFile2.Visible = True
+            '    Else
+            '        lnkUploadFile2.Visible = True
+            '        lnkRemoveFile2.Visible = False
+            '    End If
+            '    cvMediaFile2.Enabled = True
+            'Else
+            lblUploadFile2.Visible = False
+            lnkRemoveFile2.Visible = False
+            lnkUploadFile2.Visible = False
+            lblUploadFile.Text = GetGlobalResourceObject("_Media", "ContentText_MediaFile")
+            cvMediaFile2.Enabled = False
+            'End If
         Else
             valRequiredHeight.Enabled = False
             valRequiredWidth.Enabled = False
@@ -414,6 +422,9 @@ Partial Class UserControls_Back_EditMedia
             lnkRemoveThumb.Visible = False
             imgMediaThumb.ImageUrl = strIconLink & "?nocache=" & Now.Hour & Now.Minute & Now.Second
             litImgName.Text = strIconLink
+            litImageIcon.Text = "<img src=""../Image.ashx?strFullPath=" & strIconLink & "&numMaxHeight=32&numMaxWidth=32"" /> "
+            litImageIcon.Visible = True
+            phdImageIcon.Visible = False 'other icon
         End If
         If GetMediaLinkID() = 0 AndAlso blnSetDefaultValues Then
             chkDefaultHeight.Checked = True : chkDefaultHeight_CheckedChanged(Me, New EventArgs)
@@ -480,16 +491,19 @@ Partial Class UserControls_Back_EditMedia
                     If Not Directory.Exists(Server.MapPath(strTempFolder)) Then Directory.CreateDirectory(Server.MapPath(strTempFolder))
                     _UC_ThumbUploaderPopup.SaveFile(Server.MapPath(strTempFolder & litTempThumbName.Text))
                     imgMediaThumb.ImageUrl = strTempFolder & litTempThumbName.Text & "?nocache=" & Now.Hour & Now.Minute & Now.Second
+                    phdImageIcon.Visible = True
                     litImgName.Text = strTempFolder & litTempThumbName.Text
                     litImgName.Visible = True
                     lnkUploadThumb.Visible = False
                     lnkRemoveThumb.Visible = True
+                    litImageIcon.Visible = False
                 Else
                     If Not Directory.Exists(Server.MapPath(strMediaLinksFolder)) Then Directory.CreateDirectory(Server.MapPath(strMediaLinksFolder))
                     Dim strThumbName As String = GetMediaLinkID() & "_thumb" & strExtension
                     If File.Exists(Server.MapPath(strMediaLinksFolder & strThumbName)) Then File.Delete(Server.MapPath(strMediaLinksFolder & strThumbName))
                     _UC_ThumbUploaderPopup.SaveFile(Server.MapPath(strMediaLinksFolder & strThumbName))
                     PrepareExistingMedia(GetMediaLinkID)
+
                 End If
             Else
                 phdThumbUploadError.Visible = True : litThumbUploadError.Text = strMessage
