@@ -39,6 +39,8 @@ strong                                  { color: #000 }
 a                                       { text-decoration: none; color: #45d; font-weight: bold; }
 a:hover                                 { text-decoration: none; color: #000; }
 a:active                                { outline: none }
+
+.ajax__scroll_none                      { visibility: visible !important; overflow: visible; }
 /* 
 ========================================================================
 GENERAL

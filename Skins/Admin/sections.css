@@ -323,6 +323,7 @@ PAGE: USER
 #page_user table tr td.amount,
 #page_user table tr th.amount           { text-align: right }
 #page_user table tr td.amount           { font-weight: bold }
+#page_user #phdMain__UC_UserDetails_fvwUser_tabContainerUser_tabMainInfo { margin-bottom: 100px; }
 /* 
 ========================================================================
 PAGE: PROMOTIONS
@@ -595,7 +596,7 @@ SECTION: DBADMIN: ADMIN LOG
 ========================================================================
 */
 #section_adminlog label                 { width: auto }
-#section_adminlog input                 { margin-top: -20px }
+#section_adminlog input                 { margin-top: 0 }
 #section_adminlog .calendarbutton       { float: none; display: inline; }
 /* 
 ========================================================================

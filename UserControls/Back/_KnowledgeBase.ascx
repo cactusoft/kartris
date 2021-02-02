@@ -124,7 +124,7 @@
                                 <%-- Creation Date --%>
                                 <li><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litCreationDate" runat="server" Text="<%$ Resources: _Kartris , ContentText_DateCreated %>"></asp:Literal>
-                                </span><span class="Kartris-DetailsView-Value">
+                                </span><span class="Kartris-DetailsView-Value"><div style="position: relative;">
                                     <asp:ImageButton ID="btnCalendar" runat="server" AlternateText="" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
                                         Width="16" Height="16" CssClass="calendarbutton" />
                                     <asp:TextBox ID="txtCreationDate" runat="server" CssClass="midtext" MaxLength="11" />
@@ -133,12 +133,12 @@
                                         Display="Dynamic" SetFocusOnError="true" />
                                     <ajaxToolkit:CalendarExtender ID="calCreationDate" runat="server" TargetControlID="txtCreationDate"
                                         Animated="true" PopupButtonID="btnCalendar" Format="yyyy/MM/dd" PopupPosition="BottomLeft"
-                                        CssClass="calendar" />
+                                        CssClass="calendar" /></div>
                                 </span></li>
                                 <%-- Update Date --%>
                                 <li><span class="Kartris-DetailsView-Name">
                                     <asp:Literal ID="litUpdateDate" runat="server" Text="<%$ Resources: _Kartris , ContentText_LastUpdated %>"></asp:Literal>
-                                </span><span class="Kartris-DetailsView-Value">
+                                </span><span class="Kartris-DetailsView-Value"><div style="position: relative;">
                                     <asp:ImageButton ID="btnCalendar2" runat="server" AlternateText="" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
                                         Width="16" Height="16" CssClass="calendarbutton" />
                                     <asp:TextBox ID="txtUpdateDate" runat="server" CssClass="midtext" MaxLength="11" />
@@ -147,7 +147,7 @@
                                         Display="Dynamic" SetFocusOnError="true" />
                                     <ajaxToolkit:CalendarExtender ID="calUpdateDate" runat="server" TargetControlID="txtUpdateDate"
                                         Animated="true" PopupButtonID="btnCalendar2" Format="yyyy/MM/dd" PopupPosition="BottomLeft"
-                                        CssClass="calendar" />
+                                        CssClass="calendar" /></div>
                                 </span></li>
                             </ul>
                         </div>

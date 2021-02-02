@@ -107,13 +107,14 @@
                                             </span></li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserSupportEndDate" runat="server" Text="<%$ Resources: _Customers, FormLabel_SupportEndDate %>" /></span>
-                                            <span class="Kartris-DetailsView-Value">
+                                            <span class="Kartris-DetailsView-Value"><div style="position: relative;">
                                                 <asp:TextBox ValidationGroup="User" ID="txtUserSupportEndDate" runat="server" Text='<%# Cdate(CkartrisDataManipulation.FixNullFromDB(Eval("U_SupportEndDate"))).ToString("yyyy/MM/dd") %>'></asp:TextBox>
                                                 <asp:ImageButton ID="btnCalendar" runat="server" AlternateText="" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
                                                     Width="16" Height="16" CssClass="calendarbutton" />
                                                 <ajaxToolkit:CalendarExtender
                                                     Format="yyyy/MM/dd" Animated="true" PopupButtonID="btnCalendar" TargetControlID="txtUserSupportEndDate"
                                                     runat="server" ID="calDate" PopupPosition="BottomLeft" CssClass="calendar" />
+                                                </div>
                                             </span>
                                         </li>
                                         <li><span class="Kartris-DetailsView-Name">
@@ -404,13 +405,13 @@
                                             </span></li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserSupportEndDate2" runat="server" Text="<%$ Resources: _Customers, FormLabel_SupportEndDate %>" /></span>
-                                            <span class="Kartris-DetailsView-Value">
+                                            <span class="Kartris-DetailsView-Value"><div style="position: relative;">
                                                 <asp:TextBox ValidationGroup="User" ID="txtUserSupportEndDate2" runat="server" Text='<%# CkartrisDisplayFunctions.FormatDate(CkartrisDataManipulation.FixNullFromDB(Eval("U_SupportEndDate")), "d", Session("_LANG")) %>'></asp:TextBox>
                                                 <asp:ImageButton ID="btnCalendar2" runat="server" AlternateText="" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
                                                     Width="16" Height="16" CssClass="calendarbutton" />
                                                 <ajaxToolkit:CalendarExtender Format="dd MMM yy" Animated="true" PopupButtonID="btnCalendar2"
                                                     TargetControlID="txtUserSupportEndDate2" runat="server" ID="calDateSearch2" PopupPosition="BottomLeft"
-                                                    CssClass="calendar" />
+                                                    CssClass="calendar" /></div>
                                             </span></li>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="lblUserNotes2" runat="server" Text="<%$ Resources: _Kartris, ContentText_Notes%>"

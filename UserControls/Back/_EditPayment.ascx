@@ -5,7 +5,7 @@
 <asp:UpdatePanel ID="updMain" runat="server" UpdateMode="Conditional">
     <ContentTemplate>
         <a class="linkbutton icon_back floatright" href='javascript:history.back()'>
-                <asp:Literal ID="litContentTextBackLink" runat="server" Text='<%$ Resources: _Kartris, ContentText_BackLink %>' /></a>
+            <asp:Literal ID="litContentTextBackLink" runat="server" Text='<%$ Resources: _Kartris, ContentText_BackLink %>' /></a>
         <div id="paymentdetails">
             <div>
                 <h2>
@@ -26,25 +26,27 @@
                                     <li><span class="Kartris-DetailsView-Name">
                                         <asp:Literal ID="litPaymentDate" runat="server" Text="<%$ Resources:_Kartris, ContentText_Date %>" />
                                     </span><span class="Kartris-DetailsView-Value">
-                                        <asp:ImageButton ID="btnCalendar" runat="server" AlternateText="" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
-                                        Width="16" Height="16" CssClass="calendarbutton" />
-                                        <asp:TextBox ID="txtPaymentDate" runat="server" CssClass="midtext" MaxLength="11" />
-                                        <asp:RequiredFieldValidator ID="valCreationDate" runat="server" ControlToValidate="txtPaymentDate"
-                                            CssClass="error" ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
-                                            Display="Dynamic" SetFocusOnError="true" />
-                                        <ajaxToolkit:CalendarExtender Animated="true" ID="calDate" runat="server"
-                                            TargetControlID="txtPaymentDate" PopupButtonID="btnCalendar"
-                                            Format="d MMM yy" PopupPosition="BottomLeft" CssClass="calendar" />
+                                        <div style="position: relative;">
+                                            <asp:ImageButton ID="btnCalendar" runat="server" AlternateText="" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
+                                                Width="16" Height="16" CssClass="calendarbutton" />
+                                            <asp:TextBox ID="txtPaymentDate" runat="server" CssClass="midtext" MaxLength="11" />
+                                            <asp:RequiredFieldValidator ID="valCreationDate" runat="server" ControlToValidate="txtPaymentDate"
+                                                CssClass="error" ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
+                                                Display="Dynamic" SetFocusOnError="true" />
+                                            <ajaxToolkit:CalendarExtender Animated="true" ID="calDate" runat="server"
+                                                TargetControlID="txtPaymentDate" PopupButtonID="btnCalendar"
+                                                Format="d MMM yy" PopupPosition="BottomLeft" CssClass="calendar" />
+                                        </div>
                                     </span></li>
 
 
                                     <!-- Payment Order -->
-                                     <li>   
+                                    <li>
                                         <span class="Kartris-DetailsView-Name">
                                             <asp:Label ID="litContentTextCategoryParent" runat="server" Text="<%$ Resources: _Orders, ContentText_OrderID %>"></asp:Label>
                                             (<asp:Label ID="lblOptional" runat="server" Text="<%$ Resources: _Options, FormLabel_IsOptional %>"></asp:Label>)
                                         </span><span class="Kartris-DetailsView-Value">
-<asp:UpdatePanel ID="updPaymentOrders" runat="server" UpdateMode="Conditional">
+                                            <asp:UpdatePanel ID="updPaymentOrders" runat="server" UpdateMode="Conditional">
                                                 <ContentTemplate>
                                                     <asp:TextBox ID="txtOrderID" runat="server" />
                                                     <asp:LinkButton ID="lnkBtnAddOrder" class="linkbutton icon_new" runat="server"
@@ -52,7 +54,7 @@
                                                     <asp:ListBox ID="lbxOrders" runat="server"></asp:ListBox>
                                                     <asp:LinkButton ID="lnkBtnRemoveOrder" class="linkbutton icon_delete" runat="server"
                                                         Text='<%$ Resources:_Kartris, ContentText_RemoveSelected %>' CausesValidation="false" /><br />
-                                                        
+
                                                 </ContentTemplate>
                                             </asp:UpdatePanel>
                                         </span>
@@ -61,58 +63,56 @@
                                     <li><span class="Kartris-DetailsView-Name">
                                         <asp:Literal ID="lblPaymentCustomerEmail" runat="server" Text="<%$ Resources:_Reviews, ContentText_CustomerEmail %>" />
                                     </span><span class="Kartris-DetailsView-Value">
-                                        <asp:TextBox ID="txtPaymentCustomerEmail" runat="server"  AutoPostBack="true" />
+                                        <asp:TextBox ID="txtPaymentCustomerEmail" runat="server" AutoPostBack="true" />
                                         <asp:RequiredFieldValidator ID="valCustomerEmail" runat="server" ControlToValidate="txtPaymentCustomerEmail"
                                             CssClass="error" ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                             Display="Dynamic" SetFocusOnError="true" />
-                                         <asp:RegularExpressionValidator ID="valCustomerEmail2" runat="server" ControlToValidate="txtPaymentCustomerEmail"
-                                                            Display="Dynamic" ErrorMessage="<%$ Resources: Kartris, ContentText_BadEmail %>"
-                                                            ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" CssClass="error"
-                                                            ForeColor="" />
+                                        <asp:RegularExpressionValidator ID="valCustomerEmail2" runat="server" ControlToValidate="txtPaymentCustomerEmail"
+                                            Display="Dynamic" ErrorMessage="<%$ Resources: Kartris, ContentText_BadEmail %>"
+                                            ValidationExpression="\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*" CssClass="error"
+                                            ForeColor="" />
                                     </span>
-                                    
-                                    
-                                    <div>
-                                        <asp:UpdatePanel ID="updCustomerDetails" runat="server" UpdateMode="Conditional">
-                                            <ContentTemplate>
-                                                <div class="Kartris-DetailsView">
-                                                    <div class="Kartris-DetailsView-Data">
-                                                        <ul>
-                                                            <!-- CustomerID -->
-                                                            <li><span class="Kartris-DetailsView-Name">
-                                                                <asp:Literal ID="lblPaymentCustomerID" runat="server" Text="<%$ Resources: _Customers, FormLabel_CustomerID %>" />
-                                                            </span><span class="Kartris-DetailsView-Value">
-                                                                <asp:Literal ID="litPaymentCustomerID" runat="server" />
-                                                            </span></li>
-                                                            <!-- CustomerName -->
-                                                            <li><span class="Kartris-DetailsView-Name">
-                                                                <asp:Literal ID="lblPaymentCustomerName" runat="server" Text="<%$ Resources: _Kartris, ContentText_CustomerName %>" />
-                                                            </span><span class="Kartris-DetailsView-Value">
-                                                                <asp:Literal ID="litPaymentCustomerName" runat="server" />
-                                                            </span></li>
+                                        <div>
+                                            <asp:UpdatePanel ID="updCustomerDetails" runat="server" UpdateMode="Conditional">
+                                                <ContentTemplate>
+                                                    <div class="Kartris-DetailsView">
+                                                        <div class="Kartris-DetailsView-Data">
+                                                            <ul>
+                                                                <!-- CustomerID -->
+                                                                <li><span class="Kartris-DetailsView-Name">
+                                                                    <asp:Literal ID="lblPaymentCustomerID" runat="server" Text="<%$ Resources: _Customers, FormLabel_CustomerID %>" />
+                                                                </span><span class="Kartris-DetailsView-Value">
+                                                                    <asp:Literal ID="litPaymentCustomerID" runat="server" />
+                                                                </span></li>
+                                                                <!-- CustomerName -->
+                                                                <li><span class="Kartris-DetailsView-Name">
+                                                                    <asp:Literal ID="lblPaymentCustomerName" runat="server" Text="<%$ Resources: _Kartris, ContentText_CustomerName %>" />
+                                                                </span><span class="Kartris-DetailsView-Value">
+                                                                    <asp:Literal ID="litPaymentCustomerName" runat="server" />
+                                                                </span></li>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            </ContentTemplate>
-                                        </asp:UpdatePanel>
-                                    </div>
+                                                </ContentTemplate>
+                                            </asp:UpdatePanel>
+                                        </div>
 
 
                                     </li>
 
                                     <!-- Payment Gateway -->
-                                   <li><span class="Kartris-DetailsView-Name">
+                                    <li><span class="Kartris-DetailsView-Name">
                                         <asp:Label ID="lblPaymentGateway" runat="server"
                                             Text="<%$ Resources: _Orders, ContentText_PaymentGateWay %>" /></span><span class="Kartris-DetailsView-Value">
-                                            <asp:Literal ID="litInactivePaymentGateway" runat="server" />
-                                            <asp:DropDownList ID="ddlPaymentGateways" runat="server" />
-                                            <asp:RequiredFieldValidator ID="valPaymentGateways" runat="server"
-                                                ControlToValidate="ddlPaymentGateways" CssClass="error" ForeColor="" SetFocusOnError="true"
-                                                Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>">
+                                                <asp:Literal ID="litInactivePaymentGateway" runat="server" />
+                                                <asp:DropDownList ID="ddlPaymentGateways" runat="server" />
+                                                <asp:RequiredFieldValidator ID="valPaymentGateways" runat="server"
+                                                    ControlToValidate="ddlPaymentGateways" CssClass="error" ForeColor="" SetFocusOnError="true"
+                                                    Display="Dynamic" Text="<%$ Resources: Kartris, ContentText_RequiredField %>">
                                                 </asp:RequiredFieldValidator></span>
                                     </li>
 
 
-                                     <!-- Payment Gateway Reference Code-->
+                                    <!-- Payment Gateway Reference Code-->
                                     <li><span class="Kartris-DetailsView-Name">
                                         <asp:Literal ID="litPaymentReferenceCode" runat="server" Text="<%$ Resources:_Orders, ContentText_ReferenceCode %>" />
                                     </span><span class="Kartris-DetailsView-Value">
@@ -121,11 +121,11 @@
                                             CssClass="error" ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                             Display="Dynamic" SetFocusOnError="true" />
                                     </span></li>
-                                   <!-- Currency ID -->
+                                    <!-- Currency ID -->
                                     <li><span class="Kartris-DetailsView-Name">
                                         <asp:Literal ID="litPaymentCurrency" runat="server" Text="<%$ Resources:_Currency, ContentText_Currency %>" />
                                     </span><span class="Kartris-DetailsView-Value">
-                                                <asp:DropDownList ID="ddlPaymentCurrency" runat="server" AutoPostBack="True" />
+                                        <asp:DropDownList ID="ddlPaymentCurrency" runat="server" AutoPostBack="True" />
                                     </span></li>
                                     <!-- GateWay Currency Rate -->
                                     <li><span class="Kartris-DetailsView-Name">
@@ -142,7 +142,7 @@
                                             CssClass="error" ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                             Display="Dynamic" SetFocusOnError="true" />
                                         <ajaxToolkit:FilteredTextBoxExtender ID="filPaymentAmount" runat="server" TargetControlID="txtPaymentAmount"
-                                            FilterType="Custom,Numbers" ValidChars="-,."/>
+                                            FilterType="Custom,Numbers" ValidChars="-,." />
                                     </span></li>
                                 </ul>
                             </div>

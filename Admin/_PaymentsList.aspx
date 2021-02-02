@@ -24,13 +24,14 @@ MasterPageFile="~/Skins/Admin/Template.master" %>
                             ConnectionString="<%$ ConnectionStrings:KartrisSQLConnection%>" SelectCommandType="StoredProcedure" />
                     </asp:PlaceHolder>
                     <asp:Label ID="lblFindOrder" runat="server" Text=""></asp:Label>
+                    <div style="position:relative;">
                     <asp:ImageButton ID="btnCalendar" runat="server" AlternateText="" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
                         Width="16" Height="16" CssClass="calendarbutton" />
                     <asp:TextBox ID="txtSearch" runat="server" ToolTip="Find a Payment" /><ajaxToolkit:CalendarExtender
                         Format="yyyy/MM/dd" Animated="true" PopupButtonID="btnCalendar" TargetControlID="txtSearch"
                         runat="server" ID="calDateSearch" PopupPosition="BottomLeft" CssClass="calendar" />
                     <asp:Button ID="btnSearch" runat="server" Text="<%$ Resources:_Kartris, FormButton_Search %>"
-                        CssClass="button" />
+                        CssClass="button" /></div>
                     <div class="spacer">
                         &nbsp;</div>
                     <p>

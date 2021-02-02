@@ -22,7 +22,7 @@
                                             <asp:Literal ID="litFormLabelStartID" runat="server" Text='<%$ Resources: _Kartris, ContentText_ID %>' /> </span><span
                                                 class="Kartris-DetailsView-Value">
                                                 <asp:UpdatePanel ID="updDates" runat="server" UpdateMode="Conditional">
-                                                    <ContentTemplate>
+                                                    <ContentTemplate><div style="position:relative;">
                                                         <asp:ImageButton ID="imgBtnStart" runat="server" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
                                                             Width="16" Height="16" CssClass="calendarbutton" /><asp:TextBox ID="txtStartDate"
                                                                 runat="server" MaxLength="20" CssClass="midtext" />
@@ -36,6 +36,7 @@
                                                         <asp:CustomValidator ID="valCustomStartDate" runat="server" CssClass="error"
                                                             ForeColor="" ErrorMessage='<%$ Resources: _Kartris, ContentText_InvalidValue %>' 
                                                             ControlToValidate="txtStartDate" ValidationGroup="ExportOrders" SetFocusOnError="true" Display="Dynamic" />
+                                                        </div>
                                                     </ContentTemplate>
                                                 </asp:UpdatePanel>
                                             </span></li>
@@ -45,6 +46,7 @@
                                                 class="Kartris-DetailsView-Value">
                                                 <asp:UpdatePanel ID="updDates2" runat="server" UpdateMode="Conditional">
                                                     <ContentTemplate>
+                                                        <div style="position:relative;">
                                                         <asp:ImageButton ID="imgBtnEnd" runat="server" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
                                                             Width="16" Height="16" CssClass="calendarbutton" /><asp:TextBox ID="txtEndDate" runat="server"
                                                                 MaxLength="20" CssClass="midtext" />
@@ -58,6 +60,7 @@
                                                        <asp:CustomValidator ID="valCustomEndDate" runat="server" CssClass="error"
                                                             ForeColor="" ErrorMessage='<%$ Resources: _Kartris, ContentText_InvalidValue %>' 
                                                             ControlToValidate="txtEndDate" ValidationGroup="ExportOrders" SetFocusOnError="true" Display="Dynamic" />
+                                                            </div>
                                                     </ContentTemplate>
                                                 </asp:UpdatePanel>
                                             </span></li>

@@ -104,7 +104,7 @@
                                         <%-- Creation Date --%>
                                         <li><span class="Kartris-DetailsView-Name">
                                             <asp:Literal ID="litCreationDate" runat="server" Text="<%$ Resources: _Kartris , ContentText_DateCreated %>"></asp:Literal>
-                                        </span><span class="Kartris-DetailsView-Value">
+                                        </span><span class="Kartris-DetailsView-Value"><div style="position: relative;">
                                             <asp:ImageButton ID="btnCalendar" runat="server" AlternateText="" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
                                                 Width="16" Height="16" CssClass="calendarbutton" />
                                             <asp:TextBox ID="txtCreationDate" runat="server" CssClass="midtext" MaxLength="11" />
@@ -112,7 +112,7 @@
                                                 CssClass="error" ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                                 Display="Dynamic" SetFocusOnError="true" />
                                             <ajaxToolkit:CalendarExtender Animated="true" ID="calDate" runat="server" TargetControlID="txtCreationDate"
-                                                PopupButtonID="btnCalendar" Format="yyyy/MM/dd" PopupPosition="BottomLeft" CssClass="calendar" />
+                                                PopupButtonID="btnCalendar" Format="yyyy/MM/dd" PopupPosition="BottomLeft" CssClass="calendar" /></div>
                                         </span></li>
                                     </ul>
                                 </div>

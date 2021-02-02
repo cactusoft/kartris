@@ -19,43 +19,60 @@
                         CssClass="button" ValidationGroup="AdminLog" />
                 </div>
                 <br />
-                <asp:Label ID="litFormLabelStartDate" runat="server" Text='<%$ Resources: _Kartris, FormLabel_StartDate %>'
-                    AssociatedControlID="txtStartDate" />
-                <asp:ImageButton ID="imgBtnStart" runat="server" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
-                    Width="16" Height="16" CssClass="calendarbutton" /><asp:TextBox ID="txtStartDate"
-                        runat="server" MaxLength="20" CssClass="midtext" />
-                <asp:RequiredFieldValidator ID="valRequiredStartDate" runat="server" CssClass="error"
-                    ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
-                    ControlToValidate="txtStartDate" ValidationGroup="AdminLog" />
-                <ajaxToolkit:CalendarExtender ID="calExtStartDate" runat="server" TargetControlID="txtStartDate"
-                    PopupButtonID="imgBtnStart" Format="yyyy/MM/dd" CssClass="calendar" />
-                <ajaxToolkit:FilteredTextBoxExtender ID="filStartDate" runat="server" TargetControlID="txtStartDate"
-                    FilterType="Numbers, Custom" ValidChars="/" />
-                <asp:Label ID="litFormLabelEndDate" runat="server" Text='<%$ Resources: _Kartris, FormLabel_EndDate %>'
-                    AssociatedControlID="txtEndDate" />
-                <asp:ImageButton ID="imgBtnEnd" runat="server" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
-                    Width="16" Height="16" CssClass="calendarbutton" /><asp:TextBox ID="txtEndDate" runat="server"
-                        MaxLength="20" CssClass="midtext" />
-                <asp:RequiredFieldValidator ID="valRequiredEndDate" runat="server" CssClass="error"
-                    ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
-                    ControlToValidate="txtEndDate" ValidationGroup="AdminLog" Display="Dynamic" />
-                <ajaxToolkit:CalendarExtender ID="calExtEndDate" runat="server" TargetControlID="txtEndDate"
-                    PopupButtonID="imgBtnEnd" Format="yyyy/MM/dd" CssClass="calendar" />
-                <ajaxToolkit:FilteredTextBoxExtender ID="filEndDate" runat="server" TargetControlID="txtEndDate"
-                    FilterType="Numbers, Custom" ValidChars="/" />
-                <asp:CompareValidator ID="valCompareCheckPeriod" runat="server" ErrorMessage='<%$ Resources: _Promotions, ContentText_EndBeforeStartDate %>'
-                    ControlToValidate="txtEndDate" ControlToCompare="txtStartDate" Operator="GreaterThanEqual"
-                    Type="Date" SetFocusOnError="true" CultureInvariantValues="true" Display="Dynamic"
-                    ValidationGroup="validGrpNewCoupon" CssClass="error"
-                    ForeColor="" />
+
+                <div class="Kartris-DetailsView">
+                    <div class="Kartris-DetailsView-Data">
+                        <ul>
+                            <li><span class="Kartris-DetailsView-Name">
+                                <asp:Label ID="litFormLabelStartDate" runat="server" Text='<%$ Resources: _Kartris, FormLabel_StartDate %>'
+                                    AssociatedControlID="txtStartDate" /></span><span class="Kartris-DetailsView-Value"><div style="position: relative;">
+                                        <asp:ImageButton ID="imgBtnStart" runat="server" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
+                                            Width="16" Height="16" CssClass="calendarbutton" /><asp:TextBox ID="txtStartDate"
+                                                runat="server" MaxLength="20" CssClass="midtext" />
+
+                                        <ajaxToolkit:CalendarExtender ID="calExtStartDate" runat="server" TargetControlID="txtStartDate"
+                                            PopupButtonID="imgBtnStart" Format="yyyy/MM/dd" CssClass="calendar" />
+
+                                    </div>                                        <ajaxToolkit:FilteredTextBoxExtender ID="filStartDate" runat="server" TargetControlID="txtStartDate"
+                                            FilterType="Numbers, Custom" ValidChars="/" />
+                                    </span></li>
+                            <li><span class="Kartris-DetailsView-Name">
+                                <asp:Label ID="litFormLabelEndDate" runat="server" Text='<%$ Resources: _Kartris, FormLabel_EndDate %>'
+                                    AssociatedControlID="txtEndDate" /></span><span class="Kartris-DetailsView-Value"><div style="position: relative;">
+                                        <asp:ImageButton ID="imgBtnEnd" runat="server" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
+                                            Width="16" Height="16" CssClass="calendarbutton" /><asp:TextBox ID="txtEndDate" runat="server"
+                                                MaxLength="20" CssClass="midtext" />
+
+                                        <ajaxToolkit:CalendarExtender ID="calExtEndDate" runat="server" TargetControlID="txtEndDate"
+                                            PopupButtonID="imgBtnEnd" Format="yyyy/MM/dd" CssClass="calendar" />
+
+                                    </div>                                        <ajaxToolkit:FilteredTextBoxExtender ID="filEndDate" runat="server" TargetControlID="txtEndDate"
+                                            FilterType="Numbers, Custom" ValidChars="/" />
+                                        <asp:CompareValidator ID="valCompareCheckPeriod" runat="server" ErrorMessage='<%$ Resources: _Promotions, ContentText_EndBeforeStartDate %>'
+                                            ControlToValidate="txtEndDate" ControlToCompare="txtStartDate" Operator="GreaterThanEqual"
+                                            Type="Date" SetFocusOnError="true" CultureInvariantValues="true" Display="Dynamic"
+                                            ValidationGroup="validGrpNewCoupon" CssClass="error"
+                                            ForeColor="" />
+                                    </span></li>
+                        </ul>
+                    </div>
+                </div>
+
+
+
+
+
+
                 <div class="spacer">
-                    &nbsp;</div>
+                    &nbsp;
+                </div>
             </asp:Panel>
             <div>
                 <asp:MultiView ID="mvwAdminLog" runat="server">
                     <asp:View ID="viwAdminLogEmpty" runat="server">
                         <asp:Panel ID="pnlNoAdminLogs" runat="server" CssClass="noresults">
-                            <asp:Literal ID="litNoAdminLogs" runat="server" Text="<%$ Resources: _Kartris, ContentText_NoItemsFound %>" /></asp:Panel>
+                            <asp:Literal ID="litNoAdminLogs" runat="server" Text="<%$ Resources: _Kartris, ContentText_NoItemsFound %>" />
+                        </asp:Panel>
                     </asp:View>
                     <asp:View ID="viwAdminLogList" runat="server">
                         <asp:UpdatePanel ID="updAdminLogList" runat="server" UpdateMode="Conditional">
@@ -162,14 +179,20 @@
                     </asp:View>
                 </asp:MultiView>
             </div>
-            <br /><br /><br />
+            <br />
+            <br />
+            <br />
             <h2>
                 <asp:Literal ID="litPageTitlePurgeOldAdminLogs" runat="server" Text="<%$ Resources: _DBAdmin, PageTitle_PurgeOldAdminLogs %>" /></h2>
             <p>
-                <asp:Literal ID="litContentTextAdminLogsPurge1" runat="server" Text="<%$ Resources:_DBAdmin, ContentText_AdminLogsPurge1 %>" /></p>
-                <br /><br />
-                <p><asp:Button ID="btnPurgeOldLogs" runat="server" Text='<%$ Resources:_DBAdmin, ContentText_PurgeAdminLogs %>'
-                    CssClass="button" /></p>
+                <asp:Literal ID="litContentTextAdminLogsPurge1" runat="server" Text="<%$ Resources:_DBAdmin, ContentText_AdminLogsPurge1 %>" />
+            </p>
+            <br />
+            <br />
+            <p>
+                <asp:Button ID="btnPurgeOldLogs" runat="server" Text='<%$ Resources:_DBAdmin, ContentText_PurgeAdminLogs %>'
+                    CssClass="button" />
+            </p>
         </ContentTemplate>
     </asp:UpdatePanel>
 </div>

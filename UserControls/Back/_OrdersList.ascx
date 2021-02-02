@@ -12,14 +12,14 @@
                 <asp:LinkButton runat="server" ID="btnTomorrow" /></span></span>
             <asp:Literal ID="litSelectedLongDate" runat="server" Text='' Visible="false"></asp:Literal></div>
         <div>
-            <asp:Panel ID="pnlSearch" runat="server" DefaultButton="btnSearch">
+            <asp:Panel ID="pnlSearch" runat="server" DefaultButton="btnSearch"><div style="position: relative;">
                 <asp:ImageButton ID="btnCalendar" runat="server" AlternateText="" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
                     Width="16" Height="16" CssClass="calendarbutton" />
                 <asp:TextBox ID="txtFilterDate" runat="server" CssClass="midtext" /><ajaxToolkit:CalendarExtender
                     Format="dd MMM yy" Animated="true" PopupButtonID="btnCalendar" TargetControlID="txtFilterDate"
                     runat="server" ID="calDateSearch" PopupPosition="BottomLeft" CssClass="calendar" />
                 <asp:Button ID="btnSearch" runat="server" Text="<%$ Resources:_Kartris, FormButton_Search %>"
-                    CssClass="button" />
+                    CssClass="button" /></div>
             </asp:Panel>
         </div>
     </asp:PlaceHolder>

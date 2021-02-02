@@ -201,7 +201,7 @@
                                     <asp:Literal ID="litFormLabelStartDate" runat="server" Text='<%$ Resources: _Kartris, FormLabel_StartDate %>' /></span>
                                     <span class="Kartris-DetailsView-Value">
                                         <asp:UpdatePanel ID="updDates" runat="server" UpdateMode="Conditional">
-                                            <ContentTemplate>
+                                            <ContentTemplate><div style="position: relative;">
                                                 <asp:ImageButton CssClass="calendarbutton" ID="imgBtnStart" runat="server" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
                                                     Width="16" Height="16" /><asp:TextBox ID="txtStartDate" runat="server" MaxLength="20"
                                                         CssClass="midtext" />
@@ -215,6 +215,7 @@
                                                 <asp:CompareValidator ID="valCompareCheckStartIsDate" runat="server" ErrorMessage='<%$ Resources: _Kartris, ContentText_NotValidDate %>'
                                                     ForeColor="" ControlToValidate="txtStartDate" Type="Date" Operator="DataTypeCheck" SetFocusOnError="true"
                                                     CultureInvariantValues="true" Display="Dynamic" ValidationGroup="grpNewCoupon" CssClass="error" />
+                                                </div>
                                             </ContentTemplate>
                                         </asp:UpdatePanel>
                                     </span></li>
@@ -222,7 +223,7 @@
                                     <asp:Literal ID="litFormLabelEndDate" runat="server" Text='<%$ Resources: _Kartris, FormLabel_EndDate %>' /></span>
                                     <span class="Kartris-DetailsView-Value">
                                         <asp:UpdatePanel ID="updDates2" runat="server" UpdateMode="Conditional">
-                                            <ContentTemplate>
+                                            <ContentTemplate><div style="position: relative;">
                                                 <asp:ImageButton CssClass="calendarbutton" ID="imgBtnEnd" runat="server" ImageUrl="~/Skins/Admin/Images/icon_calendar.gif"
                                                     Width="16" Height="16" /><asp:TextBox ID="txtEndDate" runat="server" MaxLength="20"
                                                         CssClass="midtext" />
@@ -236,7 +237,7 @@
                                                 <asp:CompareValidator ID="valCompareCheckPeriod" runat="server" ErrorMessage='<%$ Resources: _Promotions, ContentText_EndBeforeStartDate %>'
                                                     ForeColor="" ControlToValidate="txtEndDate" ControlToCompare="txtStartDate" Operator="GreaterThanEqual"
                                                     Type="Date" SetFocusOnError="true" CultureInvariantValues="true" Display="Dynamic"
-                                                    ValidationGroup="grpNewCoupon" CssClass="error" />
+                                                    ValidationGroup="grpNewCoupon" CssClass="error" /></div>
                                             </ContentTemplate>
                                         </asp:UpdatePanel>
                                     </span></li>
