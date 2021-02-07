@@ -19,13 +19,22 @@ Imports System.Linq
 Partial Class Admin_Destinations
     Inherits _PageBaseClass
 
+    Private Shared ModifiedConfig As Configuration = Nothing
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         Page.Title = GetGlobalResourceObject("_RegionalWizard", "PageTitle_RegionalSetupWizard") & " | " & GetGlobalResourceObject("_Kartris", "ContentText_KartrisName")
 
         If Not Page.IsPostBack Then
             Dim strTaxRegime As String = TaxRegime.Name
-            litTaxRegime.Text = strTaxRegime
+
+            Try
+                'Try to set tax regime dropdown
+                ddlTaxRegime.SelectedValue = strTaxRegime
+            Catch ex As Exception
+
+            End Try
+
             'set default config settings for each region
             Select Case strTaxRegime
                 Case "EU"
@@ -49,6 +58,35 @@ Partial Class Admin_Destinations
         Else
             pnlSummary.Visible = False
         End If
+
+    End Sub
+
+    ''' <summary>
+    ''' Reset tax regime
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub ddlTaxRegime_SelectedIndexChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles ddlTaxRegime.SelectedIndexChanged
+        Try
+            If ModifiedConfig Is Nothing Then
+                ModifiedConfig = System.Web.Configuration.WebConfigurationManager.OpenWebConfiguration(Request.ApplicationPath)
+            End If
+        Catch ex As Exception
+            'Hmmm....Kartris must be running under medium trust
+        End Try
+
+        Try
+            Dim doc As New XmlDocument()
+            Dim section As System.Configuration.ConfigurationSection = ModifiedConfig.GetSection("appSettings")
+            Dim element As KeyValueConfigurationElement = CType(ModifiedConfig.AppSettings.Settings("TaxRegime"), KeyValueConfigurationElement)
+            element.Value = ddlTaxRegime.SelectedValue
+
+            If ModifiedConfig IsNot Nothing Then
+                ModifiedConfig.Save()
+                Response.Redirect("")
+            End If
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
@@ -299,7 +337,6 @@ Partial Class Admin_Destinations
 
                     For Each drwCountry As DataRow In dtbAllCountries.Rows
                         Dim intCountryID As Integer = drwCountry("D_ID")
-                        Dim sngD_Tax As Single
 
                         If ddlCountries.SelectedValue = intCountryID Then
 
@@ -313,7 +350,33 @@ Partial Class Admin_Destinations
                                                                drwCountry("D_ISOCode"), drwCountry("D_ISOCode3Letter"), drwCountry("D_ISOCodeNumeric"),
                                                                FixNullFromDB(drwCountry("D_Region")), drwCountry("D_Live"), "", FixNullFromDB(drwCountry("D_TaxExtra")))
                         End If
+
+                        'Special case for UK/GB
+                        'Brexit is a mess. It seems that for UK companies trying to import or export to the EU,
+                        'an EU VAT number really should be collected and show on the invoice, because apparently it
+                        'makes shipping paperwork easier.
+                        'So we add the code below which updates the EU countries with some extra info in the D_TaxExtra
+                        'field. Normally that won't be used, so we can use it to tell which countries are EU ones
+                        'in order to show the EU VAT field at checkout.
+                        'Loop through EU countries in XML, if match found with current country
+                        'set tax off, but D_TaxExtra to "EU"
+                        For Each objCountry In GetCountryListFromTaxConfig("EU")
+                            Try
+                                If objCountry.CountryId = intCountryID Then
+                                    'country belongs to EU - charge tax and live
+                                    ShippingBLL._UpdateDestinationForTaxWizard(intCountryID, drwCountry("D_ShippingZoneID"), 0, FixNullFromDB(drwCountry("D_Tax2")),
+                                                                               drwCountry("D_ISOCode"), drwCountry("D_ISOCode3Letter"), drwCountry("D_ISOCodeNumeric"),
+                                                                               FixNullFromDB(drwCountry("D_Region")), True, "", "EU")
+                                    Exit For
+                                End If
+                            Catch ex As Exception
+                                'Hmmm
+                            End Try
+                        Next
+
                     Next
+
+
 
                 Else
                     'No - Don't charge tax for all countries
@@ -492,9 +555,14 @@ Partial Class Admin_Destinations
         CkartrisBLL.RefreshKartrisCache()
     End Sub
 
-    Protected Function GetCountryListFromTaxConfig() As List(Of KartrisClasses.Country)
+    Protected Function GetCountryListFromTaxConfig(Optional ByVal strTaxRegime As String = "") As List(Of KartrisClasses.Country)
         Dim lstCountries As List(Of KartrisClasses.Country) = Nothing
         Dim docXML As XmlDocument = New XmlDocument
+
+        If strTaxRegime = "" Then
+            strTaxRegime = TaxRegime.Name
+        End If
+
         'Load the TaxScheme Config file file from web root
         docXML.Load(HttpContext.Current.Server.MapPath("~/TaxRegime.Config"))
 
@@ -503,7 +571,7 @@ Partial Class Admin_Destinations
         Dim ndeDestinationFilter As XmlNode
 
 
-        Dim strRegimeNodePath As String = "/configuration/" & TaxRegime.Name & "TaxRegime/DestinationsFilter"
+        Dim strRegimeNodePath As String = "/configuration/" & strTaxRegime & "TaxRegime/DestinationsFilter"
         Dim strKeyFieldName As String = ""
         Dim strKeyFieldValue As String = ""
 

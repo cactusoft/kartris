@@ -16,7 +16,14 @@
 				<li>
 				<!-- Tax regime information -->
 					<span class="Kartris-DetailsView-Name"><asp:Label runat="server" ID="lblTaxRegime" Text="<%$ Resources: _RegionalWizard, FormLabel_TaxRegime %>" /></span>
-					<span class="Kartris-DetailsView-Value"><asp:Literal runat="server" ID="litTaxRegime" Text="" /></span>
+					<span class="Kartris-DetailsView-Value"><asp:DropDownList ID="ddlTaxRegime" runat="server" AutoPostBack="True" CssClass="text">
+						<asp:ListItem Value="" Text="<%$ Resources: _Kartris, ContentText_DropDownSelect%>"></asp:ListItem>
+						<asp:ListItem Value="VAT">VAT (e.g. UK, New Zealand)</asp:ListItem>
+						<asp:ListItem Value="EU">EU (European Union)</asp:ListItem>
+						<asp:ListItem Value="US">US</asp:ListItem>
+						<asp:ListItem Value="CANADA">Canada</asp:ListItem>
+						<asp:ListItem Value="SIMPLE">Simple (general % added to order)</asp:ListItem>
+					</asp:DropDownList></span>
 				</li>
 
 				<li>
