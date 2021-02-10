@@ -1,6 +1,7 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="_UserDetails.ascx.vb"
     Inherits="UserControls_Back_UserDetails" %>
 <%@ Register TagPrefix="user" TagName="AddressesDetails" Src="~/UserControls/General/_AddressesDetails.ascx" %>
+<%@ Register TagPrefix="_user" TagName="ObjectConfig" Src="~/UserControls/Back/_ObjectConfig.ascx" %>
 <asp:UpdatePanel runat="server" ID="updUser" UpdateMode="Conditional">
     <ContentTemplate>
         <_user:PopupMessage runat="server" ID="_UC_PopupMsg" />
@@ -306,7 +307,19 @@
                             </div>
                         </ContentTemplate>
                     </ajaxToolkit:TabPanel>
+                <%-- Object Config Tab --%>
+                <ajaxToolkit:TabPanel ID="tabObjectConfig" runat="server">
+                    <HeaderTemplate>
+                        <asp:Literal ID="litObjectConfig" runat="server" Text="<%$ Resources: _Kartris, ContentText_ObjectConfig %>" />
+                    </HeaderTemplate>
+                    <ContentTemplate>
+                        <div class="subtabsection">
+                            <a class="tomeButtonLink" onclick="launchTomeHelp('https://kartris.tome.host/Content/Print/0?headId=9996')" style="margin-bottom: 20px;">?</a>
+                            <_user:ObjectConfig ID="_UC_ObjectConfig" runat="server" ItemType="User" />
+                        </div>
 
+                    </ContentTemplate>
+                </ajaxToolkit:TabPanel>
                 </ajaxToolkit:TabContainer>
                 <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
                     <asp:LinkButton ValidationGroup="User" CausesValidation="True" CssClass="button savebutton" runat="server" OnClick="btnCustomerUpdate_Click"
@@ -449,6 +462,7 @@
                             </div>
                         </ContentTemplate>
                     </ajaxToolkit:TabPanel>
+
                 </ajaxToolkit:TabContainer>
                 <div id="updatebuttonbar" class="submitbuttons topsubmitbuttons">
                     <asp:LinkButton ValidationGroup="User" CausesValidation="True" CssClass="button savebutton" runat="server" OnClick="btnCustomerAdd_Click"

@@ -67,6 +67,8 @@ Partial Class Customer
 
         numCustomerDiscount = BasketBLL.GetCustomerDiscount(numCustomerID)
 
+        litUserEmail.Text = User.Identity.Name
+
         'Hide tabs when not necessary
         If LCase(KartSettingsManager.GetKartConfig("frontend.cataloguemode")) = "y" Then
             acpDownloadableProducts.Visible = False

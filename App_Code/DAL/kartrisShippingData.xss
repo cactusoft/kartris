@@ -9,7 +9,7 @@
     <Shape ID="DesignTable:ShippingMethods" ZOrder="5" X="0" Y="-32" Height="229" Width="226" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="24" OldDataTableHeight="0" SplitterPosition="159" />
     <Shape ID="DesignTable:ShippingRates" ZOrder="3" X="254" Y="-27" Height="248" Width="273" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="140" />
     <Shape ID="DesignTable:ShippingZones" ZOrder="4" X="537" Y="-18" Height="191" Width="239" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="121" />
-    <Shape ID="DesignTable:Destinations" ZOrder="1" X="415" Y="238" Height="362" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="254" />
+    <Shape ID="DesignTable:Destinations" ZOrder="1" X="415" Y="238" Height="381" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="254" />
     <Shape ID="DesignTable:ShippingMethodsRates" ZOrder="2" X="92" Y="278" Height="229" Width="300" AdapterExpanded="true" DataTableExpanded="true" OldAdapterHeight="0" OldDataTableHeight="0" SplitterPosition="159" />
   </Shapes>
   <Connectors />

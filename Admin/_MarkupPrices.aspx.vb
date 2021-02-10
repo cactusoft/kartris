@@ -123,13 +123,13 @@ Partial Class Admin_MarkupPrices
             For Each drwVersion As DataRow In dtbVersions.Rows
                 If ddlTargetField.SelectedValue = "price" Then
                     drwVersion("V_OldPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, drwVersion("V_Price"))
-                    drwVersion("V_NewPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, drwVersion("V_Price") + numValue)
+                    drwVersion("V_NewPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, drwVersion("V_Price") + numValue, False)
                 ElseIf ddlTargetField.SelectedValue = "rrp" Then
                     drwVersion("V_OldRRP") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, FixNullFromDB(drwVersion("V_RRP")))
-                    drwVersion("V_NewRRP") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, FixNullFromDB(drwVersion("V_RRP")) + numValue)
+                    drwVersion("V_NewRRP") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, FixNullFromDB(drwVersion("V_RRP")) + numValue, False)
                 ElseIf ddlTargetField.SelectedValue = "qd" Then
                     drwVersion("V_OldPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, FixNullFromDB(drwVersion("QD_Price")))
-                    drwVersion("V_NewPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, FixNullFromDB(drwVersion("QD_Price")) + numValue)
+                    drwVersion("V_NewPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, FixNullFromDB(drwVersion("QD_Price")) + numValue, False)
                 End If
             Next
         Else '' Percente increase/decrease value
@@ -137,22 +137,22 @@ Partial Class Admin_MarkupPrices
                 If ddlTargetField.SelectedValue = "price" Then
                     drwVersion("V_OldPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, drwVersion("V_Price"))
                     '' price will be marked up
-                    If ddlMarkUpDown.SelectedValue = "up" Then drwVersion("V_NewPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, drwVersion("V_Price") + ((numValue * drwVersion("V_Price")) / 100))
+                    If ddlMarkUpDown.SelectedValue = "up" Then drwVersion("V_NewPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, drwVersion("V_Price") + ((numValue * drwVersion("V_Price")) / 100), False)
                     '' price will be marked down
-                    If ddlMarkUpDown.SelectedValue = "down" Then drwVersion("V_NewPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, drwVersion("V_Price") - ((numValue * drwVersion("V_Price")) / 100))
+                    If ddlMarkUpDown.SelectedValue = "down" Then drwVersion("V_NewPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, drwVersion("V_Price") - ((numValue * drwVersion("V_Price")) / 100), False)
                 ElseIf ddlTargetField.SelectedValue = "rrp" Then
                     Dim sngRRP As Single = FixNullFromDB(drwVersion("V_RRP"))
                     drwVersion("V_OldRRP") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, sngRRP)
                     '' price will be marked up
-                    If ddlMarkUpDown.SelectedValue = "up" Then drwVersion("V_NewRRP") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, sngRRP + ((numValue * sngRRP) / 100))
+                    If ddlMarkUpDown.SelectedValue = "up" Then drwVersion("V_NewRRP") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, sngRRP + ((numValue * sngRRP) / 100), False)
                     '' price will be marked down
-                    If ddlMarkUpDown.SelectedValue = "down" Then drwVersion("V_NewRRP") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, sngRRP - ((numValue * sngRRP) / 100))
+                    If ddlMarkUpDown.SelectedValue = "down" Then drwVersion("V_NewRRP") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, sngRRP - ((numValue * sngRRP) / 100), False)
                 ElseIf ddlTargetField.SelectedValue = "qd" Then
                     drwVersion("V_OldPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, drwVersion("QD_Price"))
                     '' price will be marked up
-                    If ddlMarkUpDown.SelectedValue = "up" Then drwVersion("V_NewPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, drwVersion("QD_Price") + ((numValue * drwVersion("QD_Price")) / 100))
+                    If ddlMarkUpDown.SelectedValue = "up" Then drwVersion("V_NewPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, drwVersion("QD_Price") + ((numValue * drwVersion("QD_Price")) / 100), False)
                     '' price will be marked down
-                    If ddlMarkUpDown.SelectedValue = "down" Then drwVersion("V_NewPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, drwVersion("QD_Price") - ((numValue * drwVersion("QD_Price")) / 100))
+                    If ddlMarkUpDown.SelectedValue = "down" Then drwVersion("V_NewPrice") = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, drwVersion("QD_Price") - ((numValue * drwVersion("QD_Price")) / 100), False)
                 End If
             Next
         End If

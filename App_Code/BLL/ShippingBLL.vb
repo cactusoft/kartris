@@ -596,6 +596,16 @@ Public Class ShippingBLL
         Return False
     End Function
 
+    'Update v3.0001 for brexit, we now set base country
+    Public Shared Function _GetISOCodeByDestinationID(ByVal numDestinationID As Byte) As String
+        Dim strISO As String = ""
+        Try
+            strISO = CStr(ShippingBLL.DestinationsAdptr._GetISOCodeByDestinationID(numDestinationID))
+        Catch ex As Exception
+            strISO = ""
+        End Try
+        Return strISO
+    End Function
 #End Region
 
 End Class

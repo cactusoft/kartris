@@ -137,7 +137,8 @@ PRODUCT - Single page product
 										{ border: solid 1px #ccc; background-color: #fff; padding: 5px; margin: 0 0 5px 0; }
 .product div.imagecolumn .media_gallery .media_links audio
 										{ background: transparent; }
-audio::-webkit-media-controls-enclosure, video::-webkit-media-controls-enclosure {
+audio::-webkit-media-controls-enclosure,
+video::-webkit-media-controls-enclosure {
 	height: 20px;
 	background: transparent;
 }
@@ -258,8 +259,8 @@ PRODUCTS - HOME PAGE CAROUSEL FORMAT
 ------------------------------------------------------------------------
 */
 .products_carousel						{ }
-.products_carousel .item				{ text-align: left; max-width: 220px; float: left; height: 300px; padding: 5px; }
-.products_carousel .item .details		{ display: block; position: absolute; top: 220px; }
+.products_carousel .item				{ text-align: left; max-width: 210px; float: left; height: 300px; padding: 5px; background-color: #fff; border: solid 1px #ccc; margin-right: 8px; }
+.products_carousel .item .details		{ display: block; position: absolute; top: 200px; padding: 0 10px; }
 .products_carousel .item .details h2	{ font-size: 100%; font-weight: bold; letter-spacing: 0px; padding: 10px 0 0 0; line-height: 1.1; }
 .products_carousel .details .minprice	{ padding: 3px 0; font-weight: normal; font-size: 90%; }
 
@@ -661,7 +662,7 @@ CHECKOUT
 #checkout .checkoutaddress              { height: 280px; }
 #checkout #confirmation .checkoutaddress
 										{ height: auto; margin-bottom: 10px; }
-#checkout .checkoutaddress .address		{ background-color: #fff; border: solid 1px #ccc; padding: 20px; min-height: 220px; }
+#checkout .checkoutaddress .address		{ background-color: #fff; border: solid 1px #ccc; padding: 20px; min-height: 265px; }
 
 #checkout .row .checkoutaddress:nth-child(1) .address {
   margin-right: 5px;
@@ -677,6 +678,7 @@ CHECKOUT
 #checkout .basket th.total,
 #checkout .basket td.total              { width: 10%; }
 #checkout #euvatsection strong          { float: right; font-size: 130%; color: #999; }
+#checkout .section label				{ font-weight: bold; }
 #checkout tr.totals span                { display: inline-block; margin-left: 10px; }
 
 #checkout .submitbuttons #cntMain_btnProceed

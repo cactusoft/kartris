@@ -680,14 +680,13 @@ PROGRESS LOADING
                                     <asp:Literal ID="litReminder" runat="server" Text="<%$ Resources: Step8_ReminderToUploadNewWebConfig %>"></asp:Literal>
                                 </p>
                                 <p>
+                                    <a href="_TaxSetupWizard.aspx" target="_new">
+                                        <asp:Literal runat="server" ID="Step8_YouCanLoginBackend" meta:resourcekey="Step8_YouCanLoginBackend" /></a>
+                                </p>
+                                <p>
                                     <a href="../Default.aspx" target="_new">
                                         <asp:Literal runat="server" ID="Step8_ViewFrontEnd" meta:resourcekey="Step8_ViewFrontEnd" /></a>
                                 </p>
-                                <p>
-                                    <a href="Default.aspx" target="_new">
-                                        <asp:Literal runat="server" ID="Step8_YouCanLoginBackend" meta:resourcekey="Step8_YouCanLoginBackend" /></a>
-                                </p>
-
                                 <iframe src="http://www.kartris.com/MailChimpForm_Install.html"
                                     style="width: 100%; height: 200px; border: none; border-top: solid 3px #ccc; margin-top: 20px;"></iframe>
 

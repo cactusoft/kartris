@@ -100,7 +100,21 @@ Partial Class UserControls_Back_UserDetails
             Else
                 'C_ID = 0
                 fvwUser.DefaultMode = FormViewMode.Insert
+
             End If
+
+            'v3 mod
+            'Object config now available for categories
+            Try
+                _UC_ObjectConfig.ItemID = GetCustomerID()
+                If Not IsPostBack Then
+                    _UC_ObjectConfig.LoadObjectConfig()
+                End If
+            Catch ex As Exception
+                'will fail if creating new user
+            End Try
+
+
         End If
 
     End Sub
@@ -166,6 +180,10 @@ Partial Class UserControls_Back_UserDetails
                         Catch ex As Exception
 
                         End Try
+
+                        'Update object config v3.0001
+                        _UC_ObjectConfig.ItemID = GetCustomerID()
+                        _UC_ObjectConfig.SaveConfig()
 
                         RaiseEvent _UCEvent_DataUpdated()
                     End If

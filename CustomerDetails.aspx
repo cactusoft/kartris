@@ -7,6 +7,7 @@
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
     <h1>
         <asp:Literal ID="litContentTextChangeCustomerCode" runat="server" Text='<%$ Resources: Kartris, ContentText_ChangeCustomerCode %>' /></h1>
+    <p><strong><asp:Literal ID="litUserEmail" runat="server"></asp:Literal></strong></p>
     <div>
         <asp:UpdatePanel ID="updAddresses" runat="server">
             <ContentTemplate>
@@ -14,7 +15,8 @@
                     <asp:View ID="viwDefaults" runat="server">
                         <div>
                             <p>
-                                <asp:Literal ID="litChangePassword" runat="server" Text='<%$ Resources: SubTitle_ChangeCustomerCode %>' /></p>
+                                <asp:Literal ID="litChangePassword" runat="server" Text='<%$ Resources: SubTitle_ChangeCustomerCode %>' />
+                            </p>
                             <div class="Kartris-DetailsView">
                                 <div class="Kartris-DetailsView-Data">
                                     <ul>
@@ -82,6 +84,12 @@
                                                         class="Kartris-DetailsView-Value">
                                                         <asp:TextBox ID="txtEUVATNumber" runat="server" />
                                                     </span></li>
+                                            <li><span class="Kartris-DetailsView-Name">
+                                                <asp:Label ID="lblEORINumber" runat="server" Text="<%$ Resources: Kartris, ContentText_EORI %>"
+                                                    AssociatedControlID="txtEORINumber" CssClass="requiredfield"></asp:Label></span><span
+                                                        class="Kartris-DetailsView-Value">
+                                                        <asp:TextBox ID="txtEORINumber" runat="server" />
+                                                    </span></li>
                                             <li>
                                                 <asp:Button ID="btnUpdate" CssClass="button" runat="server" Text="<%$ Resources: Kartris, FormButton_Submit %>"
                                                     ValidationGroup="NameAndVAT" /></li>
@@ -91,31 +99,35 @@
                             </div>
 
                             <div class="section">
-                    <div class="row collapse">
-                        <div class="small-12 medium-6 columns">
+                                <div class="row collapse">
+                                    <div class="small-12 medium-6 columns">
 
-                                <h2>
-                                    <asp:Literal ID="litDefaultBilling" runat="server" Text='<%$ Resources: Address, ContentText_DefaultBillingAddress %>' />
-                                </h2>
-                                <div>
-                                    <asp:Literal ID="litContentTextNoAddress" Visible="false" runat="server" Text='<%$ Resources: Address, ContentText_NoAddress %>' /></div>
-                                <user:AddressDetails runat="server" ID="UC_DefaultBilling" ShowButtons="false" />
-                                <br />
-                                <asp:LinkButton ID="lnkEditBilling" CssClass="link2" runat="server" Text='<%$ Resources: Address, ContentText_ManageAddresses %>'
-                                    CausesValidation="false" /><br /><br />
-                                                      </div>
-                        <div class="small-12 medium-6 columns">
-                                <h2>
-                                    <asp:Literal ID="litDefaultShipping" runat="server" Text='<%$ Resources: Address, ContentText_DefaultShippingAddress %>' />
-                                </h2>
-                                <div>
-                                    <asp:Literal ID="litContentTextNoAddress2" Visible="false" runat="server" Text='<%$ Resources: Address, ContentText_NoAddress %>' /></div>
-                                <user:AddressDetails runat="server" ID="UC_DefaultShipping" ShowButtons="false" />
-                                <br />
-                                <asp:LinkButton ID="lnkEditShipping" CssClass="link2" runat="server" Text='<%$ Resources: Address, ContentText_ManageAddresses %>'
-                                    CausesValidation="false" /><br /><br />
-                        </div>
-                    </div>
+                                        <h2>
+                                            <asp:Literal ID="litDefaultBilling" runat="server" Text='<%$ Resources: Address, ContentText_DefaultBillingAddress %>' />
+                                        </h2>
+                                        <div>
+                                            <asp:Literal ID="litContentTextNoAddress" Visible="false" runat="server" Text='<%$ Resources: Address, ContentText_NoAddress %>' />
+                                        </div>
+                                        <user:AddressDetails runat="server" ID="UC_DefaultBilling" ShowButtons="false" />
+                                        <br />
+                                        <asp:LinkButton ID="lnkEditBilling" CssClass="link2" runat="server" Text='<%$ Resources: Address, ContentText_ManageAddresses %>'
+                                            CausesValidation="false" /><br />
+                                        <br />
+                                    </div>
+                                    <div class="small-12 medium-6 columns">
+                                        <h2>
+                                            <asp:Literal ID="litDefaultShipping" runat="server" Text='<%$ Resources: Address, ContentText_DefaultShippingAddress %>' />
+                                        </h2>
+                                        <div>
+                                            <asp:Literal ID="litContentTextNoAddress2" Visible="false" runat="server" Text='<%$ Resources: Address, ContentText_NoAddress %>' />
+                                        </div>
+                                        <user:AddressDetails runat="server" ID="UC_DefaultShipping" ShowButtons="false" />
+                                        <br />
+                                        <asp:LinkButton ID="lnkEditShipping" CssClass="link2" runat="server" Text='<%$ Resources: Address, ContentText_ManageAddresses %>'
+                                            CausesValidation="false" /><br />
+                                        <br />
+                                    </div>
+                                </div>
                             </div>
                         </asp:PlaceHolder>
                     </asp:View>
@@ -135,7 +147,7 @@
                         </div>
                     </asp:View>
 
-                      <asp:View ID="viwShippingAddresses" runat="server">
+                    <asp:View ID="viwShippingAddresses" runat="server">
                         <div class="section manageaddresses">
                             <h2>
                                 <asp:Literal ID="litContentTextSavedAddresses2" runat="server" Text='<%$ Resources: Address, ContentText_SavedAddresses %>' />:
@@ -155,9 +167,10 @@
                 </asp:MultiView>
                 <p>
                     <asp:LinkButton ID="btnBack" CssClass="link2" runat="server" Text='<%$ Resources: Kartris, ContentText_GoBack  %>'
-                        CausesValidation="false" /></p>
+                        CausesValidation="false" />
+                </p>
                 <asp:LinkButton ID="lnkDummy" runat="server" CausesValidation="false" />
-                <asp:Panel ID="pnlNewAddress" runat="server" CssClass="popup" Style="display: none"  DefaultButton="btnSaveNewAddress">
+                <asp:Panel ID="pnlNewAddress" runat="server" CssClass="popup" Style="display: none" DefaultButton="btnSaveNewAddress">
                     <h2>
                         <asp:Literal ID="litAddressTitle" runat="server" Text="<%$ Resources:Kartris, ContentText_Edit%>" /></h2>
                     <user:AddressInput ID="UC_NewEditAddress" DisplayType="Shipping" runat="server" ShowSaveAs="true"

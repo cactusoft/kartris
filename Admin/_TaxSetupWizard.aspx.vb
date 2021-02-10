@@ -326,6 +326,9 @@ Partial Class Admin_Destinations
         Dim dtbAllCountries As DataTable = ShippingBLL._GetDestinationsByLanguage(CkartrisBLL.GetLanguageIDfromSession)
         Dim lstRegionCountries As List(Of KartrisClasses.Country) = GetCountryListFromTaxConfig()
 
+        'Store location ISO
+        Dim strThisLocationISOCode As String = ""
+
         'Show link to reset currency rates
         lnkCurrencyLink.Visible = True
 
@@ -375,9 +378,6 @@ Partial Class Admin_Destinations
                         Next
 
                     Next
-
-
-
                 Else
                     'No - Don't charge tax for all countries
                     For Each drwCountry As DataRow In dtbAllCountries.Rows
@@ -386,7 +386,11 @@ Partial Class Admin_Destinations
                                            FixNullFromDB(drwCountry("D_Region")), drwCountry("D_Live"), "", FixNullFromDB(drwCountry("D_TaxExtra")))
                     Next
                 End If
-                KartSettingsManager.SetKartConfig("general.tax.euvatcountry", "", False)
+
+                'Set default country
+                strThisLocationISOCode = ShippingBLL._GetISOCodeByDestinationID(ddlCountries.SelectedValue)
+                KartSettingsManager.SetKartConfig("general.tax.euvatcountry", strThisLocationISOCode, False)
+
             Case "EU"
                 'VAT Registered?
                 If ddlEUVatRegistered.SelectedValue = "y" Then
@@ -420,7 +424,8 @@ Partial Class Admin_Destinations
                     Next
 
                     'Set general.tax.euvatcountry config to selected country
-                    KartSettingsManager.SetKartConfig("general.tax.euvatcountry", strSelectedEUCountryISO, False)
+                    strThisLocationISOCode = ShippingBLL._GetISOCodeByDestinationID(ddlCountries.SelectedValue)
+                    KartSettingsManager.SetKartConfig("general.tax.euvatcountry", strThisLocationISOCode, False)
 
                     'Set TaxRate Record 2 to entered tax rate value
                     TaxBLL._UpdateTaxRate(2, txtQVatRate.Text, "", "")

@@ -290,6 +290,15 @@ Public Class ProductsBLL
         Return ProductCategoryLinkAdptr._GetCategoriesByProductID(pProductID)
     End Function
 
+    Public Shared Function GetProductIDByVersionCode(ByVal strVersionCode As String) As Integer
+        Dim _Adptr As New ProductsTblAdptr
+        Try
+            Return _Adptr.GetProductIDByVersionCode(strVersionCode)
+        Catch ex As Exception
+            Return 0
+        End Try
+    End Function
+
     Public Shared Sub _GetProductStatus( _
                             ByVal numProductID As Integer, ByRef blnProductLive As Boolean, _
                             ByRef strProductType As String, ByRef numLiveVersions As Integer, _

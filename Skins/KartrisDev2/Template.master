@@ -106,11 +106,6 @@
 						<div id="menuCategories" class="menuSpecial">
 							<user:MegaMenu runat="server" ID="UC_MegaMenu" EnableViewState="False" RootCategoryID="0" />
 						</div>
-						<div id="menuCategories2" class="menuSpecial">
-							<div class="custommegamenu">
-								<user:MegaMenu runat="server" ID="UC_MegaMenu2" EnableViewState="False" RootCategoryID="2" />
-							</div>
-						</div>
 						<div id="menuAbout" class="menuSpecial">
 							<div class="custommegamenu">
 								Edit "menuFurther2" in /Skins/Kartris/Template.master

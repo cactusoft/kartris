@@ -129,9 +129,16 @@ Public Class KartrisClasses
             m_shippingzoneID = CType(reader("D_ShippingZoneID"), Integer)
             m_name = CType(reader("D_Name"), String)
             m_codeISO3166 = CType(reader("D_ISOCode"), String)
+            Try
+                m_TaxExtra = CType(CkartrisDataManipulation.FixNullFromDB(reader("D_TaxExtra")), String)
+            Catch ex As Exception
+                m_TaxExtra = ""
+            End Try
+
 
             _TaxRate1 = CDbl(FixNullFromDB(reader("D_Tax")))
             _TaxRate2 = CDbl(FixNullFromDB(reader("D_Tax2")))
+
 
             Try
                 _isLive = FixNullFromDB(reader("D_Live"))

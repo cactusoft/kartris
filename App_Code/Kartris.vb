@@ -2510,3 +2510,51 @@ Public NotInheritable Class CkartrisEnvironment
     End Function
 End Class
 
+''' <summary>
+''' Introduced v3.0001 to handle brexit-related chaos, this
+''' has some functions used to decide whether certain items
+''' like EU VAT and EORI numbers should be displaced to
+''' customers
+''' </summary>
+Public NotInheritable Class CkartrisRegionalSettings
+    ''' <summary>
+    ''' Show EU VAT field on checkout?
+    ''' </summary>
+    ''' <param name="strBaseCountryIsoCode">Two-letter ISO code of the base country (general.tax.euvatcountry)</param>
+    ''' <param name="strAddressCountryIsoCode">Two-letter ISO code of the shipping country selected by user</param>
+    ''' <param name="blnAddressCountryTax">Tax in destination country? (D_Tax)</param>
+    ''' <param name="strTaxExtra">Tax extra info, we now set this to EU if using UK/VAT tax regime for EU countries</param>
+    ''' <param name="blnShowEUVATForDomestic">For some EU countries like Portugal, the VAT number is nearly always collected where possible, even for domestic customers, as is same as general tax ID</param>
+    ''' <returns>boolean</returns>
+    Public Shared Function ShowEUVATField(ByVal strBaseCountryIsoCode As String, strAddressCountryIsoCode As String, ByVal blnAddressCountryTax As Boolean, ByVal strTaxExtra As String, ByVal blnShowEUVATForDomestic As Boolean) As Boolean
+        'The EU VAT field should show in the following situations
+        '1. Both country A and B are different, but both have tax due (suggests both are EU)
+        '2. Same EU country and blnShowEUVATForDomestic is true
+        '3. UK/Non-EU and an EU country (determined by the TaxExtra field, since they won't have tax turned on)
+        If (strBaseCountryIsoCode <> strAddressCountryIsoCode) And blnAddressCountryTax Then
+            Return True
+        ElseIf strTaxExtra = "EU" And blnShowEUVATForDomestic Then
+            Return True
+        ElseIf (strBaseCountryIsoCode <> strAddressCountryIsoCode) And strTaxExtra = "EU" Then
+            Return True
+        End If
+        Return False
+    End Function
+
+    ''' <summary>
+    ''' Show EORI field on checkout?
+    ''' </summary>
+    ''' <param name="blnAddressCountryTax">Tax in destination country? (D_Tax)</param>
+    ''' <param name="strTaxExtra">Tax extra info, we now set this to EU if using UK/VAT tax regime for EU countries</param>
+    ''' <remarks>EORI is a company ID number used for importing/exporting from the EU. It should show for EU customers ordering on a site based outside the EU.</remarks>
+    ''' <returns>boolean</returns>
+    Public Shared Function ShowEORIField(ByVal blnAddressCountryTax As Boolean, ByVal strTaxExtra As String) As Boolean
+        'The EORI field should show in the following situations
+        '1. Base country non-EU, client country EU
+        If (Not blnAddressCountryTax) And strTaxExtra = "EU" Then
+            Return True
+        End If
+        Return False
+    End Function
+End Class
+

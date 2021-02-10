@@ -79,6 +79,14 @@ Public Class VersionsBLL
         Return Adptr.GetCustomization(numVersionID)
     End Function
 
+    Public Shared Function _GetWeightByVersionCode(ByVal strVersionCode As String) As Double
+        Try
+            Return CStr(Adptr._GetWeightByVersionCode(strVersionCode))
+        Catch ex As Exception
+            Return 0
+        End Try
+    End Function
+
     Public Shared Function IsVersionCustomizable(ByVal numVersionID As Long) As Boolean
         Dim chrCustomizationType As Char = ""
         Try

@@ -166,6 +166,11 @@ Partial Class UserControls_General_Invoice
         litCustomerID.Text = _CustomerID
         litInvoiceDate.Text = FormatDate(datInvoiceDate, "d", _OrderLanguageID)
         litVatNumber.Text = strVatNumber
+        litEORINumber.Text = ObjectConfigBLL.GetValue("K:user.eori", _CustomerID)
+
+        'MOD v3.0001
+        'Add email to invoice
+        litEmail.Text = UsersBLL.GetEmailByID(_CustomerID)
 
         If Not String.IsNullOrWhiteSpace(strOrderComments) AndAlso KartSettingsManager.GetKartConfig("frontend.orders.showcommentsoninvoice") = "y" Then
             CType(FindControl("phdOrderComments"), PlaceHolder).Visible = True
@@ -287,6 +292,24 @@ Partial Class UserControls_General_Invoice
             CType(e.Item.FindControl("litTaxAmount"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numRowTaxAmount)
             CType(e.Item.FindControl("litRowPriceIncTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numRowPriceIncTax)
 
+            '-------------------------------------------------
+            'MOD v3.0001
+            'Extra rows for more info - Brexit related for UK clients
+            CType(e.Item.FindControl("phdNonUKRows"), PlaceHolder).Visible = KartSettingsManager.GetKartConfig("general.orders.extendedinvoiceinfo") = "y"
+            CType(e.Item.FindControl("litDiscountedValue"), Literal).Text = ""
+            CType(e.Item.FindControl("litWeight"), Literal).Text = VersionsBLL._GetWeightByVersionCode(strVersionCode)
+            CType(e.Item.FindControl("litDiscountedValue"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, ((100 - numDiscountPercentage) / 100) * numRowPriceExTax)
+
+            'Commodity code, first we lookup product ID from the SKU, then use that
+            'to see if any commodity code. 
+            Dim numProductID As Integer = ProductsBLL.GetProductIDByVersionCode(strVersionCode)
+            Dim strCommodityCode As String = ObjectConfigBLL.GetValue("K:product.commoditycode", numProductID)
+            If strCommodityCode <> "" Then
+                CType(e.Item.FindControl("phdCommodityCode"), PlaceHolder).Visible = True
+                CType(e.Item.FindControl("phdNoCommodityCode"), PlaceHolder).Visible = False
+                CType(e.Item.FindControl("litCommodityCode"), Literal).Text = strCommodityCode
+            End If
+            '-------------------------------------------------
 
         ElseIf e.Item.ItemType = ListItemType.Footer Then
             Dim numTotalTaxFraction As Double

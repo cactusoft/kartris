@@ -242,7 +242,7 @@ Public Class TaxRegime
     ''' <param name="D_Tax2">Destination Country Tax 2. Same as D_Tax but used in countries with a 2 tier tax system (e.g. Canada)</param>
     ''' <param name="D_TaxExtra">The Tax Rate Calculation Type Name. View TaxRegime.Default and then for the country of interest look 
     ''' at the TaxRateCalculation node. If there is no node name then there is only one calculation, if there are multiple nodes then 
-    ''' the name is used here to descriminate between them</param>
+    ''' the name is used here to descriminate between them. From v3.0001, we also use to mark EU countries</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Shared Function CalculateTaxRate(ByVal V_Tax As Double, ByVal V_Tax2 As Double, ByVal D_Tax As Double,
@@ -253,14 +253,20 @@ Public Class TaxRegime
         Dim strCorrectFormula As String
 
         If Not String.IsNullOrEmpty(D_TaxExtra) Then
-            'D_TaxExtra has a value so must match it to the TaxRateCalculation Name to get the correct Formula
-            _FormulaNameToFind = D_TaxExtra
-            Dim result As KartrisNameValuePair = _Formulas.Find(AddressOf FindName)
-            If result IsNot Nothing Then
-                strCorrectFormula = result.Value
+            If D_TaxExtra <> "EU" Then 'We now use this field to mark EU countries
+                'D_TaxExtra has a value so must match it to the TaxRateCalculation Name to get the correct Formula
+                _FormulaNameToFind = D_TaxExtra
+                Dim result As KartrisNameValuePair = _Formulas.Find(AddressOf FindName)
+                If result IsNot Nothing Then
+                    strCorrectFormula = result.Value
+                Else
+                    Throw New Exception("Invalid D_TaxExtra Value: " & D_TaxExtra)
+                End If
             Else
-                Throw New Exception("Invalid D_TaxExtra Value: " & D_TaxExtra)
+                'D_TaxExtra is empty so just get the "default" Formula
+                strCorrectFormula = _Formulas.Item(0).Value
             End If
+
         Else
             'D_TaxExtra is empty so just get the "default" Formula
             strCorrectFormula = _Formulas.Item(0).Value

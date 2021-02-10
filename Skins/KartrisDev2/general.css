@@ -42,9 +42,9 @@ a:link,
 a:visited                               { text-decoration: none; color: #333; outline: 0; }
 a:hover                                 { text-decoration: none; color: #888; }
 a.link2,
-span.link2 a                            { padding: 2px 0; text-transform: none; font-size: 90%; font-weight: normal; letter-spacing: 1px; border-bottom: dashed 1px #008800; text-decoration: none; color: #008800; margin-right: 10px; border-radius: 0; }
+span.link2 a                            { padding: 2px 0; text-transform: none; font-size: 90%; font-weight: normal; letter-spacing: 1px; border-bottom: dashed 1px #000; text-decoration: none; color: #000; margin-right: 10px; border-radius: 0; }
 a.link2:hover,
-span.link2:hover a                      { color: #000; border-bottom: dashed 1px #000; }
+span.link2:hover a                      { color: #777; border-bottom: dashed 1px #777; }
 /* 
 ========================================================================
 GENERAL
@@ -124,7 +124,7 @@ input.highpriority                      { }
 .checkbox label                         { text-transform: none; font-size: 13px; }
 .checkbox input,
 .radio input                            { border-style: none; background-color: transparent; display: inline-block; width: 20px; float: left; margin-right: 1px; }
-label                                   { font-size: 99%; display: inline-block; letter-spacing: 1px; color: #333; margin-bottom: 3px; font-weight: normal; vertical-align: top; }
+label                                   { font-size: 99%; display: inline-block; letter-spacing: 0; color: #333; margin-bottom: 3px; font-weight: normal; vertical-align: top; }
 .inputform .column2                     { padding: 0px; margin-left: 130px; }
 .inputform .column2 label               { width: auto }
 div.formdivider                         { display: block; border-top: dotted 1px #bbb; width: 100%; }

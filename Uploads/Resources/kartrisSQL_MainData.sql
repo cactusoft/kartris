@@ -59,6 +59,9 @@ INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (7, N'K:product.showlargeimageinline', N'Product', N'b', N'0', N'Change products images to large view mode instead of being displayed in the image gallery.', 0, 2.5006)
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (8, N'K:product.excustomerdiscount', N'Product', N'b', N'0', N'Exclude designated products from customer discount.', 0, 2.9010)
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (9, N'K:product.spectable', N'Product', N's', N'', N'Pre formatted text for specs, tabular data, etc.', 1, 2.9014)
+INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (11, N'K:user.eori', N'User', N's', N'', N'EORI number', 1, 3.0001)
+INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (12, N'K:product.commoditycode', N'Product', N's', N'', N'Commodity code (for EU imports)', 0, 3.0001)
+
 SET IDENTITY_INSERT [dbo].[tblKartrisObjectConfig] OFF
 /****** Object:  Table [dbo].[tblKartrisAffiliatePayments]    Script Date: 01/23/2013 21:59:08 ******/
 SET ANSI_NULLS ON
@@ -500,6 +503,12 @@ INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_D
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.services.postcodes4u.key', N'', N's', N't', NULL, N'Product key for your postcodes4u account.', 2.9002, N'', 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.email.testaddress', N'', N's', N't', NULL, N'Test email address to send all mail to when general.email.method="test"', 2.9002, N'', 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'frontend.navigationmenu.cssids', N'n', N's', N'b', N'y|n', N'Whether to insert unique IDs into links in the navigation menus using the MenuAdapter.vb', 2.9002, N'n', 0)
+GO
+
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.tax.domesticshowfield', N'n', N's', N'b', 'y|n',N'Whether to show the VAT field at checkout for domestic orders within EU',3.0001, N'n', 0);
 GO
 
 /****** Object:  Table [dbo].[tblKartrisSessions]    Script Date: 01/23/2013 21:59:09 ******/
@@ -28160,17 +28169,82 @@ BEGIN
 END
 GO
 
+/****** Object:  StoredProcedure [dbo].[spKartrisObjectConfig_SetValue]    Script Date: 09/02/2021 09:23:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	Front end, update object config
+-- value by object config name.
+-- =============================================
+CREATE PROCEDURE [dbo].[spKartrisObjectConfig_SetValue]
+(
+	@ParentID as bigint,
+	@ConfigName as nvarchar(50),
+	@ConfigValue as nvarchar(max)
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	DECLARE @ConfigID as int;
+	SELECT  @ConfigID = OC_ID
+	FROM    tblKartrisObjectConfig
+	WHERE   (tblKartrisObjectConfig.OC_Name = @ConfigName);
+	
+	DECLARE @DefaultValue as nvarchar(max);
+	SELECT  @DefaultValue = OC_DefaultValue
+	FROM    tblKartrisObjectConfig
+	WHERE   (tblKartrisObjectConfig.OC_ID = @ConfigID);
+	
+	DECLARE @Count as int;
+	SELECT     @Count = Count(1)
+	FROM         tblKartrisObjectConfigValue
+	WHERE     (tblKartrisObjectConfigValue.OCV_ObjectConfigID = @ConfigID) AND (tblKartrisObjectConfigValue.OCV_ParentID = @ParentID);
+	
+	
+	IF @Count = 1 BEGIN
+		UPDATE  tblKartrisObjectConfigValue
+		SET OCV_Value = @ConfigValue
+		WHERE   (dbo.tblKartrisObjectConfigValue.OCV_ObjectConfigID = @ConfigID) AND (tblKartrisObjectConfigValue.OCV_ParentID = @ParentID)
+	END ELSE BEGIN
+		INSERT INTO dbo.tblKartrisObjectConfigValue
+		VALUES (@ConfigID, @ParentID, @ConfigValue);
+	END;
+	
+	-- Clear un-needed records (NULLs and Value is equal to default)
+	DELETE FROM dbo.tblKartrisObjectConfigValue 
+	WHERE (OCV_Value IS NULL) OR (OCV_Value = @DefaultValue AND OCV_ObjectConfigID = @ConfigID);
+		
+	
+END
+GO
+
 /****** change position of admin back end link on front end of site - got forgotten in the more recent maindate scripts for 2.9x ******/
 INSERT INTO [tblKartrisConfig]
 (CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
 VALUES
 (N'frontend.adminlinkposition', N'top', N's', N'b',	'top|bottom',N'Position for front end admin link. Bottom moves it down a little in case it clashes with hamburger or other navigation.',2.9012, N'top', 0);
+GO
 
+/****** New config setting, brexit related, turn on extended invoice info ******/
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.orders.extendedinvoiceinfo', N'n', N's', N's', 'y|n',N'Extended item info on invoice',3.0001, N'n', 0);
 GO
 
 /*** New language strings  ***/
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
 (N'f', N'ContentText_AccountBalance', N'Account Balance', NULL, 3.0001, N'Account Balance', NULL, N'Kartris',1);
+
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
+(N'f', N'ContentText_EORI', N'EORI Number (if available)', NULL, 3.0001, N'EORI Number (if available)', NULL, N'Kartris',1);
 
 GO
 

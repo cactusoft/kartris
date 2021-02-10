@@ -36,6 +36,11 @@ Partial Class Customer_Details
                 Dim arrNameAndVAT As Array = Split(UsersBLL.GetNameandEUVAT(CurrentLoggedUser.ID), "|||")
                 txtCustomerName.Text = arrNameAndVAT(0)
                 txtEUVATNumber.Text = arrNameAndVAT(1)
+
+                'v3.0001 EORI number
+                txtEORINumber.Text = ObjectConfigBLL.GetValue("K:user.EORI", CurrentLoggedUser.ID)
+
+                litUserEmail.Text = User.Identity.Name
             End If
 
             If ViewState("lstUsrAddresses") Is Nothing Then ViewState("lstUsrAddresses") = KartrisClasses.Address.GetAll(CurrentLoggedUser.ID)
@@ -295,6 +300,9 @@ Partial Class Customer_Details
         Page.Validate("NameAndVat")
         If Page.IsValid Then
             If UsersBLL.UpdateNameandEUVAT(CurrentLoggedUser.ID, txtCustomerName.Text, txtEUVATNumber.Text) = CurrentLoggedUser.ID Then UC_Updated.ShowAnimatedText()
+
+            'EORI number
+            Dim blnAddedEORI As Boolean = ObjectConfigBLL._SetConfigValue(11, CurrentLoggedUser.ID, txtEORINumber.Text, "")
         End If
     End Sub
 End Class

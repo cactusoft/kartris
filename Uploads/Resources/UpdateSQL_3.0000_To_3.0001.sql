@@ -750,6 +750,62 @@ END
 
 GO
 
+/****** Object:  StoredProcedure [dbo].[spKartrisObjectConfig_SetValue]    Script Date: 09/02/2021 09:23:42 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: <Create Date,,>
+-- Description:	Front end, update object config
+-- value by object config name.
+-- =============================================
+CREATE PROCEDURE [dbo].[spKartrisObjectConfig_SetValue]
+(
+	@ParentID as bigint,
+	@ConfigName as nvarchar(50),
+	@ConfigValue as nvarchar(max)
+)
+AS
+BEGIN
+	-- SET NOCOUNT ON added to prevent extra result sets from
+	-- interfering with SELECT statements.
+	SET NOCOUNT ON;
+
+	DECLARE @ConfigID as int;
+	SELECT  @ConfigID = OC_ID
+	FROM    tblKartrisObjectConfig
+	WHERE   (tblKartrisObjectConfig.OC_Name = @ConfigName);
+	
+	DECLARE @DefaultValue as nvarchar(max);
+	SELECT  @DefaultValue = OC_DefaultValue
+	FROM    tblKartrisObjectConfig
+	WHERE   (tblKartrisObjectConfig.OC_ID = @ConfigID);
+	
+	DECLARE @Count as int;
+	SELECT     @Count = Count(1)
+	FROM         tblKartrisObjectConfigValue
+	WHERE     (tblKartrisObjectConfigValue.OCV_ObjectConfigID = @ConfigID) AND (tblKartrisObjectConfigValue.OCV_ParentID = @ParentID);
+	
+	
+	IF @Count = 1 BEGIN
+		UPDATE  tblKartrisObjectConfigValue
+		SET OCV_Value = @ConfigValue
+		WHERE   (dbo.tblKartrisObjectConfigValue.OCV_ObjectConfigID = @ConfigID) AND (tblKartrisObjectConfigValue.OCV_ParentID = @ParentID)
+	END ELSE BEGIN
+		INSERT INTO dbo.tblKartrisObjectConfigValue
+		VALUES (@ConfigID, @ParentID, @ConfigValue);
+	END;
+	
+	-- Clear un-needed records (NULLs and Value is equal to default)
+	DELETE FROM dbo.tblKartrisObjectConfigValue 
+	WHERE (OCV_Value IS NULL) OR (OCV_Value = @DefaultValue AND OCV_ObjectConfigID = @ConfigID);
+		
+	
+END
+GO
+
 /*** DELETE FLASH MEDIA TYPES  ***/
 DELETE FROM [dbo].[tblKartrisMediaTypes] WHERE MT_ID =1 OR MT_ID=4
 GO
@@ -758,6 +814,29 @@ GO
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
 (N'f', N'ContentText_AccountBalance', N'Account Balance', NULL, 3.0001, N'Account Balance', NULL, N'Kartris',1);
 
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
+(N'f', N'ContentText_EORI', N'EORI Number (if available)', NULL, 3.0001, N'EORI Number (if available)', NULL, N'Kartris',1);
+
+GO
+
+/*** OBJECT CONFIG  ***/
+SET IDENTITY_INSERT [dbo].[tblKartrisObjectConfig] ON
+INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (11, N'K:user.eori', N'User', N's', N'', N'EORI number', 1, 3.0001)
+INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (12, N'K:product.commoditycode', N'Product', N's', N'', N'Commodity code (for EU imports)', 0, 3.0001)
+SET IDENTITY_INSERT [dbo].[tblKartrisObjectConfig] OFF
+
+/****** New config setting, lets countries like Portugal turn EU VAT field on for all orders in EU, even domestic ones ******/
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.tax.domesticshowfield', N'n', N's', N'b', 'y|n',N'Whether to show the VAT field at checkout for domestic orders within EU',3.0001, N'n', 0);
+GO
+
+/****** New config setting, brexit related, turn on extended invoice info ******/
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.orders.extendedinvoiceinfo', N'n', N's', N's', 'y|n',N'Extended item info on invoice',3.0001, N'n', 0);
 GO
 
 /* Change config setting */

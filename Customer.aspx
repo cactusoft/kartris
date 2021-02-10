@@ -55,6 +55,7 @@
                             <user:CustomerBalance runat="server" ID="UC_CustomerBalance" />
                             <h1>
                                 <asp:Literal ID="litPageTitleMyAccount" runat="server" Text='<%$ Resources: Kartris, PageTitle_MyAccount %>'></asp:Literal></h1>
+                            <p><strong><asp:Literal ID="litUserEmail" runat="server"></asp:Literal></strong></p>
                             <asp:LoginStatus ID="KartrisLoginStatus2" runat="server" CssClass="button"
                                 LoginText="" LogoutText='<%$ Resources: Kartris, ContentText_LogMeOut %>' LogoutAction="Redirect"
                                 LogoutPageUrl="~/Default.aspx" />

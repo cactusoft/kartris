@@ -123,22 +123,17 @@
                                         runat="server" AssociatedControlID="chkSameShippingAsBilling" EnableViewState="true" /></span>
                             </p>
                             <!--
-                    ===============================
-                    EU VAT NUMBER
-                    This section only displays if
-                    required (i.e. the setting:
-                    general.tax.euvatcountry is
-                    not blank, and the user who is
-                    checking out is in another EU
-                    country).
-                    ===============================
-                    -->
+                            ===============================
+                            EU VAT NUMBER
+                            ===============================
+                            -->
                             <asp:PlaceHolder ID="phdEUVAT" runat="server" Visible="false">
                                 <div class="section" id="euvatsection">
-                                    <h2>
-                                        <asp:Literal ID="litEnterEUVAT" runat="server" Text="<%$ Resources: ContentText_EnterEUVat %>"
-                                            EnableViewState="false" /></h2>
                                     <div class="row">
+                                        <div class="small-12 large-2 columns">
+                                            <asp:Label ID="lblEnterEUVAT" runat="server" Text="<%$ Resources: ContentText_EnterEUVat %>"
+                                                EnableViewState="false" AssociatedControlID="txtEUVAT" />
+                                        </div>
                                         <div class="small-1 large-1 columns">
                                             <strong>
                                                 <asp:Literal ID="litMSCode" runat="server" EnableViewState="true" /></strong>
@@ -146,7 +141,29 @@
                                         <div class="small-10 large-3 columns">
                                             <asp:TextBox ID="txtEUVAT" runat="server" EnableViewState="true" AutoPostBack="true"></asp:TextBox>
                                         </div>
-                                        <div class="small-1 large-8 columns">&nbsp;<asp:Literal ID="litValidationOfVATNumber" runat="server"></asp:Literal></div>
+                                        <div class="small-1 large-6 columns">&nbsp;<asp:Literal ID="litValidationOfVATNumber" runat="server"></asp:Literal></div>
+                                    </div>
+                                </div>
+                            </asp:PlaceHolder>
+                            <!--
+                            ===============================
+                            EORI
+                            ===============================
+                            -->
+                            <asp:PlaceHolder ID="phdEORI" runat="server" Visible="true">
+                                <div class="section" id="eorisection">
+                                    <div class="row">
+                                        <div class="small-12 large-2 columns">
+                                            <asp:Label ID="lblEORI" runat="server" Text="<%$ Resources: Kartris, ContentText_EORI %>"
+                                                EnableViewState="false" AssociatedControlID="txtEORI" />
+                                        </div>
+                                        <div class="small-1 large-1 columns">
+                                            &nbsp;
+                                        </div>
+                                        <div class="small-10 large-3 columns">
+                                            <asp:TextBox ID="txtEORI" runat="server" EnableViewState="true" AutoPostBack="true"></asp:TextBox>
+                                        </div>
+                                        <div class="small-1 large-6 columns">&nbsp;</div>
                                     </div>
                                 </div>
                             </asp:PlaceHolder>
@@ -167,15 +184,20 @@
                 <asp:UpdatePanel ID="updMain" runat="server">
                     <ContentTemplate>
                         <asp:PlaceHolder ID="phdPONumber" runat="server" Visible="false">
-                            <div class="section">
-                                <h2>
-                                    <asp:Literal ID="litPONumber" runat="server" Text="<%$ Resources: Invoice, ContentText_PONumber %>"
-                                        EnableViewState="false" /></h2>
+                            <div class="section" id="ponumbersection">
                                 <div class="row">
-                                    <div class="small-12 large-4 columns">
-                                        <asp:TextBox ID="txtPurchaseOrderNo" runat="server" />
+                                        <div class="small-12 large-2 columns">
+                                            <asp:Label ID="lblPONumber" runat="server" Text="<%$ Resources: Invoice, ContentText_PONumber %>"
+                                                EnableViewState="false" AssociatedControlID="txtPurchaseOrderNo" />
+                                        </div>
+                                        <div class="small-1 large-1 columns">
+                                            &nbsp;
+                                        </div>
+                                        <div class="small-10 large-3 columns">
+                                            <asp:TextBox ID="txtPurchaseOrderNo" runat="server" EnableViewState="true" AutoPostBack="true"></asp:TextBox>
+                                        </div>
+                                        <div class="small-1 large-6 columns">&nbsp;</div>
                                     </div>
-                                </div>
                             </div>
                         </asp:PlaceHolder>
                     </ContentTemplate>
@@ -417,7 +439,10 @@
                             EnableViewState="false" />: <strong>
                                 <asp:Literal ID="litPaymentMethod" runat="server" EnableViewState="true" /></strong>
                     </p>
+                    <asp:Literal ID="litVATNumberText" runat="server"></asp:Literal>
+                    <asp:Literal ID="litEORINumberText" runat="server"></asp:Literal>
                     <asp:Literal ID="litPONumberText" runat="server"></asp:Literal>
+                    <br />
                     <div class="tick">
                         <asp:Literal ID="litOrderEmailsYes2" Text="<%$ Resources: Checkout, ContentText_OrderEmailsYes %>"
                             runat="server" EnableViewState="true" />

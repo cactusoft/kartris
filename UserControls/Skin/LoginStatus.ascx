@@ -3,7 +3,7 @@
 <div id="loginstatus" class="hovermenu_holder">
     <% '----------Logged in--------- %>
     <asp:PlaceHolder ID="phdLoggedIn" runat="server" Visible="False">
-        <asp:HyperLink NavigateUrl="~/Customer.aspx?action=home" ID="lnkMyAccount" runat="server" CssClass="loginbutton loggedin" ToolTip="<%$ Resources: Kartris, PageTitle_MyAccount %>">
+        <asp:HyperLink NavigateUrl="~/Customer.aspx?action=home" ID="lnkMyAccount" runat="server" CssClass="loginbutton loggedin">
             <i class="fas fa-user-check"></i>
         </asp:HyperLink>
         <span id="username"><strong>

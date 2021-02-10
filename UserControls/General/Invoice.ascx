@@ -12,7 +12,8 @@
         </div>
         <div class="box">
             <div class="pad">
-                <strong><asp:Literal ID="litShippingAddress" runat="server" Text='<%$ Resources: Address, FormLabel_ShippingAddress %>' /></strong>
+                <strong>
+                    <asp:Literal ID="litShippingAddress" runat="server" Text='<%$ Resources: Address, FormLabel_ShippingAddress %>' /></strong>
                 <asp:Literal ID="litShipping" runat="server" Text="" />
             </div>
         </div>
@@ -21,27 +22,44 @@
                 <strong>
                     <asp:Literal ID="litInvoiceDetails" runat="server" Text='<%$ Resources: Invoice, ContentText_InvoiceDetails %>' /></strong>
                 <div class="label">
-                    <asp:Literal ID="lblOrderID" runat="server" Text='<%$ Resources: _Orders, ContentText_OrderID %>' /></div>
+                    <asp:Literal ID="lblOrderID" runat="server" Text='<%$ Resources: _Orders, ContentText_OrderID %>' />
+                </div>
                 <div class="value">
-                    <asp:Literal ID="litOrderID" runat="server" Text="" />&nbsp;</div>
+                    <asp:Literal ID="litOrderID" runat="server" Text="" />&nbsp;
+                </div>
                 <div class="label">
-                    <asp:Literal ID="litContentText_PONumber" runat="server" Text='<%$ Resources: Invoice, ContentText_PONumber %>' /></div>
+                    <asp:Literal ID="litContentText_PONumber" runat="server" Text='<%$ Resources: Invoice, ContentText_PONumber %>' />
+                </div>
                 <div class="value">
-                    <asp:Literal ID="litPONumber" runat="server" Text="" />&nbsp;</div>
+                    <asp:Literal ID="litPONumber" runat="server" Text="" />&nbsp;
+                </div>
                 <div class="label">
-                    <asp:Literal ID="lblCustomerID" runat="server" Text='<%$ Resources: _Customers, FormLabel_CustomerID %>' /></div>
+                    <asp:Literal ID="lblCustomerID" runat="server" Text='<%$ Resources: _Customers, FormLabel_CustomerID %>' />
+                </div>
                 <div class="value">
-                    <asp:Literal ID="litCustomerID" runat="server" Text="" />&nbsp;</div>
+                    <asp:Literal ID="litCustomerID" runat="server" Text="" />&nbsp;
+                </div>
                 <div class="label">
-                    <asp:Literal ID="lblInvoiceDate" runat="server" Text='<%$ Resources: FormLabel_InvoiceDate %>' /></div>
+                    <asp:Literal ID="lblInvoiceDate" runat="server" Text='<%$ Resources: FormLabel_InvoiceDate %>' />
+                </div>
                 <div class="value">
-                    <asp:Literal ID="litInvoiceDate" runat="server" Text="" />&nbsp;</div>
+                    <asp:Literal ID="litInvoiceDate" runat="server" Text="" />&nbsp;
+                </div>
                 <div class="label">
-                    <asp:Literal ID="litEUVATNumber" runat="server" Text='<%$ Resources: Invoice, FormLabel_CardholderEUVatNum %>' /></div>
+                    <asp:Literal ID="litEUVATNumber" runat="server" Text='<%$ Resources: Invoice, FormLabel_CardholderEUVatNum %>' />
+                </div>
                 <div class="value">
-                    <asp:Literal ID="litVatNumber" runat="server" Text="" />&nbsp;</div>
+                    <asp:Literal ID="litVatNumber" runat="server" Text="" />&nbsp;
+                </div>
+                <div class="label">
+                    <asp:Literal ID="lblEORINumber" runat="server" Text='EORI' />
+                </div>
+                <div class="value">
+                    <asp:Literal ID="litEORINumber" runat="server" Text="" />&nbsp;
+                </div>
             </div>
         </div>
+        <div style="padding: 0px 0px 20px 0px;">Email: <strong><asp:Literal ID="litEmail" runat="server" Text="" /></strong></div>
         <asp:PlaceHolder ID="phdOrderComments" runat="server" Visible="false">
             <div class="box" id="customercomments">
                 <div class="pad">
@@ -56,36 +74,36 @@
         <asp:Repeater ID="rptInvoice" runat="server">
             <HeaderTemplate>
                 <table id="invoiceitems">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <% If APP_ShowTaxDisplay Then%>
-                        <th>
-                            <asp:Literal ID="litContentTextExTax" runat="server" Text='<%$ Resources: Kartris, ContentText_ExTax %>' />&nbsp;
-                        </th>
-                        <th>
-                            <asp:Literal ID="litContentTextTaxPerItem" runat="server" Text='<%$ Resources: Kartris, ContentText_Tax %>' />&nbsp;
-                        </th>
-                        <% Else%>
-                        <th>
-                            <asp:Literal ID="litContentTextPrice" runat="server" Text='<%$ Resources: Kartris, ContentText_Price %>' />&nbsp;
-                        </th>
-                        <% End If%>
-                        <th>
-                            <asp:Literal ID="litContentTextQty" runat="server" Text='<%$ Resources: Basket, ContentText_Qty %>' />
-                        </th>
-                        <% If APP_ShowTaxDisplay Then%>
-                        <th>
-                            <asp:Literal ID="litContentTextTotal1" runat="server" Text='<%$ Resources: Basket, ContentText_Total %>' />
-                        </th>
-                        <th>
-                            <asp:Literal ID="litContentTextTax" runat="server" Text='<%$ Resources: Kartris, ContentText_Tax %>' />&nbsp;
-                        </th>
-                        <% End If%>
-                        <th>
-                            <asp:Literal ID="litContentTextTotal2" runat="server" Text='<%$ Resources: Basket, ContentText_Total %>' />
-                        </th>
-                    </tr>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <% If APP_ShowTaxDisplay Then%>
+                            <th>
+                                <asp:Literal ID="litContentTextExTax" runat="server" Text='<%$ Resources: Kartris, ContentText_ExTax %>' />&nbsp;
+                            </th>
+                            <th>
+                                <asp:Literal ID="litContentTextTaxPerItem" runat="server" Text='<%$ Resources: Kartris, ContentText_Tax %>' />&nbsp;
+                            </th>
+                            <% Else%>
+                            <th>
+                                <asp:Literal ID="litContentTextPrice" runat="server" Text='<%$ Resources: Kartris, ContentText_Price %>' />&nbsp;
+                            </th>
+                            <% End If%>
+                            <th>
+                                <asp:Literal ID="litContentTextQty" runat="server" Text='<%$ Resources: Basket, ContentText_Qty %>' />
+                            </th>
+                            <% If APP_ShowTaxDisplay Then%>
+                            <th>
+                                <asp:Literal ID="litContentTextTotal1" runat="server" Text='<%$ Resources: Basket, ContentText_Total %>' />
+                            </th>
+                            <th>
+                                <asp:Literal ID="litContentTextTax" runat="server" Text='<%$ Resources: Kartris, ContentText_Tax %>' />&nbsp;
+                            </th>
+                            <% End If%>
+                            <th>
+                                <asp:Literal ID="litContentTextTotal2" runat="server" Text='<%$ Resources: Basket, ContentText_Total %>' />
+                            </th>
+                        </tr>
                     </thead>
                     <tbody>
             </HeaderTemplate>
@@ -100,7 +118,8 @@
                         <asp:Literal ID="litVersionCode" runat="server" Text='' />
 
                         <div>
-                            <asp:Literal ID="litCustomizationOptionText" runat="server" Text='' /></div>
+                            <asp:Literal ID="litCustomizationOptionText" runat="server" Text='' />
+                        </div>
                     </td>
                     <% If APP_ShowTaxDisplay Then%>
                     <td>
@@ -130,6 +149,29 @@
                         <asp:Literal ID="litRowPriceIncTax" runat="server" Text='' />
                     </td>
                 </tr>
+                <% 'MOD v3.0001 for brexit %>
+                <!-- Extra rows for non UK ordersextra info rows for non-UK orders -->
+                <asp:PlaceHolder ID="phdNonUKRows" runat="server" Visible="false">
+                    <tr>
+                        <asp:PlaceHolder ID="phdCommodityCode" runat="server" Visible="false">
+                            <td class="alignright">Commodity code:</td>
+                            <td style="text-align: left; padding-left: 10px; font-weight: bold;"><asp:Literal ID="litCommodityCode" runat="server" Text='' /></td>
+                        </asp:PlaceHolder>
+                        <asp:PlaceHolder ID="phdNoCommodityCode" runat="server" Visible="true">
+                            <td colspan="2" class="alignright"></td>
+                        </asp:PlaceHolder>
+                        <td colspan='<% =numColumns - 3 %>' class="alignright">Discounted value:</td>
+                        <td style="text-align: left; padding-left: 10px; font-weight: bold;">
+                            <asp:Literal ID="litDiscountedValue" runat="server" Text='' /></td>
+                    </tr>
+                    <tr>
+                        <td colspan='<% =numColumns - 1 %>' class="alignright">Weight:</td>
+                        <td style="text-align: left; padding-left: 10px; font-weight: bold;">
+                            <asp:Literal ID="litWeight" runat="server" Text='' />
+                            kg</td>
+                    </tr>
+                </asp:PlaceHolder>
+                <!-- /extra info rows for non-UK orders -->
             </ItemTemplate>
             <FooterTemplate>
                 <asp:PlaceHolder ID="phdPromotionDiscount" runat="server" Visible="false">
@@ -191,8 +233,7 @@
                             <asp:Literal ID="litCouponDiscountPrice" runat="server" Text='' />
                         </td>
                         <% End If%>
-                        <td>
-                            1
+                        <td>1
                         </td>
                         <% If APP_ShowTaxDisplay Then%>
                         <td>
@@ -230,8 +271,7 @@
                             <asp:Literal ID="litCustomerDiscountPrice" runat="server" Text='' />
                         </td>
                         <% End If%>
-                        <td>
-                            1
+                        <td>1
                         </td>
                         <% If APP_ShowTaxDisplay Then%>
                         <td>
@@ -268,8 +308,7 @@
                             <asp:Literal ID="litShippingPrice" runat="server" Text='' />
                         </td>
                         <% End If%>
-                        <td>
-                            1
+                        <td>1
                         </td>
                         <% If APP_ShowTaxDisplay Then%>
                         <td>
@@ -291,8 +330,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td class="col1">
-                        </td>
+                        <td class="col1"></td>
                         <% If APP_ShowTaxDisplay Then%>
                         <td>
                             <asp:Literal ID="litOrderHandlingPriceExTax" runat="server" Text='' />
@@ -305,8 +343,7 @@
                             <asp:Literal ID="litOrderHandlingPrice" runat="server" Text='' />
                         </td>
                         <% End If%>
-                        <td>
-                            1
+                        <td>1
                         </td>
                         <% If APP_ShowTaxDisplay Then%>
                         <td>
@@ -346,7 +383,7 @@
                 </tr>
                 <tr id="currency">
                     <td colspan='<% =numColumns%>'>
-                        <asp:Literal ID="litCurrencyDescription" runat="server"  />
+                        <asp:Literal ID="litCurrencyDescription" runat="server" />
                     </td>
                 </tr>
                 <!-- total paid at gateway -->
@@ -359,7 +396,8 @@
                         </td>
                     </tr>
                 </asp:PlaceHolder>
-                <tbody></table>
+                <tbody>
+                    </table>
             </FooterTemplate>
         </asp:Repeater>
     </div>

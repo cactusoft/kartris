@@ -47,21 +47,6 @@ function menuCategories() {
     }
 }
 
-// Open categories menu
-function menuCategories2() {
-    if ($("#menuCategories2").is(':visible')) {
-        $("#menuCategories2").fadeOut(140);
-        menuBackOverlay();
-        $("#menuCategoriesLink2").removeClass("taller");
-    }
-    else {
-        closeAllMenus();
-        $("#menuBackOverlay").fadeIn(140); // back area to capture clicks away, so we can hide menu
-        $("#menuCategories2").fadeIn(140);
-        $("#menuCategoriesLink2").addClass("taller");
-    }
-}
-
 // Open further menu 1
 function menuAbout() {
     if ($("#menuAbout").is(':visible')) {
