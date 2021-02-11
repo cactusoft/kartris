@@ -428,7 +428,7 @@ ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) <> 1 Then
                     </asp:UpdatePanel>
                     <div class="boxinset line">
                         <div class="addtobasket">
-                            <div class="prices">
+                            <div class="prices optionpricing">
                                 <asp:UpdatePanel ID="updPricePanel" runat="server" UpdateMode="Conditional">
                                     <ContentTemplate>
                                         <%
@@ -505,6 +505,8 @@ ObjectConfigBLL.GetValue("K:product.callforprice", ProductID) <> 1 Then
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
                             </div>
+                                                <div class="spacer">
+                    </div>
                         </div>
                     </div>
                     <div class="spacer">

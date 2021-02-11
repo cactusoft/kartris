@@ -5,9 +5,9 @@ MAIN LAYOUT
 */
 html                                    { height:100%; overflow-y:scroll; overflow-x: hidden; overflow:-moz-scrollbars-vertical; }
 body									{ background-color: #fff; }
-body.main                               { padding: 0; }
+body.main                               { padding: 0; background-color: #f2f2f2; }
 #container                              { position: relative; width: 100%; margin: 0 auto; }
-#centre_container                       { min-height: calc(100% - 200px); display: block; padding: 20px 20px 90px 20px; width: 1200px; max-width: 100%; margin: 0 auto; }
+#centre_container                       { min-height: calc(100% - 100px); display: block; padding: 20px 20px 90px 20px; width: 1200px; max-width: 100%; margin: 0 auto; }
 #centre_container.page-default          { width: 100% !important; padding: 90px 0 90px 0 !important; } /* this page-default style is applied dynamically in Template.master, we can use it to make home page full width*/
 #centre_container.page-default #pagecontent_pad     { padding: 0; } /* this page-default style is applied dynamically in Template.master, we can use it to make home page full width*/
 #centre_container.page-default #custompagetext      { margin: 0 0 10px 0; }
@@ -17,30 +17,30 @@ body.main                               { padding: 0; }
 HEADER
 ========================================================================
 */
-#header                                 { top: 0; background-color: #fff; border-bottom: solid 1px #ccc; position: absolute; width: 100%; max-width: 100%; z-index: 99; height: 90px; }
+#header                                 { top: 0; background-color: #fff; position: absolute; width: 100%; max-width: 100%; z-index: 99; height: 90px; box-shadow: rgba(0,0,0,0.1) 0 2px 2px; }
 #header .row                            { width: 1200px; max-width: 100%; margin: 0 auto; padding: 30px 30px 30px 30px; }
 #header #hcol-left                      { text-align: left; }
 #header #hcol-centre                    { text-align: center; }
 #header #hcol-right                     { }
-#header .logo                           { margin: 8px 0 0 0; width: 160px; float: left; }
+#header .logo                           { margin: 7px 0 0 0; width: 130px; float: left; }
 #header i.fas                           { font-size: 21px; color: #000; }
 #header #menus                          { white-space: nowrap; display: inline-block; padding: 6px 0 0 0; margin: 0 auto; text-align: center; }
 #header #icons                          { width: 112px; float: right; }
 #header #icons #menuSearchLink          { display: inline-block; position: absolute; top: 10px; }
-#header .big-menu-link                  { display: inline-block; color: #000; padding: 5px 5px; font-size: 15px; font-weight: normal; margin: 0 5px; }
+#header .big-menu-link                  { display: inline-block; color: #000; padding: 5px 5px; font-size: 16px; font-weight: bold; margin: 0 5px; }
 #header a.big-menu-link:hover           { color: #777; }
 
 .header--fixed                          { transition: filter 0.3s, height 0.1s; position: fixed !important; z-index: 999; height: 55px !important; padding: 10px 10px !important; }
 
-#header .menuSpecial                    { top: 89px; left: 0; width: 100%; background-color: #fff; display: none; z-index: 90; height: auto; position: absolute; padding: 10px 8px 8px 8px; border-bottom: solid 1px #ccc; box-shadow: rgba(0,0,0,0.1) 0 2px 2px; } 
+#header .menuSpecial                    { top: 89px; left: 0; width: 100%; background-color: #fff; display: none; z-index: 90; height: auto; position: absolute; padding: 10px 8px 8px 8px; border-top: solid 1px #ccc; border-bottom: solid 1px #ccc; box-shadow: rgba(0,0,0,0.1) 0 2px 2px; } 
 #header.header--fixed .menuSpecial      { top: 54px; position: absolute; } 
 #header.header--fixed .row              { padding: 0 30px; }
 
 /* menus */
 #header .custommegamenu                 { text-align: center; }
-#header #categorymenu                   { width: 1400px; max-width: 100%; margin: 0 auto; }
+#header #categorymenu                   { width: 1200px; max-width: 100%; margin: 0 auto; }
 #header #categorymenu h3                { font-weight: bold; margin-bottom: 25px; }
-#header #categorymenu .custom-submenu   { width: 180px; display: inline-block; padding: 20px; text-align: left; vertical-align: top; } /* submenu formatting (columns) */
+#header #categorymenu .custom-submenu   { width: 170px; display: inline-block; padding: 20px; text-align: left; vertical-align: top; } /* submenu formatting (columns) */
 #header #categorymenu ul                { margin: 0 auto 20px auto; padding: 0; }
 #header #categorymenu ul li             { list-style: none; text-align: left; margin: 0; padding: 0; line-height: 1.2; }
 #header #categorymenu ul li a           { font-size: 100%; margin: 2px 0; display: inline-block;  }
@@ -168,7 +168,7 @@ BASKET SUMMARY
 .compactminibasket a,
 #minibasket h4 a                        { font-size: 12px; }
 #minibasket h4 a:hover                  { font-size: 12px; }
-#compactbasket_noofitems                { font-size: 15px; display: inline-block; position: absolute; background-color: #000; color: #fff; font-size: 1.0em; font-weight: bold; padding: 0 4px 1px 3px; margin: -6px 0 0 -6px; border-radius: 9px; line-height: 1.2; }
+#compactbasket_noofitems                { font-size: 15px; display: inline-block; position: absolute; background-color: #f00; color: #fff; font-size: 1.0em; font-weight: bold; padding: 0 4px 1px 3px; margin: -6px 0 0 -6px; border-radius: 9px; line-height: 1.2; }
 #compactbasket_noofitems.basket-items-0 { visibility: hidden; }
 #minibasket:hover #minibasket_main      { margin: -3px 0 0 -235px; width: 280px; }
 #minibasket:hover                       { }
@@ -186,12 +186,15 @@ BASKET SUMMARY
                                         { margin: 10px 0 0 0; font-size: 85%; letter-spacing: 1px; }
 #minibasket #contents ul #totals strong { font-weight: bold }
 
+#minibasket ul#basketlinks #checkout_button
+                                        { font-weight: bold; font-size: 110%; }
+
 /* 
 ========================================================================
 FOOTER
 ========================================================================
 */
-#footer                                 { background-color: #eee; padding: 0; min-height: 332px; /*change this size depending on the height of the footer image you're using*/ width: 100%; }
+#footer                                 { background-color: #fff; padding: 0; min-height: 332px; /*change this size depending on the height of the footer image you're using*/ width: 100%; }
 #footer_inside                          { min-height: 332px; width: 1200px; max-width: 100%; margin: 0 auto; color: #999; padding: 10px 20px 0 20px; }
 #footer .alignright                     { text-align: right; }
 #footer a                               { color: #999; font-weight: normal; }

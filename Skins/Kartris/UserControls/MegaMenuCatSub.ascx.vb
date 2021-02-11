@@ -16,6 +16,23 @@ Partial Class MegaMenuCatSub
 
     Inherits System.Web.UI.UserControl
 
+    Private _lngCategoryID As Long = 0
+
+    ''' <summary>
+    ''' Get or set the root category for this control 
+    ''' </summary>
+    ''' <value></value>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Public Property RootCategoryID() As Long
+        Get
+            Return _lngCategoryID
+        End Get
+        Set(ByVal value As Long)
+            _lngCategoryID = value
+        End Set
+    End Property
+
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         'If Not Me.IsPostBack Then
@@ -33,7 +50,7 @@ Partial Class MegaMenuCatSub
         Dim tblCategories As New DataTable
 
         'Saving the current page's subcategories in tblCategories, depending on the pageIndex "CPGR"
-        tblCategories = CategoriesBLL.GetCategoriesPageByParentID(0, Session("LANG"), 0,
+        tblCategories = CategoriesBLL.GetCategoriesPageByParentID(RootCategoryID(), Session("LANG"), 0,
                                         100, 0, 1000)
 
         If tblCategories.Rows.Count <> 0 Then

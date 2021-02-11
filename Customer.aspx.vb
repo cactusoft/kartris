@@ -349,10 +349,6 @@ Partial Class Customer
 
     End Sub
 
-    Protected Sub btnCancel_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCancel.Click
-        Response.Redirect("~/Customer.aspx?action=home")
-    End Sub
-
     Protected Sub lnkDownload_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         DownloadFile(E.CommandArgument)
     End Sub

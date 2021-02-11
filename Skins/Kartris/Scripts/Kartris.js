@@ -48,47 +48,17 @@ function menuCategories() {
 }
 
 // Open further menu 1
-function menuFurther1() {
-    if ($("#menuFurther1").is(':visible')) {
-        $("#menuFurther1").fadeOut(140);
+function menuAbout() {
+    if ($("#menuAbout").is(':visible')) {
+        $("#menuAbout").fadeOut(140);
         menuBackOverlay();
-        $("#menuFurtherLink1").removeClass("taller");
+        $("#menuAboutLink").removeClass("taller");
     }
     else {
         closeAllMenus();
         $("#menuBackOverlay").fadeIn(140); // back area to capture clicks away, so we can hide menu
-        $("#menuFurther1").fadeIn(140);
-        $("#menuFurtherLink1").addClass("taller");
-    }
-}
-
-// Open further menu 2
-function menuFurther2() {
-    if ($("#menuFurther2").is(':visible')) {
-        $("#menuFurther2").fadeOut(140);
-        menuBackOverlay();
-        $("#menuFurtherLink2").removeClass("taller");
-    }
-    else {
-        closeAllMenus();
-        $("#menuBackOverlay").fadeIn(140); // back area to capture clicks away, so we can hide menu
-        $("#menuFurther2").fadeIn(140);
-        $("#menuFurtherLink2").addClass("taller");
-    }
-}
-
-// Open further menu 3
-function menuFurther3() {
-    if ($("#menuFurther3").is(':visible')) {
-        $("#menuFurther3").fadeOut(140);
-        menuBackOverlay();
-        $("#menuFurtherLink3").removeClass("taller");
-    }
-    else {
-        closeAllMenus();
-        $("#menuBackOverlay").fadeIn(140); // back area to capture clicks away, so we can hide menu
-        $("#menuFurther3").fadeIn(140);
-        $("#menuFurtherLink3").addClass("taller");
+        $("#menuAbout").fadeIn(140);
+        $("#menuAboutLink").addClass("taller");
     }
 }
 
@@ -155,15 +125,5 @@ $(document).ready(function () {
 
 });
 
-// Home page featured products carousel
-// Make sure your template references
-// JavaScript/k30001/filmroll.jquery.min.js
-$(function () {
-    fr = new FilmRoll({
-        container: '#cntMain_UC_FeaturedProducts_updMain',
-        height: 540,
-        pager: false
-    });
-});
 
 

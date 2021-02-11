@@ -25,22 +25,17 @@
                                     <asp:Literal ID="litContentTextChooseNamePassword" runat="server" Text='<%$ Resources: Kartris, ContentText_ChooseNamePassword %>'
                                         EnableViewState="false"></asp:Literal>
                                 </p>
-                                <div class="inputform">
-                                    <div class="Kartris-DetailsView">
-                                        <div class="Kartris-DetailsView-Data">
-                                            <ul>
-                                                <li><span class="Kartris-DetailsView-Name">
-                                                    <asp:Label ID="lblContentTextBasketNamePassword" runat="server" AssociatedControlID="txtBasketName"
-                                                        Text='<%$ Resources: Basket, ContentText_BasketNamePassword %>' CssClass="requiredfield"></asp:Label>
-                                                </span><span class="Kartris-DetailsView-Value">
-                                                    <asp:TextBox MaxLength="50" ID="txtBasketName" runat="server"></asp:TextBox><asp:Button
-                                                        OnCommand="SaveBasket_Click" ValidationGroup="SavedBasket" CssClass="button"
-                                                        ID="lnkBtnSaveBasket" runat="server" Text='<%$ Resources: Kartris, FormLabel_Save %>' /><asp:RequiredFieldValidator
+                                <div class="inputform" id="savebasketform">
+                                    <div class="row">
+                                        <div class="small-12 medium-2 columns"><asp:Label ID="lblContentTextBasketNamePassword" runat="server" AssociatedControlID="txtBasketName"
+                                                        Text='<%$ Resources: Basket, ContentText_BasketNamePassword %>' CssClass="requiredfield"></asp:Label></div>
+                                        <div class="small-12 medium-3 columns"><asp:TextBox MaxLength="50" ID="txtBasketName" runat="server"></asp:TextBox><asp:RequiredFieldValidator
                                                             EnableClientScript="True" ID="valBasketName" runat="server" ControlToValidate="txtBasketName"
                                                             ValidationGroup="SavedBasket" CssClass="error" ForeColor="" Display="Dynamic"
-                                                            Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></span></li>
-                                            </ul>
-                                        </div>
+                                                            Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></div>
+                                        <div class="small-12 medium-7 columns"><asp:Button
+                                                        OnCommand="SaveBasket_Click" ValidationGroup="SavedBasket" CssClass="button"
+                                                        ID="lnkBtnSaveBasket" runat="server" Text='<%$ Resources: Kartris, FormLabel_Save %>' /></div>
                                     </div>
                                 </div>
                             </asp:PlaceHolder>
@@ -558,7 +553,7 @@
                                 <h1>
                                     <asp:Literal ID="litContentTextSaveWishList2" runat="server" Text='<%$ Resources: Basket, ContentText_SaveWishList %>'></asp:Literal></h1>
                                 <asp:Literal ID="litSaveWishlistsError" runat="server"></asp:Literal>
-                                <div class="wishlist Kartris-DetailsView">
+                                <div class="wishlist Kartris-DetailsView" id="wishlist">
                                     <div class="Kartris-DetailsView-Data">
                                         <ul>
                                             <li><span class="Kartris-DetailsView-Name">
@@ -589,7 +584,6 @@
                                                 Text='<%$ Resources: Kartris,FormLabel_Save %>' ValidationGroup="SaveWishlist" />
                                             <asp:ValidationSummary ValidationGroup="SaveWishlist" ID="valSummary" runat="server"
                                                 CssClass="valsummary" DisplayMode="BulletList" ForeColor="" HeaderText="<%$ Resources: Kartris, ContentText_Errors %>" />
-                                            <asp:Button ID="btnCancel" runat="server" CssClass="button cancel" Text="<%$ Resources:Kartris, FormButton_Cancel %>" />
                                         </div>
                                     </div>
                                 </div>

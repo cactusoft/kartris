@@ -14,7 +14,7 @@
 	<!--
 	========================================================================
 	KARTRIS by cactusoft
-	Copyright 2020 CACTUSOFT - www.kartris.com
+	Copyright 2021 CACTUSOFT - www.kartris.com
 	This skin is licensed under a
 	Creative Commons Attribution-ShareAlike 3.0 Unported License
 
@@ -34,7 +34,8 @@
 	<link href="template.css" rel="stylesheet" type="text/css" />
 	<link href="mobile.css" rel="stylesheet" type="text/css" />
 	<link href="powerpack.css" rel="stylesheet" type="text/css" />
-	<link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;400;700&display=swap" rel="stylesheet">
 	<title>Kartris v1</title>
 </head>
 <body class="main">
@@ -85,10 +86,9 @@
 							</div>
 							<div id="hcol-centre" class="large-8 hide-for-medium-down column">
 								<div id="menus">
-									<a onclick="menuCategories()" class="big-menu-link" id="menuCategoriesLink">Products</a>
-									<a onclick="menuFurther1()" class="big-menu-link" id="menuFurtherLink1">More Information 1</a>
-									<a onclick="menuFurther2()" class="big-menu-link" id="menuFurtherLink2">More Information 2</a>
-									<a onclick="menuFurther3()" class="big-menu-link" id="menuFurtherLink3">More Information 3</a>
+									<a onclick="menuCategories()" class="big-menu-link" id="menuCategoriesLink1">Products</a>
+									<a onclick="menuAbout()" class="big-menu-link" id="menuAboutLink">About Us</a>
+									<a href="/Contact.aspx" class="big-menu-link" id="menuAboutLink">Contact</a>
 								</div>
 							</div>
 							<div id="hcol-right" class="small-7 medium-6 large-2 column">
@@ -104,23 +104,14 @@
 						</div>
 						<!-- menus -->
 						<div id="menuCategories" class="menuSpecial">
-							<user:MegaMenu runat="server" ID="UC_MegaMenu" EnableViewState="False" />
+							<user:MegaMenu runat="server" ID="UC_MegaMenu" EnableViewState="False" RootCategoryID="0" />
 						</div>
-                        <div id="menuFurther1" class="menuSpecial">
-							<div class="custommegamenu">
-								Edit "menuFurther1" in /Skins/Kartris/Template.master
-							</div>
-                        </div>
-                        <div id="menuFurther2" class="menuSpecial">
+						<div id="menuAbout" class="menuSpecial">
 							<div class="custommegamenu">
 								Edit "menuFurther2" in /Skins/Kartris/Template.master
 							</div>
-                        </div>
-                        <div id="menuFurther3" class="menuSpecial">
-							<div class="custommegamenu">
-								Edit "menuFurther3" in /Skins/Kartris/Template.master
-							</div>
-                        </div>
+						</div>
+
 						<div id="menuSettings" class="menuSpecial">
 							<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
 							<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
@@ -194,18 +185,15 @@
 								<div class="small-12 large-3 columns alignright">
 									<h2>Logo</h2>
 									<div id="footer-address">
-										29 Acacia Road, Nuttytown, UK
+
 									</div>
 									<asp:HyperLink CssClass="footer-telephone" ID="lnkTelephone" runat="server" NavigateUrl="tel:0123456789">01 234 56789</asp:HyperLink>
 									<div id="social-media">
-										<asp:HyperLink ID="lnkFacebook" runat="server" NavigateUrl="https://www.facebook.com"><i class="fab fa-facebook-square"></i></asp:HyperLink>
-										<asp:HyperLink ID="lnkInstagram" runat="server" NavigateUrl="https://www.instagram.com"><i class="fab fa-instagram"></i></asp:HyperLink>
-										<asp:HyperLink ID="lnkTwitter" runat="server" NavigateUrl="https://www.twitter.com"><i class="fab fa-twitter"></i></asp:HyperLink>
-										<asp:HyperLink ID="lnkLinkedIn" runat="server" NavigateUrl="https://www.linkedin.com"><i class="fab fa-linkedin"></i></asp:HyperLink>
+										<asp:HyperLink ID="lnkFacebook" runat="server" NavigateUrl="https://www.facebook.com/"><i class="fab fa-facebook-square"></i></asp:HyperLink>
 									</div>
 								</div>
 								<div class="small-12 large-12 columns" id="copyright">
-									&copy;2020 Cactusoft Ltd.
+										Address1, Address2, Town, City, Postcode, Country.
 								</div>
 							</div>
 						</div>
@@ -224,6 +212,19 @@
 	<script>
 		$(document).foundation();
 	</script>
-
+	<asp:PlaceHolder runat="server" ID="phdScrollerJavascript" Visible="true">
+	<script>
+		// Home page featured products carousel
+		// Make sure your template references
+		// JavaScript/k30001/filmroll.jquery.min.js
+		$(function () {
+			fr = new FilmRoll({
+				container: '#cntMain_UC_FeaturedProducts_updMain',
+				height: 340,
+				pager: false
+			});
+		});
+	</script>
+	</asp:PlaceHolder>
 </body>
 </html>

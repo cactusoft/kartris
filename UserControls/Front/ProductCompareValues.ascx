@@ -5,6 +5,16 @@
 <asp:Repeater ID="rptProductAttributes" runat="server">
     <HeaderTemplate>
         <table>
+                        <thead>
+                <tr class="headrow">
+                    <th>
+                        <asp:Literal ID="litContentTextAttributeName" runat="server" Text='<%$ Resources:Attributes, ContentText_AttributeName %>' />
+                    </th>
+                    <th>
+                        <asp:Literal ID="litContentTextAttributeValue" runat="server" Text='<%$ Resources:Attributes, ContentText_AttributeValue %>' />
+                    </th>
+                </tr>
+            </thead>
     </HeaderTemplate>
     <ItemTemplate>
         <tr>
