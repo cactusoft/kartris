@@ -20,6 +20,17 @@ Partial Public Class Skin_Kartris_Template
         If Application("subsiteId") > 0 Then
             UC_AdminBar.Visible = True
         End If
+
+        'Activate javascript for scrolling featured products only if
+        'required
+        Dim strFeaturedProductsType As String = KartSettingsManager.GetKartConfig("frontend.featuredproducts.display.default")
+        If strFeaturedProductsType = "c" Then
+            'Carousel
+            phdScrollerJavascript.Visible = True
+        Else
+            phdScrollerJavascript.Visible = False
+        End If
+
     End Sub
 
     ''' <summary>
@@ -31,6 +42,13 @@ Partial Public Class Skin_Kartris_Template
     ''' if we want full width, without needing server side diddling. We
     ''' can have custom CSS for particular pages like Default.</remarks>
     Public Shared Function PageName(ByVal strRawScriptName As String) As String
+        'The format could be any of the following, depending on setup
+        '/Default.aspx
+        '/SubFolder/Default.aspx
+        'Default.aspx
+
+        'First, if there is a 
+        strRawScriptName = System.IO.Path.GetFileNameWithoutExtension(strRawScriptName)
         Dim strPageName As String = ""
         Try
             strPageName = Replace(strRawScriptName.ToLower, ".aspx", "")

@@ -150,7 +150,7 @@
                             EORI
                             ===============================
                             -->
-                            <asp:PlaceHolder ID="phdEORI" runat="server" Visible="true">
+                            <asp:PlaceHolder ID="phdEORI" runat="server" Visible="false">
                                 <div class="section" id="eorisection">
                                     <div class="row">
                                         <div class="small-12 large-2 columns">

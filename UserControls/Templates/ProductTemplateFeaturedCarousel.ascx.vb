@@ -27,11 +27,13 @@ Partial Class ProductTemplateFeaturedCarousel
         Dim strNavigateURL As String = SiteMapHelper.CreateURL(SiteMapHelper.Page.Product, litProductID.Text, Request.QueryString("strParent"), Request.QueryString("CategoryID"))
         Dim blnCallForPrice As Boolean = ObjectConfigBLL.GetValue("K:product.callforprice", litProductID.Text) = 1
 
-        If strNavigateURL.Contains("~/") Then
-            strNavigateURL = Replace(strNavigateURL, "~/", CkartrisBLL.WebShopURL)
-        End If
-
         lnkProductName.NavigateUrl = strNavigateURL
+
+        UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_ProductImage,
+            litProductID.Text,
+            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.height"),
+            KartSettingsManager.GetKartConfig("frontend.display.images.thumb.width"),
+            strNavigateURL, , , litProductName.Text)
 
         'Determine what to show for 'from' price
         Select Case GetKartConfig("frontend.products.display.fromprice").ToLower
@@ -76,36 +78,5 @@ Partial Class ProductTemplateFeaturedCarousel
             'do nowt
             Return ""
         End Try
-    End Function
-
-    Public Function FormatImageURL(ByVal _ProductID As Integer) As String
-        Dim strFirstImageName As String = ""
-        Dim strImageURL As String
-        Dim dirFolder As New DirectoryInfo(Server.MapPath(CkartrisImages.strProductImagesPath & "/" & _ProductID & "/"))
-        Dim numImageHeight As Integer
-        Dim numImageWidth As Integer
-
-        numImageHeight = KartSettingsManager.GetKartConfig("frontend.display.images.thumb.height")
-        numImageWidth = KartSettingsManager.GetKartConfig("frontend.display.images.thumb.width")
-
-        If dirFolder.Exists Then
-            If dirFolder.GetFiles().Length > 0 Then
-                For Each objFile In dirFolder.GetFiles()
-                    strFirstImageName = objFile.Name
-                    Exit For
-                Next
-            Else
-                strFirstImageName = ""
-            End If
-        Else
-            strFirstImageName = ""
-        End If
-
-        If strFirstImageName <> "" Then
-            strImageURL = "Image.ashx?strFileName=" & strFirstImageName & " &strItemType=p&numMaxHeight=" & numImageHeight & "&numMaxWidth=" & numImageWidth & "&numItem=" & _ProductID & "&strParent="
-        Else
-            strImageURL = ""
-        End If
-        Return strImageURL
     End Function
 End Class

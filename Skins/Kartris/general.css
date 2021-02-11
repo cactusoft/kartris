@@ -273,7 +273,7 @@ div.updatemessage                       { border: dotted 1px #0a0; background-co
 PAGE LINKS
 ========================================================================
 */
-.itempager                              { font-size: 120%; display: block; font-weight: normal; text-decoration: none; padding: 12px 5px 22px 0px; }
+.itempager                              { font-size: 120%; display: block; font-weight: normal; text-decoration: none; padding: 10px 5px 12px 0px; }
 .itempager a                            { display: inline-block; padding: 2px 7px 2px 7px; font-weight: normal; margin: 0 3px 5px 0; color: #333; }
 .itempager a:hover                      { color: #000; text-decoration: none; }
 .itempager a.arrow                      { text-align: center }

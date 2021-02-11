@@ -1,7 +1,7 @@
 ﻿<%@ Control Language="VB" AutoEventWireup="false" CodeFile="FeaturedProducts.ascx.vb"
     Inherits="UserControls_Skin_FeaturedProducts" %>
 <%@ Register TagPrefix="user" TagName="ItemPager" Src="~/UserControls/Front/ItemPager.ascx" %>
-<%@ Register TagPrefix="user" TagName="CarouselItem" Src="~/UserControls/Templates/ProductTemplateFeaturedCarousel.ascx" %>
+<%@ Register TagPrefix="user" TagName="ProductTemplateFeaturedCarousel" Src="~/UserControls/Templates/ProductTemplateFeaturedCarousel.ascx" %>
 <div id="featuredproducts">
     <h2 class="blockheader">
         <span><span>
@@ -67,7 +67,7 @@
                     <asp:Repeater ID="rptCarousel" runat="server">
                         <ItemTemplate>
                             <div class="products_carousel">
-                                <user:ProductTemplateShortened ID="UC_ProductShortened2" runat="server" />
+                                <user:ProductTemplateFeaturedCarousel ID="UC_ProductFeaturedCarousel" runat="server" />
                             </div>
                         </ItemTemplate>
                         <SeparatorTemplate>

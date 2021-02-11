@@ -28,7 +28,7 @@ PAGE - Home page and custom page (CMS)
 FEATURED PRODUCTS / NEW PRODUCTS
 ========================================================================
 */
-#featuredproducts .products_tabular		{ padding: 20px 0 0 0; }
+#featuredproducts .products_carousel	{  }
 #newestitems .products_tabular			{ padding: 20px 0 0 0; }
 /* 
 ========================================================================
@@ -69,7 +69,7 @@ CATEGORY FILTERS - if you have the PowerPack installed
 SUBCATEGORIES - Multiple categories/subcategories per page listing
 ========================================================================
 */
-.subcategories                          { padding: 0px 0px 10px 0px; overflow: hidden; }
+.subcategories                          { padding: 10px 0px 10px 0px; overflow: hidden; }
 .subcategories .pad                     { margin-bottom: 8px; padding: 0px; zoom: 100%; /* To fix IE 'invisible text' rendering bug (http: //archivist.incutio.com/viewlist/css-discuss/57305) */; overflow: hidden; /* To fix image flow in extended view, mozz/opera */ }
 .subcategories h2 a                     { color: #000;}
 /* 
@@ -163,7 +163,7 @@ video::-webkit-media-controls-enclosure {
 PRODUCTS - Multiple products per page listing
 ========================================================================
 */
-.products                               { padding: 0px 0px 10px 0px; overflow: hidden; }
+.products                               { padding: 10px 0px 10px 0px; overflow: hidden; }
 .products .minprice                     { display: block; font-weight: bold; padding-top: 10px; color: #000; }
 .products .pad                          { padding: 0px; zoom: 100%; /* To fix IE 'invisible text' rendering bug (http: //archivist.incutio.com/viewlist/css-discuss/57305) */; overflow: hidden; /* To fix image flow in extended view, mozz/opera */ }
 #popup .pad                             { padding: 10px }

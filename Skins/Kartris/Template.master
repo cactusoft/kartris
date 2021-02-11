@@ -126,19 +126,19 @@
 						server side and decide to show or rewrite parts of page -->
 
 					<!-- don't want the breadcrumbtrail on home page. Could use CSS, but this is better -->
-					<% If PageName(Request.ServerVariables("SCRIPT_NAME")) <> "default" %>
+					<% If PageName(Request.Url.AbsolutePath) <> "default" %>
 					<user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
 					<% End if %>
 
 					<!-- we add a dynamic class here, this lets us style home page differently, full width -->
-					<div id="centre_container" class='page-<% =PageName(Request.ServerVariables("SCRIPT_NAME")) %>'>
+					<div id="centre_container" class='page-<% =PageName(Request.Url.AbsolutePath) %>'>
 						<div class="row" id="pagebody">
 							<div class="small-12 columns" id="pagecontent_pad">
 								<asp:ContentPlaceHolder ID="cntMain" runat="server">
 								</asp:ContentPlaceHolder>
 							</div>
 							<!-- recent products only on product pages, can add others if you want -->
-							<% If PageName(Request.ServerVariables("SCRIPT_NAME")) = "product" %>
+							<% If PageName(Request.Url.AbsolutePath) = "product"Then %>
 							<div class="small-12 columns">
 								<user:ViewedProducts ID="UC_RecentlyViewedProducts" runat="server" EnableViewState="False" />
 							</div>
@@ -212,7 +212,7 @@
 	<script>
 		$(document).foundation();
 	</script>
-	<asp:PlaceHolder runat="server" ID="phdScrollerJavascript" Visible="true">
+	<asp:PlaceHolder runat="server" ID="phdScrollerJavascript" Visible="false">
 	<script>
 		// Home page featured products carousel
 		// Make sure your template references

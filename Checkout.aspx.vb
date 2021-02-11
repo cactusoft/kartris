@@ -614,8 +614,17 @@ Partial Class _Checkout
         End If
 
         'Two new functions determine whether to show EU VAT and EORI fields at checkout
-        phdEUVAT.Visible = CkartrisRegionalSettings.ShowEUVATField(UCase(GetKartConfig("general.tax.euvatcountry")), adrShipping.Country.IsoCode, adrShipping.Country.D_Tax, adrShipping.Country.TaxExtra, GetKartConfig("general.tax.domesticshowfield") = "y")
-        phdEORI.Visible = CkartrisRegionalSettings.ShowEORIField(adrShipping.Country.D_Tax, adrShipping.Country.TaxExtra)
+        Try
+            phdEUVAT.Visible = CkartrisRegionalSettings.ShowEUVATField(UCase(GetKartConfig("general.tax.euvatcountry")), adrShipping.Country.IsoCode, adrShipping.Country.D_Tax, adrShipping.Country.TaxExtra, GetKartConfig("general.tax.domesticshowfield") = "y")
+        Catch ex As Exception
+            phdEUVAT.Visible = False
+        End Try
+        Try
+            phdEORI.Visible = CkartrisRegionalSettings.ShowEORIField(adrShipping.Country.D_Tax, adrShipping.Country.TaxExtra)
+        Catch ex As Exception
+            phdEORI.Visible = False
+        End Try
+
 
         If phdEUVAT.Visible Then
             'Show VAT country ISO code in front of field
