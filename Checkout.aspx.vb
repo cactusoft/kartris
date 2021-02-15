@@ -827,6 +827,11 @@ Partial Class _Checkout
                     End If
                 End If
 
+                'Show PO number
+                If txtPurchaseOrderNo.Text = "" Then
+                    litPONumberText.Text = ""
+                End If
+
                 'Show VAT number
                 If txtEUVAT.Text <> "" Then
                     litVATNumberText.Text = GetGlobalResourceObject("Invoice", "FormLabel_CardholderEUVatNum") & ": <strong>" & txtEUVAT.Text & "</strong><br/>"
