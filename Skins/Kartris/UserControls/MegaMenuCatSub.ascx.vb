@@ -71,7 +71,7 @@ Partial Class MegaMenuCatSub
             Dim numCAT_ID As Integer = lnkTopLevel.NavigateUrl
 
             lnkTopLevel.NavigateUrl = SiteMapHelper.CreateURL(SiteMapHelper.Page.Category,
-                                        numCAT_ID)
+                                        numCAT_ID, RootCategoryID, RootCategoryID)
 
             'Create the submenu
             FormatSubMenu(numCAT_ID, rptMegaMenu)
