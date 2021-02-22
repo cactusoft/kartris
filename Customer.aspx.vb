@@ -105,6 +105,7 @@ Partial Class Customer
                 acpOrderHistory.Visible = False
             Else
                 acpOrderHistory.Visible = True
+                Call BuildNavigatePage("order")
             End If
             'Show/hide saved baskets
             If Val(KartSettingsManager.GetKartConfig("frontend.users.myaccount.savedbaskets.max")) = 0 Then
@@ -385,7 +386,6 @@ Partial Class Customer
 
     Sub RemoveSavedBasket_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         Dim numBasketID As Long
-
         numBasketID = E.CommandArgument
         BasketBLL.DeleteSavedBasket(numBasketID)
         Call BuildNavigatePage("basket")
@@ -394,15 +394,11 @@ Partial Class Customer
 
     Sub LoadSavedBasket_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         Dim numSavedBasketID, numBasketID As Long
-
         numSavedBasketID = E.CommandArgument
         numBasketID = SESSION_ID
         BasketBLL.LoadSavedBasket(numSavedBasketID, numBasketID)
         blnNoBasketItem = objBasket.BasketItems.Count > 0
-
         Call RefreshMiniBasket()
-
-
     End Sub
 
     Sub SaveBasket_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
@@ -483,23 +479,16 @@ Partial Class Customer
 
     Sub EditWishLists_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         Dim numWishListsID As Long
-
         numWishListsID = E.CommandArgument
-
         Response.Redirect("~/Customer.aspx?action=wishlists&WL_ID=" & numWishListsID)
-
     End Sub
 
     Sub LoadWishLists_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         Dim numWishListsID, numBasketID As Long
-
         numWishListsID = E.CommandArgument
         numBasketID = SESSION_ID
-
         BasketBLL.LoadWishlists(numWishListsID, numBasketID)
-
         blnNoBasketItem = objBasket.BasketItems.Count > 0
-
         Call RefreshMiniBasket()
         UC_Updated.ShowAnimatedText()
     End Sub
@@ -507,11 +496,9 @@ Partial Class Customer
     Sub RefreshMiniBasket()
         Dim objMaster As MasterPage
         Dim objBasket As Object
-
         objMaster = Page.Master
         objBasket = objMaster.FindControl("UC_MiniBasket")
         objBasket.LoadMiniBasket()
-
     End Sub
 
     Function GetCustomerDiscount() As Double
@@ -529,9 +516,9 @@ Partial Class Customer
                 ElseIf LCase(sender.id) = "lnkbtnordernext" Then
                     ViewState("Order_PageIndex") = ViewState("Order_PageIndex") + 1
                 End If
+                Call BuildNavigatePage("order")
                 lnkBtnOrderPrev.Enabled = IIf(ViewState("Order_PageIndex") <= 1, False, True)
                 lnkBtnOrderNext.Enabled = IIf(ViewState("Order_PageIndex") >= ViewState("Order_PageTotalSize") / Order_PageSize, False, True)
-                Call BuildNavigatePage("order")
 
             Case "basket"
                 If LCase(sender.id) = "lnkbtnbasketprev" Then
@@ -561,7 +548,7 @@ Partial Class Customer
 
         Select Case LCase(strPage)
             Case "order"
-                tblOrder = BasketBLL.GetCustomerOrders(numCustomerID, (((ViewState("Order_PageIndex") - 1) * Order_PageSize) + 1), Order_PageSize)
+                tblOrder = BasketBLL.GetCustomerOrders(numCustomerID, 1, Order_PageSize)
                 rptOrder.DataSource = tblOrder
                 rptOrder.DataBind()
                 updMain.Update()
