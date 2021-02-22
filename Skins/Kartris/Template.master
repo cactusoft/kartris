@@ -40,9 +40,6 @@
 </head>
 <body class="main">
 	<!-- page spinner -->
-	<div class="page-loading-container">
-		<div class="spinner"></div>
-	</div>
 	<form id="frmMain" runat="server" class="container">
 		<ajaxToolkit:ToolkitScriptManager ID="scrManager" runat="server" ScriptMode="Release"
 			EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"

@@ -15,13 +15,17 @@
                     <li>
                         <asp:HyperLink NavigateUrl="~/Customer.aspx?action=home" ID="lnkMyAccountMenuLink" runat="server" CssClass="button" Text="<%$ Resources: Kartris, PageTitle_MyAccount %>"></asp:HyperLink></li>
                     <li>
-                        <asp:HyperLink NavigateUrl="~/CustomerDetails.aspx" ID="lnkChangePassword" runat="server" CssClass="button" Text="<%$ Resources: Kartris, ContentText_ToChangeCustomerCode %>"></asp:HyperLink></li>
+                        <asp:HyperLink NavigateUrl="~/Customer.aspx?action=details" ID="lnkChangeDetails" runat="server" CssClass="button" Text="<%$ Resources: Kartris, ContentText_ChangeCustomerCode %>"></asp:HyperLink></li>
+                    <li>
+                        <asp:HyperLink NavigateUrl="~/Customer.aspx?action=addresses" ID="lnkManageAddresses" runat="server" CssClass="button" Text="<%$ Resources: Address, ContentText_ManageAddresses %>"></asp:HyperLink></li>
+                    <li>
+                        <asp:HyperLink NavigateUrl="~/Customer.aspx?action=password" ID="lnkChangePassword" runat="server" CssClass="button" Text="<%$ Resources: Kartris, ContentText_CustomerCode %>"></asp:HyperLink></li>
                     <li>
                         <asp:HyperLink NavigateUrl="~/CustomerTickets.aspx" ID="lnkSupportTickets" runat="server" CssClass="button" Text="<%$ Resources: Tickets, PageTitle_SupportTickets %>"></asp:HyperLink></li>
                     <li>
                         <asp:LoginStatus ID="KartrisLoginStatus2" runat="server" CssClass="button"
                             LoginText="" LogoutText='<%$ Resources: Kartris, ContentText_LogMeOut %>' LogoutAction="Redirect"
-                            LogoutPageUrl="~/Default.aspx" />
+                            LogoutPageUrl="~/CustomerAccount.aspx" />
                     </li>
                 </ul>
             </div>
@@ -36,8 +40,8 @@
             </span>
         </asp:HyperLink>
         <span id="statuslabel">
-        <asp:Literal ID="litContentTextNotLoggedIn" runat="server" Text="<%$ Resources: Kartris, ContentText_NotLoggedIn %>"></asp:Literal>
-    </span>
+            <asp:Literal ID="litContentTextNotLoggedIn" runat="server" Text="<%$ Resources: Kartris, ContentText_NotLoggedIn %>"></asp:Literal>
+        </span>
     </asp:PlaceHolder>
 
 </div>

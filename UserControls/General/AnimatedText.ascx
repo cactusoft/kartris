@@ -10,7 +10,7 @@
                         <OnLoad>
                             <Sequence>
                                 <EnableAction Enabled="false" />
-                                <FadeOut Duration="3" Fps="25" />
+                                <FadeOut Duration="2" Fps="25" />
                                 <Parallel >
                                 <Resize Height="0" Width="0" Unit="px" />
                                 </Parallel>

@@ -10,7 +10,7 @@ $(document).foundation({
 $(window)
     .load(function () {
     // page loading spinner
-        $(".page-loading-container").fadeOut("500");
+        //$(".page-loading-container").fadeOut("500");
         SetOffCanvasHeight();
     })
     .resize(function () {

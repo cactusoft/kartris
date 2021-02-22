@@ -46,30 +46,53 @@ Partial Class Customer
 
         SESSION_ID = Session("SessionID")
 
+        '--------------------------------------------------
+        'Redirect if not logged in
+        '--------------------------------------------------
         If Not (User.Identity.IsAuthenticated) Then
             Response.Redirect("~/CustomerAccount.aspx")
         Else
             numCustomerID = CurrentLoggedUser.ID
         End If
 
+        '--------------------------------------------------
+        'Fill customer details
+        '--------------------------------------------------
+        If Not IsPostBack Then
+            Dim arrNameAndVAT As Array = Split(UsersBLL.GetNameandEUVAT(CurrentLoggedUser.ID), "|||")
+            txtCustomerName.Text = arrNameAndVAT(0)
+            txtEUVATNumber.Text = arrNameAndVAT(1)
+
+            'v3.0001 EORI number
+            txtEORINumber.Text = ObjectConfigBLL.GetValue("K:user.EORI", CurrentLoggedUser.ID)
+            litUserEmail.Text = User.Identity.Name
+        End If
+
+        '--------------------------------------------------
+        'Grab some settings
+        '--------------------------------------------------
         Try
             numAppMaxOrders = CInt(KartSettingsManager.GetKartConfig("frontend.users.myaccount.orderhistory.max"))
             numAppMaxBaskets = CInt(KartSettingsManager.GetKartConfig("frontend.users.myaccount.savedbaskets.max"))
             strAppUploadsFolder = KartSettingsManager.GetKartConfig("general.uploadfolder")
         Catch ex As Exception
         End Try
-
         strShow = ""
         'If we're showing a full list, or config settings set to 0, then don't limit (-2)
         If numAppMaxOrders = 0 Or strShow = "orders" Then numAppMaxOrders = -2
         If numAppMaxBaskets = 0 Or strShow = "baskets" Then numAppMaxBaskets = -2
         If numAppMaxBaskets = 0 Or strShow = "wishlists" Then numAppMaxBaskets = -2
 
+        '--------------------------------------------------
+        'Customer discount
+        '--------------------------------------------------
         numCustomerDiscount = BasketBLL.GetCustomerDiscount(numCustomerID)
 
         litUserEmail.Text = User.Identity.Name
 
-        'Hide tabs when not necessary
+        '--------------------------------------------------
+        'Hide/show accordion panes
+        '--------------------------------------------------
         If LCase(KartSettingsManager.GetKartConfig("frontend.cataloguemode")) = "y" Then
             acpDownloadableProducts.Visible = False
             acpSavedBaskets.Visible = False
@@ -109,6 +132,77 @@ Partial Class Customer
             End If
         End If
 
+        '--------------------------------------------------
+        'Reset password link
+        '--------------------------------------------------
+        If Not User.Identity.IsAuthenticated Then
+            If Not String.IsNullOrEmpty(Request.QueryString("ref")) Then
+                lblCurrentPassword.Text = GetGlobalResourceObject("Kartris", "FormLabel_EmailAddress")
+                txtCurrentPassword.TextMode = TextBoxMode.SingleLine
+                Dim strRef As String = Request.QueryString("ref")
+            Else
+                Response.Redirect(WebShopURL() & "Customer.aspx?action=password")
+            End If
+        Else
+
+            '--------------------------------------------------
+            'Setup addresses
+            '--------------------------------------------------
+            If Not IsPostBack Then
+                ViewState("lstUsrAddresses") = KartrisClasses.Address.GetAll(CurrentLoggedUser.ID)
+            End If
+
+            If ViewState("lstUsrAddresses") Is Nothing Then ViewState("lstUsrAddresses") = KartrisClasses.Address.GetAll(CurrentLoggedUser.ID)
+            If mvwAddresses.ActiveViewIndex = "0" Then
+                If CurrentLoggedUser.DefaultBillingAddressID > 0 And Not IsNothing(CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).Find(Function(p) p.ID = CurrentLoggedUser.DefaultBillingAddressID)) Then
+                    UC_DefaultBilling.Address = CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).Find(Function(p) p.ID = CurrentLoggedUser.DefaultBillingAddressID)
+                    litContentTextNoAddress.Visible = False
+                Else
+                    UC_DefaultBilling.Visible = False
+                    litContentTextNoAddress.Visible = True
+                End If
+                If CurrentLoggedUser.DefaultShippingAddressID > 0 And Not IsNothing(CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).Find(Function(p) p.ID = CurrentLoggedUser.DefaultShippingAddressID)) Then
+                    UC_DefaultShipping.Address = CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).Find(Function(p) p.ID = CurrentLoggedUser.DefaultShippingAddressID)
+                    litContentTextNoAddress2.Visible = False
+                Else
+                    UC_DefaultShipping.Visible = False
+                    litContentTextNoAddress2.Visible = True
+                End If
+
+            ElseIf mvwAddresses.ActiveViewIndex = "1" Then
+                CreateBillingAddressesDetails()
+            ElseIf mvwAddresses.ActiveViewIndex = "2" Then
+                CreateShippingAddressesDetails()
+            End If
+
+
+        End If
+        If Not Page.IsPostBack Then
+            '--------------------------------------------------
+            'Set active tab
+            '--------------------------------------------------
+            Dim strAction As String = Request.QueryString("action")
+            Select Case strAction
+                Case "home"
+                    tabContainerCustomer.ActiveTabIndex = 0
+                Case "details"
+                    tabContainerCustomer.ActiveTabIndex = 1
+                Case "addresses"
+                    tabContainerCustomer.ActiveTabIndex = 2
+                Case "password"
+                    tabContainerCustomer.ActiveTabIndex = 3
+                Case Else
+                    tabContainerCustomer.ActiveTabIndex = 0
+            End Select
+            UC_Updated.reset()
+        End If
+
+        'acpAffiliates.Visible = False
+        'acpDownloadableProducts.Visible = False
+        'acpMailingList.Visible = False
+        'acpOrderHistory.Visible = False
+        'acpSavedBaskets.Visible = False
+        'acpWishLists.Visible = False
     End Sub
 
     'We create two download links on the page (.aspx),
@@ -445,19 +539,19 @@ Partial Class Customer
                 tblOrder = BasketBLL.GetCustomerOrders(numCustomerID, (((ViewState("Order_PageIndex") - 1) * Order_PageSize) + 1), Order_PageSize)
                 rptOrder.DataSource = tblOrder
                 rptOrder.DataBind()
-                updOrder.Update()
+                updMain.Update()
 
             Case "basket"
                 tblSavedBasket = BasketBLL.GetSavedBasket(numCustomerID, (((ViewState("SavedBasket_PageIndex") - 1) * SavedBasket_PageSize) + 1), SavedBasket_PageSize)
                 rptSavedBasket.DataSource = tblSavedBasket
                 rptSavedBasket.DataBind()
-                updSavedBaskets.Update()
+                updMain.Update()
 
             Case "wishlist"
                 tblWishLists = BasketBLL.GetWishLists(numCustomerID, (((ViewState("WishList_PageIndex") - 1) * WishList_PageSize) + 1), WishList_PageSize)
                 rptWishLists.DataSource = tblWishLists
                 rptWishLists.DataBind()
-                updWishlists.Update()
+                updMain.Update()
 
         End Select
 
@@ -480,7 +574,7 @@ Partial Class Customer
             AFF_AffiliateCommission = tblAffiliates.Rows(0).Item("U_AffiliateCommission")
         End If
 
-        updAffiliates.Update()
+        updMain.Update()
 
     End Sub
 
@@ -577,7 +671,7 @@ Partial Class Customer
             ML_Format = FixNullFromDB(tblCustomerData.Rows(0).Item("U_ML_Format"))
         End If
 
-        updMailingList.Update()
+        updMain.Update()
     End Sub
 
     Protected Sub rptOrder_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptOrder.ItemDataBound
@@ -607,4 +701,293 @@ Partial Class Customer
 
     End Sub
 
+    ''' <summary>
+    ''' Submit new password
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub btnPasswordSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnPasswordSubmit.Click
+        If String.IsNullOrEmpty(Request.QueryString("ref")) Then
+            Dim strUserPassword As String = txtCurrentPassword.Text
+            Dim strNewPassword As String = txtNewPassword.Text
+
+            'Only update if validators ok
+            If Me.IsValid Then
+                If Membership.ValidateUser(CurrentLoggedUser.Email, strUserPassword) Then
+                    If UsersBLL.ChangePassword(CurrentLoggedUser.ID, strUserPassword, strNewPassword) > 0 Then UC_Updated.ShowAnimatedText()
+                Else
+                    Dim strErrorMessage As String = Replace(GetGlobalResourceObject("Kartris", "ContentText_CustomerCodeIncorrect"), "[label]", GetGlobalResourceObject("Login", "FormLabel_ExistingCustomerCode"))
+                    litWrongPassword.Text = "<span class=""error"">" & strErrorMessage & "</span>"
+                End If
+            End If
+
+        Else
+            Dim strRef As String = Request.QueryString("ref")
+            Dim strEmailAddress As String = txtCurrentPassword.Text
+
+            Dim dtbUserDetails As DataTable = UsersBLL.GetDetails(strEmailAddress)
+            If dtbUserDetails.Rows.Count > 0 Then
+                Dim intUserID As Integer = dtbUserDetails(0)("U_ID")
+                Dim strTempPassword As String = FixNullFromDB(dtbUserDetails(0)("U_TempPassword"))
+                Dim datExpiry As DateTime = IIf(IsDate(FixNullFromDB(dtbUserDetails(0)("U_TempPasswordExpiry"))), dtbUserDetails(0)("U_TempPasswordExpiry"),
+                                            CkartrisDisplayFunctions.NowOffset.AddMinutes(-1))
+                If String.IsNullOrEmpty(strTempPassword) Then datExpiry = CkartrisDisplayFunctions.NowOffset.AddMinutes(-1)
+
+                If datExpiry > CkartrisDisplayFunctions.NowOffset Then
+                    If UsersBLL.EncryptSHA256Managed(strTempPassword, UsersBLL.GetSaltByEmail(strEmailAddress)) = strRef Then
+                        Dim intSuccess As Integer = UsersBLL.ChangePasswordViaRecovery(intUserID, txtConfirmPassword.Text)
+                        If intSuccess = intUserID Then
+                            UC_Updated.ShowAnimatedText()
+                            Response.Redirect(WebShopURL() & "CustomerAccount.aspx?m=u")
+                        Else
+                            litWrongPassword.Text = "<span class=""error"">" & GetGlobalResourceObject("Kartris", "ContentText_ErrorText") & "</span>"
+                        End If
+                    Else
+                        litWrongPassword.Text = "<span class=""error"">" & GetGlobalResourceObject("Kartris", "ContentText_LinkExpiredOrIncorrect") & "</span>"
+                    End If
+
+                Else
+                    litWrongPassword.Text = "<span class=""error"">" & GetGlobalResourceObject("Kartris", "ContentText_LinkExpiredOrIncorrect") & "</span>"
+                End If
+
+            Else
+                litWrongPassword.Text = "<span class=""error"">" & GetGlobalResourceObject("Kartris", "ContentText_NotFoundInDB") & "</span>"
+            End If
+        End If
+
+    End Sub
+
+    ''' <summary>
+    ''' Submit new details (general customer details tab)
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub btnDetailsSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnDetailsSubmit.Click
+        Page.Validate("NameAndVat")
+        If Page.IsValid Then
+            If UsersBLL.UpdateNameandEUVAT(CurrentLoggedUser.ID, txtCustomerName.Text, txtEUVATNumber.Text) = CurrentLoggedUser.ID Then UC_Updated.ShowAnimatedText()
+
+            'EORI number
+            Dim blnAddedEORI As Boolean = ObjectConfigBLL._SetConfigValue(11, CurrentLoggedUser.ID, txtEORINumber.Text, "")
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Addresses - load complete
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub Page_LoadComplete(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Me.LoadComplete
+        If mvwAddresses.ActiveViewIndex > 0 Then btnBack.Visible = True Else btnBack.Visible = False
+    End Sub
+
+    ''' <summary>
+    ''' Addresses - edit billing click
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub lnkEditBilling_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkEditBilling.Click
+
+        mvwAddresses.ActiveViewIndex = "1"
+        CreateBillingAddressesDetails()
+        'UC_NewEditAddress.DisplayType = "Billing"
+        UC_NewEditAddress.ValidationGroup = "Billing"
+        btnSaveNewAddress.OnClientClick = "Page_ClientValidate('Billing');"
+        UC_Updated.reset()
+    End Sub
+
+
+    ''' <summary>
+    ''' Addresses - edit shipping click
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub lnkEditShipping_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkEditShipping.Click
+
+        mvwAddresses.ActiveViewIndex = "2"
+        CreateShippingAddressesDetails()
+        'UC_NewEditAddress.DisplayType = "Shipping"
+        UC_NewEditAddress.ValidationGroup = "Shipping"
+        btnSaveNewAddress.OnClientClick = "Page_ClientValidate('Shipping');"
+        UC_Updated.reset()
+    End Sub
+
+    Protected Sub btnBack_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnBack.Click
+        mvwAddresses.ActiveViewIndex = "0"
+        If CurrentLoggedUser.DefaultBillingAddressID > 0 And Not IsNothing(CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).Find(Function(p) p.ID = CurrentLoggedUser.DefaultBillingAddressID)) Then
+            UC_DefaultBilling.Address = CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).Find(Function(p) p.ID = CurrentLoggedUser.DefaultBillingAddressID)
+            litContentTextNoAddress.Visible = False
+        Else
+            UC_DefaultBilling.Visible = False
+            litContentTextNoAddress.Visible = True
+        End If
+        If CurrentLoggedUser.DefaultShippingAddressID > 0 And Not IsNothing(CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).Find(Function(p) p.ID = CurrentLoggedUser.DefaultShippingAddressID)) Then
+            UC_DefaultShipping.Address = CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).Find(Function(p) p.ID = CurrentLoggedUser.DefaultShippingAddressID)
+            litContentTextNoAddress2.Visible = False
+        Else
+            UC_DefaultShipping.Visible = False
+            litContentTextNoAddress2.Visible = True
+        End If
+        UC_Updated.reset()
+    End Sub
+
+    ''' <summary>
+    ''' Addresses - save new address
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub btnSaveNewAddress_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSaveNewAddress.Click
+        If UC_NewEditAddress.AddressType = "s" Then
+            Page.Validate("Shipping")
+        End If
+        If UC_NewEditAddress.AddressType = "b" Then
+            Page.Validate("Billing")
+        End If
+        If UC_NewEditAddress.AddressType = "u" Then
+            Page.Validate("Shipping")
+        End If
+
+        If Page.IsValid Then
+
+            If chkAlso.Checked = False Then
+                If UC_NewEditAddress.DisplayType = "Billing" Then UC_NewEditAddress.AddressType = "b" Else UC_NewEditAddress.AddressType = "s"
+            Else
+                UC_NewEditAddress.AddressType = "u"
+            End If
+
+            Dim intGeneratedAddressID As Integer = KartrisClasses.Address.AddUpdate(UC_NewEditAddress.EnteredAddress, CurrentLoggedUser.ID, chkMakeDefault.Checked, UC_NewEditAddress.EnteredAddress.ID)
+            If intGeneratedAddressID > 0 Then
+
+                Dim objAddress As KartrisClasses.Address = UC_NewEditAddress.EnteredAddress
+                objAddress.ID = intGeneratedAddressID
+
+                If UC_NewEditAddress.EnteredAddress.ID > 0 Then
+                    Dim AddresstobeDeleted As KartrisClasses.Address = CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).Find(Function(p) p.ID = intGeneratedAddressID)
+                    CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).Remove(AddresstobeDeleted)
+                End If
+
+                CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).Add(objAddress)
+                If UC_NewEditAddress.DisplayType = "Billing" Then
+                    pnlBilling.Controls.Clear()
+                    CreateBillingAddressesDetails()
+                Else
+                    pnlShipping.Controls.Clear()
+                    CreateShippingAddressesDetails()
+                End If
+
+                If chkMakeDefault.Checked Then
+                    If UC_NewEditAddress.DisplayType = "Billing" Then CurrentLoggedUser.DefaultBillingAddressID = intGeneratedAddressID Else CurrentLoggedUser.DefaultShippingAddressID = intGeneratedAddressID
+                    If chkAlso.Checked Then If UC_NewEditAddress.DisplayType = "Billing" Then CurrentLoggedUser.DefaultShippingAddressID = intGeneratedAddressID
+                End If
+                ResetAddressInput()
+                UC_Updated.ShowAnimatedText()
+            End If
+        Else
+            popExtender.Show()
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Addresses - click "add address"
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub btnAddAddress_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkAddBilling.Click, lnkAddShipping.Click
+        UC_Updated.reset()
+        ResetAddressInput()
+        If UC_NewEditAddress.DisplayType = "Billing" Then
+            UC_NewEditAddress.ValidationGroup = "Billing"
+            chkAlso.Text = GetGlobalResourceObject("Address", "ContentText_CanAlsoBeUsedAsShippingAddress")
+        Else
+            UC_NewEditAddress.ValidationGroup = "Shipping"
+            chkAlso.Text = GetGlobalResourceObject("Address", "ContentText_CanAlsoBeUsedAsBillingAddress")
+        End If
+
+        litAddressTitle.Text = GetGlobalResourceObject("Address", "ContentText_AddEditAddress")
+        popExtender.Show()
+    End Sub
+
+    ''' <summary>
+    ''' Addresses - click "edit address"
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub btnEditAddress_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+
+        UC_Updated.reset()
+        litAddressTitle.Text = GetGlobalResourceObject("Kartris", "ContentText_Edit")
+        Dim lnkEdit As LinkButton = CType(sender, LinkButton)
+
+        UC_NewEditAddress.InitialAddressToDisplay = CType(lnkEdit.Parent.Parent, UserControls_General_AddressDetails).Address
+
+        If UC_NewEditAddress.DisplayType = "Billing" Then
+            chkAlso.Text = GetGlobalResourceObject("Address", "ContentText_CanAlsoBeUsedAsShippingAddress")
+            If CurrentLoggedUser.DefaultBillingAddressID = CType(lnkEdit.Parent.Parent, UserControls_General_AddressDetails).Address.ID Then chkMakeDefault.Checked = True
+            If CurrentLoggedUser.DefaultBillingAddressID = UC_NewEditAddress.EnteredAddress.ID Then chkMakeDefault.Checked = True Else chkMakeDefault.Checked = False
+            UC_NewEditAddress.ValidationGroup = "Billing"
+        Else
+            chkAlso.Text = GetGlobalResourceObject("Address", "ContentText_CanAlsoBeUsedAsBillingAddress")
+            If CurrentLoggedUser.DefaultShippingAddressID = CType(lnkEdit.Parent.Parent, UserControls_General_AddressDetails).Address.ID Then chkMakeDefault.Checked = True
+            If CurrentLoggedUser.DefaultShippingAddressID = UC_NewEditAddress.EnteredAddress.ID Then chkMakeDefault.Checked = True Else chkMakeDefault.Checked = False
+            UC_NewEditAddress.ValidationGroup = "Shipping"
+        End If
+
+        If UC_NewEditAddress.EnteredAddress.Type = "u" Then chkAlso.Checked = True Else chkAlso.Checked = False
+        UC_Updated.reset()
+        popExtender.Show()
+    End Sub
+
+    ''' <summary>
+    ''' Addresses - delete address click
+    ''' </summary>
+    ''' <remarks></remarks>
+    Protected Sub btnDeleteAddress_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        Dim UC_Delete As UserControls_General_AddressDetails = CType(CType(sender, LinkButton).Parent.Parent, UserControls_General_AddressDetails)
+        Dim intAddressID As Integer = UC_Delete.Address.ID
+        Dim objAddress As KartrisClasses.Address = UC_Delete.Address
+
+        If KartrisClasses.Address.Delete(intAddressID, CurrentLoggedUser.ID) > 0 Then
+            CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).Remove(objAddress)
+            If UC_NewEditAddress.DisplayType = "Shipping" Then pnlShipping.Controls.Remove(UC_Delete) Else pnlBilling.Controls.Remove(UC_Delete)
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' Addresses - refresh
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub ResetAddressInput()
+        UC_NewEditAddress.Clear()
+        chkMakeDefault.Checked = False
+        chkAlso.Checked = False
+    End Sub
+
+    ''' <summary>
+    ''' Addresses - create shipping address
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub CreateShippingAddressesDetails()
+        Dim lstShippingAddresses As Collections.Generic.List(Of KartrisClasses.Address) = CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).FindAll(Function(ShippingAdd) ShippingAdd.Type = "s" Or ShippingAdd.Type = "u")
+        For Each objAddress In lstShippingAddresses
+            Dim UC_Shipping As UserControls_General_AddressDetails = DirectCast(LoadControl("~/UserControls/General/AddressDetails.ascx"), UserControls_General_AddressDetails)
+            UC_Shipping.ID = "dtlShipping-" & objAddress.ID
+            pnlShipping.Controls.Add(UC_Shipping)
+
+            Dim UC_ShippingInstance As UserControls_General_AddressDetails = DirectCast(mvwAddresses.Views(2).FindControl("dtlShipping-" & objAddress.ID), UserControls_General_AddressDetails)
+            UC_ShippingInstance.Address = objAddress
+            UC_ShippingInstance.ShowButtons = True
+            AddHandler UC_ShippingInstance.btnEditClicked, AddressOf Me.btnEditAddress_Click
+            AddHandler UC_ShippingInstance.btnDeleteClicked, AddressOf Me.btnDeleteAddress_Click
+        Next
+    End Sub
+
+    ''' <summary>
+    ''' Addresses - create billing address
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub CreateBillingAddressesDetails()
+        Dim lstBillingAddresses As Collections.Generic.List(Of KartrisClasses.Address) = CType(ViewState("lstUsrAddresses"), Collections.Generic.List(Of KartrisClasses.Address)).FindAll(Function(BillingAdd) BillingAdd.Type = "b" Or BillingAdd.Type = "u")
+        For Each objAddress In lstBillingAddresses
+            Dim UC_Billing As UserControls_General_AddressDetails = DirectCast(LoadControl("~/UserControls/General/AddressDetails.ascx"), UserControls_General_AddressDetails)
+            UC_Billing.ID = "UC_Billing-" & objAddress.ID
+            pnlBilling.Controls.Add(UC_Billing)
+            Dim UC_BillingInstance As UserControls_General_AddressDetails = CType(mvwAddresses.Views(1).FindControl("UC_Billing-" & objAddress.ID), UserControls_General_AddressDetails)
+            UC_BillingInstance.Address = objAddress
+            UC_BillingInstance.ShowButtons = True
+            AddHandler UC_BillingInstance.btnEditClicked, AddressOf Me.btnEditAddress_Click
+            AddHandler UC_BillingInstance.btnDeleteClicked, AddressOf Me.btnDeleteAddress_Click
+        Next
+    End Sub
 End Class

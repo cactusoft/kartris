@@ -388,7 +388,7 @@ Partial Class _Checkout
                         chkSameShippingAsBilling.Checked = True
                     End If
                 Else
-                    chkSameShippingAsBilling.Checked = False
+                    chkSameShippingAsBilling.Checked = True
                 End If
 
                 If UC_BasketSummary.GetBasket.AllDigital Then

@@ -267,7 +267,7 @@ ACCORDION AJAX CONTROL
 UPDATE MESSAGE ('the record was updated')
 ========================================================================
 */
-div.updatemessage                       { border: dotted 1px #0a0; background-color: #ccf4bb; color: #080; padding: 3px 10px 3px 10px; margin: 15px 0 10px 0; font-weight: bold; }
+div.updatemessage                       { position: fixed; z-index: 9999; left: calc(50% - 100px); width: 200px; border: none; background-color: #080; color: #fff; padding: 3px 10px 3px 10px; margin: 15px 0 10px 0; font-weight: bold; text-align: center; border-radius: 5px; }
 /* 
 ========================================================================
 PAGE LINKS

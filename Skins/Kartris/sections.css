@@ -433,7 +433,7 @@ SUPPORT TICKETS
 #supporttickets td.opened               { width: 100px }
 #supporttickets td.closed               { width: 100px }
 #supporttickets td.selectfield          { width: 55px; text-align: right; }
-#supporttickets div.userreply           { border-top: solid 1px #ccc; margin: 10px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #f5f5f5; }
+#supporttickets div.userreply           { border-top: solid 1px #ccc; margin: 10px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #fff; }
 #supporttickets div.ownerreply          { border-top: solid 1px #fc5;margin: 10px 0 5px 0; padding: 3px 15px 10px 15px; background-color: #fe9; }
 #supporttickets p.details               { color: #999; padding-bottom: 5px; }
 #supporttickets p.message               { white-space: pre-wrap }
