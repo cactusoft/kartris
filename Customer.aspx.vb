@@ -111,12 +111,14 @@ Partial Class Customer
                 acpSavedBaskets.Visible = False
             Else
                 acpSavedBaskets.Visible = True
+                Call BuildNavigatePage("basket")
             End If
             'Show/hide wishlists
             If LCase(KartSettingsManager.GetKartConfig("frontend.users.wishlists.enabled")) = "n" Or Val(KartSettingsManager.GetKartConfig("frontend.users.myaccount.wishlists.max")) = 0 Then
                 acpWishLists.Visible = False
             Else
                 acpWishLists.Visible = True
+                Call BuildNavigatePage("wishlist")
             End If
             'Show/hide affiliates
             If LCase(KartSettingsManager.GetKartConfig("frontend.users.myaccount.affiliates.enabled")) = "n" Then
@@ -181,8 +183,8 @@ Partial Class Customer
             '--------------------------------------------------
             'Set active tab
             '--------------------------------------------------
-            Dim strAction As String = Request.QueryString("action")
-            Select Case strAction
+            Dim strQSAction As String = Request.QueryString("action")
+            Select Case strQSAction
                 Case "home"
                     tabContainerCustomer.ActiveTabIndex = 0
                 Case "details"
@@ -191,6 +193,14 @@ Partial Class Customer
                     tabContainerCustomer.ActiveTabIndex = 2
                 Case "password"
                     tabContainerCustomer.ActiveTabIndex = 3
+                Case "savebasket"
+                    tabContainerCustomer.ActiveTabIndex = 0
+                    phdSaveBasket.Visible = True
+                    phdHome.Visible = False
+                Case "wishlists"
+                    tabContainerCustomer.ActiveTabIndex = 0
+                    phdSaveWishLists.Visible = True
+                    phdHome.Visible = False
                 Case Else
                     tabContainerCustomer.ActiveTabIndex = 0
             End Select
@@ -379,7 +389,7 @@ Partial Class Customer
         numBasketID = E.CommandArgument
         BasketBLL.DeleteSavedBasket(numBasketID)
         Call BuildNavigatePage("basket")
-
+        UC_Updated.ShowAnimatedText()
     End Sub
 
     Sub LoadSavedBasket_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
@@ -398,7 +408,12 @@ Partial Class Customer
     Sub SaveBasket_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         If Me.IsValid Then
             Call BasketBLL.SaveBasket(numCustomerID, Trim(txtBasketName.Text), SESSION_ID)
-            Response.Redirect("~/Customer.aspx?action=home")
+            UC_Updated.ShowAnimatedText()
+            accMyAccount.SelectedIndex = 2
+            phdSaveBasket.Visible = False
+            phdHome.Visible = True
+            Call BuildNavigatePage("basket")
+            updMain.Update()
         End If
     End Sub
 
@@ -431,12 +446,22 @@ Partial Class Customer
                     End With
                 Else ''// new wishlist (create it)
                     Call BasketBLL.SaveWishLists(numWishlistsID, SESSION_ID, numCustomerID, strName, strPublicPassword, strMessage)
-                    Response.Redirect("~/Customer.aspx?action=home")
+                    UC_Updated.ShowAnimatedText()
+                    accMyAccount.SelectedIndex = 3
+                    phdSaveWishLists.Visible = False
+                    phdHome.Visible = True
+                    Call BuildNavigatePage("wishlist")
+                    updMain.Update()
                 End If
 
             Else ''// existing wishlist (update it)
                 Call BasketBLL.SaveWishLists(numWishlistsID, SESSION_ID, numCustomerID, strName, strPublicPassword, strMessage)
-                Response.Redirect("~/Customer.aspx?action=home")
+                UC_Updated.ShowAnimatedText()
+                accMyAccount.SelectedIndex = 3
+                phdSaveWishLists.Visible = False
+                phdHome.Visible = True
+                Call BuildNavigatePage("wishlist")
+                updMain.Update()
             End If
 
         End If
@@ -453,7 +478,7 @@ Partial Class Customer
         numWishListsID = E.CommandArgument
         BasketBLL.DeleteWishLists(numWishListsID)
         Call BuildNavigatePage("wishlist")
-
+        UC_Updated.ShowAnimatedText()
     End Sub
 
     Sub EditWishLists_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
@@ -476,7 +501,7 @@ Partial Class Customer
         blnNoBasketItem = objBasket.BasketItems.Count > 0
 
         Call RefreshMiniBasket()
-
+        UC_Updated.ShowAnimatedText()
     End Sub
 
     Sub RefreshMiniBasket()
@@ -514,9 +539,9 @@ Partial Class Customer
                 ElseIf LCase(sender.id) = "lnkbtnbasketnext" Then
                     ViewState("SavedBasket_PageIndex") = ViewState("SavedBasket_PageIndex") + 1
                 End If
+                Call BuildNavigatePage("basket")
                 lnkBtnBasketPrev.Enabled = IIf(ViewState("SavedBasket_PageIndex") <= 1, False, True)
                 lnkBtnBasketNext.Enabled = IIf(ViewState("SavedBasket_PageIndex") >= ViewState("SavedBasket_PageTotalSize") / SavedBasket_PageSize, False, True)
-                Call BuildNavigatePage("basket")
 
             Case "wishlist"
                 If LCase(sender.id) = "lnkbtnwishlistprev" Then
@@ -524,9 +549,9 @@ Partial Class Customer
                 ElseIf LCase(sender.id) = "lnkbtnwishlistnext" Then
                     ViewState("WishList_PageIndex") = ViewState("WishList_PageIndex") + 1
                 End If
+                Call BuildNavigatePage("wishlist")
                 lnkBtnWishlistPrev.Enabled = IIf(ViewState("WishList_PageIndex") <= 1, False, True)
                 lnkBtnWishlistNext.Enabled = IIf(ViewState("WishList_PageIndex") >= ViewState("WishList_PageTotalSize") / WishList_PageSize, False, True)
-                Call BuildNavigatePage("wishlist")
 
         End Select
 
@@ -542,13 +567,13 @@ Partial Class Customer
                 updMain.Update()
 
             Case "basket"
-                tblSavedBasket = BasketBLL.GetSavedBasket(numCustomerID, (((ViewState("SavedBasket_PageIndex") - 1) * SavedBasket_PageSize) + 1), SavedBasket_PageSize)
+                tblSavedBasket = BasketBLL.GetSavedBasket(numCustomerID, 1, SavedBasket_PageSize)
                 rptSavedBasket.DataSource = tblSavedBasket
                 rptSavedBasket.DataBind()
                 updMain.Update()
 
             Case "wishlist"
-                tblWishLists = BasketBLL.GetWishLists(numCustomerID, (((ViewState("WishList_PageIndex") - 1) * WishList_PageSize) + 1), WishList_PageSize)
+                tblWishLists = BasketBLL.GetWishLists(numCustomerID, 1, WishList_PageSize)
                 rptWishLists.DataSource = tblWishLists
                 rptWishLists.DataBind()
                 updMain.Update()
@@ -656,10 +681,6 @@ Partial Class Customer
                 End If
                 SendEmail(strFrom, strEmail, GetGlobalResourceObject("Kartris", "PageTitle_MailingList"), strBodyText, , , , , blnHTMLEmail,, objBCCsCollection)
             End If
-
-
-
-
 
         End If
 

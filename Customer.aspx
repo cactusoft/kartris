@@ -473,6 +473,93 @@
                             </asp:PlaceHolder>
 
                             <!-- end of home -->
+   <!-- start of save basket -->
+
+                <asp:Panel ID="pnlSaveBasket" runat="server" DefaultButton="lnkBtnSaveBasket">
+                    <asp:PlaceHolder ID="phdSaveBasket" runat="server" Visible="false">
+                        <h1>
+                            <asp:Literal ID="litPageTitleSaveCurrentBasketContents" runat="server" Text='<%$ Resources: Kartris, PageTitle_SaveCurrentBasketContents %>'
+                                EnableViewState="false"></asp:Literal></h1>
+                        <p>
+                            <asp:Literal ID="litSaveBasketError" runat="server"></asp:Literal>
+                        </p>
+                        <p>
+                            <asp:Literal ID="litContentTextSaveRecoverBasketContentsDesc" runat="server" Text='<%$ Resources: Kartris, ContentText_SaveRecoverBasketContentsDesc %>'
+                                EnableViewState="false"></asp:Literal>
+                        </p>
+                        <p>
+                            <asp:Literal ID="litContentTextChooseNamePassword" runat="server" Text='<%$ Resources: Kartris, ContentText_ChooseNamePassword %>'
+                                EnableViewState="false"></asp:Literal>
+                        </p>
+                        <div class="inputform" id="savebasketform">
+                            <div class="row">
+                                <div class="small-12 medium-2 columns">
+                                    <asp:Label ID="lblContentTextBasketNamePassword" runat="server" AssociatedControlID="txtBasketName"
+                                        Text='<%$ Resources: Basket, ContentText_BasketNamePassword %>' CssClass="requiredfield"></asp:Label>
+                                </div>
+                                <div class="small-12 medium-3 columns">
+                                    <asp:TextBox MaxLength="50" ID="txtBasketName" runat="server"></asp:TextBox><asp:RequiredFieldValidator
+                                        EnableClientScript="True" ID="valBasketName" runat="server" ControlToValidate="txtBasketName"
+                                        ValidationGroup="SavedBasket" CssClass="error" ForeColor="" Display="Dynamic"
+                                        Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator>
+                                </div>
+                                <div class="small-12 medium-7 columns">
+                                    <asp:Button
+                                        OnCommand="SaveBasket_Click" ValidationGroup="SavedBasket" CssClass="button"
+                                        ID="lnkBtnSaveBasket" runat="server" Text='<%$ Resources: Kartris, FormLabel_Save %>' />
+                                </div>
+                            </div>
+                        </div>
+                    </asp:PlaceHolder>
+                </asp:Panel>
+
+                <!-- end of save basket-->
+                <!-- start of save wishlists -->
+                <%If KartSettingsManager.GetKartConfig("frontend.users.wishlists.enabled") <> "n" And KartSettingsManager.GetKartConfig("frontend.users.myaccount.wishlists.enabled") <> "n" Then%>
+
+                <asp:Panel ID="pnlSaveWishLists" runat="server" DefaultButton="lnkbtnSubmit">
+                    <asp:PlaceHolder ID="phdSaveWishLists" runat="server" Visible="false">
+                        <h1>
+                            <asp:Literal ID="litContentTextSaveWishList2" runat="server" Text='<%$ Resources: Basket, ContentText_SaveWishList %>'></asp:Literal></h1>
+                        <asp:Literal ID="litSaveWishlistsError" runat="server"></asp:Literal>
+                        <div class="wishlist Kartris-DetailsView" id="wishlist">
+                            <div class="Kartris-DetailsView-Data">
+                                <ul>
+                                    <li><span class="Kartris-DetailsView-Name">
+                                        <asp:Label ID="lblName" runat="server" Text='<%$ Resources: Kartris, ContentText_WishListName %>'
+                                            AssociatedControlID="txtWL_Name" CssClass="requiredfield"></asp:Label></span><span
+                                                class="Kartris-DetailsView-Value">
+                                                <asp:TextBox MaxLength="200" ID="txtWL_Name" runat="server"></asp:TextBox><asp:RequiredFieldValidator
+                                                    EnableClientScript="True" ID="valWL_Name" runat="server" ControlToValidate="txtWL_Name"
+                                                    ValidationGroup="SaveWishlist" CssClass="error" ForeColor="" Display="Dynamic"
+                                                    Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></span></li>
+                                    <li><span class="Kartris-DetailsView-Name">
+                                        <asp:Label ID="lblPublicPassword" runat="server" Text='<%$ Resources: Kartris, ContentText_WishListPublicPassword %>'
+                                            AssociatedControlID="txtWL_PublicPassword" CssClass="requiredfield"></asp:Label></span><span
+                                                class="Kartris-DetailsView-Value">
+                                                <asp:TextBox MaxLength="10" ID="txtWL_PublicPassword" runat="server"></asp:TextBox><asp:RequiredFieldValidator
+                                                    EnableClientScript="True" ID="valWL_PublicPassword" runat="server" ControlToValidate="txtWL_PublicPassword"
+                                                    ValidationGroup="SaveWishlist" CssClass="error" ForeColor="" Display="Dynamic"
+                                                    Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></span></li>
+                                    <li><span class="Kartris-DetailsView-Name">
+                                        <asp:Label ID="lblPersonalMessage" runat="server" Text='<%$ Resources: Kartris, ContentText_WishListPersonalMessage %>'
+                                            AssociatedControlID="txtWL_Message"></asp:Label></span><span class="Kartris-DetailsView-Value">
+                                                <asp:TextBox Rows="12" TextMode="MultiLine" Wrap="true" ID="txtWL_Message" runat="server"
+                                                    MaxLength="1000"></asp:TextBox>
+                                                <asp:Literal ID="litExplanation" runat="server"></asp:Literal></span></li>
+                                </ul>
+                                <div class="submitbuttons">
+                                    <asp:Button OnCommand="SaveWishLists_Click" ID="lnkbtnSubmit" runat="server" CssClass="button"
+                                        Text='<%$ Resources: Kartris,FormLabel_Save %>' ValidationGroup="SaveWishlist" />
+                                    <asp:ValidationSummary ValidationGroup="SaveWishlist" ID="valSummary" runat="server"
+                                        CssClass="valsummary" DisplayMode="BulletList" ForeColor="" HeaderText="<%$ Resources: Kartris, ContentText_Errors %>" />
+                                </div>
+                            </div>
+                        </div>
+                    </asp:PlaceHolder>
+                </asp:Panel>
+                <% End If%>
+                <!-- end of save wishlists -->
                         </ContentTemplate>
                     </ajaxToolkit:TabPanel>
                     <%-- ChangeDetails --%>
@@ -692,94 +779,9 @@
                 </ajaxToolkit:TabContainer>
 
 
-                <!-- start of save basket -->
+             
 
-                <asp:Panel ID="pnlSaveBasket" runat="server" DefaultButton="lnkBtnSaveBasket">
-                    <asp:PlaceHolder ID="phdSaveBasket" runat="server" Visible="false">
-                        <h1>
-                            <asp:Literal ID="litPageTitleSaveCurrentBasketContents" runat="server" Text='<%$ Resources: Kartris, PageTitle_SaveCurrentBasketContents %>'
-                                EnableViewState="false"></asp:Literal></h1>
-                        <p>
-                            <asp:Literal ID="litSaveBasketError" runat="server"></asp:Literal>
-                        </p>
-                        <p>
-                            <asp:Literal ID="litContentTextSaveRecoverBasketContentsDesc" runat="server" Text='<%$ Resources: Kartris, ContentText_SaveRecoverBasketContentsDesc %>'
-                                EnableViewState="false"></asp:Literal>
-                        </p>
-                        <p>
-                            <asp:Literal ID="litContentTextChooseNamePassword" runat="server" Text='<%$ Resources: Kartris, ContentText_ChooseNamePassword %>'
-                                EnableViewState="false"></asp:Literal>
-                        </p>
-                        <div class="inputform" id="savebasketform">
-                            <div class="row">
-                                <div class="small-12 medium-2 columns">
-                                    <asp:Label ID="lblContentTextBasketNamePassword" runat="server" AssociatedControlID="txtBasketName"
-                                        Text='<%$ Resources: Basket, ContentText_BasketNamePassword %>' CssClass="requiredfield"></asp:Label>
-                                </div>
-                                <div class="small-12 medium-3 columns">
-                                    <asp:TextBox MaxLength="50" ID="txtBasketName" runat="server"></asp:TextBox><asp:RequiredFieldValidator
-                                        EnableClientScript="True" ID="valBasketName" runat="server" ControlToValidate="txtBasketName"
-                                        ValidationGroup="SavedBasket" CssClass="error" ForeColor="" Display="Dynamic"
-                                        Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator>
-                                </div>
-                                <div class="small-12 medium-7 columns">
-                                    <asp:Button
-                                        OnCommand="SaveBasket_Click" ValidationGroup="SavedBasket" CssClass="button"
-                                        ID="lnkBtnSaveBasket" runat="server" Text='<%$ Resources: Kartris, FormLabel_Save %>' />
-                                </div>
-                            </div>
-                        </div>
-                    </asp:PlaceHolder>
-                </asp:Panel>
 
-                <!-- end of save basket-->
-
-                <!-- start of save wishlists -->
-                <%If KartSettingsManager.GetKartConfig("frontend.users.wishlists.enabled") <> "n" And KartSettingsManager.GetKartConfig("frontend.users.myaccount.wishlists.enabled") <> "n" Then%>
-
-                <asp:Panel ID="pnlSaveWishLists" runat="server" DefaultButton="lnkbtnSubmit">
-                    <asp:PlaceHolder ID="phdSaveWishLists" runat="server" Visible="false">
-                        <h1>
-                            <asp:Literal ID="litContentTextSaveWishList2" runat="server" Text='<%$ Resources: Basket, ContentText_SaveWishList %>'></asp:Literal></h1>
-                        <asp:Literal ID="litSaveWishlistsError" runat="server"></asp:Literal>
-                        <div class="wishlist Kartris-DetailsView" id="wishlist">
-                            <div class="Kartris-DetailsView-Data">
-                                <ul>
-                                    <li><span class="Kartris-DetailsView-Name">
-                                        <asp:Label ID="lblName" runat="server" Text='<%$ Resources: Kartris, ContentText_WishListName %>'
-                                            AssociatedControlID="txtWL_Name" CssClass="requiredfield"></asp:Label></span><span
-                                                class="Kartris-DetailsView-Value">
-                                                <asp:TextBox MaxLength="200" ID="txtWL_Name" runat="server"></asp:TextBox><asp:RequiredFieldValidator
-                                                    EnableClientScript="True" ID="valWL_Name" runat="server" ControlToValidate="txtWL_Name"
-                                                    ValidationGroup="SaveWishlist" CssClass="error" ForeColor="" Display="Dynamic"
-                                                    Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></span></li>
-                                    <li><span class="Kartris-DetailsView-Name">
-                                        <asp:Label ID="lblPublicPassword" runat="server" Text='<%$ Resources: Kartris, ContentText_WishListPublicPassword %>'
-                                            AssociatedControlID="txtWL_PublicPassword" CssClass="requiredfield"></asp:Label></span><span
-                                                class="Kartris-DetailsView-Value">
-                                                <asp:TextBox MaxLength="10" ID="txtWL_PublicPassword" runat="server"></asp:TextBox><asp:RequiredFieldValidator
-                                                    EnableClientScript="True" ID="valWL_PublicPassword" runat="server" ControlToValidate="txtWL_PublicPassword"
-                                                    ValidationGroup="SaveWishlist" CssClass="error" ForeColor="" Display="Dynamic"
-                                                    Text="<%$ Resources: Kartris, ContentText_RequiredField %>"></asp:RequiredFieldValidator></span></li>
-                                    <li><span class="Kartris-DetailsView-Name">
-                                        <asp:Label ID="lblPersonalMessage" runat="server" Text='<%$ Resources: Kartris, ContentText_WishListPersonalMessage %>'
-                                            AssociatedControlID="txtWL_Message"></asp:Label></span><span class="Kartris-DetailsView-Value">
-                                                <asp:TextBox Rows="12" TextMode="MultiLine" Wrap="true" ID="txtWL_Message" runat="server"
-                                                    MaxLength="1000"></asp:TextBox>
-                                                <asp:Literal ID="litExplanation" runat="server"></asp:Literal></span></li>
-                                </ul>
-                                <div class="submitbuttons">
-                                    <asp:Button OnCommand="SaveWishLists_Click" ID="lnkbtnSubmit" runat="server" CssClass="button"
-                                        Text='<%$ Resources: Kartris,FormLabel_Save %>' ValidationGroup="SaveWishlist" />
-                                    <asp:ValidationSummary ValidationGroup="SaveWishlist" ID="valSummary" runat="server"
-                                        CssClass="valsummary" DisplayMode="BulletList" ForeColor="" HeaderText="<%$ Resources: Kartris, ContentText_Errors %>" />
-                                </div>
-                            </div>
-                        </div>
-                    </asp:PlaceHolder>
-                </asp:Panel>
-                <% End If%>
-                <!-- end of save wishlists -->
 
 
             </div>
