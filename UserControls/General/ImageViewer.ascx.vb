@@ -219,7 +219,7 @@ Partial Class ImageViewer
                                 '---------------------------------------
                                 strImageMainView = Replace(_strFolderPath & objFile.Name, "~/", "")
                                 litSingleImage.Text &= "<!-- LARGE VIEW DISPLAY: IN 'NEW PAGE' LARGE VIEW MODE Direct link to the image itself --><img alt=""" & strAltText & """ src=""" &
-                                    strImageMainView & """ />"
+                                    strImageMainView & """ height=""" & numImageHeight & """ width=""" & numImageWidth & """ />"
                             Else
                                 '---------------------------------------
                                 'IN 'AJAX' LARGE VIEW MODE
@@ -231,7 +231,7 @@ Partial Class ImageViewer
 
                                 If strHyperlink <> "" Then litSingleImage.Text &= "<a href=""" & strHyperlink & """>"
                                 litSingleImage.Text &= "<img alt=""" & strAltText & """ src=""" &
-                                    strImageMainViewStart & """ />"
+                                    strImageMainViewStart & """ height=""" & numImageHeight & """ width=""" & numImageWidth & """ />"
                                 If strHyperlink <> "" Then litSingleImage.Text &= "</a>"
                                 litSingleImage.Text &= "</div>" & vbCrLf
                             End If
@@ -331,7 +331,7 @@ Partial Class ImageViewer
                         litMainImage.Text &= "<a target=""_blank"" href=""" &
                             "LargeImage.aspx?P_ID=" & strImagesDirName & "&blnFullSize=y" & """>"
                         litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" &
-                            strImageMainViewStart & """ /></a>"
+                            strImageMainViewStart & """ height=""" & numImageHeight & """ width=""" & numImageWidth & """ /></a>"
                         litMainImage.Text &= "</div>" & vbCrLf
                     Else
                         litMainImage.Text = ""
@@ -348,7 +348,7 @@ Partial Class ImageViewer
                         End If
                         litMainImage.Text &= "<!-- MAIN IMAGE PREVIEW: IN 'AJAX' LARGE VIEW MODE --><div class=""imageholder hand"" " &
                         "style=""max-width: 100%; max-height: 100%;"">"
-                        litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" & strImageMainViewStart & """ />" & vbCrLf
+                        litMainImage.Text &= "<img alt=""" & strAltText & """ src=""" & strImageMainViewStart & """ height=""" & numImageHeight & """ width=""" & numImageWidth & """ />" & vbCrLf
                         litMainImage.Text &= "</div>"
                     End If
                 End If
