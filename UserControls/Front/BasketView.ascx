@@ -12,8 +12,8 @@ CUSTOMIZE POPUP
             <h2>
                 <asp:Literal ID="litContentTextCustomization" runat="server" Text='<%$ Resources: Kartris, ContentText_Customization %>'
                     EnableViewState="false" /></h2>
-            <asp:LinkButton ID="lnkClose" runat="server" Text="" CssClass="closebutton" ValidationGroup="CustomForm" />
-            <asp:LinkButton ID="lnkDummy" runat="server" Text="×" CssClass="closebutton" ValidationGroup="CustomForm" />
+            <asp:LinkButton ID="lnkClose" runat="server" Text="" CssClass="closebutton" ValidationGroup="CustomForm" CausesValidation="False" />
+            <asp:LinkButton ID="lnkDummy" runat="server" Text="×" CssClass="closebutton" ValidationGroup="CustomForm" CausesValidation="False" />
             <div>
                 <!-- Cancel Customization Link -->
                 <asp:PlaceHolder ID="phdCustomizationCancel" runat="server" Visible="True">
