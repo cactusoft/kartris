@@ -10,7 +10,7 @@
 		<siteMapNode url="~/CustomerAccount.aspx" title="$resources:Kartris,PageTitle_MyAccount"  description="$resources:Kartris,PageTitle_MyAccount" />
 		<siteMapNode url="~/Customer.aspx?action=home" title="$resources:Kartris,PageTitle_MyAccount"  description="$resources:Kartris,PageTitle_MyAccount" />
 		<siteMapNode url="~/Customer.aspx" title="$resources:Kartris,PageTitle_MyAccount"  description="$resources:Kartris,PageTitle_MyAccount">
-			<siteMapNode url="~/CustomerDetails.aspx" title="$resources:Kartris,ContentText_ChangeCustomerCode"  description="$resources:Kartris,ContentText_ChangeCustomerCode" />
+			<siteMapNode url="~/PasswordReset.aspx" title="$resources:Kartris,ContentText_ChangeCustomerCode"  description="$resources:Kartris,ContentText_ChangeCustomerCode" />
 			<siteMapNode url="~/Customer.aspx?action=savebasket" title="$resources:Basket,PageTitle_SaveRecoverBasketContents"  description="$resources:Basket,PageTitle_SaveRecoverBasketContents" />
 			<siteMapNode url="~/Customer.aspx?action=wishlists" title="$resources:Basket,ContentText_SaveWishList"  description="$resources:Basket,ContentText_SaveWishList" />
 			<siteMapNode url="~/CustomerViewOrder.aspx" title="$resources:Kartris,PageTitle_OrderStatus"  description="$resources:Kartris,PageTitle_OrderStatus" />

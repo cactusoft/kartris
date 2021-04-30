@@ -127,12 +127,28 @@ Public Class ObjectConfigBLL
         Return False
     End Function
 
-
+    ''' <summary>
+    ''' Get object config value
+    ''' </summary>
+    ''' <param name="strConfigName">Name of the object config setting, e.g. K:user.eori</param>
+    ''' <param name="numParentID">ID of the parent item, e.g. user ID</param>
+    ''' <returns>object</returns>
+    ''' <remarks>Since v3.1002 this does similar to language elements retrieval,
+    ''' it will try twice before failing</remarks>
     Public Shared Function GetValue(ByVal strConfigName As String, ByVal numParentID As Long) As Object
         Try
             Return Adptr.GetValue(strConfigName, numParentID)
         Catch ex As Exception
-            CkartrisFormatErrors.LogError("ObjectConfigBLL.GetValue - " & ex.Message & vbCrLf & "strConfigName: " & strConfigName & vbCrLf & "numParentID: " & numParentID)
+
+            'Wait a little, then try again
+            System.Threading.Thread.Sleep(20)
+            Try
+                Return Adptr.GetValue(strConfigName, numParentID)
+            Catch ex2 As Exception
+                'Ok, maybe something more going on.
+                CkartrisFormatErrors.LogError("ObjectConfigBLL.GetValue - " & ex.Message & vbCrLf & "strConfigName: " & strConfigName & vbCrLf & "numParentID: " & numParentID)
+            End Try
+
         End Try
         Return Nothing
     End Function

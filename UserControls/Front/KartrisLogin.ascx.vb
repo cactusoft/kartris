@@ -90,7 +90,7 @@ Partial Class KartrisLogin
                 End If
 
                 If Not String.IsNullOrEmpty(Request.QueryString("m")) Then
-                    If Request.QueryString("m") = "u" Then litMessage.Text = "<li><div class=""updatemessage"">" & GetGlobalResourceObject("Login", "ContentText_PasswordUpdated") & "</div></li>"
+                    If Request.QueryString("m") = "u" Then litMessage.Text = "<li><div class=""updatemessage"" style=""position: relative; width: 100%; left: 0;"">" & GetGlobalResourceObject("Login", "ContentText_PasswordUpdated") & "</div></li>"
                     SelectExistingCustomerOption()
                 End If
 
@@ -410,7 +410,7 @@ Partial Class KartrisLogin
                     Dim intSuccess As Integer = UsersBLL.ResetPassword(intUserID, strRandomPassword)
                     If intSuccess = intUserID Then
                         litRecoveryMessage.Text = GetLocalResourceObject("ContentText_CustomerNumberEmailSent") & " " & strEmailAddress
-                        Dim strPasswordResetLink As String = CkartrisBLL.WebShopURL & "CustomerDetails.aspx?ref=" & HttpUtility.UrlEncode(UsersBLL.EncryptSHA256Managed(UsersBLL.EncryptSHA256Managed(strRandomPassword, strOldSalt), strOldSalt))
+                        Dim strPasswordResetLink As String = CkartrisBLL.WebShopURL & "PasswordReset.aspx?ref=" & HttpUtility.UrlEncode(UsersBLL.EncryptSHA256Managed(UsersBLL.EncryptSHA256Managed(strRandomPassword, strOldSalt), strOldSalt))
 
                         Dim strBodyText As String = GetGlobalResourceObject("Email", "EmailText_CustomerNumberDesc") & " " &
                             GetGlobalResourceObject("Kartris", "Config_Webshopname") & vbCrLf & vbCrLf

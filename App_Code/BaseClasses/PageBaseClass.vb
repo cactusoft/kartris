@@ -468,7 +468,7 @@ Public MustInherit Class PageBaseClass
         Dim strUserAccess As String = LCase(GetKartConfig("frontend.users.access"))
         If strUserAccess = "yes" And Not _
             Request.Path.ToString.Contains("/CustomerAccount.aspx") And Not _
-            Request.Path.ToString.Contains("/CustomerDetails.aspx") And Not _
+            Request.Path.ToString.Contains("/PasswordReset.aspx") And Not _
             Request.Path.ToString.ToLower.Contains("callback") And Not _
             User.Identity.IsAuthenticated Then
             Response.Redirect("CustomerAccount.aspx?return=" & HttpContext.Current.Request.RawUrl)

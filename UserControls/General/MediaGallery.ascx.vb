@@ -238,26 +238,29 @@ Partial Class UserControls_Front_MediaGallery
     'thumbnail (if available)
     Function GetThumbPath(ByVal numMediaID As String, ByVal strMediaType As String) As String
         Dim strWebShopURL As String = CkartrisBLL.WebShopURL
-
-        Dim strImagesFolder As String = KartSettingsManager.GetKartConfig("general.uploadfolder") & "Media/"
-        Dim dirMediaImages As New DirectoryInfo(Server.MapPath(strImagesFolder))
         Try
-            For Each objFile As FileInfo In dirMediaImages.GetFiles(numMediaID & "_thumb.*")
-                Return Replace(strImagesFolder, "~/", strWebShopURL) & objFile.Name
-            Next
-        Catch ex As Exception
-            'maybe local files don't match what db means we think we have
-        End Try
+            Dim strImagesFolder As String = KartSettingsManager.GetKartConfig("general.uploadfolder") & "Media/"
+            Dim dirMediaImages As New DirectoryInfo(Server.MapPath(strImagesFolder))
+            Try
+                For Each objFile As FileInfo In dirMediaImages.GetFiles(numMediaID & "_thumb.*")
+                    Return Replace(strImagesFolder, "~/", strWebShopURL) & objFile.Name
+                Next
+            Catch ex As Exception
+                'maybe local files don't match what db means we think we have
+            End Try
 
-        'Media Link doesn't have thumbnail so get the default media type icon
-        strImagesFolder = "~/Images/MediaTypes/"
-        Dim dirMediaIconImages As New DirectoryInfo(Server.MapPath(strImagesFolder))
-        Try
-            For Each objFile As FileInfo In dirMediaIconImages.GetFiles(strMediaType & ".*")
-                Return Replace(strImagesFolder, "~/", strWebShopURL) & objFile.Name
-            Next
+            'Media Link doesn't have thumbnail so get the default media type icon
+            strImagesFolder = "~/Images/MediaTypes/"
+            Dim dirMediaIconImages As New DirectoryInfo(Server.MapPath(strImagesFolder))
+            Try
+                For Each objFile As FileInfo In dirMediaIconImages.GetFiles(strMediaType & ".*")
+                    Return Replace(strImagesFolder, "~/", strWebShopURL) & objFile.Name
+                Next
+            Catch ex As Exception
+                'maybe local files don't match what db means we think we have
+            End Try
         Catch ex As Exception
-            'maybe local files don't match what db means we think we have
+
         End Try
 
         Return Nothing
