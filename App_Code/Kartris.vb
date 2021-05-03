@@ -33,8 +33,8 @@ Imports MimeKit 'new in v3, mail now uses MailKit (nuget)
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 3.1001
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #02/15/2021# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION As Decimal = 3.1002
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #05/03/2021# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
