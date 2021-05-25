@@ -83,7 +83,7 @@ Public Class OrdersBLL
         End Try
     End Function
 
-    Public Shared Sub _Delete(ByVal O_ID As Integer, ByVal blnReturnStock As Boolean)
+    Public Sub _Delete(ByVal O_ID As Integer, ByVal blnReturnStock As Boolean)
         Try
 
             ' Perform the update on the DataTable
@@ -96,7 +96,7 @@ Public Class OrdersBLL
         End Try
     End Sub
 
-    Public Shared Sub _PurgeOrders(ByVal O_PurgeDate As Date)
+    Public Sub _PurgeOrders(ByVal O_PurgeDate As Date)
         Try
 
             ' Perform the update on the DataTable
@@ -273,17 +273,17 @@ Public Class OrdersBLL
         Return 0
     End Function
 
-    Public Shared Function GetOrderByID(ByVal O_ID As Long) As DataTable
+    Public Function GetOrderByID(ByVal O_ID As Long) As DataTable
         Return Adptr.GetData(O_ID)
     End Function
 
-    Public Shared Function _GetParentOrderID(ByVal O_ID As Long) As Long
+    Public Function _GetParentOrderID(ByVal O_ID As Long) As Long
         Return Adptr._GetParentOrderID(O_ID)
     End Function
-    Public Shared Function _GetChildOrderID(ByVal O_ID As Long) As Long
+    Public Function _GetChildOrderID(ByVal O_ID As Long) As Long
         Return Adptr._GetChildOrderID(O_ID)
     End Function
-    Public Shared Function _GetByStatus(ByVal CallMode As ORDERS_LIST_CALLMODE, ByVal intPageNo As Integer, Optional ByVal AffiliateID As Integer = 0, Optional ByVal O_DateRangeStart As Date = Nothing, Optional ByVal O_DateRangeEnd As Date = Nothing, Optional ByVal strGateway As String = "", Optional ByVal strGatewayID As String = "", Optional ByVal Limit As Integer = 50) As DataTable
+    Public Function _GetByStatus(ByVal CallMode As ORDERS_LIST_CALLMODE, ByVal intPageNo As Integer, Optional ByVal AffiliateID As Integer = 0, Optional ByVal O_DateRangeStart As Date = Nothing, Optional ByVal O_DateRangeEnd As Date = Nothing, Optional ByVal strGateway As String = "", Optional ByVal strGatewayID As String = "", Optional ByVal Limit As Integer = 50) As DataTable
         'If date range start parameter is empty then use a valid date
         If O_DateRangeStart = Date.MinValue Then
             O_DateRangeStart = CkartrisDisplayFunctions.NowOffset.Date
@@ -309,7 +309,7 @@ Public Class OrdersBLL
         Return Adptr._GetDataByStatus(System.Enum.GetName(GetType(ORDERS_LIST_CALLMODE), CallMode), AffiliateID, O_DateRangeStart, O_DateRangeEnd, strGateway, strGatewayID, intPageNo, Limit)
     End Function
 
-    Public Shared Function _GetByStatusCount(ByVal CallMode As ORDERS_LIST_CALLMODE, Optional ByVal AffiliateID As Integer = 0, Optional ByVal O_DateRangeStart As Date = Nothing, Optional ByVal O_DateRangeEnd As Date = Nothing, Optional ByVal strGateway As String = "", Optional ByVal strGatewayID As String = "") As Integer
+    Public Function _GetByStatusCount(ByVal CallMode As ORDERS_LIST_CALLMODE, Optional ByVal AffiliateID As Integer = 0, Optional ByVal O_DateRangeStart As Date = Nothing, Optional ByVal O_DateRangeEnd As Date = Nothing, Optional ByVal strGateway As String = "", Optional ByVal strGatewayID As String = "") As Integer
         'If date range start parameter is empty then use a valid date
         If O_DateRangeStart = Date.MinValue Then
             O_DateRangeStart = CkartrisDisplayFunctions.NowOffset.Date
@@ -335,7 +335,7 @@ Public Class OrdersBLL
         Return Adptr._GetByStatusCount(System.Enum.GetName(GetType(ORDERS_LIST_CALLMODE), CallMode), AffiliateID, O_DateRangeStart, O_DateRangeEnd, strGateway, strGatewayID)
     End Function
 
-    Public Shared Function _UpdateStatus(ByVal O_ID As Integer, ByVal O_Sent As Boolean, ByVal O_Paid As Boolean, ByVal O_Shipped As Boolean,
+    Public Function _UpdateStatus(ByVal O_ID As Integer, ByVal O_Sent As Boolean, ByVal O_Paid As Boolean, ByVal O_Shipped As Boolean,
                                          ByVal O_Invoiced As Boolean, ByVal O_Status As String, ByVal O_Notes As String, ByVal O_Cancelled As Boolean) As Integer
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -366,8 +366,8 @@ Public Class OrdersBLL
                     Throw New Exception("ID is 0? Something's not right")
                 End If
 
-                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Orders, _
-                 GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"), _
+                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Orders,
+                 GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"),
                  CreateQuery(cmd), O_ID, sqlConn, savePoint)
 
                 ' If we reach here, no errors, so commit the transaction
@@ -387,7 +387,7 @@ Public Class OrdersBLL
     Public Shared Function _GetInvoiceRows(ByVal O_ID As Integer) As DataTable
         Return InvoiceRowsAdptr.GetInvoiceRows(O_ID)
     End Function
-    Public Shared Function _GetOrderTotalByCustomerID(ByVal CustomerID As Integer) As Double
+    Public Function _GetOrderTotalByCustomerID(ByVal CustomerID As Integer) As Double
         Return Adptr._GetCustomerTotal(CustomerID)
     End Function
 #Region "Payment"
@@ -518,7 +518,7 @@ Public Class OrdersBLL
             End Try
         End Using
     End Function
-    Public Shared Function _GetPaymentByCustomerID(ByVal CustomerID As Integer) As DataTable
+    Public Function _GetPaymentByCustomerID(ByVal CustomerID As Integer) As DataTable
         Return PaymentsAdptr._GetByCustomerID(CustomerID)
     End Function
     Public Shared Function _GetPaymentByID(ByVal PaymentID As Long) As DataTable
@@ -539,7 +539,7 @@ Public Class OrdersBLL
         If Payment_Date = Date.MinValue Then Payment_Date = Date.Today
         Return PaymentsAdptr._GetFilteredListCount(Payment_FilterType, Payment_Gateway, Payment_Date)
     End Function
-    Public Shared Function _GetPaymentTotalByCustomerID(ByVal CustomerID As Integer) As Double
+    Public Function _GetPaymentTotalByCustomerID(ByVal CustomerID As Integer) As Double
         Return PaymentsAdptr._GetCustomerTotal(CustomerID)
     End Function
 #End Region
@@ -558,7 +558,7 @@ Public Class OrdersBLL
     ''' can be rolled back.
     ''' </summary>
     ''' <returns>Returns the newly created order ID</returns>
-    Public Shared Function Add(ByVal C_ID As Integer, ByVal strUserEmailAddress As String, ByVal strUserPassword As String,
+    Public Function Add(ByVal C_ID As Integer, ByVal strUserEmailAddress As String, ByVal strUserPassword As String,
               ByVal BillingAddress As KartrisClasses.Address, ByVal ShippingAddress As KartrisClasses.Address,
               ByVal blnSameShippingAsBilling As Boolean, ByVal BasketObject As Kartris.Basket, ByVal BasketArray As List(Of Kartris.BasketItem),
               ByVal strOrderDetails As String, ByVal strGatewayName As String,
@@ -851,10 +851,10 @@ Public Class OrdersBLL
     ''' <summary>
     ''' This is the method used by the callback (callback.aspx) page to update a successful order.
     ''' </summary>
-    Public Shared Function CallbackUpdate(ByVal O_ID As Long, ByVal O_ReferenceCode As String, ByVal O_LastModified As Date, _
-                                          ByVal O_Sent As Boolean, ByVal O_Invoiced As Boolean, ByVal O_Paid As Boolean, _
-                                          ByVal O_Status As String, ByVal O_CouponCode As String, ByVal O_WLID As Integer, _
-                                          ByVal O_CustomerID As Integer, ByVal GatewayCurrencyID As Short, _
+    Public Function CallbackUpdate(ByVal O_ID As Long, ByVal O_ReferenceCode As String, ByVal O_LastModified As Date,
+                                          ByVal O_Sent As Boolean, ByVal O_Invoiced As Boolean, ByVal O_Paid As Boolean,
+                                          ByVal O_Status As String, ByVal O_CouponCode As String, ByVal O_WLID As Integer,
+                                          ByVal O_CustomerID As Integer, ByVal GatewayCurrencyID As Short,
                                           ByVal O_GatewayName As String, ByVal O_Amount As Double) As Integer
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -922,7 +922,7 @@ Public Class OrdersBLL
 
                 'Try to update customer balance before returning value
                 Try
-                    UsersBLL.UpdateCustomerBalance(O_CustomerID, _
+                    UsersBLL.UpdateCustomerBalance(O_CustomerID,
                                 CDec(_GetPaymentTotalByCustomerID(O_CustomerID) - _GetOrderTotalByCustomerID(O_CustomerID)))
                 Catch ex As Exception
 
@@ -941,7 +941,7 @@ Public Class OrdersBLL
     ''' <summary>
     ''' This method is used to update an order's data field before passing the customer to the payment gateway
     ''' </summary>
-    Public Shared Function DataUpdate(ByVal O_ID As Long, ByVal O_Data As String) As Integer
+    Public Function DataUpdate(ByVal O_ID As Long, ByVal O_Data As String) As Integer
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
             Dim cmd As SqlCommand = sqlConn.CreateCommand

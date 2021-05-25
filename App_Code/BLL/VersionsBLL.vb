@@ -115,7 +115,8 @@ Public Class VersionsBLL
     End Function
 
     Public Shared Function _GetNameByVersionID(ByVal _VersionID As Integer, ByVal _LanguageID As Short) As String
-        Return LanguageElementsBLL.GetElementValue(
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Return objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Versions, LANG_ELEM_FIELD_NAME.Name, _VersionID)
     End Function
 

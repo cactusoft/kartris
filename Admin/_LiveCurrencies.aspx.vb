@@ -56,7 +56,8 @@ Partial Class Admin_LiveCurrencies
         Dim sbdIsoList As New StringBuilder(""), strBaseISO As String = ""
         For Each drwTempCurrency As DataRow In tblTempCurrencies.Rows
             Dim strCurrencyName As String = ""
-            strCurrencyName = CStr(LanguageElementsBLL.GetElementValue(Session("_LANG"), _
+            Dim objLanguageElementsBLL As New LanguageElementsBLL()
+            strCurrencyName = CStr(objLanguageElementsBLL.GetElementValue(Session("_LANG"),
                                     LANG_ELEM_TABLE_TYPE.Currencies, LANG_ELEM_FIELD_NAME.Name, CLng(drwTempCurrency("CUR_ID"))))
 
             If CByte(drwTempCurrency("CUR_ID")) = CurrenciesBLL.GetDefaultCurrency() Then

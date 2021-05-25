@@ -22,44 +22,44 @@ Imports KartSettingsManager
 
 Public Class ProductsBLL
 
-    Private Shared _Adptr As ProductsTblAdptr = Nothing
-    Private Shared _ProdcutCategoryLinkAdptr As ProductCategoryLinkTblAdptr = Nothing
-    Private Shared _RelatedAdptr As RelatedProductsTblAdptr = Nothing
+    Private _Adptr As ProductsTblAdptr = Nothing
+    Private _ProdcutCategoryLinkAdptr As ProductCategoryLinkTblAdptr = Nothing
+    Private _RelatedAdptr As RelatedProductsTblAdptr = Nothing
 
-    Protected Shared ReadOnly Property Adptr() As ProductsTblAdptr
+    Protected ReadOnly Property Adptr() As ProductsTblAdptr
         Get
             _Adptr = New ProductsTblAdptr
             Return _Adptr
         End Get
     End Property
 
-    Protected Shared ReadOnly Property ProductCategoryLinkAdptr() As ProductCategoryLinkTblAdptr
+    Protected ReadOnly Property ProductCategoryLinkAdptr() As ProductCategoryLinkTblAdptr
         Get
             _ProdcutCategoryLinkAdptr = New ProductCategoryLinkTblAdptr
             Return _ProdcutCategoryLinkAdptr
         End Get
     End Property
 
-    Protected Shared ReadOnly Property RelatedAdptr() As RelatedProductsTblAdptr
+    Protected ReadOnly Property RelatedAdptr() As RelatedProductsTblAdptr
         Get
             _RelatedAdptr = New RelatedProductsTblAdptr
             Return _RelatedAdptr
         End Get
     End Property
 
-    Public Shared Function _GetRelatedProductsByParent(ByVal intParentID As Integer) As DataTable
+    Public Function _GetRelatedProductsByParent(ByVal intParentID As Integer) As DataTable
         Return RelatedAdptr._GetRelatedProductsByParent(intParentID)
     End Function
 
-    Public Shared Function GetProductDetailsByID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As DataTable
+    Public Function GetProductDetailsByID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As DataTable
         Return Adptr.GetByID(_ProductID, _LanguageID)
     End Function
 
-    Public Shared Function _GetProductsBySupplier(ByVal numLanguageID As Byte, ByVal numSupplierID As Short) As DataTable
+    Public Function _GetProductsBySupplier(ByVal numLanguageID As Byte, ByVal numSupplierID As Short) As DataTable
         Return Adptr._GetBySupplier(numLanguageID, numSupplierID)
     End Function
 
-    Public Shared Function _GetFeaturedProducts(ByVal numLanguageID As Byte) As DataTable
+    Public Function _GetFeaturedProducts(ByVal numLanguageID As Byte) As DataTable
         Return _Adptr._GetFeaturedProducts(numLanguageID)
     End Function
 
@@ -68,8 +68,9 @@ Public Class ProductsBLL
     'We can also use it on the front end to nullify
     'the UseCombinationPrices object config setting
     'for a product that is not a combinations product.
-    Public Shared Function _NumberOfCombinations(ByVal _ProductID As Integer) As Integer
-        Dim dtbData As DataTable = _Adptr._NumberOfCombinations(_ProductID)
+    Public Function _NumberOfCombinations(ByVal _ProductID As Integer) As Integer
+        Dim Adptr As New ProductsTblAdptr
+        Dim dtbData As DataTable = Adptr._NumberOfCombinations(_ProductID)
         Dim intCombinations As Integer = 0
         For Each drwData As DataRow In dtbData.Rows
             intCombinations = drwData("Combinations")
@@ -135,6 +136,7 @@ Public Class ProductsBLL
     End Function
 
     Public Shared Function GetFeaturedProductForCache() As DataTable
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr.GetFeaturedProducts()
     End Function
 
@@ -145,6 +147,7 @@ Public Class ProductsBLL
 
     Public Shared Function GetNewestProductsForCache() As DataTable
         Dim tblNewestProducts As New DataTable
+        Dim Adptr As New ProductsTblAdptr
         For Each rowLanguage As DataRow In LanguagesBLL.GetLanguages.Rows
             tblNewestProducts.Merge(Adptr.GetNewestProducts(rowLanguage("LANG_ID")), False)
         Next
@@ -161,6 +164,7 @@ Public Class ProductsBLL
         Dim datRange As Date = Today.AddDays(-CDbl(GetKartConfig("frontend.display.topsellers.days")))
         If datRange = Today Then datRange = Today.AddYears(-100)
         Dim intTopSellingCount As Integer = CInt(GetKartConfig("frontend.display.topsellers.quantity"))
+        Dim Adptr As New ProductsTblAdptr
         For Each rowLanguage As DataRow In LanguagesBLL.GetLanguages.Rows
             tblTopListProducts.Merge(Adptr.GetTopList(intTopSellingCount, rowLanguage("LANG_ID"), datRange), False)
         Next
@@ -169,6 +173,7 @@ Public Class ProductsBLL
 
     Public Shared Function _SearchProductByName(ByVal _Key As String, ByVal _LanguageID As Byte) As DataTable
         Dim tbl As New DataTable
+        Dim Adptr As New ProductsTblAdptr
         tbl = Adptr._SearchByName(_Key, _LanguageID)
         If tbl.Rows.Count = 0 Then
             tbl = Adptr._GetData(_LanguageID)
@@ -180,6 +185,7 @@ Public Class ProductsBLL
                                             ByVal _PageIndx As Short, ByVal _RowsPerPage As Short, _
                                             ByVal _CGroupID As Short, ByRef _TotalNoOfProducts As Integer) As DataTable
         _TotalNoOfProducts = GetTotalProductsInCategory_s(_CategoryID, _LanguageID, _CGroupID)
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr.GetProductsPageByCategoryID(_LanguageID, _CategoryID, _PageIndx, _RowsPerPage, _CGroupID)
     End Function
     Public Shared Function GetProductsPageByCategory(Request As HttpRequest, ByVal _CategoryID As Integer, ByVal _LanguageID As Short, _
@@ -197,6 +203,7 @@ Public Class ProductsBLL
     Public Shared Function _GetProductsPageByCategory(ByVal _CategoryID As Integer, ByVal _LanguageID As Short, _
                                             ByVal _PageIndx As Short, ByVal _RowsPerPage As Short, ByRef _TotalNoOfProducts As Integer) As DataTable
         _TotalNoOfProducts = _GetTotalProductsInCategory_s(_CategoryID, _LanguageID)
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr._GetProductsPageByCategoryID(_LanguageID, _CategoryID, _PageIndx, _RowsPerPage)
     End Function
 
@@ -229,42 +236,49 @@ Public Class ProductsBLL
     End Function
 
     Public Shared Function GetRelatedProducts(ByVal _ProductID As Integer, ByVal _LanguageId As Short, ByVal _CustomerGroupID As Short) As DataTable
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr.GetRelatedProducts(_ProductID, _LanguageId, _CustomerGroupID)
     End Function
 
     Public Shared Function GetPeopleWhoBoughtThis(ByVal ProductID As Integer, ByVal LanguageID As Short, ByVal numPeopleWhoBoughtThis As Integer) As DataTable
         Dim intType As Boolean
         If KartSettingsManager.GetKartConfig("frontend.crossselling.peoplewhoboughtthis.type") = "y" Then intType = True Else intType = False
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr.GetPeopleWhoBoughtThis(ProductID, LanguageID, numPeopleWhoBoughtThis, intType)
     End Function
 
     Public Shared Function GetParentCategories(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As DataTable
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr.GetParentCategories(_LanguageID, _ProductID)
     End Function
 
     Public Shared Function GetNameByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As String
-        Return LanguageElementsBLL.GetElementValue( _
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Return objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Products, LANG_ELEM_FIELD_NAME.Name, _ProductID)
     End Function
 
     Public Shared Function GetMetaDescriptionByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As String
-        Dim strMetaDescription As String = LanguageElementsBLL.GetElementValue( _
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Dim strMetaDescription As String = objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Products, LANG_ELEM_FIELD_NAME.MetaDescription, _ProductID)
         If String.IsNullOrEmpty(strMetaDescription) Or strMetaDescription = "# -LE- #" Then _
-            strMetaDescription = LanguageElementsBLL.GetElementValue(_LanguageID, LANG_ELEM_TABLE_TYPE.Products, LANG_ELEM_FIELD_NAME.Description, _ProductID)
+            strMetaDescription = objLanguageElementsBLL.GetElementValue(_LanguageID, LANG_ELEM_TABLE_TYPE.Products, LANG_ELEM_FIELD_NAME.Description, _ProductID)
         If strMetaDescription = "# -LE- #" Then strMetaDescription = Nothing
         Return Left(StripHTML(strMetaDescription), 160)
     End Function
 
     Public Shared Function GetMetaKeywordsByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As String
-        Dim strMetaKeywords As String = LanguageElementsBLL.GetElementValue( _
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Dim strMetaKeywords As String = objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Products, LANG_ELEM_FIELD_NAME.MetaKeywords, _ProductID)
         If strMetaKeywords = "# -LE- #" Then strMetaKeywords = Nothing
         Return StripHTML(strMetaKeywords)
     End Function
 
     Public Shared Function _GetNameByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As String
-        Return LanguageElementsBLL.GetElementValue( _
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Return objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Products, LANG_ELEM_FIELD_NAME.Name, _ProductID)
     End Function
 
@@ -283,10 +297,12 @@ Public Class ProductsBLL
     End Function
 
     Public Shared Function _GetProductInfoByID(ByVal pProductID As Integer) As DataTable
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr._GetProductInfoByID(pProductID)
     End Function
 
     Public Shared Function _GetCategoriesByProductID(ByVal pProductID As Integer) As DataTable
+        Dim ProductCategoryLinkAdptr As New ProductCategoryLinkTblAdptr
         Return ProductCategoryLinkAdptr._GetCategoriesByProductID(pProductID)
     End Function
 
@@ -672,10 +688,12 @@ Public Class ProductsBLL
     End Function
 
     Public Shared Sub _ChangeSortValue(ByVal numCategoryID As Integer, ByVal numProductID As Integer, ByVal chrDirection As Char)
+        Dim ProductCategoryLinkAdptr As New ProductCategoryLinkTblAdptr()
         ProductCategoryLinkAdptr._ChangeSortValue(numProductID, numCategoryID, chrDirection)
     End Sub
 
     Public Shared Function GetRichSnippetProperties(numProductID As Integer, numLanguageID As Byte) As DataTable
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr.GetRichSnippetProperties(numProductID, numLanguageID)
     End Function
 

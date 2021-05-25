@@ -957,7 +957,8 @@ Public Class SiteMapHelper
         If numCategoryID = 0 Then Return ""
         Dim strCategoryNameInURL As String = ""
         If blnCheckURLName Then
-            strCategoryNameInURL = LanguageElementsBLL.GetElementValue(
+            Dim objLanguageElementsBLL As New LanguageElementsBLL()
+            strCategoryNameInURL = objLanguageElementsBLL.GetElementValue(
             numLanguageID, CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Categories, CkartrisEnumerations.LANG_ELEM_FIELD_NAME.URLName, numCategoryID)
         End If
 
@@ -972,7 +973,8 @@ Public Class SiteMapHelper
     Private Shared Function GetProductName(ByVal numProductID As Integer, ByVal numLanguageID As Short, Optional ByVal blnCheckURLName As Boolean = False) As String
         Dim strProductNameInURL As String = ""
         If blnCheckURLName Then
-            strProductNameInURL = LanguageElementsBLL.GetElementValue(
+            Dim objLanguageElementsBLL As New LanguageElementsBLL()
+            strProductNameInURL = objLanguageElementsBLL.GetElementValue(
             numLanguageID, CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Products, CkartrisEnumerations.LANG_ELEM_FIELD_NAME.URLName, numProductID)
         End If
 

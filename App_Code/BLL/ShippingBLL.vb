@@ -75,7 +75,8 @@ Public Class ShippingBLL
     End Function
 
     Public Shared Function _GetShippingMethodNameByID(ByVal numMethodID As Byte, ByVal numLanguageID As Byte) As String
-        Return LanguageElementsBLL.GetElementValue( _
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Return objLanguageElementsBLL.GetElementValue(
           numLanguageID, LANG_ELEM_TABLE_TYPE.ShippingMethods, LANG_ELEM_FIELD_NAME.Name, numMethodID)
     End Function
 

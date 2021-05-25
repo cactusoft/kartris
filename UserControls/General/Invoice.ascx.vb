@@ -424,8 +424,9 @@ Partial Class UserControls_General_Invoice
 
             'Add currency description row, separate from total so can keep final column
             'width reasonable
+            Dim objLanguageElementsBLL As New LanguageElementsBLL()
             CType(e.Item.FindControl("litCurrencyDescription"), Literal).Text = "(" & CurrenciesBLL.CurrencyCode(numOrderCurrency) & " - " &
-                                            LanguageElementsBLL.GetElementValue(_OrderLanguageID,
+                                            objLanguageElementsBLL.GetElementValue(_OrderLanguageID,
                                               CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                             CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, numOrderCurrency) & ")"
 
@@ -434,7 +435,7 @@ Partial Class UserControls_General_Invoice
             If numGatewayCurrency <> numOrderCurrency Then
                 CType(e.Item.FindControl("phdTotalGateway"), PlaceHolder).Visible = True
                 CType(e.Item.FindControl("litTotalGateway"), Literal).Text = "(" & CurrenciesBLL.CurrencyCode(numGatewayCurrency) & " - " &
-                            LanguageElementsBLL.GetElementValue(_OrderLanguageID,
+                            objLanguageElementsBLL.GetElementValue(_OrderLanguageID,
                               CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                             CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, numGatewayCurrency) & ") "
                 CType(e.Item.FindControl("litTotalGateway"), Literal).Text += CurrenciesBLL.FormatCurrencyPrice(numGatewayCurrency, numFinalTotalPriceInTaxGateway)

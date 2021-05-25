@@ -42,7 +42,8 @@ Partial Class Admin_FeaturedProducts
         mvwFeaturedProducts.SetActiveView(viwProductList)
         lbxFeaturedProducts.Items.Clear()
         Try
-            Dim tblFeaturedProducts As DataTable = ProductsBLL._GetFeaturedProducts(Session("_LANG"))
+            Dim objProductsBLL As New ProductsBLL
+            Dim tblFeaturedProducts As DataTable = objProductsBLL._GetFeaturedProducts(Session("_LANG"))
             If tblFeaturedProducts.Rows.Count = 0 Then mvwFeaturedProducts.SetActiveView(viwNoItems)
             If tblFeaturedProducts.Rows.Count > 0 Then
                 tblFeaturedProducts.DefaultView.Sort = "ProductPriority DESC"

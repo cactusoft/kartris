@@ -39,8 +39,9 @@ Partial Class UserControls_Back_OrderDetails
 
             Try
                 'Get the Order ID QueryString - if it won't convert to integer then force return to Orders List page
+                Dim objOrdersBLL As New OrdersBLL
                 ViewState("numOrderID") = CType(Request.QueryString("OrderID"), Integer)
-                fvwOrderDetails.DataSource = OrdersBLL.GetOrderByID(ViewState("numOrderID"))
+                fvwOrderDetails.DataSource = objOrdersBLL.GetOrderByID(ViewState("numOrderID"))
                 fvwOrderDetails.DataBind()
                 UC_CustomerOrder.OrderID = ViewState("numOrderID")
                 UC_CustomerOrder.ShowOrderSummary = False
@@ -97,9 +98,10 @@ Partial Class UserControls_Back_OrderDetails
 
         Dim dblOrderTotalPrice As Single = CSng(litOrderTotalPrice.Text)
         Dim srtOrderCurrencyID As Short = CShort(hidOrderCurrencyID.Value)
+        Dim objOrdersBLL As New OrdersBLL
 
         'Hide edit button if order data is empty and if order is not flagged as replaced
-        If Trim(hidOrderData.Value) <> "" And OrdersBLL._GetChildOrderID(ViewState("numOrderID")) = 0 Then
+        If Trim(hidOrderData.Value) <> "" And objOrdersBLL._GetChildOrderID(ViewState("numOrderID")) = 0 Then
             DirectCast(fvwOrderDetails.FindControl("lnkBtnEdit"), LinkButton).Visible = True
         Else
             DirectCast(fvwOrderDetails.FindControl("lnkBtnEdit"), LinkButton).Visible = False
@@ -247,7 +249,8 @@ Partial Class UserControls_Back_OrderDetails
         End If
 
         'This line is actually the one that updates the order - not the built-in FormView update. Gives us more flexibility - needs to catch some thingies. =)
-        If OrdersBLL._UpdateStatus(ViewState("numOrderID"), chkOrderSent.Checked, chkOrderPaid.Checked, chkOrderShipped.Checked,
+        Dim objOrdersBLL As New OrdersBLL
+        If objOrdersBLL._UpdateStatus(ViewState("numOrderID"), chkOrderSent.Checked, chkOrderPaid.Checked, chkOrderShipped.Checked,
                                 chkOrderInvoiced.Checked, txtOrderStatus.Text, txtOrderNotes.Text, chkOrderCancelled.Checked) > 0 Then
             If KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y" Then
                 Try
@@ -290,9 +293,10 @@ Partial Class UserControls_Back_OrderDetails
 
         Dim objBasketTemp As Basket = New Basket
         Dim objBasket As Basket = New Basket
+        Dim objOrdersBLL As New OrdersBLL
 
         'Load first basket from order XML, deserialized
-        Dim dtOrderRecord As DataTable = OrdersBLL.GetOrderByID(NumOrderId)
+        Dim dtOrderRecord As DataTable = objOrdersBLL.GetOrderByID(NumOrderId)
         If dtOrderRecord IsNot Nothing Then
             Dim strOrderData As String = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_Data"))
             Dim arrOrder As Array = Split(strOrderData, "|||")
@@ -330,7 +334,8 @@ Partial Class UserControls_Back_OrderDetails
         Dim blnReturnStock As Boolean
         Dim blnOrigO_Sent As Boolean = CBool(DirectCast(fvwOrderDetails.FindControl("hidOrigOrderSent"), HiddenField).Value)
         If KartSettingsManager.GetKartConfig("backend.orders.returnstockondelete") <> "n" And blnOrigO_Sent Then blnReturnStock = True Else blnReturnStock = False
-        OrdersBLL._Delete(ViewState("numOrderID"), blnReturnStock)
+        Dim objOrdersBLL As New OrdersBLL
+        objOrdersBLL._Delete(ViewState("numOrderID"), blnReturnStock)
         RaiseEvent ShowMasterUpdate()
         Response.Redirect(ViewState("Referer"))
     End Sub

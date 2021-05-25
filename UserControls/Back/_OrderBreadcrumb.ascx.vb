@@ -17,16 +17,17 @@ Partial Class UserControls_Back_OrderBreadcrumb
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not IsPostBack Then
             Dim intOrderID As Long = CType(Request.QueryString("OrderID"), Integer)
+            Dim objOrdersBLL As New OrdersBLL
             If intOrderID > 0 Then
                 Dim blnIsOrderChild As Boolean = True
                 Dim intChildID As Long = 0
                 'Check if this order has a parent
-                Dim intParentID As Long = OrdersBLL._GetParentOrderID(intOrderID)
+                Dim intParentID As Long = objOrdersBLL._GetParentOrderID(intOrderID)
                 'If it doesn't have a parent then assume that its the parent
                 If intParentID = 0 Then
                     blnIsOrderChild = False
                     intParentID = intOrderID
-                    intChildID = OrdersBLL._GetChildOrderID(intOrderID)
+                    intChildID = objOrdersBLL._GetChildOrderID(intOrderID)
                 Else
                     intChildID = intOrderID
                 End If

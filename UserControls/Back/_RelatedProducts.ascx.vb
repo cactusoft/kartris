@@ -22,7 +22,8 @@ Partial Class UserControls_Back_RelatedProducts
 
     Public Sub LoadRelatedProducts()
         lbxRelatedProducts.Items.Clear()
-        Dim tblRelatedProducts As DataTable = ProductsBLL._GetRelatedProductsByParent(_GetProductID())
+        Dim objProductsBLL As New ProductsBLL
+        Dim tblRelatedProducts As DataTable = objProductsBLL._GetRelatedProductsByParent(_GetProductID())
         For Each row As DataRow In tblRelatedProducts.Rows
             AddProductToList(row("RP_ChildID"))
         Next
@@ -31,7 +32,8 @@ Partial Class UserControls_Back_RelatedProducts
     Private Sub AddProductToList(ByVal intProductID As Integer)
 
         If lbxRelatedProducts.Items.FindByValue(CStr(intProductID)) Is Nothing Then
-            Dim strItemName As String = ProductsBLL._GetNameByProductID(intProductID, 1)
+            Dim objProductsBLL As New ProductsBLL
+            Dim strItemName As String = objProductsBLL._GetNameByProductID(intProductID, 1)
             If Not strItemName Is Nothing Then
                 lbxRelatedProducts.Items.Add(New ListItem(strItemName, CStr(intProductID)))
             Else

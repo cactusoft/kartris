@@ -35,8 +35,9 @@ Partial Class UserControls_Front_CustomerBalance
         End Try
 
         'Get orders for user and total them, set literal to this value
-        Dim dblOrdersTotal As Double = OrdersBLL._GetOrderTotalByCustomerID(numCustomerID) 'total value of orders made
-        Dim dblPaymentsTotal As Double = OrdersBLL._GetPaymentTotalByCustomerID(numCustomerID) 'total payments made
+        Dim objOrdersBLL As New OrdersBLL
+        Dim dblOrdersTotal As Double = objOrdersBLL._GetOrderTotalByCustomerID(numCustomerID) 'total value of orders made
+        Dim dblPaymentsTotal As Double = objOrdersBLL._GetPaymentTotalByCustomerID(numCustomerID) 'total payments made
         Dim dblUpdatedBalance As Double = dblPaymentsTotal - dblOrdersTotal
 
         litCustomerBalance.Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, dblUpdatedBalance)

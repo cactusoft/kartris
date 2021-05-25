@@ -160,7 +160,8 @@ Partial Class _ProductOptionGroups
 
                 'If is combinations product, the stock value is set at version/combination
                 'level, not for the base version
-                If ProductsBLL._NumberOfCombinations(CInt(litProductID.Text)) > 0 Then
+                Dim objProductsBLL As New ProductsBLL
+                If objProductsBLL._NumberOfCombinations(CInt(litProductID.Text)) > 0 Then
                     'Is combinations product
                     'Hide the stock level on first tab
                     phdStockQuantity.Visible = False

@@ -58,7 +58,8 @@ Public Class PromotionsBLL
         Return Adptr.GetByProductID(_ProductID, _LanguageID, NowOffset, numPromotionID)
     End Function
     Public Shared Function GetPromotionName(ByVal numPromotionID As Integer, ByVal numLanguageID As Short) As String
-        Dim strName As String = LanguageElementsBLL.GetElementValue(numLanguageID, LANG_ELEM_TABLE_TYPE.Promotions, LANG_ELEM_FIELD_NAME.Name, numPromotionID)
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Dim strName As String = objLanguageElementsBLL.GetElementValue(numLanguageID, LANG_ELEM_TABLE_TYPE.Promotions, LANG_ELEM_FIELD_NAME.Name, numPromotionID)
         If strName = "# -LE- #" Then Return Nothing
         Return strName
     End Function

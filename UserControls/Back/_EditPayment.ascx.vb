@@ -177,8 +177,9 @@ Partial Class UserControls_Back_EditPayment
 
                 Dim numOrderID As Long = CLng(strOrderID)
                 Dim tblOrder As New DataTable
+                Dim objOrdersBLL As New OrdersBLL
 
-                tblOrder = OrdersBLL.GetOrderByID(numOrderID)
+                tblOrder = objOrdersBLL.GetOrderByID(numOrderID)
 
                 If tblOrder.Rows.Count > 0 Then
 

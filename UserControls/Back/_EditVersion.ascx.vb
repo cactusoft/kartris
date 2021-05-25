@@ -27,7 +27,8 @@ Partial Class _EditVersion
     Public Event NeedCategoryRefresh()
 
     Dim numProductID As Int64 = _GetProductID()
-    Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", numProductID) = "1", True, False) And ProductsBLL._NumberOfCombinations(numProductID) > 0
+    Dim objProductsBLL As New ProductsBLL
+    Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", numProductID) = "1", True, False) And objProductsBLL._NumberOfCombinations(numProductID) > 0
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -90,7 +91,7 @@ Partial Class _EditVersion
     ''' <param name="blnClone"></param>
     ''' <remarks></remarks>
     Public Sub CreateVersionData(ByVal numVersionID As Long, Optional ByVal blnClone As Boolean = False)
-
+        Dim objProductsBLL As New ProductsBLL
         litVersionID.Text = numVersionID
 
         If GetVersionID() = 0 Then  '' new
@@ -106,7 +107,7 @@ Partial Class _EditVersion
         chkClone.Checked = blnClone
 
         '' check the product type to know if we should disable some fields
-        If ProductsBLL._GetProductType_s(_GetProductID()) = "s" Then
+        If objProductsBLL._GetProductType_s(_GetProductID()) = "s" Then
             _UC_LangContainer.SetFieldEditable(LANG_ELEM_FIELD_NAME.Name, False)
             _UC_LangContainer.SetFieldEditable(LANG_ELEM_FIELD_NAME.Description, False)
         End If
@@ -123,7 +124,8 @@ Partial Class _EditVersion
             _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.Versions, False, GetVersionID())
         End If
         '' check the product type to know if we should disable some fields
-        If ProductsBLL._GetProductType_s(_GetProductID()) = "s" Then
+        Dim objProductsBLL As New ProductsBLL
+        If objProductsBLL._GetProductType_s(_GetProductID()) = "s" Then
             _UC_LangContainer.SetFieldEditable(LANG_ELEM_FIELD_NAME.Name, False)
             _UC_LangContainer.SetFieldEditable(LANG_ELEM_FIELD_NAME.Description, False)
         End If
@@ -135,7 +137,8 @@ Partial Class _EditVersion
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub SetVersionType()
-        Select ProductsBLL._GetProductType_s(_GetProductID())
+        Dim objProductsBLL As New ProductsBLL
+        Select Case objProductsBLL._GetProductType_s(_GetProductID())
             Case "m" '' Multiple Version Product
                 ddlVersionType.SelectedValue = "v"
             Case "o" '' Optional Product

@@ -62,17 +62,18 @@ Partial Class UserControls_Back_UserDetails
                         RaiseEvent _UCEvent_DataUpdated()
                         ViewState("isNewUser") = Nothing
                     Else
-                        Dim dblOrdersTotal As Double = OrdersBLL._GetOrderTotalByCustomerID(GetCustomerID())
-                        Dim dblPaymentsTotal As Double = OrdersBLL._GetPaymentTotalByCustomerID(GetCustomerID())
+                        Dim objOrdersBLL As New OrdersBLL
+                        Dim dblOrdersTotal As Double = objOrdersBLL._GetOrderTotalByCustomerID(GetCustomerID())
+                        Dim dblPaymentsTotal As Double = objOrdersBLL._GetPaymentTotalByCustomerID(GetCustomerID())
                         If Not (dblOrdersTotal = 0 And dblPaymentsTotal = 0) Then
                             Dim dblCustomerBalance As Double = CkartrisDataManipulation.FixNullFromDB(dtUserDetails(0)("U_CustomerBalance"))
                             Dim dblUpdatedBalance As Double = dblPaymentsTotal - dblOrdersTotal
-                            Dim dtbUserOrders As DataTable = OrdersBLL._GetByStatus(OrdersBLL.ORDERS_LIST_CALLMODE.CUSTOMER, 0, , , , , GetCustomerID())
+                            Dim dtbUserOrders As DataTable = objOrdersBLL._GetByStatus(OrdersBLL.ORDERS_LIST_CALLMODE.CUSTOMER, 0, , , , , GetCustomerID())
                             'Filter to show only finished orders and those that were not cancelled
                             Dim drwFiltered As DataRow() = dtbUserOrders.Select("CO_OrderID IS NULL AND O_SENT = 1")
                             gvwCustomerOrders.DataSource = drwFiltered
                             gvwCustomerOrders.DataBind()
-                            gvwCustomerPayments.DataSource = OrdersBLL._GetPaymentByCustomerID(GetCustomerID())
+                            gvwCustomerPayments.DataSource = objOrdersBLL._GetPaymentByCustomerID(GetCustomerID())
                             gvwCustomerPayments.DataBind()
                             litOrdersTotalValue.Text = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, dblOrdersTotal)
                             litPaymentsTotalValue.Text = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, dblPaymentsTotal)

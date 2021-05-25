@@ -184,8 +184,8 @@ Partial Class ProductPromotions
             drwTemp.Item("PROM_ID") = arrPromotionIDs(i)
             drwTemp.Item("PROM_TEXT") = arrPromotionText(i)
             drwTemp.Item("PROM_Name") = GetPromotionName(CInt(arrPromotionIDs(i)))
-
-            If Not LanguageElementsBLL.GetElementValue(Session("LANG"), _
+            Dim objLanguageElementsBLL As New LanguageElementsBLL()
+            If Not objLanguageElementsBLL.GetElementValue(Session("LANG"),
                     LANG_ELEM_TABLE_TYPE.Promotions, LANG_ELEM_FIELD_NAME.Name, CInt(arrPromotionIDs(i))) Is Nothing Then
                 tblPromotionsSummary.Rows.Add(drwTemp)
             End If

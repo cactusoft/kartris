@@ -609,9 +609,10 @@ Partial Class UserControls_Back_CreateOrder
                     sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) &
                          IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & vbCrLf)
                 End If
+                Dim objLanguageElementsBLL As New LanguageElementsBLL()
                 sbdBodyText.Append(" " & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
                                    " (" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
-                                        LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                        objLanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
                                         CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                         CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, CUR_ID) &
                                     ")" & vbCrLf)
@@ -624,7 +625,7 @@ Partial Class UserControls_Back_CreateOrder
                              IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & "<br/>")
                     End If
                     sbdHTMLOrderContents.Append("(" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
-                                                    LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                                    objLanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
                                                     CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                                     CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, CUR_ID) &
                                                 ") <strong>" & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
@@ -645,7 +646,7 @@ Partial Class UserControls_Back_CreateOrder
                     sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & vbCrLf)
                     sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) &
                                        " (" & CurrenciesBLL.CurrencyCode(intGatewayCurrency) & " - " &
-                                           LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                           objLanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
                                            CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                            CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
                                          ")" & vbCrLf)
@@ -656,7 +657,7 @@ Partial Class UserControls_Back_CreateOrder
                         sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & "<br/>")
                         sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) &
                                                     " (" & CurrenciesBLL.CurrencyCode(intGatewayCurrency) & " - " &
-                                                       LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                                       objLanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
                                                        CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                                        CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
                                                      ")" & "<br/>")
@@ -932,7 +933,8 @@ Partial Class UserControls_Back_CreateOrder
 
 
                 'Create the order record
-                O_ID = OrdersBLL.Add(C_ID, txtOrderCustomerEmail.Text, txtNewPassword.Text, _UC_BillingAddress.SelectedAddress,
+                Dim objOrdersBLL As New OrdersBLL
+                O_ID = objOrdersBLL.Add(C_ID, txtOrderCustomerEmail.Text, txtNewPassword.Text, _UC_BillingAddress.SelectedAddress,
                                      _UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket,
                                       BasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID,
                                      intGatewayCurrency, chkSendOrderUpdateEmail.Checked, _UC_BasketMain.SelectedShippingMethod, numGatewayTotalPrice,
@@ -1032,7 +1034,7 @@ Partial Class UserControls_Back_CreateOrder
                     Session("objOrder") = Payment.Serialize(objOrder)
 
                     'update data field with serialized order and basket objects and selected shipping method id - this allows us to edit this order later if needed
-                    OrdersBLL.DataUpdate(O_ID, Session("objOrder") & "|||" & Payment.Serialize(objBasket) & "|||" & _UC_BasketMain.SelectedShippingID)
+                    objOrdersBLL.DataUpdate(O_ID, Session("objOrder") & "|||" & Payment.Serialize(objBasket) & "|||" & _UC_BasketMain.SelectedShippingID)
 
                     If LCase(clsPlugin.GatewayType) = "local" Then
                         '---------------------------------------
@@ -1096,7 +1098,7 @@ Partial Class UserControls_Back_CreateOrder
                                 '---------------------------------------
                                 'CREATE DATATABLE OF ORDER
                                 '---------------------------------------
-                                Dim tblOrder As DataTable = OrdersBLL.GetOrderByID(O_ID)
+                                Dim tblOrder As DataTable = objOrdersBLL.GetOrderByID(O_ID)
 
                                 Dim O_CouponCode As String = ""
                                 Dim O_TotalPriceGateway As Double = 0
@@ -1183,7 +1185,7 @@ Partial Class UserControls_Back_CreateOrder
                                         '---------------------------------------
                                         'UPDATE THE ORDER RECORD
                                         '---------------------------------------
-                                        Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True,
+                                        Dim intUpdateResult As Integer = objOrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True,
                                                                                                   blnCheckInvoicedOnPayment,
                                                                                                   blnCheckReceivedOnPayment,
                                                                                                   strOrderTimeText,
@@ -1303,7 +1305,7 @@ Partial Class UserControls_Back_CreateOrder
                         '---------------------------------------
                         'UPDATE THE ORDER RECORD
                         '---------------------------------------
-                        Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, "", CkartrisDisplayFunctions.NowOffset, True,
+                        Dim intUpdateResult As Integer = objOrdersBLL.CallbackUpdate(O_ID, "", CkartrisDisplayFunctions.NowOffset, True,
                                                                                   True,
                                                                                   False,
                                                                                   Payment.Serialize(objBasket),

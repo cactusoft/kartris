@@ -72,7 +72,8 @@ Partial Class ProductView
 
         'Gets the details of the current product
         Dim tblProducts As New DataTable
-        tblProducts = ProductsBLL.GetProductDetailsByID(_ProductID, _LanguageID)
+        Dim objProductsBLL As New ProductsBLL
+        tblProducts = objProductsBLL.GetProductDetailsByID(_ProductID, _LanguageID)
 
         'If there is no products returned, then go to the categories page.
         If tblProducts.Rows.Count = 0 Then _IsProductExit = False : Exit Sub
@@ -123,7 +124,7 @@ Partial Class ProductView
         fvwProduct.DataSource = tblProducts
         fvwProduct.DataBind()
 
-        Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", ProductID) = "1", True, False) And ProductsBLL._NumberOfCombinations(ProductID) > 0
+        Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", ProductID) = "1", True, False) And objProductsBLL._NumberOfCombinations(ProductID) > 0
 
         'Create the image view 
         UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_ProductImage, _

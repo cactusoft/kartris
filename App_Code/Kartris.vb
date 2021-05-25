@@ -1836,12 +1836,13 @@ Public NotInheritable Class CkartrisBLL
         If GetKartConfig("general.pushnotifications.enabled") = "y" Then
             Try
                 Dim DataValue As Long = 0
+                Dim objOrdersBLL As New OrdersBLL
                 If DataType.ToLower = "s" Then
                     Dim numUnassignedTickets As Integer, numAwaitingTickets As Integer
                     TicketsBLL._TicketsCounterSummary(numUnassignedTickets, numAwaitingTickets, 0)
                     DataValue = numUnassignedTickets
                 ElseIf DataType.ToLower = "o" Then
-                    DataValue = OrdersBLL._GetByStatusCount(OrdersBLL.ORDERS_LIST_CALLMODE.INVOICE)
+                    DataValue = objOrdersBLL._GetByStatusCount(OrdersBLL.ORDERS_LIST_CALLMODE.INVOICE)
                 End If
 
                 Dim svcNotifications As New com.kartris.livetile.Service1

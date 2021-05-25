@@ -65,7 +65,8 @@ Partial Class Admin_Suppliers
         gvwLinkedProducts.DataBind()
 
         Dim tblLinkedProducts As New DataTable
-        tblLinkedProducts = ProductsBLL._GetProductsBySupplier(Session("_LANG"), GetSupplierID())
+        Dim objProductsBLL As New ProductsBLL
+        tblLinkedProducts = objProductsBLL._GetProductsBySupplier(Session("_LANG"), GetSupplierID())
 
         If tblLinkedProducts.Rows.Count = 0 Then
             pnlNoLinkedProducts.Visible = True

@@ -147,7 +147,8 @@ Partial Class Callback
                 If clsPlugin.CallbackSuccessful Then
 
                     Dim O_ID As Integer = clsPlugin.CallbackOrderID
-                    Dim tblOrder As DataTable = OrdersBLL.GetOrderByID(O_ID)
+                    Dim objOrdersBLL As New OrdersBLL
+                    Dim tblOrder As DataTable = objOrdersBLL.GetOrderByID(O_ID)
 
                     Dim O_CouponCode As String = ""
                     Dim O_TotalPriceGateway As Double = 0
@@ -227,7 +228,7 @@ Partial Class Callback
                             'Set invoiced and received checkboxes, depending on
                             'config settings
                             '-----------------------------------------------------
-                            Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True,
+                            Dim intUpdateResult As Integer = objOrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True,
                                                                                       blnCheckInvoicedOnPayment,
                                                                                       blnCheckReceivedOnPayment,
                                                                                       GetGlobalResourceObject("Email", "EmailText_OrderTime") & " " & CkartrisDisplayFunctions.NowOffset,
@@ -236,7 +237,7 @@ Partial Class Callback
                                 Try
                                     Dim notes As String = "Multibanco order with Entity: " & strMultibancoData(2).Split(":")(1) &
                                                        " and Reference:" & strMultibancoData(3).Split(":")(1)
-                                    OrdersBLL._UpdateStatus(O_ID,
+                                    objOrdersBLL._UpdateStatus(O_ID,
                                                             True,
                                                             True,
                                                             tblOrder.Rows(0)("O_Shipped"),

@@ -37,7 +37,7 @@ Public Class LanguageElementsBLL
         Return Adptr.GetDataByLanguageID(_LanguageID)
     End Function
 
-    Public Shared Function GetElementValue(ByVal _LanguageID As Short, ByVal _TypeID As LANG_ELEM_TABLE_TYPE,
+    Public Function GetElementValue(ByVal _LanguageID As Short, ByVal _TypeID As LANG_ELEM_TABLE_TYPE,
                                         ByVal _FieldID As LANG_ELEM_FIELD_NAME, ByVal _ParentID As Long) As String
         'In v2.9014 we modified this a little to make it more resilient. From time
         'to time, sites with very large numbers of products seem to get OOps messages
@@ -112,11 +112,11 @@ Public Class LanguageElementsBLL
         Return False
     End Function
 
-    Public Shared Function _AddLanguageElements( _
-                            ByVal ptblElements As DataTable, _
-                            ByVal enumType As LANG_ELEM_TABLE_TYPE, _
-                            ByVal ItemID As Long, _
-                            ByVal sqlConn As SqlClient.SqlConnection, _
+    Public Shared Function _AddLanguageElements(
+                            ByVal ptblElements As DataTable,
+                            ByVal enumType As LANG_ELEM_TABLE_TYPE,
+                            ByVal ItemID As Long,
+                            ByVal sqlConn As SqlClient.SqlConnection,
                             ByVal savePoint As SqlClient.SqlTransaction) As Boolean
         Try
             Dim cmd As New SqlClient.SqlCommand("_spKartrisLanguageElements_Add", sqlConn)
@@ -139,11 +139,11 @@ Public Class LanguageElementsBLL
 
         Return False
     End Function
-    Public Shared Function _UpdateLanguageElements( _
-                            ByVal ptblElements As DataTable, _
-                            ByVal enumType As LANG_ELEM_TABLE_TYPE, _
-                            ByVal ItemID As Long, _
-                            ByVal sqlConn As SqlClient.SqlConnection, _
+    Public Shared Function _UpdateLanguageElements(
+                            ByVal ptblElements As DataTable,
+                            ByVal enumType As LANG_ELEM_TABLE_TYPE,
+                            ByVal ItemID As Long,
+                            ByVal sqlConn As SqlClient.SqlConnection,
                             ByVal savePoint As SqlClient.SqlTransaction) As Boolean
         '' No need to update the languageElements, will send nothing as parameter (like Update Basic Info.)
         If ptblElements Is Nothing Then Return True
@@ -167,6 +167,6 @@ Public Class LanguageElementsBLL
         End Try
         Return False
     End Function
-    
+
 
 End Class

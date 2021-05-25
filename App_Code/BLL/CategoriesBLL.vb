@@ -110,28 +110,32 @@ Public Class CategoriesBLL
     End Function
 
     Public Shared Function GetNameByCategoryID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As String
-        Return LanguageElementsBLL.GetElementValue( _
-          _LanguageID, LANG_ELEM_TABLE_TYPE.Categories, LANG_ELEM_FIELD_NAME.Name, _CategoryID)
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Return objLanguageElementsBLL.GetElementValue(
+              _LanguageID, LANG_ELEM_TABLE_TYPE.Categories, LANG_ELEM_FIELD_NAME.Name, _CategoryID)
     End Function
 
     Public Shared Function GetMetaDescriptionByCategoryID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As String
-        Dim strMetaDescription As String = LanguageElementsBLL.GetElementValue( _
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Dim strMetaDescription As String = objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Categories, LANG_ELEM_FIELD_NAME.MetaDescription, _CategoryID)
         If String.IsNullOrEmpty(strMetaDescription) Or strMetaDescription = "# -LE- #" Then _
-            strMetaDescription = LanguageElementsBLL.GetElementValue(_LanguageID, LANG_ELEM_TABLE_TYPE.Categories, LANG_ELEM_FIELD_NAME.Description, _CategoryID)
+            strMetaDescription = objLanguageElementsBLL.GetElementValue(_LanguageID, LANG_ELEM_TABLE_TYPE.Categories, LANG_ELEM_FIELD_NAME.Description, _CategoryID)
         If strMetaDescription = "# -LE- #" Then strMetaDescription = ""
         Return Left(StripHTML(strMetaDescription), 160)
     End Function
 
     Public Shared Function GetMetaKeywordsByCategoryID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As String
-        Dim strMetaKeywords As String = LanguageElementsBLL.GetElementValue( _
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Dim strMetaKeywords As String = objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Categories, LANG_ELEM_FIELD_NAME.MetaKeywords, _CategoryID)
         If strMetaKeywords = "# -LE- #" Then strMetaKeywords = ""
         Return StripHTML(strMetaKeywords)
     End Function
 
     Public Shared Function _GetNameByCategoryID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As String
-        Return LanguageElementsBLL.GetElementValue( _
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Return objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Categories, LANG_ELEM_FIELD_NAME.Name, _CategoryID)
 
     End Function
