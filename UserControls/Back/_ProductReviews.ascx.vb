@@ -91,7 +91,9 @@ Partial Class _ProductReviews
         Dim tblReview As DataTable = ReviewsBLL._GetReviewByID(ReviewID)
         Dim productID As Integer = CInt(FixNullFromDB(tblReview.Rows(0)("REV_ProductID")))
 
-        litProductName.Text = ProductsBLL._GetNameByProductID(productID, Session("_LANG"))
+        Dim objProductsBLL As New ProductsBLL
+
+        litProductName.Text = objProductsBLL._GetNameByProductID(productID, Session("_LANG"))
         txtTitle.Text = FixNullFromDB(tblReview.Rows(0)("REV_Title"))
         txtReviewText.Text = FixNullFromDB(tblReview.Rows(0)("REV_Text"))
         txtName.Text = FixNullFromDB(tblReview.Rows(0)("REV_Name"))
@@ -159,10 +161,12 @@ Partial Class _ProductReviews
                     End If
             End Select
 
+            Dim objProductsBLL As New ProductsBLL
+
             If gvwProductReviews.Columns(0).Visible Then
                 Dim numProductID As Integer = CInt(CType(e.Row.Cells(0).FindControl("litProductID"), Literal).Text)
-                CType(e.Row.Cells(0).FindControl("lnkBtnProductName"), LinkButton).Text = _
-                    ProductsBLL._GetNameByProductID(numProductID, Session("_LANG"))
+                CType(e.Row.Cells(0).FindControl("lnkBtnProductName"), LinkButton).Text =
+                    objProductsBLL._GetNameByProductID(numProductID, Session("_LANG"))
                 CType(e.Row.Cells(0).FindControl("lnkBtnProductName"), LinkButton).PostBackUrl = _
                     "~/Admin/_ModifyProduct.aspx?ProductID=" & numProductID
             End If

@@ -51,7 +51,8 @@ Partial Class Customer_ViewOrder
         UC_CustomerOrder.ShowOrderSummary = True
         UC_CustomerOrder.OrderID = numOrderID
 
-        tblOrder = BasketBLL.GetCustomerOrderDetails(numOrderID)
+        Dim objBasketBLL As New BasketBLL
+        tblOrder = objBasketBLL.GetCustomerOrderDetails(numOrderID)
 
         If tblOrder.Rows.Count > 0 Then
             If tblOrder.Rows(0).Item("O_CustomerID") <> numCustomerID Then

@@ -977,9 +977,9 @@ Public Class SiteMapHelper
             strProductNameInURL = objLanguageElementsBLL.GetElementValue(
             numLanguageID, CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Products, CkartrisEnumerations.LANG_ELEM_FIELD_NAME.URLName, numProductID)
         End If
-
+        Dim objProductsBLL As New ProductsBLL
         If strProductNameInURL.ToLower = "# -le- #" Or strProductNameInURL = "" Then
-            strProductNameInURL = ProductsBLL.GetNameByProductID(numProductID, numLanguageID)
+            strProductNameInURL = objProductsBLL.GetNameByProductID(numProductID, numLanguageID)
         End If
 
         Return strProductNameInURL

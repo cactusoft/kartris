@@ -521,13 +521,13 @@ Public Class OrdersBLL
     Public Function _GetPaymentByCustomerID(ByVal CustomerID As Integer) As DataTable
         Return PaymentsAdptr._GetByCustomerID(CustomerID)
     End Function
-    Public Shared Function _GetPaymentByID(ByVal PaymentID As Long) As DataTable
+    Public Function _GetPaymentByID(ByVal PaymentID As Long) As DataTable
         Return PaymentsAdptr._Get(PaymentID)
     End Function
     Public Shared Function _DeletePayment(ByVal PaymentID As Long) As Integer
         Return PaymentsAdptr._Delete(PaymentID)
     End Function
-    Public Shared Function _GetPaymentLinkedOrders(ByVal PaymentID As Long) As DataTable
+    Public Function _GetPaymentLinkedOrders(ByVal PaymentID As Long) As DataTable
         Return PaymentsAdptr._GetLinkedOrders(PaymentID)
     End Function
     Public Shared Function _GetPaymentsFilteredList(ByVal Payment_FilterType As String, ByVal Payment_Gateway As String, ByVal Payment_Date As Date,

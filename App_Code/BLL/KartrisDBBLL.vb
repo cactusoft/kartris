@@ -532,6 +532,9 @@ Public Class KartrisDBBLL
             Dim numID As Long = FixNullFromDB(row("Deleted_ID"))
             Dim chrType As Char = FixNullFromDB(row("Deleted_Type"))
             If numID <> Nothing AndAlso chrType <> Nothing Then
+
+                Dim objProductsBLL As New ProductsBLL
+
                 Try
                     Select Case chrType
                         Case "c" '' Category
@@ -541,7 +544,7 @@ Public Class KartrisDBBLL
                             End If
                             _DeleteRecord(numID, chrType)
                         Case "p" '' Product
-                            Dim tblRecord As DataTable = ProductsBLL._GetProductInfoByID(numID)
+                            Dim tblRecord As DataTable = objProductsBLL._GetProductInfoByID(numID)
                             If tblRecord.Rows.Count = 0 Then
                                 CkartrisImages.RemoveImages(CkartrisImages.IMAGE_TYPE.enum_ProductImage, numID)
                             End If

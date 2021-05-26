@@ -125,9 +125,11 @@ Partial Class UserControls_Front_StockNotification
     ''' </summary>
     Public Sub ShowStockNotificationsPopup()
 
+        Dim objProductsBLL As New ProductsBLL
+
         'Format full product name from lookup of product
         'name plus version name
-        Dim strProductFullName As String = ProductsBLL.GetNameByProductID(_ProductID, _LanguageID)
+        Dim strProductFullName As String = objProductsBLL.GetNameByProductID(_ProductID, _LanguageID)
 
         'Options products won't have version name, but rest will
         If _VersionName <> "" Then strProductFullName &= " - " & Server.UrlDecode(_VersionName)

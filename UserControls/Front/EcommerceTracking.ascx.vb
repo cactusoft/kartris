@@ -45,8 +45,10 @@ Partial Class UserControls_Front_EcommerceTracking
             'Declare variables
             Dim tblOrder As System.Data.DataTable
 
+            Dim objBasketBLL As New BasketBLL
+
             'Fill datatable width basket items
-            tblOrder = BasketBLL.GetCustomerOrderDetails(_OrderID)
+            tblOrder = objBasketBLL.GetCustomerOrderDetails(_OrderID)
 
             'Examine data of order, if exists
             If tblOrder.Rows.Count > 0 Then
@@ -87,7 +89,7 @@ Partial Class UserControls_Front_EcommerceTracking
                 'Fill order with details of customer invoice,
                 'so we can loop through individual item
                 'records
-                tblOrder = BasketBLL.GetCustomerInvoice(_OrderID, _UserID, 1)
+                tblOrder = objBasketBLL.GetCustomerInvoice(_OrderID, _UserID, 1)
 
                 'Bind data to repeater control
                 rptOrderItems.DataSource = tblOrder

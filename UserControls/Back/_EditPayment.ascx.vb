@@ -27,6 +27,8 @@ Partial Class UserControls_Back_EditPayment
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
 
+            Dim objOrdersBLL As New OrdersBLL
+
             ViewState("Referer") = Request.ServerVariables("HTTP_REFERER")
 
             
@@ -109,7 +111,7 @@ Partial Class UserControls_Back_EditPayment
             Else
                 Dim lngPaymentID As Long = CLng(Request.QueryString("PaymentID"))
                 Dim tblPayment As New DataTable
-                tblPayment = OrdersBLL._GetPaymentByID(lngPaymentID)
+                tblPayment = objOrdersBLL._GetPaymentByID(lngPaymentID)
                 If tblPayment.Rows.Count > 0 Then
                     Dim intCurrencyID As Integer = CInt(FixNullFromDB(tblPayment.Rows(0)("Payment_CurrencyID")))
                     Dim lngCustomerID As Long = CLng(FixNullFromDB(tblPayment.Rows(0)("Payment_CustomerID")))
@@ -127,7 +129,7 @@ Partial Class UserControls_Back_EditPayment
                     SetPaymentGateway(FixNullFromDB(tblPayment.Rows(0)("Payment_Gateway")))
 
                     Dim tblLinkedOrders As New DataTable
-                    tblLinkedOrders = OrdersBLL._GetPaymentLinkedOrders(lngPaymentID)
+                    tblLinkedOrders = objOrdersBLL._GetPaymentLinkedOrders(lngPaymentID)
                     If tblLinkedOrders.Rows.Count > 0 Then
                         lbxOrders.Items.Clear()
                         For Each drwOrder As DataRow In tblLinkedOrders.Rows

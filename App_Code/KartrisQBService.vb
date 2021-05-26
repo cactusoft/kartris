@@ -484,8 +484,9 @@ Public Class KartrisQBService
                     CustomerRef.AppendChild(inputXMLDoc.CreateElement("ListID")).InnerText = strCustomerListID
 
                     Dim DT As Data.DataTable
-                    Dim objBasket As New kartris.Basket
-                    DT = BasketBLL.GetCustomerOrderDetails(intOrderID)
+                    Dim objBasket As New Kartris.Basket
+                    Dim objBasketBLL As New BasketBLL
+                    DT = objBasketBLL.GetCustomerOrderDetails(intOrderID)
 
                     Dim dtOrderDate As DateTime
                     dtOrderDate = DT.Rows(0).Item("O_Date")

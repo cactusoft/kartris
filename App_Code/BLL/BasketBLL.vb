@@ -1042,7 +1042,7 @@ Public Class BasketBLL
     ''' <param name="numOrderID">The order we want to get data for</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function GetCustomerOrderDetails(ByVal numOrderID As Integer) As DataTable
+    Public Function GetCustomerOrderDetails(ByVal numOrderID As Integer) As DataTable
         Dim tblCustomerOrders As New DataTable
         tblCustomerOrders = _CustomersAdptr.GetOrderDetails(numOrderID)
         Return tblCustomerOrders
@@ -1081,7 +1081,7 @@ Public Class BasketBLL
     ''' <param name="numType">Defines what data should be returned. A value of 0 returns only summary and address data; any other value returns the row level detail</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function GetCustomerInvoice(ByVal numOrderID As Integer, ByVal numUserID As Integer, Optional ByVal numType As Integer = 0) As DataTable
+    Public Function GetCustomerInvoice(ByVal numOrderID As Integer, ByVal numUserID As Integer, Optional ByVal numType As Integer = 0) As DataTable
         Dim tblInvoice As New DataTable
         tblInvoice = _CustomersAdptr.GetInvoice(numOrderID, numUserID, numType)
         Return tblInvoice
@@ -1131,7 +1131,7 @@ Public Class BasketBLL
     ''' <param name="strCouponName">The coupon code.</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function GetCouponData(ByVal strCouponName As String) As DataTable
+    Public Function GetCouponData(ByVal strCouponName As String) As DataTable
         Dim tblCoupon As New DataTable
         tblCoupon = _CouponsAdptr.GetCouponCode(strCouponName)
         Return tblCoupon
@@ -1539,15 +1539,17 @@ Public Class BasketBLL
                 strText = strText.Replace("[C]", strItemLink)
             End If
 
+            Dim objProductsBLL As New ProductsBLL
+
             If strText.Contains("[P]") AndAlso strItemID <> "" Then ''==== language_ID =====
-                strItemName = ProductsBLL.GetNameByProductID(CInt(strItemID), numLanguageId)
+                strItemName = objProductsBLL.GetNameByProductID(CInt(strItemID), numLanguageId)
                 strItemLink = " <b><a href='" & CreateURL(Page.CanonicalProduct, strItemID) & "'>" & strItemName & "</a></b>"
                 strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
                 strText = strText.Replace("[P]", strItemLink)
             End If
 
             If strText.Contains("[V]") AndAlso strItemID <> "" Then ''==== language_ID =====
-                strItemName = ProductsBLL.GetNameByProductID(intProductID, numLanguageId) & " (" & VersionsBLL._GetNameByVersionID(CInt(strItemID), numLanguageId) & ")"
+                strItemName = objProductsBLL.GetNameByProductID(intProductID, numLanguageId) & " (" & VersionsBLL._GetNameByVersionID(CInt(strItemID), numLanguageId) & ")"
                 strItemLink = " <b><a href='" & CreateURL(Page.CanonicalProduct, intProductID) & "'>" & strItemName & "</a></b>"
                 strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
                 strText = strText.Replace("[V]", strItemLink)

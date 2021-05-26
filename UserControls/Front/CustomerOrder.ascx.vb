@@ -61,7 +61,8 @@ Partial Class UserControls_Front_CustomerOrder
 
         phdViewOrder.Visible = ShowOrderSummary
 
-        tblBasket = BasketBLL.GetCustomerOrderDetails(OrderID)
+        Dim objBasketBLL As New BasketBLL
+        tblBasket = objBasketBLL.GetCustomerOrderDetails(OrderID)
 
         If tblBasket.Rows.Count > 0 Then
             Dim datOrderDate, datLastModified As DateTime
@@ -98,7 +99,7 @@ Partial Class UserControls_Front_CustomerOrder
 
             If strCouponCode <> "" Then
                 Dim tblCoupon As Data.DataTable
-                tblCoupon = BasketBLL.GetCouponData(strCouponCode)
+                tblCoupon = objBasketBLL.GetCouponData(strCouponCode)
                 If tblCoupon.Rows.Count > 0 Then
                     CP_DiscountValue = tblCoupon.Rows(0).Item("CP_DiscountValue")
                     CP_DiscountType = tblCoupon.Rows(0).Item("CP_DiscountType") & ""

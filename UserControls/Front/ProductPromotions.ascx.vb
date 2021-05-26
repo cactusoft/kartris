@@ -237,8 +237,10 @@ Partial Class ProductPromotions
                 strText = strText.Replace("[C]", strItemLink)
             End If
 
+            Dim objProductsBLL As New ProductsBLL
+
             If strText.Contains("[P]") AndAlso strItemID <> "" Then
-                strItemName = Server.HtmlEncode(ProductsBLL.GetNameByProductID(CInt(strItemID), Session("LANG")))
+                strItemName = Server.HtmlEncode(objProductsBLL.GetNameByProductID(CInt(strItemID), Session("LANG")))
                 strItemLink = " <a href='" & CreateURL(SiteMapHelper.Page.CanonicalProduct, strItemID) & "'>" & strItemName & "</a>"
                 strText = strText.Replace("[P]", strItemLink)
             End If
@@ -246,8 +248,8 @@ Partial Class ProductPromotions
             If strText.Contains("[V]") AndAlso strItemID <> "" Then
                 Dim ProductID As Integer = VersionsBLL.GetProductID_s(CInt(strItemID))
                 strItemName = Server.HtmlEncode(VersionsBLL._GetNameByVersionID(CInt(strItemID), Session("LANG")))
-                strItemLink = " <a href='" & CreateURL(SiteMapHelper.Page.CanonicalProduct, ProductID) & "'>" & _
-                ProductsBLL.GetNameByProductID(ProductID, Session("LANG")) & " (" & strItemName & ")</a>"
+                strItemLink = " <a href='" & CreateURL(SiteMapHelper.Page.CanonicalProduct, ProductID) & "'>" &
+                objProductsBLL.GetNameByProductID(ProductID, Session("LANG")) & " (" & strItemName & ")</a>"
                 strText = strText.Replace("[V]", strItemLink)
             End If
 

@@ -161,6 +161,7 @@ Partial Class _ProductOptionGroups
                 'If is combinations product, the stock value is set at version/combination
                 'level, not for the base version
                 Dim objProductsBLL As New ProductsBLL
+
                 If objProductsBLL._NumberOfCombinations(CInt(litProductID.Text)) > 0 Then
                     'Is combinations product
                     'Hide the stock level on first tab
@@ -232,8 +233,11 @@ Partial Class _ProductOptionGroups
 
         Dim strProductName As String = ""
         Dim tblLanguages As DataTable = GetLanguagesFromCache()
+
+        Dim objProductsBLL As New ProductsBLL
+
         For Each row As DataRow In tblLanguages.Rows
-            strProductName = ProductsBLL._GetNameByProductID(_GetProductID(), CShort(row("LANG_ID")))
+            strProductName = objProductsBLL._GetNameByProductID(_GetProductID(), CShort(row("LANG_ID")))
             If strProductName Is Nothing Then Continue For 'Means the Name doesn't exist for that language, so no need to add it.
             tblLanguageContents.Rows.Add(row("LANG_ID"), CByte(LANG_ELEM_FIELD_NAME.Name), strProductName)
             tblLanguageContents.Rows.Add(row("LANG_ID"), CByte(LANG_ELEM_FIELD_NAME.Description), "")
@@ -493,7 +497,7 @@ Partial Class _ProductOptionGroups
             If CType(itm.FindControl("_UC_ItemSelection"), UserControls_Back_ItemSelection).IsSelected Then
 
                 tblOptions = New DataTable
-                tblOptions = CType(itm.FindControl("_uc_ProductOptions"),  _
+                tblOptions = CType(itm.FindControl("_UC_ProductOptions"),
                         _ProductOptions).GetSelectedOptions()
 
                 'If no options are selected then, no need to save any item-related data

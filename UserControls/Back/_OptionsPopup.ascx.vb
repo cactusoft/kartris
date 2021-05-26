@@ -27,10 +27,13 @@ Partial Class UserControls_Back_OptionsPopup
     Public Event OptionsSelected(ByVal strOptions As String, ByVal numVersionID As Integer)
 
     Public Sub ShowPopup(ByVal numVersionID As Long, ByVal numProductID As Integer, ByVal strVersionCode As String)
+
+        Dim objProductsBLL As New ProductsBLL
+
         'lblVID_Options.Text = CStr(numVersionID)
         litVersionID.Text = CStr(numVersionID)
         litProductID.Text = CStr(numProductID)
-        litProductName.Text = ProductsBLL._GetNameByProductID(numProductID, Session("LANG"))
+        litProductName.Text = objProductsBLL._GetNameByProductID(numProductID, Session("LANG"))
         litVersionCode.Text = "&nbsp;&nbsp;-&nbsp;&nbsp;" & strVersionCode
         Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", CLng(numProductID)) = "1", True, False)
         '' Initializes/Loads the OptionsContainer UC to view the Options that are available for the Product.

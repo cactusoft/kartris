@@ -85,8 +85,8 @@ Partial Class UserControls_General_Invoice
         numCurrencyRoundNumber = BasketBLL.CurrencyRoundNumber
 
         strDefaultAddress = "" : strBillingAddress = "" : strShippingAddress = ""
-
-        tblInvoice = BasketBLL.GetCustomerInvoice(_OrderID, _CustomerID, 0)
+        Dim objBasketBLL As New BasketBLL
+        tblInvoice = objBasketBLL.GetCustomerInvoice(_OrderID, _CustomerID, 0)
 
         If tblInvoice.Rows.Count > 0 Then
             strBillingAddress = tblInvoice.Rows(0).Item("O_BillingAddress")
@@ -180,7 +180,7 @@ Partial Class UserControls_General_Invoice
         'get sales receipt details
         tblInvoice.Dispose()
 
-        tblInvoice = BasketBLL.GetCustomerInvoice(_OrderID, _CustomerID, 1)
+        tblInvoice = objBasketBLL.GetCustomerInvoice(_OrderID, _CustomerID, 1)
 
         rptInvoice.DataSource = tblInvoice
         rptInvoice.DataBind()

@@ -233,15 +233,17 @@ Public Class PromotionsBLL
                 strText = strText.Replace("[C]", strItemLink)
             End If
 
+            Dim objProductsBLL As New ProductsBLL
+
             If strText.Contains("[P]") AndAlso strItemID <> "" Then ''==== language_ID =====
-                strItemName = ProductsBLL.GetNameByProductID(CInt(strItemID), numLanguageID)
+                strItemName = objProductsBLL.GetNameByProductID(CInt(strItemID), numLanguageID)
                 strItemLink = " <b><a href='" & CreateURL(Page.CanonicalProduct, strItemID) & "'>" & strItemName & "</a></b>"
                 strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
                 strText = strText.Replace("[P]", strItemLink)
             End If
 
             If strText.Contains("[V]") AndAlso strItemID <> "" Then ''==== language_ID =====
-                strItemName = ProductsBLL.GetNameByProductID(intProductID, numLanguageID) & " (" & VersionsBLL._GetNameByVersionID(CInt(strItemID), numLanguageID) & ")"
+                strItemName = objProductsBLL.GetNameByProductID(intProductID, numLanguageID) & " (" & VersionsBLL._GetNameByVersionID(CInt(strItemID), numLanguageID) & ")"
                 strItemLink = " <b><a href='" & CreateURL(Page.CanonicalProduct, intProductID) & "'>" & strItemName & "</a></b>"
                 strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
                 strText = strText.Replace("[V]", strItemLink)
