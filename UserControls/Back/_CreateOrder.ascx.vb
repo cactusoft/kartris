@@ -295,7 +295,8 @@ Partial Class UserControls_Back_CreateOrder
     ''' </summary>
     ''' <remarks></remarks>
     Public Function CheckEmailExist(ByVal strEmailAddress As String) As Long
-        Dim tblUserDetails As System.Data.DataTable = UsersBLL.GetDetails(strEmailAddress)
+        Dim objUsersBLL As New UsersBLL
+        Dim tblUserDetails As System.Data.DataTable = objUsersBLL.GetDetails(strEmailAddress)
         If tblUserDetails.Rows.Count > 0 Then
             Session("DefaultBillingAddressID") = tblUserDetails(0)("U_DefBillingAddressID")
             Session("DefaultShippingAddressID") = tblUserDetails(0)("U_DefShippingAddressID")
@@ -416,8 +417,8 @@ Partial Class UserControls_Back_CreateOrder
             Else
                 Session("CUR_ID") = 1
             End If
-
-            Dim dr As DataRow = VersionsBLL._GetVersionByID(intVersionID).Rows(0)
+            Dim objVersionsBLL As New VersionsBLL
+            Dim dr As DataRow = objVersionsBLL._GetVersionByID(intVersionID).Rows(0)
             Select Case CChar(FixNullFromDB(dr("V_Type")))
                 Case "o", "b", "c"  '' Options Product
                     litOptionsVersion.Text = intVersionID
@@ -1328,12 +1329,13 @@ Partial Class UserControls_Back_CreateOrder
     Function CheckAutoCompleteData() As Long
         Dim strAutoCompleteText As String = ""
         strAutoCompleteText = _UC_AutoComplete_Item.GetText
+        Dim objVersionsBLL As New VersionsBLL
         If strAutoCompleteText <> "" AndAlso strAutoCompleteText.Contains("(") _
                 AndAlso strAutoCompleteText.Contains(")") Then
             Try
                 Dim numItemID As Long = CLng(Mid(strAutoCompleteText, strAutoCompleteText.LastIndexOf("(") + 2, strAutoCompleteText.LastIndexOf(")") - strAutoCompleteText.LastIndexOf("(") - 1))
                 Dim strItemName As String = ""
-                strItemName = VersionsBLL._GetNameByVersionID(numItemID, Session("_LANG"))
+                strItemName = objVersionsBLL._GetNameByVersionID(numItemID, Session("_LANG"))
 
                 If strItemName Is Nothing Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_InvalidValue"))

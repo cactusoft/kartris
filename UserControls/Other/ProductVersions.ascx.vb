@@ -13,7 +13,6 @@
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
 Imports CkartrisTaxes
-Imports VersionsBLL
 Imports CkartrisDataManipulation
 Imports CkartrisImages
 Imports KartSettingsManager
@@ -63,15 +62,14 @@ Partial Class ProductVersions
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+        Dim objVersionsBLL As New VersionsBLL
         ddlVersionImages.Visible = False
         Try
-            phdDropdownCustomizable.Visible = VersionsBLL.IsVersionCustomizable(CLng(ddlName_DropDown.SelectedValue))
+            phdDropdownCustomizable.Visible = objVersionsBLL.IsVersionCustomizable(CLng(ddlName_DropDown.SelectedValue))
         Catch
             'do nothing
         End Try
-
         If Request.QueryString("strOptions") & "" = "" Then Session("BasketItemInfo") = ""
-
     End Sub
 
     ''' <summary>
@@ -114,7 +112,8 @@ Partial Class ProductVersions
         End If
 
         Dim tblVersions As DataTable
-        tblVersions = VersionsBLL.GetByProduct(_ProductID, _LanguageID, numCGroupID)
+        Dim objVersionsBLL As New VersionsBLL
+        tblVersions = objVersionsBLL.GetByProduct(_ProductID, _LanguageID, numCGroupID)
 
         If tblVersions.Rows.Count = 0 Then mvwVersion.SetActiveView(viwError) : Exit Sub
 
@@ -339,7 +338,8 @@ Partial Class ProductVersions
         Else
             phdOutOfStock3.Visible = False
             phdNotOutOfStock3.Visible = True
-            phdDropdownCustomizable.Visible = VersionsBLL.IsVersionCustomizable(CLng(ddlName_DropDown.SelectedValue))
+            Dim objVersionsBLL As New VersionsBLL
+            phdDropdownCustomizable.Visible = objVersionsBLL.IsVersionCustomizable(CLng(ddlName_DropDown.SelectedValue))
 
             'In multi-version dropdown, if the [T] for text customization is not
             'visible, then we don't need to show the AJAX customization popup, so
@@ -413,7 +413,8 @@ Partial Class ProductVersions
             btnAdd_Options.Text = GetGlobalResourceObject("Products", "FormButton_Add")
         End If
 
-        phdOptionsCustomizable.Visible = VersionsBLL.IsVersionCustomizable(CLng(FixNullFromDB(ptblVersions.Rows(0)("V_ID"))))
+        Dim objVersionsBLL As New VersionsBLL
+        phdOptionsCustomizable.Visible = objVersionsBLL.IsVersionCustomizable(CLng(FixNullFromDB(ptblVersions.Rows(0)("V_ID"))))
 
         If UC_OptionsContainer.GetNoOfRows > 0 Then
             Return viwVersionOptions
@@ -704,8 +705,8 @@ Partial Class ProductVersions
                 Dim strOptionString As String = UC_OptionsContainer.GetSelectedOptions()
 
                 If [String].IsNullOrEmpty(strOptionString) Then strOptionString = ""
-
-                Dim numVersionID As Integer = VersionsBLL.GetCombinationVersionID_s(_ProductID, strOptionString)
+                Dim objVersionsBLL As New VersionsBLL
+                Dim numVersionID As Integer = objVersionsBLL.GetCombinationVersionID_s(_ProductID, strOptionString)
                 If numVersionID <> 0 Then
                     lblVID_Options.Text = numVersionID
                 Else
@@ -759,7 +760,8 @@ Partial Class ProductVersions
 
 
         If Not [String].IsNullOrEmpty(strOptionsList) Then
-            numVersionID = GetCombinationVersionID_s(ProductID, strOptionsList)
+            Dim objVersionsBLL As New VersionsBLL
+            numVersionID = objVersionsBLL.GetCombinationVersionID_s(ProductID, strOptionsList)
             If numVersionID <> -1 Then CheckCombinationsImages(numVersionID)
 
         End If
@@ -883,8 +885,9 @@ Partial Class ProductVersions
         CleanOptionString(strOptionsList)
         If Not [String].IsNullOrEmpty(strOptionsList) Then
 
-            Dim numPrice As Single = VersionsBLL.GetCombinationPrice(ProductID, strOptionsList)
-            numVersionID = GetCombinationVersionID_s(ProductID, strOptionsList)
+            Dim objVersionsBLL As New VersionsBLL
+            Dim numPrice As Single = objVersionsBLL.GetCombinationPrice(ProductID, strOptionsList)
+            numVersionID = objVersionsBLL.GetCombinationVersionID_s(ProductID, strOptionsList)
 
             numPrice = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), GetPriceWithGroupDiscount(numVersionID, numPrice))
 
@@ -1046,7 +1049,8 @@ Partial Class ProductVersions
             Return
         End If
 
-        Dim numQty As Single = VersionsBLL.GetOptionStockQty(_ProductID, strOptionString)
+        Dim objVersionsBLL As New VersionsBLL
+        Dim numQty As Single = objVersionsBLL.GetOptionStockQty(_ProductID, strOptionString)
 
         'The version is not live or does not exist,
         'probably because invalid options selections
@@ -1059,14 +1063,14 @@ Partial Class ProductVersions
         End If
 
         'This handles showing 'out of stock' and hiding the 'add' button
-        If VersionsBLL.IsStockTrackingInBase(_ProductID) And numQty <= 0.0F And KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y" Then
+        If objVersionsBLL.IsStockTrackingInBase(_ProductID) And numQty <= 0.0F And KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y" Then
             phdOutOfStock4.Visible = True
             UC_AddToBasketQty4.Visible = False
             phdNotOutOfStock4.Visible = False
 
             'Set the command argument for this item based
             'We use this for stock notifications popup
-            numVersionID = GetCombinationVersionID_s(_ProductID, strOptionString) 'This will find version ID for combination
+            numVersionID = objVersionsBLL.GetCombinationVersionID_s(_ProductID, strOptionString) 'This will find version ID for combination
             If numVersionID = 0 Then numVersionID = UC_AddToBasketQty4.VersionID 'Combination ID will be zero if options product, so just grab base Version ID
             btnNotifyMe4.CommandArgument = FormatStockNotificationDetails(numVersionID, _ProductID, "", Request.RawUrl.ToString.ToLower, Session("LANG"))
         End If

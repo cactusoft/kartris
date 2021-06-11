@@ -95,8 +95,9 @@ Partial Class _EditProduct
     Public Sub ReloadProduct()
         If _GetProductID() = 0 Then 'new product
             '' If there is no parent category, we should make sure that we have categories in the db.
+            Dim objCategoriesBLL As New CategoriesBLL
             If _CategorySiteMapProvider.StripParents(_GetParentCategory()) = 0 Then
-                If CategoriesBLL._GetTotalCategoriesByLanguageID(Session("_LANG")) = 0 Then
+                If objCategoriesBLL._GetTotalCategoriesByLanguageID(Session("_LANG")) = 0 Then
                     phdNoCategories.Visible = True
                     phdEditProduct.Visible = False
                 Else
@@ -130,11 +131,11 @@ Partial Class _EditProduct
         End Try
 
         lbxProductCategories.Items.Clear()
-
+        Dim objCategoriesBLL As New CategoriesBLL
         If numParentCategoryID <> 0 Then
             If lbxProductCategories.Items.FindByValue(CStr(numParentCategoryID)) Is Nothing Then
-                lbxProductCategories.Items.Add( _
-                        New ListItem(CategoriesBLL._GetNameByCategoryID(numParentCategoryID, Session("_LANG")), _
+                lbxProductCategories.Items.Add(
+                        New ListItem(objCategoriesBLL._GetNameByCategoryID(numParentCategoryID, Session("_LANG")),
                         CStr(numParentCategoryID)))
                 lbxProductCategories.SelectedIndex = lbxProductCategories.Items.Count - 1
             End If
@@ -194,13 +195,14 @@ Partial Class _EditProduct
 
         '' -----------------------------------------
         '' Load Product's Parents into the 'Parent List'
+        Dim objCategoriesBLL As New CategoriesBLL
         Dim tblProductCategories As New DataTable
         tblProductCategories = objProductsBLL._GetCategoriesByProductID(_GetProductID())
         lbxProductCategories.Items.Clear()
         For Each row In tblProductCategories.Rows
             Dim itm As New ListItem
             itm.Value = CStr(FixNullFromDB(row("PCAT_CategoryID")))
-            itm.Text = CategoriesBLL._GetNameByCategoryID(CInt(itm.Value), Session("_LANG"))
+            itm.Text = objCategoriesBLL._GetNameByCategoryID(CInt(itm.Value), Session("_LANG"))
             lbxProductCategories.Items.Add(itm)
         Next
         '' -----------------------------------------
@@ -215,9 +217,10 @@ Partial Class _EditProduct
     ''' <remarks></remarks>
     Public Sub CheckProductType()
         ddlProductType.Enabled = True '' by default always allow the changes
+        Dim objVersionsBLL As New VersionsBLL
         Select Case ddlProductType.SelectedValue
             Case "m"    '' multiple version product
-                If VersionsBLL._GetNoOfVersionsByProductID(_GetProductID()) > 1 Then
+                If objVersionsBLL._GetNoOfVersionsByProductID(_GetProductID()) > 1 Then
                     ddlProductType.Enabled = False
                 End If
                 ddlVersionDisplay.Enabled = True
@@ -242,7 +245,7 @@ Partial Class _EditProduct
                     ddlVersionDisplay.Items.Remove(ddlVersionDisplay.Items.FindByValue("l"))
                 End Try
             Case "o"    '' option product
-                If VersionsBLL._GetNoOfVersionsByProductID(_GetProductID()) > 0 Then
+                If objVersionsBLL._GetNoOfVersionsByProductID(_GetProductID()) > 0 Then
                     ddlProductType.Enabled = False
                 End If
 
@@ -322,10 +325,11 @@ Partial Class _EditProduct
     ''' <remarks></remarks>
     Protected Sub lnkBtnAddCategory_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnAddCategory.Click
         Try
+            Dim objCategoriesBLL As New CategoriesBLL
             Dim strCategoryText As String = _UC_AutoComplete.GetText()
             If strCategoryText <> "" Then
                 Dim numCategoryID As Integer = CInt(Mid(strCategoryText, strCategoryText.LastIndexOf("(") + 2, strCategoryText.LastIndexOf(")") - strCategoryText.LastIndexOf("(") - 1))
-                Dim strCategoryName As String = CategoriesBLL._GetNameByCategoryID(numCategoryID, Session("_LANG"))
+                Dim strCategoryName As String = objCategoriesBLL._GetNameByCategoryID(numCategoryID, Session("_LANG"))
                 If Not strCategoryName Is Nothing Then
                     If lbxProductCategories.Items.FindByValue(CStr(numCategoryID)) Is Nothing Then
                         lbxProductCategories.Items.Add(New ListItem(strCategoryName, CStr(numCategoryID)))
@@ -471,7 +475,8 @@ Partial Class _EditProduct
                         Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intProductID & "&CategoryID=" & _GetCategoryID() & "&strParent=" & _GetParentCategory())
                     Else
                         Try
-                            Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intProductID & "&CategoryID=" & lbxProductCategories.Items(0).Value & "&strParent=" & CategoriesBLL._GetParentsByID(Session("_lang"), lbxProductCategories.Items(0).Value).Rows(0)("ParentID").ToString())
+                            Dim objCategoriesBLL As New CategoriesBLL
+                            Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intProductID & "&CategoryID=" & lbxProductCategories.Items(0).Value & "&strParent=" & objCategoriesBLL._GetParentsByID(Session("_lang"), lbxProductCategories.Items(0).Value).Rows(0)("ParentID").ToString())
                         Catch ex As Exception
                             Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intProductID & "&CategoryID=" & lbxProductCategories.Items(0).Value)
                         End Try

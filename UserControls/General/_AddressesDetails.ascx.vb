@@ -32,9 +32,10 @@ Partial Class UserControls_General_AddressesDetails
         If Trim(Request.QueryString("CustomerID")) <> "" Then
             Try
                 Dim U_ID As Integer = CInt(Request.QueryString("CustomerID"))
+                Dim objUsersBLL As New UsersBLL
                 hidUserID.Value = U_ID
                 'retrieve address list based on the current customer ID and the set adddress type
-                Dim dtUserDetails As DataTable = UsersBLL._GetAddressesByUserID(U_ID, hidDisplayAddressType.Value)
+                Dim dtUserDetails As DataTable = objUsersBLL._GetAddressesByUserID(U_ID, hidDisplayAddressType.Value)
                 rptrUserAddresses.DataSource = dtUserDetails
                 rptrUserAddresses.DataBind()
             Catch ex As Exception
@@ -101,7 +102,8 @@ Partial Class UserControls_General_AddressesDetails
     ''' <remarks></remarks>
     Public Sub btnSaveNewAddress_Click() Handles btnSaveNewAddress.Click
         Dim intGeneratedAddressID As Integer = Address.AddUpdate(UC_NewEditAddress.EnteredAddress, hidUserID.Value, , UC_NewEditAddress.EnteredAddress.ID)
-        Dim dtUserDetails As DataTable = UsersBLL._GetAddressesByUserID(hidUserID.Value, hidDisplayAddressType.Value)
+        Dim objUsersBLL As New UsersBLL
+        Dim dtUserDetails As DataTable = objUsersBLL._GetAddressesByUserID(hidUserID.Value, hidDisplayAddressType.Value)
         rptrUserAddresses.DataSource = dtUserDetails
         rptrUserAddresses.DataBind()
         RaiseEvent _UCEvent_DataUpdated()
@@ -113,7 +115,8 @@ Partial Class UserControls_General_AddressesDetails
     ''' <remarks></remarks>
     Protected Sub _UC_PopupMsg_Confirmed() Handles _UC_PopupMsg.Confirmed
         KartrisClasses.Address.Delete(hidAddressToDeleteID.Value, hidUserID.Value)
-        Dim dtUserDetails As DataTable = UsersBLL._GetAddressesByUserID(hidUserID.Value, hidDisplayAddressType.Value)
+        Dim objUsersBLL As New UsersBLL
+        Dim dtUserDetails As DataTable = objUsersBLL._GetAddressesByUserID(hidUserID.Value, hidDisplayAddressType.Value)
         rptrUserAddresses.DataSource = dtUserDetails
         rptrUserAddresses.DataBind()
         RaiseEvent _UCEvent_DataUpdated()

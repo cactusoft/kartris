@@ -160,9 +160,9 @@ Partial Class _EditVersion
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Function SaveChanges() As Boolean
-
+        Dim objVersionsBLL As New VersionsBLL
         '' checking if the code number exist or not
-        If VersionsBLL._IsCodeNumberExist(txtCodeNumber.Text, , IIf(chkClone.Checked, -1, GetVersionID())) Then
+        If objVersionsBLL._IsCodeNumberExist(txtCodeNumber.Text, , IIf(chkClone.Checked, -1, GetVersionID())) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_AlreadyExists"))
             Return False
         End If
@@ -174,9 +174,7 @@ Partial Class _EditVersion
             '' if update => UPDATE
             If Not SaveVersion(DML_OPERATION.UPDATE) Then Return False
         End If
-
         Return True
-
     End Function
 
     ''' <summary>
@@ -276,9 +274,10 @@ Partial Class _EditVersion
         '' 3. Saving the changes
         Dim strMessage As String = ""
         Dim VersionID As Long = GetVersionID()
+        Dim objVersionsBLL As New VersionsBLL
         Select Case enumOperation
             Case DML_OPERATION.UPDATE
-                If Not VersionsBLL._UpdateVersion(
+                If Not objVersionsBLL._UpdateVersion(
                                 tblLanguageContents, VersionID, strCodeNumber, _GetProductID(), decPrice, bytTaxBand, bytTaxBand2, "",
                                 snglWeight, bytDelivery, sngStockQty, sngWarnLevel, blnLive, strDownloadInfo, strDownloadType,
                                  decRRP, chrVersionType, intCustomerGrp, chrCustomizationType, strCustomizationDesc,
@@ -287,7 +286,7 @@ Partial Class _EditVersion
                     Return False
                 End If
             Case DML_OPERATION.INSERT
-                If Not VersionsBLL._AddNewVersion(
+                If Not objVersionsBLL._AddNewVersion(
                                 tblLanguageContents, strCodeNumber, _GetProductID(), decPrice, bytTaxBand, bytTaxBand2, "",
                                 snglWeight, bytDelivery, sngStockQty, sngWarnLevel, blnLive, strDownloadInfo, strDownloadType,
                                  decRRP, chrVersionType, intCustomerGrp, chrCustomizationType, strCustomizationDesc,
@@ -315,8 +314,9 @@ Partial Class _EditVersion
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub LoadMainInfo()
+        Dim objVersionsBLL As New VersionsBLL
         Dim tblVersion As New DataTable
-        tblVersion = VersionsBLL._GetVersionByID(GetVersionID())
+        tblVersion = objVersionsBLL._GetVersionByID(GetVersionID())
 
         If tblVersion.Rows.Count = 0 Then Exit Sub
 
@@ -399,8 +399,6 @@ Partial Class _EditVersion
         End If
         CheckDownloadType(CStr(FixNullFromDB(tblVersion.Rows(0)("V_DownloadInfo"))), False)
 
-
-
         updMain.Update()
     End Sub
 
@@ -421,7 +419,6 @@ Partial Class _EditVersion
         ddlCustomizationType.Enabled = True
         txtCustomizationDesc.Enabled = True
         txtCustomizationCost.Enabled = True
-
     End Sub
 
     ''' <summary>
@@ -430,6 +427,7 @@ Partial Class _EditVersion
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub DisableCombinationControls()
+        Dim objVersionsBLL As New VersionsBLL
         chkLive.Enabled = False
         If blnUseCombinationPrice Then txtPriceIncTax.Enabled = True Else txtPriceIncTax.Enabled = False
         ddlTaxBand.Enabled = False
@@ -442,7 +440,7 @@ Partial Class _EditVersion
         txtCustomizationDesc.Enabled = False
         txtCustomizationCost.Enabled = False
 
-        If Not VersionsBLL.IsStockTrackingInBase(_GetProductID()) Then
+        If Not objVersionsBLL.IsStockTrackingInBase(_GetProductID()) Then
             phdStockTracking.Visible = False
         Else
             phdStockTracking.Visible = True
@@ -450,7 +448,6 @@ Partial Class _EditVersion
             chkStockTracking.Visible = False
             litFormLabelStockTrackingText.Visible = False
             litFormLabelWarningLevel.Visible = False
-
         End If
 
     End Sub

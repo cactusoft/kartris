@@ -80,7 +80,8 @@ Partial Class UserControls_Back_RelatedProducts
 
     Protected Sub btnDeleteAll_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnDeleteAll.Click
         Dim strMessage As String = ""
-        ProductsBLL._DeleteRelatedProducts(_GetProductID(), strMessage)
+        Dim objProductsBLL As New ProductsBLL
+        objProductsBLL._DeleteRelatedProducts(_GetProductID(), strMessage)
         LoadRelatedProducts()
         gvwRelatedProducts.DataBind()
         updRelatedProducts.Update()
@@ -132,7 +133,7 @@ Partial Class UserControls_Back_RelatedProducts
     End Sub
 
     Sub SaveChanges()
-
+        Dim objProductsBLL As New ProductsBLL
         Dim tblRelatedProducts As New DataTable
         tblRelatedProducts.Columns.Add(New DataColumn("RP_ParentID", Type.GetType("System.Int32")))
         tblRelatedProducts.Columns.Add(New DataColumn("RP_ChildID", Type.GetType("System.Int32")))
@@ -146,7 +147,7 @@ Partial Class UserControls_Back_RelatedProducts
         Next
 
         Dim strMessage As String = ""
-        If Not ProductsBLL._UpdateRelatedProducts(_GetProductID(), sbdChildList.ToString(), strMessage) Then
+        If Not objProductsBLL._UpdateRelatedProducts(_GetProductID(), sbdChildList.ToString(), strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
             Return
         End If

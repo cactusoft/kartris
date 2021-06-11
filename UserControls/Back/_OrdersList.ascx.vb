@@ -463,6 +463,7 @@ Partial Class UserControls_Back_OrdersList
 
         'Email order update?
         If chkInformCustomers.Checked Then
+            Dim objUsersBLL As New UsersBLL
             Dim hidOrderLanguageID As HiddenField = DirectCast(rowGridView.FindControl("hidOrderLanguageID"), HiddenField)
             Dim hidCustomerID As HiddenField = DirectCast(rowGridView.FindControl("hidOrderCustomerID"), HiddenField)
 
@@ -479,7 +480,7 @@ Partial Class UserControls_Back_OrdersList
                 strCustomOrderStatus = hidOrderStatus.Value
             End If
             Dim strEmailFrom As String = LanguagesBLL.GetEmailFrom(CInt(hidOrderLanguageID.Value))
-            Dim strEmailTo As String = UsersBLL.GetEmailByID(CInt(hidCustomerID.Value))
+            Dim strEmailTo As String = objUsersBLL.GetEmailByID(CInt(hidCustomerID.Value))
             Dim strEmailText As String
             Dim strSubjectLine As String = GetGlobalResourceObject("Email", "EmailText_OrderUpdateFrom") & " " & GetGlobalResourceObject("Kartris", "Config_Webshopname")
             strEmailText = GetGlobalResourceObject("Email", "EmailText_OrderStatusUpdated").Replace("[order_status]", strCustomOrderStatus) & vbCrLf & vbCrLf & WebShopURL() & "CustomerViewOrder.aspx?O_ID=" & intCurrentID

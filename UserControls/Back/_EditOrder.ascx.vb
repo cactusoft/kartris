@@ -84,6 +84,7 @@ Partial Class UserControls_Back_EditOrder
                     'jeepers, let's hope this doesn't happen
                 Else
                     Dim dtOrderRecord As DataTable = objOrdersBLL.GetOrderByID(ViewState("numOrderID"))
+                    Dim objUsersBLL As New UsersBLL
                     If dtOrderRecord IsNot Nothing Then
                         If dtOrderRecord.Rows.Count = 1 Then
                             Dim strOrderData As String = ""
@@ -105,7 +106,7 @@ Partial Class UserControls_Back_EditOrder
                             Dim strOrderPaymentGateway As String = dtOrderRecord.Rows(0)("O_PaymentGateway")
                             lnkOrderCustomerID.Text = CInt(dtOrderRecord.Rows(0)("O_CustomerID"))
                             lnkOrderCustomerID.NavigateUrl = FormatCustomerLink(dtOrderRecord.Rows(0)("O_CustomerID"))
-                            txtOrderCustomerEmail.Text = UsersBLL.CleanGuestEmailUsername(UsersBLL.GetEmailByID(lnkOrderCustomerID.Text))
+                            txtOrderCustomerEmail.Text = UsersBLL.CleanGuestEmailUsername(objUsersBLL.GetEmailByID(lnkOrderCustomerID.Text))
                             txtOrderPONumber.Text = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_PurchaseOrderNo"))
                             chkOrderSent.Checked = CBool(dtOrderRecord.Rows(0)("O_Sent"))
                             chkOrderInvoiced.Checked = CBool(dtOrderRecord.Rows(0)("O_Invoiced"))
@@ -353,7 +354,8 @@ Partial Class UserControls_Back_EditOrder
     Protected Sub lnkBtnAddToBasket_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         Dim intVersionID As Long = CheckAutoCompleteData()
         If intVersionID > 0 Then
-            Dim dr As DataRow = VersionsBLL._GetVersionByID(intVersionID).Rows(0)
+            Dim objVersionsBLL As New VersionsBLL
+            Dim dr As DataRow = objVersionsBLL._GetVersionByID(intVersionID).Rows(0)
             Select Case CChar(FixNullFromDB(dr("V_Type")))
                 Case "o", "b", "c"  '' Options Product
                     litOptionsVersion.Text = intVersionID
@@ -896,6 +898,7 @@ Partial Class UserControls_Back_EditOrder
     ''' </summary>
     ''' <remarks></remarks>
     Function CheckAutoCompleteData() As Long
+        Dim objVersionsBLL As New VersionsBLL
         Dim strAutoCompleteText As String = ""
         strAutoCompleteText = _UC_AutoComplete_Item.GetText
         If strAutoCompleteText <> "" AndAlso strAutoCompleteText.Contains("(") _
@@ -903,7 +906,7 @@ Partial Class UserControls_Back_EditOrder
             Try
                 Dim numItemID As Long = CLng(Mid(strAutoCompleteText, strAutoCompleteText.LastIndexOf("(") + 2, strAutoCompleteText.LastIndexOf(")") - strAutoCompleteText.LastIndexOf("(") - 1))
                 Dim strItemName As String = ""
-                strItemName = VersionsBLL._GetNameByVersionID(numItemID, Session("_LANG"))
+                strItemName = objVersionsBLL._GetNameByVersionID(numItemID, Session("_LANG"))
 
                 If strItemName Is Nothing Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_InvalidValue"))

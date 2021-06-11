@@ -29,7 +29,10 @@ Partial Class UserControls_Back_ItemIndicator
     Public Sub CheckProductStatus()
         Dim blnProductLive As Boolean = False, strProductType As String = "", numCustomerGroup As Short = 0
         Dim numLiveVersions As Integer = 0, numLiveCategories As Integer = 0
-        ProductsBLL._GetProductStatus(_GetProductID(), blnProductLive, strProductType, _
+        Dim objVersionsBLL As New VersionsBLL
+        Dim objProductsBLL As New ProductsBLL
+
+        objProductsBLL._GetProductStatus(_GetProductID(), blnProductLive, strProductType,
                                       numLiveVersions, numLiveCategories, numCustomerGroup)
         bulList.Items.Clear()
 
@@ -56,7 +59,7 @@ Partial Class UserControls_Back_ItemIndicator
         '(e) none of the options has been assigned to the product
         If strProductType = "o" Then
             Using tblOptions As New DataTable
-                If VersionsBLL.GetProductOptions(_GetProductID(), Session("_lang")).Rows.Count = 0 Then
+                If objVersionsBLL.GetProductOptions(_GetProductID(), Session("_lang")).Rows.Count = 0 Then
                     bulList.Items.Add(New ListItem(GetGlobalResourceObject("_Kartris", "ContentText_NoOptionsSelected")))
                 End If
             End Using
@@ -76,7 +79,8 @@ Partial Class UserControls_Back_ItemIndicator
     Sub CheckCategoryStatus()
         Dim blnCategoryLive As Boolean = False, numCustomerGroup As Short = 0
         Dim numLiveParents As Integer = 0
-        CategoriesBLL._GetCategoryStatus(_GetCategoryID(), blnCategoryLive, numLiveParents, numCustomerGroup)
+        Dim objCategoriesBLL As New CategoriesBLL
+        objCategoriesBLL._GetCategoryStatus(_GetCategoryID(), blnCategoryLive, numLiveParents, numCustomerGroup)
 
         bulList.Items.Clear()
 

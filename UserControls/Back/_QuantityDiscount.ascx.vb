@@ -23,9 +23,9 @@ Partial Class UserControls_Back_QuantityDiscount
     Public Sub LoadVersionQuantityDiscount(ByVal VersionID As Long)
 
         litVersionID.Text = CStr(VersionID)
-
+        Dim objVersionsBLL As New VersionsBLL
         Dim tblQuantityDiscount As New DataTable
-        tblQuantityDiscount = VersionsBLL._GetQuantityDiscountsByVersion(GetVersionID())
+        tblQuantityDiscount = objVersionsBLL._GetQuantityDiscountsByVersion(GetVersionID())
 
         lbxQty.Items.Clear()
         lbxPrice.Items.Clear()
@@ -117,7 +117,8 @@ Partial Class UserControls_Back_QuantityDiscount
         Next
 
         Dim strMessage As String = ""
-        If Not VersionsBLL._UpdateQuantityDiscount(tblQtyDiscount, GetVersionID(), strMessage) Then
+        Dim objVersionsBLL As New VersionsBLL
+        If Not objVersionsBLL._UpdateQuantityDiscount(tblQtyDiscount, GetVersionID(), strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
             Return
         End If

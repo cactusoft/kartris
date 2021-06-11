@@ -33,7 +33,8 @@ Partial Class MegaMenuCatImage
         Dim tblCategories As New DataTable
 
         'Saving the current page's subcategories in tblCategories, depending on the pageIndex "CPGR"
-        tblCategories = CategoriesBLL.GetCategoriesPageByParentID(0, Session("LANG"), 0,
+        Dim objCategoriesBLL As New CategoriesBLL
+        tblCategories = objCategoriesBLL.GetCategoriesPageByParentID(0, Session("LANG"), 0,
                                         100, 0, 1000)
 
         If tblCategories.Rows.Count <> 0 Then
@@ -70,7 +71,8 @@ Partial Class MegaMenuCatImage
         Dim tblSubCategories As New DataTable
 
         'Saving the current page's subcategories in tblCategories, depending on the pageIndex "CPGR"
-        tblSubCategories = CategoriesBLL.GetCategoriesPageByParentID(numSubCatID, Session("LANG"), 0,
+        Dim objCategoriesBLL As New CategoriesBLL
+        tblSubCategories = objCategoriesBLL.GetCategoriesPageByParentID(numSubCatID, Session("LANG"), 0,
                                         100, 0, 1000)
 
         'Add the subcat ID as a parent value to subcats data, so we can pull it out and use

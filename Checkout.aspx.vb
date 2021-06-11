@@ -426,8 +426,9 @@ Partial Class _Checkout
         'Fails for new users
         If Not Me.IsPostBack Then
             Try
+                Dim objUsersBLL As New UsersBLL
                 If txtEUVAT.Text = "" And phdEUVAT.Visible = True Then
-                    txtEUVAT.Text = UsersBLL.GetCustomerEUVATNumber(CurrentLoggedUser.ID)
+                    txtEUVAT.Text = objUsersBLL.GetCustomerEUVATNumber(CurrentLoggedUser.ID)
                 End If
             Catch ex As Exception
                 'probably a new user or don't need vate
@@ -636,7 +637,8 @@ Partial Class _Checkout
 
             'Try to fill EU number
             Try
-                txtEUVAT.Text = UsersBLL.GetCustomerEUVATNumber(CurrentLoggedUser.ID)
+                Dim objUsersBLL As New UsersBLL
+                txtEUVAT.Text = objUsersBLL.GetCustomerEUVATNumber(CurrentLoggedUser.ID)
             Catch ex As Exception
 
             End Try

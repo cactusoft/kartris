@@ -134,8 +134,8 @@ Partial Class Admin_FeaturedProducts
                 AndAlso strAutoCompleteText.Contains(")") Then
                 Try
                     numItemID = CInt(Replace(Mid(strAutoCompleteText, numIndex + 2), ")", ""))
-
-                    If ProductsBLL._GetCustomerGroup(numItemID) <> 0 Then
+                    Dim objProductsBLL As New ProductsBLL
+                    If objProductsBLL._GetCustomerGroup(numItemID) <> 0 Then
                         _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_ProductLimitedToCustomerGroupAsFeatured"))
                         Exit Sub
                     End If

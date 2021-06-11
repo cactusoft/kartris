@@ -117,16 +117,17 @@ Partial Class Admin_Suppliers
 
         Dim strSupplierName As String = txtSupplierName.Text
         Dim blnLive As Boolean = chkSupplierLive.Checked
+        Dim objUsersBLL As New UsersBLL
 
         Dim strMessage As String = ""
         Select Case enumOperation
             Case DML_OPERATION.UPDATE
-                If Not UsersBLL._UpdateSuppliers(GetSupplierID(), strSupplierName, blnLive, strMessage) Then
+                If Not objUsersBLL._UpdateSuppliers(GetSupplierID(), strSupplierName, blnLive, strMessage) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     Return False
                 End If
             Case DML_OPERATION.INSERT
-                If Not UsersBLL._AddSuppliers(strSupplierName, blnLive, strMessage) Then
+                If Not objUsersBLL._AddSuppliers(strSupplierName, blnLive, strMessage) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     Return False
                 End If

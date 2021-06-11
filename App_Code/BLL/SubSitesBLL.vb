@@ -70,6 +70,7 @@ Public Class SubSitesBLL
                 Next
             End If
         End If
+        Return 0
     End Function
 
     ''' <summary>

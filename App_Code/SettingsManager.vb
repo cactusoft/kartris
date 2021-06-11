@@ -201,7 +201,8 @@ Public Class KartSettingsManager
     Public Shared Sub RefreshSuppliersCache()
 
         If Not HttpRuntime.Cache("KartrisSuppliersCache") Is Nothing Then HttpRuntime.Cache.Remove("KartrisSuppliersCache")
-        Dim tblSuppliers As DataTable = UsersBLL._GetSuppliersForCache()
+        Dim objUsersBLL As New UsersBLL
+        Dim tblSuppliers As DataTable = objUsersBLL._GetSuppliersForCache()
         HttpRuntime.Cache.Add("KartrisSuppliersCache", tblSuppliers, Nothing, Date.MaxValue, TimeSpan.Zero, _
                                CacheItemPriority.Low, Nothing)
     End Sub
@@ -217,7 +218,8 @@ Public Class KartSettingsManager
     Public Shared Sub RefreshCustomerGroupsCache()
 
         If Not HttpRuntime.Cache("KartrisCustomerGroupsCache") Is Nothing Then HttpRuntime.Cache.Remove("KartrisCustomerGroupsCache")
-        Dim tblCG As DataTable = UsersBLL._GetCustomerGroupsForCache()
+        Dim objUsersBLL As New UsersBLL
+        Dim tblCG As DataTable = objUsersBLL._GetCustomerGroupsForCache()
         HttpRuntime.Cache.Add("KartrisCustomerGroupsCache", tblCG, Nothing, Date.MaxValue, TimeSpan.Zero, _
                                CacheItemPriority.Low, Nothing)
     End Sub

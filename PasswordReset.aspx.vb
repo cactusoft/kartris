@@ -35,6 +35,7 @@ Partial Class PasswordReset
 
 
     Protected Sub btnSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSubmit.Click
+        Dim objUsersBLL As New UsersBLL
         If String.IsNullOrEmpty(Request.QueryString("ref")) Then
             Dim strUserPassword As String = txtCurrentPassword.Text
             Dim strNewPassword As String = txtNewPassword.Text
@@ -42,7 +43,7 @@ Partial Class PasswordReset
             'Only update if validators ok
             If Me.IsValid Then
                 If Membership.ValidateUser(CurrentLoggedUser.Email, strUserPassword) Then
-                    If UsersBLL.ChangePassword(CurrentLoggedUser.ID, strUserPassword, strNewPassword) > 0 Then UC_Updated.ShowAnimatedText()
+                    If objUsersBLL.ChangePassword(CurrentLoggedUser.ID, strUserPassword, strNewPassword) > 0 Then UC_Updated.ShowAnimatedText()
                 Else
                     Dim strErrorMessage As String = Replace(GetGlobalResourceObject("Kartris", "ContentText_CustomerCodeIncorrect"), "[label]", GetLocalResourceObject("FormLabel_ExistingCustomerCode"))
                     litWrongPassword.Text = "<span class=""error"">" & strErrorMessage & "</span>"
@@ -53,7 +54,7 @@ Partial Class PasswordReset
             Dim strRef As String = Request.QueryString("ref")
             Dim strEmailAddress As String = txtCurrentPassword.Text
 
-            Dim dtbUserDetails As DataTable = UsersBLL.GetDetails(strEmailAddress)
+            Dim dtbUserDetails As DataTable = objUsersBLL.GetDetails(strEmailAddress)
             If dtbUserDetails.Rows.Count > 0 Then
                 Dim intUserID As Integer = dtbUserDetails(0)("U_ID")
                 Dim strTempPassword As String = FixNullFromDB(dtbUserDetails(0)("U_TempPassword"))
@@ -62,8 +63,8 @@ Partial Class PasswordReset
                 If String.IsNullOrEmpty(strTempPassword) Then datExpiry = CkartrisDisplayFunctions.NowOffset.AddMinutes(-1)
 
                 If datExpiry > CkartrisDisplayFunctions.NowOffset Then
-                    If UsersBLL.EncryptSHA256Managed(strTempPassword, UsersBLL.GetSaltByEmail(strEmailAddress)) = strRef Then
-                        Dim intSuccess As Integer = UsersBLL.ChangePasswordViaRecovery(intUserID, txtConfirmPassword.Text)
+                    If objUsersBLL.EncryptSHA256Managed(strTempPassword, objUsersBLL.GetSaltByEmail(strEmailAddress)) = strRef Then
+                        Dim intSuccess As Integer = objUsersBLL.ChangePasswordViaRecovery(intUserID, txtConfirmPassword.Text)
                         If intSuccess = intUserID Then
                             UC_Updated.ShowAnimatedText()
                             Response.Redirect(WebShopURL() & "CustomerAccount.aspx?m=u")

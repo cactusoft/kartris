@@ -34,6 +34,7 @@ Partial Class ProductCompareValues
                                      ByVal pLanguageID As Short, ByVal pNotIncludedAttributes As String())
 
         '' Creating a table (Attribute Table) to hold the attributes that should be shown in the page.
+        Dim objProductsBLL As New ProductsBLL
         Dim tblAttributes As New DataTable
         tblAttributes.Columns.Add("ATTRIB_ID", Type.GetType("System.Int32"))
         tblAttributes.Columns.Add("ATTRIB_Name", Type.GetType("System.String"))
@@ -85,9 +86,9 @@ Partial Class ProductCompareValues
             '' Used in a TRY block, cause it could violate the PK constraints; because the 
             ''   productsToCompare Table has a duplicate attributeIDs along with diff. products.
             Try
-                tblAttributes.Rows.Add(FixNullFromDB(itmRow("ATTRIB_ID")), _
-                               "<strong>" & Server.HtmlEncode(FixNullFromDB(itmRow("ATTRIB_Name"))) & "</strong>", _
-                               ProductsBLL.GetAttributeValueByAttributeID_s( _
+                tblAttributes.Rows.Add(FixNullFromDB(itmRow("ATTRIB_ID")),
+                               "<strong>" & Server.HtmlEncode(FixNullFromDB(itmRow("ATTRIB_Name"))) & "</strong>",
+                               objProductsBLL.GetAttributeValueByAttributeID_s(
                                            pLanguageID, pProductID, FixNullFromDB(itmRow("ATTRIB_ID"))), FixNullFromDB(itmRow("ATTRIB_OrderByValue")))
 
                 blnAtLeastOneRow = True

@@ -1027,23 +1027,23 @@ Public NotInheritable Class CkartrisDataManipulation
                     If Not String.IsNullOrEmpty(strFromName) Then
                         objEmailFrom = New MailboxAddress(strFromName, strFrom)
                     Else
-                        objEmailFrom = New MailboxAddress(strFrom)
+                        objEmailFrom = MailboxAddress.Parse(strFrom)
                     End If
-                    Dim objEmailTo As MailboxAddress = New MailboxAddress(strTo)
+                    Dim objEmailTo As MailboxAddress = MailboxAddress.Parse(strTo)
                     Dim objMailMessage As New MimeMessage()
                     objMailMessage.From.Add(objEmailFrom)
                     objMailMessage.To.Add(objEmailTo)
                     If Not String.IsNullOrEmpty(strReplyTo) Then
-                        objMailMessage.ReplyTo.Add(New MailboxAddress(strReplyTo))
+                        objMailMessage.ReplyTo.Add(MailboxAddress.Parse(strReplyTo))
                     End If
                     If objAdditionalToAddresses IsNot Nothing Then
                         For Each objItem As MailAddress In objAdditionalToAddresses
-                            objMailMessage.To.Add(New MailboxAddress(objItem.Address))
+                            objMailMessage.To.Add(MailboxAddress.Parse(objItem.Address))
                         Next
                     End If
                     If objBCCAddress IsNot Nothing Then
                         For Each objItem As MailAddress In objBCCAddress
-                            objMailMessage.Bcc.Add(New MailboxAddress(objItem.Address))
+                            objMailMessage.Bcc.Add(MailboxAddress.Parse(objItem.Address))
                         Next
                     End If
                     objMailMessage.Subject = strSubject
@@ -1897,7 +1897,8 @@ Public NotInheritable Class CkartrisCombinations
     Public Shared Function IsCombinationsProduct(ByVal numProductID As Double) As Boolean
         'Need to see if there are combinations, if not, this is a normal options product
         Dim tblCurrentCombinations As New DataTable
-        tblCurrentCombinations = VersionsBLL._GetCombinationsByProductID(numProductID)
+        Dim objVersionsBLL As New VersionsBLL
+        tblCurrentCombinations = objVersionsBLL._GetCombinationsByProductID(numProductID)
 
         If tblCurrentCombinations.Rows.Count = 0 Then
             'No combinations, not a combinations product

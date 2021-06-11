@@ -36,8 +36,8 @@ Partial Class Admin_MarkupPrices
     Sub InitializeContents()
         litCurrencySymbol1.Text = CurrenciesBLL.CurrencySymbol(CurrenciesBLL.GetDefaultCurrency())
         litCurrencySymbol2.Text = litCurrencySymbol1.Text
-
-        Dim dtbCategories As DataTable = CategoriesBLL._GetWithProducts(Session("_LANG"))
+        Dim objCategoriesBLL As New CategoriesBLL
+        Dim dtbCategories As DataTable = objCategoriesBLL._GetWithProducts(Session("_LANG"))
         Dim dvwCategories As DataView = dtbCategories.DefaultView
         dvwCategories.Sort = "CAT_Name"
         chklistCategories.Items.Clear()
@@ -86,7 +86,8 @@ Partial Class Admin_MarkupPrices
             Exit Sub
         End If
 
-        Dim dtbVersionsRaw As DataTable = VersionsBLL._GetVersionsByCategoryList(Session("_LANG"), numFromPrice, numToPrice, strCategoryIDs)
+        Dim objVersionsBLL As New VersionsBLL
+        Dim dtbVersionsRaw As DataTable = objVersionsBLL._GetVersionsByCategoryList(Session("_LANG"), numFromPrice, numToPrice, strCategoryIDs)
 
         'Here we filter the raw versions by supplier ID if the supplier ID is not zero
         If numSupplierID > 0 Then
@@ -106,7 +107,7 @@ Partial Class Admin_MarkupPrices
         Next
 
         If ddlTargetField.SelectedValue = "qd" Then
-            dtbVersions = VersionsBLL._GetQuantityDiscountsByVersionIDList(strVersionIDs, Session("_LANG"))
+            dtbVersions = objVersionsBLL._GetQuantityDiscountsByVersionIDList(strVersionIDs, Session("_LANG"))
         Else
             dtbVersions.Columns.Add(New DataColumn("QD_Quantity", Type.GetType("System.String")))
         End If
@@ -296,7 +297,8 @@ Partial Class Admin_MarkupPrices
 
     Protected Sub btnSubmitPriceList_Click(sender As Object, e As System.EventArgs) Handles btnSubmitPriceList.Click
         Dim numLines As Integer = 0, strMessage As String = String.Empty
-        If VersionsBLL._UpdatePriceList(txtPriceList.Text.Replace(Chr(10), "#"), numLines, strMessage) Then
+        Dim objVersionsBLL As New VersionsBLL
+        If objVersionsBLL._UpdatePriceList(txtPriceList.Text.Replace(Chr(10), "#"), numLines, strMessage) Then
             txtPriceList.Text = Nothing : updPriceList.Update() '' clear the list for new entry
             CType(Me.Master, Skins_Admin_Template).DataUpdated()
         Else
@@ -340,8 +342,9 @@ Partial Class Admin_MarkupPrices
         'Paul mod 2021/01/13
         Dim blnUseVersionCode As Boolean = False
         If ddlVersionIdentifier.SelectedValue = "V_CodeNumber" Then blnUseVersionCode = True
+        Dim objVersionsBLL As New VersionsBLL
 
-        If VersionsBLL._UpdateCustomerGroupPriceList(txtCustomerGroupPriceList.Text.Replace(Chr(10), "#"), numLines, strMessage, blnUseVersionCode) Then
+        If objVersionsBLL._UpdateCustomerGroupPriceList(txtCustomerGroupPriceList.Text.Replace(Chr(10), "#"), numLines, strMessage, blnUseVersionCode) Then
             txtCustomerGroupPriceList.Text = Nothing : updCustomerGroupPriceList.Update() '' clear the list for new entry
             CType(Me.Master, Skins_Admin_Template).DataUpdated()
         Else
@@ -398,7 +401,7 @@ Partial Class Admin_MarkupPrices
         tblQtyDiscount.Columns.Add(New DataColumn("QD_VersionID", Type.GetType("System.Int64")))
         tblQtyDiscount.Columns.Add(New DataColumn("QD_Quantity", Type.GetType("System.Single")))
         tblQtyDiscount.Columns.Add(New DataColumn("QD_Price", Type.GetType("System.Single")))
-
+        Dim objVersionsBLL As New VersionsBLL
         For numCounter = 0 To aryQuantityDiscountLines.Length - 1
             Try
                 Dim aryThisLine As String() = aryQuantityDiscountLines(numCounter).Split(New Char() {","c})
@@ -409,7 +412,7 @@ Partial Class Admin_MarkupPrices
 
                 tblQtyDiscount.Rows.Add(numQD_VersionID, numQD_Quantity, HandleDecimalValues(numQD_Price))
 
-                VersionsBLL._UpdateQuantityDiscount(tblQtyDiscount, numQD_VersionID, strMessage)
+                objVersionsBLL._UpdateQuantityDiscount(tblQtyDiscount, numQD_VersionID, strMessage)
             Catch ex As Exception
                 'Fail softly
             End Try

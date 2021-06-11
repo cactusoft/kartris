@@ -129,7 +129,8 @@ Public Class CategorySiteMapProvider
     ''' that contains the Site Map
     ''' </summary>
     Private Function GetSiteMapFromDB(ByVal numLANGID As Integer) As DataTable
-        Return CategoriesBLL.GetHierarchyByLanguageID(numLANGID)
+        Dim objCategoriesBLL As New CategoriesBLL
+        Return objCategoriesBLL.GetHierarchyByLanguageID(numLANGID)
     End Function
 
     ''' <summary>
@@ -963,7 +964,8 @@ Public Class SiteMapHelper
         End If
 
         If strCategoryNameInURL.ToLower = "# -le- #" Then
-            strCategoryNameInURL = CategoriesBLL.GetNameByCategoryID(numCategoryID, numLanguageID)
+            Dim objCategoriesBLL As New CategoriesBLL
+            strCategoryNameInURL = objCategoriesBLL.GetNameByCategoryID(numCategoryID, numLanguageID)
         End If
 
         'URL Safe
@@ -977,8 +979,9 @@ Public Class SiteMapHelper
             strProductNameInURL = objLanguageElementsBLL.GetElementValue(
             numLanguageID, CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Products, CkartrisEnumerations.LANG_ELEM_FIELD_NAME.URLName, numProductID)
         End If
-        Dim objProductsBLL As New ProductsBLL
+
         If strProductNameInURL.ToLower = "# -le- #" Or strProductNameInURL = "" Then
+            Dim objProductsBLL As New ProductsBLL
             strProductNameInURL = objProductsBLL.GetNameByProductID(numProductID, numLanguageID)
         End If
 
@@ -1117,7 +1120,8 @@ Public Class _CategorySiteMapProvider
         Else
             numLANGID = CInt(HttpContext.Current.Session.Item("_LANG"))
         End If
-        Return CategoriesBLL._GetHierarchyByLanguageId(numLANGID)
+        Dim objCategoriesBLL As New CategoriesBLL
+        Return objCategoriesBLL._GetHierarchyByLanguageId(numLANGID)
     End Function
 
     ''' <summary>

@@ -73,7 +73,9 @@ Partial Class Admin_Promotions
 
         Dim strBldrPromotionText As New StringBuilder("")
         Dim intTextCounter As Integer = 0
+        Dim objCategoriesBLL As New CategoriesBLL
         Dim objProductsBLL As New ProductsBLL
+        Dim objVersionsBLL As New VersionsBLL
 
         For Each row As DataRow In tblPromotionParts.Rows
 
@@ -89,7 +91,7 @@ Partial Class Admin_Promotions
             End If
 
             If strText.Contains("[C]") AndAlso strItemID <> "" Then
-                strItemName = CategoriesBLL._GetNameByCategoryID(CInt(strItemID), Session("_LANG"))
+                strItemName = objCategoriesBLL._GetNameByCategoryID(CInt(strItemID), Session("_LANG"))
                 strItemLink = " <b><a href='_ModifyCategory.aspx?CategoryID=" & strItemID & "'>" & strItemName & "</a></b>"
                 strText = strText.Replace("[C]", strItemLink)
             End If
@@ -101,8 +103,8 @@ Partial Class Admin_Promotions
             End If
 
             If strText.Contains("[V]") AndAlso strItemID <> "" Then
-                Dim ProductID As Integer = VersionsBLL.GetProductID_s(CInt(strItemID))
-                strItemName = VersionsBLL._GetNameByVersionID(CInt(strItemID), Session("_LANG"))
+                Dim ProductID As Integer = objVersionsBLL.GetProductID_s(CInt(strItemID))
+                strItemName = objVersionsBLL._GetNameByVersionID(CInt(strItemID), Session("_LANG"))
                 strItemLink = " <b><a href='_ModifyProduct.aspx?ProductID=" & ProductID & "'>" &
                     objProductsBLL._GetNameByProductID(ProductID, 1) & " (" & strItemName & ")</a></b>"
                 strText = strText.Replace("[V]", strItemLink)

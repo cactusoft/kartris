@@ -39,10 +39,11 @@ Public NotInheritable Class HttpSecureCookie
     ''' Creates a SHA256 hash
     ''' </summary>
     Public Shared Function CreateHash(ByVal drwLogin As DataRow, ByVal strUserName As String, ByVal strPassword As String, ByVal strClientIP As String) As String
-        Dim strUserData As String = strUserName & "##" & drwLogin("LOGIN_Config").ToString & "##" & _
-                            drwLogin("LOGIN_Products").ToString & "##" & drwLogin("LOGIN_Orders").ToString & "##" & _
-                            drwLogin("LOGIN_LanguageID").ToString & "##" & NowOffset() & "##" & _
-                            UsersBLL.EncryptSHA256Managed(strPassword, LoginsBLL._GetSaltByUserName(strUserName), True) & "##" & strClientIP & "##" & drwLogin("LOGIN_Tickets").ToString
+        Dim objUsersBLL As New UsersBLL
+        Dim strUserData As String = strUserName & "##" & drwLogin("LOGIN_Config").ToString & "##" &
+                            drwLogin("LOGIN_Products").ToString & "##" & drwLogin("LOGIN_Orders").ToString & "##" &
+                            drwLogin("LOGIN_LanguageID").ToString & "##" & NowOffset() & "##" &
+                            objUsersBLL.EncryptSHA256Managed(strPassword, LoginsBLL._GetSaltByUserName(strUserName), True) & "##" & strClientIP & "##" & drwLogin("LOGIN_Tickets").ToString
         Dim objTicket As New FormsAuthenticationTicket(1, strUserName, NowOffset, NowOffset.AddDays(1), True, strUserData, FormsAuthentication.FormsCookiePath)
         Return FormsAuthentication.Encrypt(objTicket)
     End Function

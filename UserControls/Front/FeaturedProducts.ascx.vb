@@ -55,7 +55,8 @@ Partial Class UserControls_Skin_FeaturedProducts
         For i As Integer = 0 To drwFeaturedProducts.Length - 1
             Dim numMinPrice As Single = FixNullFromDB(drwFeaturedProducts(i)("MinPrice"))
             If Page.User.Identity.IsAuthenticated AndAlso CType(Page, PageBaseClass).CurrentLoggedUser.CustomerGroupID <> 0 Then
-                numMinPrice = ProductsBLL.GetMinPriceByCG(drwFeaturedProducts(i)("P_ID"), _
+                Dim objProductsBLL As New ProductsBLL
+                numMinPrice = objProductsBLL.GetMinPriceByCG(drwFeaturedProducts(i)("P_ID"),
                                                           CType(Page, PageBaseClass).CurrentLoggedUser.CustomerGroupID)
             End If
             tblFeaturedProducts.Rows.Add(drwFeaturedProducts(i)("P_ID"), _

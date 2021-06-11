@@ -170,7 +170,8 @@ Partial Class UserControls_General_Invoice
 
         'MOD v3.0001
         'Add email to invoice
-        litEmail.Text = UsersBLL.GetEmailByID(_CustomerID)
+        Dim objUsersBLL As New UsersBLL
+        litEmail.Text = objUsersBLL.GetEmailByID(_CustomerID)
 
         If Not String.IsNullOrWhiteSpace(strOrderComments) AndAlso KartSettingsManager.GetKartConfig("frontend.orders.showcommentsoninvoice") = "y" Then
             CType(FindControl("phdOrderComments"), PlaceHolder).Visible = True
@@ -202,6 +203,8 @@ Partial Class UserControls_General_Invoice
             numPromoDiscountTotal = 0
 
         ElseIf e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
+            Dim objProductsBLL As New ProductsBLL
+            Dim objVersionsBLL As New VersionsBLL
             strVersionCode = e.Item.DataItem("IR_VersionCode")
             strCustomizationOptionText = e.Item.DataItem("IR_OptionsText")
             numTotal = e.Item.DataItem("O_TotalPrice")
@@ -241,8 +244,6 @@ Partial Class UserControls_General_Invoice
 
             'Handle items that are exempt from customer discount
             blnExcludeFromCustomerDiscount = e.Item.DataItem("IR_ExcludeFromCustomerDiscount")
-
-
 
             'Totals
             If e.Item.DataItem("O_PricesIncTax") Then
@@ -297,12 +298,12 @@ Partial Class UserControls_General_Invoice
             'Extra rows for more info - Brexit related for UK clients
             CType(e.Item.FindControl("phdNonUKRows"), PlaceHolder).Visible = KartSettingsManager.GetKartConfig("general.orders.extendedinvoiceinfo") = "y"
             CType(e.Item.FindControl("litDiscountedValue"), Literal).Text = ""
-            CType(e.Item.FindControl("litWeight"), Literal).Text = VersionsBLL._GetWeightByVersionCode(strVersionCode)
+            CType(e.Item.FindControl("litWeight"), Literal).Text = objVersionsBLL._GetWeightByVersionCode(strVersionCode)
             CType(e.Item.FindControl("litDiscountedValue"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, ((100 - numDiscountPercentage) / 100) * numRowPriceExTax)
 
             'Commodity code, first we lookup product ID from the SKU, then use that
             'to see if any commodity code. 
-            Dim numProductID As Integer = ProductsBLL.GetProductIDByVersionCode(strVersionCode)
+            Dim numProductID As Integer = objProductsBLL.GetProductIDByVersionCode(strVersionCode)
             Dim strCommodityCode As String = ObjectConfigBLL.GetValue("K:product.commoditycode", numProductID)
             If strCommodityCode <> "" Then
                 CType(e.Item.FindControl("phdCommodityCode"), PlaceHolder).Visible = True

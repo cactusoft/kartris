@@ -58,7 +58,8 @@ Partial Class Admin_ModifyCategory
     End Sub
 
     Sub PrepareExistingCategory()
-        litCategoryName.Text = CategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG"))
+        Dim objCategoriesBLL As New CategoriesBLL
+        litCategoryName.Text = objCategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG"))
         For Each t As AjaxControlToolkit.TabPanel In tabContainerProduct.Tabs
             t.Enabled = True : t.Visible = True
         Next

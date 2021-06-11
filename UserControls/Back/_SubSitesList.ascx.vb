@@ -91,9 +91,9 @@ Partial Class UserControls_Back_SubSiteList
             Dim strCategoryText As String = _UC_AutoComplete.GetText()
             If strCategoryText <> "" Then
                 If lbxCategory.Items.Count = 0 Then
-
+                    Dim objCategoriesBLL As New CategoriesBLL
                     Dim numCategoryID As Integer = CInt(Mid(strCategoryText, strCategoryText.LastIndexOf("(") + 2, strCategoryText.LastIndexOf(")") - strCategoryText.LastIndexOf("(") - 1))
-                    Dim strCategoryName As String = CategoriesBLL._GetNameByCategoryID(numCategoryID, Session("_LANG"))
+                    Dim strCategoryName As String = objCategoriesBLL._GetNameByCategoryID(numCategoryID, Session("_LANG"))
                     If Not strCategoryName Is Nothing Then
                         If lbxCategory.Items.FindByValue(CStr(numCategoryID)) Is Nothing Then
                             lbxCategory.Items.Add(New ListItem(strCategoryName, CStr(numCategoryID)))

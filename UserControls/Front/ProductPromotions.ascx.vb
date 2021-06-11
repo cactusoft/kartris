@@ -213,6 +213,9 @@ Partial Class ProductPromotions
 
         Dim sbdPromotionText As New StringBuilder("")
         Dim intTextCounter As Integer = 0
+        Dim objCategoriesBLL As New CategoriesBLL
+        Dim objProductsBLL As New ProductsBLL
+        Dim objVersionsBLL As New VersionsBLL
 
         For Each drwPromoParts As DataRow In tblPromotionParts.Rows
 
@@ -232,12 +235,10 @@ Partial Class ProductPromotions
             End If
 
             If strText.Contains("[C]") AndAlso strItemID <> "" Then
-                strItemName = Server.HtmlEncode(CategoriesBLL.GetNameByCategoryID(CInt(strItemID), Session("LANG")))
+                strItemName = Server.HtmlEncode(objCategoriesBLL.GetNameByCategoryID(CInt(strItemID), Session("LANG")))
                 strItemLink = " <a href='" & CreateURL(SiteMapHelper.Page.CanonicalCategory, strItemID) & "'>" & strItemName & "</a>"
                 strText = strText.Replace("[C]", strItemLink)
             End If
-
-            Dim objProductsBLL As New ProductsBLL
 
             If strText.Contains("[P]") AndAlso strItemID <> "" Then
                 strItemName = Server.HtmlEncode(objProductsBLL.GetNameByProductID(CInt(strItemID), Session("LANG")))
@@ -246,8 +247,8 @@ Partial Class ProductPromotions
             End If
 
             If strText.Contains("[V]") AndAlso strItemID <> "" Then
-                Dim ProductID As Integer = VersionsBLL.GetProductID_s(CInt(strItemID))
-                strItemName = Server.HtmlEncode(VersionsBLL._GetNameByVersionID(CInt(strItemID), Session("LANG")))
+                Dim ProductID As Integer = objVersionsBLL.GetProductID_s(CInt(strItemID))
+                strItemName = Server.HtmlEncode(objVersionsBLL._GetNameByVersionID(CInt(strItemID), Session("LANG")))
                 strItemLink = " <a href='" & CreateURL(SiteMapHelper.Page.CanonicalProduct, ProductID) & "'>" &
                 objProductsBLL.GetNameByProductID(ProductID, Session("LANG")) & " (" & strItemName & ")</a>"
                 strText = strText.Replace("[V]", strItemLink)

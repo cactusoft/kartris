@@ -47,10 +47,11 @@ Partial Class MegaMenuCatSub
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub FormatTopMenu()
+        Dim objCategoriesBLL As New CategoriesBLL
         Dim tblCategories As New DataTable
 
         'Saving the current page's subcategories in tblCategories, depending on the pageIndex "CPGR"
-        tblCategories = CategoriesBLL.GetCategoriesPageByParentID(RootCategoryID(), Session("LANG"), 0,
+        tblCategories = objCategoriesBLL.GetCategoriesPageByParentID(RootCategoryID(), Session("LANG"), 0,
                                         100, 0, 1000)
 
         If tblCategories.Rows.Count <> 0 Then
@@ -88,10 +89,11 @@ Partial Class MegaMenuCatSub
     Private Sub FormatSubMenu(ByVal numSubCatID As Integer, ByVal rptMegaMenu As Repeater)
         AddHandler rptMegaMenu.ItemDataBound, AddressOf rptMegaMenu_ItemDataBound
 
+        Dim objCategoriesBLL As New CategoriesBLL
         Dim tblSubCategories As New DataTable
 
         'Saving the current page's subcategories in tblCategories, depending on the pageIndex "CPGR"
-        tblSubCategories = CategoriesBLL.GetCategoriesPageByParentID(numSubCatID, Session("LANG"), 0,
+        tblSubCategories = objCategoriesBLL.GetCategoriesPageByParentID(numSubCatID, Session("LANG"), 0,
                                         100, 0, 1000)
 
         'Add the subcat ID as a parent value to subcats data, so we can pull it out and use

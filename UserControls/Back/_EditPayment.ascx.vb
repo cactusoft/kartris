@@ -28,17 +28,18 @@ Partial Class UserControls_Back_EditPayment
         If Not Page.IsPostBack Then
 
             Dim objOrdersBLL As New OrdersBLL
+            Dim objUsersBLL As New UsersBLL
 
             ViewState("Referer") = Request.ServerVariables("HTTP_REFERER")
 
-            
-                'Payment gateways
-                Dim strPaymentMethods As String = GetKartConfig("frontend.payment.gatewayslist")
-                Dim arrPaymentsMethods As String() = Split(strPaymentMethods, ",")
-                Try
-                    ddlPaymentGateways.Items.Add(New ListItem(GetGlobalResourceObject("Kartris", "ContentText_DropdownSelectDefault"), ""))
-                    For Each strGatewayEntry As String In arrPaymentsMethods
-                        Dim arrGateway As String() = Split(strGatewayEntry, "::")
+
+            'Payment gateways
+            Dim strPaymentMethods As String = GetKartConfig("frontend.payment.gatewayslist")
+            Dim arrPaymentsMethods As String() = Split(strPaymentMethods, ",")
+            Try
+                ddlPaymentGateways.Items.Add(New ListItem(GetGlobalResourceObject("Kartris", "ContentText_DropdownSelectDefault"), ""))
+                For Each strGatewayEntry As String In arrPaymentsMethods
+                    Dim arrGateway As String() = Split(strGatewayEntry, "::")
                     If UBound(arrGateway) = 4 Then
                         Dim blnOkToAdd As Boolean = True
                         If arrGateway(4) = "p" Then
@@ -61,16 +62,16 @@ Partial Class UserControls_Back_EditPayment
                         Throw New Exception("Invalid gatewaylist config setting!")
                     End If
 
-                    Next
+                Next
 
-                Catch ex As Exception
-                    Throw New Exception("Error loading payment gateway list")
-                End Try
+            Catch ex As Exception
+                Throw New Exception("Error loading payment gateway list")
+            End Try
 
-                If ddlPaymentGateways.Items.Count = 1 Then
-                    Throw New Exception("No valid payment gateways")
-                End If
-            
+            If ddlPaymentGateways.Items.Count = 1 Then
+                Throw New Exception("No valid payment gateways")
+            End If
+
             Try
                 Dim tblCurrenceis As DataTable = KartSettingsManager.GetCurrenciesFromCache() 'CurrenciesBLL.GetCurrencies()
                 Dim drwLiveCurrencies As DataRow() = tblCurrenceis.Select("CUR_Live = 1")
@@ -101,7 +102,7 @@ Partial Class UserControls_Back_EditPayment
                         End If
                         'add fill up the customer email if the CustomerID QS passed is valid
                         If intCustomerID > 0 Then
-                            Dim strCustomerEmail As String = UsersBLL.GetEmailByID(intCustomerID)
+                            Dim strCustomerEmail As String = objUsersBLL.GetEmailByID(intCustomerID)
                             If Not String.IsNullOrEmpty(strCustomerEmail) Then SetPaymentCustomer(strCustomerEmail)
                         End If
                     Catch ex As Exception
@@ -122,7 +123,7 @@ Partial Class UserControls_Back_EditPayment
 
                     txtPaymentDate.Text = FormatDate(FixNullFromDB(tblPayment.Rows(0)("Payment_Date")), "d", Session("_LANG"))
 
-                    SetPaymentCustomer(UsersBLL.GetEmailByID(lngCustomerID))
+                    SetPaymentCustomer(objUsersBLL.GetEmailByID(lngCustomerID))
                     SetPaymentCurrency(intCurrencyID)
                     txtPaymentAmount.Text = FixNullFromDB(tblPayment.Rows(0)("Payment_Amount"))
                     txtPaymentReferenceCode.Text = FixNullFromDB(tblPayment.Rows(0)("Payment_ReferenceNo"))
@@ -180,6 +181,7 @@ Partial Class UserControls_Back_EditPayment
                 Dim numOrderID As Long = CLng(strOrderID)
                 Dim tblOrder As New DataTable
                 Dim objOrdersBLL As New OrdersBLL
+                Dim objUsersBLL As New UsersBLL
 
                 tblOrder = objOrdersBLL.GetOrderByID(numOrderID)
 
@@ -189,7 +191,7 @@ Partial Class UserControls_Back_EditPayment
                     Dim intCurrencyID As Integer = FixNullFromDB(tblOrder.Rows(0)("O_CurrencyID"))
 
 
-                    If SetPaymentCustomer(UsersBLL.GetEmailByID(lngCustomerID)) = 0 Then
+                    If SetPaymentCustomer(objUsersBLL.GetEmailByID(lngCustomerID)) = 0 Then
                         _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_InvalidValue"))
                     End If
 
@@ -242,8 +244,9 @@ Partial Class UserControls_Back_EditPayment
     End Sub
 
     Function SetPaymentCustomer(ByVal strCustomerEmail As String) As Long
+        Dim objUsersBLL As New UsersBLL
         Dim tblCustomer As New DataTable
-        tblCustomer = UsersBLL.GetDetails(strCustomerEmail)
+        tblCustomer = objUsersBLL.GetDetails(strCustomerEmail)
         If tblCustomer.Rows.Count > 0 Then
             Dim lngCustomerID As Long = CLng(FixNullFromDB(tblCustomer.Rows(0)("U_ID")))
             txtPaymentCustomerEmail.Text = strCustomerEmail
@@ -329,20 +332,22 @@ Partial Class UserControls_Back_EditPayment
         'OrdersBLL._Delete(ViewState("numOrderID"), blnReturnStock)
         If Not String.IsNullOrEmpty(Request.QueryString("PaymentID")) Then
             Dim lngPaymentID As Long = CLng(Request.QueryString("PaymentID"))
-            OrdersBLL._DeletePayment(lngPaymentID)
+            Dim objOrdersBLL As New OrdersBLL
+            objOrdersBLL._DeletePayment(lngPaymentID)
             Response.Redirect(ViewState("Referer"))
         End If
     End Sub
 
     Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSave.Click
         Try
+            Dim objOrdersBLL As New OrdersBLL
             If Not String.IsNullOrEmpty(Request.QueryString("PaymentID")) Then
                 Dim lngPaymentID As Long = CLng(Request.QueryString("PaymentID"))
-                If OrdersBLL._UpdatePayment(lngPaymentID, txtPaymentDate.Text, litPaymentCustomerID.Text, txtPaymentAmount.Text, ddlPaymentCurrency.SelectedValue,
+                If objOrdersBLL._UpdatePayment(lngPaymentID, txtPaymentDate.Text, litPaymentCustomerID.Text, txtPaymentAmount.Text, ddlPaymentCurrency.SelectedValue,
                                             ddlPaymentGateways.SelectedValue, txtPaymentReferenceCode.Text, txtPaymentCurrencyRate.Text, lbxOrders.Items) > 0 Then RaiseEvent ShowMasterUpdate()
             Else
                 Dim intNewPaymentID As Integer
-                intNewPaymentID = OrdersBLL._AddNewPayment(txtPaymentDate.Text, litPaymentCustomerID.Text, txtPaymentAmount.Text, ddlPaymentCurrency.SelectedValue, ddlPaymentGateways.SelectedValue,
+                intNewPaymentID = objOrdersBLL._AddNewPayment(txtPaymentDate.Text, litPaymentCustomerID.Text, txtPaymentAmount.Text, ddlPaymentCurrency.SelectedValue, ddlPaymentGateways.SelectedValue,
                                          txtPaymentReferenceCode.Text, txtPaymentCurrencyRate.Text, lbxOrders.Items)
                 If intNewPaymentID > 0 Then
                     Response.Redirect("_ModifyPayment.aspx?PaymentID=" & intNewPaymentID & "&s=update")
@@ -351,7 +356,7 @@ Partial Class UserControls_Back_EditPayment
         Catch ex As Exception
             'Oh dear
         End Try
-        
+
     End Sub
 End Class
 

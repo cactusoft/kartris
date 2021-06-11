@@ -138,8 +138,9 @@ Partial Class _VersionView
             updEditVersion.Update()
             _UC_EditVersion.CreateVersionData(GetVersionID(), blnClone)
         Else
+            Dim objVersionsBLL As New VersionsBLL
             ShowVersionTabs()
-            litVersionName.Text = VersionsBLL._GetNameByVersionID(GetVersionID(), Session("_LANG"))
+            litVersionName.Text = objVersionsBLL._GetNameByVersionID(GetVersionID(), Session("_LANG"))
             lnkBtnDelete.Visible = True
             updEditVersion.Update()
 
@@ -194,9 +195,9 @@ Partial Class _VersionView
         gvwViewVersions.DataBind()
 
         Dim objProductsBLL As New ProductsBLL
-
+        Dim objVersionsBLL As New VersionsBLL
         Dim tblVersions As New DataTable
-        tblVersions = VersionsBLL._GetByProduct(_GetProductID(), Session("_LANG"))
+        tblVersions = objVersionsBLL._GetByProduct(_GetProductID(), Session("_LANG"))
 
         If tblVersions.Rows.Count = 0 Then ShowNoVersions() : Exit Sub
 
@@ -296,7 +297,8 @@ Partial Class _VersionView
             Case "MoveUp"
                 '' Will use try to avoid error in case of null values or 0 values
                 Try
-                    VersionsBLL._ChangeSortValue(e.CommandArgument, _GetProductID(), "u")
+                    Dim objVersionsBLL As New VersionsBLL
+                    objVersionsBLL._ChangeSortValue(e.CommandArgument, _GetProductID(), "u")
                     LoadVersions()
                     updVersions.Update()
                 Catch ex As Exception
@@ -305,7 +307,8 @@ Partial Class _VersionView
             Case "MoveDown"
                 '' Will use try to avoid error in case of null values or 0 values
                 Try
-                    VersionsBLL._ChangeSortValue(e.CommandArgument, _GetProductID(), "d")
+                    Dim objVersionsBLL As New VersionsBLL
+                    objVersionsBLL._ChangeSortValue(e.CommandArgument, _GetProductID(), "d")
                     LoadVersions()
                     updVersions.Update()
                 Catch ex As Exception
@@ -358,7 +361,8 @@ Partial Class _VersionView
     Protected Sub _UC_PopupMsg_Confirmed() Handles _UC_PopupMsg.Confirmed
         If Page.IsPostBack Then
             Dim strMessage As String = "", strDownloadFiles = ""
-            If VersionsBLL._DeleteVersion(GetVersionID(), strDownloadFiles, strMessage) Then
+            Dim objVersionsBLL As New VersionsBLL
+            If objVersionsBLL._DeleteVersion(GetVersionID(), strDownloadFiles, strMessage) Then
 
                 If GetKartConfig("backend.files.delete.cleanup ") = "y" Then KartrisDBBLL.DeleteNotNeededFiles()
                 RemoveDownloadFiles(strDownloadFiles)

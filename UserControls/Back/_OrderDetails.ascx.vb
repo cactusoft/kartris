@@ -170,6 +170,8 @@ Partial Class UserControls_Back_OrderDetails
 
         Dim hidSendOrderUpdateEmail As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidSendOrderUpdateEmail"), HiddenField)
 
+        Dim objUsersBLL As New UsersBLL
+
         'Email order update?
         If hidSendOrderUpdateEmail.Value = True Then
 
@@ -180,7 +182,7 @@ Partial Class UserControls_Back_OrderDetails
                 Dim hidCustomerID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidCustomerID"), HiddenField)
 
                 Dim strEmailFrom As String = LanguagesBLL.GetEmailFrom(CInt(hidOrderLanguageID.Value))
-                Dim strEmailTo As String = UsersBLL.GetEmailByID(CInt(hidCustomerID.Value))
+                Dim strEmailTo As String = objUsersBLL.GetEmailByID(CInt(hidCustomerID.Value))
                 Dim strEmailText As String
                 Dim strSubjectLine As String = _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "EmailText_OrderUpdateFrom") & " " & Server.HtmlEncode(_GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "f", "Config_Webshopname"))
                 strEmailText = _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "EmailText_OrderStatusUpdated") & vbCrLf & WebShopURL() & "CustomerViewOrder.aspx?O_ID=" & litOrderID.Text
@@ -250,6 +252,7 @@ Partial Class UserControls_Back_OrderDetails
 
         'This line is actually the one that updates the order - not the built-in FormView update. Gives us more flexibility - needs to catch some thingies. =)
         Dim objOrdersBLL As New OrdersBLL
+
         If objOrdersBLL._UpdateStatus(ViewState("numOrderID"), chkOrderSent.Checked, chkOrderPaid.Checked, chkOrderShipped.Checked,
                                 chkOrderInvoiced.Checked, txtOrderStatus.Text, txtOrderNotes.Text, chkOrderCancelled.Checked) > 0 Then
             If KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y" Then
@@ -258,7 +261,7 @@ Partial Class UserControls_Back_OrderDetails
                         Dim hidOrderCurrencyID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidOrderCurrencyID"), HiddenField)
                         Dim intOrderCurrencyID As Integer = CInt(hidOrderCurrencyID.Value)
                         Dim hidCustomerID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidCustomerID"), HiddenField)
-                        Dim kartrisUser As KartrisMemberShipUser = Membership.GetUser(UsersBLL.GetEmailByID(CInt(hidCustomerID.Value)))
+                        Dim kartrisUser As KartrisMemberShipUser = Membership.GetUser(objUsersBLL.GetEmailByID(CInt(hidCustomerID.Value)))
                         Dim basketObj As Basket = GetBasket(ViewState("numOrderID"))
                         Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(kartrisUser, basketObj, CurrenciesBLL.CurrencyCode(intOrderCurrencyID))
 

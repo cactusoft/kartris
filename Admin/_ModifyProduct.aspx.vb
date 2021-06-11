@@ -222,8 +222,8 @@ Partial Class Admin_ModifyProduct
         Dim objProductsBLL As New ProductsBLL
         If objProductsBLL._GetProductType_s(_GetProductID()) = "o" Then
             _UC_ProductOptionGroups.CreateProductOptionGroups()
-
-            If VersionsBLL._GetNoOfVersionsByProductID(_GetProductID()) = 0 Then
+            Dim objVersionsBLL As New VersionsBLL
+            If objVersionsBLL._GetNoOfVersionsByProductID(_GetProductID()) = 0 Then
                 If mvwEditProduct.ActiveViewIndex = 5 Then mvwEditProduct.ActiveViewIndex = 0
             End If
             lnkOptions.Visible = True

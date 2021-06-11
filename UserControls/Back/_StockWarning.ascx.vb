@@ -49,7 +49,8 @@ Partial Class UserControls_Back_StockWarning
     'Load stock level
     Private Sub LoadStockLevel()
         Dim tblStockLevel As DataTable
-        tblStockLevel = VersionsBLL._GetStockLevel(Session("_LANG"))
+        Dim objVersionsBLL As New VersionsBLL
+        tblStockLevel = objVersionsBLL._GetStockLevel(Session("_LANG"))
 
         Dim dvwStock As DataView = tblStockLevel.DefaultView
         If ddlSupplier.SelectedValue <> 0 Then
@@ -102,6 +103,7 @@ Partial Class UserControls_Back_StockWarning
 
     'Update the stock level line by line
     Private Sub UpdateStockLevel()
+        Dim objVersionsBLL As New VersionsBLL
         Dim tblVersionsToUpdate As New DataTable
         tblVersionsToUpdate.Columns.Add(New DataColumn("VersionID", Type.GetType("System.Int64")))
         tblVersionsToUpdate.Columns.Add(New DataColumn("StockQty", Type.GetType("System.Single")))
@@ -119,7 +121,7 @@ Partial Class UserControls_Back_StockWarning
             End If
         Next
         Dim strMessage As String = ""
-        If Not VersionsBLL._UpdateVersionStockLevel(tblVersionsToUpdate, strMessage) Then
+        If Not objVersionsBLL._UpdateVersionStockLevel(tblVersionsToUpdate, strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
         Else
             'success, show updated message
@@ -133,9 +135,9 @@ Partial Class UserControls_Back_StockWarning
     'simple to modify in bulk in Excel or a spreadsheet
     'program then upload and update by file
     Protected Sub btnExportCSV_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnExportCSV.Click
-
+        Dim objVersionsBLL As New VersionsBLL
         Dim tblStockLevel As DataTable
-        tblStockLevel = VersionsBLL._GetStockLevel(Session("_LANG"))
+        tblStockLevel = objVersionsBLL._GetStockLevel(Session("_LANG"))
 
         Dim strFileName As String = "Stock Level"
         Dim dvwStock As DataView = tblStockLevel.DefaultView
@@ -151,7 +153,7 @@ Partial Class UserControls_Back_StockWarning
         tblExport.Columns.Add(New DataColumn("Warning Level", Type.GetType("System.Single")))
 
         For Each row As DataRow In dvwStock.ToTable.Rows
-            tblExport.Rows.Add("""" & Replace(FixNullFromDB(row("V_CodeNumber").ToString), """", """""") & """", """" & Replace(FixNullFromDB(row("V_Name").ToString), """", """""") & """", _
+            tblExport.Rows.Add("""" & Replace(FixNullFromDB(row("V_CodeNumber").ToString), """", """""") & """", """" & Replace(FixNullFromDB(row("V_Name").ToString), """", """""") & """",
                                FixNullFromDB(row("V_Quantity")), FixNullFromDB(row("V_QuantityWarnLevel")))
         Next
 
@@ -311,6 +313,7 @@ Partial Class UserControls_Back_StockWarning
     'Save the import
     Protected Sub btnSaveImport_Click(sender As Object, e As System.EventArgs) Handles btnSaveImport.Click
         If gvwImportStockLevel.Rows.Count = 0 Then Exit Sub
+        Dim objVersionsBLL As New VersionsBLL
         Dim tblVersionsToUpdate As New DataTable
         tblVersionsToUpdate.Columns.Add(New DataColumn("VersionCode", Type.GetType("System.String")))
         tblVersionsToUpdate.Columns.Add(New DataColumn("StockQty", Type.GetType("System.Single")))
@@ -327,7 +330,7 @@ Partial Class UserControls_Back_StockWarning
             End If
         Next
         Dim strMessage As String = ""
-        If Not VersionsBLL._UpdateVersionStockLevelByCode(tblVersionsToUpdate, strMessage) Then
+        If Not objVersionsBLL._UpdateVersionStockLevelByCode(tblVersionsToUpdate, strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
         Else
             'success, show updated message

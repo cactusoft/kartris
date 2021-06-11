@@ -159,7 +159,8 @@ Partial Class CategoryProductsView
         End If
 
         '' Saving the current page's products in tblProducts, depending on the pageIndex "PPGR"
-        pTblProducts = ProductsBLL.GetProductsPageByCategory(Request, _CategoryID, _LanguageID, numPageIndx, _
+        Dim objProductsBLL As New ProductsBLL
+        pTblProducts = objProductsBLL.GetProductsPageByCategory(Request, _CategoryID, _LanguageID, numPageIndx,
                                                                 _RowsPerPage, numCGroupID, c_numTotalProductsInCategory)
 
         If pTblProducts.Rows.Count <> 0 Then

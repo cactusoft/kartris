@@ -391,7 +391,7 @@ Public Class OrdersBLL
         Return Adptr._GetCustomerTotal(CustomerID)
     End Function
 #Region "Payment"
-    Public Shared Function _AddNewPayment(ByVal Payment_Date As Date, ByVal Payment_CustomerID As Integer, ByVal Payment_Amount As Double, ByVal Payment_CurrencyID As Integer,
+    Public Function _AddNewPayment(ByVal Payment_Date As Date, ByVal Payment_CustomerID As Integer, ByVal Payment_Amount As Double, ByVal Payment_CurrencyID As Integer,
                                                     ByVal Payment_Gateway As String, ByVal Payment_ReferenceCode As String, ByVal Payment_ExchangeRate As Double,
                                                     ByVal lcLinkedOrders As ListItemCollection) As Integer
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -432,8 +432,8 @@ Public Class OrdersBLL
                     Next
                 End If
 
-                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Orders, _
-               GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"), _
+                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Orders,
+               GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"),
                CreateQuery(cmd), intNewPaymentID, sqlConn, savePoint)
 
                 ' If we reach here, no errors, so commit the transaction
@@ -451,7 +451,7 @@ Public Class OrdersBLL
             End Try
         End Using
     End Function
-    Public Shared Function _UpdatePayment(ByVal Payment_ID As Integer, ByVal Payment_Date As Date, ByVal Payment_CustomerID As Integer, ByVal Payment_Amount As Double,
+    Public Function _UpdatePayment(ByVal Payment_ID As Integer, ByVal Payment_Date As Date, ByVal Payment_CustomerID As Integer, ByVal Payment_Amount As Double,
                                           ByVal Payment_CurrencyID As Integer, ByVal Payment_Gateway As String, ByVal Payment_ReferenceCode As String,
                                           ByVal Payment_ExchangeRate As Double, ByVal lcLinkedOrders As ListItemCollection) As Integer
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -499,8 +499,8 @@ Public Class OrdersBLL
                     Next
                 End If
 
-                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Orders, _
-               GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"), _
+                KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Orders,
+               GetGlobalResourceObject("_Kartris", "ContentText_OperationCompletedSuccessfully"),
                CreateQuery(cmd), Payment_ID, sqlConn, savePoint)
 
                 ' If we reach here, no errors, so commit the transaction
@@ -524,7 +524,7 @@ Public Class OrdersBLL
     Public Function _GetPaymentByID(ByVal PaymentID As Long) As DataTable
         Return PaymentsAdptr._Get(PaymentID)
     End Function
-    Public Shared Function _DeletePayment(ByVal PaymentID As Long) As Integer
+    Public Function _DeletePayment(ByVal PaymentID As Long) As Integer
         Return PaymentsAdptr._Delete(PaymentID)
     End Function
     Public Function _GetPaymentLinkedOrders(ByVal PaymentID As Long) As DataTable
@@ -590,6 +590,7 @@ Public Class OrdersBLL
                 Dim strBillingAddressText As String = "", strShippingAddressText As String = ""
 
                 Dim objBasket As Kartris.Basket = BasketObject
+                Dim objUsersBLL As New UsersBLL
                 Dim arrBasketItems As List(Of Kartris.BasketItem) = BasketArray
 
                 'if C_ID has a value then we have a legitimate user - proceed with the order transaction
@@ -599,7 +600,7 @@ Public Class OrdersBLL
                     Dim cmdAddOrderUser As New SqlCommand("spKartrisUsers_Add", sqlConn, savePoint)
                     cmdAddOrderUser.CommandType = CommandType.StoredProcedure
                     cmdAddOrderUser.Parameters.AddWithValue("@U_EmailAddress", strUserEmailAddress)
-                    cmdAddOrderUser.Parameters.AddWithValue("@U_Password", UsersBLL.EncryptSHA256Managed(strUserPassword, strRandomSalt))
+                    cmdAddOrderUser.Parameters.AddWithValue("@U_Password", objUsersBLL.EncryptSHA256Managed(strUserPassword, strRandomSalt))
                     cmdAddOrderUser.Parameters.AddWithValue("@U_SaltValue", strRandomSalt)
                     cmdAddOrderUser.Parameters.AddWithValue("@U_GDPR_SignupIP", CkartrisEnvironment.GetClientIPAddress())
                     cmdAddOrderUser.Parameters.AddWithValue("@U_GDPR_IsGuest", blnIsGuest)
@@ -921,8 +922,9 @@ Public Class OrdersBLL
                 sqlConn.Close()
 
                 'Try to update customer balance before returning value
+                Dim objUsersBLL As New UsersBLL
                 Try
-                    UsersBLL.UpdateCustomerBalance(O_CustomerID,
+                    objUsersBLL.UpdateCustomerBalance(O_CustomerID,
                                 CDec(_GetPaymentTotalByCustomerID(O_CustomerID) - _GetOrderTotalByCustomerID(O_CustomerID)))
                 Catch ex As Exception
 
@@ -1002,11 +1004,11 @@ Public Class OrdersBLL
 
     End Function
 
-    Public Shared Function GetQBQueue() As DataTable
+    Public Function GetQBQueue() As DataTable
         Return Adptr.GetQBQueue
     End Function
 
-    Public Shared Function UpdateQBSent(ByVal intOrderID As Integer) As Integer
+    Public Function UpdateQBSent(ByVal intOrderID As Integer) As Integer
         Return Adptr.UpdateQBSent(intOrderID)
     End Function
 

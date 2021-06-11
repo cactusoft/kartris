@@ -80,6 +80,7 @@ Public Class KartrisQBService
         evLogTxt += ("string strPassword = ") + strPassword & vbCrLf
         evLogTxt += vbCrLf
 
+        Dim objUsersBLL As New UsersBLL
 
         Dim authReturn As String() = New String(1) {}
         ' Code below uses a random GUID to use as session ticket
@@ -87,7 +88,7 @@ Public Class KartrisQBService
         authReturn(0) = System.Guid.NewGuid().ToString()
         
         Dim pwd As String = KartSettingsManager.GetKartConfig("general.quickbooks.pass")
-        If strUserName.Trim().Equals("Kartris") AndAlso UsersBLL.EncryptSHA256Managed(strPassword.Trim(), LoginsBLL._GetSaltByUserName(strUserName), True) = pwd Then
+        If strUserName.Trim().Equals("Kartris") AndAlso objUsersBLL.EncryptSHA256Managed(strPassword.Trim(), LoginsBLL._GetSaltByUserName(strUserName), True) = pwd Then
             ' An empty string for authReturn[1] means asking QBWebConnector 
             ' to connect to the company file that is currently openned in QB
             'authReturn(1) = "c:\Program Files\Intuit\QuickBooks\sample_product-based business.qbw"
@@ -96,7 +97,8 @@ Public Class KartrisQBService
             authReturn(1) = "nvu"
         End If
         ' "none" to indicate there is no work to do
-        If OrdersBLL.GetQBQueue.Rows.Count = 0 Then authReturn(1) = "none"
+        Dim objOrdersBLL As New OrdersBLL
+        If objOrdersBLL.GetQBQueue.Rows.Count = 0 Then authReturn(1) = "none"
         ' or a company filename in the format C:\full\path\to\company.qbw
 
         evLogTxt += vbCrLf
@@ -263,6 +265,7 @@ Public Class KartrisQBService
                     End If
                 Case "AddCustomer"
                     Dim qbXMLMsgsRsNodeList As XmlNodeList = outputXMLDoc.GetElementsByTagName("CustomerAddRs")
+                    Dim objUsersBLL As New UsersBLL
 
                     If qbXMLMsgsRsNodeList.Count = 1 Then
                         'it's always true, since we added a single Customer
@@ -283,7 +286,7 @@ Public Class KartrisQBService
                                     If custRetNode.Name.Equals("ListID") Then
                                         Dim intCustomerID As String = CInt(Session("QBCustomerID"))
                                         Dim strListId As String = custRetNode.InnerText
-                                        UsersBLL.UpdateQBListID(intCustomerID, strListId)
+                                        objUsersBLL.UpdateQBListID(intCustomerID, strListId)
                                         Exit For
                                     End If
                                 Next
@@ -296,6 +299,7 @@ Public Class KartrisQBService
                     End If
                 Case "AddOrder"
                     Dim qbXMLMsgsRsNodeList As XmlNodeList = outputXMLDoc.GetElementsByTagName("SalesReceiptAddRs")
+                    Dim objOrdersBLL As New OrdersBLL
 
                     If qbXMLMsgsRsNodeList.Count = 1 Then
                         Dim rsAttributes As XmlAttributeCollection = qbXMLMsgsRsNodeList.Item(0).Attributes
@@ -315,7 +319,7 @@ Public Class KartrisQBService
                                     If SalesReceiptRetNode.Name.Equals("RefNumber") Then
                                         Dim O_ID As Integer = CInt(SalesReceiptRetNode.InnerText)
                                         Session("O_ctr") += 1
-                                        OrdersBLL.UpdateQBSent(O_ID)
+                                        objOrdersBLL.UpdateQBSent(O_ID)
                                         Exit For
                                     End If
                                 Next
@@ -363,10 +367,12 @@ Public Class KartrisQBService
         'Newer than version 2006?
         Dim blnQBNew As Boolean = Session("QBNew")
 
+        Dim objOrdersBLL As New OrdersBLL
+
         Dim request As String = ""
         If Session("O_ctr") Is Nothing Then Session("O_ctr") = 0
         If Application("KartrisQBItemListID") IsNot Nothing Then
-            Dim dtQueue As DataTable = OrdersBLL.GetQBQueue
+            Dim dtQueue As DataTable = objOrdersBLL.GetQBQueue
             If Session("O_ctr") = 0 Then Session("O_TotalCount") = dtQueue.Rows.Count
             If dtQueue.Rows.Count > 0 Then
                 Dim intOrderID As Integer = dtQueue.Rows(0)("O_ID")

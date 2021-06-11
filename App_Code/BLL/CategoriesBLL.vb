@@ -22,34 +22,34 @@ Imports CkartrisDisplayFunctions
 
 Public Class CategoriesBLL
 
-    Private Shared _Adptr As CategoriesTblAdptr = Nothing
-    Private Shared _AdptrHierarchy As CategoryHierarchyTblAdptr = Nothing
+    Private _Adptr As CategoriesTblAdptr = Nothing
+    Private _AdptrHierarchy As CategoryHierarchyTblAdptr = Nothing
 
-    Protected Shared ReadOnly Property Adptr() As CategoriesTblAdptr
+    Protected ReadOnly Property Adptr() As CategoriesTblAdptr
         Get
             _Adptr = New CategoriesTblAdptr
             Return _Adptr
         End Get
     End Property
 
-    Protected Shared ReadOnly Property AdptrHierarchy() As CategoryHierarchyTblAdptr
+    Protected ReadOnly Property AdptrHierarchy() As CategoryHierarchyTblAdptr
         Get
             _AdptrHierarchy = New CategoryHierarchyTblAdptr
             Return _AdptrHierarchy
         End Get
     End Property
 
-    Public Shared Function _GetWithProducts(ByVal _LanguageID As Short) As DataTable
+    Public Function _GetWithProducts(ByVal _LanguageID As Short) As DataTable
         Return Adptr._GetWithProductsOnly(_LanguageID)
     End Function
 
-    Public Shared Function _SearchTopLevelCategoryByName(ByVal _Key As String, ByVal _LanguageID As Byte) As DataTable
+    Public Function _SearchTopLevelCategoryByName(ByVal _Key As String, ByVal _LanguageID As Byte) As DataTable
         Dim tbl As New DataTable
         tbl = Adptr._SearchTopLevelByName(_Key, _LanguageID)
         Return tbl
     End Function
 
-    Public Shared Function _SearchCategoryByName(ByVal _Key As String, ByVal _LanguageID As Byte) As DataTable
+    Public Function _SearchCategoryByName(ByVal _Key As String, ByVal _LanguageID As Byte) As DataTable
         Dim tbl As New DataTable
         tbl = Adptr._SearchByName(_Key, _LanguageID)
         If tbl.Rows.Count = 0 Then
@@ -58,16 +58,16 @@ Public Class CategoriesBLL
         Return tbl
     End Function
 
-    Public Shared Function GetCategoryByID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As DataTable
+    Public Function GetCategoryByID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As DataTable
         Return Adptr.GetByCategoryID(_CategoryID, _LanguageID)
     End Function
 
-    Public Shared Function GetCategoriesByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As DataTable
+    Public Function GetCategoriesByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As DataTable
         Return Adptr.GetByProductID(_ProductID, _LanguageID)
     End Function
 
-    Public Shared Function GetCategoriesPageByParentID(ByVal _ParentCategoryID As Integer, ByVal _LanguageID As Short, _
-                                            ByVal _PageIndx As Short, ByVal _RowsPerPage As Short, _
+    Public Function GetCategoriesPageByParentID(ByVal _ParentCategoryID As Integer, ByVal _LanguageID As Short,
+                                            ByVal _PageIndx As Short, ByVal _RowsPerPage As Short,
                                             ByVal _CGroupID As Short, ByRef _TotalNoOfCategories As Integer) As DataTable
         _TotalNoOfCategories = GetTotalCategoriesByParentID_o(_LanguageID, _ParentCategoryID, _CGroupID)
         Return Adptr.GetCategoriesPageByParentID(_LanguageID, _ParentCategoryID, _PageIndx, _RowsPerPage, _CGroupID)
@@ -75,47 +75,47 @@ Public Class CategoriesBLL
 
     'New in v3, new treeview function grabs main categories but also
     'appends sub site cats too
-    Public Shared Function _Treeview(ByVal _LanguageID As Short) As DataTable
+    Public Function _Treeview(ByVal _LanguageID As Short) As DataTable
         Return Adptr._Treeview(_LanguageID)
     End Function
 
-    Public Shared Function _GetCategoriesPageByParentID(ByVal _ParentCategoryID As Integer, ByVal _LanguageID As Short, _
+    Public Function _GetCategoriesPageByParentID(ByVal _ParentCategoryID As Integer, ByVal _LanguageID As Short,
                                             ByVal _PageIndx As Short, ByVal _RowsPerPage As Short, ByRef _TotalNoOfCategories As Integer) As DataTable
         _TotalNoOfCategories = _GetTotalCategoriesByParentID_o(_LanguageID, _ParentCategoryID)
         Return Adptr._GetCategoriesPageByParentID(_LanguageID, _ParentCategoryID, _PageIndx, _RowsPerPage)
     End Function
 
-    Public Shared Function _GetTotalCategoriesByParentID_o(ByVal _LanguageID As Short, ByVal _ParentCategoryID As Integer) As Integer
+    Public Function _GetTotalCategoriesByParentID_o(ByVal _LanguageID As Short, ByVal _ParentCategoryID As Integer) As Integer
         Dim totalCategories As Integer
         Dim qAdptr As New CategoriesQTblAdptr
         qAdptr._GetTotalByParentID_o(_LanguageID, _ParentCategoryID, totalCategories)
         Return totalCategories
     End Function
 
-    Public Shared Function GetTotalCategoriesByParentID_o(ByVal _LanguageID As Short, ByVal _ParentCategoryID As Integer, ByVal _CGroupID As Short) As Integer
+    Public Function GetTotalCategoriesByParentID_o(ByVal _LanguageID As Short, ByVal _ParentCategoryID As Integer, ByVal _CGroupID As Short) As Integer
         Dim totalCategories As Integer
         Dim qAdptr As New CategoriesQTblAdptr
         qAdptr.GetTotalByParentID_o(_LanguageID, _ParentCategoryID, _CGroupID, totalCategories)
         Return totalCategories
     End Function
 
-    Public Shared Function GetHierarchyByLanguageID(ByVal _LanguageID As Short) As DataTable
+    Public Function GetHierarchyByLanguageID(ByVal _LanguageID As Short) As DataTable
         Dim blnSortByName As Boolean = False
         If LCase(KartSettingsManager.GetKartConfig("frontend.categories.display.sortdefault")) = "cat_name" Then blnSortByName = True
         Return AdptrHierarchy.GetHierarchyByLanguage(_LanguageID, blnSortByName)
     End Function
 
-    Public Shared Function _GetHierarchyByLanguageId(ByVal _LanguageID As Short) As DataTable
+    Public Function _GetHierarchyByLanguageId(ByVal _LanguageID As Short) As DataTable
         Return AdptrHierarchy._GetHierarchyByLanguage(_LanguageID)
     End Function
 
-    Public Shared Function GetNameByCategoryID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As String
+    Public Function GetNameByCategoryID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As String
         Dim objLanguageElementsBLL As New LanguageElementsBLL()
         Return objLanguageElementsBLL.GetElementValue(
               _LanguageID, LANG_ELEM_TABLE_TYPE.Categories, LANG_ELEM_FIELD_NAME.Name, _CategoryID)
     End Function
 
-    Public Shared Function GetMetaDescriptionByCategoryID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As String
+    Public Function GetMetaDescriptionByCategoryID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As String
         Dim objLanguageElementsBLL As New LanguageElementsBLL()
         Dim strMetaDescription As String = objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Categories, LANG_ELEM_FIELD_NAME.MetaDescription, _CategoryID)
@@ -125,7 +125,7 @@ Public Class CategoriesBLL
         Return Left(StripHTML(strMetaDescription), 160)
     End Function
 
-    Public Shared Function GetMetaKeywordsByCategoryID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As String
+    Public Function GetMetaKeywordsByCategoryID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As String
         Dim objLanguageElementsBLL As New LanguageElementsBLL()
         Dim strMetaKeywords As String = objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Categories, LANG_ELEM_FIELD_NAME.MetaKeywords, _CategoryID)
@@ -133,35 +133,35 @@ Public Class CategoriesBLL
         Return StripHTML(strMetaKeywords)
     End Function
 
-    Public Shared Function _GetNameByCategoryID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As String
+    Public Function _GetNameByCategoryID(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As String
         Dim objLanguageElementsBLL As New LanguageElementsBLL()
         Return objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Categories, LANG_ELEM_FIELD_NAME.Name, _CategoryID)
 
     End Function
 
-    Public Shared Function _GetTotalCategoriesByLanguageID(ByVal numLanguageID As Byte) As Integer
+    Public Function _GetTotalCategoriesByLanguageID(ByVal numLanguageID As Byte) As Integer
         Dim numTotalCategories As Integer = 0
         Adptr._GetTotalCategoriesByLanguageID(numLanguageID, numTotalCategories)
         Return numTotalCategories
     End Function
 
-    Public Shared Function _GetParentsByID(ByVal pLanguageID As Byte, ByVal pChildID As Integer) As DataTable
+    Public Function _GetParentsByID(ByVal pLanguageID As Byte, ByVal pChildID As Integer) As DataTable
         Return AdptrHierarchy._GetParentsByID(pLanguageID, pChildID)
     End Function
 
-    Public Shared Function _GetByID(ByVal pCategoryID As Integer) As DataTable
+    Public Function _GetByID(ByVal pCategoryID As Integer) As DataTable
         Return Adptr._GetByCategoryID(pCategoryID)
     End Function
 
-    Public Shared Function _GetTotalSubCategories_s(ByVal CategoryID As Integer) As Short
+    Public Function _GetTotalSubCategories_s(ByVal CategoryID As Integer) As Short
         Dim totalSubcategories As Short = 0
         AdptrHierarchy._GetTotalSubcategories(CategoryID, totalSubcategories)
         Return totalSubcategories
     End Function
 
-    Public Shared Sub _GetCategoryStatus( _
-             ByVal numCategoryID As Integer, ByRef blnCategoryLive As Boolean, _
+    Public Sub _GetCategoryStatus(
+             ByVal numCategoryID As Integer, ByRef blnCategoryLive As Boolean,
              ByRef numLiveParents As Integer, ByRef numCustomerGroup As Short)
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -194,10 +194,10 @@ Public Class CategoriesBLL
         End Using
     End Sub
 
-    Public Shared Function _AddCategory(ByVal ptblElements As DataTable, ByVal pParentsList As String, _
-       ByRef pCategoryID As Integer, ByVal pLive As Boolean, ByVal pProductDisplayType As Char, _
-       ByVal pSubCatDisplayType As Char, ByVal pOrderProductsBy As String, _
-       ByVal pProductsSortDirection As Char, ByVal pOrderSubcatBy As String, _
+    Public Function _AddCategory(ByVal ptblElements As DataTable, ByVal pParentsList As String,
+       ByRef pCategoryID As Integer, ByVal pLive As Boolean, ByVal pProductDisplayType As Char,
+       ByVal pSubCatDisplayType As Char, ByVal pOrderProductsBy As String,
+       ByVal pProductsSortDirection As Char, ByVal pOrderSubcatBy As String,
         ByVal pSubcatSortDirection As Char, ByVal pCustomerGroupID As Integer, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -261,10 +261,10 @@ Public Class CategoriesBLL
         Return False
     End Function
 
-    Public Shared Function _UpdateCategory(ByVal ptblElements As DataTable, ByVal pParentsList As String, _
-         ByVal pCategoryID As Integer, ByVal pLive As Boolean, ByVal pProductDisplayType As Char, _
-        ByVal pSubCatDisplayType As Char, ByVal pOrderProductsBy As String, _
-        ByVal pProductsSortDirection As Char, ByVal pOrderSubcatBy As String, _
+    Public Function _UpdateCategory(ByVal ptblElements As DataTable, ByVal pParentsList As String,
+         ByVal pCategoryID As Integer, ByVal pLive As Boolean, ByVal pProductDisplayType As Char,
+        ByVal pSubCatDisplayType As Char, ByVal pOrderProductsBy As String,
+        ByVal pProductsSortDirection As Char, ByVal pOrderSubcatBy As String,
         ByVal pSubcatSortDirection As Char, ByVal pCustomerGroupID As Integer, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -291,7 +291,7 @@ Public Class CategoriesBLL
                 cmd.Transaction = savePoint
 
                 If pCategoryID = 0 Then '' Used to modify the category no. 0
-                    If Not LanguageElementsBLL._UpdateLanguageElements(ptblElements, LANG_ELEM_TABLE_TYPE.Categories, _
+                    If Not LanguageElementsBLL._UpdateLanguageElements(ptblElements, LANG_ELEM_TABLE_TYPE.Categories,
                       pCategoryID, sqlConn, savePoint) Then
                         Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                     End If
@@ -306,8 +306,8 @@ Public Class CategoriesBLL
                 cmd.ExecuteNonQuery()
 
                 '' 2. Update the Language Elements
-                If Not LanguageElementsBLL._UpdateLanguageElements( _
-                  ptblElements, LANG_ELEM_TABLE_TYPE.Categories, _
+                If Not LanguageElementsBLL._UpdateLanguageElements(
+                  ptblElements, LANG_ELEM_TABLE_TYPE.Categories,
                   pCategoryID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
@@ -336,7 +336,7 @@ Public Class CategoriesBLL
         Return False
     End Function
 
-    Private Shared Function _UpdateCategoryHierarchy(ByVal pChildID As Integer, ByVal pNewParents As String, _
+    Private Function _UpdateCategoryHierarchy(ByVal pChildID As Integer, ByVal pNewParents As String,
                                              ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean
 
         Dim cmd As New SqlCommand("_spKartrisCategoryHierarchy_DeleteByChild", sqlConn, savePoint)
@@ -365,7 +365,7 @@ Public Class CategoriesBLL
         Return False
     End Function
 
-    Public Shared Function _DeleteCategory(ByVal intCategoryID As Integer, ByRef strMsg As String) As Boolean
+    Public Function _DeleteCategory(ByVal intCategoryID As Integer, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -398,12 +398,12 @@ Public Class CategoriesBLL
         Return False
     End Function
 
-    Public Shared Sub _ChangeSortValue(ByVal numParentID As Integer, ByVal numCategoryID As Integer, ByVal chrDirection As Char)
+    Public Sub _ChangeSortValue(ByVal numParentID As Integer, ByVal numCategoryID As Integer, ByVal chrDirection As Char)
         AdptrHierarchy._ChangeSortValue(numParentID, numCategoryID, chrDirection)
     End Sub
 
     '' Delete Category Cascade (with subcategories)
-    Public Shared Function _DeleteCategoryCascade(ByVal intCategoryID As Integer, ByRef strMsg As String) As Boolean
+    Public Function _DeleteCategoryCascade(ByVal intCategoryID As Integer, ByRef strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
             Try
@@ -421,7 +421,7 @@ Public Class CategoriesBLL
         Return False
 
     End Function
-    Public Shared Function _RecursiveCategoryDelete(ByVal intCategoryID As Integer, ByVal sqlConn As SqlConnection) As Boolean
+    Public Function _RecursiveCategoryDelete(ByVal intCategoryID As Integer, ByVal sqlConn As SqlConnection) As Boolean
         Dim tblChildCategories As DataTable = AdptrHierarchy._GetSubcategoriesIDs(intCategoryID)
         For Each child As DataRow In tblChildCategories.Rows
 
@@ -440,7 +440,7 @@ Public Class CategoriesBLL
 
         Return _DeleteCategoryWithoutTransaction(intCategoryID, sqlConn)
     End Function
-    Public Shared Function _DeleteCategoryWithoutTransaction(ByVal numCategoryID As Integer, ByVal sqlConn As SqlConnection) As Boolean
+    Public Function _DeleteCategoryWithoutTransaction(ByVal numCategoryID As Integer, ByVal sqlConn As SqlConnection) As Boolean
 
         Dim cmdDeleteCategory As SqlCommand = sqlConn.CreateCommand
         cmdDeleteCategory.CommandText = "_spKartrisCategories_Delete"
@@ -457,7 +457,7 @@ Public Class CategoriesBLL
 
         Return False
     End Function
-    Public Shared Function _DeleteHierarchyLink(ByVal numChildID As Integer, ByVal numParentID As Integer, ByVal sqlConn As SqlConnection) As Boolean
+    Public Function _DeleteHierarchyLink(ByVal numChildID As Integer, ByVal numParentID As Integer, ByVal sqlConn As SqlConnection) As Boolean
 
         Dim cmd As SqlCommand = sqlConn.CreateCommand
         cmd.CommandText = "_spKartrisCategoryHierarchy_DeleteLink"

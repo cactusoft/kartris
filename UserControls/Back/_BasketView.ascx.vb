@@ -709,9 +709,9 @@ Partial Class Back_BasketView
     End Sub
 
     Private Sub ShowAddItemToBasket(ByVal VersionID As Integer, ByVal Quantity As Double, Optional ByVal blnDisplayPopup As Boolean = False)
-
+        Dim objVersionsBLL As New VersionsBLL
         Dim tblVersion As DataTable
-        tblVersion = VersionsBLL._GetVersionByID(VersionID)
+        tblVersion = objVersionsBLL._GetVersionByID(VersionID)
         If tblVersion.Rows.Count > 0 Then
             ''// add basket item quantity to new item qty and check for stock
             Dim numBasketQty As Double = 0

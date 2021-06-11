@@ -86,8 +86,9 @@ Partial Class CategoryView
         _CategoryID = pCategoryID
 
         '' DataTable that will hold the category information.
+        Dim objCategoriesBLL As New CategoriesBLL
         Dim tblCategories As New DataTable
-        tblCategories = CategoriesBLL.GetCategoryByID(_CategoryID, pLanguageID)
+        tblCategories = objCategoriesBLL.GetCategoryByID(_CategoryID, pLanguageID)
 
         '' If there is no category, then exit.
         If tblCategories.Rows.Count = 0 Then _IsCategoryExist = False : Exit Sub

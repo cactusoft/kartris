@@ -148,6 +148,7 @@ Partial Class Callback
 
                     Dim O_ID As Integer = clsPlugin.CallbackOrderID
                     Dim objOrdersBLL As New OrdersBLL
+                    Dim objUsersBLL As New UsersBLL
                     Dim tblOrder As DataTable = objOrdersBLL.GetOrderByID(O_ID)
 
                     Dim O_CouponCode As String = ""
@@ -194,7 +195,7 @@ Partial Class Callback
                                     BasketBLL.RecoverAutosaveBasket(O_CustomerID)
 
                                     'Need to create a temp user for the code below to work
-                                    Dim tempKartrisUser As KartrisMemberShipUser = New KartrisMemberShipUser(O_CustomerID, UsersBLL.GetEmailByID(O_CustomerID), 0, 0, 0, 0, 1, True)
+                                    Dim tempKartrisUser As KartrisMemberShipUser = New KartrisMemberShipUser(O_CustomerID, objUsersBLL.GetEmailByID(O_CustomerID), 0, 0, 0, 0, 1, True)
                                     Dim kartrisBasket As Kartris.Basket = Session("Basket")
 
                                     CkartrisFormatErrors.LogError("Get Session Basket")
@@ -286,7 +287,7 @@ Partial Class Callback
                             'To customer
                             '-----------------------------------------------------
                             If KartSettingsManager.GetKartConfig("frontend.orders.emailcustomer") <> "n" Then
-                                SendEmail(strFromEmail, UsersBLL.GetEmailByID(O_CustomerID), GetGlobalResourceObject("Email", "Config_Subjectline") & " (#" & O_ID & ")", strCustomerEmailText, , , , , blnUseHTMLOrderEmail)
+                                SendEmail(strFromEmail, objUsersBLL.GetEmailByID(O_CustomerID), GetGlobalResourceObject("Email", "Config_Subjectline") & " (#" & O_ID & ")", strCustomerEmailText, , , , , blnUseHTMLOrderEmail)
                             End If
 
                             '-----------------------------------------------------
