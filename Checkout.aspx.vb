@@ -651,8 +651,9 @@ Partial Class _Checkout
 
         If phdEORI.Visible Then
             'Try to fill EU number
+            Dim objObjectConfigBLL As New ObjectConfigBLL
             Try
-                txtEORI.Text = ObjectConfigBLL.GetValue("K:user.eori", CurrentLoggedUser.ID)
+                txtEORI.Text = objObjectConfigBLL.GetValue("K:user.eori", CurrentLoggedUser.ID)
             Catch ex As Exception
 
             End Try
@@ -1417,6 +1418,9 @@ Partial Class _Checkout
                 sbdBodyText.Insert(0, sbdBasketItems.ToString)
 
                 arrBasketItems = UC_BasketView.GetBasketItems
+
+                Dim objObjectConfigBLL As New ObjectConfigBLL 'needed in loops below
+
                 If Not (arrBasketItems Is Nothing) Then
                     Dim BasketItem As New BasketItem
                     'final check if basket items are still there
@@ -1445,7 +1449,7 @@ Partial Class _Checkout
                     'Loop through basket items
                     For Each Item As Kartris.BasketItem In arrBasketItems
                         With Item
-                            Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", Item.ProductID)
+                            Dim strCustomControlName As String = objObjectConfigBLL.GetValue("K:product.customcontrolname", Item.ProductID)
                             Dim strCustomText As String = ""
 
                             Dim sbdOptionText As New StringBuilder("")
@@ -1531,7 +1535,7 @@ Partial Class _Checkout
 
                 'Store EORI number for client
                 Try
-                    Dim blnUpdatedEORI As Boolean = ObjectConfigBLL.SetConfigValue("K:user.eori", C_ID, txtEORI.Text, "")
+                    Dim blnUpdatedEORI As Boolean = objObjectConfigBLL.SetConfigValue("K:user.eori", C_ID, txtEORI.Text, "")
                 Catch ex As Exception
                     CkartrisFormatErrors.LogError("Error updating K:user.eori")
                 End Try

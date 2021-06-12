@@ -118,12 +118,13 @@ Partial Class ProductVersions
         If tblVersions.Rows.Count = 0 Then mvwVersion.SetActiveView(viwError) : Exit Sub
 
         'Load the custom control for the product
-            Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", _ProductID)
-            If Not String.IsNullOrEmpty(strCustomControlName) Then
-                mvwVersion.SetActiveView(viwCustomVersion)
-                Dim UC_CustomControl As KartrisClasses.CustomProductControl = LoadControl("~/UserControls/Custom/" & strCustomControlName)
-                If UC_CustomControl IsNot Nothing Then
-                    UC_CustomControl.ID = "UC_CustomControl"
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        Dim strCustomControlName As String = objObjectConfigBLL.GetValue("K:product.customcontrolname", _ProductID)
+        If Not String.IsNullOrEmpty(strCustomControlName) Then
+            mvwVersion.SetActiveView(viwCustomVersion)
+            Dim UC_CustomControl As KartrisClasses.CustomProductControl = LoadControl("~/UserControls/Custom/" & strCustomControlName)
+            If UC_CustomControl IsNot Nothing Then
+                UC_CustomControl.ID = "UC_CustomControl"
                 phdCustomControl.Controls.Add(UC_CustomControl)
             End If
 
@@ -172,7 +173,7 @@ Partial Class ProductVersions
             drwVersion("V_Price") = GetPriceWithGroupDiscount(drwVersion("V_ID"), drwVersion("V_Price"))
 
             Dim drwCurrencies As DataRow() = GetCurrenciesFromCache().Select("CUR_ID = " & Session("CUR_ID"))
-            Dim numCalculatedTax As Single = CalculateTax(Math.Round(CDbl(FixNullFromDB(drwVersion("V_Price"))), drwCurrencies(0)("CUR_RoundNumbers")), _
+            Dim numCalculatedTax As Single = CalculateTax(Math.Round(CDbl(FixNullFromDB(drwVersion("V_Price"))), drwCurrencies(0)("CUR_RoundNumbers")),
               CDbl(FixNullFromDB(drwVersion("T_TaxRate"))))
             drwCurrencies = Nothing
             drwVersion("CalculatedTax") = CStr(CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), numCalculatedTax))
@@ -208,8 +209,8 @@ Partial Class ProductVersions
         Dim strV_Price As String = ""
 
         ddlName_DropDown.Items.Clear()
-
-        Dim blnIsCallForPrice As Boolean = (ObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) = 1)
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        Dim blnIsCallForPrice As Boolean = (objObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) = 1)
 
         If blnIsCallForPrice Then
             For Each drwVersion As DataRow In ptblVersions.Rows
@@ -220,9 +221,9 @@ Partial Class ProductVersions
                 'Need to check if out of stock
                 If drwVersion("V_Quantity") < 1.0F And drwVersion("V_QuantityWarnLevel") > 0.0F Then
                     'out of stock
-                    ddlName_DropDown.Items.Add(New ListItem(strV_Name & _
-                     " [" & _
-                     GetGlobalResourceObject("Versions", "ContentText_AltOutOfStock") & _
+                    ddlName_DropDown.Items.Add(New ListItem(strV_Name &
+                     " [" &
+                     GetGlobalResourceObject("Versions", "ContentText_AltOutOfStock") &
                      "]", drwVersion("V_ID")))
                     txtOutOfStockItems.Text &= "," & intCounter & ","
                 Else
@@ -246,7 +247,7 @@ Partial Class ProductVersions
                 ''//
                 drwVersion("V_Price") = GetPriceWithGroupDiscount(drwVersion("V_ID"), drwVersion("V_Price"))
                 Dim drwCurrencies As DataRow() = GetCurrenciesFromCache().Select("CUR_ID = " & Session("CUR_ID"))
-                Dim numCalculatedTax As Single = CalculateTax(Math.Round(CDbl(FixNullFromDB(drwVersion("V_Price"))), drwCurrencies(0)("CUR_RoundNumbers")), _
+                Dim numCalculatedTax As Single = CalculateTax(Math.Round(CDbl(FixNullFromDB(drwVersion("V_Price"))), drwCurrencies(0)("CUR_RoundNumbers")),
                   CDbl(FixNullFromDB(drwVersion("T_TaxRate"))))
 
                 numPrice = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), CDbl(drwVersion("V_Price")))
@@ -261,10 +262,10 @@ Partial Class ProductVersions
                     'Show tax display
                     If KartSettingsManager.GetKartConfig("general.tax.pricesinctax") = "y" Then
                         'ExTax / IncTax
-                        strV_Price = " " & _
-                        GetGlobalResourceObject("Kartris", "ContentText_ExTax") & " " & _
-                        CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice2, , False) & " -- " & _
-                        GetGlobalResourceObject("Kartris", "ContentText_IncTax") & " " & _
+                        strV_Price = " " &
+                        GetGlobalResourceObject("Kartris", "ContentText_ExTax") & " " &
+                        CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice2, , False) & " -- " &
+                        GetGlobalResourceObject("Kartris", "ContentText_IncTax") & " " &
                         CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice, , False)
                     Else
                         'litExTax / Tax%
@@ -282,10 +283,10 @@ Partial Class ProductVersions
                 'Need to check if out of stock
                 If drwVersion("V_Quantity") < 1.0F And drwVersion("V_QuantityWarnLevel") > 0.0F And KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y" Then
                     'out of stock
-                    ddlName_DropDown.Items.Add(New ListItem(strV_Name & _
-                     CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice, , False) & _
-                     " [" & _
-                     GetGlobalResourceObject("Versions", "ContentText_AltOutOfStock") & _
+                    ddlName_DropDown.Items.Add(New ListItem(strV_Name &
+                     CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice, , False) &
+                     " [" &
+                     GetGlobalResourceObject("Versions", "ContentText_AltOutOfStock") &
                      "]", drwVersion("V_ID")))
                     txtOutOfStockItems.Text &= "," & intCounter & ","
                 Else
@@ -364,7 +365,8 @@ Partial Class ProductVersions
         'Added check now for _NumberOfCombinations, so we don't
         'use this setting if it's an options product, not a combinations
         'product
-        Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", ProductID) = "1", True, False) And objProductsBLL._NumberOfCombinations(ProductID) > 0
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        Dim blnUseCombinationPrice As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", ProductID) = "1", True, False) And objProductsBLL._NumberOfCombinations(ProductID) > 0
         ptblVersions.Rows(0)("V_Price") = GetPriceWithGroupDiscount(ptblVersions.Rows(0)("V_ID"), ptblVersions.Rows(0)("V_Price"))
 
         ptblVersions.Rows(0)("V_Price") = CurrenciesBLL.ConvertCurrency(Session("CUR_ID"),
@@ -392,7 +394,7 @@ Partial Class ProductVersions
 
         ''// set addtobasket control's version id
         'If Not (IsPostBack) Then
-        Dim strQuantityControl As String = LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", ProductID))
+        Dim strQuantityControl As String = LCase(objObjectConfigBLL.GetValue("K:product.addtobasketqty", ProductID))
         If Request.QueryString("strOptions") <> "" AndAlso (strQuantityControl = "dropdown" OrElse strQuantityControl = "textbox") Then
 
             If Session("BasketItemInfo") & "" <> "" Then
@@ -436,7 +438,7 @@ Partial Class ProductVersions
             drwVersion("V_Price") = GetPriceWithGroupDiscount(drwVersion("V_ID"), drwVersion("V_Price"))
 
             Dim drwCurrencies As DataRow() = GetCurrenciesFromCache().Select("CUR_ID = " & Session("CUR_ID"))
-            Dim numCalculatedTax As Single = CalculateTax(Math.Round(CDbl(FixNullFromDB(drwVersion("V_Price"))), drwCurrencies(0)("CUR_RoundNumbers")), _
+            Dim numCalculatedTax As Single = CalculateTax(Math.Round(CDbl(FixNullFromDB(drwVersion("V_Price"))), drwCurrencies(0)("CUR_RoundNumbers")),
              CDbl(FixNullFromDB(drwVersion("T_TaxRate"))))
             'Dim calculatedTax As Single = CalculateTax(CDbl(row("V_Price")), CDbl(FixNullFromDB(row("T_TaxRate"))))
             drwCurrencies = Nothing
@@ -460,6 +462,7 @@ Partial Class ProductVersions
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub rptRows_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptRows.ItemDataBound
+        Dim objObjectConfigBLL As New ObjectConfigBLL
         For Each ctlItem As Control In e.Item.Controls
             Select Case ctlItem.ID
 
@@ -471,12 +474,12 @@ Partial Class ProductVersions
                     Dim UC_ImageView As New ImageViewer
                     UC_ImageView = CType(e.Item.FindControl("UC_ImageViewer_Rows"), ImageViewer)
 
-                    UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_VersionImage, _
-                      numVersionID, _
-                      KartSettingsManager.GetKartConfig("frontend.display.images.thumb.height"), _
-                      KartSettingsManager.GetKartConfig("frontend.display.images.thumb.width"), _
-                      "", _
-                      _ProductID, _
+                    UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_VersionImage,
+                      numVersionID,
+                      KartSettingsManager.GetKartConfig("frontend.display.images.thumb.height"),
+                      KartSettingsManager.GetKartConfig("frontend.display.images.thumb.width"),
+                      "",
+                      _ProductID,
                       ImageViewer.SmallImagesType.enum_ImageButton)
 
                     'Hide whole image and container if no image available, otherwise can end up
@@ -491,13 +494,13 @@ Partial Class ProductVersions
 
                 Case "litResultedPrice_Rows"
                     ''Handle 'call for prices' - determine whether to
-                    If ObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) = 1 Then
+                    If objObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) = 1 Then
                         CType(e.Item.FindControl("litResultedPrice_Rows"), Literal).Text = GetGlobalResourceObject("Versions", "ContentText_CallForPrice")
                         Continue For
                     End If
                     '' Creating the Currency Format for the Version's Price.
                     Dim numPrice As Single = CDbl(CType(e.Item.FindControl("litPrice_Rows"), Literal).Text)
-                    CType(e.Item.FindControl("litResultedPrice_Rows"), Literal).Text = _
+                    CType(e.Item.FindControl("litResultedPrice_Rows"), Literal).Text =
                       CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
 
                 Case "litResultedCalculatedTax_Rows"
@@ -507,12 +510,12 @@ Partial Class ProductVersions
 
                 Case "litResultedIncTax_Rows"
                     Dim numPrice As Single = CDbl(CType(e.Item.FindControl("litIncTax_Rows"), Literal).Text)
-                    CType(e.Item.FindControl("litResultedIncTax_Rows"), Literal).Text = _
+                    CType(e.Item.FindControl("litResultedIncTax_Rows"), Literal).Text =
                       CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
 
                 Case "litResultedExTax_Rows"
                     Dim numPrice As Single = CDbl(CType(e.Item.FindControl("litExTax_Rows"), Literal).Text)
-                    CType(e.Item.FindControl("litResultedExTax_Rows"), Literal).Text = _
+                    CType(e.Item.FindControl("litResultedExTax_Rows"), Literal).Text =
                       CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
 
                 Case "litResultedTaxRate_Rows"
@@ -537,7 +540,7 @@ Partial Class ProductVersions
                 Case "litRRP_Rows"
                     '' Creating the Currency Format for the Version's Price.
                     Dim numRRP As Single = CDbl(CType(e.Item.FindControl("litRRP_Rows"), Literal).Text)
-                    CType(e.Item.FindControl("litRRP_Rows"), Literal).Text = _
+                    CType(e.Item.FindControl("litRRP_Rows"), Literal).Text =
                       CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numRRP)
 
                 Case "phdCustomizable"
@@ -592,7 +595,8 @@ Partial Class ProductVersions
 
                 End If
             Else
-                If ObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) <> 1 Then
+                Dim objObjectConfigBLL As New ObjectConfigBLL
+                If objObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) <> 1 Then
                     ''Show single price
                     fvwPrice.FindControl("pnlPrice").Visible = True
 
@@ -631,7 +635,7 @@ Partial Class ProductVersions
         If UC_CustomControl IsNot Nothing Then
             If UC_CustomControl.ComputeFromSelectedOptions() = "success" Then
                 Dim objMiniBasket As Object = Page.Master.FindControl("UC_MiniBasket")
-                Dim objBasket As kartris.Basket = objMiniBasket.GetBasket
+                Dim objBasket As Kartris.Basket = objMiniBasket.GetBasket
                 objMiniBasket.AddCustomItemToBasket(litHiddenV_ID.Text, ddlCustomVersionQuantity.SelectedValue,
                                             UC_CustomControl.ParameterValues & "|||" & UC_CustomControl.ItemDescription & "|||" & UC_CustomControl.ItemPrice)
             End If
@@ -652,13 +656,13 @@ Partial Class ProductVersions
 
             '' Check for wrong quantity
             Dim numNoOfDecimalPlacesForUnit As Integer = IIf(strUnitSize.Contains("."), Mid(strUnitSize, strUnitSize.IndexOf(".") + 2).Length, 0)
-            Dim numNoOfDecimalPlacesForQty As Integer = IIf(CStr(numQuantity).Contains(".") AndAlso CLng(Mid(CStr(numQuantity), CStr(numQuantity).IndexOf(".") + 2)) <> 0, _
-                                                            Mid(CStr(numQuantity), CStr(numQuantity).IndexOf(".") + 2).Length, _
+            Dim numNoOfDecimalPlacesForQty As Integer = IIf(CStr(numQuantity).Contains(".") AndAlso CLng(Mid(CStr(numQuantity), CStr(numQuantity).IndexOf(".") + 2)) <> 0,
+                                                            Mid(CStr(numQuantity), CStr(numQuantity).IndexOf(".") + 2).Length,
                                                             0)
             Dim numMod As Integer = CInt(numQuantity * Math.Pow(10, numNoOfDecimalPlacesForQty)) Mod CInt(strUnitSize * Math.Pow(10, numNoOfDecimalPlacesForUnit))
             If numMod <> 0.0F OrElse numNoOfDecimalPlacesForQty > numNoOfDecimalPlacesForUnit Then
                 '' wrong quantity - quantity should be a multiplies of unit size
-                AddWrongQuantity(GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors"), _
+                AddWrongQuantity(GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors"),
                         Replace(GetGlobalResourceObject("ObjectConfig", "ContentText_OrderMultiplesOfUnitsize"), "[unitsize]", strUnitSize))
             Else
                 Dim sessionID As Long = Session("SessionID")
@@ -692,13 +696,13 @@ Partial Class ProductVersions
 
             '' Check for wrong quantity
             Dim numNoOfDecimalPlacesForUnit As Integer = IIf(strUnitSize.Contains("."), Mid(strUnitSize, strUnitSize.IndexOf(".") + 2).Length, 0)
-            Dim numNoOfDecimalPlacesForQty As Integer = IIf(CStr(numQuantity).Contains(".") AndAlso CLng(Mid(CStr(numQuantity), CStr(numQuantity).IndexOf(".") + 2)) <> 0, _
-                                                            Mid(CStr(numQuantity), CStr(numQuantity).IndexOf(".") + 2).Length, _
+            Dim numNoOfDecimalPlacesForQty As Integer = IIf(CStr(numQuantity).Contains(".") AndAlso CLng(Mid(CStr(numQuantity), CStr(numQuantity).IndexOf(".") + 2)) <> 0,
+                                                            Mid(CStr(numQuantity), CStr(numQuantity).IndexOf(".") + 2).Length,
                                                             0)
             Dim numMod As Integer = CInt(numQuantity * Math.Pow(10, numNoOfDecimalPlacesForQty)) Mod CInt(strUnitSize * Math.Pow(10, numNoOfDecimalPlacesForUnit))
             If numMod <> 0.0F OrElse numNoOfDecimalPlacesForQty > numNoOfDecimalPlacesForUnit Then
                 '' wrong quantity - quantity should be a multiplies of unit size
-                AddWrongQuantity(GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors"), _
+                AddWrongQuantity(GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors"),
                         Replace(GetGlobalResourceObject("ObjectConfig", "ContentText_OrderMultiplesOfUnitsize"), "[unitsize]", strUnitSize))
             Else
                 '' Reading the values of Options from the OptionsContainer in a muli-dimentional array
@@ -731,7 +735,7 @@ Partial Class ProductVersions
             Loop
             strNonSelectedOptions = Replace(strNonSelectedOptions, ",", "<br />" & vbCrLf)
 
-            strOptionValidationMessage = "<div>" & GetGlobalResourceObject("Kartris", "ContentText_OptionsMissingSelection") & _
+            strOptionValidationMessage = "<div>" & GetGlobalResourceObject("Kartris", "ContentText_OptionsMissingSelection") &
               "</div><p><strong>" & strNonSelectedOptions & "</strong></p>"
 
             UC_PopupMessage.SetTitle = GetGlobalResourceObject("Kartris", "ContentText_Alert")
@@ -775,7 +779,7 @@ Partial Class ProductVersions
         Dim extensions As New List(Of String)
         extensions.Add("*.png")
         extensions.Add("*.jpg")
-            extensions.Add("*.jpeg")
+        extensions.Add("*.jpeg")
 
         'Let's find and create some objects we'll need to manipulate
         Dim updProduct As UpdatePanel
@@ -920,8 +924,8 @@ Partial Class ProductVersions
         'correspond to a particular combination that
         'exists
         phdNoValidCombinations.Visible = True  'show the no-valid-combinations message
-
-        If ObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) <> 1 Then
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        If objObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) <> 1 Then
 
             If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
                 phdPrice.Visible = True
@@ -956,7 +960,8 @@ Partial Class ProductVersions
 
         ''Handle 'call for prices' - determine whether to
         ''show the add to basket button or not
-        If ObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) = 1 Then
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        If objObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) = 1 Then
             'PricePreview(0)
             phdIncTax.Visible = False
             phdExTax.Visible = False
@@ -1021,7 +1026,9 @@ Partial Class ProductVersions
 
         Dim arrBasketInfo() As String
         Dim numBasketItemID As Integer = 0
-        Dim strQuantityControl As String = LCase(ObjectConfigBLL.GetValue("K:product.addtobasketqty", ProductID))
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+
+        Dim strQuantityControl As String = LCase(objObjectConfigBLL.GetValue("K:product.addtobasketqty", ProductID))
         If Session("BasketItemInfo") & "" <> "" AndAlso (strQuantityControl = "dropdown" OrElse strQuantityControl = "textbox") Then
             arrBasketInfo = Split(Session("BasketItemInfo"), ";")
             numBasketItemID = arrBasketInfo(0)
@@ -1125,7 +1132,7 @@ Partial Class ProductVersions
     ''' </summary>
     ''' <remarks></remarks>
     Private Function GetPriceWithGroupDiscount(ByVal numVersionID As Long, ByVal numPrice As Double) As Double
-        Dim objBasket As New kartris.Basket
+        Dim objBasket As New Kartris.Basket
         Dim numCustomerID As Long = 0
         Dim numNewPrice, numCustomerGroupPrice As Double
 
@@ -1205,4 +1212,14 @@ Partial Class ProductVersions
         UC_PopupMessage.ShowPopup()
         Response.Redirect(Request.RawUrl)
     End Sub
+
+    ''' <summary>
+    ''' Call for Price
+    ''' </summary>
+    ''' <remarks></remarks>
+    Function ReturnCallForPrice(ByVal numP_ID As Int64) As Int16
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        Dim objValue As Object = objObjectConfigBLL.GetValue("K:product.callforprice", numP_ID)
+        Return objValue
+    End Function
 End Class

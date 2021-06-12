@@ -28,7 +28,8 @@ Partial Class _EditVersion
 
     Dim numProductID As Int64 = _GetProductID()
     Dim objProductsBLL As New ProductsBLL
-    Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", numProductID) = "1", True, False) And objProductsBLL._NumberOfCombinations(numProductID) > 0
+    Dim objObjectConfigBLL As New ObjectConfigBLL
+    Dim blnUseCombinationPrice As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", numProductID) = "1", True, False) And objProductsBLL._NumberOfCombinations(numProductID) > 0
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 

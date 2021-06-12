@@ -73,6 +73,7 @@ Partial Class ProductView
         'Gets the details of the current product
         Dim tblProducts As New DataTable
         Dim objProductsBLL As New ProductsBLL
+        Dim objObjectConfigBLL As New ObjectConfigBLL
         tblProducts = objProductsBLL.GetProductDetailsByID(_ProductID, _LanguageID)
 
         'If there is no products returned, then go to the categories page.
@@ -124,7 +125,7 @@ Partial Class ProductView
         fvwProduct.DataSource = tblProducts
         fvwProduct.DataBind()
 
-        Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", ProductID) = "1", True, False) And objProductsBLL._NumberOfCombinations(ProductID) > 0
+        Dim blnUseCombinationPrice As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", ProductID) = "1", True, False) And objProductsBLL._NumberOfCombinations(ProductID) > 0
 
         'Create the image view 
         UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_ProductImage, _
@@ -141,7 +142,7 @@ Partial Class ProductView
             
         Else
             'If tblProducts.Rows(0)("P_Desc").ToString.Contains("<overridelargeimagelinktype>") Then
-            If CBool(ObjectConfigBLL.GetValue("K:product.showlargeimageinline", pProductID)) Then
+            If CBool(objObjectConfigBLL.GetValue("K:product.showlargeimageinline", pProductID)) Then
                 'Override triggered - for MTMC large images
                 UC_ImageView.Visible = False
 
@@ -218,7 +219,8 @@ Partial Class ProductView
         'Handle specs tab
         'Specs tab added in v2.9014
         '=================================
-        Dim strSpecs As String = CkartrisDisplayFunctions.StripHTML(CkartrisDataManipulation.FixNullFromDB(ObjectConfigBLL.GetValue("K:product.spectable", _ProductID)))
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        Dim strSpecs As String = CkartrisDisplayFunctions.StripHTML(CkartrisDataManipulation.FixNullFromDB(objObjectConfigBLL.GetValue("K:product.spectable", _ProductID)))
         If Trim(strSpecs) <> "" Then
             'Great, we have specs - show tab
             numVisibleTabs += 1
@@ -235,7 +237,7 @@ Partial Class ProductView
         'Handle quantity discounts tab
         '=================================
         ' Check if Call for Price Product, will not process quantity discount
-        If ObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) <> 1 Then
+        If objObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) <> 1 Then
             UC_QuantityDiscounts.LoadProductQuantityDiscounts(_ProductID, _LanguageID)
         Else
             UC_QuantityDiscounts.Visible = False

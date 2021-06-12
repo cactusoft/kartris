@@ -166,7 +166,9 @@ Partial Class UserControls_General_Invoice
         litCustomerID.Text = _CustomerID
         litInvoiceDate.Text = FormatDate(datInvoiceDate, "d", _OrderLanguageID)
         litVatNumber.Text = strVatNumber
-        litEORINumber.Text = ObjectConfigBLL.GetValue("K:user.eori", _CustomerID)
+
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        litEORINumber.Text = objObjectConfigBLL.GetValue("K:user.eori", _CustomerID)
 
         'MOD v3.0001
         'Add email to invoice
@@ -304,7 +306,8 @@ Partial Class UserControls_General_Invoice
             'Commodity code, first we lookup product ID from the SKU, then use that
             'to see if any commodity code. 
             Dim numProductID As Integer = objProductsBLL.GetProductIDByVersionCode(strVersionCode)
-            Dim strCommodityCode As String = ObjectConfigBLL.GetValue("K:product.commoditycode", numProductID)
+            Dim objObjectConfigBLL As New ObjectConfigBLL
+            Dim strCommodityCode As String = objObjectConfigBLL.GetValue("K:product.commoditycode", numProductID)
             If strCommodityCode <> "" Then
                 CType(e.Item.FindControl("phdCommodityCode"), PlaceHolder).Visible = True
                 CType(e.Item.FindControl("phdNoCommodityCode"), PlaceHolder).Visible = False

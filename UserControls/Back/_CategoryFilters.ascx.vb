@@ -33,7 +33,8 @@ Partial Class UserControls_Back_CategoryFilters
     Protected Sub lnkBtnSave_Click(sender As Object, e As EventArgs) Handles lnkBtnSave.Click
         Dim intObjectConfigID As Integer = PowerpackBLL._GetFilterObjectID()
         Dim strMessage As String = String.Empty
-        If Not ObjectConfigBLL._SetConfigValue(intObjectConfigID, _GetCategoryID(), txtXML.Text, strMessage) Then
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        If Not objObjectConfigBLL._SetConfigValue(intObjectConfigID, _GetCategoryID(), txtXML.Text, strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
         Else
             RaiseEvent ShowMasterUpdate()

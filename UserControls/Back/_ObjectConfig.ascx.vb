@@ -41,7 +41,8 @@ Partial Class UserControls_Back_ObjectConfig
     Public Event ShowMasterUpdate()
 
     Public Sub LoadObjectConfig()
-        Dim dtbObjectConfig As DataTable = ObjectConfigBLL._GetData()
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        Dim dtbObjectConfig As DataTable = objObjectConfigBLL._GetData()
         Dim dvwObjectConfig As DataView = dtbObjectConfig.DefaultView
         dvwObjectConfig.RowFilter = "OC_ObjectType = '" & _ItemType & "'"
         rptObjectConfig.DataSource = dvwObjectConfig
@@ -59,10 +60,11 @@ Partial Class UserControls_Back_ObjectConfig
     End Sub
 
     Protected Sub rptObjectConfig_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptObjectConfig.ItemDataBound
-        If e.Item.ItemType = ListItemType.AlternatingItem OrElse _
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        If e.Item.ItemType = ListItemType.AlternatingItem OrElse
             e.Item.ItemType = ListItemType.Item Then
             Dim strConfigName As String = CType(e.Item.FindControl("litConfigName"), Literal).Text
-            Dim objConfigValue As Object = ObjectConfigBLL._GetValue(strConfigName, _ItemID)
+            Dim objConfigValue As Object = objObjectConfigBLL._GetValue(strConfigName, _ItemID)
             If objConfigValue IsNot Nothing Then
                 If CType(e.Item.FindControl("litConfigType"), Literal).Text = "b" Then
                     CType(e.Item.FindControl("chkSelected"), CheckBox).Checked = CBool(objConfigValue)
@@ -88,6 +90,7 @@ Partial Class UserControls_Back_ObjectConfig
 
     Sub SaveConfig()
         Dim blnHasErrors As Boolean = False
+        Dim objObjectConfigBLL As New ObjectConfigBLL
         For Each itmObjectConfig As RepeaterItem In rptObjectConfig.Items
             If itmObjectConfig.ItemType = ListItemType.Item OrElse itmObjectConfig.ItemType = ListItemType.AlternatingItem Then
                 Dim numConfigID As Integer = CInt(CType(itmObjectConfig.FindControl("litConfigID"), Literal).Text)
@@ -100,7 +103,7 @@ Partial Class UserControls_Back_ObjectConfig
                     strValue = CType(itmObjectConfig.FindControl("txtValue"), TextBox).Text
                 End If
 
-                If Not ObjectConfigBLL._SetConfigValue(numConfigID, _ItemID, strValue, strMessage) Then
+                If Not objObjectConfigBLL._SetConfigValue(numConfigID, _ItemID, strValue, strMessage) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     blnHasErrors = True
                     Exit For

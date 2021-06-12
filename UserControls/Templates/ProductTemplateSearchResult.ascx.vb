@@ -37,7 +37,8 @@ Partial Class Templates_ProductTemplateSearchResult
             intPageNumber = 0
         End Try
 
-        Dim blnCallForPrice As Boolean = ObjectConfigBLL.GetValue("K:product.callforprice", CType(e.Item.FindControl("litProductID"), Literal).Text) = 1
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        Dim blnCallForPrice As Boolean = objObjectConfigBLL.GetValue("K:product.callforprice", CType(e.Item.FindControl("litProductID"), Literal).Text) = 1
         For Each ctlElement As Control In e.Item.Controls
 
             Dim strNavigateURL As String = "~/Product.aspx?ProductID=" & _

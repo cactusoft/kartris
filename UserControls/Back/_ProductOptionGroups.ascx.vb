@@ -370,6 +370,8 @@ Partial Class _ProductOptionGroups
 
         Dim tblCurrentCombinations As New DataTable
         Dim objVersionsBLL As New VersionsBLL
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+
         tblCurrentCombinations = objVersionsBLL._GetCombinationsByProductID(CInt(litProductID.Text))
         tblCurrentCombinations.Columns.Add(New DataColumn("IsStockTracking", Type.GetType("System.Boolean")))
         tblCurrentCombinations.Columns.Add(New DataColumn("UseCombinationPrices", Type.GetType("System.Boolean")))
@@ -378,7 +380,7 @@ Partial Class _ProductOptionGroups
         Dim blnStockTrackingEnabled As Boolean = False
         If objVersionsBLL.IsStockTrackingInBase(CInt(litProductID.Text)) Then blnStockTrackingEnabled = True
         'Check whether the product will use the combination prices or not
-        Dim blnUseCombinationPrices As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", CInt(litProductID.Text)) = "1", True, False)
+        Dim blnUseCombinationPrices As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", CInt(litProductID.Text)) = "1", True, False)
         For Each drwCombination As DataRow In tblCurrentCombinations.Rows
             drwCombination("IsStockTracking") = blnStockTrackingEnabled
             drwCombination("UseCombinationPrices") = blnUseCombinationPrices
@@ -558,6 +560,8 @@ Partial Class _ProductOptionGroups
         Dim tblSuspendedCombinations As New DataTable
         Dim tblNewCombinations As New DataTable
         Dim objVersionsBLL As New VersionsBLL
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+
         tblExistingCombinations = objVersionsBLL._GetVersionOptionsByProductID(CInt(litProductID.Text))
 
         Dim varExisting = From a In tblExistingCombinations _
@@ -635,7 +639,7 @@ Partial Class _ProductOptionGroups
             Dim blnStockTrackingEnabled As Boolean = False
             If objVersionsBLL.IsStockTrackingInBase(CInt(litProductID.Text)) Then blnStockTrackingEnabled = True
             'Check whether the product will use the combination prices or not
-            Dim blnUseCombinationPrices As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", CInt(litProductID.Text)) = "1", True, False)
+            Dim blnUseCombinationPrices As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", CInt(litProductID.Text)) = "1", True, False)
             For Each drwNewCombination As DataRow In tblNewCombinations.Rows
                 drwNewCombination("IsStockTracking") = blnStockTrackingEnabled
                 drwNewCombination("UseCombinationPrices") = blnUseCombinationPrices
@@ -741,6 +745,8 @@ Partial Class _ProductOptionGroups
         'Create datatable for 'new' combinations
         Dim tblNewCombinations As New DataTable
         Dim objVersionsBLL As New VersionsBLL
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+
         tblNewCombinations = objVersionsBLL._GetSchema()
         tblNewCombinations.Columns.Add(New DataColumn("ID_List", Type.GetType("System.String")))
 
@@ -783,7 +789,7 @@ Partial Class _ProductOptionGroups
         Dim vRRP As Decimal = FixNullToDB(HandleDecimalValues(txtBasicRRP.Text), "z")
         Dim vWeight As Single = FixNullToDB(HandleDecimalValues(txtBasicWeight.Text), "d")
         Dim vProductID As Integer = FixNullToDB(litProductID.Text, "i")
-        Dim blnUseCombinationPrices As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", vProductID) = "1", True, False)
+        Dim blnUseCombinationPrices As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", vProductID) = "1", True, False)
         For Each itm As RepeaterItem In rptNewCombinations.Items
             If itm.ItemType = ListItemType.Item OrElse itm.ItemType = ListItemType.AlternatingItem Then
                 Dim vOldVersionID As Int64 = CLng(FixNullToDB(CType(itm.FindControl("hidOldVersionID"), TextBox).Text))

@@ -67,5 +67,14 @@ Partial Class ProductTemplateExtended
 
     End Sub
 
+    'Show or hide minprice
+    Function ShowMinPrice(ByVal numP_ID As Int64) As Boolean
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        If objObjectConfigBLL.GetValue("K:product.callforprice", Eval("P_ID")) = 1 OrElse Not String.IsNullOrEmpty(objObjectConfigBLL.GetValue("K:product.customcontrolname", Eval("P_ID"))) Then
+            Return False
+        Else
+            Return True
+        End If
+    End Function
 
 End Class

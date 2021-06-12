@@ -448,6 +448,7 @@ Public Class BasketBLL
         Dim tblBasketValues As DataTable
         Dim numCurrencyID As Integer ', numLanguageId, numSessionId
         Dim BasketItems As New List(Of Kartris.BasketItem)
+        Dim objObjectConfigBLL As New ObjectConfigBLL
 
         Dim SESS_CurrencyID As Short
         If numCurrencyID > 0 Then
@@ -491,7 +492,7 @@ Public Class BasketBLL
 
                 'Added v2.9010 - lets us exclude particular products
                 'from the customer discount 
-                objItem.ExcludeFromCustomerDiscount = CBool(ObjectConfigBLL.GetValue("K:product.excustomerdiscount", drwBasketValues("ProductID")))
+                objItem.ExcludeFromCustomerDiscount = CBool(objObjectConfigBLL.GetValue("K:product.excustomerdiscount", drwBasketValues("ProductID")))
 
                 'We can tell if this is an combinations product
                 If objItem.VersionType = "c" Then
@@ -502,7 +503,7 @@ Public Class BasketBLL
                     'and any options that are selected, just like a regular options product. However,
                     'by setting the usecombination object config setting for the product to 'on', you
                     'can specify pricing individually for each combination.
-                    If ObjectConfigBLL.GetValue("K:product.usecombinationprice", objItem.ProductID) = "1" Then
+                    If objObjectConfigBLL.GetValue("K:product.usecombinationprice", objItem.ProductID) = "1" Then
                         objItem.Price = FixNullFromDB(drwBasketValues("CombinationPrice"))
                         objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
                         objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
@@ -537,7 +538,7 @@ Public Class BasketBLL
                 objItem.TableText = ""
 
                 'Handle the price differently if basket item is from a custom product
-                Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", objItem.ProductID)
+                Dim strCustomControlName As String = objObjectConfigBLL.GetValue("K:product.customcontrolname", objItem.ProductID)
                 If Not String.IsNullOrEmpty(strCustomControlName) Then
                     Try
                         Dim strParameterValues As String = FixNullFromDB(drwBasketValues("CustomText"))

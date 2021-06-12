@@ -65,7 +65,8 @@ Partial Class Customer
             txtEUVATNumber.Text = arrNameAndVAT(1)
 
             'v3.0001 EORI number
-            txtEORINumber.Text = ObjectConfigBLL.GetValue("K:user.EORI", CurrentLoggedUser.ID)
+            Dim objObjectConfigBLL As New ObjectConfigBLL
+            txtEORINumber.Text = objObjectConfigBLL.GetValue("K:user.EORI", CurrentLoggedUser.ID)
             litUserEmail.Text = User.Identity.Name
         End If
 
@@ -777,7 +778,8 @@ Partial Class Customer
             If objUsersBLL.UpdateNameandEUVAT(CurrentLoggedUser.ID, txtCustomerName.Text, txtEUVATNumber.Text) = CurrentLoggedUser.ID Then UC_Updated.ShowAnimatedText()
 
             'EORI number
-            Dim blnAddedEORI As Boolean = ObjectConfigBLL._SetConfigValue(11, CurrentLoggedUser.ID, txtEORINumber.Text, "")
+            Dim objObjectConfigBLL As New ObjectConfigBLL
+            Dim blnAddedEORI As Boolean = objObjectConfigBLL._SetConfigValue(11, CurrentLoggedUser.ID, txtEORINumber.Text, "")
         End If
     End Sub
 

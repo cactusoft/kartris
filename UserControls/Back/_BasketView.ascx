@@ -244,7 +244,8 @@
                                         <asp:UpdatePanel runat="server" ID="updItemQuantity">
                                             <ContentTemplate>
                                                 <asp:Literal ID="litProductID_H" runat="server" Text='<%# Eval("ProductID") %>' Visible="false" />
-                                                    <% If ObjectConfigBLL.GetValue("K:product.decimalquantity", CLng(litProductID_H.Text)) = 1 Then%>
+                                                    <% Dim objObjectConfigBLL As New ObjectConfigBLL
+                                                        If objObjectConfigBLL.GetValue("K:product.decimalquantity", CLng(litProductID_H.Text)) = 1 Then %>
                                                 <ajaxToolkit:FilteredTextBoxExtender ID="filDecimalQuantity" runat="server" TargetControlID="txtQuantity"
                                                     FilterType="Numbers,Custom" ValidChars=".">
                                                 </ajaxToolkit:FilteredTextBoxExtender>

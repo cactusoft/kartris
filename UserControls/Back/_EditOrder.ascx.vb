@@ -734,9 +734,10 @@ Partial Class UserControls_Back_EditOrder
             Dim blnHasExemptCustomerDiscountItems As Boolean = False
 
             'Loop through basket items
+            Dim objObjectConfigBLL As New ObjectConfigBLL
             For Each Item As Kartris.BasketItem In arrBasketItems
                 With Item
-                    Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", Item.ProductID)
+                    Dim strCustomControlName As String = objObjectConfigBLL.GetValue("K:product.customcontrolname", Item.ProductID)
                     Dim strCustomText As String = ""
 
                     Dim sbdOptionText As New StringBuilder("")
@@ -816,7 +817,7 @@ Partial Class UserControls_Back_EditOrder
         End If
 
         'Create the order record
-        Dim intNewOrderID As Integer = OrdersBLL._CloneAndCancel(intO_ID, strOrderDetails, UC_BillingAddress.SelectedAddress, UC_ShippingAddress.SelectedAddress,
+        Dim intNewOrderID As Integer = objOrdersBLL._CloneAndCancel(intO_ID, strOrderDetails, UC_BillingAddress.SelectedAddress, UC_ShippingAddress.SelectedAddress,
                                                                  chkSameShippingAsBilling.Checked, chkOrderSent.Checked, chkOrderInvoiced.Checked, chkOrderPaid.Checked,
                                                                  chkOrderShipped.Checked, objBasket, arrBasketItems,
                                                                 UC_BasketMain.SelectedShippingMethod, txtOrderNotes.Text, numGatewayTotalPrice, txtOrderPONumber.Text,

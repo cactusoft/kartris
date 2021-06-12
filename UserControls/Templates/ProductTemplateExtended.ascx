@@ -22,7 +22,7 @@
 
 
                 <asp:PlaceHolder ID="phdMinPrice" runat="server" Visible="false">
-                    <div class="minprice" id="divPrice" runat="server" visible='<%# Iif( ObjectConfigBLL.GetValue("K:product.callforprice", Eval("P_ID")) = 1 OrElse Not String.IsNullOrEmpty(ObjectConfigBLL.GetValue("K:product.customcontrolname", Eval("P_ID"))), False, True) %>'>
+                    <div class="minprice" id="divPrice" runat="server" visible='<%# ShowMinPrice(Eval("P_ID")) %>'>
                         <asp:Literal ID="litPrice" runat="server" Text='<%# Eval("MinPrice") %>' Visible="false" />
                         <asp:Literal ID="litTaxRateHidden" runat="server" Text='<%# Eval("MinTaxRate") %>'
                             Visible="false" />

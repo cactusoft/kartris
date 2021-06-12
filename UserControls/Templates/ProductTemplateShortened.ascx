@@ -9,7 +9,7 @@
         <asp:HyperLink ID="lnkProductName" runat="server" NavigateUrl='<%# Eval("P_ID", "~/Product.aspx?ProductID={0}") %>' CssClass="details">
             <h2>
                 <asp:Literal ID="litProductName" runat="server" Text='<%# DisplayProductName() %>'></asp:Literal></h2>
-            <div class="minprice" enableviewstate="true" id="divPrice" runat="server" visible='<%# IIf(ObjectConfigBLL.GetValue("K:product.callforprice", Eval("P_ID")) = 1 OrElse Not String.IsNullOrEmpty(ObjectConfigBLL.GetValue("K:product.customcontrolname", Eval("P_ID"))), False, True) %>'>
+            <div class="minprice" enableviewstate="true" id="divPrice" runat="server" visible='<%# ShowMinPrice(Eval("P_ID")) %>'>
                 <asp:Literal ID="litPriceFrom" runat="server" Text="<%$ Resources:Products,ContentText_ProductPriceFrom %>"></asp:Literal>
                 <asp:Literal ID="litPriceHidden" runat="server" Text='<%# Eval("MinPrice") %>' Visible="false" />
                 <asp:Literal ID="litPriceView" runat="server" />

@@ -22,19 +22,19 @@ Imports KartSettingsManager
 
 Public Class ObjectConfigBLL
 
-    Private Shared _Adptr As ObjectConfigTblAdptr = Nothing
-    Protected Shared ReadOnly Property Adptr() As ObjectConfigTblAdptr
+    Private _Adptr As ObjectConfigTblAdptr = Nothing
+    Protected ReadOnly Property Adptr() As ObjectConfigTblAdptr
         Get
             _Adptr = New ObjectConfigTblAdptr
             Return _Adptr
         End Get
     End Property
 
-    Public Shared Function _GetData() As DataTable
+    Public Function _GetData() As DataTable
         Return Adptr._GetData()
     End Function
 
-    Public Shared Function _GetValue(ByVal strConfigName As String, ByVal numParentID As Long) As Object
+    Public Function _GetValue(ByVal strConfigName As String, ByVal numParentID As Long) As Object
         'Dim strValue As String = CStr(Adptr._GetValue(strConfigName, numParentID))
         Return FixNullFromDB(Adptr._GetValue(strConfigName, numParentID))
     End Function
@@ -47,7 +47,7 @@ Public Class ObjectConfigBLL
     ''' <param name="strValue">The value you want to set it to</param>
     ''' <param name="strMsg">Tax extra info, we now set this to EU if using UK/VAT tax regime for EU countries</param>
     ''' <returns>boolean</returns>
-    Public Shared Function _SetConfigValue(ByVal numConfigID As Integer, ByVal numParentID As Long, ByVal strValue As String, ByRef strMsg As String) As Boolean
+    Public Function _SetConfigValue(ByVal numConfigID As Integer, ByVal numParentID As Long, ByVal strValue As String, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -91,7 +91,7 @@ Public Class ObjectConfigBLL
     ''' <param name="strValue">The value you want to set it to</param>
     ''' <param name="strMsg">Tax extra info, we now set this to EU if using UK/VAT tax regime for EU countries</param>
     ''' <returns>boolean</returns>
-    Public Shared Function SetConfigValue(ByVal strConfigName As String, ByVal numParentID As Long, ByVal strValue As String, ByRef strMsg As String) As Boolean
+    Public Function SetConfigValue(ByVal strConfigName As String, ByVal numParentID As Long, ByVal strValue As String, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -135,7 +135,7 @@ Public Class ObjectConfigBLL
     ''' <returns>object</returns>
     ''' <remarks>Since v3.1002 this does similar to language elements retrieval,
     ''' it will try twice before failing</remarks>
-    Public Shared Function GetValue(ByVal strConfigName As String, ByVal numParentID As Long) As Object
+    Public Function GetValue(ByVal strConfigName As String, ByVal numParentID As Long) As Object
         Try
             Return Adptr.GetValue(strConfigName, numParentID)
         Catch ex As Exception

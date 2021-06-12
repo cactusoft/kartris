@@ -825,7 +825,8 @@ Namespace Kartris
                         'can only be bought in units of 10, we need to ensure
                         'the qty of that item is a multiple of 10, or fix it
                         'down.
-                        numUnitSize = CkartrisDataManipulation.FixNullFromDB(ObjectConfigBLL.GetValue("K:product.unitsize", .P_ID))
+                        Dim objObjectConfigBLL As New ObjectConfigBLL
+                        numUnitSize = CkartrisDataManipulation.FixNullFromDB(objObjectConfigBLL.GetValue("K:product.unitsize", .P_ID))
                         .Quantity = (.Quantity - CkartrisDataManipulation.SafeModulus(.Quantity, numUnitSize))
 
                         'Get basic price, modify for customer group pricing (if lower)
@@ -857,7 +858,7 @@ Namespace Kartris
                         End If
 
                         If Not String.IsNullOrEmpty(.CustomText) Then
-                            Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", .ProductID)
+                            Dim strCustomControlName As String = objObjectConfigBLL.GetValue("K:product.customcontrolname", .ProductID)
                             If Not String.IsNullOrEmpty(strCustomControlName) Then
                                 'Split the custom text field
                                 Dim arrParameters As String() = Split(.CustomText, "|||")

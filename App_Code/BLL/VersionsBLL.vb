@@ -824,8 +824,11 @@ Public Class VersionsBLL
 
                 cmdUpdateVersion.ExecuteNonQuery()
 
+
+
                 If chrType = "b" Then
-                    If ObjectConfigBLL.GetValue("K:product.usecombinationprice", intProductID) <> "1" Then
+                    Dim objObjectConfigBLL As New ObjectConfigBLL
+                    If objObjectConfigBLL.GetValue("K:product.usecombinationprice", intProductID) <> "1" Then
                         If Not _UpdateCombinationsFromBasicInfo(intProductID, decPrice, intTaxID, intTaxID2, strTaxExtra, snglWeight, decRRP, sqlConn, savePoint) Then
                             Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                         End If

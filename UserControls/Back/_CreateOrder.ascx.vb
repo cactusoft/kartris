@@ -882,9 +882,10 @@ Partial Class UserControls_Back_CreateOrder
                                                         "Generated Body Text: " & sbdBodyText.ToString)
                         'Response.Redirect("~/Basket.aspx")
                     End If
+                    Dim objObjectConfigBLL As New ObjectConfigBLL
                     For Each Item As Kartris.BasketItem In BasketItems
                         With Item
-                            Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", BasketItem.ProductID)
+                            Dim strCustomControlName As String = objObjectConfigBLL.GetValue("K:product.customcontrolname", BasketItem.ProductID)
                             Dim strCustomText As String = ""
 
                             Dim sbdOptionText As New StringBuilder("")

@@ -114,14 +114,14 @@ Public Class OrdersBLL
     ''' 
     ''' </summary>
     ''' <returns>Returns the newly created order ID</returns>
-    Public Shared Function _CloneAndCancel(ByVal O_ID As Integer, ByVal strOrderDetails As String, _
-                                           ByVal BillingAddress As KartrisClasses.Address, ByVal ShippingAddress As KartrisClasses.Address, _
-                                           ByVal blnSameShippingAsBilling As Boolean, _
-                                            ByVal O_Sent As Boolean, ByVal O_Invoiced As Boolean, ByVal O_Paid As Boolean, ByVal O_Shipped As Boolean, _
-                                          ByVal BasketObject As Kartris.Basket, ByVal BasketArray As List(Of Kartris.BasketItem), _
-                                           ByVal strShippingMethod As String, ByVal strNotes As String, _
-                                          ByVal numGatewayTotalPrice As Double, ByVal O_PurchaseOrderNo As String, _
-                                          ByVal strPromotionDescription As String, ByVal intCurrencyID As Integer, _
+    Public Function _CloneAndCancel(ByVal O_ID As Integer, ByVal strOrderDetails As String,
+                                           ByVal BillingAddress As KartrisClasses.Address, ByVal ShippingAddress As KartrisClasses.Address,
+                                           ByVal blnSameShippingAsBilling As Boolean,
+                                            ByVal O_Sent As Boolean, ByVal O_Invoiced As Boolean, ByVal O_Paid As Boolean, ByVal O_Shipped As Boolean,
+                                          ByVal BasketObject As Kartris.Basket, ByVal BasketArray As List(Of Kartris.BasketItem),
+                                           ByVal strShippingMethod As String, ByVal strNotes As String,
+                                          ByVal numGatewayTotalPrice As Double, ByVal O_PurchaseOrderNo As String,
+                                          ByVal strPromotionDescription As String, ByVal intCurrencyID As Integer,
                                           ByVal blnOrderEmails As Boolean) As Integer
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -143,9 +143,9 @@ Public Class OrdersBLL
 
                 'Build the billing address string to be used in the order record
                 With BillingAddress
-                    strBillingAddressText = .FullName & vbCrLf & .Company & vbCrLf & _
-                          .StreetAddress & vbCrLf & .TownCity & vbCrLf & _
-                          .County & vbCrLf & .Postcode & vbCrLf & _
+                    strBillingAddressText = .FullName & vbCrLf & .Company & vbCrLf &
+                          .StreetAddress & vbCrLf & .TownCity & vbCrLf &
+                          .County & vbCrLf & .Postcode & vbCrLf &
                           .Country.Name & vbCrLf & .Phone
                 End With
 
@@ -154,9 +154,9 @@ Public Class OrdersBLL
                     strShippingAddressText = strBillingAddressText
                 Else
                     With ShippingAddress
-                        strShippingAddressText = .FullName & vbCrLf & .Company & vbCrLf & _
-                              .StreetAddress & vbCrLf & .TownCity & vbCrLf & _
-                              .County & vbCrLf & .Postcode & vbCrLf & _
+                        strShippingAddressText = .FullName & vbCrLf & .Company & vbCrLf &
+                              .StreetAddress & vbCrLf & .TownCity & vbCrLf &
+                              .County & vbCrLf & .Postcode & vbCrLf &
                               .Country.Name & vbCrLf & .Phone
                     End With
                 End If
@@ -213,8 +213,8 @@ Public Class OrdersBLL
 
                             cmdAddInvoiceRows.Parameters.AddWithValue("@IR_OrderNumberID", intNewOrderID)
                             cmdAddInvoiceRows.Parameters.AddWithValue("@IR_VersionCode", .VersionCode)
-                            cmdAddInvoiceRows.Parameters.AddWithValue("@IR_VersionName", IIf(.VersionName <> .ProductName Or _
-                                                                                             InStr(.VersionName, .ProductName) = 0, _
+                            cmdAddInvoiceRows.Parameters.AddWithValue("@IR_VersionName", IIf(.VersionName <> .ProductName Or
+                                                                                             InStr(.VersionName, .ProductName) = 0,
                                                                                              .ProductName & " - " & .VersionName, .VersionName))
                             cmdAddInvoiceRows.Parameters.AddWithValue("@IR_Quantity", .Quantity)
                             cmdAddInvoiceRows.Parameters.AddWithValue("@IR_PricePerItem", .IR_PricePerItem)

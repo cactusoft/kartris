@@ -22,9 +22,9 @@ Partial Class ProductTemplateShortened
     Inherits System.Web.UI.UserControl
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-
+        Dim objObjectConfigBLL As New ObjectConfigBLL
         Dim strNavigateURL As String = SiteMapHelper.CreateURL(SiteMapHelper.Page.Product, litProductID.Text, Request.QueryString("strParent"), Request.QueryString("CategoryID"))
-        Dim blnCallForPrice As Boolean = ObjectConfigBLL.GetValue("K:product.callforprice", litProductID.Text) = 1
+        Dim blnCallForPrice As Boolean = objObjectConfigBLL.GetValue("K:product.callforprice", litProductID.Text) = 1
 
         lnkProductName.NavigateUrl = strNavigateURL
 
@@ -77,5 +77,15 @@ Partial Class ProductTemplateShortened
             'do nowt
             Return ""
         End Try
+    End Function
+
+    'Show or hide minprice
+    Function ShowMinPrice(ByVal numP_ID As Int64) As Boolean
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        If objObjectConfigBLL.GetValue("K:product.callforprice", Eval("P_ID")) = 1 OrElse Not String.IsNullOrEmpty(objObjectConfigBLL.GetValue("K:product.customcontrolname", Eval("P_ID"))) Then
+            Return False
+        Else
+            Return True
+        End If
     End Function
 End Class
