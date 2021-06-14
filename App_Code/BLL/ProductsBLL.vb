@@ -192,7 +192,8 @@ Public Class ProductsBLL
                                             ByVal _PageIndx As Short, ByVal _RowsPerPage As Short,
                                             ByVal _CGroupID As Short, ByRef _TotalNoOfProducts As Integer) As DataTable
         If Request.QueryString("f") = 1 Then
-            Dim dtFilteredProducts As DataTable = PowerpackBLL.GetFilteredProductsByCategory(Request, _CategoryID, _LanguageID, _PageIndx,
+            Dim objPowerpackBLL As New PowerpackBLL
+            Dim dtFilteredProducts As DataTable = objPowerpackBLL.GetFilteredProductsByCategory(Request, _CategoryID, _LanguageID, _PageIndx,
                                                                 _RowsPerPage, _CGroupID, _TotalNoOfProducts)
             If dtFilteredProducts IsNot Nothing Then Return dtFilteredProducts
         End If

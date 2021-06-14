@@ -25,13 +25,15 @@ Partial Class UserControls_Back_CategoryFilters
 
     Protected Sub Page_Load(sender As Object, e As EventArgs) Handles Me.Load
         If Not Page.IsPostBack Then
-            txtXML.Text = PowerpackBLL._GetFilterXMLByCategory(_GetCategoryID())
+            Dim objPowerpackBLL As New PowerpackBLL
+            txtXML.Text = objPowerpackBLL._GetFilterXMLByCategory(_GetCategoryID())
             If txtXML.Text = "Not Enabled" Then Me.Visible = False
         End If
     End Sub
 
     Protected Sub lnkBtnSave_Click(sender As Object, e As EventArgs) Handles lnkBtnSave.Click
-        Dim intObjectConfigID As Integer = PowerpackBLL._GetFilterObjectID()
+        Dim objPowerpackBLL As New PowerpackBLL
+        Dim intObjectConfigID As Integer = objPowerpackBLL._GetFilterObjectID()
         Dim strMessage As String = String.Empty
         Dim objObjectConfigBLL As New ObjectConfigBLL
         If Not objObjectConfigBLL._SetConfigValue(intObjectConfigID, _GetCategoryID(), txtXML.Text, strMessage) Then
@@ -42,6 +44,7 @@ Partial Class UserControls_Back_CategoryFilters
     End Sub
 
     Protected Sub btnGenerate_Click(sender As Object, e As EventArgs) Handles btnGenerate.Click
-        txtXML.Text = PowerpackBLL._GenerateFilterXML(_GetCategoryID(), Session("_LANG"))
+        Dim objPowerpackBLL As New PowerpackBLL
+        txtXML.Text = objPowerpackBLL._GenerateFilterXML(_GetCategoryID(), Session("_LANG"))
     End Sub
 End Class
