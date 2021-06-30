@@ -130,9 +130,9 @@ SEARCH BOX
 OTHER CONTROLS language, currency, etc.
 ========================================================================
 */
-#currencymenu                           { margin: 7px 20px 0 20px; width: 90px; overflow: hidden; float: right; }
+#currencymenu                           { margin: 7px 20px 0 20px; width: 60px; overflow: hidden; float: left; }
 #currencymenu select					{ color: #000; border: none; background-color: #fff; font-size: 0.9em; box-shadow: none; min-width: 70px; }
-#languagemenu                           { font-size: 0.8em; margin: 8px 0 0 20px; float: right; text-align: left; display: block; max-width: 110px; border: none; border: solid 1px #000; }
+#languagemenu                           { font-size: 0.8em; margin: 8px 0 0 20px; float: left; text-align: left; display: block; max-width: 110px; border: none; border: solid 1px #000; }
 #languagemenu .language-link            { display: inline-block; border: none; padding: 1px 3px; color: #000; text-transform: uppercase; }
 #languagemenu .lang-selected            { background-color: #000; color: #fff; }
 #recentlyviewed                         { padding: 50px 0 40px 0; text-align: center; }

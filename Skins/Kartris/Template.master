@@ -70,7 +70,7 @@
 					</aside>
 					<div id="header">
 						<div class="row collapse">
-							<div id="hcol-left" class="small-5 medium-6 large-2 column">
+							<div id="hcol-left" class="small-4 medium-6 large-3 column">
 
 								<a onclick="openOffCanvas()" class="left-off-canvas-toggle off-canvas-open show-for-medium-down" href="#">
 									<i class="fas fa-bars"></i>
@@ -81,14 +81,16 @@
 								</asp:HyperLink>
 
 							</div>
-							<div id="hcol-centre" class="large-8 hide-for-medium-down column">
+							<div id="hcol-centre" class="large-6 hide-for-medium-down column">
 								<div id="menus">
 									<a onclick="menuCategories()" class="big-menu-link" id="menuCategoriesLink1">Products</a>
 									<a onclick="menuAbout()" class="big-menu-link" id="menuAboutLink">About Us</a>
-									<a href="/Contact.aspx" class="big-menu-link" id="menuAboutLink">Contact</a>
+									<a href="/Contact.aspx" class="big-menu-link" id="menuContactLink">Contact</a>
 								</div>
 							</div>
-							<div id="hcol-right" class="small-7 medium-6 large-2 column">
+							<div id="hcol-right" class="small-8 medium-6 large-3 column">
+								<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
+								<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
 								<div id="icons">
 									<a onclick="menuSearch()" id="menuSearchLink"><i class="fas fa-search"></i></a>
 
@@ -107,11 +109,6 @@
 							<div class="custommegamenu">
 								Edit "menuFurther2" in /Skins/Kartris/Template.master
 							</div>
-						</div>
-
-						<div id="menuSettings" class="menuSpecial">
-							<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
-							<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
 						</div>
 						<div id="menuSearch" class="menuSpecial">
 							<user:SearchBox runat="server" ID="UC_SearchBox" EnableViewState="False" />
