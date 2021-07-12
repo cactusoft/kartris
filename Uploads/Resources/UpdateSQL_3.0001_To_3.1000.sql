@@ -812,10 +812,10 @@ GO
 
 /*** New language strings  ***/
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
-(N'f', N'ContentText_AccountBalance', N'Account Balance', NULL, 3.0001, N'Account Balance', NULL, N'Kartris',1);
+(N'f', N'ContentText_AccountBalance', N'Account Balance', NULL, 3.1000, N'Account Balance', NULL, N'Kartris',1);
 
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES
-(N'f', N'ContentText_EORI', N'EORI Number (if available)', NULL, 3.0001, N'EORI Number (if available)', NULL, N'Kartris',1);
+(N'f', N'ContentText_EORI', N'EORI Number (if available)', NULL, 3.1000, N'EORI Number (if available)', NULL, N'Kartris',1);
 
 GO
 
@@ -836,7 +836,7 @@ GO
 INSERT INTO [tblKartrisConfig]
 (CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
 VALUES
-(N'general.orders.extendedinvoiceinfo', N'n', N's', N's', 'y|n',N'Extended item info on invoice',3.0001, N'n', 0);
+(N'general.orders.extendedinvoiceinfo', N'n', N's', N's', 'y|n',N'Extended item info on invoice',3.1000, N'n', 0);
 GO
 
 /* Change config setting */
