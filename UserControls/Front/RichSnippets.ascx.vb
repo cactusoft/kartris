@@ -26,7 +26,12 @@ Partial Class UserControls_Front_RichSnippets
 
     Protected Sub UserControls_Front_RichSnippets_Load(sender As Object, e As EventArgs) Handles Me.Load
         If Not Page.IsPostBack AndAlso _ProductID > 0 Then
-            LoadSnippets()
+            Try
+                LoadSnippets()
+            Catch ex As Exception
+
+            End Try
+
         End If
     End Sub
 

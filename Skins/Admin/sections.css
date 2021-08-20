@@ -768,6 +768,8 @@ span.link2 a                            { background-position: left top; backgro
                                         { border-top: dotted 1px #daa; border-bottom: dotted 1px #daa; background-color: #fdd; }
 .basket table.baskettable tr.footerrow td span.totallabel
                                         { float: left; width: 150px; color: #000; text-align: left; }
+.basket table.baskettable tr.footerrow td span.totallabel span.unbold
+                                        { font-weight: normal; margin-left: 20px; }
 .basket table.baskettable tr.footerrow td span.total
                                         { color: #f00 }
 /* 

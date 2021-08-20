@@ -125,7 +125,13 @@ Partial Class ProductView
         fvwProduct.DataSource = tblProducts
         fvwProduct.DataBind()
 
-        Dim blnUseCombinationPrice As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", ProductID) = "1", True, False) And objProductsBLL._NumberOfCombinations(ProductID) > 0
+        'This way below is a bit more robust, we don't lose images if there is some issue
+        Dim blnUseCombinationPrice As Boolean = False
+        Try
+            blnUseCombinationPrice = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", ProductID) = "1", True, False) And objProductsBLL._NumberOfCombinations(ProductID) > 0
+        Catch ex As Exception
+
+        End Try
 
         'Create the image view 
         UC_ImageView.CreateImageViewer(IMAGE_TYPE.enum_ProductImage, _

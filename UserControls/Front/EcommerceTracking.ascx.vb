@@ -41,7 +41,7 @@ Partial Class UserControls_Front_EcommerceTracking
         'Only need ecommerce tracking if there is a 
         'webproperty ID (site identifier) set in 
         'the config settings of Kartris
-        If KartSettingsManager.GetKartConfig("general.googleanalytics.webpropertyid") <> "" Then
+        If KartSettingsManager.GetKartConfig("general.google.analytics.webpropertyid") <> "" Then
             'Declare variables
             Dim tblOrder As System.Data.DataTable
 
@@ -105,7 +105,7 @@ Partial Class UserControls_Front_EcommerceTracking
         Else
             'Ecommerce tracking not enabled
             phdEcommerceTracking.Visible = False
-            litHiddenBecause.Text = "<!-- GOOGLE ANALYTICS: general.googleanalytics.webpropertyid is not set -->"
+            litHiddenBecause.Text = "<!-- GOOGLE ANALYTICS: general.google.analytics.webpropertyid is not set -->"
         End If
 
     End Sub

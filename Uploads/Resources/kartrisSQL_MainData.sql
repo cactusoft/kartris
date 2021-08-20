@@ -470,7 +470,7 @@ INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_D
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.fts.enabled', N'n', N's', N't', N'Warning !! should not be modified by user', N'Warning !! (this config should not be modified by user), it will be modified automatically if needed.
 
 indicates if the Full Text Search is enabled', 1.0022, N'n', 0)
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.googleanalytics.webpropertyid', N'', N's', N't', NULL, N'This is the Google Analytics web property ID for your site', 1.0021, NULL, 0)
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.google.analytics.webpropertyid', N'', N's', N't', NULL, N'This is the Google Analytics web property ID for your site', 1.0021, NULL, 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.imagequality', N'85', N'n', N'n', N'1-99', N'Compression quality for uploaded images. This will allow the uploaded images to be compressed to improve performance and save disk space. To disable image compression set the value to 0 or 100', 2, N'85', 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.paging.group.size', N'10', N'n', N'n', NULL, N'General item pager group size', 1.0018, N'10', 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.products.hittracking', N'y', N's', N'b', N'y|n', N'Determines whether product hit tracking for the statistics is turned on or off - y/n', 1, N'y', 0)
@@ -28273,8 +28273,15 @@ CREATE NONCLUSTERED INDEX [OP_OrderID] ON [dbo].[tblKartrisOrderPaymentLink]
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 
+/****** New config setting, google tag manager v3.2001 ******/
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.google.tagmanager.webpropertyid', N'', N's', N's', '',N'The web property ID of the site in Google Tag Manager ',3.2001, N'GTM-9XXXXXX', 0);
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'3.0001', N's', N's', N'kartris version', N'', 3.0000, N'2.9014', 0)
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'3.2001', N's', N's', N'kartris version', N'', 3.2001, N'3.2001', 0)
 GO
 
 
