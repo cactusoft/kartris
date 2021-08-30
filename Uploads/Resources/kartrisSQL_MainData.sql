@@ -9351,13 +9351,56 @@ BEGIN
 	-- interfering with SELECT statements.
 	SET NOCOUNT ON;
 
-
 	DECLARE @O_Sent bit;
 	DECLARE @O_Invoiced bit;
 	DECLARE @O_Paid bit;
 	DECLARE @O_Shipped bit ;
 	DECLARE @O_CustomerID int;
 	DECLARE @O_Cancelled bit ;
+
+	SET @O_Cancelled = 0;
+
+	IF @Callmode = 'RECENT'
+	BEGIN
+		SET @O_Sent = 1;
+	END
+	
+	ELSE IF @Callmode = 'INVOICE'
+	BEGIN
+		SET @O_Sent = 1;
+		SET @O_Paid = 0;
+		SET @O_Invoiced = 0;
+	END
+	
+	ELSE IF @Callmode = 'DISPATCH'
+	BEGIN
+		SET @O_Sent = 1; 
+		SET @O_Paid = 1;
+		SET @O_Shipped = 0;
+	END
+
+	ELSE IF @Callmode = 'COMPLETE'
+	BEGIN
+		SET @O_Paid = 1;
+		SET @O_Shipped = 1;
+	END
+	
+	ELSE IF @Callmode = 'PAYMENT'
+	BEGIN
+		SET @O_Sent = 1; 
+		SET @O_Paid = 0; 
+		SET @O_Invoiced = 1;
+	END
+	
+	ELSE IF @Callmode = 'UNFINISHED'
+	BEGIN
+		SET @O_Sent = 0;
+	END
+
+	ELSE IF @Callmode = 'CANCELLED'
+	BEGIN
+		SET @O_Cancelled = 1;
+	END
 	
 	IF @Callmode <> 'CUSTOMER'
 	BEGIN
@@ -9393,77 +9436,48 @@ BEGIN
 				END
 		END;
 
-
+	
 	IF @Callmode = 'RECENT' OR @Callmode = 'INVOICE' OR @Callmode = 'DISPATCH' OR @Callmode = 'COMPLETE' OR @Callmode = 'PAYMENT' OR @Callmode = 'UNFINISHED' OR @Callmode = 'CANCELLED'
 		BEGIN
-		  IF @Callmode = 'RECENT'
-			BEGIN
-			  SELECT count(1) 
-			  FROM         tblKartrisOrders LEFT OUTER JOIN
-					tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
-			  WHERE (O_Sent = 1)
-			END
-
-		  IF @Callmode = 'INVOICE'
-			BEGIN
-			  SELECT count(1) 
-			  FROM         tblKartrisOrders LEFT OUTER JOIN
-					tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
-			  WHERE (O_Sent = 1) AND (O_Paid = 1) AND (O_Shipped = 0)
-			END
-		  IF @Callmode = 'DISPATCH'
-			BEGIN
-			  SELECT count(1) 
-			  FROM         tblKartrisOrders LEFT OUTER JOIN
-					tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
-			  WHERE     (O_Sent = 1) AND (O_Paid = 1) AND (O_Shipped = 0) AND (O_Cancelled = 0)
-			END
-		  IF @Callmode = 'COMPLETE'
-			BEGIN
-			  SELECT count(1) 
-			  FROM         tblKartrisOrders LEFT OUTER JOIN
-					tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
-			  WHERE (O_Paid = 1) AND (O_Shipped = 1)
-			END
-		  IF @Callmode = 'PAYMENT'
-			BEGIN
-			  SELECT count(1) 
-			  FROM         tblKartrisOrders LEFT OUTER JOIN
-					tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
-			  WHERE (O_Sent = 1) AND (O_Invoiced = 1) AND (O_Paid = 0)
-			END
-		  IF @Callmode = 'UNFINISHED'
-			BEGIN
-			  SELECT count(1) 
-			  FROM         tblKartrisOrders LEFT OUTER JOIN
-					tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
-			  WHERE (O_Sent = 0)
-			END
-		  IF @Callmode = 'CANCELLED'
-			BEGIN
-			  SELECT count(1) 
-			  FROM         tblKartrisOrders LEFT OUTER JOIN
-					tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
-			  WHERE (O_Cancelled = 1)
-			END
-		  END
-		ELSE
+			WITH OrdersList AS
+			(
+				SELECT     O_ID
+				FROM         tblKartrisOrders LEFT OUTER JOIN
+						  tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
+				WHERE     (O_Sent = COALESCE (@O_Sent, O_Sent)) AND (O_Invoiced = COALESCE (@O_Invoiced, O_Invoiced)) AND (O_Paid = COALESCE (@O_Paid, O_Paid)) AND 
+									  (O_Shipped = COALESCE (@O_Shipped, O_Shipped)) AND (O_Cancelled = COALESCE (@O_Cancelled, O_Cancelled))
+			)
+			SELECT Count(1)
+			FROM OrdersList
+		END
+	ELSE
 		IF @Callmode = 'SEARCH'
 			BEGIN
-				SELECT count(1) 
+				WITH OrdersList AS
+			(
+				SELECT     O_ID
 				FROM         tblKartrisOrders LEFT OUTER JOIN
 					  tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
 				WHERE     (O_BillingAddress LIKE '%' + @O_GatewayID + '%') OR (O_ShippingAddress LIKE '%' + @O_GatewayID + '%')
+			)
+			SELECT Count(1)
+			FROM OrdersList
 			END
 		ELSE
-			BEGIN
-				SELECT count(1) 
+		BEGIN
+			WITH OrdersList AS
+			(
+				SELECT     O_ID
 				FROM         tblKartrisOrders LEFT OUTER JOIN
-					  tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
+						  tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
 				WHERE     (O_Sent = COALESCE (@O_Sent, O_Sent)) AND (O_AffiliatePaymentID = COALESCE (@O_AffiliatePaymentID, O_AffiliatePaymentID)) AND 
 									  (O_Date >= COALESCE (@O_DateRangeStart, O_Date)) AND (O_Date <= COALESCE (@O_DateRangeEnd, O_Date)) AND (O_PaymentGateWay = COALESCE (@O_Gateway, O_PaymentGateWay)) 
 										AND (O_ReferenceCode = COALESCE (@O_GatewayID, O_ReferenceCode)) AND (O_CustomerID = COALESCE (@O_CustomerID, O_CustomerID))
-			END
+			)
+			SELECT Count(1)
+			FROM OrdersList
+		END
+		
 END
 GO
 
