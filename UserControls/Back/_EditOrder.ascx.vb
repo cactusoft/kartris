@@ -342,6 +342,7 @@ Partial Class UserControls_Back_EditOrder
     '''' </summary>
     '''' <remarks></remarks>
     Protected Sub lnkBtnResetAndCopy_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        BasketBLL.DeleteBasket() 'clear basket when restoring
         UC_BasketMain.EmptyBasket_Click(Nothing, Nothing)
         LoadBasket(True)
         RaiseEvent ShowMasterUpdate()
@@ -422,9 +423,17 @@ Partial Class UserControls_Back_EditOrder
 
         'Get the order confirmation template if HTML email is enabled
         If blnUseHTMLOrderEmail Then
-            sbdHTMLOrderEmail.Append(RetrieveHTMLEmailTemplate("OrderConfirmation"))
+            sbdHTMLOrderEmail.Append(RetrieveHTMLEmailTemplate("OrderConfirmationEdit"))
+
+            'This was a new template, so if not in skin, let's pull the older one
+            If sbdHTMLOrderEmail.Length < 1 Then
+                sbdHTMLOrderEmail.Append(RetrieveHTMLEmailTemplate("OrderConfirmation"))
+            End If
+
             'switch back to normal text email if the template can't be retrieved
-            If sbdHTMLOrderEmail.Length < 1 Then blnUseHTMLOrderEmail = False
+            If sbdHTMLOrderEmail.Length < 1 Then
+                blnUseHTMLOrderEmail = False
+            End If
         End If
 
         Dim objOrdersBLL As New OrdersBLL
