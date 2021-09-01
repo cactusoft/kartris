@@ -290,7 +290,7 @@ POPUP MESSAGE
 #largeimagepopup                        { overflow-y: hidden; overflow: hidden; background-image: none; }
 .popup_background                       { background-color: #fff; filter: alpha(opacity=80); opacity: 0.8; }
 .popup                                  { box-shadow: rgba(0,0,0,0.3) 1px 1px 8px; background-color: #fff ; border: solid 1px #222; padding: 45px 10px 13px 10px; width: 650px; max-width: 100%; max-height: 100%; min-height: 150px; text-align: left; top: 0px; left: 0px; overflow-x: hidden; }
-.popup h2                               { position: absolute; left: 10px; top: 0; padding: 10px 0 10px 0; margin: 0px; font-size: 125%; }
+.popup h2                               { position: absolute; left: 10px; top: 0; padding: 10px 0 10px 0; margin: 10px 0 0 0 !important; font-size: 125%; }
 .popup p                                { padding: 10px 0 0 0; margin: 0; }
 .popup strong                           { color: #000 }
 .popup .closebutton                     { position: absolute; right: 5px; top: 4px; text-align: center; padding: 1px 6px 1px 6px; font-size: 17pt; font-weight: bold; color: #000; }

@@ -155,6 +155,48 @@ BEGIN
 END
 GO
 
+/****** Object:  StoredProcedure [dbo].[spKartrisBasket_GetCustomerOrders]    Script Date: 31/08/2021 18:10:59 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: 31/08/2021
+-- Description:	
+-- =============================================
+ALTER PROCEDURE [dbo].[spKartrisBasket_GetCustomerOrders] ( 
+	@intType smallint,
+	@CustomerID int,
+	@PageIndexStart int=0,
+	@PageIndexEnd int=0
+) 
+AS
+BEGIN
+	SET NOCOUNT ON;
+	
+	DECLARE @cnt bigint
+
+	If @intType=0
+	Begin
+		select @cnt=count(O_ID) from tblKartrisOrders O 
+			inner join tblKartrisCurrencies C on O.O_CurrencyID=C.CUR_ID
+		where O_Sent=1 and O_Cancelled=0 and O_CustomerID=@CustomerID
+		select isnull(@cnt,0)'TotalRec'
+	End	
+	Else
+	Begin
+		select * from (
+			select ROW_NUMBER() OVER (ORDER BY O_Date desc) as RowNum,O_ID,O_Date,O_LastModified,O_TotalPrice,O_PromotionDiscountTotal,O_CouponDiscountTotal,O_DiscountPercentage,O_ShippingPrice,O_OrderHandlingCharge,O_OrderHandlingChargeTax,O_CurrencyID,O_Sent,O_Invoiced,O_Paid,CUR_Symbol,CUR_RoundNumbers from tblKartrisOrders O
+			inner join tblKartrisCurrencies C on O.O_CurrencyID=C.CUR_ID
+			where O_Sent=1 and O_Cancelled=0 and O_CustomerID=@CustomerID
+		) ORD 
+		WHERE RowNum>=@PageIndexStart AND RowNum<=@PageIndexEnd 
+	End
+
+END
+GO
+
 /* Small change to Google analytics config setting, this is so we can add further Google services under same branch. Neater. */
 UPDATE tblKartrisConfig SET CFG_Name='general.google.analytics.webpropertyid' WHERE CFG_Name='general.googleanalytics.webpropertyid'
 

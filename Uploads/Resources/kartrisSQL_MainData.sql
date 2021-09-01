@@ -8560,19 +8560,18 @@ BEGIN
 	Begin
 		select @cnt=count(O_ID) from tblKartrisOrders O 
 			inner join tblKartrisCurrencies C on O.O_CurrencyID=C.CUR_ID
-		where O_Sent=1 and O_CustomerID=@CustomerID
+		where O_Sent=1 and O_Cancelled=0 and O_CustomerID=@CustomerID
 		select isnull(@cnt,0)'TotalRec'
 	End	
 	Else
 	Begin
 		select * from (
-			select ROW_NUMBER() OVER (ORDER BY O_Date desc) as RowNum,O_ID,O_Date,O_LastModified,O_TotalPrice,O_PromotionDiscountTotal,O_CouponDiscountTotal,O_DiscountPercentage,O_ShippingPrice,O_OrderHandlingCharge,O_OrderHandlingChargeTax,O_CurrencyID,O_Sent,CUR_Symbol,CUR_RoundNumbers from tblKartrisOrders O
+			select ROW_NUMBER() OVER (ORDER BY O_Date desc) as RowNum,O_ID,O_Date,O_LastModified,O_TotalPrice,O_PromotionDiscountTotal,O_CouponDiscountTotal,O_DiscountPercentage,O_ShippingPrice,O_OrderHandlingCharge,O_OrderHandlingChargeTax,O_CurrencyID,O_Sent,O_Invoiced,O_Paid,CUR_Symbol,CUR_RoundNumbers from tblKartrisOrders O
 			inner join tblKartrisCurrencies C on O.O_CurrencyID=C.CUR_ID
-			where O_Sent=1 and O_CustomerID=@CustomerID
+			where O_Sent=1 and O_Cancelled=0 and O_CustomerID=@CustomerID
 		) ORD 
 		WHERE RowNum>=@PageIndexStart AND RowNum<=@PageIndexEnd 
 	End
-
 END
 GO
 /****** Object:  UserDefinedFunction [dbo].[fnKartrisConfig_GetValue]    Script Date: 01/23/2013 21:59:11 ******/
