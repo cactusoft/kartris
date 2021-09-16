@@ -338,24 +338,53 @@ Partial Class UserControls_Back_EditPayment
         End If
     End Sub
 
+    ''' <summary>
+    ''' Click to save order
+    ''' </summary>
+    ''' <remarks></remarks>
     Protected Sub btnSave_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnSave.Click
-        Try
-            Dim objOrdersBLL As New OrdersBLL
-            If Not String.IsNullOrEmpty(Request.QueryString("PaymentID")) Then
-                Dim lngPaymentID As Long = CLng(Request.QueryString("PaymentID"))
-                If objOrdersBLL._UpdatePayment(lngPaymentID, txtPaymentDate.Text, litPaymentCustomerID.Text, txtPaymentAmount.Text, ddlPaymentCurrency.SelectedValue,
-                                            ddlPaymentGateways.SelectedValue, txtPaymentReferenceCode.Text, txtPaymentCurrencyRate.Text, lbxOrders.Items) > 0 Then RaiseEvent ShowMasterUpdate()
-            Else
-                Dim intNewPaymentID As Integer
-                intNewPaymentID = objOrdersBLL._AddNewPayment(txtPaymentDate.Text, litPaymentCustomerID.Text, txtPaymentAmount.Text, ddlPaymentCurrency.SelectedValue, ddlPaymentGateways.SelectedValue,
+
+        Dim objOrdersBLL As New OrdersBLL
+        If Not String.IsNullOrEmpty(Request.QueryString("PaymentID")) Then
+
+            Dim lngPaymentID As Long = CLng(Request.QueryString("PaymentID"))
+
+            If objOrdersBLL._UpdatePayment(lngPaymentID, txtPaymentDate.Text, litPaymentCustomerID.Text, txtPaymentAmount.Text, ddlPaymentCurrency.SelectedValue,
+                                            ddlPaymentGateways.SelectedValue, txtPaymentReferenceCode.Text, txtPaymentCurrencyRate.Text, lbxOrders.Items) > 0 Then
+                RaiseEvent ShowMasterUpdate()
+            End If
+
+        Else
+            Dim intNewPaymentID As Integer
+            'v3.2001
+            'I found during testing (but would not really happen in real use cases) that
+            'when adding payments, I make up a reference code. Problem is, these must be unique
+            'in the db, and often the made up ones aren't. Need to trap insertion error, and
+            'pretty sure in these cases, errors would be down to that.
+
+            intNewPaymentID = objOrdersBLL._AddNewPayment(txtPaymentDate.Text, litPaymentCustomerID.Text, txtPaymentAmount.Text, ddlPaymentCurrency.SelectedValue, ddlPaymentGateways.SelectedValue,
                                          txtPaymentReferenceCode.Text, txtPaymentCurrencyRate.Text, lbxOrders.Items)
-                If intNewPaymentID > 0 Then
+            If intNewPaymentID > 0 Then
+                'Mark order as paid
+                'Rather than redirect to the payment, if it was successful and linked to a specific order, we should
+                'redirect to edit that order, so the payment box and any comments can be made
+                If lbxOrders.Items.Count > 0 Then
+                    'we have an order linked to this payment
+                    Dim numOrderID As Integer = lbxOrders.Items(0).Value
+                    Response.Redirect("_ModifyOrderStatus.aspx?OrderID=" & numOrderID & "&FromDate=false&Page=1")
+                Else
                     Response.Redirect("_ModifyPayment.aspx?PaymentID=" & intNewPaymentID & "&s=update")
                 End If
+
+            Else
+                'Will return zero in case of error
+                'Error, show "already in use" validator for reference box
+                litPaymentReferenceUsed.Visible = True
+                litPaymentReferenceUsed.Text = "<br /><span class=""error"" style=""display: inline;"">" & GetGlobalResourceObject("_Kartris", "ContentText_AlreadyExists") & "</span>"
+                updPaymentDetails.Update()
             End If
-        Catch ex As Exception
-            'Oh dear
-        End Try
+
+        End If
 
     End Sub
 End Class

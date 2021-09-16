@@ -116,7 +116,7 @@
                                     <li><span class="Kartris-DetailsView-Name">
                                         <asp:Literal ID="litPaymentReferenceCode" runat="server" Text="<%$ Resources:_Orders, ContentText_ReferenceCode %>" />
                                     </span><span class="Kartris-DetailsView-Value">
-                                        <asp:TextBox ID="txtPaymentReferenceCode" runat="server" />
+                                        <asp:TextBox ID="txtPaymentReferenceCode" runat="server" /><asp:Literal runat="server" ID="litPaymentReferenceUsed"></asp:Literal>
                                         <asp:RequiredFieldValidator ID="valReferenceCode" runat="server" ControlToValidate="txtPaymentReferenceCode"
                                             CssClass="error" ForeColor="" ErrorMessage="<%$ Resources: _Kartris, ContentText_RequiredField %>"
                                             Display="Dynamic" SetFocusOnError="true" />
