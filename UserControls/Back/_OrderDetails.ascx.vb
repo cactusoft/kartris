@@ -230,20 +230,31 @@ Partial Class UserControls_Back_OrderDetails
 
                 'build up the HTML email if template is found
                 If Not String.IsNullOrEmpty(strHTMLEmailText) Then
-                    strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
-                    strHTMLEmailText = strHTMLEmailText.Replace("[orderid]", ViewState("numOrderID"))
-                    strHTMLEmailText = strHTMLEmailText.Replace("[orderstatus]", txtOrderStatus.Text.Replace(vbCrLf, "<br />"))
-                    strHTMLEmailText = strHTMLEmailText.Replace("[orderdetails]", strOrderText)
-                    If ViewState("O_Notes") <> txtOrderNotes.Text And Trim(txtOrderNotes.Text) <> "" Then
-                        strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "<p>" & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_Notes") &
-                                                                ": <br />" & txtOrderNotes.Text & "</p>")
-                    Else
-                        strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "")
+
+                    'Before we send email to customer, we need to figure out something. We should not send a view order link to customers
+                    'who did guest checkout, since it won't work. So we need to remove link for those. 
+                    Dim strViewOrderLink As String = "<p><a href=""[webshopurl]CustomerViewOrder.aspx?O_ID=[orderid]"">[webshopurl]CustomerViewOrder.aspx?O_ID=[orderid]</a></p>"
+                    If strEmailTo.Contains("|GUEST|") Then
+                        'Remove link from email
+                        strHTMLEmailText = strHTMLEmailText.Replace(strViewOrderLink, "")
                     End If
-                    strEmailText = strHTMLEmailText
-                Else
-                    blnHTMLEmail = False
+
+                    strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
+                        strHTMLEmailText = strHTMLEmailText.Replace("[orderid]", ViewState("numOrderID"))
+                        strHTMLEmailText = strHTMLEmailText.Replace("[orderstatus]", txtOrderStatus.Text.Replace(vbCrLf, "<br />"))
+                        strHTMLEmailText = strHTMLEmailText.Replace("[orderdetails]", strOrderText)
+                        If ViewState("O_Notes") <> txtOrderNotes.Text And Trim(txtOrderNotes.Text) <> "" Then
+                            strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "<p>" & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_Notes") &
+                                                                    ": <br />" & txtOrderNotes.Text & "</p>")
+                        Else
+                            strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "")
+                        End If
+                        strEmailText = strHTMLEmailText
+                    Else
+                        blnHTMLEmail = False
                 End If
+
+
 
                 'Send mail update to customer
                 SendEmail(strEmailFrom, strEmailTo, strSubjectLine, strEmailText, , , , , blnHTMLEmail)
