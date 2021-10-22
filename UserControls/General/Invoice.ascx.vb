@@ -396,8 +396,8 @@ Partial Class UserControls_General_Invoice
 
             'shipping cost
             numShippingPrice = IIf(blnTaxDue, numShippingPriceIncTax, numShippingPriceExTax)
-            If numShippingPrice <> 0 Then
-                CType(e.Item.FindControl("phdShippingCost"), PlaceHolder).Visible = True
+            'If numShippingPrice <> 0 Then 'we should always show shipping, even if zero
+            CType(e.Item.FindControl("phdShippingCost"), PlaceHolder).Visible = True
                 CType(e.Item.FindControl("litShippingMethod"), Literal).Text = strShippingMethod
                 CType(e.Item.FindControl("litShippingPriceExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingPriceExTax)
                 CType(e.Item.FindControl("litShippingTaxPerItem"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingTaxTotal)
@@ -405,7 +405,7 @@ Partial Class UserControls_General_Invoice
                 CType(e.Item.FindControl("litShippingPriceTotal1"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingPriceExTax)
                 CType(e.Item.FindControl("litShippingTaxAmount"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingTaxTotal)
                 CType(e.Item.FindControl("litShippingPriceTotal2"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingPrice)
-            End If
+            'End If
 
             'order handling charge
             numOrderHandlingPrice = IIf(blnTaxDue, numOrderHandlingPriceIncTax, numOrderHandlingPriceExTax)
