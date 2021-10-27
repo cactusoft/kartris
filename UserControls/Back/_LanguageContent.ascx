@@ -13,7 +13,7 @@
                                 <asp:Literal ID="litID" runat="server" Text='<%# Eval("LEFN_ID") %>' Visible="false" /></span>
                                 <span class="Kartris-DetailsView-Value">
                                     <asp:TextBox ID="txtValue" runat="server" CssClass='<%# Eval("LEFN_CssClass") %>'
-                                        MaxLength="8000" />
+                                        MaxLength="64000" />
                                     <asp:ImageButton ID="btnEdit" runat="server" AlternateText="HTML" CssClass="icon_html"
                                         Visible='<%# Eval("LEFN_UseHTMLEditor") %>' CommandName="ShowEditor" CommandArgument='<%# Eval("LEFN_ID") %>'
                                         ImageUrl="~/Skins/Admin/Images/icon_html.gif" Width="24px" Height="24px" ToolTip="HTML" />
