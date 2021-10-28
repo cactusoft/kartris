@@ -1632,7 +1632,7 @@ Partial Class _Checkout
                     Dim strFromEmail As String = LanguagesBLL.GetEmailFrom(CInt(Session("LANG")))
 
                     'Send new account email to new customer
-                    If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" And blnNewUser Then
+                    If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" And blnNewUser And Not blnIsGuest Then
 
                         Dim blnHTMLEmail As Boolean = KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y"
                         If blnHTMLEmail Then
