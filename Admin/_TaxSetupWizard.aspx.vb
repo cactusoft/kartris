@@ -424,7 +424,7 @@ Partial Class Admin_Destinations
                     Next
 
                     'Set general.tax.euvatcountry config to selected country
-                    strThisLocationISOCode = ShippingBLL._GetISOCodeByDestinationID(ddlCountries.SelectedValue)
+                    strThisLocationISOCode = ShippingBLL._GetISOCodeByDestinationID(ddlEUCountries.SelectedValue)
                     KartSettingsManager.SetKartConfig("general.tax.euvatcountry", strThisLocationISOCode, False)
 
                     'Set TaxRate Record 2 to entered tax rate value
