@@ -466,6 +466,15 @@ Partial Class UserControls_General_CheckoutAddress
         'if available. We use pipes to separate, this way we
         'can work out any blank entries and end up joining 
         'what is left with comma-spaces
+
+        'Mod v3.2002 - 16 Nov 2021
+        'The way Postcodes4u formats the data, "Flat 1" does not come through as building number. Instead
+        'We are better to use "subbuilding" too
+
+        strAddress &= "|" & dtsAddress.Tables("Address").Rows(0)("SubBuilding") & "|"
+        strAddress &= "|" & dtsAddress.Tables("Address").Rows(0)("BuildingName") & "|"
+        strAddress &= "|" & Trim(dtsAddress.Tables("Address").Rows(0)("BuildingNumber") & " " & dtsAddress.Tables("Address").Rows(0)("PrimaryStreet")) & "|"
+
         strAddress &= "|" & dtsAddress.Tables("Address").Rows(0)("BuildingName") & "|"
         strAddress &= "|" & Trim(dtsAddress.Tables("Address").Rows(0)("BuildingNumber") & " " & dtsAddress.Tables("Address").Rows(0)("PrimaryStreet")) & "|"
 
