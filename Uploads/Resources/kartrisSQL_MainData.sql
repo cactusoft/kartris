@@ -15743,7 +15743,7 @@ GO
 CREATE TABLE [dbo].[tblKartrisProductCategoryLink](
 	[PCAT_ProductID] [int] NOT NULL,
 	[PCAT_CategoryID] [int] NOT NULL,
-	[PCAT_OrderNo] [smallint] NULL,
+	[PCAT_OrderNo] [int] NULL,
  CONSTRAINT [PK_tblKartrisProductCategoryLink] PRIMARY KEY CLUSTERED 
 (
 	[PCAT_ProductID] ASC,
@@ -28294,7 +28294,7 @@ VALUES
 GO
 
 /****** Set this to tell Data tool which version of db we have ******/
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'3.2001', N's', N's', N'kartris version', N'', 3.2001, N'3.2001', 0)
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'3.2002', N's', N's', N'kartris version', N'', 3.2001, N'3.2002', 0)
 GO
 
 
