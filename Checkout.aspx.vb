@@ -541,7 +541,16 @@ Partial Class _Checkout
     ''' shipping methods
     ''' </summary>
     Protected Sub BillingCountryUpdated(ByVal sender As Object, ByVal e As System.EventArgs) Handles UC_BillingAddress.CountryUpdated
-        RefreshShippingMethods()
+        If chkSameShippingAsBilling.Checked Then
+            pnlShippingAddress.Visible = False
+            UC_ShippingAddress.Visible = False
+            RefreshShippingMethods("billing")
+        Else
+            pnlShippingAddress.Visible = True
+            UC_ShippingAddress.Visible = True
+            RefreshShippingMethods("shipping")
+        End If
+        updAddresses.Update()
     End Sub
 
     ''' <summary>
@@ -549,7 +558,16 @@ Partial Class _Checkout
     ''' shipping methods
     ''' </summary>
     Protected Sub ShippingCountryUpdated(ByVal sender As Object, ByVal e As System.EventArgs) Handles UC_ShippingAddress.CountryUpdated
-        RefreshShippingMethods()
+        If chkSameShippingAsBilling.Checked Then
+            pnlShippingAddress.Visible = False
+            UC_ShippingAddress.Visible = False
+            RefreshShippingMethods("billing")
+        Else
+            pnlShippingAddress.Visible = True
+            UC_ShippingAddress.Visible = True
+            RefreshShippingMethods("shipping")
+        End If
+        updAddresses.Update()
     End Sub
 
     ''' <summary>
