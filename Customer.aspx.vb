@@ -550,19 +550,19 @@ Partial Class Customer
 
         Select Case LCase(strPage)
             Case "order"
-                tblOrder = BasketBLL.GetCustomerOrders(numCustomerID, 1, Order_PageSize)
+                tblOrder = BasketBLL.GetCustomerOrders(numCustomerID, (ViewState("Order_PageIndex") - 1) * Order_PageSize, Order_PageSize)
                 rptOrder.DataSource = tblOrder
                 rptOrder.DataBind()
                 updMain.Update()
 
             Case "basket"
-                tblSavedBasket = BasketBLL.GetSavedBasket(numCustomerID, 1, SavedBasket_PageSize)
+                tblSavedBasket = BasketBLL.GetSavedBasket(numCustomerID, (ViewState("SavedBasket_PageIndex") - 1) * SavedBasket_PageSize, SavedBasket_PageSize)
                 rptSavedBasket.DataSource = tblSavedBasket
                 rptSavedBasket.DataBind()
                 updMain.Update()
 
             Case "wishlist"
-                tblWishLists = BasketBLL.GetWishLists(numCustomerID, 1, WishList_PageSize)
+                tblWishLists = BasketBLL.GetWishLists(numCustomerID, (ViewState("WishList_PageIndex") - 1) * WishList_PageSize, WishList_PageSize)
                 rptWishLists.DataSource = tblWishLists
                 rptWishLists.DataBind()
                 updMain.Update()
