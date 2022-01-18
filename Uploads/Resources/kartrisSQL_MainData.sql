@@ -28257,6 +28257,27 @@ BEGIN
 END
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisOrders_DetailsUpdate]    Script Date: 17/01/2022 11:09:48 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisOrders_DetailsUpdate]
+(
+	@O_ID int,
+	@O_Details nvarchar(MAX)
+)
+AS
+BEGIN
+	SET NOCOUNT ON;
+		
+	
+	UPDATE [tblKartrisOrders] SET [O_Details] = @O_Details
+		WHERE [O_ID] = @O_ID;
+	SELECT @O_ID;
+END
+GO
+
 /****** change position of admin back end link on front end of site - got forgotten in the more recent maindate scripts for 2.9x ******/
 INSERT INTO [tblKartrisConfig]
 (CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)

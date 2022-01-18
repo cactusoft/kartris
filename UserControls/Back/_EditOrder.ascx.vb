@@ -35,6 +35,7 @@ Partial Class UserControls_Back_EditOrder
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
         If Not Page.IsPostBack Then
             ViewState("Referer") = Request.ServerVariables("HTTP_REFERER")
             Try
@@ -77,6 +78,7 @@ Partial Class UserControls_Back_EditOrder
                 End If
 
                 Dim objOrdersBLL As New OrdersBLL
+                Dim numCustomerID As Integer = 0
 
                 'Get the Order ID QueryString - if it won't convert to integer then force return to Orders List page
                 ViewState("numOrderID") = CType(Request.QueryString("OrderID"), Integer)
@@ -105,6 +107,9 @@ Partial Class UserControls_Back_EditOrder
                             Dim intOrderCurrencyID As Int16 = CShort(dtOrderRecord.Rows(0)("O_CurrencyID"))
                             Dim strOrderPaymentGateway As String = dtOrderRecord.Rows(0)("O_PaymentGateway")
                             lnkOrderCustomerID.Text = CInt(dtOrderRecord.Rows(0)("O_CustomerID"))
+
+                            numCustomerID = CInt(dtOrderRecord.Rows(0)("O_CustomerID"))
+
                             lnkOrderCustomerID.NavigateUrl = FormatCustomerLink(dtOrderRecord.Rows(0)("O_CustomerID"))
                             txtOrderCustomerEmail.Text = UsersBLL.CleanGuestEmailUsername(objUsersBLL.GetEmailByID(lnkOrderCustomerID.Text))
                             txtOrderPONumber.Text = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_PurchaseOrderNo"))
@@ -149,19 +154,57 @@ Partial Class UserControls_Back_EditOrder
                                     With .Shipping
                                         addShipping = New Address(.Name, .Company, .StreetAddress, .TownCity, .CountyState, .Postcode,
                                                                           Country.GetByIsoCode(.CountryIsoCode).CountryId, .Phone, , ,
-                                                                          IIf(objOrder.SameShippingAsBilling, "u", "s"))
+                                                                          "s")
                                         ViewState("intShippingDestinationID") = Country.GetByIsoCode(.CountryIsoCode).CountryId
                                     End With
                                 End If
                             End With
 
-                            Dim lstBilling As New Generic.List(Of Address)
-                            lstBilling.Add(addBilling)
-                            UC_BillingAddress.Addresses = lstBilling
+                            UC_BillingAddress.CustomerID = numCustomerID
+                            UC_ShippingAddress.CustomerID = numCustomerID
 
-                            Dim lstShipping As New Generic.List(Of Address)
-                            lstShipping.Add(addShipping)
-                            UC_ShippingAddress.Addresses = lstShipping
+                            'Set up first user address (billing)
+                            Dim lstUsrAddresses As Collections.Generic.List(Of KartrisClasses.Address) = Nothing
+
+                            '---------------------------------------
+                            'BILLING ADDRESS
+                            '---------------------------------------
+                            If UC_BillingAddress.Addresses Is Nothing Then
+
+                                'Find all addresses in this user's account
+                                lstUsrAddresses = KartrisClasses.Address.GetAll(numCustomerID)
+
+                                'Populate dropdown by filtering billing/universal addresses
+                                UC_BillingAddress.Addresses = lstUsrAddresses.FindAll(Function(p) p.Type = "b" Or p.Type = "u")
+
+                                'Try to select correct address based on postcode of order,
+                                'this avoids having to manually select correct addresses when
+                                'cloning and editing an order
+                                UC_BillingAddress.SelectByPostcode(objOrder.Billing.Postcode)
+                            End If
+
+                            '---------------------------------------
+                            'SHIPPING ADDRESS
+                            '---------------------------------------
+                            If UC_ShippingAddress.Addresses Is Nothing Then
+
+                                'Find all addresses in this user's account
+                                If lstUsrAddresses Is Nothing Then lstUsrAddresses = KartrisClasses.Address.GetAll(numCustomerID)
+
+                                'Populate dropdown by filtering shipping/universal addresses
+                                UC_ShippingAddress.Addresses = lstUsrAddresses.FindAll(Function(ShippingAdd) ShippingAdd.Type = "s" Or ShippingAdd.Type = "u")
+
+                                'Try to select correct address based on postcode of order,
+                                'this avoids having to manually select correct addresses when
+                                'cloning and editing an order
+                                UC_ShippingAddress.SelectByPostcode(objOrder.Shipping.Postcode)
+                            End If
+
+                            If objOrder.Shipping.CountryIsoCode Is Nothing Then
+                                objOrder.SameShippingAsBilling = True
+                                chkSameShippingAsBilling.Checked = True
+                                chkSameShippingAsBilling_CheckedChanged(Nothing, Nothing)
+                            End If
 
                             If ddlPaymentGateways.Items.Count = 2 And strOrderPaymentGateway = "" Then
                                 _SelectedPaymentMethod = ddlPaymentGateways.Items(1).Value
@@ -179,8 +222,8 @@ Partial Class UserControls_Back_EditOrder
                         End If
                     Else
                         Exit Sub
+                        End If
                     End If
-                End If
             Catch ex As Exception
                 CkartrisFormatErrors.LogError(ex.Message)
                 Response.Redirect("_OrdersList.aspx")
@@ -404,6 +447,7 @@ Partial Class UserControls_Back_EditOrder
         Dim arrBasketItems As List(Of Kartris.BasketItem)
         Dim objBasket As Kartris.Basket = Session("Basket")
         Dim objOrder As Kartris.Interfaces.objOrder = Nothing
+        Dim objObjectConfigBLL As New ObjectConfigBLL
         Dim strOrderDetails As String = ""
 
         Dim blnAppPricesIncTax As Boolean
@@ -643,6 +687,15 @@ Partial Class UserControls_Back_EditOrder
                     sbdHTMLOrderEmail.Replace("[euvatnumbervalue]<br />", "")
                     sbdHTMLOrderEmail.Replace("[euvatnumbervalue]", "")
                 End If
+                'do the same for EORI number
+                If Not String.IsNullOrEmpty(objObjectConfigBLL.GetValue("K:user.eori", UC_BillingAddress.CustomerID)) Then
+                    sbdHTMLOrderEmail.Replace("[eorinumberlabel]", "EORI: ")
+                    sbdHTMLOrderEmail.Replace("[eorinumbervalue]", objObjectConfigBLL.GetValue("K:user.eori", UC_BillingAddress.CustomerID))
+                Else
+                    sbdHTMLOrderEmail.Replace("[eorinumberlabel]", "")
+                    sbdHTMLOrderEmail.Replace("[eorinumbervalue]<br />", "")
+                    sbdHTMLOrderEmail.Replace("[eorinumbervalue]", "")
+                End If
                 sbdHTMLOrderEmail.Replace("[billingemail]", Server.HtmlEncode(txtOrderCustomerEmail.Text))
                 sbdHTMLOrderEmail.Replace("[billingphone]", Server.HtmlEncode(.Phone))
                 sbdHTMLOrderEmail.Replace("[billingstreetaddress]", Server.HtmlEncode(.StreetAddress))
@@ -743,7 +796,6 @@ Partial Class UserControls_Back_EditOrder
             Dim blnHasExemptCustomerDiscountItems As Boolean = False
 
             'Loop through basket items
-            Dim objObjectConfigBLL As New ObjectConfigBLL
             For Each Item As Kartris.BasketItem In arrBasketItems
                 With Item
                     Dim strCustomControlName As String = objObjectConfigBLL.GetValue("K:product.customcontrolname", Item.ProductID)
@@ -824,6 +876,9 @@ Partial Class UserControls_Back_EditOrder
         Else
             strOrderDetails = sbdBodyText.ToString
         End If
+
+        'show original order ID
+        strOrderDetails = strOrderDetails.Replace("[originalorderid]", intO_ID)
 
         'Create the order record
         Dim intNewOrderID As Integer = objOrdersBLL._CloneAndCancel(intO_ID, strOrderDetails, UC_BillingAddress.SelectedAddress, UC_ShippingAddress.SelectedAddress,
@@ -940,7 +995,7 @@ Partial Class UserControls_Back_EditOrder
         If Not String.IsNullOrEmpty(litOptionsVersion.Text) AndAlso litOptionsVersion.Text = numVersionID Then
             _UC_OptionsPopup.ClearIDs() '' reset product id and version id for the options popup
             litOptionsVersion.Text = Nothing
-            Dim objBasket As kartris.Basket = UC_BasketMain.GetBasket
+            Dim objBasket As Kartris.Basket = UC_BasketMain.GetBasket
             Dim sessionID As Long = Session("SessionID")
             BasketBLL.AddNewBasketValue(objBasket.BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, numVersionID, 1, "", strOptions)
             LoadBasket()

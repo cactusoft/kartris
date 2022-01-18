@@ -110,8 +110,9 @@ Public Class OrdersBLL
             ' If we reach here, there was an error, so rollback the transaction
         End Try
     End Sub
+
     ''' <summary>
-    ''' 
+    ''' Clone and cancel an order
     ''' </summary>
     ''' <returns>Returns the newly created order ID</returns>
     Public Function _CloneAndCancel(ByVal O_ID As Integer, ByVal strOrderDetails As String,
@@ -271,6 +272,43 @@ Public Class OrdersBLL
             End Try
         End Using
         Return 0
+    End Function
+
+    ''' <summary>
+    ''' Update details holding mail text
+    ''' </summary>
+    Public Function _DetailsUpdate(ByVal O_ID As Long, ByVal O_Details As String) As Integer
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Using sqlConn As New SqlConnection(strConnString)
+            Dim cmd As SqlCommand = sqlConn.CreateCommand
+            cmd.CommandText = "_spKartrisOrders_DetailsUpdate"
+            Dim savePoint As SqlTransaction = Nothing
+            cmd.CommandType = CommandType.StoredProcedure
+            Try
+                sqlConn.Open()
+                savePoint = sqlConn.BeginTransaction()
+                cmd.Transaction = savePoint
+                ' Perform the update on the DataTable
+                cmd.Parameters.AddWithValue("@O_ID", O_ID)
+                cmd.Parameters.AddWithValue("@O_Details", O_Details)
+
+                Dim returnValue As Integer = cmd.ExecuteScalar
+                If returnValue <> O_ID Then
+                    Throw New Exception("ID is 0? Something's not right")
+                End If
+
+                ' If we reach here, no errors, so commit the transaction
+                savePoint.Commit()
+                sqlConn.Close()
+
+                Return returnValue
+            Catch ex As Exception
+                ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
+                ' If we reach here, there was an error, so rollback the transaction
+                savePoint.Rollback()
+                Return 0
+            End Try
+        End Using
     End Function
 
     Public Function GetOrderByID(ByVal O_ID As Long) As DataTable

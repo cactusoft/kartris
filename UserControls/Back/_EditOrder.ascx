@@ -38,7 +38,7 @@
                                         <asp:TextBox ID="txtOrderPONumber" runat="server"></asp:TextBox>
                                     </span></li>
                                 <li><span class="Kartris-DetailsView-Name">
-                                    <asp:Label ID="Label1" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Language %>" /></span>
+                                    <asp:Label ID="lblLanguage" runat="server" Text="<%$ Resources: _Kartris, FormLabel_Language %>" /></span>
                                     <span class="Kartris-DetailsView-Value">
                                         <asp:DropDownList ID="ddlOrderLanguage" AutoPostBack="true" runat="server" />
                                     </span></li>

@@ -50,6 +50,7 @@ Partial Class UserControls_General_CheckoutAddress
     Public WriteOnly Property Title() As String
         Set(ByVal value As String)
             litAddressTitle.Text = value
+            ViewState("Title") = value
         End Set
     End Property
 
@@ -71,6 +72,44 @@ Partial Class UserControls_General_CheckoutAddress
         If Not IsPostBack Then
             btnAccept.OnClientClick = "Page_ClientValidate('" & strValidationGroup & "');"
         End If
+
+    End Sub
+
+    ''' <summary>
+    ''' v3.2002 
+    ''' When cloning orders, this gives us a way to select
+    ''' the addresses from the order object recovered from the
+    ''' O_Details field. We use the postcode to try to find an
+    ''' existing address match, and set that. Not 100% reliable
+    ''' if the addresses have been edited, but should be good
+    ''' enough for most cases.
+    ''' </summary>
+    Public Sub SelectByPostcode(ByVal strPostcode As String)
+        Try
+            Dim numSelectedID As Integer = -1
+            Dim i As Integer = -1
+            If Addresses.Count > 0 Then
+                For i = 0 To Addresses.Count - 1
+                    Dim adrAddress As Address = Addresses(i)
+                    If adrAddress.Postcode.ToLower = strPostcode.ToLower Then Exit For
+                Next
+            End If
+            Try
+                'numSelectedID = ddlAddresses.Items.FindByText(strPostcode).Value
+                ddlAddresses.SelectedIndex = i
+                ViewState("_SelectedAddress") = Addresses.Find(Function(p) p.ID = ddlAddresses.SelectedValue)
+                SelectedID = ddlAddresses.SelectedValue
+                RefreshAddressDetails()
+                pnlNewAddress.Visible = True
+                lnkNew.Visible = True
+                UC_CustomerAddress.EnableValidation = False
+                RaiseEvent CountryUpdated(Nothing, Nothing)
+            Catch ex As Exception
+                Dim strError As String = ex.Message
+            End Try
+        Catch ex As Exception
+
+        End Try
 
     End Sub
 
@@ -100,6 +139,7 @@ Partial Class UserControls_General_CheckoutAddress
 
                     End Try
                 End If
+
                 phdAddressDetails.Visible = True
                 phdNoAddress.Visible = False
                 phdAddNewAddress.Visible = True
