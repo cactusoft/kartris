@@ -31,6 +31,9 @@ GO
 /* Change the OrderNo field in category-product link, smallint too small when have large number (32768+) products in a category */
 ALTER TABLE tblKartrisProductCategoryLink ALTER COLUMN PCAT_OrderNo int
 
+/* Fix to customer balance, which is currency */
+ALTER TABLE [dbo].[tblKartrisUsers] ALTER COLUMN U_CustomerBalance DECIMAL(18,4) NULL
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.2002', CFG_VersionAdded=3.2002 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

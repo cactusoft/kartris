@@ -4568,7 +4568,7 @@ CREATE TABLE [dbo].[tblKartrisUsers](
 	[U_QBListID] [nvarchar](50) NULL,
 	[U_SupportEndDate] [datetime] NULL,
 	[U_Notes] [nvarchar](max) NULL,
-	[U_CustomerBalance] [real] NULL,
+	[U_CustomerBalance] DECIMAL(18,4) NULL,
 	[U_SaltValue] [nvarchar](64) NULL,
 	[U_GDPR_OptIn] [datetime] NULL,
 	[U_GDPR_SignupIP] [nvarchar](50) NULL,
