@@ -72,7 +72,7 @@ Partial Class UserControls_Back_UserDetails
                             Dim dblUpdatedBalance As Double = dblPaymentsTotal - dblOrdersTotal
                             Dim dtbUserOrders As DataTable = objOrdersBLL._GetByStatus(OrdersBLL.ORDERS_LIST_CALLMODE.CUSTOMER, 0, , , , , GetCustomerID())
                             'Filter to show only finished orders and those that were not cancelled
-                            Dim drwFiltered As DataRow() = dtbUserOrders.Select("CO_OrderID IS NULL AND O_SENT = 1")
+                            Dim drwFiltered As DataRow() = dtbUserOrders.Select("CO_OrderID IS NULL AND O_SENT = 1 AND O_CANCELLED <> 1")
                             gvwCustomerOrders.DataSource = drwFiltered
                             gvwCustomerOrders.DataBind()
                             gvwCustomerPayments.DataSource = objOrdersBLL._GetPaymentByCustomerID(GetCustomerID())

@@ -28,6 +28,31 @@ BEGIN
 END
 GO
 
+/****** Object:  StoredProcedure [dbo].[_spKartrisOrders_GetCustomerTotal]    Script Date: 28/01/2022 10:39:13 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Medz
+-- Create date: <Create Date,,>
+-- Description:	<Description,,>
+-- =============================================
+ALTER PROCEDURE [dbo].[_spKartrisOrders_GetCustomerTotal]
+(
+	@CustomerID as int
+)
+AS
+BEGIN
+
+	SELECT Sum(O_TotalPrice / O_CurrencyRate) as TotalValue
+	FROM dbo.tblKartrisOrders LEFT OUTER JOIN
+					  tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
+	WHERE CO_OrderID IS NULL AND O_DATA IS NOT NULL AND O_CustomerID = @CustomerID AND O_Sent = 1 AND O_Cancelled<>1
+
+END
+GO
+
 /* Change the OrderNo field in category-product link, smallint too small when have large number (32768+) products in a category */
 ALTER TABLE tblKartrisProductCategoryLink ALTER COLUMN PCAT_OrderNo int
 
