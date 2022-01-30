@@ -48,7 +48,7 @@ BEGIN
 	SELECT Sum(O_TotalPrice / O_CurrencyRate) as TotalValue
 	FROM dbo.tblKartrisOrders LEFT OUTER JOIN
 					  tblKartrisClonedOrders ON tblKartrisOrders.O_ID = tblKartrisClonedOrders.CO_ParentOrderID
-	WHERE CO_OrderID IS NULL AND O_DATA IS NOT NULL AND O_CustomerID = @CustomerID AND O_Sent = 1 AND O_Cancelled<>1
+	WHERE CO_OrderID IS NULL AND O_CustomerID = @CustomerID AND O_Sent = 1 AND O_Cancelled<>1
 
 END
 GO
