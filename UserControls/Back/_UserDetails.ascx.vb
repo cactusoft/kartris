@@ -67,8 +67,8 @@ Partial Class UserControls_Back_UserDetails
                         Dim objOrdersBLL As New OrdersBLL
                         Dim dblOrdersTotal As Double = objOrdersBLL._GetOrderTotalByCustomerID(GetCustomerID())
                         Dim dblPaymentsTotal As Double = objOrdersBLL._GetPaymentTotalByCustomerID(GetCustomerID())
-                        If Not (dblOrdersTotal = 0 And dblPaymentsTotal = 0) Then
-                            Dim dblCustomerBalance As Double = CkartrisDataManipulation.FixNullFromDB(dtUserDetails(0)("U_CustomerBalance"))
+                        'If Not (dblOrdersTotal = 0 And dblPaymentsTotal = 0) Then
+                        Dim dblCustomerBalance As Double = CkartrisDataManipulation.FixNullFromDB(dtUserDetails(0)("U_CustomerBalance"))
                             Dim dblUpdatedBalance As Double = dblPaymentsTotal - dblOrdersTotal
                             Dim dtbUserOrders As DataTable = objOrdersBLL._GetByStatus(OrdersBLL.ORDERS_LIST_CALLMODE.CUSTOMER, 0, , , , , GetCustomerID())
                             'Filter to show only finished orders and those that were not cancelled
@@ -80,14 +80,14 @@ Partial Class UserControls_Back_UserDetails
                             litOrdersTotalValue.Text = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, dblOrdersTotal)
                             litPaymentsTotalValue.Text = CurrenciesBLL.FormatCurrencyPrice(CurrenciesBLL.GetDefaultCurrency, dblPaymentsTotal)
                             If dblCustomerBalance <> dblUpdatedBalance Then objUsersBLL.UpdateCustomerBalance(GetCustomerID(), dblUpdatedBalance)
-                        Else
-                            'Hide Payment / Order History Tab
-                            Dim tabContainer As AjaxControlToolkit.TabContainer = fvwUser.FindControl("tabContainerUser")
-                            Dim tab As AjaxControlToolkit.TabPanel = tabContainer.FindControl("tabPaymentHistory")
-                            If tab IsNot Nothing Then
-                                tab.Enabled = False
-                            End If
-                        End If
+                        'Else
+                        '    'Hide Payment / Order History Tab
+                        '    Dim tabContainer As AjaxControlToolkit.TabContainer = fvwUser.FindControl("tabContainerUser")
+                        '    Dim tab As AjaxControlToolkit.TabPanel = tabContainer.FindControl("tabPaymentHistory")
+                        '    If tab IsNot Nothing Then
+                        '        tab.Enabled = False
+                        '    End If
+                        'End If
                     End If
                     If Trim(Request.QueryString("tab")) <> "" Then
                         Dim strTab As String = Request.QueryString("tab")

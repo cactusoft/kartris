@@ -260,6 +260,18 @@ Public Class OrdersBLL
                 savePoint.Commit()
                 sqlConn.Close()
 
+                'Try to update customer balance before returning value
+                Dim O_CustomerID As Integer = 0
+                Dim objUsersBLL As New UsersBLL
+                Dim objOrdersBLL As New OrdersBLL
+                Try
+                    O_CustomerID = objOrdersBLL._GetCustomerIDbyOrderID(O_ID)
+                    objUsersBLL.UpdateCustomerBalance(O_CustomerID,
+                                CDec(_GetPaymentTotalByCustomerID(O_CustomerID) - _GetOrderTotalByCustomerID(O_CustomerID)))
+                Catch ex As Exception
+
+                End Try
+
                 Return intNewOrderID
             Catch ex As Exception
                 ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
@@ -300,6 +312,18 @@ Public Class OrdersBLL
                 ' If we reach here, no errors, so commit the transaction
                 savePoint.Commit()
                 sqlConn.Close()
+
+                'Try to update customer balance before returning value
+                Dim O_CustomerID As Integer = 0
+                Dim objUsersBLL As New UsersBLL
+                Dim objOrdersBLL As New OrdersBLL
+                Try
+                    O_CustomerID = objOrdersBLL._GetCustomerIDbyOrderID(O_ID)
+                    objUsersBLL.UpdateCustomerBalance(O_CustomerID,
+                                CDec(_GetPaymentTotalByCustomerID(O_CustomerID) - _GetOrderTotalByCustomerID(O_CustomerID)))
+                Catch ex As Exception
+
+                End Try
 
                 Return returnValue
             Catch ex As Exception
@@ -412,6 +436,18 @@ Public Class OrdersBLL
                 savePoint.Commit()
                 sqlConn.Close()
 
+                'Try to update customer balance before returning value
+                Dim O_CustomerID As Integer = 0
+                Dim objUsersBLL As New UsersBLL
+                Dim objOrdersBLL As New OrdersBLL
+                Try
+                    O_CustomerID = objOrdersBLL._GetCustomerIDbyOrderID(O_ID)
+                    objUsersBLL.UpdateCustomerBalance(O_CustomerID,
+                                CDec(_GetPaymentTotalByCustomerID(O_CustomerID) - _GetOrderTotalByCustomerID(O_CustomerID)))
+                Catch ex As Exception
+
+                End Try
+
                 Return returnValue
             Catch ex As Exception
                 ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
@@ -477,6 +513,16 @@ Public Class OrdersBLL
                 ' If we reach here, no errors, so commit the transaction
                 savePoint.Commit()
                 sqlConn.Close()
+
+                'Try to update customer balance before returning value
+                Dim objUsersBLL As New UsersBLL
+                Try
+                    objUsersBLL.UpdateCustomerBalance(Payment_CustomerID,
+                                CDec(_GetPaymentTotalByCustomerID(Payment_CustomerID) - _GetOrderTotalByCustomerID(Payment_CustomerID)))
+                Catch ex As Exception
+
+                End Try
+
                 Return intNewPaymentID
             Catch ex As Exception
                 ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
@@ -579,6 +625,9 @@ Public Class OrdersBLL
     End Function
     Public Function _GetPaymentTotalByCustomerID(ByVal CustomerID As Integer) As Double
         Return PaymentsAdptr._GetCustomerTotal(CustomerID)
+    End Function
+    Public Function _GetCustomerIDbyOrderID(ByVal O_ID As Integer) As Integer
+        Return Adptr._GetCustomerIDbyOrderID(O_ID)
     End Function
 #End Region
 
@@ -1004,6 +1053,18 @@ Public Class OrdersBLL
                 ' If we reach here, no errors, so commit the transaction
                 savePoint.Commit()
                 sqlConn.Close()
+
+                'Try to update customer balance before returning value
+                Dim O_CustomerID As Integer = 0
+                Dim objUsersBLL As New UsersBLL
+                Dim objOrdersBLL As New OrdersBLL
+                Try
+                    O_CustomerID = objOrdersBLL._GetCustomerIDbyOrderID(O_ID)
+                    objUsersBLL.UpdateCustomerBalance(O_CustomerID,
+                                CDec(_GetPaymentTotalByCustomerID(O_CustomerID) - _GetOrderTotalByCustomerID(O_CustomerID)))
+                Catch ex As Exception
+
+                End Try
 
                 Return returnValue
             Catch ex As Exception
