@@ -97,6 +97,16 @@ Partial Class UserControls_General_AddressesDetails
     End Sub
 
     ''' <summary>
+    ''' Add new address
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub NewAddress() Handles lnkAddBilling.Click
+        ResetAddressInput()
+        popExtender.Show()
+    End Sub
+
+
+    ''' <summary>
     ''' Submit/save address 
     ''' </summary>
     ''' <remarks></remarks>
