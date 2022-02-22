@@ -111,7 +111,7 @@ Public Class LanguageStringsBLL
             Try
                 cmdAddLanguageString.Parameters.AddWithValue("@LS_LangID", _LanguageID)
                 cmdAddLanguageString.Parameters.AddWithValue("@LS_FrontBack", FixNullToDB(_FrontBack))
-                cmdAddLanguageString.Parameters.AddWithValue("@LS_Name", FixNullToDB(_Name))
+                cmdAddLanguageString.Parameters.AddWithValue("@LS_Name", Trim(FixNullToDB(_Name)))
                 cmdAddLanguageString.Parameters.AddWithValue("@LS_Value", FixNullToDB(_Value))
                 cmdAddLanguageString.Parameters.AddWithValue("@LS_Description", FixNullToDB(_Description))
                 cmdAddLanguageString.Parameters.AddWithValue("@LS_VersionAdded", KARTRIS_VERSION)
