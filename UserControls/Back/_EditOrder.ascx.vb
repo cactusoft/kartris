@@ -110,15 +110,6 @@ Partial Class UserControls_Back_EditOrder
 
                             numCustomerID = CInt(dtOrderRecord.Rows(0)("O_CustomerID"))
 
-                            'Set basket to user ID, so we get customer discount if required
-                            'Try to set User ID
-                            'v3.2002
-                            Try
-                                _UC_BasketMain.UserID = numCustomerID
-                            Catch ex As Exception
-
-                            End Try
-
                             lnkOrderCustomerID.NavigateUrl = FormatCustomerLink(dtOrderRecord.Rows(0)("O_CustomerID"))
                             txtOrderCustomerEmail.Text = UsersBLL.CleanGuestEmailUsername(objUsersBLL.GetEmailByID(lnkOrderCustomerID.Text))
                             txtOrderPONumber.Text = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_PurchaseOrderNo"))
@@ -231,13 +222,23 @@ Partial Class UserControls_Back_EditOrder
                         End If
                     Else
                         Exit Sub
-                        End If
                     End If
+                End If
             Catch ex As Exception
                 CkartrisFormatErrors.LogError(ex.Message)
                 Response.Redirect("_OrdersList.aspx")
             End Try
         End If
+
+        numCustomerID = lnkOrderCustomerID.Text
+
+        'Set basket to user ID, so we get customer discount if required
+        'Try to set User ID
+        Try
+            _UC_BasketMain.UserID = numCustomerID
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     ''' <summary>
