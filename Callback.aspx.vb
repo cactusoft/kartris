@@ -251,6 +251,14 @@ Partial Class Callback
                             End If
 
 
+                            'Try to delete AUTOSAVE basket
+                            Dim objBasketBLL As New BasketBLL
+                            Try
+                                objBasketBLL.DeleteSavedBasketByNameAndUserID(O_CustomerID, "AUTOSAVE")
+                            Catch ex As Exception
+
+                            End Try
+
                             '-----------------------------------------------------
                             'FORMAT CONFIRMATION EMAIL
                             '-----------------------------------------------------

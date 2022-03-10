@@ -28315,6 +28315,45 @@ CREATE NONCLUSTERED INDEX [OP_OrderID] ON [dbo].[tblKartrisOrderPaymentLink]
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 
+/****** Object:  StoredProcedure [dbo].[spKartrisBasket_DeleteSavedBasketByNameAndUserID]    Script Date: 2022-03-10 10:07:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Create date: 10/Mar/2022
+-- Description:	v3.2002
+-- =============================================
+CREATE PROCEDURE [dbo].[spKartrisBasket_DeleteSavedBasketByNameAndUserID] (
+	@UserID bigint,
+	@SBSKT_Name nvarchar(200)
+) AS
+BEGIN
+	
+	SET NOCOUNT ON;
+
+	DECLARE @SBSKT_ID as int;
+
+	SELECT @SBSKT_ID = SBSKT_ID FROM tblKartrisSavedBaskets WHERE SBSKT_Name='AUTOSAVE' AND SBSKT_UserID=@UserID;
+	
+	DELETE tblKartrisSavedBaskets 
+	WHERE SBSKT_ID=@SBSKT_ID;
+	
+
+--	
+	DELETE tblKartrisBasketOptionValues
+	WHERE BSKTOPT_BasketValueID in (SELECT BV_ID FROM tblKartrisBasketValues WHERE BV_ParentID=@SBSKT_ID and BV_ParentType='s');
+--	
+
+--	
+	DELETE tblKartrisBasketValues
+	WHERE BV_ParentID=@SBSKT_ID and BV_ParentType='s';
+--	
+
+END
+GO
+
 /****** New config setting, google tag manager v3.2001 ******/
 INSERT INTO [tblKartrisConfig]
 (CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)

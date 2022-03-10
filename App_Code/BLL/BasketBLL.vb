@@ -2360,6 +2360,7 @@ Public Class BasketBLL
 
     End Sub
 
+#Region "Autosave Basket"
     ''' <summary>
     ''' Autosave basket
     ''' We trigger this when adding items to the basket, or removing them.
@@ -2409,6 +2410,48 @@ Public Class BasketBLL
         End If
 
     End Sub
+
+    ''' <summary>
+    ''' Delete AUTOSAVE basket, or in fact, any basket by NAME and user ID
+    ''' </summary>
+    ''' <param name="UserID">User ID</param>
+    ''' <param name="SBSKT_Name">Basket name</param>
+    ''' <returns>True if ok, False if some error</returns>
+    ''' <remarks></remarks>
+    Public Function DeleteSavedBasketByNameAndUserID(ByVal UserID As Integer, ByVal SBSKT_Name As String) As Boolean
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Using sqlConn As New SqlConnection(strConnString)
+
+            Dim cmdAddAttribute As SqlCommand = sqlConn.CreateCommand
+            cmdAddAttribute.CommandText = "spKartrisBasket_DeleteSavedBasketByNameAndUserID"
+
+            Dim savePoint As SqlTransaction = Nothing
+            cmdAddAttribute.CommandType = CommandType.StoredProcedure
+            Try
+                cmdAddAttribute.Parameters.AddWithValue("@UserID", UserID)
+                cmdAddAttribute.Parameters.AddWithValue("@SBSKT_Name", SBSKT_Name)
+
+                sqlConn.Open()
+                savePoint = sqlConn.BeginTransaction()
+                cmdAddAttribute.Transaction = savePoint
+
+                cmdAddAttribute.ExecuteNonQuery()
+
+                savePoint.Commit()
+                sqlConn.Close()
+
+                Return True
+            Catch ex As Exception
+                'ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod(), "Error")
+                If Not savePoint Is Nothing Then savePoint.Rollback()
+            Finally
+                If sqlConn.State = ConnectionState.Open Then sqlConn.Close() : savePoint.Dispose()
+            End Try
+        End Using
+        Return False
+    End Function
+#End Region
+
 
 #Region "MailingList"
 

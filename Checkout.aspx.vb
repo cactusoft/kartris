@@ -1877,12 +1877,12 @@ Partial Class _Checkout
                         If blnResult Then
                             'The transaction was authorized so update the order
                             If clsPlugin.CallbackSuccessful Or
-                        clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
-                        clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
-                        clsPlugin.GatewayName.ToLower = "braintreepayment" Then
+                                clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
+                                clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
+                                clsPlugin.GatewayName.ToLower = "braintreepayment" Then
                                 If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
-                            clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
-                            clsPlugin.GatewayName.ToLower = "braintreepayment" Then
+                                    clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
+                                    clsPlugin.GatewayName.ToLower = "braintreepayment" Then
                                     O_ID = objOrder.ID
                                 Else
                                     'Get order ID that was passed back with callback
@@ -2135,6 +2135,14 @@ Partial Class _Checkout
                         Session("GatewayName") = strGatewayName
                         Session("_NewPassword") = Nothing
                         clsPlugin = Nothing
+
+                        'Try to delete AUTOSAVE basket
+                        Dim objBasketBLL As New BasketBLL
+                        Try
+                            objBasketBLL.DeleteSavedBasketByNameAndUserID(objOrder.CustomerID, "AUTOSAVE")
+                        Catch ex As Exception
+
+                        End Try
 
                         '---------------------------------------
                         'FORMAT FORM TO POST TO REMOTE GATEWAY
