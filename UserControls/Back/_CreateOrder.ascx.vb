@@ -215,26 +215,30 @@ Partial Class UserControls_Back_CreateOrder
             '---------------------------------------
             'BILLING ADDRESS
             '---------------------------------------
-            If _UC_BillingAddress.Addresses Is Nothing Then
+            'If _UC_BillingAddress.Addresses Is Nothing Then
 
-                'Find all addresses in this user's account
-                lstUsrAddresses = KartrisClasses.Address.GetAll(lngCustomerID)
+            _UC_BillingAddress.Clear()
+
+            'Find all addresses in this user's account
+            lstUsrAddresses = KartrisClasses.Address.GetAll(lngCustomerID)
 
                 'Populate dropdown by filtering billing/universal addresses
                 _UC_BillingAddress.Addresses = lstUsrAddresses.FindAll(Function(p) p.Type = "b" Or p.Type = "u")
-            End If
+            'End If
 
             '---------------------------------------
             'SHIPPING ADDRESS
             '---------------------------------------
-            If _UC_ShippingAddress.Addresses Is Nothing Then
+            'If _UC_ShippingAddress.Addresses Is Nothing Then
 
-                'Find all addresses in this user's account
-                If lstUsrAddresses Is Nothing Then lstUsrAddresses = KartrisClasses.Address.GetAll(lngCustomerID)
+            _UC_ShippingAddress.Clear()
+
+            'Find all addresses in this user's account
+            If lstUsrAddresses Is Nothing Then lstUsrAddresses = KartrisClasses.Address.GetAll(lngCustomerID)
 
                 'Populate dropdown by filtering shipping/universal addresses
                 _UC_ShippingAddress.Addresses = lstUsrAddresses.FindAll(Function(ShippingAdd) ShippingAdd.Type = "s" Or ShippingAdd.Type = "u")
-            End If
+            'End If
 
             '---------------------------------------
             'SHIPPING/BILLING ADDRESS NOT SAME
@@ -956,34 +960,44 @@ Partial Class UserControls_Back_CreateOrder
 
 
                     If Not _blnAnonymousCheckout Then
-                        With _UC_BillingAddress.SelectedAddress
-                            objOrder.Billing.Name = .FullName
-                            objOrder.Billing.StreetAddress = .StreetAddress
-                            objOrder.Billing.TownCity = .TownCity
-                            objOrder.Billing.CountyState = .County
-                            objOrder.Billing.CountryName = .Country.Name
-                            objOrder.Billing.Postcode = .Postcode
-                            objOrder.Billing.Phone = .Phone
-                            objOrder.Billing.CountryIsoCode = .Country.IsoCode
-                            objOrder.Billing.Company = .Company
-                        End With
+                        Try
+                            With _UC_BillingAddress.SelectedAddress
+                                objOrder.Billing.Name = .FullName
+                                objOrder.Billing.StreetAddress = .StreetAddress
+                                objOrder.Billing.TownCity = .TownCity
+                                objOrder.Billing.CountyState = .County
+                                objOrder.Billing.CountryName = .Country.Name
+                                objOrder.Billing.Postcode = .Postcode
+                                objOrder.Billing.Phone = .Phone
+                                objOrder.Billing.CountryIsoCode = .Country.IsoCode
+                                objOrder.Billing.Company = .Company
+                            End With
+                        Catch ex As Exception
+
+                        End Try
+
                     End If
 
                     If Not blnBasketAllDigital Then
                         If chkSameShippingAsBilling.Checked Then
                             objOrder.SameShippingAsBilling = True
                         Else
-                            With _UC_ShippingAddress.SelectedAddress
-                                objOrder.Shipping.Name = .FullName
-                                objOrder.Shipping.StreetAddress = .StreetAddress
-                                objOrder.Shipping.TownCity = .TownCity
-                                objOrder.Shipping.CountyState = .County
-                                objOrder.Shipping.CountryName = .Country.Name
-                                objOrder.Shipping.Postcode = .Postcode
-                                objOrder.Shipping.Phone = .Phone
-                                objOrder.Shipping.CountryIsoCode = .Country.IsoCode
-                                objOrder.Shipping.Company = .Company
-                            End With
+                            Try
+                                With _UC_ShippingAddress.SelectedAddress
+                                    objOrder.Shipping.Name = .FullName
+                                    objOrder.Shipping.StreetAddress = .StreetAddress
+                                    objOrder.Shipping.TownCity = .TownCity
+                                    objOrder.Shipping.CountyState = .County
+                                    objOrder.Shipping.CountryName = .Country.Name
+                                    objOrder.Shipping.Postcode = .Postcode
+                                    objOrder.Shipping.Phone = .Phone
+                                    objOrder.Shipping.CountryIsoCode = .Country.IsoCode
+                                    objOrder.Shipping.Company = .Company
+                                End With
+                            Catch ex As Exception
+
+                            End Try
+
                         End If
                     End If
 
