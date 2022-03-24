@@ -36,6 +36,13 @@ Partial Class UserControls_Back_EditOrder
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
+        'New instance
+        Dim objOrdersBLL As New OrdersBLL
+        Dim objUsersBLL As New UsersBLL
+
+        Dim numCustomerID As Integer = 0
+
+
         If Not Page.IsPostBack Then
             ViewState("Referer") = Request.ServerVariables("HTTP_REFERER")
             Try
@@ -77,16 +84,13 @@ Partial Class UserControls_Back_EditOrder
                     Throw New Exception("No valid payment gateways")
                 End If
 
-                Dim objOrdersBLL As New OrdersBLL
-                Dim numCustomerID As Integer = 0
-
                 'Get the Order ID QueryString - if it won't convert to integer then force return to Orders List page
                 ViewState("numOrderID") = CType(Request.QueryString("OrderID"), Integer)
                 If ViewState("numOrderID") = 0 Then
                     'jeepers, let's hope this doesn't happen
                 Else
                     Dim dtOrderRecord As DataTable = objOrdersBLL.GetOrderByID(ViewState("numOrderID"))
-                    Dim objUsersBLL As New UsersBLL
+
                     If dtOrderRecord IsNot Nothing Then
                         If dtOrderRecord.Rows.Count = 1 Then
                             Dim strOrderData As String = ""

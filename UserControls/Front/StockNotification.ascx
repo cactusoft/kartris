@@ -31,6 +31,7 @@ STOCK NOTIFICATION
             <div class="submitbuttons">
                 <asp:Button ID="btnSave" runat="server" CssClass="button"
                     Text='<%$ Resources: Kartris, FormLabel_Save %>' UseSubmitBehavior="True" ValidationGroup="<%# UniqueValidationGroup %>" />
+
                 <ajaxToolkit:NoBot ID="ajaxNoBotContact" runat="server"
                     ResponseMinimumDelaySeconds="2"
                     CutoffWindowSeconds="60"
@@ -45,9 +46,20 @@ STOCK NOTIFICATION
                 <asp:HiddenField ID="hidLanguageID" runat="server" />
             </div>
         </asp:Panel>
+        <asp:Panel ID="pnlSuccess"  runat="server" CssClass="popup popup_customization" Visible="false">
+                        <h2>
+                <asp:Literal ID="litContentStockNotifications2" runat="server" Text='<%$ Resources: StockNotification, ContentText_NotifyMe %>'
+                    EnableViewState="false" /></h2>
+            <asp:LinkButton ID="lnkClose2" runat="server" Text="×" CssClass="closebutton" />
+           <p>Thanks! You will be notified when this item is back in stock.</p>
+            </asp:Panel>
         <ajaxToolkit:ModalPopupExtender ID="popStockNotification" runat="server" TargetControlID="lnkClose"
             PopupControlID="pnlStockNotification" BackgroundCssClass="popup_background" OkControlID="lnkClose"
             CancelControlID="lnkClose" DropShadow="False">
+        </ajaxToolkit:ModalPopupExtender>
+        <ajaxToolkit:ModalPopupExtender ID="popSuccess" runat="server" TargetControlID="lnkClose2"
+            PopupControlID="pnlSuccess" BackgroundCssClass="popup_background" OkControlID="lnkClose2"
+            CancelControlID="lnkClose2" DropShadow="False">
         </ajaxToolkit:ModalPopupExtender>
     </ContentTemplate>
 </asp:UpdatePanel>

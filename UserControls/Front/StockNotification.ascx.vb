@@ -166,8 +166,15 @@ Partial Class UserControls_Front_StockNotification
         Page.Validate(btnSave.ValidationGroup)
         If Page.IsValid Then
             StockNotificationsBLL.AddNewStockNotification(txtEmail.Text, hidVersionID.Value, hidPageLink.Value, hidProductName.Value, hidLanguageID.Value)
+
+            pnlSuccess.Visible = True
+            pnlStockNotification.Visible = False
+            popSuccess.Show()
+            updPnlStockNotification.Update()
         Else
             CkartrisFormatErrors.LogError("Something not valid in group " & btnSave.ValidationGroup)
         End If
     End Sub
+
+
 End Class

@@ -34,8 +34,6 @@
 	<link href="template.css" rel="stylesheet" type="text/css" />
 	<link href="mobile.css" rel="stylesheet" type="text/css" />
 	<link href="powerpack.css" rel="stylesheet" type="text/css" />
-	<link rel="preconnect" href="https://fonts.gstatic.com">
-	<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@100;400;700&display=swap" rel="stylesheet">
 	<title>Kartris v1</title>
 </head>
 <body class="main">

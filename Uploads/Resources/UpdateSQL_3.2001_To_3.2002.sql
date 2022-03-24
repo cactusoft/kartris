@@ -98,6 +98,10 @@ ALTER TABLE tblKartrisProductCategoryLink ALTER COLUMN PCAT_OrderNo int
 /* Fix to customer balance, which is currency */
 ALTER TABLE [dbo].[tblKartrisUsers] ALTER COLUMN U_CustomerBalance DECIMAL(18,4) NULL
 
+/****** New config setting, google tag manager v3.2001 ******/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_StockNotificationAdded', N'Thanks! You will be notified by email when the item is back in stock.', NULL, 3.2002, N'', NULL, N'StockNotification',1)
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.2002', CFG_VersionAdded=3.2002 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

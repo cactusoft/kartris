@@ -28355,6 +28355,10 @@ END
 GO
 
 /****** New config setting, google tag manager v3.2001 ******/
+INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_StockNotificationAdded', N'Thanks! You will be notified by email when the item is back in stock.', NULL, 3.2002, N'', NULL, N'StockNotification',1)
+GO
+
+/****** New config setting, google tag manager v3.2001 ******/
 INSERT INTO [tblKartrisConfig]
 (CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
 VALUES
