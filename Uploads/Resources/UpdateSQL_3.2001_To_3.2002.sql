@@ -73,7 +73,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 -- =============================================
--- Author:		Medz
+-- Author:		Paul
 -- Create date: <Create Date,,>
 -- Description:	<Description,,>
 -- =============================================
@@ -100,6 +100,65 @@ ALTER TABLE [dbo].[tblKartrisUsers] ALTER COLUMN U_CustomerBalance DECIMAL(18,4)
 
 /****** New config setting, google tag manager v3.2001 ******/
 INSERT [dbo].[tblKartrisLanguageStrings] ([LS_FrontBack], [LS_Name], [LS_Value], [LS_Description], [LS_VersionAdded], [LS_DefaultValue], [LS_VirtualPath], [LS_ClassName], [LS_LangID]) VALUES (N'f', N'ContentText_StockNotificationAdded', N'Thanks! You will be notified by email when the item is back in stock.', NULL, 3.2002, N'', NULL, N'StockNotification',1)
+GO
+
+/****** Object:  StoredProcedure [dbo].[_spKartrisOrders_AdjustStockLevels]    Script Date: 2022-03-25 10:43:45 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE PROCEDURE [dbo].[_spKartrisOrders_AdjustStockLevels]
+(
+	@O_ID int,
+	@strIncreaseDecrease char(1)
+)
+AS
+BEGIN
+	SET NOCOUNT ON;
+
+		
+		DECLARE @V_Codenumber nvarchar(25)
+		DECLARE @IR_Quantity int
+		DECLARE @V_ID int
+
+
+		DECLARE tnames_cursor CURSOR
+		FOR
+		-- check if return stock flag is on
+		SELECT     tblKartrisInvoiceRows.IR_VersionCode, tblKartrisInvoiceRows.IR_Quantity
+		FROM         tblKartrisOrders INNER JOIN
+							  tblKartrisInvoiceRows ON tblKartrisOrders.O_ID = tblKartrisInvoiceRows.IR_OrderNumberID
+		WHERE     (tblKartrisOrders.O_ID = @O_ID)
+
+
+		--loop through the invoicerows records and return the stocks back to individual versions		
+		OPEN tnames_cursor
+
+		FETCH NEXT FROM tnames_cursor INTO @V_Codenumber,@IR_Quantity
+		WHILE (@@FETCH_STATUS <> -1)
+		BEGIN
+			IF (@@FETCH_STATUS <> -2)
+			BEGIN 
+				
+				IF @strIncreaseDecrease = 'i'
+				BEGIN
+					-- If @strIncreaseDecrease is 'i', we are returning stock, so increasing stock levels
+					UPDATE tblKartrisVersions SET V_Quantity= V_Quantity + @IR_Quantity WHERE V_CodeNumber=@V_Codenumber AND V_QuantityWarnLevel<>0;
+					SELECT @V_ID = V_ID FROM tblKartrisVersions WHERE V_CodeNumber = @V_Codenumber;
+				END
+				ELSE
+				BEGIN
+					-- If @strIncreaseDecrease is 'd', we are using stock, so decreasing stock levels
+					UPDATE tblKartrisVersions SET V_Quantity= V_Quantity - @IR_Quantity WHERE V_CodeNumber=@V_Codenumber AND V_QuantityWarnLevel<>0;
+					SELECT @V_ID = V_ID FROM tblKartrisVersions WHERE V_CodeNumber = @V_Codenumber;
+				END
+					
+			END
+			FETCH NEXT FROM tnames_cursor INTO @V_Codenumber,@IR_Quantity
+		END
+		CLOSE tnames_cursor
+		DEALLOCATE tnames_cursor ;
+END
 GO
 
 /****** Set this to tell Data tool which version of db we have ******/

@@ -272,6 +272,15 @@ Public Class OrdersBLL
 
                 End Try
 
+                'Final step
+                'We want to update the stock levels
+                'First increase stock for first order that was cancelled
+                Dim blnResult As Boolean = False
+                blnResult = _AdjustStockLevels(O_ID, "i")
+
+                'Then deplete stock of items in the new order
+                blnResult = _AdjustStockLevels(intNewOrderID, "d")
+
                 Return intNewOrderID
             Catch ex As Exception
                 ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
@@ -284,6 +293,50 @@ Public Class OrdersBLL
             End Try
         End Using
         Return 0
+    End Function
+
+    ''' <summary>
+    ''' Adjust stock levels up or down
+    ''' </summary>
+    ''' <returns>boolean</returns>
+    ''' <remarks>
+    ''' Added v3.2002
+    ''' This queries by order ID to find invoice rows, and then can increase or 
+    ''' decrease the stock levels of the versions in those orders, depending on 
+    ''' the strIncreaseDecrease sent in. This is useful to release stock when
+    ''' an order is cancelled and replaced, or when creating a new order in the
+    ''' back end.
+    ''' </remarks>
+    Public Function _AdjustStockLevels(ByVal O_ID As Integer, ByVal strIncreaseDecrease As String) As Boolean
+
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Using sqlConn As New SqlConnection(strConnString)
+            Dim cmd As SqlCommand = sqlConn.CreateCommand
+            cmd.CommandText = "_spKartrisOrders_AdjustStockLevels"
+            Dim savePoint As SqlTransaction = Nothing
+            cmd.CommandType = CommandType.StoredProcedure
+            Try
+                sqlConn.Open()
+                savePoint = sqlConn.BeginTransaction()
+                cmd.Transaction = savePoint
+                ' Perform the update on the DataTable
+                With cmd.Parameters
+                    .AddWithValue("@O_ID", O_ID)
+                    .AddWithValue("@strIncreaseDecrease", strIncreaseDecrease)
+                End With
+
+                cmd.ExecuteNonQuery()
+
+                savePoint.Commit()
+                sqlConn.Close()
+                Return True
+            Catch ex As Exception
+                ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
+                ' If we reach here, there was an error, so rollback the transaction
+                savePoint.Rollback()
+                Return False
+            End Try
+        End Using
     End Function
 
     ''' <summary>
