@@ -159,7 +159,7 @@ Partial Class Callback
                     Dim O_CurrencyIDGateway As Integer = 0
                     Dim strBasketBLL As String = ""
                     If tblOrder.Rows.Count > 0 Then
-                        If tblOrder.Rows(0)("O_Sent") = 0 OrElse intCallbackStep = 2 Then
+                        If tblOrder.Rows(0)("O_Paid") = 0 OrElse intCallbackStep = 2 Then
                             'Store the order details
                             O_CouponCode = CStr(FixNullFromDB(tblOrder.Rows(0)("O_CouponCode")))
                             O_TotalPriceGateway = CDbl(tblOrder.Rows(0)("O_TotalPriceGateway"))
