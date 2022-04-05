@@ -63,15 +63,23 @@ QuickPay
  Whether this payment gateway requires Kartris to pass the basket items
  </summary>
 </member>
+<member name="M:Kartris.QuickPay.Get3LetterISOcode(System.String)">
+ <summary>
+ Quickpay uses 3 letter ISOcodes, but our billing object only has the 2 letter codes. We use a built in globalization feature to convert
+ </summary>
+</member>
 <member name="M:Kartris.QuickPay.ProcessOrder(System.String,System.String)">
  <summary>
  Remote Payment Gateways only -Process order data and to generate the form fields to submit.
  </summary>
 </member>
-<member name="M:Kartris.QuickPay.ProcessCallback(System.String,System.String)">
+<member name="T:Kartris.QuickPay.JSON_result">
  <summary>
  Process callback response.
  </summary>
+</member>
+<member name="M:Kartris.QuickPay.ProcessCallback(System.String,System.String)">
+ 
 </member>
 <member name="M:Kartris.QuickPay.ValidateCardOrder(System.String,System.String)">
  <summary>
