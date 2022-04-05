@@ -1,0 +1,87 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+QuickPay
+</name>
+</assembly>
+<members>
+<member name="T:Kartris.My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:Kartris.My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:Kartris.My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="T:Kartris.QuickPay">
+ <summary>
+ Kartris QuickPay Payment Gateway Interface
+ </summary>
+</member>
+<member name="P:Kartris.QuickPay.AcceptsPaypal">
+ <summary>
+ 'Whether this payment gateway accepts PayPal as a payment option.
+ </summary>
+</member>
+<member name="P:Kartris.QuickPay.AuthorizedOnly">
+ <summary>
+ Whether this payment gateway can only be accessed by authorized users.
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>configurable by the user</remarks>
+</member>
+<member name="P:Kartris.QuickPay.Currency">
+ <summary>
+ Payment Gateway's Currency ISO Code
+ </summary>
+ <value></value>
+ <returns></returns>
+ <remarks>configurable by the user</remarks>
+</member>
+<member name="P:Kartris.QuickPay.GatewayName">
+ <summary>
+ Gateway name that appears in the payment gateway dropdown in Kartris checkout
+ </summary>
+</member>
+<member name="P:Kartris.QuickPay.GatewayType">
+ <summary>
+ Whether this is a REMOTE or a LOCAL payment gateway.
+ </summary>
+</member>
+<member name="P:Kartris.QuickPay.RequiresBasketItems">
+ <summary>
+ Whether this payment gateway requires Kartris to pass the basket items
+ </summary>
+</member>
+<member name="M:Kartris.QuickPay.ProcessOrder(System.String,System.String)">
+ <summary>
+ Remote Payment Gateways only -Process order data and to generate the form fields to submit.
+ </summary>
+</member>
+<member name="M:Kartris.QuickPay.ProcessCallback(System.String,System.String)">
+ <summary>
+ Process callback response.
+ </summary>
+</member>
+<member name="M:Kartris.QuickPay.ValidateCardOrder(System.String,System.String)">
+ <summary>
+ Used by local payment gateways only. Directly accepts and validates credit card info. Return "false" if doing remote gateway.
+ </summary>
+</member>
+<member name="M:Kartris.QuickPay.RefreshSettingsCache">
+ <summary>
+ Instructs the gateway to refresh the settings cache response.
+ </summary>
+</member>
+</members>
+</doc>
