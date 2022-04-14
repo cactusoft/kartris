@@ -33,7 +33,7 @@ Imports MimeKit 'new in v3, mail now uses MailKit (nuget)
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 3.2002
+    Public Const KARTRIS_VERSION As Decimal = 3.2003
     Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #04/05/2022# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
@@ -2457,7 +2457,8 @@ Public NotInheritable Class CKartrisCSVExporter
         If value IsNot Nothing AndAlso Not String.IsNullOrEmpty(value) Then
             Select Case colType.FullName
                 Case "System.Int16", "System.Int32", "System.Int64",
-                 "System.Double", "System.Byte", "System.Single", "System.Boolean"
+                 "System.Double", "System.Byte", "System.Single", "System.Boolean",
+                     "System.Decimal"
                     stbData.Append(value.Replace(FieldDelimiter, "/"))
                 Case "System.String"
                     value = Replace(Replace(value, Chr(10), " "), Chr(13), " ")
