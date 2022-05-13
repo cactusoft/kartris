@@ -24469,17 +24469,17 @@ BEGIN
 END
 
 GO
-/****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetSummaryByCatID]    Script Date: 7/21/2014 10:14:31 PM ******/
+/****** Object:  StoredProcedure [dbo].[spKartrisProducts_GetSummaryByCatID]    Script Date: 13/05/2022 12:23:38 ******/
 SET ANSI_NULLS ON
 GO
-
 SET QUOTED_IDENTIFIER ON
 GO
 
 -- =============================================
--- Author:		Mohammad
--- Last Modified: Mohammad - July 2014
--- Description:	Replaces the [spKartris_PROD_Select]
+-- Author:		Paul
+-- Last Modified: May 2022
+-- Description:	Speed doubled, use productslite
+-- table, drop unnecessary fields
 -- =============================================
 CREATE PROCEDURE [dbo].[spKartrisProducts_GetSummaryByCatID](@CAT_ID as int, @LANG_ID as tinyint)
 AS
@@ -24497,8 +24497,8 @@ BEGIN
 		GROUP BY P_ID, P_OrderVersionsBy, P_VersionsSortDirection, P_VersionDisplayType,
 					P_Featured, P_Type
 	)
-	SELECT CategoryProducts.*, P_Name, dbo.fnKartrisDB_TruncateDescription(P_Desc) as P_Desc, P_StrapLine, P_PageTitle
-	FROM CategoryProducts INNER JOIN [dbo].[vKartrisTypeProducts] ON CategoryProducts.P_ID = vKartrisTypeProducts.P_ID
+	SELECT CategoryProducts.*, P_Name
+	FROM CategoryProducts INNER JOIN [dbo].[vKartrisTypeProductsLite] ON CategoryProducts.P_ID = vKartrisTypeProductsLite.P_ID
 	WHERE LANG_ID = @LANG_ID
 	ORDER BY P_Featured, P_ID DESC
 	   
