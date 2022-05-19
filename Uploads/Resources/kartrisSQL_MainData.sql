@@ -24598,7 +24598,7 @@ BEGIN
 					WHEN (@OrderBy = 'PCAT_OrderNo' AND @OrderDirection = 'A') THEN ROW_NUMBER() OVER (ORDER BY PCAT_OrderNo ASC) 
 					WHEN (@OrderBy = 'PCAT_OrderNo' AND @OrderDirection = 'D') THEN ROW_NUMBER() OVER (ORDER BY PCAT_OrderNo DESC) 
 					END AS Row,
-					vKartrisTypeProductsLite.P_ID, dbo.fnKartrisProduct_GetMinPriceWithCG(vKartrisTypeProductsLite.P_ID, @CGroupID) AS MinPrice, MIN(tblKartrisTaxRates.T_Taxrate) AS MinTaxRate, vKartrisTypeProductsLite.P_Name, 
+					vKartrisTypeProductsLite.P_ID, MIN(tblKartrisTaxRates.T_Taxrate) AS MinTaxRate, vKartrisTypeProductsLite.P_Name, 
 										  vKartrisTypeProductsLite.P_VersionDisplayType, 
 										  vKartrisTypeProductsLite.P_DateCreated, vKartrisTypeProductsLite.P_LastModified, tblKartrisProductCategoryLink.PCAT_OrderNo
 					FROM         tblKartrisProductCategoryLink INNER JOIN
@@ -24615,6 +24615,7 @@ BEGIN
 		)
 
 		SELECT *,
+	dbo.fnKartrisProduct_GetMinPriceWithCG(ProductList.P_ID, @CGroupID) AS MinPrice, 
 	dbo.fnKartrisDB_TruncateDescription(dbo.fnKartrisLanguageElement_GetItemValue(@LANG_ID, 2, 2, ProductList.P_ID)) AS P_Desc,
 	dbo.fnKartrisLanguageElement_GetItemValue(@LANG_ID, 2, 7, ProductList.P_ID) AS P_Strapline
 		FROM ProductList
