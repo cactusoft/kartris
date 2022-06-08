@@ -734,4 +734,42 @@ Public Class ProductsBLL
         End Using
         Return False
     End Function
+
+    'v3.3000
+    'For performance, we now use the new tblKartrisProductSearchIndex table
+    'to store max/min prices for products, calculated for any versions,
+    'options and qty discounts they have. This saves us having to do that
+    'calculation in real time, since it will only change when versions, 
+    'options or qty discounts are updated. So we just trigger it then on
+    'that product. We also include this function, so you can manually 
+    'trigger a full rebuild for the site.
+    Public Shared Function _RebuildPriceIndex() As Boolean
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Using sqlConn As New SqlConnection(strConnString)
+            Dim cmd As SqlCommand = sqlConn.CreateCommand
+            cmd.CommandText = "_spKartrisProducts_RebuildPriceIndex"
+            Dim savePoint As SqlTransaction = Nothing
+            cmd.CommandType = CommandType.StoredProcedure
+
+            Try
+                sqlConn.Open()
+                savePoint = sqlConn.BeginTransaction()
+                cmd.Transaction = savePoint
+
+                cmd.ExecuteNonQuery()
+
+                savePoint.Commit()
+                sqlConn.Close()
+
+                Return True
+            Catch ex As Exception
+                ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
+                If Not savePoint Is Nothing Then savePoint.Rollback()
+                Return False
+            Finally
+                If sqlConn.State = ConnectionState.Open Then sqlConn.Close() : savePoint.Dispose()
+            End Try
+
+        End Using
+    End Function
 End Class

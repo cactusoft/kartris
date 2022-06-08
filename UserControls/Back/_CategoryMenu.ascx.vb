@@ -58,6 +58,11 @@ Partial Class _CategoryMenu
         CatSiteMap.RefreshSiteMap()
         BuildTopLevelMenu()
         SelectCurrentPage()
+
+        'v3.3000
+        'Rebuild new product price index
+        Dim blnRebuilt As Boolean = ProductsBLL._RebuildPriceIndex()
+
         RaiseEvent ShowMasterUpdate()
         updMenu.Update()
     End Sub

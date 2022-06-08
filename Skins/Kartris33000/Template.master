@@ -1,0 +1,221 @@
+﻿<%@ Master Language="VB" CodeFile="Template.master.vb" Inherits="Skin_Kartris_Template" %>
+
+<%@ Register TagPrefix="user" TagName="AdminBar" Src="~/UserControls/Front/AdminBar.ascx" %>
+<%@ Register TagPrefix="user" TagName="NavigationMenu" Src="UserControls/NavigationMenu.ascx" %>
+<%@ Register TagPrefix="user" TagName="MegaMenu" Src="UserControls/MegaMenuCatSub.ascx" %>
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" ><![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en">
+<!--<![endif]-->
+
+<head id="Head1" runat="server" enableviewstate="true">
+	<base id="baseTag" runat="server" />
+	<!--
+	========================================================================
+	KARTRIS by cactusoft
+	Copyright 2022 CACTUSOFT - www.kartris.com
+	This skin is licensed under a
+	Creative Commons Attribution-ShareAlike 3.0 Unported License
+
+	http://creativecommons.org/licenses/by-sa/3.0/deed.en_GB
+	========================================================================
+	-->
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
+
+	<link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
+<%--	<link href="normalize.css" rel="stylesheet" type="text/css" />--%>
+	<link href="foundation.css" rel="stylesheet" type="text/css" />
+	<link href="FontAwesome/css/all.css" rel="stylesheet" type="text/css" />
+	<link href="general.css" rel="stylesheet" type="text/css" />
+	<link href="sections.css" rel="stylesheet" type="text/css" />
+	<link href="template.css" rel="stylesheet" type="text/css" />
+	<link href="mobile.css" rel="stylesheet" type="text/css" />
+	<link href="powerpack.css" rel="stylesheet" type="text/css" />
+	<title>Kartris v1</title>
+</head>
+<body class="main">
+	<!-- page spinner -->
+	<form id="frmMain" runat="server" class="container">
+		<ajaxToolkit:ToolkitScriptManager ID="scrManager" runat="server" ScriptMode="Release"
+			EnableHistory="true" EnableSecureHistoryState="false" EnablePageMethods="True"
+			CombineScripts="true" EnableViewState="True">
+			<Scripts>
+				<asp:ScriptReference Path="Scripts/foundation.js" />
+				<asp:ScriptReference Path="Scripts/jquery.js" />
+				<asp:ScriptReference Path="Scripts/what-input.js" />
+				<asp:ScriptReference Path="~/JavaScript/k30001/filmroll.jquery.min.js" />
+				<asp:ScriptReference Path="Scripts/Kartris.js" />
+			</Scripts>
+		</ajaxToolkit:ToolkitScriptManager>
+
+		<!-- This goes here so can be full width, not confined to shop link cell -->
+		<div id="container">
+			<div class="off-canvas-wrap" data-offcanvas>
+				<div class="inner-wrap">
+					<!-- Off Canvas Menu -->
+					<aside class="left-off-canvas-menu offcanvas-overlap-left">
+						<div class="content">
+							<a onclick="closeOffCanvas()" class="left-off-canvas-toggle off-canvas-close" href="#"><span>×</span></a>
+							<user:CategoryMenuSimple ID="UC_CategoryMenuSimple" runat="server" EnableViewState="False"
+												Visible="True" />
+							<user:NavigationMenu ID="UC_NavigationMenu" runat="server" EnableViewState="False"
+								Visible="True" />
+						</div>
+					</aside>
+					<div id="header">
+						<div class="row collapse">
+							<div id="hcol-left" class="small-4 medium-6 large-3 column">
+
+								<a onclick="openOffCanvas()" class="left-off-canvas-toggle off-canvas-open show-for-medium-down" href="#">
+									<i class="fas fa-bars"></i>
+								</a>
+								<asp:HyperLink ID="lnkHome" NavigateUrl="~/" runat="server">
+									<asp:Image ID="imgLogo" runat="server" ImageUrl="Images/logo.png"
+										CssClass="logo" AlternateText="logo" />
+								</asp:HyperLink>
+
+							</div>
+							<div id="hcol-centre" class="large-6 hide-for-medium-down column">
+								<div id="menus">
+									<a onclick="menuCategories()" class="big-menu-link" id="menuCategoriesLink1">Products</a>
+									<a onclick="menuAbout()" class="big-menu-link" id="menuAboutLink">About Us</a>
+									<a href="/Contact.aspx" class="big-menu-link" id="menuContactLink">Contact</a>
+								</div>
+							</div>
+							<div id="hcol-right" class="small-8 medium-6 large-3 column">
+								<user:LanguageDropdown ID="UC_Languagemenu" runat="server" />
+								<user:CurrencyDropdown ID="UC_Currencymenu" runat="server" />
+								<div id="icons">
+									<a onclick="menuSearch()" id="menuSearchLink"><i class="fas fa-search"></i></a>
+
+									<user:BasketView ID="UC_MiniBasket" runat="server" ViewType="MINI_BASKET" />
+
+									<user:LoginStatus runat="server" ID="UC_LoginStatus" EnableViewState="False" />
+								</div>
+							</div>
+							<div class="spacer"></div>
+						</div>
+						<!-- menus -->
+						<div id="menuCategories" class="menuSpecial">
+							<user:MegaMenu runat="server" ID="UC_MegaMenu" EnableViewState="False" RootCategoryID="0" />
+						</div>
+						<div id="menuAbout" class="menuSpecial">
+							<div class="custommegamenu">
+								Edit "menuFurther2" in /Skins/Kartris/Template.master
+							</div>
+						</div>
+						<div id="menuSearch" class="menuSpecial">
+							<user:SearchBox runat="server" ID="UC_SearchBox" EnableViewState="False" />
+						</div>
+						<!-- /menus -->
+					</div>
+
+					<!-- We have a function to check name of page, lets us check page name
+						server side and decide to show or rewrite parts of page -->
+
+					<!-- don't want the breadcrumbtrail on home page. Could use CSS, but this is better -->
+					<% If PageName(Request.Url.AbsolutePath) <> "default" %>
+					<user:BreadCrumbTrail ID="UC_BreadCrumbTrail" runat="server" EnableViewState="False" />
+					<% End if %>
+
+					<!-- we add a dynamic class here, this lets us style home page differently, full width -->
+					<div id="centre_container" class='page-<% =PageName(Request.Url.AbsolutePath) %>'>
+						<div class="row" id="pagebody">
+							<div class="small-12 columns" id="pagecontent_pad">
+								<asp:ContentPlaceHolder ID="cntMain" runat="server">
+								</asp:ContentPlaceHolder>
+							</div>
+							<!-- recent products only on product pages, can add others if you want -->
+							<% If PageName(Request.Url.AbsolutePath) = "product"Then %>
+							<div class="small-12 columns">
+								<user:ViewedProducts ID="UC_RecentlyViewedProducts" runat="server" EnableViewState="False" />
+							</div>
+							<% End if %>
+						</div>
+						<div class="spacer"></div>
+					</div>
+					<div id="footer">
+						<div id="footer_inside">
+							<div class="row">
+								<div class="small-12 large-3 columns">
+									<h2>Section</h2>
+									<ul>
+										<li>
+											<asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink2" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink3" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									</ul>
+								</div>
+								<div class="small-12 large-3 columns">
+									<h2>Section</h2>
+									<ul>
+										<li>
+											<asp:HyperLink ID="HyperLink4" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink5" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink6" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									</ul>
+								</div>
+								<div class="small-12 large-3 columns">
+									<h2>Section</h2>
+									<ul>
+										<li>
+											<asp:HyperLink ID="HyperLink10" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink11" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+										<li>
+											<asp:HyperLink ID="HyperLink12" runat="server" NavigateUrl="~/Default.aspx">Link</asp:HyperLink></li>
+									</ul>
+								</div>
+								<div class="small-12 large-3 columns alignright">
+									<h2>Logo</h2>
+									<div id="footer-address">
+
+									</div>
+									<asp:HyperLink CssClass="footer-telephone" ID="lnkTelephone" runat="server" NavigateUrl="tel:0123456789">01 234 56789</asp:HyperLink>
+									<div id="social-media">
+										<asp:HyperLink ID="lnkFacebook" runat="server" NavigateUrl="https://www.facebook.com/"><i class="fab fa-facebook-square"></i></asp:HyperLink>
+									</div>
+								</div>
+								<div class="small-12 large-12 columns" id="copyright">
+										Address1, Address2, Town, City, Postcode, Country.
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+
+				<a class="exit-off-canvas" onclick="closeOffCanvas()"></a>
+			</div>
+		</div>
+		<user:AdminBar ID="UC_AdminBar" runat="server" />
+	</form>
+
+	<div id="menuBackOverlay" style="display: none;" onclick="menuBackOverlay()"></div>
+	<!-- Load up javascript -->
+	<script>
+		$(document).foundation();
+	</script>
+	<asp:PlaceHolder runat="server" ID="phdScrollerJavascript" Visible="false">
+	<script>
+		// Home page featured products carousel
+		// Make sure your template references
+		// JavaScript/k30001/filmroll.jquery.min.js
+		$(function () {
+			fr = new FilmRoll({
+				container: '#cntMain_UC_FeaturedProducts_updMain',
+				height: 340,
+				pager: false
+			});
+		});
+	</script>
+	</asp:PlaceHolder>
+</body>
+</html>

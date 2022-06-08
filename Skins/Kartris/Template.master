@@ -26,7 +26,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
 
 	<link id="lnkFavIcon1" rel="icon" href="~/favicon.ico" type="image/x-icon" runat="server" />
-	<link href="normalize.css" rel="stylesheet" type="text/css" />
+<%--	<link href="normalize.css" rel="stylesheet" type="text/css" />--%>
 	<link href="foundation.css" rel="stylesheet" type="text/css" />
 	<link href="FontAwesome/css/all.css" rel="stylesheet" type="text/css" />
 	<link href="general.css" rel="stylesheet" type="text/css" />
