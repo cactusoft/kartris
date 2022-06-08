@@ -2429,9 +2429,10 @@ CREATE UNIQUE CLUSTERED INDEX [P_LANG_ID] ON [dbo].[vKartrisTypeProductsLite]
 	[LANG_ID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  View [dbo].[vKartrisTypeProductsLiteWithPrices]    Script Date: 06/06/2022 10:54:09 ******/
+/****** Object:  View [dbo].[vKartrisTypeProductsLiteWithPrices]    Script Date: 08/06/2022 17:40:18 ******/
 SET ANSI_NULLS ON
 GO
+
 SET QUOTED_IDENTIFIER ON
 GO
 
@@ -2439,13 +2440,88 @@ CREATE VIEW [dbo].[vKartrisTypeProductsLiteWithPrices]
 WITH SCHEMABINDING 
 AS
 SELECT        dbo.tblKartrisProducts.P_ID, dbo.tblKartrisLanguages.LANG_ID, CAST(dbo.tblKartrisLanguageElements.LE_Value AS NVARCHAR(255)) AS P_Name, dbo.tblKartrisProducts.P_Featured, dbo.tblKartrisProducts.P_Type, 
-                         dbo.tblKartrisProducts.P_CustomerGroupID, dbo.tblKartrisProducts.P_AverageRating, dbo.tblKartrisProductSearchIndex.PSI_MinPrice, dbo.tblKartrisProductSearchIndex.PSI_MaxPrice, dbo.tblKartrisProducts.P_SupplierID
+                         dbo.tblKartrisProducts.P_CustomerGroupID, dbo.tblKartrisProducts.P_AverageRating, dbo.tblKartrisProductSearchIndex.PSI_MinPrice, dbo.tblKartrisProductSearchIndex.PSI_MaxPrice, dbo.tblKartrisProducts.P_SupplierID, 
+                         dbo.tblKartrisProducts.P_Live, dbo.tblKartrisProducts.P_DateCreated, dbo.tblKartrisProducts.P_LastModified, dbo.tblKartrisProducts.P_VersionDisplayType
 FROM            dbo.tblKartrisLanguageElements INNER JOIN
                          dbo.tblKartrisLanguages ON dbo.tblKartrisLanguageElements.LE_LanguageID = dbo.tblKartrisLanguages.LANG_ID INNER JOIN
                          dbo.tblKartrisProducts ON dbo.tblKartrisLanguageElements.LE_ParentID = dbo.tblKartrisProducts.P_ID INNER JOIN
                          dbo.tblKartrisProductSearchIndex ON dbo.tblKartrisProducts.P_ID = dbo.tblKartrisProductSearchIndex.PSI_ProductID
 WHERE        (dbo.tblKartrisLanguageElements.LE_FieldID = 1) AND (NOT (dbo.tblKartrisLanguageElements.LE_Value IS NULL)) AND (dbo.tblKartrisLanguageElements.LE_TypeID = 2) AND (dbo.tblKartrisProducts.P_Live = 1)
 GO
+/****** Add indexes for vKartrisTypeProductsLiteWithPrices ******/
+SET ARITHABORT ON
+SET CONCAT_NULL_YIELDS_NULL ON
+SET QUOTED_IDENTIFIER ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+SET NUMERIC_ROUNDABORT OFF
+GO
+
+/****** Object:  Index [P_LANG_ID]    Script Date: 08/06/2022 14:07:23 ******/
+CREATE UNIQUE CLUSTERED INDEX [P_LANG_ID] ON [dbo].[vKartrisTypeProductsLiteWithPrices]
+(
+	[P_ID] ASC,
+	[LANG_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Object:  Index [LANG_ID]    Script Date: 08/06/2022 14:05:23 ******/
+CREATE NONCLUSTERED INDEX [LANG_ID] ON [dbo].[vKartrisTypeProductsLiteWithPrices]
+(
+	[LANG_ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Object:  Index [PSI_MinPrice]    Script Date: 08/06/2022 14:07:39 ******/
+CREATE NONCLUSTERED INDEX [PSI_MinPrice] ON [dbo].[vKartrisTypeProductsLiteWithPrices]
+(
+	[PSI_MinPrice] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Object:  Index [PSI_MaxPrice]    Script Date: 08/06/2022 14:07:39 ******/
+CREATE NONCLUSTERED INDEX [PSI_MaxPrice] ON [dbo].[vKartrisTypeProductsLiteWithPrices]
+(
+	[PSI_MaxPrice] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Object:  Index [P_Name]    Script Date: 08/06/2022 14:07:55 ******/
+CREATE NONCLUSTERED INDEX [P_Name] ON [dbo].[vKartrisTypeProductsLiteWithPrices]
+(
+	[P_Name] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Object:  Index [P_Live]    Script Date: 08/06/2022 14:07:55 ******/
+CREATE NONCLUSTERED INDEX [P_Live] ON [dbo].[vKartrisTypeProductsLiteWithPrices]
+(
+	[P_Live] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Object:  Index [P_DateCreated]    Script Date: 08/06/2022 14:07:55 ******/
+CREATE NONCLUSTERED INDEX [P_DateCreated] ON [dbo].[vKartrisTypeProductsLiteWithPrices]
+(
+	[P_DateCreated] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Object:  Index [P_LastModified]    Script Date: 08/06/2022 14:07:55 ******/
+CREATE NONCLUSTERED INDEX [P_LastModified] ON [dbo].[vKartrisTypeProductsLiteWithPrices]
+(
+	[P_LastModified] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Object:  Index [P_VersionDisplayType]    Script Date: 08/06/2022 14:07:55 ******/
+CREATE NONCLUSTERED INDEX [P_VersionDisplayType] ON [dbo].[vKartrisTypeProductsLiteWithPrices]
+(
+	[P_VersionDisplayType] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
 /****** Object:  UserDefinedFunction [dbo].[fnKartrisLanguageElement_GetItemValue]    Script Date: 06/06/2022 10:54:09 ******/
 SET ANSI_NULLS ON
 GO
