@@ -62,6 +62,11 @@ Partial Class Category
                             tabProducts.Visible = False
                         End If
 
+                        'If we are filtering in powerpack, always use the products tab, even if zero products/results
+                        If Request.QueryString("f") = 1 Then
+                            tabContainer.ActiveTabIndex = 1
+                        End If
+
                         If Not Page.IsPostBack AndAlso KartSettingsManager.GetKartConfig("general.products.hittracking") = "y" Then
                             StatisticsBLL.AddNewStatsRecord("C",
                                             GetIntegerQS("CategoryID"), GetIntegerQS("strParent"))
