@@ -6761,14 +6761,14 @@ ALTER TABLE [dbo].[tblKartrisPayments] ADD  CONSTRAINT [Payment_ReferenceNo] UNI
 	[Payment_ReferenceNo] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, IGNORE_DUP_KEY = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [PC_CategoryID]    Script Date: 06/06/2022 10:55:27 ******/
-CREATE NONCLUSTERED INDEX [PC_CategoryID] ON [dbo].[tblKartrisProductCategoryLink]
+/****** Object:  Index [PCAT_CategoryID]    Script Date: 06/06/2022 10:55:27 ******/
+CREATE NONCLUSTERED INDEX [PCAT_CategoryID] ON [dbo].[tblKartrisProductCategoryLink]
 (
 	[PCAT_CategoryID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [PC_ProductID]    Script Date: 06/06/2022 10:55:27 ******/
-CREATE NONCLUSTERED INDEX [PC_ProductID] ON [dbo].[tblKartrisProductCategoryLink]
+/****** Object:  Index [PCAT_ProductID]    Script Date: 06/06/2022 10:55:27 ******/
+CREATE NONCLUSTERED INDEX [PCAT_ProductID] ON [dbo].[tblKartrisProductCategoryLink]
 (
 	[PCAT_ProductID] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
@@ -11255,9 +11255,8 @@ BEGIN
 
 	-- (Advanced Search) Exclude products that are not between the price range
 	IF @MinPrice <> -1 AND @MaxPrice <> -1 BEGIN
-		--UPDATE tblKartrisSearchHelper
-		--SET SH_Price = dbo.fnKartrisProduct_GetMinPriceWithCG(SH_ProductID, @CustomerGroupID)
-		--WHERE SH_SessionID = @@SPID;
+		UPDATE tblKartrisSearchHelper
+		SET SH_Price = (SELECT PSI_MinPrice FROM tblKartrisProductSearchIndex WHERE PSI_ProductID=SH_ProductID AND SH_SessionID = @@SPID)
 		DELETE FROM tblKartrisSearchHelper WHERE SH_SessionID = @@SPID AND SH_Price NOT BETWEEN @MinPrice AND @MaxPrice;
 	END
 
@@ -23762,10 +23761,9 @@ SET NOCOUNT ON;
 	END
 	
 	-- (Advanced Search) Exclude products that are not between the price range
-	IF @MinPrice <> -1 AND @MaxPrice <> -1	BEGIN
-		--UPDATE tblKartrisSearchHelper
-		--SET SH_Price = dbo.fnKartrisProduct_GetMinPriceWithCG(SH_ProductID, @CustomerGroupID)
-		--WHERE SH_SessionID = @@SPID;
+	IF @MinPrice <> -1 AND @MaxPrice <> -1 BEGIN
+		UPDATE tblKartrisSearchHelper
+		SET SH_Price = (SELECT PSI_MinPrice FROM tblKartrisProductSearchIndex WHERE PSI_ProductID=SH_ProductID AND SH_SessionID = @@SPID)
 		DELETE FROM tblKartrisSearchHelper WHERE SH_SessionID = @@SPID AND SH_Price NOT BETWEEN @MinPrice AND @MaxPrice;
 	END
 
