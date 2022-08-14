@@ -289,6 +289,8 @@ Partial Class ProductVersions
                      GetGlobalResourceObject("Versions", "ContentText_AltOutOfStock") &
                      "]", drwVersion("V_ID")))
                     txtOutOfStockItems.Text &= "," & intCounter & ","
+                ElseIf ReturnCallForPrice(0, drwVersion("V_ID")) = 1 Then
+                    ddlName_DropDown.Items.Add(New ListItem(strV_Name & GetGlobalResourceObject("Versions", "ContentText_CallForPrice"), drwVersion("V_ID")))
                 Else
                     'available
                     If intFirstInStock = -1 Then intFirstInStock = intCounter
@@ -493,34 +495,34 @@ Partial Class ProductVersions
                     End If
 
                 Case "litResultedPrice_Rows"
-                    ''Handle 'call for prices' - determine whether to
-                    If objObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) = 1 Then
-                        CType(e.Item.FindControl("litResultedPrice_Rows"), Literal).Text = GetGlobalResourceObject("Versions", "ContentText_CallForPrice")
-                        Continue For
-                    End If
-                    '' Creating the Currency Format for the Version's Price.
-                    Dim numPrice As Single = CDbl(CType(e.Item.FindControl("litPrice_Rows"), Literal).Text)
-                    CType(e.Item.FindControl("litResultedPrice_Rows"), Literal).Text =
-                      CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
+                    '''Handle 'call for prices' - determine whether to
+                    'If objObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) = 1 Then
+                    '    CType(e.Item.FindControl("litResultedPrice_Rows"), Literal).Text = GetGlobalResourceObject("Versions", "ContentText_CallForPrice")
+                    '    Continue For
+                    'End If
+                    ''' Creating the Currency Format for the Version's Price.
+                    'Dim numPrice As Single = CDbl(CType(e.Item.FindControl("litPrice_Rows"), Literal).Text)
+                    'CType(e.Item.FindControl("litResultedPrice_Rows"), Literal).Text =
+                    '  CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
 
                 Case "litResultedCalculatedTax_Rows"
-                    Dim numPrice As Single = CDbl(CType(e.Item.FindControl("litCalculatedTax_Rows"), Literal).Text)
-                    CType(e.Item.FindControl("litResultedCalculatedTax_Rows"), Literal).Text =
-                      CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
+                    'Dim numPrice As Single = CDbl(CType(e.Item.FindControl("litCalculatedTax_Rows"), Literal).Text)
+                    'CType(e.Item.FindControl("litResultedCalculatedTax_Rows"), Literal).Text =
+                    '  CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
 
                 Case "litResultedIncTax_Rows"
-                    Dim numPrice As Single = CDbl(CType(e.Item.FindControl("litIncTax_Rows"), Literal).Text)
-                    CType(e.Item.FindControl("litResultedIncTax_Rows"), Literal).Text =
-                      CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
+                    'Dim numPrice As Single = CDbl(CType(e.Item.FindControl("litIncTax_Rows"), Literal).Text)
+                    'CType(e.Item.FindControl("litResultedIncTax_Rows"), Literal).Text =
+                    '  CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
 
                 Case "litResultedExTax_Rows"
-                    Dim numPrice As Single = CDbl(CType(e.Item.FindControl("litExTax_Rows"), Literal).Text)
-                    CType(e.Item.FindControl("litResultedExTax_Rows"), Literal).Text =
-                      CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
+                    'Dim numPrice As Single = CDbl(CType(e.Item.FindControl("litExTax_Rows"), Literal).Text)
+                    'CType(e.Item.FindControl("litResultedExTax_Rows"), Literal).Text =
+                    '  CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice)
 
                 Case "litResultedTaxRate_Rows"
-                    CType(e.Item.FindControl("litResultedTaxRate_Rows"), Literal).Text =
-                      CType(e.Item.FindControl("litTaxRate_Rows"), Literal).Text & "%"
+                    'CType(e.Item.FindControl("litResultedTaxRate_Rows"), Literal).Text =
+                    '  CType(e.Item.FindControl("litTaxRate_Rows"), Literal).Text & "%"
 
                 Case "updAddQty"
                     '' Adding the Quantity 1 To 10, for each row of the versions.
@@ -1217,9 +1219,13 @@ Partial Class ProductVersions
     ''' Call for Price
     ''' </summary>
     ''' <remarks></remarks>
-    Function ReturnCallForPrice(ByVal numP_ID As Int64) As Int16
+    Function ReturnCallForPrice(ByVal numP_ID As Int64, Optional numV_ID As Int64 = 0) As Int16
         Dim objObjectConfigBLL As New ObjectConfigBLL
         Dim objValue As Object = objObjectConfigBLL.GetValue("K:product.callforprice", numP_ID)
+        If CInt(objValue) = 0 And numV_ID <> 0 Then
+            'Product not call for price, maybe there is a version
+            objValue = objObjectConfigBLL.GetValue("K:version.callforprice", numV_ID)
+        End If
         Return objValue
     End Function
 End Class

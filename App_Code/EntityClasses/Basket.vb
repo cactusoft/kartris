@@ -900,17 +900,27 @@ Namespace Kartris
                         ' read out in the first place.
                         .Weight = numWeight
 
+                        'If item set as callforprice at product or version level,
+                        'remove it from the basket
+
+                        If ReturnCallForPrice(.ProductID, .VersionID) = 1 Then
+                            .Quantity = 0
+                        End If
+
                         If .Quantity = 0 Then
-                            BasketItems.Remove(Item)
+                            'BasketItems.Remove(Item)
                             'v2.9010 fix, need to delete item rather than update qty to zero,
                             'that doesn't seem to work now
                             'BasketBLL.UpdateQuantity(.ID, 0)
                             BasketBLL.DeleteBasketItems(.ID)
                             'Current.Response.Redirect("~/Basket.aspx")
-
+                        Else
+                            'IMPORTANT!
+                            'If we remove items from the basket, we don't want to advance the 
+                            'counter or we get an error at the "next"
+                            i = i + 1
                         End If
                     End With
-                    i = i + 1
                 Next
             End If
             Return True
@@ -1006,6 +1016,20 @@ Namespace Kartris
         Protected Overrides Sub Finalize()
             MyBase.Finalize()
         End Sub
+
+        ''' <summary>
+        ''' Call for Price
+        ''' </summary>
+        ''' <remarks></remarks>
+        Function ReturnCallForPrice(ByVal numP_ID As Int64, Optional numV_ID As Int64 = 0) As Int16
+            Dim objObjectConfigBLL As New ObjectConfigBLL
+            Dim objValue As Object = objObjectConfigBLL.GetValue("K:product.callforprice", numP_ID)
+            If CInt(objValue) = 0 And numV_ID <> 0 Then
+                'Product not call for price, maybe there is a version
+                objValue = objObjectConfigBLL.GetValue("K:version.callforprice", numV_ID)
+            End If
+            Return objValue
+        End Function
 
     End Class
 End Namespace

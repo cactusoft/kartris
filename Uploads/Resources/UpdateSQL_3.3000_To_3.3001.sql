@@ -876,6 +876,14 @@ END
 END
 GO
 
+/****** New callforprice setting at version level ******/
+SET IDENTITY_INSERT [dbo].[tblKartrisObjectConfig] ON 
+
+INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (13, N'K:version.callforprice', N'Version', N'b', N'0', N'display ''call for price'' and hide ''add'' button at version level.', 0, 3.3001)
+
+SET IDENTITY_INSERT [dbo].[tblKartrisObjectConfig] OFF
+GO
+
 /****** Set this to tell Data tool which version of db we have ******/
 UPDATE tblKartrisConfig SET CFG_Value='3.3001', CFG_VersionAdded=3.3001 WHERE CFG_Name='general.kartrisinfo.versionadded';
 GO

@@ -6252,6 +6252,8 @@ INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (9, N'K:product.spectable', N'Product', N's', N'', N'Pre formatted text for specs, tabular data, etc.', 1, 2.9014)
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (11, N'K:user.eori', N'User', N's', N'', N'EORI number', 0, 3.0001)
 INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (12, N'K:product.commoditycode', N'Product', N's', N'', N'Commodity code (for EU imports)', 0, 3.0001)
+INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_DataType], [OC_DefaultValue], [OC_Description], [OC_MultilineValue], [OC_VersionAdded]) VALUES (13, N'K:version.callforprice', N'Version', N'b', N'0', N'display ''call for price'' and hide ''add'' button at version level.', 0, 3.3001)
+
 SET IDENTITY_INSERT [dbo].[tblKartrisObjectConfig] OFF
 GO
 INSERT [dbo].[tblKartrisPromotionStrings] ([PS_ID], [PS_LanguageStringName], [PS_PartNo], [PS_Type], [PS_Item], [PS_Order]) VALUES (1, N'ContentText_PromotionTextBuyVersion', N'a', N'q', N'v', 1)
