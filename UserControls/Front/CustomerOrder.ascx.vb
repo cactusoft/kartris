@@ -19,7 +19,7 @@ Partial Class UserControls_Front_CustomerOrder
     Inherits System.Web.UI.UserControl
 
     Protected APP_PricesIncTax, APP_ShowTaxDisplay, blnHasExemptCustomerDiscountItems As Boolean
-    Private objBasket As New kartris.Basket
+    Private objBasket As New Kartris.Basket
     Private numTaxDue, numTotalPriceExTax, numTotalPriceIncTax, numCouponDiscount, numCustomerDiscount, numShipping, numOrderHandlingCharge, numTotal As Double
     Private numDiscountPercentage, numPromotionDiscountTotal, numCouponDiscountTotal, CP_DiscountValue As Double
     Private strCouponCode, CP_DiscountType, CP_CouponCode As String
@@ -61,7 +61,8 @@ Partial Class UserControls_Front_CustomerOrder
 
         phdViewOrder.Visible = ShowOrderSummary
 
-        tblBasket = BasketBLL.GetCustomerOrderDetails(OrderID)
+        Dim objBasketBLL As New BasketBLL
+        tblBasket = objBasketBLL.GetCustomerOrderDetails(OrderID)
 
         If tblBasket.Rows.Count > 0 Then
             Dim datOrderDate, datLastModified As DateTime
@@ -98,7 +99,7 @@ Partial Class UserControls_Front_CustomerOrder
 
             If strCouponCode <> "" Then
                 Dim tblCoupon As Data.DataTable
-                tblCoupon = BasketBLL.GetCouponData(strCouponCode)
+                tblCoupon = objBasketBLL.GetCouponData(strCouponCode)
                 If tblCoupon.Rows.Count > 0 Then
                     CP_DiscountValue = tblCoupon.Rows(0).Item("CP_DiscountValue")
                     CP_DiscountType = tblCoupon.Rows(0).Item("CP_DiscountType") & ""
@@ -138,9 +139,9 @@ Partial Class UserControls_Front_CustomerOrder
 
             'Bind the repeater to the new sorted datatable
             rptBasket.DataSource = tblBasketSorted
-                rptBasket.DataBind()
+            rptBasket.DataBind()
 
-            End If
+        End If
 
 
     End Sub
@@ -205,6 +206,7 @@ Partial Class UserControls_Front_CustomerOrder
 
         ElseIf e.Item.ItemType = ListItemType.Footer Then
 
+            'shipping and order handling
             If numTaxDue > 0 Then
                 CType(e.Item.FindControl("litTotOrderValue"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numTotalPriceIncTax)
                 CType(e.Item.FindControl("litShipping"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numShippingPriceIncTax)
@@ -214,6 +216,19 @@ Partial Class UserControls_Front_CustomerOrder
                 CType(e.Item.FindControl("litShipping"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numShippingPriceExTax)
                 CType(e.Item.FindControl("litOrderHandlingCharge"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numOrderHandlingPriceExTax)
             End If
+
+            'Get shipping method
+            'Added v3.2002
+            'We're going to try to get the shipping details from the XML copy of the order
+            Try
+                Dim objBasketBLL As New BasketBLL
+                Dim tblBasket As Data.DataTable = objBasketBLL.GetCustomerOrderDetails(OrderID)
+                If tblBasket.Rows.Count > 0 Then
+                    CType(e.Item.FindControl("litShippingDesc"), Literal).Text = "(" & tblBasket.Rows(0).Item("O_ShippingMethod") & ")"
+                End If
+            Catch ex As Exception
+                'Ex
+            End Try
 
             'Promotions line
             If numPromotionDiscountTotal < 0 Then
@@ -243,6 +258,7 @@ Partial Class UserControls_Front_CustomerOrder
                 End If
             End If
 
+            'Total
             CType(e.Item.FindControl("litTotal"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numCurrencyID, numTotal)
 
             If numCurrencyIDGateway <> numCurrencyID Then

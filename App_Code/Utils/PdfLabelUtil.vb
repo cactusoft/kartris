@@ -144,13 +144,14 @@ Public Class PdfLabelUtil
         Dim ShippingAddresses As New List(Of String)
 
         ' Get the dispatch label information.
-        tblOrdersList = OrdersBLL._GetByStatus(OrdersBLL.ORDERS_LIST_CALLMODE.DISPATCH, 0, 0, FromDateTime, ToDateTime, "", "", 999)
+        Dim objOrdersBLL As New OrdersBLL
+        tblOrdersList = objOrdersBLL._GetByStatus(OrdersBLL.ORDERS_LIST_CALLMODE.DISPATCH, 0, 0, FromDateTime, ToDateTime, "", "", 999)
 
         If Not IsNothing(tblOrdersList) Then
             If tblOrdersList.Rows.Count > 0 Then
                 For Each OrdersRow As DataRow In tblOrdersList.Rows
                     ' Itterate each order.
-                    tblSingleOrder = OrdersBLL.GetOrderByID(OrdersRow("O_ID"))
+                    tblSingleOrder = objOrdersBLL.GetOrderByID(OrdersRow("O_ID"))
                     If Not IsNothing(tblSingleOrder) Then
                         For Each DetailRow As DataRow In tblSingleOrder.Rows
                             ' Itterate each detail row in the single order (should only be one).

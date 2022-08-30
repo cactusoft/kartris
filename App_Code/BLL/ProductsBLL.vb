@@ -22,44 +22,44 @@ Imports KartSettingsManager
 
 Public Class ProductsBLL
 
-    Private Shared _Adptr As ProductsTblAdptr = Nothing
-    Private Shared _ProdcutCategoryLinkAdptr As ProductCategoryLinkTblAdptr = Nothing
-    Private Shared _RelatedAdptr As RelatedProductsTblAdptr = Nothing
+    Private _Adptr As ProductsTblAdptr = Nothing
+    Private _ProdcutCategoryLinkAdptr As ProductCategoryLinkTblAdptr = Nothing
+    Private _RelatedAdptr As RelatedProductsTblAdptr = Nothing
 
-    Protected Shared ReadOnly Property Adptr() As ProductsTblAdptr
+    Protected ReadOnly Property Adptr() As ProductsTblAdptr
         Get
             _Adptr = New ProductsTblAdptr
             Return _Adptr
         End Get
     End Property
 
-    Protected Shared ReadOnly Property ProductCategoryLinkAdptr() As ProductCategoryLinkTblAdptr
+    Protected ReadOnly Property ProductCategoryLinkAdptr() As ProductCategoryLinkTblAdptr
         Get
             _ProdcutCategoryLinkAdptr = New ProductCategoryLinkTblAdptr
             Return _ProdcutCategoryLinkAdptr
         End Get
     End Property
 
-    Protected Shared ReadOnly Property RelatedAdptr() As RelatedProductsTblAdptr
+    Protected ReadOnly Property RelatedAdptr() As RelatedProductsTblAdptr
         Get
             _RelatedAdptr = New RelatedProductsTblAdptr
             Return _RelatedAdptr
         End Get
     End Property
 
-    Public Shared Function _GetRelatedProductsByParent(ByVal intParentID As Integer) As DataTable
+    Public Function _GetRelatedProductsByParent(ByVal intParentID As Integer) As DataTable
         Return RelatedAdptr._GetRelatedProductsByParent(intParentID)
     End Function
 
-    Public Shared Function GetProductDetailsByID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As DataTable
+    Public Function GetProductDetailsByID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As DataTable
         Return Adptr.GetByID(_ProductID, _LanguageID)
     End Function
 
-    Public Shared Function _GetProductsBySupplier(ByVal numLanguageID As Byte, ByVal numSupplierID As Short) As DataTable
+    Public Function _GetProductsBySupplier(ByVal numLanguageID As Byte, ByVal numSupplierID As Short) As DataTable
         Return Adptr._GetBySupplier(numLanguageID, numSupplierID)
     End Function
 
-    Public Shared Function _GetFeaturedProducts(ByVal numLanguageID As Byte) As DataTable
+    Public Function _GetFeaturedProducts(ByVal numLanguageID As Byte) As DataTable
         Return _Adptr._GetFeaturedProducts(numLanguageID)
     End Function
 
@@ -68,8 +68,9 @@ Public Class ProductsBLL
     'We can also use it on the front end to nullify
     'the UseCombinationPrices object config setting
     'for a product that is not a combinations product.
-    Public Shared Function _NumberOfCombinations(ByVal _ProductID As Integer) As Integer
-        Dim dtbData As DataTable = _Adptr._NumberOfCombinations(_ProductID)
+    Public Function _NumberOfCombinations(ByVal _ProductID As Integer) As Integer
+        Dim Adptr As New ProductsTblAdptr
+        Dim dtbData As DataTable = Adptr._NumberOfCombinations(_ProductID)
         Dim intCombinations As Integer = 0
         For Each drwData As DataRow In dtbData.Rows
             intCombinations = drwData("Combinations")
@@ -135,6 +136,7 @@ Public Class ProductsBLL
     End Function
 
     Public Shared Function GetFeaturedProductForCache() As DataTable
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr.GetFeaturedProducts()
     End Function
 
@@ -145,6 +147,7 @@ Public Class ProductsBLL
 
     Public Shared Function GetNewestProductsForCache() As DataTable
         Dim tblNewestProducts As New DataTable
+        Dim Adptr As New ProductsTblAdptr
         For Each rowLanguage As DataRow In LanguagesBLL.GetLanguages.Rows
             tblNewestProducts.Merge(Adptr.GetNewestProducts(rowLanguage("LANG_ID")), False)
         Next
@@ -161,14 +164,16 @@ Public Class ProductsBLL
         Dim datRange As Date = Today.AddDays(-CDbl(GetKartConfig("frontend.display.topsellers.days")))
         If datRange = Today Then datRange = Today.AddYears(-100)
         Dim intTopSellingCount As Integer = CInt(GetKartConfig("frontend.display.topsellers.quantity"))
+        Dim Adptr As New ProductsTblAdptr
         For Each rowLanguage As DataRow In LanguagesBLL.GetLanguages.Rows
             tblTopListProducts.Merge(Adptr.GetTopList(intTopSellingCount, rowLanguage("LANG_ID"), datRange), False)
         Next
         Return tblTopListProducts
     End Function
 
-    Public Shared Function _SearchProductByName(ByVal _Key As String, ByVal _LanguageID As Byte) As DataTable
+    Public Function _SearchProductByName(ByVal _Key As String, ByVal _LanguageID As Byte) As DataTable
         Dim tbl As New DataTable
+        Dim Adptr As New ProductsTblAdptr
         tbl = Adptr._SearchByName(_Key, _LanguageID)
         If tbl.Rows.Count = 0 Then
             tbl = Adptr._GetData(_LanguageID)
@@ -176,17 +181,19 @@ Public Class ProductsBLL
         Return tbl
     End Function
 
-    Public Shared Function GetProductsPageByCategory(ByVal _CategoryID As Integer, ByVal _LanguageID As Short, _
-                                            ByVal _PageIndx As Short, ByVal _RowsPerPage As Short, _
+    Public Function GetProductsPageByCategory(ByVal _CategoryID As Integer, ByVal _LanguageID As Short,
+                                            ByVal _PageIndx As Short, ByVal _RowsPerPage As Short,
                                             ByVal _CGroupID As Short, ByRef _TotalNoOfProducts As Integer) As DataTable
         _TotalNoOfProducts = GetTotalProductsInCategory_s(_CategoryID, _LanguageID, _CGroupID)
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr.GetProductsPageByCategoryID(_LanguageID, _CategoryID, _PageIndx, _RowsPerPage, _CGroupID)
     End Function
-    Public Shared Function GetProductsPageByCategory(Request As HttpRequest, ByVal _CategoryID As Integer, ByVal _LanguageID As Short, _
-                                            ByVal _PageIndx As Short, ByVal _RowsPerPage As Short, _
+    Public Function GetProductsPageByCategory(Request As HttpRequest, ByVal _CategoryID As Integer, ByVal _LanguageID As Short,
+                                            ByVal _PageIndx As Short, ByVal _RowsPerPage As Short,
                                             ByVal _CGroupID As Short, ByRef _TotalNoOfProducts As Integer) As DataTable
         If Request.QueryString("f") = 1 Then
-            Dim dtFilteredProducts As DataTable = PowerpackBLL.GetFilteredProductsByCategory(Request, _CategoryID, _LanguageID, _PageIndx, _
+            Dim objPowerpackBLL As New PowerpackBLL
+            Dim dtFilteredProducts As DataTable = objPowerpackBLL.GetFilteredProductsByCategory(Request, _CategoryID, _LanguageID, _PageIndx,
                                                                 _RowsPerPage, _CGroupID, _TotalNoOfProducts)
             If dtFilteredProducts IsNot Nothing Then Return dtFilteredProducts
         End If
@@ -194,103 +201,113 @@ Public Class ProductsBLL
         Return GetProductsPageByCategory(_CategoryID, _LanguageID, _PageIndx, _RowsPerPage, _CGroupID, _TotalNoOfProducts)
     End Function
 
-    Public Shared Function _GetProductsPageByCategory(ByVal _CategoryID As Integer, ByVal _LanguageID As Short, _
+    Public Function _GetProductsPageByCategory(ByVal _CategoryID As Integer, ByVal _LanguageID As Short,
                                             ByVal _PageIndx As Short, ByVal _RowsPerPage As Short, ByRef _TotalNoOfProducts As Integer) As DataTable
         _TotalNoOfProducts = _GetTotalProductsInCategory_s(_CategoryID, _LanguageID)
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr._GetProductsPageByCategoryID(_LanguageID, _CategoryID, _PageIndx, _RowsPerPage)
     End Function
 
-    Public Shared Function _GetCustomerGroup(ByVal numProductID As Integer) As Integer
+    Public Function _GetCustomerGroup(ByVal numProductID As Integer) As Integer
         Dim qAdptr As New ProductQTblAdptr
         Dim _CGroupID As Integer
         qAdptr._GetCustomerGroup(numProductID, _CGroupID)
         Return _CGroupID
     End Function
 
-    Public Shared Function GetTotalProductsInCategory_s(ByVal _CategoryID As Integer, ByVal _LanguageID As Short, ByVal _CGroupID As Short) As Object
+    Public Function GetTotalProductsInCategory_s(ByVal _CategoryID As Integer, ByVal _LanguageID As Short, ByVal _CGroupID As Short) As Object
         Dim qAdptr As New ProductQTblAdptr
         Dim totalProducts As Integer
         qAdptr.GetTotalByCatID_s(_LanguageID, _CategoryID, _CGroupID, totalProducts)
         Return totalProducts
     End Function
 
-    Public Shared Function _GetTotalProductsInCategory_s(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As Object
+    Public Function _GetTotalProductsInCategory_s(ByVal _CategoryID As Integer, ByVal _LanguageID As Short) As Object
         Dim qAdptr As New ProductQTblAdptr
         Dim totalProducts As Integer
         qAdptr._GetTotalByCatID_s(_LanguageID, _CategoryID, totalProducts)
         Return totalProducts
     End Function
 
-    Public Shared Function GetMinPriceByCG(ByVal numProductID As Integer, ByVal numCG_ID As Integer) As Double
+    Public Function GetMinPriceByCG(ByVal numProductID As Integer, ByVal numCG_ID As Integer) As Double
         Dim qAdptr As New ProductQTblAdptr
         Dim MinPrice As Single = 0.0F
         qAdptr.GetMinPriceWithCG_s(numProductID, numCG_ID, MinPrice)
         Return MinPrice
     End Function
 
-    Public Shared Function GetRelatedProducts(ByVal _ProductID As Integer, ByVal _LanguageId As Short, ByVal _CustomerGroupID As Short) As DataTable
+    Public Function GetRelatedProducts(ByVal _ProductID As Integer, ByVal _LanguageId As Short, ByVal _CustomerGroupID As Short) As DataTable
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr.GetRelatedProducts(_ProductID, _LanguageId, _CustomerGroupID)
     End Function
 
-    Public Shared Function GetPeopleWhoBoughtThis(ByVal ProductID As Integer, ByVal LanguageID As Short, ByVal numPeopleWhoBoughtThis As Integer) As DataTable
+    Public Function GetPeopleWhoBoughtThis(ByVal ProductID As Integer, ByVal LanguageID As Short, ByVal numPeopleWhoBoughtThis As Integer) As DataTable
         Dim intType As Boolean
         If KartSettingsManager.GetKartConfig("frontend.crossselling.peoplewhoboughtthis.type") = "y" Then intType = True Else intType = False
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr.GetPeopleWhoBoughtThis(ProductID, LanguageID, numPeopleWhoBoughtThis, intType)
     End Function
 
-    Public Shared Function GetParentCategories(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As DataTable
+    Public Function GetParentCategories(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As DataTable
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr.GetParentCategories(_LanguageID, _ProductID)
     End Function
 
-    Public Shared Function GetNameByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As String
-        Return LanguageElementsBLL.GetElementValue( _
+    Public Function GetNameByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As String
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Return objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Products, LANG_ELEM_FIELD_NAME.Name, _ProductID)
     End Function
 
-    Public Shared Function GetMetaDescriptionByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As String
-        Dim strMetaDescription As String = LanguageElementsBLL.GetElementValue( _
+    Public Function GetMetaDescriptionByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As String
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Dim strMetaDescription As String = objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Products, LANG_ELEM_FIELD_NAME.MetaDescription, _ProductID)
         If String.IsNullOrEmpty(strMetaDescription) Or strMetaDescription = "# -LE- #" Then _
-            strMetaDescription = LanguageElementsBLL.GetElementValue(_LanguageID, LANG_ELEM_TABLE_TYPE.Products, LANG_ELEM_FIELD_NAME.Description, _ProductID)
+            strMetaDescription = objLanguageElementsBLL.GetElementValue(_LanguageID, LANG_ELEM_TABLE_TYPE.Products, LANG_ELEM_FIELD_NAME.Description, _ProductID)
         If strMetaDescription = "# -LE- #" Then strMetaDescription = Nothing
         Return Left(StripHTML(strMetaDescription), 160)
     End Function
 
-    Public Shared Function GetMetaKeywordsByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As String
-        Dim strMetaKeywords As String = LanguageElementsBLL.GetElementValue( _
+    Public Function GetMetaKeywordsByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As String
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Dim strMetaKeywords As String = objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Products, LANG_ELEM_FIELD_NAME.MetaKeywords, _ProductID)
         If strMetaKeywords = "# -LE- #" Then strMetaKeywords = Nothing
         Return StripHTML(strMetaKeywords)
     End Function
 
-    Public Shared Function _GetNameByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As String
-        Return LanguageElementsBLL.GetElementValue( _
+    Public Function _GetNameByProductID(ByVal _ProductID As Integer, ByVal _LanguageID As Short) As String
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Return objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Products, LANG_ELEM_FIELD_NAME.Name, _ProductID)
     End Function
 
-    Public Shared Function GetAttributeValueByAttributeID_s(ByVal _LanguageID As Short, ByVal _ProductID As Integer, ByVal _AttributeID As Integer) As String
+    Public Function GetAttributeValueByAttributeID_s(ByVal _LanguageID As Short, ByVal _ProductID As Integer, ByVal _AttributeID As Integer) As String
         Dim qAdptr As New ProductQTblAdptr
         Dim _AttributeValue As String = ""
         qAdptr.GetAttributeValue_s(_ProductID, _AttributeID, _LanguageID, _AttributeValue)
         Return _AttributeValue
     End Function
 
-    Public Shared Function _GetProductType_s(ByVal _ProductID As Integer) As Char
+    Public Function _GetProductType_s(ByVal _ProductID As Integer) As Char
         Dim qAdptr As New ProductQTblAdptr
         Dim _ProductType As Char = ""
         qAdptr._GetProductType_s(_ProductID, _ProductType)
         Return _ProductType
     End Function
 
-    Public Shared Function _GetProductInfoByID(ByVal pProductID As Integer) As DataTable
+    Public Function _GetProductInfoByID(ByVal pProductID As Integer) As DataTable
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr._GetProductInfoByID(pProductID)
     End Function
 
-    Public Shared Function _GetCategoriesByProductID(ByVal pProductID As Integer) As DataTable
+    Public Function _GetCategoriesByProductID(ByVal pProductID As Integer) As DataTable
+        Dim ProductCategoryLinkAdptr As New ProductCategoryLinkTblAdptr
         Return ProductCategoryLinkAdptr._GetCategoriesByProductID(pProductID)
     End Function
 
-    Public Shared Function GetProductIDByVersionCode(ByVal strVersionCode As String) As Integer
+    Public Function GetProductIDByVersionCode(ByVal strVersionCode As String) As Integer
         Dim _Adptr As New ProductsTblAdptr
         Try
             Return _Adptr.GetProductIDByVersionCode(strVersionCode)
@@ -299,9 +316,9 @@ Public Class ProductsBLL
         End Try
     End Function
 
-    Public Shared Sub _GetProductStatus( _
-                            ByVal numProductID As Integer, ByRef blnProductLive As Boolean, _
-                            ByRef strProductType As String, ByRef numLiveVersions As Integer, _
+    Public Sub _GetProductStatus(
+                            ByVal numProductID As Integer, ByRef blnProductLive As Boolean,
+                            ByRef strProductType As String, ByRef numLiveVersions As Integer,
                             ByRef numLiveCategories As Integer, ByRef numCustomerGroup As Short)
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -337,7 +354,7 @@ Public Class ProductsBLL
         End Using
     End Sub
 
-    Public Shared Function _DeleteProduct(ByVal intProductID As Integer, ByRef strMsg As String) As Boolean
+    Public Function _DeleteProduct(ByVal intProductID As Integer, ByRef strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
             Dim cmdDeleteProduct As SqlCommand = sqlConn.CreateCommand
@@ -366,7 +383,7 @@ Public Class ProductsBLL
         Return False
     End Function
 
-    Public Shared Function _AddProduct(ByVal ptblElements As DataTable, ByVal pParentsList As String,
+    Public Function _AddProduct(ByVal ptblElements As DataTable, ByVal pParentsList As String,
                                     ByRef pProductID As Integer, ByVal pLive As Boolean, ByVal pFeatured As Byte,
                                     ByVal pOrderVersionsBy As String, ByVal pVersionsSortDirection As Char,
                                     ByVal pReviews As Char, ByVal pVersionDisplayType As Char, ByVal pSupplier As Integer,
@@ -422,7 +439,8 @@ Public Class ProductsBLL
                 ' and not cloning (clones we will run a separate procedure
                 ' to create the version[s])
                 If pProductType = "s" And Not blnIsClone Then
-                    If Not VersionsBLL._AddNewVersionAsSingle(
+                    Dim objVersionsBLL As New VersionsBLL
+                    If Not objVersionsBLL._AddNewVersionAsSingle(
                             _GetVersionElements(ptblElements), "SKU_" & CStr(pProductID), pProductID, pCustomerGroupID, sqlConn, savePoint, strMsg) Then
                         Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                     End If
@@ -447,7 +465,7 @@ Public Class ProductsBLL
 
     'Creates records such as version(s), related product links, attribute values
     'etc. that are linked to a product
-    Public Shared Function _CloneProductRecords(ByVal pProductID_OLD As Integer, ByVal pProductID_NEW As Integer) As Boolean
+    Public Function _CloneProductRecords(ByVal pProductID_OLD As Integer, ByVal pProductID_NEW As Integer) As Boolean
         Dim strMsg As String = ""
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -479,7 +497,7 @@ Public Class ProductsBLL
         Return False
     End Function
 
-    Private Shared Function _GetVersionElements(ByVal tblProductElements As DataTable) As DataTable
+    Private Function _GetVersionElements(ByVal tblProductElements As DataTable) As DataTable
         Dim tblVersionElements As New DataTable
         tblVersionElements.Columns.Add(New DataColumn("_LE_LanguageID"))
         tblVersionElements.Columns.Add(New DataColumn("_LE_FieldID"))
@@ -487,19 +505,19 @@ Public Class ProductsBLL
 
         For Each row As DataRow In tblProductElements.Rows
             Dim numType As Integer = CInt(FixNullFromDB(row("_LE_FieldID")))
-            If numType = LANG_ELEM_FIELD_NAME.Name OrElse _
+            If numType = LANG_ELEM_FIELD_NAME.Name OrElse
                 numType = LANG_ELEM_FIELD_NAME.Description Then
-                tblVersionElements.Rows.Add(row("_LE_LanguageID"), row("_LE_FieldID"), _
+                tblVersionElements.Rows.Add(row("_LE_LanguageID"), row("_LE_FieldID"),
                 IIf(numType = LANG_ELEM_FIELD_NAME.Name, row("_LE_Value"), ""))
             End If
         Next
         Return tblVersionElements
     End Function
 
-    Public Shared Function _UpdateProduct(ByVal ptblElements As DataTable, ByVal pParentsList As String, _
-                                    ByVal pProductID As Integer, ByVal pLive As Boolean, ByVal pFeatured As Byte, _
-                                    ByVal pOrderVersionsBy As String, ByVal pVersionsSortDirection As Char, ByVal pReviews As Char, _
-                                    ByVal pVersionDisplayType As Char, ByVal pSupplier As Integer, ByVal pProductType As Char, _
+    Public Function _UpdateProduct(ByVal ptblElements As DataTable, ByVal pParentsList As String,
+                                    ByVal pProductID As Integer, ByVal pLive As Boolean, ByVal pFeatured As Byte,
+                                    ByVal pOrderVersionsBy As String, ByVal pVersionsSortDirection As Char, ByVal pReviews As Char,
+                                    ByVal pVersionDisplayType As Char, ByVal pSupplier As Integer, ByVal pProductType As Char,
                                     ByVal pCustomerGroupID As Integer, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -524,10 +542,11 @@ Public Class ProductsBLL
 
                 '' Needed to update the products' version (product' type is single version only)
                 Dim numSingleVersionID As Long = 0
-                If pProductType = "s" Then numSingleVersionID = VersionsBLL._GetSingleVersionByProduct(pProductID).Rows(0)("V_ID")
+                Dim objVersionsBLL As New VersionsBLL
+                If pProductType = "s" Then numSingleVersionID = objVersionsBLL._GetSingleVersionByProduct(pProductID).Rows(0)("V_ID")
 
                 Dim NoOfVersions As Integer = 0
-                If pProductType = "o" OrElse pProductType = "s" Then NoOfVersions = VersionsBLL._GetNoOfVersionsByProductID(pProductID)
+                If pProductType = "o" OrElse pProductType = "s" Then NoOfVersions = objVersionsBLL._GetNoOfVersionsByProductID(pProductID)
 
                 sqlConn.Open()
                 savePoint = sqlConn.BeginTransaction()
@@ -537,8 +556,8 @@ Public Class ProductsBLL
                 cmd.ExecuteNonQuery()
 
                 '2. Update the Language Elements
-                If Not LanguageElementsBLL._UpdateLanguageElements( _
-                        ptblElements, LANG_ELEM_TABLE_TYPE.Products, _
+                If Not LanguageElementsBLL._UpdateLanguageElements(
+                        ptblElements, LANG_ELEM_TABLE_TYPE.Products,
                         pProductID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
@@ -550,13 +569,13 @@ Public Class ProductsBLL
 
                 '4. Check the product type
                 If pProductType = "o" AndAlso NoOfVersions = 1 Then
-                    If Not VersionsBLL._SetVersionAsBaseByProductID(pProductID, sqlConn, savePoint, strMsg) Then
+                    If Not objVersionsBLL._SetVersionAsBaseByProductID(pProductID, sqlConn, savePoint, strMsg) Then
                         Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                     End If
                 ElseIf pProductType = "s" AndAlso NoOfVersions = 1 Then
                     '' Update the versions' info, the versions will be readonly in the backend
-                    If Not LanguageElementsBLL._UpdateLanguageElements( _
-                        _GetVersionElements(ptblElements), LANG_ELEM_TABLE_TYPE.Versions, _
+                    If Not LanguageElementsBLL._UpdateLanguageElements(
+                        _GetVersionElements(ptblElements), LANG_ELEM_TABLE_TYPE.Versions,
                         numSingleVersionID, sqlConn, savePoint) Then
                         Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                     End If
@@ -578,7 +597,7 @@ Public Class ProductsBLL
         Return False
     End Function
 
-    Private Shared Function _UpdateProductCategories(ByVal pProductID As Integer, ByVal pNewParents As String, _
+    Private Function _UpdateProductCategories(ByVal pProductID As Integer, ByVal pNewParents As String,
                                              ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction, ByRef strMsg As String) As Boolean
 
         Try
@@ -599,7 +618,7 @@ Public Class ProductsBLL
         Return False
     End Function
 
-    Public Shared Function _UpdateRelatedProducts(ByVal intParentProduct As Integer, ByVal strChildList As String, ByRef strMsg As String) As Boolean
+    Public Function _UpdateRelatedProducts(ByVal intParentProduct As Integer, ByVal strChildList As String, ByRef strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
             Dim cmdDeleteRelatedProducts As SqlCommand = sqlConn.CreateCommand
@@ -641,7 +660,7 @@ Public Class ProductsBLL
         Return False
     End Function
 
-    Public Shared Function _DeleteRelatedProducts(ByVal intParentProduct As Integer, ByRef strMsg As String) As Boolean
+    Public Function _DeleteRelatedProducts(ByVal intParentProduct As Integer, ByRef strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
             Dim cmdDeleteRelatedProducts As SqlCommand = sqlConn.CreateCommand
@@ -671,16 +690,18 @@ Public Class ProductsBLL
         Return False
     End Function
 
-    Public Shared Sub _ChangeSortValue(ByVal numCategoryID As Integer, ByVal numProductID As Integer, ByVal chrDirection As Char)
+    Public Sub _ChangeSortValue(ByVal numCategoryID As Integer, ByVal numProductID As Integer, ByVal chrDirection As Char)
+        Dim ProductCategoryLinkAdptr As New ProductCategoryLinkTblAdptr()
         ProductCategoryLinkAdptr._ChangeSortValue(numProductID, numCategoryID, chrDirection)
     End Sub
 
-    Public Shared Function GetRichSnippetProperties(numProductID As Integer, numLanguageID As Byte) As DataTable
+    Public Function GetRichSnippetProperties(numProductID As Integer, numLanguageID As Byte) As DataTable
+        Dim Adptr As New ProductsTblAdptr
         Return Adptr.GetRichSnippetProperties(numProductID, numLanguageID)
     End Function
 
     'Set whether product live or not
-    Public Shared Function _HideShowAllByCategoryID(ByVal pCategoryID As Integer, ByVal pLive As Boolean) As Boolean
+    Public Function _HideShowAllByCategoryID(ByVal pCategoryID As Integer, ByVal pLive As Boolean) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -712,5 +733,43 @@ Public Class ProductsBLL
 
         End Using
         Return False
+    End Function
+
+    'v3.3000
+    'For performance, we now use the new tblKartrisProductSearchIndex table
+    'to store max/min prices for products, calculated for any versions,
+    'options and qty discounts they have. This saves us having to do that
+    'calculation in real time, since it will only change when versions, 
+    'options or qty discounts are updated. So we just trigger it then on
+    'that product. We also include this function, so you can manually 
+    'trigger a full rebuild for the site.
+    Public Shared Function _RebuildPriceIndex() As Boolean
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Using sqlConn As New SqlConnection(strConnString)
+            Dim cmd As SqlCommand = sqlConn.CreateCommand
+            cmd.CommandText = "_spKartrisProducts_RebuildPriceIndex"
+            Dim savePoint As SqlTransaction = Nothing
+            cmd.CommandType = CommandType.StoredProcedure
+
+            Try
+                sqlConn.Open()
+                savePoint = sqlConn.BeginTransaction()
+                cmd.Transaction = savePoint
+
+                cmd.ExecuteNonQuery()
+
+                savePoint.Commit()
+                sqlConn.Close()
+
+                Return True
+            Catch ex As Exception
+                ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
+                If Not savePoint Is Nothing Then savePoint.Rollback()
+                Return False
+            Finally
+                If sqlConn.State = ConnectionState.Open Then sqlConn.Close() : savePoint.Dispose()
+            End Try
+
+        End Using
     End Function
 End Class

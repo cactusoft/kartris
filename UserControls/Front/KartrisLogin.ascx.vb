@@ -90,7 +90,7 @@ Partial Class KartrisLogin
                 End If
 
                 If Not String.IsNullOrEmpty(Request.QueryString("m")) Then
-                    If Request.QueryString("m") = "u" Then litMessage.Text = "<li><div class=""updatemessage"">" & GetGlobalResourceObject("Login", "ContentText_PasswordUpdated") & "</div></li>"
+                    If Request.QueryString("m") = "u" Then litMessage.Text = "<li><div class=""updatemessage"" style=""position: relative; width: 100%; left: 0;"">" & GetGlobalResourceObject("Login", "ContentText_PasswordUpdated") & "</div></li>"
                     SelectExistingCustomerOption()
                 End If
 
@@ -127,7 +127,8 @@ Partial Class KartrisLogin
     ''' This should not return accounts tagged as 'IsGuest'
     ''' </remarks>
     Public Function CheckEmailExist(ByVal strEmailAddress As String) As Boolean
-        Dim tblUserDetails As System.Data.DataTable = UsersBLL.GetDetails(strEmailAddress)
+        Dim objUsersBLL As New UsersBLL
+        Dim tblUserDetails As System.Data.DataTable = objUsersBLL.GetDetails(strEmailAddress)
         If tblUserDetails.Rows.Count > 0 Then
             Return True
         Else
@@ -228,7 +229,8 @@ Partial Class KartrisLogin
                         'Let's look up customer ID so we can recover
                         'AUTOSAVE basket for this user
                         'Try
-                        Dim dtbUser As DataTable = UsersBLL.GetDetails(strEmail)
+                        Dim objUsersBLL As New UsersBLL
+                        Dim dtbUser As DataTable = objUsersBLL.GetDetails(strEmail)
                         Dim numCustomerID As Integer = dtbUser.Rows(0).Item("U_ID").ToString()
 
 
@@ -330,7 +332,8 @@ Partial Class KartrisLogin
             Session("blnLoginCleared") = True
             litFailureText.Text = ""
             If ForSection = "myaccount" Or ForSection = "support" Then
-                Dim intUserID As Integer = UsersBLL.Add(strEmail, strPassword, blnIsGuest)
+                Dim objUsersBLL As New UsersBLL
+                Dim intUserID As Integer = objUsersBLL.Add(strEmail, strPassword, blnIsGuest)
                 If intUserID > 0 And Membership.ValidateUser(strEmail, strPassword) Then
                     If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" And Not blnIsGuest Then
                         'Build up email text
@@ -396,7 +399,8 @@ Partial Class KartrisLogin
         Page.Validate("RecoverPassword")
         Dim strEmailAddress As String = DirectCast(PasswordRecover.UserNameTemplateContainer.FindControl("UserName"), TextBox).Text
         If Page.IsValid Then
-            Dim dtUserDetails As DataTable = UsersBLL.GetDetails(strEmailAddress)
+            Dim objUsersBLL As New UsersBLL
+            Dim dtUserDetails As DataTable = objUsersBLL.GetDetails(strEmailAddress)
             If dtUserDetails.Rows.Count > 0 Then
                 Dim intUserID As Integer = dtUserDetails(0)("U_ID")
                 Dim strTempPassword As String = FixNullFromDB(dtUserDetails(0)("U_TempPassword"))
@@ -406,11 +410,11 @@ Partial Class KartrisLogin
 
                 If dateExpiry < CkartrisDisplayFunctions.NowOffset Or String.IsNullOrEmpty(strTempPassword) Then
                     Dim strRandomPassword As String = Membership.GeneratePassword(12, 0)
-                    Dim strOldSalt As String = UsersBLL.GetSaltByEmail(strEmailAddress)
-                    Dim intSuccess As Integer = UsersBLL.ResetPassword(intUserID, strRandomPassword)
+                    Dim strOldSalt As String = objUsersBLL.GetSaltByEmail(strEmailAddress)
+                    Dim intSuccess As Integer = objUsersBLL.ResetPassword(intUserID, strRandomPassword)
                     If intSuccess = intUserID Then
                         litRecoveryMessage.Text = GetLocalResourceObject("ContentText_CustomerNumberEmailSent") & " " & strEmailAddress
-                        Dim strPasswordResetLink As String = CkartrisBLL.WebShopURL & "CustomerDetails.aspx?ref=" & HttpUtility.UrlEncode(UsersBLL.EncryptSHA256Managed(UsersBLL.EncryptSHA256Managed(strRandomPassword, strOldSalt), strOldSalt))
+                        Dim strPasswordResetLink As String = CkartrisBLL.WebShopURL & "PasswordReset.aspx?ref=" & HttpUtility.UrlEncode(objUsersBLL.EncryptSHA256Managed(objUsersBLL.EncryptSHA256Managed(strRandomPassword, strOldSalt), strOldSalt))
 
                         Dim strBodyText As String = GetGlobalResourceObject("Email", "EmailText_CustomerNumberDesc") & " " &
                             GetGlobalResourceObject("Kartris", "Config_Webshopname") & vbCrLf & vbCrLf

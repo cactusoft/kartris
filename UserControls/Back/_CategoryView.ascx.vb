@@ -37,6 +37,7 @@ Partial Class _CategoryView
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
         lnkPreview.NavigateUrl = "~/Category.aspx?CategoryID=" & _GetCategoryID()
+        Dim objCategoriesBLL As New CategoriesBLL
 
         If Not Page.IsPostBack Then
             If _GetSiteID() <> 0 Then
@@ -55,13 +56,12 @@ Partial Class _CategoryView
 
 
                 If _GetCategoryID() <> 0 Then
-                    If CategoriesBLL._GetByID(_GetCategoryID()).Rows.Count = 0 Then RedirectToMainCategory()
-                    'litCatName.Text = CategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG"))
+                    If objCategoriesBLL._GetByID(_GetCategoryID()).Rows.Count = 0 Then RedirectToMainCategory()
                     LoadProducts() '' Only if its not the main category will show the products
                 End If
             ElseIf _GetCategoryID() <> 0 Then
-                If CategoriesBLL._GetByID(_GetCategoryID()).Rows.Count = 0 Then RedirectToMainCategory()
-                litCatName.Text = CategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG"))
+                If objCategoriesBLL._GetByID(_GetCategoryID()).Rows.Count = 0 Then RedirectToMainCategory()
+                litCatName.Text = objCategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG"))
                 LoadProducts() '' Only if its not the main category will show the products
             Else
                 phdBreadCrumbTrail.Visible = False
@@ -172,9 +172,10 @@ Partial Class _CategoryView
 
 
         Dim tblCategories As New DataTable
+        Dim objCategoriesBLL As New CategoriesBLL
 
         If c_ShowPages Then
-            tblCategories = CategoriesBLL._GetCategoriesPageByParentID(_GetCategoryID(), Session("_LANG"), numPageIndx,
+            tblCategories = objCategoriesBLL._GetCategoriesPageByParentID(_GetCategoryID(), Session("_LANG"), numPageIndx,
                                             numCategoryPageSize, numTotalNumberOfCategories)
             If tblCategories.Rows.Count <> 0 Then
                 If numTotalNumberOfCategories > numCategoryPageSize Then
@@ -190,7 +191,7 @@ Partial Class _CategoryView
                 phdNoSubCategories.Visible = True
             End If
         Else
-            tblCategories = CategoriesBLL._GetCategoriesPageByParentID(_GetCategoryID(), Session("_LANG"), 0,
+            tblCategories = objCategoriesBLL._GetCategoriesPageByParentID(_GetCategoryID(), Session("_LANG"), 0,
                                             500, 500)
             If tblCategories.Rows.Count <> 0 Then
                 dtlSubCategories.DataSource = tblCategories
@@ -236,10 +237,10 @@ Partial Class _CategoryView
             numPageIndx = 0
         End Try
 
-
         Dim tblProducts As New DataTable
+        Dim objProductsBLL As New ProductsBLL
         If c_ShowPages Then
-            tblProducts = ProductsBLL._GetProductsPageByCategory(_GetCategoryID(), Session("_LANG"), numPageIndx,
+            tblProducts = objProductsBLL._GetProductsPageByCategory(_GetCategoryID(), Session("_LANG"), numPageIndx,
                                                                 numProductPageSize, numTotalNumberOfProducts)
             If tblProducts.Rows.Count <> 0 Then
                 If numTotalNumberOfProducts > numProductPageSize Then
@@ -255,7 +256,7 @@ Partial Class _CategoryView
                 _UC_ItemPager_PROD_Header.Visible = False
             End If
         Else
-            tblProducts = ProductsBLL._GetProductsPageByCategory(_GetCategoryID(), Session("_LANG"), 0, 1000, 1000)
+            tblProducts = objProductsBLL._GetProductsPageByCategory(_GetCategoryID(), Session("_LANG"), 0, 1000, 1000)
             If tblProducts.Rows.Count <> 0 Then
                 phdNoProducts.Visible = False
             End If
@@ -298,10 +299,10 @@ Partial Class _CategoryView
             numPageIndx = 0
         End Try
 
-
+        Dim objProductsBLL As New ProductsBLL
         Dim tblProducts As New DataTable
         If c_ShowPages Then
-            tblProducts = ProductsBLL._GetProductsPageByCategory(_GetCategoryID(), Session("_LANG"), numPageIndx,
+            tblProducts = objProductsBLL._GetProductsPageByCategory(_GetCategoryID(), Session("_LANG"), numPageIndx,
                                                                 numProductPageSize, numTotalNumberOfProducts)
             If tblProducts.Rows.Count <> 0 Then
                 If numTotalNumberOfProducts > numProductPageSize Then
@@ -315,7 +316,7 @@ Partial Class _CategoryView
                 _UC_ItemPager_PROD_Header.Visible = False
             End If
         Else
-            tblProducts = ProductsBLL._GetProductsPageByCategory(_GetCategoryID(), Session("_LANG"), 0, 1000, 1000)
+            tblProducts = objProductsBLL._GetProductsPageByCategory(_GetCategoryID(), Session("_LANG"), 0, 1000, 1000)
             If tblProducts.Rows.Count <> 0 Then
                 phdNoProducts2.Visible = False
             End If
@@ -337,7 +338,8 @@ Partial Class _CategoryView
 
         Dim numProductID As Integer = CType(e.Item.FindControl("litProductID"), Literal).Text
         Dim tblVersions As New DataTable
-        tblVersions = VersionsBLL._GetByProduct(numProductID, Session("_LANG"))
+        Dim objVersionsBLL As New VersionsBLL
+        tblVersions = objVersionsBLL._GetByProduct(numProductID, Session("_LANG"))
         Dim dtcShowClone As DataColumn = New DataColumn("ShowClone", Type.GetType("System.Boolean"))
         dtcShowClone.DefaultValue = True
         tblVersions.Columns.Add(dtcShowClone)
@@ -378,6 +380,7 @@ Partial Class _CategoryView
     'Clicks on product level elements within the datalist
     Protected Sub dtlProducts_ItemCommand(ByVal source As Object, ByVal e As System.Web.UI.WebControls.DataListCommandEventArgs) Handles dtlProducts.ItemCommand
         Dim strTab As String = ""
+        Dim objProductsBLL As New ProductsBLL
         Select Case e.CommandName
             Case "select"
                 dtlProducts.SelectedIndex = e.Item.ItemIndex
@@ -392,14 +395,14 @@ Partial Class _CategoryView
             Case "MoveUp"
                 '' Will use try to avoid error in case of null values or 0 values
                 Try
-                    ProductsBLL._ChangeSortValue(_GetCategoryID(), e.CommandArgument, "u")
+                    objProductsBLL._ChangeSortValue(_GetCategoryID(), e.CommandArgument, "u")
                     LoadProducts()
                 Catch ex As Exception
                 End Try
             Case "MoveDown"
                 '' Will use try to avoid error in case of null values or 0 values
                 Try
-                    ProductsBLL._ChangeSortValue(_GetCategoryID(), e.CommandArgument, "d")
+                    objProductsBLL._ChangeSortValue(_GetCategoryID(), e.CommandArgument, "d")
                     LoadProducts()
                 Catch ex As Exception
                 End Try
@@ -424,7 +427,7 @@ Partial Class _CategoryView
 
     'Each product being bound to datalist
     Protected Sub dtlProducts_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.DataListItemEventArgs) Handles dtlProducts.ItemDataBound
-
+        Dim objVersionsBLL As New VersionsBLL
         Dim chrProductType As Char = ""
         Try
             chrProductType = CChar(CType(e.Item.FindControl("litProductType"), Literal).Text)
@@ -434,7 +437,7 @@ Partial Class _CategoryView
         If e.Item.ItemIndex = dtlProducts.SelectedIndex Then
             Dim numProductID As Integer = CType(e.Item.FindControl("litProductID"), Literal).Text
             Dim tblVersions As New DataTable
-            tblVersions = VersionsBLL._GetByProduct(numProductID, Session("_LANG"))
+            tblVersions = objVersionsBLL._GetByProduct(numProductID, Session("_LANG"))
             Dim dtcShowClone As DataColumn = New DataColumn("ShowClone", Type.GetType("System.Boolean"))
             dtcShowClone.DefaultValue = True
             tblVersions.Columns.Add(dtcShowClone)
@@ -477,7 +480,8 @@ Partial Class _CategoryView
             Case "MoveUp"
                 '' Will use try to avoid error in case of null values or 0 values
                 Try
-                    CategoriesBLL._ChangeSortValue(_GetCategoryID(), e.CommandArgument, "u")
+                    Dim objCategoriesBLL As New CategoriesBLL
+                    objCategoriesBLL._ChangeSortValue(_GetCategoryID(), e.CommandArgument, "u")
                     LoadSubCategories()
                     RefreshSiteMap()
                     updSubCategories.Update()
@@ -486,7 +490,8 @@ Partial Class _CategoryView
             Case "MoveDown"
                 '' Will use try to avoid error in case of null values or 0 values
                 Try
-                    CategoriesBLL._ChangeSortValue(_GetCategoryID(), e.CommandArgument, "d")
+                    Dim objCategoriesBLL As New CategoriesBLL
+                    objCategoriesBLL._ChangeSortValue(_GetCategoryID(), e.CommandArgument, "d")
                     LoadSubCategories()
                     RefreshSiteMap()
                     updSubCategories.Update()
@@ -559,7 +564,8 @@ Partial Class _CategoryView
         Dim tblLanguageContents As New DataTable()
         tblLanguageContents = _UC_LangContainer.ReadContent()
         Dim strMessage As String = ""
-        If Not CategoriesBLL._UpdateCategory(tblLanguageContents, "", 0, Nothing, Nothing, _
+        Dim objCategoriesBLL As New CategoriesBLL
+        If Not objCategoriesBLL._UpdateCategory(tblLanguageContents, "", 0, Nothing, Nothing,
                                     Nothing, Nothing, Nothing, Nothing, Nothing, Nothing, strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
             Return
@@ -580,7 +586,8 @@ Partial Class _CategoryView
 
     'Turn all products in a category ON (live=true)
     Protected Sub lnkTurnProductsOn_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkTurnProductsOn.Click
-        If ProductsBLL._HideShowAllByCategoryID(_GetCategoryID(), True) Then
+        Dim objProductsBLL As New ProductsBLL
+        If objProductsBLL._HideShowAllByCategoryID(_GetCategoryID(), True) Then
             RaiseEvent ShowMasterUpdate()
             LoadProducts()
         End If
@@ -588,7 +595,8 @@ Partial Class _CategoryView
 
     'Turn all products in a category OFF (live=false)
     Protected Sub lnkTurnProductsOff_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkTurnProductsOff.Click
-        If ProductsBLL._HideShowAllByCategoryID(_GetCategoryID(), False) Then
+        Dim objProductsBLL As New ProductsBLL
+        If objProductsBLL._HideShowAllByCategoryID(_GetCategoryID(), False) Then
             RaiseEvent ShowMasterUpdate()
             LoadProducts()
         End If

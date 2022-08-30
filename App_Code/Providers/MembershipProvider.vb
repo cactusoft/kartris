@@ -189,8 +189,9 @@ Public Class KartrisMembershipProvider
         'status = MembershipCreateStatus.InvalidEmail
 
         '---add the user to the database
+        Dim objUsersBLL As New UsersBLL
         Try
-            Dim U_ID As Integer = UsersBLL.Add(username, password)
+            Dim U_ID As Integer = objUsersBLL.Add(username, password)
             If U_ID > 0 Then
                 KartrisUser = New KartrisMemberShipUser(U_ID, username, 0, 0, 0, 0, 1, True)
                 status = MembershipCreateStatus.Success
@@ -244,8 +245,9 @@ Public Class KartrisMembershipProvider
 
     Public Overloads Overrides Function GetUser(ByVal username As String, ByVal userIsOnline As Boolean) As System.Web.Security.MembershipUser
         Dim User As KartrisMemberShipUser
+        Dim objUsersBLL As New UsersBLL
 
-        Dim UserDetails As DataTable = UsersBLL.GetDetails(username)
+        Dim UserDetails As DataTable = objUsersBLL.GetDetails(username)
         If UserDetails.Rows.Count > 0 Then
             Dim blnSupportValid As Boolean = False
 
@@ -346,7 +348,8 @@ Public Class KartrisMembershipProvider
 
     Public Overrides Function ValidateUser(ByVal username As String, ByVal password As String) As Boolean
         Try
-            Dim U_ID As Integer = UsersBLL.ValidateUser(username, password)
+            Dim objUsersBLL As New UsersBLL
+            Dim U_ID As Integer = objUsersBLL.ValidateUser(username, password)
             If U_ID > 0 Then
                 'Dim UserDetails As DataTable = UsersBLL.GetDetails(username)
                 'KartrisUser = New KartrisMemberShipUser(U_ID, username, UserDetails.Rows(0)("U_CustomerGroupID"), UserDetails.Rows(0)("U_CustomerDiscount"), UserDetails.Rows(0)("U_DefBillingAddressID"), _

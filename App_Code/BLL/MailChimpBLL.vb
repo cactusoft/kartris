@@ -178,7 +178,8 @@ Public Class MailChimpBLL
     Public Async Function AddCustomer() As Task(Of Customer)
         Try
             Dim userFullName As String = ""
-            userFullName = UsersBLL.GetNameandEUVAT(currentLoggedUser.ID).Split("|||")(0)
+            Dim objUsersBLL As New UsersBLL
+            userFullName = objUsersBLL.GetNameandEUVAT(currentLoggedUser.ID).Split("|||")(0)
             Dim userNamesArray() As String = userFullName.Split(" ")
             'Use the Status property if updating an existing member
             Dim customer As Customer = New Customer With {.Id = currentLoggedUser.ID,
@@ -514,6 +515,7 @@ Public Class MailChimpBLL
             End Try
 
         End Try
+        Return Nothing
     End Function
 
 
@@ -639,6 +641,7 @@ Public Class MailChimpBLL
             End Try
 
         End Try
+        Return Nothing
     End Function
 
     ''' <summary>
@@ -667,6 +670,7 @@ Public Class MailChimpBLL
             End Try
 
         End Try
+        Return Nothing
     End Function
 
     ''' <summary>
@@ -691,6 +695,7 @@ Public Class MailChimpBLL
             End Try
 
         End Try
+        Return Nothing
     End Function
 
 End Class

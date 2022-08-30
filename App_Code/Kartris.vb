@@ -33,8 +33,8 @@ Imports MimeKit 'new in v3, mail now uses MailKit (nuget)
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 3.1001
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #02/15/2021# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION As Decimal = 3.3
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #06/08/2022# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1
@@ -1027,23 +1027,23 @@ Public NotInheritable Class CkartrisDataManipulation
                     If Not String.IsNullOrEmpty(strFromName) Then
                         objEmailFrom = New MailboxAddress(strFromName, strFrom)
                     Else
-                        objEmailFrom = New MailboxAddress(strFrom)
+                        objEmailFrom = MailboxAddress.Parse(strFrom)
                     End If
-                    Dim objEmailTo As MailboxAddress = New MailboxAddress(strTo)
+                    Dim objEmailTo As MailboxAddress = MailboxAddress.Parse(strTo)
                     Dim objMailMessage As New MimeMessage()
                     objMailMessage.From.Add(objEmailFrom)
                     objMailMessage.To.Add(objEmailTo)
                     If Not String.IsNullOrEmpty(strReplyTo) Then
-                        objMailMessage.ReplyTo.Add(New MailboxAddress(strReplyTo))
+                        objMailMessage.ReplyTo.Add(MailboxAddress.Parse(strReplyTo))
                     End If
                     If objAdditionalToAddresses IsNot Nothing Then
                         For Each objItem As MailAddress In objAdditionalToAddresses
-                            objMailMessage.To.Add(New MailboxAddress(objItem.Address))
+                            objMailMessage.To.Add(MailboxAddress.Parse(objItem.Address))
                         Next
                     End If
                     If objBCCAddress IsNot Nothing Then
                         For Each objItem As MailAddress In objBCCAddress
-                            objMailMessage.Bcc.Add(New MailboxAddress(objItem.Address))
+                            objMailMessage.Bcc.Add(MailboxAddress.Parse(objItem.Address))
                         Next
                     End If
                     objMailMessage.Subject = strSubject
@@ -1836,12 +1836,13 @@ Public NotInheritable Class CkartrisBLL
         If GetKartConfig("general.pushnotifications.enabled") = "y" Then
             Try
                 Dim DataValue As Long = 0
+                Dim objOrdersBLL As New OrdersBLL
                 If DataType.ToLower = "s" Then
                     Dim numUnassignedTickets As Integer, numAwaitingTickets As Integer
                     TicketsBLL._TicketsCounterSummary(numUnassignedTickets, numAwaitingTickets, 0)
                     DataValue = numUnassignedTickets
                 ElseIf DataType.ToLower = "o" Then
-                    DataValue = OrdersBLL._GetByStatusCount(OrdersBLL.ORDERS_LIST_CALLMODE.INVOICE)
+                    DataValue = objOrdersBLL._GetByStatusCount(OrdersBLL.ORDERS_LIST_CALLMODE.INVOICE)
                 End If
 
                 Dim svcNotifications As New com.kartris.livetile.Service1
@@ -1896,7 +1897,8 @@ Public NotInheritable Class CkartrisCombinations
     Public Shared Function IsCombinationsProduct(ByVal numProductID As Double) As Boolean
         'Need to see if there are combinations, if not, this is a normal options product
         Dim tblCurrentCombinations As New DataTable
-        tblCurrentCombinations = VersionsBLL._GetCombinationsByProductID(numProductID)
+        Dim objVersionsBLL As New VersionsBLL
+        tblCurrentCombinations = objVersionsBLL._GetCombinationsByProductID(numProductID)
 
         If tblCurrentCombinations.Rows.Count = 0 Then
             'No combinations, not a combinations product
@@ -2455,7 +2457,8 @@ Public NotInheritable Class CKartrisCSVExporter
         If value IsNot Nothing AndAlso Not String.IsNullOrEmpty(value) Then
             Select Case colType.FullName
                 Case "System.Int16", "System.Int32", "System.Int64",
-                 "System.Double", "System.Byte", "System.Single", "System.Boolean"
+                 "System.Double", "System.Byte", "System.Single", "System.Boolean",
+                     "System.Decimal"
                     stbData.Append(value.Replace(FieldDelimiter, "/"))
                 Case "System.String"
                     value = Replace(Replace(value, Chr(10), " "), Chr(13), " ")

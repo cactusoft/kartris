@@ -6,6 +6,10 @@
 <asp:HiddenField ID="hidAddressToDeleteID" runat="server" Value="" />
 <asp:HiddenField ID="hidUserID" runat="server" Value="" />
 <_user:PopupMessage runat="server" ID="_UC_PopupMsg" />
+
+<asp:LinkButton ID="lnkAddBilling" CssClass="linkbutton icon_new" runat="server" CausesValidation="false"
+                                                Text='<%$ Resources: _Kartris, ContentText_AddNew %>' />
+
 <asp:Repeater ID="rptrUserAddresses" runat="server">
     <ItemTemplate>
         </br>

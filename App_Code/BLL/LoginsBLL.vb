@@ -46,11 +46,12 @@ Public Class LoginsBLL
             'KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins,
             ' "Login", "username: " & UserName & " ---  password(hashed): " & Password, UserName)
         Else
+            Dim objUsersBLL As New UsersBLL
             Dim strUserSalt As String = _GetSaltByUserName(UserName)
-            Dim blnUserValidated As Boolean = Adptr._Validate(UserName, UsersBLL.EncryptSHA256Managed(Password, strUserSalt, True))
+            Dim blnUserValidated As Boolean = Adptr._Validate(UserName, objUsersBLL.EncryptSHA256Managed(Password, strUserSalt, True))
 
             KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.Logins,
-             "Login", "username: " & UserName & " ---  password(hashed): " & UsersBLL.EncryptSHA256Managed(Password, strUserSalt, True), UserName)
+             "Login", "username: " & UserName & " ---  password(hashed): " & objUsersBLL.EncryptSHA256Managed(Password, strUserSalt, True), UserName)
 
             'LogError("Login info: " & "username: " & UserName & " ---  password(hashed): " & UsersBLL.EncryptSHA256Managed(Password, strUserSalt, True))
 
@@ -72,7 +73,7 @@ Public Class LoginsBLL
                         Dim LOGIN_ID As Integer = LoginsBLL._GetIDbyName(UserName)
                         With cmdUpdateLogin
                             .Parameters.AddWithValue("@LOGIN_ID", LOGIN_ID)
-                            .Parameters.AddWithValue("@LOGIN_Password", UsersBLL.EncryptSHA256Managed(Password, strRandomSalt, True))
+                            .Parameters.AddWithValue("@LOGIN_Password", objUsersBLL.EncryptSHA256Managed(Password, strRandomSalt, True))
                             .Parameters.AddWithValue("@LOGIN_SaltValue", strRandomSalt)
                             sqlConn.Open()
                             savePoint = sqlConn.BeginTransaction()
@@ -178,7 +179,7 @@ Public Class LoginsBLL
     Public Shared Sub Update(ByVal LOGIN_ID As Integer, ByVal LOGIN_UserName As String, ByVal LOGIN_Password As String, ByVal LOGIN_Live As Boolean,
                                   ByVal LOGIN_Orders As Boolean, ByVal LOGIN_Products As Boolean, ByVal LOGIN_Config As Boolean, ByVal LOGIN_Protected As Boolean,
                                   ByVal LOGIN_LanguageID As Integer, ByVal LOGIN_EmailAddress As String, ByVal LOGIN_Tickets As Boolean, ByVal LOGIN_Pushnotifications As String)
-
+        Dim objUsersBLL As New UsersBLL
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Dim strRandomSalt As String = Membership.GeneratePassword(20, 0)
         Using sqlConn As New SqlClient.SqlConnection(strConnString)
@@ -194,7 +195,7 @@ Public Class LoginsBLL
                 With cmdUpdateLogin
                     .Parameters.AddWithValue("@LOGIN_ID", LOGIN_ID)
                     .Parameters.AddWithValue("@LOGIN_Username", LOGIN_UserName)
-                    .Parameters.AddWithValue("@LOGIN_Password", IIf(String.IsNullOrEmpty(LOGIN_Password), "", UsersBLL.EncryptSHA256Managed(LOGIN_Password, strRandomSalt, True)))
+                    .Parameters.AddWithValue("@LOGIN_Password", IIf(String.IsNullOrEmpty(LOGIN_Password), "", objUsersBLL.EncryptSHA256Managed(LOGIN_Password, strRandomSalt, True)))
                     .Parameters.AddWithValue("@LOGIN_Live", LOGIN_Live)
                     .Parameters.AddWithValue("@LOGIN_Orders", LOGIN_Orders)
                     .Parameters.AddWithValue("@LOGIN_Products", LOGIN_Products)
@@ -248,7 +249,7 @@ Public Class LoginsBLL
     Public Shared Sub Add(ByVal LOGIN_UserName As String, ByVal LOGIN_Password As String, ByVal LOGIN_Live As Boolean,
                                   ByVal LOGIN_Orders As Boolean, ByVal LOGIN_Products As Boolean, ByVal LOGIN_Config As Boolean, ByVal LOGIN_Protected As Boolean,
                                   ByVal LOGIN_LanguageID As Integer, ByVal LOGIN_EmailAddress As String, ByVal LOGIN_Tickets As Boolean, ByVal LOGIN_Pushnotifications As String)
-
+        Dim objUsersBLL As New UsersBLL
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Dim strRandomSalt As String = Membership.GeneratePassword(20, 0)
         Using sqlConn As New SqlClient.SqlConnection(strConnString)
@@ -263,7 +264,7 @@ Public Class LoginsBLL
                 Dim ReturnedID As Integer
                 With cmdAddLogin
                     .Parameters.AddWithValue("@LOGIN_Username", LOGIN_UserName)
-                    .Parameters.AddWithValue("@LOGIN_Password", UsersBLL.EncryptSHA256Managed(LOGIN_Password, strRandomSalt, True))
+                    .Parameters.AddWithValue("@LOGIN_Password", objUsersBLL.EncryptSHA256Managed(LOGIN_Password, strRandomSalt, True))
                     .Parameters.AddWithValue("@LOGIN_Live", LOGIN_Live)
                     .Parameters.AddWithValue("@LOGIN_Orders", LOGIN_Orders)
                     .Parameters.AddWithValue("@LOGIN_Products", LOGIN_Products)

@@ -178,16 +178,18 @@ Partial Class UserControls_Back_PromotionStringBuilder
                 AndAlso strAutoCompleteText.Contains(")") Then
             Try
                 Dim numItemID As Integer = CInt(Mid(strAutoCompleteText, strAutoCompleteText.LastIndexOf("(") + 2, strAutoCompleteText.LastIndexOf(")") - strAutoCompleteText.LastIndexOf("(") - 1))
-
+                Dim objCategoriesBLL As New CategoriesBLL
+                Dim objProductsBLL As New ProductsBLL
+                Dim objVersionsBLL As New VersionsBLL
                 Dim strItemName As String = ""
 
                 Select Case strMethodName
                     Case "GetCategories"
-                        strItemName = CategoriesBLL._GetNameByCategoryID(numItemID, Session("_LANG"))
+                        strItemName = objCategoriesBLL._GetNameByCategoryID(numItemID, Session("_LANG"))
                     Case "GetProducts"
-                        strItemName = ProductsBLL._GetNameByProductID(numItemID, Session("_LANG"))
+                        strItemName = objProductsBLL._GetNameByProductID(numItemID, Session("_LANG"))
                     Case "GetVersions"
-                        strItemName = VersionsBLL._GetNameByVersionID(numItemID, Session("_LANG"))
+                        strItemName = objVersionsBLL._GetNameByVersionID(numItemID, Session("_LANG"))
                 End Select
                 If strItemName Is Nothing Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_InvalidValue"))
@@ -413,6 +415,9 @@ Partial Class UserControls_Back_PromotionStringBuilder
         lbxStringItem.Items.Clear()
         lbxStringValue.Items.Clear()
 
+        Dim objCategoriesBLL As New CategoriesBLL
+        Dim objProductsBLL As New ProductsBLL
+        Dim objVersionsBLL As New VersionsBLL
 
         For Each rowParts As DataRow In tblPromotionParts.Rows
             Dim strText As String = rowParts("PS_Text")
@@ -426,17 +431,17 @@ Partial Class UserControls_Back_PromotionStringBuilder
             End If
 
             If strText.Contains("[C]") AndAlso strItemID <> "" Then
-                strItemName = CategoriesBLL._GetNameByCategoryID(CInt(strItemID), Session("_LANG"))
+                strItemName = objCategoriesBLL._GetNameByCategoryID(CInt(strItemID), Session("_LANG"))
                 strText = strText.Replace("[C]", strItemName)
             End If
 
             If strText.Contains("[P]") AndAlso strItemID <> "" Then
-                strItemName = ProductsBLL._GetNameByProductID(CInt(strItemID), Session("_LANG"))
+                strItemName = objProductsBLL._GetNameByProductID(CInt(strItemID), Session("_LANG"))
                 strText = strText.Replace("[P]", strItemName)
             End If
 
             If strText.Contains("[V]") AndAlso strItemID <> "" Then
-                strItemName = VersionsBLL._GetNameByVersionID(CInt(strItemID), Session("_LANG"))
+                strItemName = objVersionsBLL._GetNameByVersionID(CInt(strItemID), Session("_LANG"))
                 strText = strText.Replace("[V]", strItemName)
             End If
 

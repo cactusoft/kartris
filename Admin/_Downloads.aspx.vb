@@ -55,7 +55,8 @@ Partial Class Admin_Downloads
 
     Sub LoadDownloads()
         mvwDownloads.SetActiveView(viwDownloadData)
-        Dim tblDownloads As DataTable = VersionsBLL._GetDownloadableFiles(Session("_LANG"))
+        Dim objVersionsBLL As New VersionsBLL
+        Dim tblDownloads As DataTable = objVersionsBLL._GetDownloadableFiles(Session("_LANG"))
         If tblDownloads.Rows.Count = 0 Then mvwDownloads.SetActiveView(viwNoDownloads)
         gvwDownloads.DataSource = tblDownloads
         gvwDownloads.DataBind()
@@ -65,7 +66,8 @@ Partial Class Admin_Downloads
 
     Sub LoadLinks()
         mvwLinks.SetActiveView(viwLinksData)
-        Dim tblLinks As DataTable = VersionsBLL._GetDownloadableLinks(Session("_LANG"))
+        Dim objVersionsBLL As New VersionsBLL
+        Dim tblLinks As DataTable = objVersionsBLL._GetDownloadableLinks(Session("_LANG"))
         If tblLinks.Rows.Count = 0 Then mvwLinks.SetActiveView(viwNoLinks)
         gvwLinks.DataSource = tblLinks
         gvwLinks.DataBind()
@@ -203,7 +205,8 @@ Partial Class Admin_Downloads
             Dim strSavedPath As String = strTempFolder & strFileName
             _UC_UploaderPopup.SaveFile(Server.MapPath(strSavedPath))
             Dim strMessage As String = String.Empty
-            If Not VersionsBLL._UpdateVersionDownloadInfo(lngVersionNumber, strFileName, "u", strMessage) Then
+            Dim objVersionsBLL As New VersionsBLL
+            If Not objVersionsBLL._UpdateVersionDownloadInfo(lngVersionNumber, strFileName, "u", strMessage) Then
                 _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                 File.SetAttributes(Server.MapPath(GetKartConfig("general.uploadfolder") & "temp/" & strFileName), FileAttributes.Normal)
                 File.Delete(Server.MapPath(GetKartConfig("general.uploadfolder") & "temp/" & strFileName))
@@ -216,6 +219,7 @@ Partial Class Admin_Downloads
 
     Protected Sub lnkSave_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         lnkSave.ValidationGroup = ""
+        Dim objVersionsBLL As New VersionsBLL
         If litType.Text = "u" Then
             Dim strUploadFolder As String = GetKartConfig("general.uploadfolder")
             If File.Exists(Current.Server.MapPath(strUploadFolder & litPopupFileName.Text)) Then
@@ -223,7 +227,8 @@ Partial Class Admin_Downloads
                           Current.Server.MapPath(strUploadFolder & "temp/" & txtPopupFileName.Text))
                 Dim lngVersionNumber As Long = CLng(gvwDownloads.SelectedValue)
                 Dim strMessage As String = String.Empty
-                If Not VersionsBLL._UpdateVersionDownloadInfo(lngVersionNumber, txtPopupFileName.Text, "u", strMessage) Then
+
+                If Not objVersionsBLL._UpdateVersionDownloadInfo(lngVersionNumber, txtPopupFileName.Text, "u", strMessage) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     File.SetAttributes(Server.MapPath(GetKartConfig("general.uploadfolder") & "temp/" & txtPopupFileName.Text), FileAttributes.Normal)
                     File.Delete(Server.MapPath(GetKartConfig("general.uploadfolder") & "temp/" & txtPopupFileName.Text))
@@ -237,7 +242,7 @@ Partial Class Admin_Downloads
         Else
             Dim lngVersionNumber As Long = CLng(gvwLinks.SelectedValue)
             Dim strMessage As String = String.Empty
-            If Not VersionsBLL._UpdateVersionDownloadInfo(lngVersionNumber, Replace(txtPopupLinkLocation.Text, "http://", ""), "l", strMessage) Then
+            If Not objVersionsBLL._UpdateVersionDownloadInfo(lngVersionNumber, Replace(txtPopupLinkLocation.Text, "http://", ""), "l", strMessage) Then
                 _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                 Return
             End If
@@ -280,7 +285,8 @@ Partial Class Admin_Downloads
     End Sub
 
     Sub DeleteNonRelatedFiles()
-        Dim tblDownloads As DataTable = VersionsBLL._GetDownloadableFiles(Session("_lang"))
+        Dim objVersionsBLL As New VersionsBLL
+        Dim tblDownloads As DataTable = objVersionsBLL._GetDownloadableFiles(Session("_lang"))
         Dim _dirInfo As New DirectoryInfo(Server.MapPath(GetKartConfig("general.uploadfolder")))
         For Each _file As FileInfo In _dirInfo.GetFiles
             Dim drFiles As DataRow() = tblDownloads.Select("V_DownloadInfo='" & _file.Name & "'")

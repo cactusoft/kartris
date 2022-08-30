@@ -7,7 +7,7 @@
         runat="server" />
 </div>
 <div>
-        
+
     <asp:GridView CssClass="kartristable" ID="gvwCustomers" runat="server" AutoGenerateColumns="False"
         DataKeyNames="U_ID" GridLines="None" EnableViewState="false">
         <Columns>

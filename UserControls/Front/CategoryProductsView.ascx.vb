@@ -159,7 +159,8 @@ Partial Class CategoryProductsView
         End If
 
         '' Saving the current page's products in tblProducts, depending on the pageIndex "PPGR"
-        pTblProducts = ProductsBLL.GetProductsPageByCategory(Request, _CategoryID, _LanguageID, numPageIndx, _
+        Dim objProductsBLL As New ProductsBLL
+        pTblProducts = objProductsBLL.GetProductsPageByCategory(Request, _CategoryID, _LanguageID, numPageIndx,
                                                                 _RowsPerPage, numCGroupID, c_numTotalProductsInCategory)
 
         If pTblProducts.Rows.Count <> 0 Then
@@ -200,25 +201,26 @@ Partial Class CategoryProductsView
     End Sub
 
     Sub LoadCategoryFilters()
-        PowerpackBLL.LoadCategoryFilters(CategoryID(), Request, _
-                                        xmlDoc, arrSelectedValues, _
-                                        Session("CUR_ID"), phdCategoryFilters, _
-                                        phdPriceRange, ddlPriceRange, _
-                                        txtFromPrice, txtToPrice, _
-                                        litFromSymbol, litToSymbol, _
-                                        phdCustomPrice, txtSearch, _
-                                        ddlOrderBy, phdAttributes, _
+        Dim objPowerpackBLL As New PowerpackBLL
+        objPowerpackBLL.LoadCategoryFilters(CategoryID(), Request,
+                                        xmlDoc, arrSelectedValues,
+                                        Session("CUR_ID"), phdCategoryFilters,
+                                        phdPriceRange, ddlPriceRange,
+                                        txtFromPrice, txtToPrice,
+                                        litFromSymbol, litToSymbol,
+                                        phdCustomPrice, txtSearch,
+                                        ddlOrderBy, phdAttributes,
                                         rptAttributes)
     End Sub
 
 
-''' <summary>
-''' Gets the ID of the post back control.
-''' 
-''' See: http://geekswithblogs.net/mahesh/archive/2006/06/27/83264.aspx
-''' </summary>
-''' <param name = "page">The page.</param>
-''' <returns></returns>
+    ''' <summary>
+    ''' Gets the ID of the post back control.
+    ''' 
+    ''' See: http://geekswithblogs.net/mahesh/archive/2006/06/27/83264.aspx
+    ''' </summary>
+    ''' <param name = "page">The page.</param>
+    ''' <returns></returns>
     Public Shared Function GetPostBackControlId(page As Page) As String
       If Not page.IsPostBack Then
         Return String.Empty
@@ -263,7 +265,8 @@ Partial Class CategoryProductsView
 
     Protected Sub rptAttributes_ItemDataBound(sender As Object, e As RepeaterItemEventArgs) Handles rptAttributes.ItemDataBound
         If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem Then
-            PowerpackBLL.BoundRepeaterAttributeItem(xmlDoc, arrSelectedValues, e.Item)
+            Dim objPowerpackBLL As New PowerpackBLL
+            objPowerpackBLL.BoundRepeaterAttributeItem(xmlDoc, arrSelectedValues, e.Item)
         End If
     End Sub
 

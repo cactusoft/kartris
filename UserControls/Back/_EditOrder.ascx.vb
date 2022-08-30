@@ -35,6 +35,14 @@ Partial Class UserControls_Back_EditOrder
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
+
+        'New instance
+        Dim objOrdersBLL As New OrdersBLL
+        Dim objUsersBLL As New UsersBLL
+
+        Dim numCustomerID As Integer = 0
+
+
         If Not Page.IsPostBack Then
             ViewState("Referer") = Request.ServerVariables("HTTP_REFERER")
             Try
@@ -81,7 +89,8 @@ Partial Class UserControls_Back_EditOrder
                 If ViewState("numOrderID") = 0 Then
                     'jeepers, let's hope this doesn't happen
                 Else
-                    Dim dtOrderRecord As DataTable = OrdersBLL.GetOrderByID(ViewState("numOrderID"))
+                    Dim dtOrderRecord As DataTable = objOrdersBLL.GetOrderByID(ViewState("numOrderID"))
+
                     If dtOrderRecord IsNot Nothing Then
                         If dtOrderRecord.Rows.Count = 1 Then
                             Dim strOrderData As String = ""
@@ -102,8 +111,11 @@ Partial Class UserControls_Back_EditOrder
                             Dim intOrderCurrencyID As Int16 = CShort(dtOrderRecord.Rows(0)("O_CurrencyID"))
                             Dim strOrderPaymentGateway As String = dtOrderRecord.Rows(0)("O_PaymentGateway")
                             lnkOrderCustomerID.Text = CInt(dtOrderRecord.Rows(0)("O_CustomerID"))
+
+                            numCustomerID = CInt(dtOrderRecord.Rows(0)("O_CustomerID"))
+
                             lnkOrderCustomerID.NavigateUrl = FormatCustomerLink(dtOrderRecord.Rows(0)("O_CustomerID"))
-                            txtOrderCustomerEmail.Text = UsersBLL.CleanGuestEmailUsername(UsersBLL.GetEmailByID(lnkOrderCustomerID.Text))
+                            txtOrderCustomerEmail.Text = UsersBLL.CleanGuestEmailUsername(objUsersBLL.GetEmailByID(lnkOrderCustomerID.Text))
                             txtOrderPONumber.Text = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_PurchaseOrderNo"))
                             chkOrderSent.Checked = CBool(dtOrderRecord.Rows(0)("O_Sent"))
                             chkOrderInvoiced.Checked = CBool(dtOrderRecord.Rows(0)("O_Invoiced"))
@@ -146,19 +158,57 @@ Partial Class UserControls_Back_EditOrder
                                     With .Shipping
                                         addShipping = New Address(.Name, .Company, .StreetAddress, .TownCity, .CountyState, .Postcode,
                                                                           Country.GetByIsoCode(.CountryIsoCode).CountryId, .Phone, , ,
-                                                                          IIf(objOrder.SameShippingAsBilling, "u", "s"))
+                                                                          "s")
                                         ViewState("intShippingDestinationID") = Country.GetByIsoCode(.CountryIsoCode).CountryId
                                     End With
                                 End If
                             End With
 
-                            Dim lstBilling As New Generic.List(Of Address)
-                            lstBilling.Add(addBilling)
-                            UC_BillingAddress.Addresses = lstBilling
+                            UC_BillingAddress.CustomerID = numCustomerID
+                            UC_ShippingAddress.CustomerID = numCustomerID
 
-                            Dim lstShipping As New Generic.List(Of Address)
-                            lstShipping.Add(addShipping)
-                            UC_ShippingAddress.Addresses = lstShipping
+                            'Set up first user address (billing)
+                            Dim lstUsrAddresses As Collections.Generic.List(Of KartrisClasses.Address) = Nothing
+
+                            '---------------------------------------
+                            'BILLING ADDRESS
+                            '---------------------------------------
+                            If UC_BillingAddress.Addresses Is Nothing Then
+
+                                'Find all addresses in this user's account
+                                lstUsrAddresses = KartrisClasses.Address.GetAll(numCustomerID)
+
+                                'Populate dropdown by filtering billing/universal addresses
+                                UC_BillingAddress.Addresses = lstUsrAddresses.FindAll(Function(p) p.Type = "b" Or p.Type = "u")
+
+                                'Try to select correct address based on postcode of order,
+                                'this avoids having to manually select correct addresses when
+                                'cloning and editing an order
+                                UC_BillingAddress.SelectByPostcode(objOrder.Billing.Postcode)
+                            End If
+
+                            '---------------------------------------
+                            'SHIPPING ADDRESS
+                            '---------------------------------------
+                            If UC_ShippingAddress.Addresses Is Nothing Then
+
+                                'Find all addresses in this user's account
+                                If lstUsrAddresses Is Nothing Then lstUsrAddresses = KartrisClasses.Address.GetAll(numCustomerID)
+
+                                'Populate dropdown by filtering shipping/universal addresses
+                                UC_ShippingAddress.Addresses = lstUsrAddresses.FindAll(Function(ShippingAdd) ShippingAdd.Type = "s" Or ShippingAdd.Type = "u")
+
+                                'Try to select correct address based on postcode of order,
+                                'this avoids having to manually select correct addresses when
+                                'cloning and editing an order
+                                UC_ShippingAddress.SelectByPostcode(objOrder.Shipping.Postcode)
+                            End If
+
+                            If objOrder.Shipping.CountryIsoCode Is Nothing Then
+                                objOrder.SameShippingAsBilling = True
+                                chkSameShippingAsBilling.Checked = True
+                                chkSameShippingAsBilling_CheckedChanged(Nothing, Nothing)
+                            End If
 
                             If ddlPaymentGateways.Items.Count = 2 And strOrderPaymentGateway = "" Then
                                 _SelectedPaymentMethod = ddlPaymentGateways.Items(1).Value
@@ -183,6 +233,16 @@ Partial Class UserControls_Back_EditOrder
                 Response.Redirect("_OrdersList.aspx")
             End Try
         End If
+
+        numCustomerID = lnkOrderCustomerID.Text
+
+        'Set basket to user ID, so we get customer discount if required
+        'Try to set User ID
+        Try
+            _UC_BasketMain.UserID = numCustomerID
+        Catch ex As Exception
+
+        End Try
     End Sub
 
     ''' <summary>
@@ -339,6 +399,7 @@ Partial Class UserControls_Back_EditOrder
     '''' </summary>
     '''' <remarks></remarks>
     Protected Sub lnkBtnResetAndCopy_Click(ByVal sender As Object, ByVal e As System.EventArgs)
+        BasketBLL.DeleteBasket() 'clear basket when restoring
         UC_BasketMain.EmptyBasket_Click(Nothing, Nothing)
         LoadBasket(True)
         RaiseEvent ShowMasterUpdate()
@@ -351,7 +412,8 @@ Partial Class UserControls_Back_EditOrder
     Protected Sub lnkBtnAddToBasket_Click(ByVal sender As Object, ByVal e As System.EventArgs)
         Dim intVersionID As Long = CheckAutoCompleteData()
         If intVersionID > 0 Then
-            Dim dr As DataRow = VersionsBLL._GetVersionByID(intVersionID).Rows(0)
+            Dim objVersionsBLL As New VersionsBLL
+            Dim dr As DataRow = objVersionsBLL._GetVersionByID(intVersionID).Rows(0)
             Select Case CChar(FixNullFromDB(dr("V_Type")))
                 Case "o", "b", "c"  '' Options Product
                     litOptionsVersion.Text = intVersionID
@@ -399,6 +461,7 @@ Partial Class UserControls_Back_EditOrder
         Dim arrBasketItems As List(Of Kartris.BasketItem)
         Dim objBasket As Kartris.Basket = Session("Basket")
         Dim objOrder As Kartris.Interfaces.objOrder = Nothing
+        Dim objObjectConfigBLL As New ObjectConfigBLL
         Dim strOrderDetails As String = ""
 
         Dim blnAppPricesIncTax As Boolean
@@ -418,14 +481,24 @@ Partial Class UserControls_Back_EditOrder
 
         'Get the order confirmation template if HTML email is enabled
         If blnUseHTMLOrderEmail Then
-            sbdHTMLOrderEmail.Append(RetrieveHTMLEmailTemplate("OrderConfirmation"))
+            sbdHTMLOrderEmail.Append(RetrieveHTMLEmailTemplate("OrderConfirmationEdit"))
+
+            'This was a new template, so if not in skin, let's pull the older one
+            If sbdHTMLOrderEmail.Length < 1 Then
+                sbdHTMLOrderEmail.Append(RetrieveHTMLEmailTemplate("OrderConfirmation"))
+            End If
+
             'switch back to normal text email if the template can't be retrieved
-            If sbdHTMLOrderEmail.Length < 1 Then blnUseHTMLOrderEmail = False
+            If sbdHTMLOrderEmail.Length < 1 Then
+                blnUseHTMLOrderEmail = False
+            End If
         End If
+
+        Dim objOrdersBLL As New OrdersBLL
 
         'try to get the gateway currency and details from the old order
         Dim intO_ID As Integer = ViewState("numOrderID")
-        Dim dtOrderRecord As DataTable = OrdersBLL.GetOrderByID(intO_ID)
+        Dim dtOrderRecord As DataTable = objOrdersBLL.GetOrderByID(intO_ID)
         If dtOrderRecord IsNot Nothing Then
             If dtOrderRecord.Rows.Count = 1 Then
                 intGatewayCurrency = dtOrderRecord.Rows(0)("O_CurrencyIDGateway")
@@ -505,9 +578,10 @@ Partial Class UserControls_Back_EditOrder
             sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) &
                          IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & vbCrLf)
         End If
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
         sbdBodyText.Append(" " & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
                                    " (" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
-                                        LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                        objLanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
                                         CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                         CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, CUR_ID) &
                                     ")" & vbCrLf)
@@ -520,7 +594,7 @@ Partial Class UserControls_Back_EditOrder
                              IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & "<br/>")
             End If
             sbdHTMLOrderContents.Append("(" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
-                                                    LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                                    objLanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
                                                     CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                                     CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, CUR_ID) &
                                                 ") <strong>" & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
@@ -546,7 +620,7 @@ Partial Class UserControls_Back_EditOrder
             sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & vbCrLf)
             sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) &
                                        " (" & CurrenciesBLL.CurrencyCode(intGatewayCurrency) & " - " &
-                                           LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                           objLanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
                                            CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                            CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
                                          ")" & vbCrLf)
@@ -557,7 +631,7 @@ Partial Class UserControls_Back_EditOrder
                 sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & "<br/>")
                 sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) &
                                                     " (" & CurrenciesBLL.CurrencyCode(intGatewayCurrency) & " - " &
-                                                       LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                                       objLanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
                                                        CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                                        CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
                                                      ")" & "<br/>")
@@ -626,6 +700,15 @@ Partial Class UserControls_Back_EditOrder
                     sbdHTMLOrderEmail.Replace("[euvatnumberlabel]", "")
                     sbdHTMLOrderEmail.Replace("[euvatnumbervalue]<br />", "")
                     sbdHTMLOrderEmail.Replace("[euvatnumbervalue]", "")
+                End If
+                'do the same for EORI number
+                If Not String.IsNullOrEmpty(objObjectConfigBLL.GetValue("K:user.eori", UC_BillingAddress.CustomerID)) Then
+                    sbdHTMLOrderEmail.Replace("[eorinumberlabel]", "EORI: ")
+                    sbdHTMLOrderEmail.Replace("[eorinumbervalue]", objObjectConfigBLL.GetValue("K:user.eori", UC_BillingAddress.CustomerID))
+                Else
+                    sbdHTMLOrderEmail.Replace("[eorinumberlabel]", "")
+                    sbdHTMLOrderEmail.Replace("[eorinumbervalue]<br />", "")
+                    sbdHTMLOrderEmail.Replace("[eorinumbervalue]", "")
                 End If
                 sbdHTMLOrderEmail.Replace("[billingemail]", Server.HtmlEncode(txtOrderCustomerEmail.Text))
                 sbdHTMLOrderEmail.Replace("[billingphone]", Server.HtmlEncode(.Phone))
@@ -729,7 +812,7 @@ Partial Class UserControls_Back_EditOrder
             'Loop through basket items
             For Each Item As Kartris.BasketItem In arrBasketItems
                 With Item
-                    Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", Item.ProductID)
+                    Dim strCustomControlName As String = objObjectConfigBLL.GetValue("K:product.customcontrolname", Item.ProductID)
                     Dim strCustomText As String = ""
 
                     Dim sbdOptionText As New StringBuilder("")
@@ -808,8 +891,11 @@ Partial Class UserControls_Back_EditOrder
             strOrderDetails = sbdBodyText.ToString
         End If
 
+        'show original order ID
+        strOrderDetails = strOrderDetails.Replace("[originalorderid]", intO_ID)
+
         'Create the order record
-        Dim intNewOrderID As Integer = OrdersBLL._CloneAndCancel(intO_ID, strOrderDetails, UC_BillingAddress.SelectedAddress, UC_ShippingAddress.SelectedAddress,
+        Dim intNewOrderID As Integer = objOrdersBLL._CloneAndCancel(intO_ID, strOrderDetails, UC_BillingAddress.SelectedAddress, UC_ShippingAddress.SelectedAddress,
                                                                  chkSameShippingAsBilling.Checked, chkOrderSent.Checked, chkOrderInvoiced.Checked, chkOrderPaid.Checked,
                                                                  chkOrderShipped.Checked, objBasket, arrBasketItems,
                                                                 UC_BasketMain.SelectedShippingMethod, txtOrderNotes.Text, numGatewayTotalPrice, txtOrderPONumber.Text,
@@ -880,7 +966,7 @@ Partial Class UserControls_Back_EditOrder
             objOrder.CustomerEmail = txtOrderCustomerEmail.Text
 
             'update data field with serialized order and basket objects and selected shipping method id - this allows us to edit this order later if needed
-            OrdersBLL.DataUpdate(intNewOrderID, Payment.Serialize(objOrder) & "|||" & Payment.Serialize(objBasket) & "|||" & UC_BasketMain.SelectedShippingID)
+            objOrdersBLL.DataUpdate(intNewOrderID, Payment.Serialize(objOrder) & "|||" & Payment.Serialize(objBasket) & "|||" & UC_BasketMain.SelectedShippingID)
 
             Response.Redirect("_ModifyOrderStatus.aspx?OrderID=" & intNewOrderID & "&cloned=y")
         End If
@@ -891,6 +977,7 @@ Partial Class UserControls_Back_EditOrder
     ''' </summary>
     ''' <remarks></remarks>
     Function CheckAutoCompleteData() As Long
+        Dim objVersionsBLL As New VersionsBLL
         Dim strAutoCompleteText As String = ""
         strAutoCompleteText = _UC_AutoComplete_Item.GetText
         If strAutoCompleteText <> "" AndAlso strAutoCompleteText.Contains("(") _
@@ -898,7 +985,7 @@ Partial Class UserControls_Back_EditOrder
             Try
                 Dim numItemID As Long = CLng(Mid(strAutoCompleteText, strAutoCompleteText.LastIndexOf("(") + 2, strAutoCompleteText.LastIndexOf(")") - strAutoCompleteText.LastIndexOf("(") - 1))
                 Dim strItemName As String = ""
-                strItemName = VersionsBLL._GetNameByVersionID(numItemID, Session("_LANG"))
+                strItemName = objVersionsBLL._GetNameByVersionID(numItemID, Session("_LANG"))
 
                 If strItemName Is Nothing Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_InvalidValue"))
@@ -922,7 +1009,7 @@ Partial Class UserControls_Back_EditOrder
         If Not String.IsNullOrEmpty(litOptionsVersion.Text) AndAlso litOptionsVersion.Text = numVersionID Then
             _UC_OptionsPopup.ClearIDs() '' reset product id and version id for the options popup
             litOptionsVersion.Text = Nothing
-            Dim objBasket As kartris.Basket = UC_BasketMain.GetBasket
+            Dim objBasket As Kartris.Basket = UC_BasketMain.GetBasket
             Dim sessionID As Long = Session("SessionID")
             BasketBLL.AddNewBasketValue(objBasket.BasketItems, BasketBLL.BASKET_PARENTS.BASKET, sessionID, numVersionID, 1, "", strOptions)
             LoadBasket()

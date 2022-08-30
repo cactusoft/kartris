@@ -426,8 +426,9 @@ Partial Class _Checkout
         'Fails for new users
         If Not Me.IsPostBack Then
             Try
+                Dim objUsersBLL As New UsersBLL
                 If txtEUVAT.Text = "" And phdEUVAT.Visible = True Then
-                    txtEUVAT.Text = UsersBLL.GetCustomerEUVATNumber(CurrentLoggedUser.ID)
+                    txtEUVAT.Text = objUsersBLL.GetCustomerEUVATNumber(CurrentLoggedUser.ID)
                 End If
             Catch ex As Exception
                 'probably a new user or don't need vate
@@ -540,7 +541,16 @@ Partial Class _Checkout
     ''' shipping methods
     ''' </summary>
     Protected Sub BillingCountryUpdated(ByVal sender As Object, ByVal e As System.EventArgs) Handles UC_BillingAddress.CountryUpdated
-        RefreshShippingMethods("billing")
+        If chkSameShippingAsBilling.Checked Then
+            pnlShippingAddress.Visible = False
+            UC_ShippingAddress.Visible = False
+            RefreshShippingMethods("billing")
+        Else
+            pnlShippingAddress.Visible = True
+            UC_ShippingAddress.Visible = True
+            RefreshShippingMethods("shipping")
+        End If
+        updAddresses.Update()
     End Sub
 
     ''' <summary>
@@ -548,8 +558,16 @@ Partial Class _Checkout
     ''' shipping methods
     ''' </summary>
     Protected Sub ShippingCountryUpdated(ByVal sender As Object, ByVal e As System.EventArgs) Handles UC_ShippingAddress.CountryUpdated
-        'If Not chkSameShippingAsBilling.Checked And UC_ShippingAddress.SelectedAddress IsNot Nothing Then RefreshShippingMethods()
-        RefreshShippingMethods()
+        If chkSameShippingAsBilling.Checked Then
+            pnlShippingAddress.Visible = False
+            UC_ShippingAddress.Visible = False
+            RefreshShippingMethods("billing")
+        Else
+            pnlShippingAddress.Visible = True
+            UC_ShippingAddress.Visible = True
+            RefreshShippingMethods("shipping")
+        End If
+        updAddresses.Update()
     End Sub
 
     ''' <summary>
@@ -636,7 +654,8 @@ Partial Class _Checkout
 
             'Try to fill EU number
             Try
-                txtEUVAT.Text = UsersBLL.GetCustomerEUVATNumber(CurrentLoggedUser.ID)
+                Dim objUsersBLL As New UsersBLL
+                txtEUVAT.Text = objUsersBLL.GetCustomerEUVATNumber(CurrentLoggedUser.ID)
             Catch ex As Exception
 
             End Try
@@ -649,8 +668,9 @@ Partial Class _Checkout
 
         If phdEORI.Visible Then
             'Try to fill EU number
+            Dim objObjectConfigBLL As New ObjectConfigBLL
             Try
-                txtEORI.Text = ObjectConfigBLL.GetValue("K:user.eori", CurrentLoggedUser.ID)
+                txtEORI.Text = objObjectConfigBLL.GetValue("K:user.eori", CurrentLoggedUser.ID)
             Catch ex As Exception
 
             End Try
@@ -1138,9 +1158,10 @@ Partial Class _Checkout
                     sbdBodyText.Append(" " & GetGlobalResourceObject("Kartris", "ContentText_Tax") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceTaxAmount, , False) &
                      IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & vbCrLf)
                 End If
+                Dim objLanguageElementsBLL As New LanguageElementsBLL()
                 sbdBodyText.Append(" " & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
                                " (" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
-                                    LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                    objLanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
                                     CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                     CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, CUR_ID) &
                                 ")" & vbCrLf)
@@ -1153,7 +1174,7 @@ Partial Class _Checkout
                          IIf(blnAppUSmultistatetax, " (" & Math.Round((objBasket.D_Tax * 100), 5) & "%)", "") & "<br/>")
                     End If
                     sbdHTMLOrderContents.Append("(" & CurrenciesBLL.CurrencyCode(CUR_ID) & " - " &
-                                                LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                                objLanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
                                                 CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                                 CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, CUR_ID) &
                                             ") <strong>" & GetGlobalResourceObject("Basket", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(CUR_ID, objBasket.FinalPriceIncTax, , False) &
@@ -1174,7 +1195,7 @@ Partial Class _Checkout
                     sbdBodyText.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & vbCrLf)
                     sbdBodyText.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) &
                                    " (" & CurrenciesBLL.CurrencyCode(intGatewayCurrency) & " - " &
-                                       LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                       objLanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
                                        CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                        CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
                                      ")" & vbCrLf)
@@ -1185,7 +1206,7 @@ Partial Class _Checkout
                         sbdHTMLOrderContents.AppendLine(" " & GetGlobalResourceObject("Email", "EmailText_ProcessCurrencyExp1") & "<br/>")
                         sbdHTMLOrderContents.Append(" " & GetGlobalResourceObject("Email", "ContentText_TotalInclusive") & " = " & CurrenciesBLL.FormatCurrencyPrice(intGatewayCurrency, numGatewayTotalPrice, , False) &
                                                 " (" & CurrenciesBLL.CurrencyCode(intGatewayCurrency) & " - " &
-                                                   LanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
+                                                   objLanguageElementsBLL.GetElementValue(GetLanguageIDfromSession,
                                                    CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                                    CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, intGatewayCurrency) &
                                                  ")" & "<br/>")
@@ -1414,6 +1435,9 @@ Partial Class _Checkout
                 sbdBodyText.Insert(0, sbdBasketItems.ToString)
 
                 arrBasketItems = UC_BasketView.GetBasketItems
+
+                Dim objObjectConfigBLL As New ObjectConfigBLL 'needed in loops below
+
                 If Not (arrBasketItems Is Nothing) Then
                     Dim BasketItem As New BasketItem
                     'final check if basket items are still there
@@ -1442,7 +1466,7 @@ Partial Class _Checkout
                     'Loop through basket items
                     For Each Item As Kartris.BasketItem In arrBasketItems
                         With Item
-                            Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", Item.ProductID)
+                            Dim strCustomControlName As String = objObjectConfigBLL.GetValue("K:product.customcontrolname", Item.ProductID)
                             Dim strCustomText As String = ""
 
                             Dim sbdOptionText As New StringBuilder("")
@@ -1515,8 +1539,11 @@ Partial Class _Checkout
                 'account created is tagged as guest
                 Dim blnIsGuest As Boolean = (Session("_IsGuest") = "YES")
 
+                'New instance of orders BLL
+                Dim objOrdersBLL As New OrdersBLL
+
                 'Create the order record
-                O_ID = OrdersBLL.Add(C_ID, UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword, UC_BillingAddress.SelectedAddress,
+                O_ID = objOrdersBLL.Add(C_ID, UC_KartrisLogin.UserEmailAddress, UC_KartrisLogin.UserPassword, UC_BillingAddress.SelectedAddress,
                                          UC_ShippingAddress.SelectedAddress, chkSameShippingAsBilling.Checked, objBasket,
                                           arrBasketItems, IIf(blnUseHTMLOrderEmail, sbdHTMLOrderEmail.ToString, sbdBodyText.ToString), clsPlugin.GatewayName, CInt(Session("LANG")), CUR_ID,
                                          intGatewayCurrency, chkOrderEmails.Checked, UC_BasketView.SelectedShippingMethod, numGatewayTotalPrice,
@@ -1525,7 +1552,7 @@ Partial Class _Checkout
 
                 'Store EORI number for client
                 Try
-                    Dim blnUpdatedEORI As Boolean = ObjectConfigBLL.SetConfigValue("K:user.eori", C_ID, txtEORI.Text, "")
+                    Dim blnUpdatedEORI As Boolean = objObjectConfigBLL.SetConfigValue("K:user.eori", C_ID, txtEORI.Text, "")
                 Catch ex As Exception
                     CkartrisFormatErrors.LogError("Error updating K:user.eori")
                 End Try
@@ -1622,7 +1649,7 @@ Partial Class _Checkout
                     Dim strFromEmail As String = LanguagesBLL.GetEmailFrom(CInt(Session("LANG")))
 
                     'Send new account email to new customer
-                    If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" And blnNewUser Then
+                    If KartSettingsManager.GetKartConfig("frontend.users.emailnewaccountdetails") = "y" And blnNewUser And Not blnIsGuest Then
 
                         Dim blnHTMLEmail As Boolean = KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y"
                         If blnHTMLEmail Then
@@ -1739,7 +1766,7 @@ Partial Class _Checkout
                     Session("objOrder") = Payment.Serialize(objOrder)
 
                     'update data field with serialized order and basket objects and selected shipping method id - this allows us to edit this order later if needed
-                    OrdersBLL.DataUpdate(O_ID, Session("objOrder") & "|||" & Payment.Serialize(objBasket) & "|||" & UC_BasketView.SelectedShippingID)
+                    objOrdersBLL.DataUpdate(O_ID, Session("objOrder") & "|||" & Payment.Serialize(objBasket) & "|||" & UC_BasketView.SelectedShippingID)
 
                     Dim transactionId As String = ""
                     If LCase(clsPlugin.GatewayType) = "local" Then
@@ -1850,12 +1877,12 @@ Partial Class _Checkout
                         If blnResult Then
                             'The transaction was authorized so update the order
                             If clsPlugin.CallbackSuccessful Or
-                        clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
-                        clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
-                        clsPlugin.GatewayName.ToLower = "braintreepayment" Then
+                                clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
+                                clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
+                                clsPlugin.GatewayName.ToLower = "braintreepayment" Then
                                 If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
-                            clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
-                            clsPlugin.GatewayName.ToLower = "braintreepayment" Then
+                                    clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
+                                    clsPlugin.GatewayName.ToLower = "braintreepayment" Then
                                     O_ID = objOrder.ID
                                 Else
                                     'Get order ID that was passed back with callback
@@ -1865,7 +1892,7 @@ Partial Class _Checkout
                                 '---------------------------------------
                                 'CREATE DATATABLE OF ORDER
                                 '---------------------------------------
-                                Dim tblOrder As DataTable = OrdersBLL.GetOrderByID(O_ID)
+                                Dim tblOrder As DataTable = objOrdersBLL.GetOrderByID(O_ID)
 
                                 Dim O_CouponCode As String = ""
                                 Dim O_TotalPriceGateway As Double = 0
@@ -1984,7 +2011,7 @@ Partial Class _Checkout
                                             referenceCode = clsPlugin.CallbackReferenceCode
                                         End If
 
-                                        Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, referenceCode, CkartrisDisplayFunctions.NowOffset, blnCheckSent,
+                                        Dim intUpdateResult As Integer = objOrdersBLL.CallbackUpdate(O_ID, referenceCode, CkartrisDisplayFunctions.NowOffset, blnCheckSent,
                                                                                               blnCheckInvoicedOnPayment,
                                                                                               blnCheckReceivedOnPayment,
                                                                                               strOrderTimeText,
@@ -2108,6 +2135,14 @@ Partial Class _Checkout
                         Session("GatewayName") = strGatewayName
                         Session("_NewPassword") = Nothing
                         clsPlugin = Nothing
+
+                        'Try to delete AUTOSAVE basket
+                        Dim objBasketBLL As New BasketBLL
+                        Try
+                            objBasketBLL.DeleteSavedBasketByNameAndUserID(objOrder.CustomerID, "AUTOSAVE")
+                        Catch ex As Exception
+
+                        End Try
 
                         '---------------------------------------
                         'FORMAT FORM TO POST TO REMOTE GATEWAY

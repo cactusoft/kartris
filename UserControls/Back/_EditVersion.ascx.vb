@@ -27,7 +27,9 @@ Partial Class _EditVersion
     Public Event NeedCategoryRefresh()
 
     Dim numProductID As Int64 = _GetProductID()
-    Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", numProductID) = "1", True, False) And ProductsBLL._NumberOfCombinations(numProductID) > 0
+    Dim objProductsBLL As New ProductsBLL
+    Dim objObjectConfigBLL As New ObjectConfigBLL
+    Dim blnUseCombinationPrice As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", numProductID) = "1", True, False) And objProductsBLL._NumberOfCombinations(numProductID) > 0
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
@@ -90,7 +92,7 @@ Partial Class _EditVersion
     ''' <param name="blnClone"></param>
     ''' <remarks></remarks>
     Public Sub CreateVersionData(ByVal numVersionID As Long, Optional ByVal blnClone As Boolean = False)
-
+        Dim objProductsBLL As New ProductsBLL
         litVersionID.Text = numVersionID
 
         If GetVersionID() = 0 Then  '' new
@@ -106,7 +108,7 @@ Partial Class _EditVersion
         chkClone.Checked = blnClone
 
         '' check the product type to know if we should disable some fields
-        If ProductsBLL._GetProductType_s(_GetProductID()) = "s" Then
+        If objProductsBLL._GetProductType_s(_GetProductID()) = "s" Then
             _UC_LangContainer.SetFieldEditable(LANG_ELEM_FIELD_NAME.Name, False)
             _UC_LangContainer.SetFieldEditable(LANG_ELEM_FIELD_NAME.Description, False)
         End If
@@ -123,7 +125,8 @@ Partial Class _EditVersion
             _UC_LangContainer.CreateLanguageStrings(LANG_ELEM_TABLE_TYPE.Versions, False, GetVersionID())
         End If
         '' check the product type to know if we should disable some fields
-        If ProductsBLL._GetProductType_s(_GetProductID()) = "s" Then
+        Dim objProductsBLL As New ProductsBLL
+        If objProductsBLL._GetProductType_s(_GetProductID()) = "s" Then
             _UC_LangContainer.SetFieldEditable(LANG_ELEM_FIELD_NAME.Name, False)
             _UC_LangContainer.SetFieldEditable(LANG_ELEM_FIELD_NAME.Description, False)
         End If
@@ -135,7 +138,8 @@ Partial Class _EditVersion
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub SetVersionType()
-        Select ProductsBLL._GetProductType_s(_GetProductID())
+        Dim objProductsBLL As New ProductsBLL
+        Select Case objProductsBLL._GetProductType_s(_GetProductID())
             Case "m" '' Multiple Version Product
                 ddlVersionType.SelectedValue = "v"
             Case "o" '' Optional Product
@@ -157,9 +161,9 @@ Partial Class _EditVersion
     ''' <returns></returns>
     ''' <remarks></remarks>
     Public Function SaveChanges() As Boolean
-
+        Dim objVersionsBLL As New VersionsBLL
         '' checking if the code number exist or not
-        If VersionsBLL._IsCodeNumberExist(txtCodeNumber.Text, , IIf(chkClone.Checked, -1, GetVersionID())) Then
+        If objVersionsBLL._IsCodeNumberExist(txtCodeNumber.Text, , IIf(chkClone.Checked, -1, GetVersionID())) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_AlreadyExists"))
             Return False
         End If
@@ -171,9 +175,7 @@ Partial Class _EditVersion
             '' if update => UPDATE
             If Not SaveVersion(DML_OPERATION.UPDATE) Then Return False
         End If
-
         Return True
-
     End Function
 
     ''' <summary>
@@ -273,9 +275,10 @@ Partial Class _EditVersion
         '' 3. Saving the changes
         Dim strMessage As String = ""
         Dim VersionID As Long = GetVersionID()
+        Dim objVersionsBLL As New VersionsBLL
         Select Case enumOperation
             Case DML_OPERATION.UPDATE
-                If Not VersionsBLL._UpdateVersion(
+                If Not objVersionsBLL._UpdateVersion(
                                 tblLanguageContents, VersionID, strCodeNumber, _GetProductID(), decPrice, bytTaxBand, bytTaxBand2, "",
                                 snglWeight, bytDelivery, sngStockQty, sngWarnLevel, blnLive, strDownloadInfo, strDownloadType,
                                  decRRP, chrVersionType, intCustomerGrp, chrCustomizationType, strCustomizationDesc,
@@ -284,7 +287,7 @@ Partial Class _EditVersion
                     Return False
                 End If
             Case DML_OPERATION.INSERT
-                If Not VersionsBLL._AddNewVersion(
+                If Not objVersionsBLL._AddNewVersion(
                                 tblLanguageContents, strCodeNumber, _GetProductID(), decPrice, bytTaxBand, bytTaxBand2, "",
                                 snglWeight, bytDelivery, sngStockQty, sngWarnLevel, blnLive, strDownloadInfo, strDownloadType,
                                  decRRP, chrVersionType, intCustomerGrp, chrCustomizationType, strCustomizationDesc,
@@ -312,8 +315,9 @@ Partial Class _EditVersion
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub LoadMainInfo()
+        Dim objVersionsBLL As New VersionsBLL
         Dim tblVersion As New DataTable
-        tblVersion = VersionsBLL._GetVersionByID(GetVersionID())
+        tblVersion = objVersionsBLL._GetVersionByID(GetVersionID())
 
         If tblVersion.Rows.Count = 0 Then Exit Sub
 
@@ -396,8 +400,6 @@ Partial Class _EditVersion
         End If
         CheckDownloadType(CStr(FixNullFromDB(tblVersion.Rows(0)("V_DownloadInfo"))), False)
 
-
-
         updMain.Update()
     End Sub
 
@@ -418,7 +420,6 @@ Partial Class _EditVersion
         ddlCustomizationType.Enabled = True
         txtCustomizationDesc.Enabled = True
         txtCustomizationCost.Enabled = True
-
     End Sub
 
     ''' <summary>
@@ -427,6 +428,7 @@ Partial Class _EditVersion
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub DisableCombinationControls()
+        Dim objVersionsBLL As New VersionsBLL
         chkLive.Enabled = False
         If blnUseCombinationPrice Then txtPriceIncTax.Enabled = True Else txtPriceIncTax.Enabled = False
         ddlTaxBand.Enabled = False
@@ -439,7 +441,7 @@ Partial Class _EditVersion
         txtCustomizationDesc.Enabled = False
         txtCustomizationCost.Enabled = False
 
-        If Not VersionsBLL.IsStockTrackingInBase(_GetProductID()) Then
+        If Not objVersionsBLL.IsStockTrackingInBase(_GetProductID()) Then
             phdStockTracking.Visible = False
         Else
             phdStockTracking.Visible = True
@@ -447,7 +449,6 @@ Partial Class _EditVersion
             chkStockTracking.Visible = False
             litFormLabelStockTrackingText.Visible = False
             litFormLabelWarningLevel.Visible = False
-
         End If
 
     End Sub

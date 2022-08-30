@@ -403,6 +403,8 @@ Public Class KartrisDBBLL
             ByRef blnSucceeded As Boolean, ByRef strMsg As String)
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Dim objUsersBLL As New UsersBLL
+
         Using sqlConn As New SqlConnection(strConnString)
 
             Dim cmdClearProductsData As SqlCommand = sqlConn.CreateCommand
@@ -413,7 +415,7 @@ Public Class KartrisDBBLL
             Try
                 cmdClearProductsData.Parameters.AddWithValue("@DataType", FixNullToDB(chrDataType, "c"))
                 cmdClearProductsData.Parameters.AddWithValue("@UserName", FixNullToDB(strUser, "s"))
-                cmdClearProductsData.Parameters.AddWithValue("@Password", UsersBLL.EncryptSHA256Managed(FixNullToDB(strPassword), LoginsBLL._GetSaltByUserName(strUser), True))
+                cmdClearProductsData.Parameters.AddWithValue("@Password", objUsersBLL.EncryptSHA256Managed(FixNullToDB(strPassword), LoginsBLL._GetSaltByUserName(strUser), True))
                 cmdClearProductsData.Parameters.AddWithValue("@IPAddress", FixNullToDB(CkartrisEnvironment.GetClientIPAddress()))
                 cmdClearProductsData.Parameters.AddWithValue("@Succeeded", False).Direction = ParameterDirection.Output
                 cmdClearProductsData.Parameters.Add("@Output", SqlDbType.NVarChar, 4000).Direction = ParameterDirection.Output
@@ -528,27 +530,32 @@ Public Class KartrisDBBLL
 #Region " Deleted Items             "
     Public Shared Sub DeleteNotNeededFiles()
         Dim tblDeleted As DataTable = _GetDeletedItems()
+        Dim objCategoriesBLL As New CategoriesBLL
+        Dim objProductsBLL As New ProductsBLL
+        Dim objVersionsBLL As New VersionsBLL
+
         For Each row As DataRow In tblDeleted.Rows
             Dim numID As Long = FixNullFromDB(row("Deleted_ID"))
             Dim chrType As Char = FixNullFromDB(row("Deleted_Type"))
             If numID <> Nothing AndAlso chrType <> Nothing Then
+
                 Try
                     Select Case chrType
                         Case "c" '' Category
-                            Dim tblRecord As DataTable = CategoriesBLL._GetByID(numID)
+                            Dim tblRecord As DataTable = objCategoriesBLL._GetByID(numID)
                             If tblRecord.Rows.Count = 0 Then
                                 CkartrisImages.RemoveImages(CkartrisImages.IMAGE_TYPE.enum_CategoryImage, numID)
                             End If
                             _DeleteRecord(numID, chrType)
                         Case "p" '' Product
-                            Dim tblRecord As DataTable = ProductsBLL._GetProductInfoByID(numID)
+                            Dim tblRecord As DataTable = objProductsBLL._GetProductInfoByID(numID)
                             If tblRecord.Rows.Count = 0 Then
                                 CkartrisImages.RemoveImages(CkartrisImages.IMAGE_TYPE.enum_ProductImage, numID)
                             End If
                             _DeleteRecord(numID, chrType)
                         Case "v" '' Version
                             If CInt(FixNullFromDB(row("Deleted_VersionProduct"))) <> Nothing Then
-                                Dim tblRecord As DataTable = VersionsBLL._GetVersionByID(numID)
+                                Dim tblRecord As DataTable = objVersionsBLL._GetVersionByID(numID)
                                 If tblRecord.Rows.Count = 0 Then
                                     CkartrisImages.RemoveImages(CkartrisImages.IMAGE_TYPE.enum_VersionImage, numID, row("Deleted_VersionProduct"))
                                 End If

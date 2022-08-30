@@ -3,13 +3,7 @@
 <asp:PlaceHolder runat="server" ID="phdOrderBreadcrumb">
     <div class="breadcrumbtrail">
         <span>
-            <span>
-                <asp:HyperLink ID="lnkParent" runat="server"></asp:HyperLink>
-            </span>
-            <span>&#160;</span>
-            <span>
-                <asp:HyperLink ID="lnkChild" runat="server"></asp:HyperLink>
-            </span>
+            <asp:Literal ID="litLinks" runat="server"></asp:Literal>
         </span>
     </div>
 </asp:PlaceHolder>

@@ -163,7 +163,8 @@ Partial Class Admin_ModifyProduct
     End Sub
 
     Sub PrepareExistingProduct()
-        litProductName.Text = ProductsBLL._GetNameByProductID(_GetProductID(), Session("_LANG"))
+        Dim objProductsBLL As New ProductsBLL
+        litProductName.Text = objProductsBLL._GetNameByProductID(_GetProductID(), Session("_LANG"))
         pnlTabStrip.Visible = True
         _UC_ProductIndicator.CheckProductStatus()
 
@@ -173,7 +174,8 @@ Partial Class Admin_ModifyProduct
 
     Sub CheckToShowOptionLink()
         Dim chrProductType As Char = Nothing
-        chrProductType = ProductsBLL._GetProductType_s(_GetProductID())
+        Dim objProductsBLL As New ProductsBLL
+        chrProductType = objProductsBLL._GetProductType_s(_GetProductID())
         If chrProductType <> "o" Then
             lnkOptions.Visible = False
         Else
@@ -192,7 +194,8 @@ Partial Class Admin_ModifyProduct
     End Sub
 
     Protected Sub _UC_EditProduct_ProductSaved() Handles _UC_EditProduct.ProductSaved
-        litProductName.Text = ProductsBLL._GetNameByProductID(_GetProductID(), Session("_LANG"))
+        Dim objProductsBLL As New ProductsBLL
+        litProductName.Text = objProductsBLL._GetNameByProductID(_GetProductID(), Session("_LANG"))
         _UC_EditProduct.LoadProductInfo()
         ShowMasterUpdateMessage()
     End Sub
@@ -216,10 +219,11 @@ Partial Class Admin_ModifyProduct
     End Sub
 
     Sub CheckProductOptions()
-        If ProductsBLL._GetProductType_s(_GetProductID()) = "o" Then
+        Dim objProductsBLL As New ProductsBLL
+        If objProductsBLL._GetProductType_s(_GetProductID()) = "o" Then
             _UC_ProductOptionGroups.CreateProductOptionGroups()
-
-            If VersionsBLL._GetNoOfVersionsByProductID(_GetProductID()) = 0 Then
+            Dim objVersionsBLL As New VersionsBLL
+            If objVersionsBLL._GetNoOfVersionsByProductID(_GetProductID()) = 0 Then
                 If mvwEditProduct.ActiveViewIndex = 5 Then mvwEditProduct.ActiveViewIndex = 0
             End If
             lnkOptions.Visible = True

@@ -17,7 +17,7 @@
                     <asp:Literal ID="litProductDesc" runat="server" Text='<%# CkartrisDisplayFunctions.TruncateDescription(Eval("P_Desc"), KartSettingsManager.GetKartConfig("frontend.products.display.truncatedescription")) %>'></asp:Literal></p>
                 <asp:Literal ID="litVersionsViewType" runat="server" Text='<%# Eval("P_VersionDisplayType") %>'
                     Visible="false"></asp:Literal>
-                <div class="minprice" id="divPrice" runat="server" visible='<%# Iif( ObjectConfigBLL.GetValue("K:product.callforprice", Eval("P_ID")) = 1 OrElse Not String.IsNullOrEmpty(ObjectConfigBLL.GetValue("K:product.customcontrolname", Eval("P_ID"))), False, True) %>'>
+                <div class="minprice" id="divPrice" runat="server" visible='<%# ShowMinPrice(Eval("P_ID")) %>'>
                     <asp:Literal ID="litPriceFrom" runat="server" Text="<%$ Resources:Products,ContentText_ProductPriceFrom %>"></asp:Literal>
                     <asp:Literal ID="litPriceHidden" runat="server" Text='<%# Eval("MinPrice") %>' Visible="false" />
                     <asp:Literal ID="litPriceView" runat="server" />

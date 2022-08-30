@@ -140,8 +140,8 @@ Partial Class OptionsContainer
         '' Creating a table to hold the Options of the specified Product.
         '' Also calling "VersionsBLL.GetProductOptions" to get the data from database.
         Dim tblOptions As New DataTable
-
-        tblOptions = VersionsBLL.GetProductOptions(_ProductID, _LanguageID)
+        Dim objVersionsBLL As New VersionsBLL
+        tblOptions = objVersionsBLL.GetProductOptions(_ProductID, _LanguageID)
         _NoOptionsRows = tblOptions.Rows.Count
 
         If _NoOptionsRows = 0 Then
@@ -171,7 +171,7 @@ Partial Class OptionsContainer
 
             '' Creating new dataTable to hold the values for specified Option.
             Dim tblOptionValues As New DataTable
-            tblOptionValues = VersionsBLL.GetProductOptionValues(_ProductID, _LanguageID, intOptionsGroupID)
+            tblOptionValues = objVersionsBLL.GetProductOptionValues(_ProductID, _LanguageID, intOptionsGroupID)
 
             If chrOptionsType = "l" Then
                 If tblOptionValues.Rows.Count = 1 Then

@@ -28,7 +28,8 @@ Partial Class Admin_WholesaleApplicationsList
     End Sub
 
     Protected Sub btnAnonymize_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnAnonymize.Click
-        UsersBLL._AnonymizeAll()
+        Dim objUsersBLL As New UsersBLL
+        objUsersBLL._AnonymizeAll()
         GetGuestsList()
     End Sub
 
@@ -36,7 +37,8 @@ Partial Class Admin_WholesaleApplicationsList
         gvwCustomers.DataSource = Nothing
         gvwCustomers.DataBind()
         'get wholesale - pending customer group list (U_CustomerGroupID = 1)
-        gvwCustomers.DataSource = UsersBLL._GetGuestList()
+        Dim objUsersBLL As New UsersBLL
+        gvwCustomers.DataSource = objUsersBLL._GetGuestList()
         gvwCustomers.DataBind()
     End Sub
 

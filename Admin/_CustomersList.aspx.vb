@@ -77,8 +77,9 @@ Partial Class Admin_CustomersList
     'from the search button, or if the page loads
     'with some values passed in via querystring
     Protected Sub RunSearch()
+        Dim objUsersBLL As New UsersBLL
         If IsNumeric(txtSearch.Text) Then
-            If DirectCast(UsersBLL._GetCustomerDetails(txtSearch.Text), DataTable).Rows.Count > 0 Then
+            If DirectCast(objUsersBLL._GetCustomerDetails(txtSearch.Text), DataTable).Rows.Count > 0 Then
                 Response.Redirect("_ModifyCustomerStatus.aspx?CustomerID=" & txtSearch.Text)
             Else
                 _UC_CustomersList.strSearch = txtSearch.Text

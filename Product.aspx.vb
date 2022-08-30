@@ -28,6 +28,7 @@ Partial Class Product
         If Not (InStr(strCurrentPath, "/skins/") > 0 Or InStr(strCurrentPath, "/javascript/") > 0 Or InStr(strCurrentPath, "/images/") > 0) Then
             Try
                 Dim intProductID As Integer = Request.QueryString("ProductID")
+                Dim objProductsBLL As New ProductsBLL
 
                 Dim numLangID As Short = 1 'default to default language
                 Try
@@ -53,8 +54,8 @@ Partial Class Product
                         'Above we use four hashes or pipes because these should not occur naturally in product names
                         If intProductID > 0 Then
                             Me.CanonicalTag = CkartrisBLL.WebShopURL & Mid(SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, intProductID), 2)
-                            Me.MetaDescription = ProductsBLL.GetMetaDescriptionByProductID(intProductID, numLangID)
-                            Me.MetaKeywords = ProductsBLL.GetMetaKeywordsByProductID(intProductID, numLangID)
+                            Me.MetaDescription = objProductsBLL.GetMetaDescriptionByProductID(intProductID, numLangID)
+                            Me.MetaKeywords = objProductsBLL.GetMetaKeywordsByProductID(intProductID, numLangID)
                         End If
                     End If
                 Else

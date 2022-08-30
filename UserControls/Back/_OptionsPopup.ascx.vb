@@ -27,12 +27,16 @@ Partial Class UserControls_Back_OptionsPopup
     Public Event OptionsSelected(ByVal strOptions As String, ByVal numVersionID As Integer)
 
     Public Sub ShowPopup(ByVal numVersionID As Long, ByVal numProductID As Integer, ByVal strVersionCode As String)
+
+        Dim objProductsBLL As New ProductsBLL
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+
         'lblVID_Options.Text = CStr(numVersionID)
         litVersionID.Text = CStr(numVersionID)
         litProductID.Text = CStr(numProductID)
-        litProductName.Text = ProductsBLL._GetNameByProductID(numProductID, Session("LANG"))
+        litProductName.Text = objProductsBLL._GetNameByProductID(numProductID, Session("LANG"))
         litVersionCode.Text = "&nbsp;&nbsp;-&nbsp;&nbsp;" & strVersionCode
-        Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", CLng(numProductID)) = "1", True, False)
+        Dim blnUseCombinationPrice As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", CLng(numProductID)) = "1", True, False)
         '' Initializes/Loads the OptionsContainer UC to view the Options that are available for the Product.
         UC_OptionsContainer.InitializeOption(numProductID, Session("LANG"), blnUseCombinationPrice)
 
@@ -80,9 +84,10 @@ Partial Class UserControls_Back_OptionsPopup
     End Sub
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If Not String.IsNullOrEmpty(litVersionID.Text) AndAlso IsNumeric(litVersionID.Text) AndAlso _
+        If Not String.IsNullOrEmpty(litVersionID.Text) AndAlso IsNumeric(litVersionID.Text) AndAlso
             Not String.IsNullOrEmpty(litProductID.Text) AndAlso IsNumeric(litProductID.Text) Then
-            Dim blnUseCombinationPrice As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", CLng(litProductID.Text)) = "1", True, False)
+            Dim objObjectConfigBLL As New ObjectConfigBLL
+            Dim blnUseCombinationPrice As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", CLng(litProductID.Text)) = "1", True, False)
             '' Need to create options for the specific product, without selecting the radio control if exist
             UC_OptionsContainer.InitializeOption(CInt(litProductID.Text), Session("LANG"), blnUseCombinationPrice, False)
         End If

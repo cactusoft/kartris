@@ -198,7 +198,7 @@
                     </td>
                 </tr>
             </asp:PlaceHolder>
-            <!-- customer disocunt -->
+            <!-- customer discount -->
             <asp:PlaceHolder ID="phdCustomer" runat="server" Visible="false">
                 <tr class="footerrow">
                     <td colspan="6">
@@ -219,7 +219,9 @@
             <tr class="footerrow">
                 <td colspan="6">
                     <span class="totallabel">
-                        <asp:Literal ID="litContentTextShipping" runat="server" Text='<%$ Resources: Address, ContentText_Shipping %>' /></span>
+                        <asp:Literal ID="litContentTextShipping" runat="server" Text='<%$ Resources: Address, ContentText_Shipping %>' />
+                        <span class="unbold"><asp:Literal ID="litShippingDesc" runat="server" /></span>
+                    </span>
                     <span class="total"><asp:Literal ID="litShipping" runat="server" Text='' /></span>
                 </td>
             </tr>

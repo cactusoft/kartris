@@ -87,7 +87,9 @@ Partial Class UserControls_General_AddToBasket
             c_strSelectorType = strSelectorType
         Else
             'Try to set to the K:product.addtorbasketqty set at product level
-            c_strSelectorType = LCase(FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID))))
+            Dim objVersionsBLL As New VersionsBLL
+            Dim objObjectConfigBLL As New ObjectConfigBLL
+            c_strSelectorType = LCase(FixNullFromDB(objObjectConfigBLL.GetValue("K:product.addtobasketqty", objVersionsBLL.GetProductID_s(c_numVersionID))))
             If c_strSelectorType Is Nothing Then c_strSelectorType = ""
 
             'No per-product value set, default to global config setting frontend.basket.addtobasketdisplay
@@ -154,16 +156,18 @@ Partial Class UserControls_General_AddToBasket
         'to pass this well, so better to use the VersionID and then lookup parent product from that
         Dim numProductID As Long
         numProductID = c_numProductID
+        Dim objVersionsBLL As New VersionsBLL
         If numProductID = 0 Then
             Try
-                numProductID = VersionsBLL.GetProductID_s(litVersionID.Text)
+                numProductID = objVersionsBLL.GetProductID_s(litVersionID.Text)
             Catch ex As Exception
                 'Hope we never land here
             End Try
         End If
 
         'Unit size should be checked if the quantity control is "textbox" => qty entered by user
-        c_UnitSize = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.unitsize", numProductID))
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        c_UnitSize = FixNullFromDB(objObjectConfigBLL.GetValue("K:product.unitsize", numProductID))
         If c_UnitSize Is Nothing Then c_UnitSize = ""
         c_UnitSize = Replace(c_UnitSize, ",", ".") 'Will use the "." instead of "," (just in case wrongly typed)
         If Not IsNumeric(c_UnitSize) Then c_UnitSize = "1" 'Unit size default value is 1
@@ -181,7 +185,7 @@ Partial Class UserControls_General_AddToBasket
         Dim numQuantity As Single = Me.ItemsQuantity
         Dim objMiniBasket As Object = Page.Master.FindControl("UC_MiniBasket")
         Dim numMod As Decimal = SafeModulus(numQuantity, strUnitSize)
-
+        Dim objVersionsBLL As New VersionsBLL
 
         If numMod <> 0D Then
             '' wrong quantity - quantity should be a multiplies of unit size
@@ -192,7 +196,8 @@ Partial Class UserControls_General_AddToBasket
             'Trace.Warn("Quantity: " & numQuantity)
 
             Dim numBasketItemID As Long = 0, numEditVersionID As Long = 0
-            Dim strAddToBasketQtyCFG As String = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID)))
+            Dim objObjectConfigBLL As New ObjectConfigBLL
+            Dim strAddToBasketQtyCFG As String = FixNullFromDB(objObjectConfigBLL.GetValue("K:product.addtobasketqty", objVersionsBLL.GetProductID_s(c_numVersionID)))
             If strAddToBasketQtyCFG Is Nothing Then strAddToBasketQtyCFG = ""
             If Session("BasketItemInfo") & "" <> "" AndAlso LCase(strAddToBasketQtyCFG) = "dropdown" Then
                 Dim arrBasketItemInfo() As String = Split(Session("BasketItemInfo") & "", ";")
@@ -219,10 +224,12 @@ Partial Class UserControls_General_AddToBasket
     Private Sub LoadAddItemToBasket()
         Dim strUnitSize As String = GetUnitSize()
         Dim strMinimumAllowedQty As String = "1"
+        Dim objVersionsBLL As New VersionsBLL
+        Dim objObjectConfigBLL As New ObjectConfigBLL
 
         'If nothing specified, set selector type based
         'on config setting.
-        Dim strAddToBasketQtyCFG As String = FixNullFromDB(ObjectConfigBLL.GetValue("K:product.addtobasketqty", VersionsBLL.GetProductID_s(c_numVersionID)))
+        Dim strAddToBasketQtyCFG As String = FixNullFromDB(objObjectConfigBLL.GetValue("K:product.addtobasketqty", objVersionsBLL.GetProductID_s(c_numVersionID)))
         If strAddToBasketQtyCFG Is Nothing Then strAddToBasketQtyCFG = ""
         c_strSelectorType = GetSelectorType(strAddToBasketQtyCFG)
 

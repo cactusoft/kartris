@@ -141,7 +141,8 @@ Partial Class UserControls_Front_New_SubCategoryView
         End If
 
         '' Saving the current page's subcategories in tblCategories, depending on the pageIndex "CPGR"
-        prTblCategories = CategoriesBLL.GetCategoriesPageByParentID(_ParentCategoryID, _LanguageID, numPageIndx, _
+        Dim objCategoriesBLL As New CategoriesBLL
+        prTblCategories = objCategoriesBLL.GetCategoriesPageByParentID(_ParentCategoryID, _LanguageID, numPageIndx,
                                         _RowsPerPage, numCGroupID, c_numTotalCategoriesInParent)
 
         If prTblCategories.Rows.Count <> 0 Then

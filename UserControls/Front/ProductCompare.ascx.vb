@@ -54,8 +54,9 @@ Partial Class ProductCompare
         End If
 
         '' Get the ID, Name, and MinPrice for each product in the session variable "ProductsToCompare"
+        Dim objVersionsBLL As New VersionsBLL
         Dim tblProducts As DataTable
-        tblProducts = VersionsBLL.GetMinPriceByProductList(strProductList, Session("LANG"), numCGroupID)
+        tblProducts = objVersionsBLL.GetMinPriceByProductList(strProductList, Session("LANG"), numCGroupID)
 
         '' Bind the resulted dataTable to the repeater that will hold the ProductName, Pic. & its Price.
         rptCompareProducts.DataSource = tblProducts

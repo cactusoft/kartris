@@ -30,7 +30,8 @@ Public Class kartrisServices
     <Script.Services.ScriptMethod()>
     Public Function GetTopLevelCategories(ByVal prefixText As String, ByVal count As Integer) As String()
         Dim tblCategories As New DataTable
-        tblCategories = CategoriesBLL._SearchTopLevelCategoryByName(prefixText, Session("_LANG"))
+        Dim objCategoriesBLL As New CategoriesBLL
+        tblCategories = objCategoriesBLL._SearchTopLevelCategoryByName(prefixText, Session("_LANG"))
 
         Dim items() As String = New String() {""}
         Dim counter As Integer = 0
@@ -47,7 +48,8 @@ Public Class kartrisServices
     <Script.Services.ScriptMethod()> _
     Public Function GetCategories(ByVal prefixText As String, ByVal count As Integer) As String()
         Dim tblCategories As New DataTable
-        tblCategories = CategoriesBLL._SearchCategoryByName(prefixText, Session("_LANG"))
+        Dim objCategoriesBLL As New CategoriesBLL
+        tblCategories = objCategoriesBLL._SearchCategoryByName(prefixText, Session("_LANG"))
 
         Dim items() As String = New String() {""}
         Dim counter As Integer = 0
@@ -64,7 +66,8 @@ Public Class kartrisServices
     <Script.Services.ScriptMethod()>
     Public Function GetProducts(ByVal prefixText As String, ByVal count As Integer) As String()
         Dim tblProducts As New DataTable
-        tblProducts = ProductsBLL._SearchProductByName(prefixText, Session("_LANG"))
+        Dim objProductsBLL As New ProductsBLL
+        tblProducts = objProductsBLL._SearchProductByName(prefixText, Session("_LANG"))
 
         Dim items() As String = New String() {""}
         Dim counter As Integer = 0
@@ -85,7 +88,8 @@ Public Class kartrisServices
     <Script.Services.ScriptMethod()> _
     Public Function GetVersions(ByVal prefixText As String, ByVal count As Integer) As String()
         Dim tblVersions As New DataTable
-        tblVersions = VersionsBLL._SearchVersionByCode(prefixText)
+        Dim objVersionsBLL As New VersionsBLL
+        tblVersions = objVersionsBLL._SearchVersionByCode(prefixText)
 
         Dim items() As String = New String() {""}
         Dim counter As Integer = 0
@@ -103,7 +107,8 @@ Public Class kartrisServices
     <Script.Services.ScriptMethod()>
     Public Function GetVersionsExcludeBaseCombinations(ByVal prefixText As String, ByVal count As Integer) As String()
         Dim tblVersions As New DataTable
-        tblVersions = VersionsBLL._SearchVersionByCodeExcludeBaseCombinations(prefixText)
+        Dim objVersionsBLL As New VersionsBLL
+        tblVersions = objVersionsBLL._SearchVersionByCodeExcludeBaseCombinations(prefixText)
 
         Dim items() As String = New String() {""}
         Dim counter As Integer = 0

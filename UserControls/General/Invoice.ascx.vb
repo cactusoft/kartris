@@ -85,8 +85,8 @@ Partial Class UserControls_General_Invoice
         numCurrencyRoundNumber = BasketBLL.CurrencyRoundNumber
 
         strDefaultAddress = "" : strBillingAddress = "" : strShippingAddress = ""
-
-        tblInvoice = BasketBLL.GetCustomerInvoice(_OrderID, _CustomerID, 0)
+        Dim objBasketBLL As New BasketBLL
+        tblInvoice = objBasketBLL.GetCustomerInvoice(_OrderID, _CustomerID, 0)
 
         If tblInvoice.Rows.Count > 0 Then
             strBillingAddress = tblInvoice.Rows(0).Item("O_BillingAddress")
@@ -166,11 +166,14 @@ Partial Class UserControls_General_Invoice
         litCustomerID.Text = _CustomerID
         litInvoiceDate.Text = FormatDate(datInvoiceDate, "d", _OrderLanguageID)
         litVatNumber.Text = strVatNumber
-        litEORINumber.Text = ObjectConfigBLL.GetValue("K:user.eori", _CustomerID)
+
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+        litEORINumber.Text = objObjectConfigBLL.GetValue("K:user.eori", _CustomerID)
 
         'MOD v3.0001
         'Add email to invoice
-        litEmail.Text = UsersBLL.GetEmailByID(_CustomerID)
+        Dim objUsersBLL As New UsersBLL
+        litEmail.Text = objUsersBLL.GetEmailByID(_CustomerID)
 
         If Not String.IsNullOrWhiteSpace(strOrderComments) AndAlso KartSettingsManager.GetKartConfig("frontend.orders.showcommentsoninvoice") = "y" Then
             CType(FindControl("phdOrderComments"), PlaceHolder).Visible = True
@@ -180,7 +183,7 @@ Partial Class UserControls_General_Invoice
         'get sales receipt details
         tblInvoice.Dispose()
 
-        tblInvoice = BasketBLL.GetCustomerInvoice(_OrderID, _CustomerID, 1)
+        tblInvoice = objBasketBLL.GetCustomerInvoice(_OrderID, _CustomerID, 1)
 
         rptInvoice.DataSource = tblInvoice
         rptInvoice.DataBind()
@@ -202,6 +205,8 @@ Partial Class UserControls_General_Invoice
             numPromoDiscountTotal = 0
 
         ElseIf e.Item.ItemType = ListItemType.Item Or e.Item.ItemType = ListItemType.AlternatingItem Then
+            Dim objProductsBLL As New ProductsBLL
+            Dim objVersionsBLL As New VersionsBLL
             strVersionCode = e.Item.DataItem("IR_VersionCode")
             strCustomizationOptionText = e.Item.DataItem("IR_OptionsText")
             numTotal = e.Item.DataItem("O_TotalPrice")
@@ -241,8 +246,6 @@ Partial Class UserControls_General_Invoice
 
             'Handle items that are exempt from customer discount
             blnExcludeFromCustomerDiscount = e.Item.DataItem("IR_ExcludeFromCustomerDiscount")
-
-
 
             'Totals
             If e.Item.DataItem("O_PricesIncTax") Then
@@ -297,13 +300,14 @@ Partial Class UserControls_General_Invoice
             'Extra rows for more info - Brexit related for UK clients
             CType(e.Item.FindControl("phdNonUKRows"), PlaceHolder).Visible = KartSettingsManager.GetKartConfig("general.orders.extendedinvoiceinfo") = "y"
             CType(e.Item.FindControl("litDiscountedValue"), Literal).Text = ""
-            CType(e.Item.FindControl("litWeight"), Literal).Text = VersionsBLL._GetWeightByVersionCode(strVersionCode)
+            CType(e.Item.FindControl("litWeight"), Literal).Text = objVersionsBLL._GetWeightByVersionCode(strVersionCode)
             CType(e.Item.FindControl("litDiscountedValue"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, ((100 - numDiscountPercentage) / 100) * numRowPriceExTax)
 
             'Commodity code, first we lookup product ID from the SKU, then use that
             'to see if any commodity code. 
-            Dim numProductID As Integer = ProductsBLL.GetProductIDByVersionCode(strVersionCode)
-            Dim strCommodityCode As String = ObjectConfigBLL.GetValue("K:product.commoditycode", numProductID)
+            Dim numProductID As Integer = objProductsBLL.GetProductIDByVersionCode(strVersionCode)
+            Dim objObjectConfigBLL As New ObjectConfigBLL
+            Dim strCommodityCode As String = objObjectConfigBLL.GetValue("K:product.commoditycode", numProductID)
             If strCommodityCode <> "" Then
                 CType(e.Item.FindControl("phdCommodityCode"), PlaceHolder).Visible = True
                 CType(e.Item.FindControl("phdNoCommodityCode"), PlaceHolder).Visible = False
@@ -392,8 +396,8 @@ Partial Class UserControls_General_Invoice
 
             'shipping cost
             numShippingPrice = IIf(blnTaxDue, numShippingPriceIncTax, numShippingPriceExTax)
-            If numShippingPrice <> 0 Then
-                CType(e.Item.FindControl("phdShippingCost"), PlaceHolder).Visible = True
+            'If numShippingPrice <> 0 Then 'we should always show shipping, even if zero
+            CType(e.Item.FindControl("phdShippingCost"), PlaceHolder).Visible = True
                 CType(e.Item.FindControl("litShippingMethod"), Literal).Text = strShippingMethod
                 CType(e.Item.FindControl("litShippingPriceExTax"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingPriceExTax)
                 CType(e.Item.FindControl("litShippingTaxPerItem"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingTaxTotal)
@@ -401,7 +405,7 @@ Partial Class UserControls_General_Invoice
                 CType(e.Item.FindControl("litShippingPriceTotal1"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingPriceExTax)
                 CType(e.Item.FindControl("litShippingTaxAmount"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingTaxTotal)
                 CType(e.Item.FindControl("litShippingPriceTotal2"), Literal).Text = CurrenciesBLL.FormatCurrencyPrice(numOrderCurrency, numShippingPrice)
-            End If
+            'End If
 
             'order handling charge
             numOrderHandlingPrice = IIf(blnTaxDue, numOrderHandlingPriceIncTax, numOrderHandlingPriceExTax)
@@ -424,8 +428,9 @@ Partial Class UserControls_General_Invoice
 
             'Add currency description row, separate from total so can keep final column
             'width reasonable
+            Dim objLanguageElementsBLL As New LanguageElementsBLL()
             CType(e.Item.FindControl("litCurrencyDescription"), Literal).Text = "(" & CurrenciesBLL.CurrencyCode(numOrderCurrency) & " - " &
-                                            LanguageElementsBLL.GetElementValue(_OrderLanguageID,
+                                            objLanguageElementsBLL.GetElementValue(_OrderLanguageID,
                                               CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                                             CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, numOrderCurrency) & ")"
 
@@ -434,7 +439,7 @@ Partial Class UserControls_General_Invoice
             If numGatewayCurrency <> numOrderCurrency Then
                 CType(e.Item.FindControl("phdTotalGateway"), PlaceHolder).Visible = True
                 CType(e.Item.FindControl("litTotalGateway"), Literal).Text = "(" & CurrenciesBLL.CurrencyCode(numGatewayCurrency) & " - " &
-                            LanguageElementsBLL.GetElementValue(_OrderLanguageID,
+                            objLanguageElementsBLL.GetElementValue(_OrderLanguageID,
                               CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Currencies,
                             CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, numGatewayCurrency) & ") "
                 CType(e.Item.FindControl("litTotalGateway"), Literal).Text += CurrenciesBLL.FormatCurrencyPrice(numGatewayCurrency, numFinalTotalPriceInTaxGateway)

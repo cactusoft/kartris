@@ -90,9 +90,9 @@ Partial Class _ProductOptionGroups
     End Sub
 
     Private Sub GetBasicInformation()
-
+        Dim objVersionsBLL As New VersionsBLL
         Dim tblBasicVersion As New DataTable
-        tblBasicVersion = VersionsBLL._GetBasicVersionByProduct(CInt(litProductID.Text))
+        tblBasicVersion = objVersionsBLL._GetBasicVersionByProduct(CInt(litProductID.Text))
 
         Select Case tblBasicVersion.Rows.Count
             Case 0 'No Basic Version
@@ -160,7 +160,9 @@ Partial Class _ProductOptionGroups
 
                 'If is combinations product, the stock value is set at version/combination
                 'level, not for the base version
-                If ProductsBLL._NumberOfCombinations(CInt(litProductID.Text)) > 0 Then
+                Dim objProductsBLL As New ProductsBLL
+
+                If objProductsBLL._NumberOfCombinations(CInt(litProductID.Text)) > 0 Then
                     'Is combinations product
                     'Hide the stock level on first tab
                     phdStockQuantity.Visible = False
@@ -231,23 +233,27 @@ Partial Class _ProductOptionGroups
 
         Dim strProductName As String = ""
         Dim tblLanguages As DataTable = GetLanguagesFromCache()
+
+        Dim objProductsBLL As New ProductsBLL
+
         For Each row As DataRow In tblLanguages.Rows
-            strProductName = ProductsBLL._GetNameByProductID(_GetProductID(), CShort(row("LANG_ID")))
+            strProductName = objProductsBLL._GetNameByProductID(_GetProductID(), CShort(row("LANG_ID")))
             If strProductName Is Nothing Then Continue For 'Means the Name doesn't exist for that language, so no need to add it.
             tblLanguageContents.Rows.Add(row("LANG_ID"), CByte(LANG_ELEM_FIELD_NAME.Name), strProductName)
             tblLanguageContents.Rows.Add(row("LANG_ID"), CByte(LANG_ELEM_FIELD_NAME.Description), "")
         Next
 
         Dim strMsg As String = ""
+        Dim objVersionsBLL As New VersionsBLL
         Select Case lnkBtnSaveBasicVersion.CommandName
             Case "new"
-                If VersionsBLL._IsCodeNumberExist(txtBasicCodeNumber.Text) Then
+                If objVersionsBLL._IsCodeNumberExist(txtBasicCodeNumber.Text) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_AlreadyExists"))
                     Exit Sub
                 End If
-                If Not VersionsBLL._AddNewVersion(tblLanguageContents, strCodeNumber, _GetProductID(), numPrice, _
-                                                                     numTaxBand, numTaxBand2, "", numWeight, Nothing, numStockQty, numQtyLevel, _
-                                                                     True, Nothing, "n", numRRP, "b", _
+                If Not objVersionsBLL._AddNewVersion(tblLanguageContents, strCodeNumber, _GetProductID(), numPrice,
+                                                                     numTaxBand, numTaxBand2, "", numWeight, Nothing, numStockQty, numQtyLevel,
+                                                                     True, Nothing, "n", numRRP, "b",
                                                                      Nothing, "n", Nothing, 0, strMsg) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMsg)
                 Else
@@ -257,21 +263,21 @@ Partial Class _ProductOptionGroups
                 End If
             Case "update"
                 Dim lngCurrentVersion As Long = CLng(litBasicVersionID.Text)
-                If VersionsBLL._IsCodeNumberExist(txtBasicCodeNumber.Text, , lngCurrentVersion) Then
+                If objVersionsBLL._IsCodeNumberExist(txtBasicCodeNumber.Text, , lngCurrentVersion) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_AlreadyExists"))
                     Exit Sub
                 End If
 
-                Dim tblVersionInfo As DataTable = VersionsBLL._GetVersionByID(lngCurrentVersion)
+                Dim tblVersionInfo As DataTable = objVersionsBLL._GetVersionByID(lngCurrentVersion)
                 Dim drwVersion As DataRow = tblVersionInfo.Rows(0)
                 'On update Basic Info. no need to change the languageElements, so will send it as Nothing..'
                 'So, languageElements will be not included in the Update.
-                If VersionsBLL._UpdateVersion( _
-                    Nothing, lngCurrentVersion, strCodeNumber, _GetProductID(), numPrice, numTaxBand, numTaxBand2, "", numWeight, _
-                    FixNullFromDB(drwVersion("V_DeliveryTime")), numStockQty, numQtyLevel, FixNullFromDB(drwVersion("V_Live")), _
-                    FixNullFromDB(drwVersion("V_DownLoadInfo")), FixNullFromDB(drwVersion("V_DownloadType")), _
-                    numRRP, FixNullFromDB(drwVersion("V_Type")), _
-                    FixNullFromDB(drwVersion("V_CustomerGroupID")), FixNullFromDB(drwVersion("V_CustomizationType")), _
+                If objVersionsBLL._UpdateVersion(
+                    Nothing, lngCurrentVersion, strCodeNumber, _GetProductID(), numPrice, numTaxBand, numTaxBand2, "", numWeight,
+                    FixNullFromDB(drwVersion("V_DeliveryTime")), numStockQty, numQtyLevel, FixNullFromDB(drwVersion("V_Live")),
+                    FixNullFromDB(drwVersion("V_DownLoadInfo")), FixNullFromDB(drwVersion("V_DownloadType")),
+                    numRRP, FixNullFromDB(drwVersion("V_Type")),
+                    FixNullFromDB(drwVersion("V_CustomerGroupID")), FixNullFromDB(drwVersion("V_CustomizationType")),
                     FixNullFromDB(drwVersion("V_CustomizationDesc")), FixNullFromDB(drwVersion("V_CustomizationCost")), strMsg) Then
 
                     GetExistingCombinations()
@@ -363,15 +369,18 @@ Partial Class _ProductOptionGroups
     Private Sub GetExistingCombinations()
 
         Dim tblCurrentCombinations As New DataTable
-        tblCurrentCombinations = VersionsBLL._GetCombinationsByProductID(CInt(litProductID.Text))
+        Dim objVersionsBLL As New VersionsBLL
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+
+        tblCurrentCombinations = objVersionsBLL._GetCombinationsByProductID(CInt(litProductID.Text))
         tblCurrentCombinations.Columns.Add(New DataColumn("IsStockTracking", Type.GetType("System.Boolean")))
         tblCurrentCombinations.Columns.Add(New DataColumn("UseCombinationPrices", Type.GetType("System.Boolean")))
 
         'If the base set to stop stock tracking, then will hide the quantity & the warn level
         Dim blnStockTrackingEnabled As Boolean = False
-        If VersionsBLL.IsStockTrackingInBase(CInt(litProductID.Text)) Then blnStockTrackingEnabled = True
+        If objVersionsBLL.IsStockTrackingInBase(CInt(litProductID.Text)) Then blnStockTrackingEnabled = True
         'Check whether the product will use the combination prices or not
-        Dim blnUseCombinationPrices As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", CInt(litProductID.Text)) = "1", True, False)
+        Dim blnUseCombinationPrices As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", CInt(litProductID.Text)) = "1", True, False)
         For Each drwCombination As DataRow In tblCurrentCombinations.Rows
             drwCombination("IsStockTracking") = blnStockTrackingEnabled
             drwCombination("UseCombinationPrices") = blnUseCombinationPrices
@@ -492,7 +501,7 @@ Partial Class _ProductOptionGroups
             If CType(itm.FindControl("_UC_ItemSelection"), UserControls_Back_ItemSelection).IsSelected Then
 
                 tblOptions = New DataTable
-                tblOptions = CType(itm.FindControl("_uc_ProductOptions"),  _
+                tblOptions = CType(itm.FindControl("_UC_ProductOptions"),
                         _ProductOptions).GetSelectedOptions()
 
                 'If no options are selected then, no need to save any item-related data
@@ -550,8 +559,10 @@ Partial Class _ProductOptionGroups
         Dim tblExistingCombinations As New DataTable
         Dim tblSuspendedCombinations As New DataTable
         Dim tblNewCombinations As New DataTable
+        Dim objVersionsBLL As New VersionsBLL
+        Dim objObjectConfigBLL As New ObjectConfigBLL
 
-        tblExistingCombinations = VersionsBLL._GetVersionOptionsByProductID(CInt(litProductID.Text))
+        tblExistingCombinations = objVersionsBLL._GetVersionOptionsByProductID(CInt(litProductID.Text))
 
         Dim varExisting = From a In tblExistingCombinations _
                   Select New With _
@@ -599,7 +610,7 @@ Partial Class _ProductOptionGroups
                     If IsTheSameArray(strNewIDs, strExistingIDs) Then
 
                         If nextCombination.Type = "s" Then
-                            Dim tblTemp As DataTable = VersionsBLL._GetSuspendedByVersionID(nextCombination.ID, Session("_LANG"))
+                            Dim tblTemp As DataTable = objVersionsBLL._GetSuspendedByVersionID(nextCombination.ID, Session("_LANG"))
                             If tblTemp.Rows.Count <> 1 Then Exit For
 
                             Dim drwSuspended As DataRow = tblTemp.Rows(0)
@@ -626,9 +637,9 @@ Partial Class _ProductOptionGroups
 
             'If the base set to stop stock tracking, then will hide the quantity & the warn level
             Dim blnStockTrackingEnabled As Boolean = False
-            If VersionsBLL.IsStockTrackingInBase(CInt(litProductID.Text)) Then blnStockTrackingEnabled = True
+            If objVersionsBLL.IsStockTrackingInBase(CInt(litProductID.Text)) Then blnStockTrackingEnabled = True
             'Check whether the product will use the combination prices or not
-            Dim blnUseCombinationPrices As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", CInt(litProductID.Text)) = "1", True, False)
+            Dim blnUseCombinationPrices As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", CInt(litProductID.Text)) = "1", True, False)
             For Each drwNewCombination As DataRow In tblNewCombinations.Rows
                 drwNewCombination("IsStockTracking") = blnStockTrackingEnabled
                 drwNewCombination("UseCombinationPrices") = blnUseCombinationPrices
@@ -733,7 +744,10 @@ Partial Class _ProductOptionGroups
 
         'Create datatable for 'new' combinations
         Dim tblNewCombinations As New DataTable
-        tblNewCombinations = VersionsBLL._GetSchema()
+        Dim objVersionsBLL As New VersionsBLL
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+
+        tblNewCombinations = objVersionsBLL._GetSchema()
         tblNewCombinations.Columns.Add(New DataColumn("ID_List", Type.GetType("System.String")))
 
         'Create datatable for existing combinations
@@ -775,7 +789,7 @@ Partial Class _ProductOptionGroups
         Dim vRRP As Decimal = FixNullToDB(HandleDecimalValues(txtBasicRRP.Text), "z")
         Dim vWeight As Single = FixNullToDB(HandleDecimalValues(txtBasicWeight.Text), "d")
         Dim vProductID As Integer = FixNullToDB(litProductID.Text, "i")
-        Dim blnUseCombinationPrices As Boolean = IIf(ObjectConfigBLL.GetValue("K:product.usecombinationprice", vProductID) = "1", True, False)
+        Dim blnUseCombinationPrices As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", vProductID) = "1", True, False)
         For Each itm As RepeaterItem In rptNewCombinations.Items
             If itm.ItemType = ListItemType.Item OrElse itm.ItemType = ListItemType.AlternatingItem Then
                 Dim vOldVersionID As Int64 = CLng(FixNullToDB(CType(itm.FindControl("hidOldVersionID"), TextBox).Text))
@@ -826,8 +840,8 @@ Partial Class _ProductOptionGroups
         'tblUpdatedCombinations
 
         'First, update existing combinations
-        If VersionsBLL._UpdateCurrentCombinations(tblCurrentCombinations, "") Then
-            If VersionsBLL._CreateNewCombinations(tblNewCombinations, vProductID, CLng(litBasicVersionID.Text), strMsg) Then
+        If objVersionsBLL._UpdateCurrentCombinations(tblCurrentCombinations, "") Then
+            If objVersionsBLL._CreateNewCombinations(tblNewCombinations, vProductID, CLng(litBasicVersionID.Text), strMsg) Then
                 RaiseEvent VersionChanged()
             Else
                 _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMsg)
@@ -879,7 +893,8 @@ Partial Class _ProductOptionGroups
 
         If tblCurrentCombinations.Rows.Count = 0 Then Return True
         Dim strMsg As String = ""
-        If VersionsBLL._UpdateCurrentCombinations(tblCurrentCombinations, strMsg) Then
+        Dim objVersionsBLL As New VersionsBLL
+        If objVersionsBLL._UpdateCurrentCombinations(tblCurrentCombinations, strMsg) Then
             RaiseEvent VersionChanged()
         Else
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMsg)
@@ -924,7 +939,8 @@ Partial Class _ProductOptionGroups
                 Dim txtBox As TextBox = CType(dList.Items(i).FindControl("txtCombinationCodeNumber"), TextBox)
                 txtBox.CssClass = "codenumber"
                 'Need to check the code number, will scan all the versions' table, except the Product's Versions
-                If VersionsBLL._IsCodeNumberExist(txtBox.Text, _GetProductID()) Then
+                Dim objVersionsBLL As New VersionsBLL
+                If objVersionsBLL._IsCodeNumberExist(txtBox.Text, _GetProductID()) Then
                     txtBox.CssClass = "codenumber errortextbox"
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_AlreadyExists"))
                     Return False
@@ -947,7 +963,8 @@ Partial Class _ProductOptionGroups
 
     Protected Sub _UC_PopupMsg_Confirmed() Handles _UC_PopupMsg.Confirmed
         Dim strMessage As String = "", strDownloadFiles = ""
-        If Not VersionsBLL._DeleteProductVersions(_GetProductID(), strDownloadFiles, strMessage) Then
+        Dim objVersionsBLL As New VersionsBLL
+        If Not objVersionsBLL._DeleteProductVersions(_GetProductID(), strDownloadFiles, strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
             Return
         End If
@@ -983,7 +1000,8 @@ Partial Class _ProductOptionGroups
 
     Protected Sub _UC_PopupMsg_DeleteCombinations_Confirmed() Handles _UC_PopupMsg_DeleteCombinations.Confirmed
         Dim strMessage As String = ""
-        If Not VersionsBLL._DeleteExistingCombinations(_GetProductID(), strMessage) Then
+        Dim objVersionsBLL As New VersionsBLL
+        If Not objVersionsBLL._DeleteExistingCombinations(_GetProductID(), strMessage) Then
             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
             Return
         End If

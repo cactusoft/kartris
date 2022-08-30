@@ -58,7 +58,8 @@ Public Class PromotionsBLL
         Return Adptr.GetByProductID(_ProductID, _LanguageID, NowOffset, numPromotionID)
     End Function
     Public Shared Function GetPromotionName(ByVal numPromotionID As Integer, ByVal numLanguageID As Short) As String
-        Dim strName As String = LanguageElementsBLL.GetElementValue(numLanguageID, LANG_ELEM_TABLE_TYPE.Promotions, LANG_ELEM_FIELD_NAME.Name, numPromotionID)
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Dim strName As String = objLanguageElementsBLL.GetElementValue(numLanguageID, LANG_ELEM_TABLE_TYPE.Promotions, LANG_ELEM_FIELD_NAME.Name, numPromotionID)
         If strName = "# -LE- #" Then Return Nothing
         Return strName
     End Function
@@ -207,13 +208,17 @@ Public Class PromotionsBLL
 
         numLanguageID = Current.Session("LANG")
 
+        Dim objCategoriesBLL As New CategoriesBLL
+        Dim objProductsBLL As New ProductsBLL
+        Dim objVersionsBLL As New VersionsBLL
+
         For Each drwPromotionParts As DataRow In tblPromotionParts.Rows
 
             Dim strText As String = drwPromotionParts("PS_Text")
             Dim strStringID As String = drwPromotionParts("PS_ID")
             Dim strValue As String = CkartrisDisplayFunctions.FixDecimal(FixNullFromDB(drwPromotionParts("PP_Value")))
             Dim strItemID As String = FixNullFromDB(drwPromotionParts("PP_ItemID"))
-            Dim intProductID As Integer = VersionsBLL.GetProductID_s(CLng(strItemID))
+            Dim intProductID As Integer = objVersionsBLL.GetProductID_s(CLng(strItemID))
             Dim strItemName As String = ""
             Dim strItemLink As String = ""
 
@@ -226,21 +231,21 @@ Public Class PromotionsBLL
             End If
 
             If strText.Contains("[C]") AndAlso strItemID <> "" Then ''==== language_ID =====
-                strItemName = CategoriesBLL.GetNameByCategoryID(CInt(strItemID), numLanguageID)
+                strItemName = objCategoriesBLL.GetNameByCategoryID(CInt(strItemID), numLanguageID)
                 strItemLink = " <b><a href='" & CreateURL(Page.CanonicalCategory, strItemID) & "'>" & strItemName & "</a></b>"
                 strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
                 strText = strText.Replace("[C]", strItemLink)
             End If
 
             If strText.Contains("[P]") AndAlso strItemID <> "" Then ''==== language_ID =====
-                strItemName = ProductsBLL.GetNameByProductID(CInt(strItemID), numLanguageID)
+                strItemName = objProductsBLL.GetNameByProductID(CInt(strItemID), numLanguageID)
                 strItemLink = " <b><a href='" & CreateURL(Page.CanonicalProduct, strItemID) & "'>" & strItemName & "</a></b>"
                 strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
                 strText = strText.Replace("[P]", strItemLink)
             End If
 
             If strText.Contains("[V]") AndAlso strItemID <> "" Then ''==== language_ID =====
-                strItemName = ProductsBLL.GetNameByProductID(intProductID, numLanguageID) & " (" & VersionsBLL._GetNameByVersionID(CInt(strItemID), numLanguageID) & ")"
+                strItemName = objProductsBLL.GetNameByProductID(intProductID, numLanguageID) & " (" & objVersionsBLL._GetNameByVersionID(CInt(strItemID), numLanguageID) & ")"
                 strItemLink = " <b><a href='" & CreateURL(Page.CanonicalProduct, intProductID) & "'>" & strItemName & "</a></b>"
                 strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
                 strText = strText.Replace("[V]", strItemLink)

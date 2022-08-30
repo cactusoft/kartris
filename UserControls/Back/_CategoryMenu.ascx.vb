@@ -58,6 +58,11 @@ Partial Class _CategoryMenu
         CatSiteMap.RefreshSiteMap()
         BuildTopLevelMenu()
         SelectCurrentPage()
+
+        'v3.3000
+        'Rebuild new product price index
+        Dim blnRebuilt As Boolean = ProductsBLL._RebuildPriceIndex()
+
         RaiseEvent ShowMasterUpdate()
         updMenu.Update()
     End Sub
@@ -69,7 +74,8 @@ Partial Class _CategoryMenu
     ''' New sproc for Kartris v3, now includes subsites
     ''' </remarks>
     Sub BuildTopLevelMenu()
-        Dim tblChilds As DataTable = CategoriesBLL._Treeview(Session("_LANG"))
+        Dim objCategoriesBLL As New CategoriesBLL
+        Dim tblChilds As DataTable = objCategoriesBLL._Treeview(Session("_LANG"))
         Dim childNode As TreeNode = Nothing
         For Each drwChilds As DataRow In tblChilds.Rows
             childNode = New TreeNode(drwChilds("CAT_Name"), drwChilds("CAT_ID") & "|" & drwChilds("SUB_ID"))
@@ -119,7 +125,8 @@ Partial Class _CategoryMenu
     ''' <remarks></remarks>
     Sub BuildChildNodes(ByRef node As TreeNode, ByVal numParentID As Integer, ByVal numSiteID As Integer, Optional ByVal chrParentType As Char = "c")
         If chrParentType = "c" Then
-            Dim tblChilds As DataTable = CategoriesBLL._GetCategoriesPageByParentID(numParentID, Session("_LANG"), 0, 2000, 0)
+            Dim objCategoriesBLL As New CategoriesBLL
+            Dim tblChilds As DataTable = objCategoriesBLL._GetCategoriesPageByParentID(numParentID, Session("_LANG"), 0, 2000, 0)
             Dim childNode As TreeNode = Nothing
             For Each drwChilds As DataRow In tblChilds.Rows
                 childNode = New TreeNode(drwChilds("CAT_Name"), drwChilds("CAT_ID") & "|" & numSiteID)
@@ -152,7 +159,8 @@ Partial Class _CategoryMenu
                 node.ChildNodes.Add(childNode)
             Next
         ElseIf chrParentType = "p" Then
-            Dim tblChilds As DataTable = ProductsBLL._GetProductsPageByCategory(numParentID, Session("_LANG"), 0, 2000, 0)
+            Dim objProductsBLL As New ProductsBLL
+            Dim tblChilds As DataTable = objProductsBLL._GetProductsPageByCategory(numParentID, Session("_LANG"), 0, 2000, 0)
             Dim childNode As TreeNode = Nothing
             For Each drwChilds As DataRow In tblChilds.Rows
                 childNode = New TreeNode(drwChilds("P_Name"), drwChilds("P_ID") & "|" & numSiteID)

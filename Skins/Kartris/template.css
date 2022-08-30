@@ -122,7 +122,7 @@ SEARCH BOX
 */
 #section_searchbox                      { border-bottom: solid 1px #333; position: relative; margin: 3px 0 0 0; display: block; margin: 0 auto; width: 400px; max-width: 100%; height: 45px; }
 #section_searchbox .row                 { padding: 0; }
-#section_searchbox i.fas                { font-size: 160% !important; margin: 13px 0 0 6px; color: #000; }
+#section_searchbox i.fas                { font-size: 160% !important; margin: 13px 0 0 6px; color: #000; cursor: pointer; }
 #section_searchbox input[type="text"],
 #section_searchbox input[type="search"]   { margin: 4px 0 15px 0; box-shadow: none; border: none; color: #000; font-size: 160%; background-color: transparent; }
 /* 
@@ -130,9 +130,9 @@ SEARCH BOX
 OTHER CONTROLS language, currency, etc.
 ========================================================================
 */
-#currencymenu                           { margin: 7px 20px 0 20px; width: 90px; overflow: hidden; float: right; }
+#currencymenu                           { margin: 7px 20px 0 20px; width: 60px; overflow: hidden; float: left; }
 #currencymenu select					{ color: #000; border: none; background-color: #fff; font-size: 0.9em; box-shadow: none; min-width: 70px; }
-#languagemenu                           { font-size: 0.8em; margin: 8px 0 0 20px; float: right; text-align: left; display: block; max-width: 110px; border: none; border: solid 1px #000; }
+#languagemenu                           { font-size: 0.8em; margin: 8px 0 0 20px; float: left; text-align: left; display: block; max-width: 110px; border: none; border: solid 1px #000; }
 #languagemenu .language-link            { display: inline-block; border: none; padding: 1px 3px; color: #000; text-transform: uppercase; }
 #languagemenu .lang-selected            { background-color: #000; color: #fff; }
 #recentlyviewed                         { padding: 50px 0 40px 0; text-align: center; }

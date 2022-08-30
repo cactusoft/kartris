@@ -22,64 +22,64 @@ Imports CkartrisDataManipulation
 Imports KartSettingsManager
 Public Class VersionsBLL
 
-    Private Shared _Adptr As VersionsTblAdptr = Nothing
-    Protected Shared ReadOnly Property Adptr() As VersionsTblAdptr
+    Private _Adptr As VersionsTblAdptr = Nothing
+    Protected ReadOnly Property Adptr() As VersionsTblAdptr
         Get
             _Adptr = New VersionsTblAdptr
             Return _Adptr
         End Get
     End Property
 
-    Private Shared _AdptrVersionOption As VersionOptionLinkTblAdptr = Nothing
-    Protected Shared ReadOnly Property AdptrVersionOption() As VersionOptionLinkTblAdptr
+    Private _AdptrVersionOption As VersionOptionLinkTblAdptr = Nothing
+    Protected ReadOnly Property AdptrVersionOption() As VersionOptionLinkTblAdptr
         Get
             _AdptrVersionOption = New VersionOptionLinkTblAdptr
             Return _AdptrVersionOption
         End Get
     End Property
 
-    Private Shared _AdptrQuantity As QuantityDiscountsTblAdptr = Nothing
-    Protected Shared ReadOnly Property AdptrQuantity() As QuantityDiscountsTblAdptr
+    Private _AdptrQuantity As QuantityDiscountsTblAdptr = Nothing
+    Protected ReadOnly Property AdptrQuantity() As QuantityDiscountsTblAdptr
         Get
             _AdptrQuantity = New QuantityDiscountsTblAdptr
             Return _AdptrQuantity
         End Get
     End Property
 
-    Public Shared Function GetByProduct(ByVal prodID As Integer, ByVal langID As Short, ByVal cgroup As Short) As Data.DataTable
+    Public Function GetByProduct(ByVal prodID As Integer, ByVal langID As Short, ByVal cgroup As Short) As Data.DataTable
         Return Adptr.GetByProductID(prodID, langID, cgroup)
     End Function
 
-    Public Shared Function GetProductOptions(ByVal _ProductID As Integer, ByVal _LangID As Short) As Data.DataTable
+    Public Function GetProductOptions(ByVal _ProductID As Integer, ByVal _LangID As Short) As Data.DataTable
         Return Adptr.GetProductOptions(_ProductID, _LangID)
     End Function
 
-    Public Shared Function GetProductOptionValues(ByVal _ProductID As Integer, ByVal _LangID As Short, ByVal _OptionGroupID As Int32) As DataTable
+    Public Function GetProductOptionValues(ByVal _ProductID As Integer, ByVal _LangID As Short, ByVal _OptionGroupID As Int32) As DataTable
         Return Adptr.GetOptionValues(_ProductID, _OptionGroupID, _LangID)
     End Function
 
-    Public Shared Function GetProductID_s(ByVal _VersionID As Long) As Integer
+    Public Function GetProductID_s(ByVal _VersionID As Long) As Integer
         Dim qAdptr As New VersionQTblAdptr
         Dim numProductID As Integer
         qAdptr.GetProductID_s(_VersionID, numProductID)
         Return numProductID
     End Function
 
-    Public Shared Function GetMinPriceByProductList(ByVal pProductList As String, ByVal pLanguageID As Short, ByVal pCGID As Short) As DataTable
+    Public Function GetMinPriceByProductList(ByVal pProductList As String, ByVal pLanguageID As Short, ByVal pCGID As Short) As DataTable
         Return Adptr.GetMinPriceByProductList(pLanguageID, pProductList, pCGID)
     End Function
 
-    Public Shared Function GetOptionStockQty(ByVal ProductID As Integer, ByVal strOptionList As String) As Single
+    Public Function GetOptionStockQty(ByVal ProductID As Integer, ByVal strOptionList As String) As Single
         Dim numQty As Single = -9999.0F
         Adptr.GetOptionStockQty(ProductID, strOptionList, numQty)
         Return numQty
     End Function
 
-    Public Shared Function GetVersionCustomization(ByVal numVersionID As Long) As DataTable
+    Public Function GetVersionCustomization(ByVal numVersionID As Long) As DataTable
         Return Adptr.GetCustomization(numVersionID)
     End Function
 
-    Public Shared Function _GetWeightByVersionCode(ByVal strVersionCode As String) As Double
+    Public Function _GetWeightByVersionCode(ByVal strVersionCode As String) As Double
         Try
             Return CStr(Adptr._GetWeightByVersionCode(strVersionCode))
         Catch ex As Exception
@@ -87,7 +87,7 @@ Public Class VersionsBLL
         End Try
     End Function
 
-    Public Shared Function IsVersionCustomizable(ByVal numVersionID As Long) As Boolean
+    Public Function IsVersionCustomizable(ByVal numVersionID As Long) As Boolean
         Dim chrCustomizationType As Char = ""
         Try
             chrCustomizationType = CChar(GetVersionCustomization(numVersionID).Rows(0)("V_CustomizationType"))
@@ -97,11 +97,11 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Private Shared Function GetBasicVersionByProduct(ByVal _ProductID As Integer) As DataTable
+    Private Function GetBasicVersionByProduct(ByVal _ProductID As Integer) As DataTable
         Return Adptr.GetBasicVersionByProduct(_ProductID)
     End Function
 
-    Public Shared Function IsStockTrackingInBase(ByVal _ProductID As Integer) As Boolean
+    Public Function IsStockTrackingInBase(ByVal _ProductID As Integer) As Boolean
         Dim tblBaseVersion As DataTable = Adptr.GetBasicVersionByProduct(_ProductID)
         If tblBaseVersion.Rows.Count > 0 AndAlso
             tblBaseVersion.Rows(0)("V_QuantityWarnLevel") > 0.0F Then
@@ -110,20 +110,21 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Function _GetVersionByID(ByVal _VersionID As Long) As DataTable
+    Public Function _GetVersionByID(ByVal _VersionID As Long) As DataTable
         Return Adptr._GetByID(_VersionID)
     End Function
 
-    Public Shared Function _GetNameByVersionID(ByVal _VersionID As Integer, ByVal _LanguageID As Short) As String
-        Return LanguageElementsBLL.GetElementValue(
+    Public Function _GetNameByVersionID(ByVal _VersionID As Integer, ByVal _LanguageID As Short) As String
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Return objLanguageElementsBLL.GetElementValue(
           _LanguageID, LANG_ELEM_TABLE_TYPE.Versions, LANG_ELEM_FIELD_NAME.Name, _VersionID)
     End Function
 
-    Public Shared Function _GetStockLevel(ByVal numLanguageID As Byte) As DataTable
+    Public Function _GetStockLevel(ByVal numLanguageID As Byte) As DataTable
         Return Adptr._GetStockLevel(numLanguageID)
     End Function
 
-    Public Shared Function _SearchVersionByName(ByVal _Key As String, ByVal _LanguageID As Byte) As DataTable
+    Public Function _SearchVersionByName(ByVal _Key As String, ByVal _LanguageID As Byte) As DataTable
         Dim tbl As New DataTable
         tbl = Adptr._SearchByName(_Key, _LanguageID)
         If tbl.Rows.Count = 0 Then
@@ -132,7 +133,7 @@ Public Class VersionsBLL
         Return tbl
     End Function
 
-    Public Shared Function _SearchVersionByCode(ByVal _Key As String) As DataTable
+    Public Function _SearchVersionByCode(ByVal _Key As String) As DataTable
         Dim tbl As New DataTable
         Try
             tbl = Adptr._SearchByCode(_Key)
@@ -146,7 +147,7 @@ Public Class VersionsBLL
         Return tbl
     End Function
 
-    Public Shared Function _SearchVersionByCodeExcludeBaseCombinations(ByVal _Key As String) As DataTable
+    Public Function _SearchVersionByCodeExcludeBaseCombinations(ByVal _Key As String) As DataTable
         Dim tbl As New DataTable
         Try
             tbl = Adptr._SearchByCodeExcludeBaseCombinations(_Key)
@@ -160,72 +161,72 @@ Public Class VersionsBLL
         Return tbl
     End Function
 
-    Public Shared Function _GetBasicVersionByProduct(ByVal _ProductID As Integer) As DataTable
+    Public Function _GetBasicVersionByProduct(ByVal _ProductID As Integer) As DataTable
         Return Adptr._GetBasicVersionByProduct(_ProductID)
     End Function
 
-    Public Shared Function _GetSingleVersionByProduct(ByVal _ProductID As Integer) As DataTable
+    Public Function _GetSingleVersionByProduct(ByVal _ProductID As Integer) As DataTable
         Return Adptr._GetSingleVersionByProduct(_ProductID)
     End Function
 
-    Public Shared Function _GetVersionOptionsByProductID(ByVal pProductID As Integer) As DataTable
+    Public Function _GetVersionOptionsByProductID(ByVal pProductID As Integer) As DataTable
         Return AdptrVersionOption._GetByProduct(pProductID)
     End Function
 
-    Public Shared Function _GetCombinationsByProductID(ByVal pProductID As Integer) As DataTable
+    Public Function _GetCombinationsByProductID(ByVal pProductID As Integer) As DataTable
         Return Adptr._GetCombinationsByProductID(pProductID)
     End Function
 
-    Public Shared Function _GetSuspendedByVersionID(ByVal pVersionID As Long, ByVal pLanguageID As Byte) As DataTable
+    Public Function _GetSuspendedByVersionID(ByVal pVersionID As Long, ByVal pLanguageID As Byte) As DataTable
         Return Adptr._GetSuspendedByVersionID(pVersionID, pLanguageID)
     End Function
 
-    Public Shared Function _GetSchema() As DataTable
+    Public Function _GetSchema() As DataTable
         Return Adptr._GetByID(-1)
     End Function
 
-    Private Shared Function _GetRowsByProduct(ByVal pProductID As Integer) As DataTable
+    Private Function _GetRowsByProduct(ByVal pProductID As Integer) As DataTable
         Return Adptr._GetRowsByProductID(pProductID)
     End Function
 
-    Public Shared Function _GetByProduct(ByVal prodID As Integer, ByVal langID As Short) As Data.DataTable
+    Public Function _GetByProduct(ByVal prodID As Integer, ByVal langID As Short) As Data.DataTable
         Return Adptr._GetByProductID(prodID, langID)
     End Function
 
-    Public Shared Function _IsCodeNumberExist(ByVal pCodeNumber As String, Optional ByVal pExcludedProductID As Integer = -1, Optional ByVal pExecludedVersionID As Long = -1) As Boolean
+    Public Function _IsCodeNumberExist(ByVal pCodeNumber As String, Optional ByVal pExcludedProductID As Integer = -1, Optional ByVal pExecludedVersionID As Long = -1) As Boolean
         Return Adptr._GetByCodeNumber(pCodeNumber, pExcludedProductID, pExecludedVersionID).Rows.Count > 0
     End Function
 
-    Public Shared Function _GetVersionIDByCodeNumber(ByVal pCodeNumber As String) As Int64
+    Public Function _GetVersionIDByCodeNumber(ByVal pCodeNumber As String) As Int64
         Return Adptr._GetVersionIDByCodeNumber(pCodeNumber)
     End Function
 
-    Public Shared Function _GetNoOfVersionsByProductID(ByVal ProductID As Integer) As Integer
+    Public Function _GetNoOfVersionsByProductID(ByVal ProductID As Integer) As Integer
         Return CInt(Adptr._GetTotalByProductID(ProductID).Rows(0)("TotalVersions"))
     End Function
 
-    Public Shared Function _GetQuantityDiscountsByVersion(ByVal VersionID As Long) As DataTable
+    Public Function _GetQuantityDiscountsByVersion(ByVal VersionID As Long) As DataTable
         Return AdptrQuantity._GetByVersion(VersionID)
     End Function
 
-    Public Shared Function _GetQuantityDiscountsByVersionIDList(ByVal strVersionIDList As String, ByVal LanguageID As Byte) As DataTable
+    Public Function _GetQuantityDiscountsByVersionIDList(ByVal strVersionIDList As String, ByVal LanguageID As Byte) As DataTable
         Return AdptrQuantity._GetByVersionIDList(strVersionIDList, LanguageID)
     End Function
 
-    Public Shared Function GetQuantityDiscountByProduct(ByVal ProductID As Integer, ByVal LanguageID As Byte) As DataTable
+    Public Function GetQuantityDiscountByProduct(ByVal ProductID As Integer, ByVal LanguageID As Byte) As DataTable
         Return AdptrQuantity.GetByProduct(ProductID, LanguageID)
     End Function
 
-    Public Shared Function _GetDownloadableFiles(ByVal numLanguageID As Byte) As DataTable
+    Public Function _GetDownloadableFiles(ByVal numLanguageID As Byte) As DataTable
         Return Adptr._GetDownloadableFiles(numLanguageID)
     End Function
 
-    Public Shared Function _GetDownloadableLinks(ByVal numLanguageID As Byte) As DataTable
+    Public Function _GetDownloadableLinks(ByVal numLanguageID As Byte) As DataTable
         Return Adptr._GetDownloadableLinks(numLanguageID)
     End Function
 #Region "Markup Prices"
 
-    Public Shared Function _GetVersionsByCategoryList(ByVal numLanguageID As Byte, ByVal numFromPrice As Single, ByVal numToPrice As Single, ByVal strCategories As String) As DataTable
+    Public Function _GetVersionsByCategoryList(ByVal numLanguageID As Byte, ByVal numFromPrice As Single, ByVal numToPrice As Single, ByVal strCategories As String) As DataTable
         Return Adptr._GetDetailsByCategoryList(numLanguageID, numFromPrice, numToPrice, strCategories)
     End Function
 
@@ -257,7 +258,7 @@ Public Class VersionsBLL
     End Function
 #End Region
 
-    Public Shared Function _UpdateQuantityDiscount(ByVal tblQtyDiscount As DataTable, ByVal VersionID As Long, ByRef strMsg As String) As Boolean
+    Public Function _UpdateQuantityDiscount(ByVal tblQtyDiscount As DataTable, ByVal VersionID As Long, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -296,7 +297,7 @@ Public Class VersionsBLL
 
     End Function
 
-    Private Shared Function _DeleteQtyDiscountByVersion(ByVal VersionID As Long, ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean
+    Private Function _DeleteQtyDiscountByVersion(ByVal VersionID As Long, ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean
         Try
             Dim cmd As New SqlCommand("_spKartrisQuantityDiscounts_DeleteByVersion", sqlConn)
             cmd.CommandType = CommandType.StoredProcedure
@@ -314,7 +315,7 @@ Public Class VersionsBLL
 
     End Function
 
-    Public Shared Function _GetCustomerGroupPricesForVersion(ByVal LanguageID As Integer, ByVal VersionID As Long) As DataTable
+    Public Function _GetCustomerGroupPricesForVersion(ByVal LanguageID As Integer, ByVal VersionID As Long) As DataTable
         Dim dtCustomerGroupPrices As New DataTable
         Dim daCustomerGroupPrices As New SqlDataAdapter
 
@@ -341,7 +342,7 @@ Public Class VersionsBLL
         Return dtCustomerGroupPrices
     End Function
 
-    Public Shared Function _UpdateCustomerGroupPrice(ByVal CustomerGroupID As Integer, ByVal VersionID As Integer, ByVal Price As Double, ByVal CustomerGroupPriceID As Integer, ByRef strMsg As String) As Boolean
+    Public Function _UpdateCustomerGroupPrice(ByVal CustomerGroupID As Integer, ByVal VersionID As Integer, ByVal Price As Double, ByVal CustomerGroupPriceID As Integer, ByRef strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Dim blnSuccess As Boolean = True
 
@@ -368,14 +369,14 @@ Public Class VersionsBLL
     End Function
 
 #Region "   Combinations Work "
-    Public Shared Function GetCombinationVersionID_s(ByVal numProductID As Integer, ByVal strOptions As String) As Long
+    Public Function GetCombinationVersionID_s(ByVal numProductID As Integer, ByVal strOptions As String) As Long
         Dim qAdptr As New VersionQTblAdptr
         Dim numVersionID As Long
         qAdptr.GetCombinationVersionID_s(numProductID, strOptions, numVersionID)
         Return numVersionID
     End Function
 
-    Public Shared Function _CreateNewCombinations(ByVal ptblNewData As DataTable, ByVal pProductID As Integer,
+    Public Function _CreateNewCombinations(ByVal ptblNewData As DataTable, ByVal pProductID As Integer,
        ByVal pBasicVersionID As Long, ByRef strMsg As String) As Boolean
 
         '' From Kartris v3, a little different here. We want to keep the version IDs
@@ -418,7 +419,7 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Private Shared Function _DeleteSuspendedCombinations(ByVal productID As Integer, ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean
+    Private Function _DeleteSuspendedCombinations(ByVal productID As Integer, ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean
         Try
             Dim cmd As New SqlCommand("_spKartrisVersions_DeleteSuspendedVersions", sqlConn, savePoint)
             cmd.CommandType = CommandType.StoredProcedure
@@ -432,7 +433,7 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Private Shared Function _InsertNewCombinations(ByVal ptblCombinations As DataTable, ByVal pProductID As Integer, ByVal pSqlConn As SqlConnection, ByVal pSavePoint As SqlTransaction) As Boolean
+    Private Function _InsertNewCombinations(ByVal ptblCombinations As DataTable, ByVal pProductID As Integer, ByVal pSqlConn As SqlConnection, ByVal pSavePoint As SqlTransaction) As Boolean
 
         Try
             Dim tblLanguageElement As New DataTable
@@ -480,7 +481,7 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Function _AddNewVersionAsCombination(ByVal tblElements As DataTable, ByVal strCodeNumber As String, ByVal intProductID As Integer,
+    Public Function _AddNewVersionAsCombination(ByVal tblElements As DataTable, ByVal strCodeNumber As String, ByVal intProductID As Integer,
       ByVal decPrice As Decimal, ByVal intTaxID As Byte, intTaxID2 As Byte, strExtraTax As String, ByVal snglWeight As Single, ByVal sngStockQty As Single,
       ByVal sngWarnLevel As Single, ByVal decRRP As Decimal, ByVal chrType As Char,
       ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction, ByRef numNewVersionID As Long) As Boolean
@@ -525,7 +526,7 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Function _DeleteExistingCombinations(ByVal productID As Integer, ByRef strMsg As String) As Boolean
+    Public Function _DeleteExistingCombinations(ByVal productID As Integer, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -555,7 +556,7 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Function _UpdateCurrentCombinations(ByVal ptblCurrentCombinations As DataTable, ByRef strMsg As String) As Boolean
+    Public Function _UpdateCurrentCombinations(ByVal ptblCurrentCombinations As DataTable, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -607,7 +608,7 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Function GetCombinationPrice(ByVal numProductID As Integer, strOptions As String) As Single
+    Public Function GetCombinationPrice(ByVal numProductID As Integer, strOptions As String) As Single
         Dim qAdptr As New VersionQTblAdptr
         Dim numCombinationPrice As Single = 0.0F
         qAdptr.GetCombinationPrice_s(numProductID, strOptions, numCombinationPrice)
@@ -615,8 +616,8 @@ Public Class VersionsBLL
     End Function
 #End Region
 
-    Public Shared Function _SetVersionAsBaseByProductID( _
-      ByVal intProductID As Long, ByVal sqlConn As SqlConnection, _
+    Public Function _SetVersionAsBaseByProductID(
+      ByVal intProductID As Long, ByVal sqlConn As SqlConnection,
       ByVal savePoint As SqlTransaction, ByRef strMsg As String) As Boolean
 
         Try
@@ -634,7 +635,7 @@ Public Class VersionsBLL
 
         Return False
     End Function
-    Public Shared Function _AddNewVersionAsSingle(ByVal tblElements As DataTable, ByVal strCodeNumber As String, ByVal intProductID As Integer, _
+    Public Function _AddNewVersionAsSingle(ByVal tblElements As DataTable, ByVal strCodeNumber As String, ByVal intProductID As Integer,
          ByVal intCustomerGrp As Short, ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction, ByRef strMsg As String) As Boolean
 
         Try
@@ -651,13 +652,13 @@ Public Class VersionsBLL
             cmdAddVersion.Transaction = savePoint
             cmdAddVersion.ExecuteNonQuery()
 
-            If cmdAddVersion.Parameters("@V_NewID").Value Is Nothing OrElse _
+            If cmdAddVersion.Parameters("@V_NewID").Value Is Nothing OrElse
               cmdAddVersion.Parameters("@V_NewID").Value Is DBNull.Value Then
                 Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
             End If
 
             Dim intNewVersionID As Long = cmdAddVersion.Parameters("@V_NewID").Value
-            If Not LanguageElementsBLL._AddLanguageElements( _
+            If Not LanguageElementsBLL._AddLanguageElements(
               tblElements, LANG_ELEM_TABLE_TYPE.Versions, intNewVersionID, sqlConn, savePoint) Then
                 Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
             End If
@@ -672,7 +673,7 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Function _AddNewVersion(ByVal tblElements As DataTable, ByVal strCodeNumber As String, ByVal intProductID As Integer,
+    Public Function _AddNewVersion(ByVal tblElements As DataTable, ByVal strCodeNumber As String, ByVal intProductID As Integer,
          ByVal decPrice As Decimal, ByVal intTaxID As Byte, ByVal intTaxID2 As Byte, ByVal strTaxExtra As String, ByVal snglWeight As Single,
          ByVal intDeliveryTime As Byte, ByVal sngStockQty As Single, ByVal sngWarnLevel As Single,
          ByVal blnLive As Boolean, ByVal strDownloadInfo As String, ByVal chrDownloadType As Char,
@@ -754,7 +755,7 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Function _UpdateVersion(ByVal tblElements As DataTable, ByVal lngVersionID As Long, ByVal strCodeNumber As String, ByVal intProductID As Integer,
+    Public Function _UpdateVersion(ByVal tblElements As DataTable, ByVal lngVersionID As Long, ByVal strCodeNumber As String, ByVal intProductID As Integer,
          ByVal decPrice As Decimal, ByVal intTaxID As Byte, ByVal intTaxID2 As Byte, ByVal strTaxExtra As String, ByVal snglWeight As Single,
          ByVal intDeliveryTime As Byte, ByVal sngStockQty As Single, ByVal sngWarnLevel As Single,
          ByVal blnLive As Boolean, ByVal strDownloadInfo As String, ByVal chrDownloadType As Char,
@@ -823,8 +824,11 @@ Public Class VersionsBLL
 
                 cmdUpdateVersion.ExecuteNonQuery()
 
+
+
                 If chrType = "b" Then
-                    If ObjectConfigBLL.GetValue("K:product.usecombinationprice", intProductID) <> "1" Then
+                    Dim objObjectConfigBLL As New ObjectConfigBLL
+                    If objObjectConfigBLL.GetValue("K:product.usecombinationprice", intProductID) <> "1" Then
                         If Not _UpdateCombinationsFromBasicInfo(intProductID, decPrice, intTaxID, intTaxID2, strTaxExtra, snglWeight, decRRP, sqlConn, savePoint) Then
                             Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                         End If
@@ -885,7 +889,7 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Function _UpdateVersionDownloadInfo(ByVal lngVersionID As Long, ByVal strDownloadInfo As String, ByVal chrDownloadType As Char, ByRef strMsg As String) As Boolean
+    Public Function _UpdateVersionDownloadInfo(ByVal lngVersionID As Long, ByVal strDownloadInfo As String, ByVal chrDownloadType As Char, ByRef strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
             Dim cmdUpdateVersion As SqlCommand = sqlConn.CreateCommand
@@ -936,7 +940,7 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Function _UpdateVersionStockLevel(ByVal tblVersionsToUpdate As DataTable, ByRef strMsg As String) As Boolean
+    Public Function _UpdateVersionStockLevel(ByVal tblVersionsToUpdate As DataTable, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -991,7 +995,7 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Function _UpdateVersionStockLevelByCode(ByVal tblVersionsToUpdate As DataTable, ByRef strMsg As String) As Boolean
+    Public Function _UpdateVersionStockLevelByCode(ByVal tblVersionsToUpdate As DataTable, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -1047,8 +1051,8 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Private Shared Function _UpdateCombinationsFromBasicInfo(ByVal intProductID As Integer, ByVal snglPrice As Single, ByVal intTax As Byte, _
-              ByVal intTax2 As Byte, strTaxExtra As String, ByVal snglWeight As Single, ByVal snglRRP As Single, _
+    Private Function _UpdateCombinationsFromBasicInfo(ByVal intProductID As Integer, ByVal snglPrice As Single, ByVal intTax As Byte,
+              ByVal intTax2 As Byte, strTaxExtra As String, ByVal snglWeight As Single, ByVal snglRRP As Single,
               ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean
         Try
             Dim cmd As New SqlCommand("_spKartrisVersions_UpdateCombinationsFromBasicInfo", sqlConn)
@@ -1071,7 +1075,7 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Function _DeleteVersion(ByVal VersionID As Long, ByRef strFiles As String, ByRef strMsg As String) As Boolean
+    Public Function _DeleteVersion(ByVal VersionID As Long, ByRef strFiles As String, ByRef strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
             Dim cmdDeleteVersion As SqlCommand = sqlConn.CreateCommand
@@ -1102,7 +1106,7 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Function _DeleteProductVersions(ByVal ProductID As Integer, ByRef strFiles As String, ByVal strMsg As String) As Boolean
+    Public Function _DeleteProductVersions(ByVal ProductID As Integer, ByRef strFiles As String, ByVal strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
             Dim cmdDeleteProductVersions As SqlCommand = sqlConn.CreateCommand
@@ -1137,11 +1141,11 @@ Public Class VersionsBLL
         Return False
     End Function
 
-    Public Shared Sub _ChangeSortValue(ByVal numVersionID As Long, ByVal numProductID As Integer, ByVal chrDirection As Char)
+    Public Sub _ChangeSortValue(ByVal numVersionID As Long, ByVal numProductID As Integer, ByVal chrDirection As Char)
         Adptr._ChangeSortValue(numVersionID, numProductID, chrDirection)
     End Sub
 
-    Public Shared Function _UpdateCustomerGroupPriceList(strPriceList As String, ByRef numLineNumber As Integer, ByRef strMsg As String, ByRef blnUseVersionCode As Boolean) As Boolean
+    Public Function _UpdateCustomerGroupPriceList(strPriceList As String, ByRef numLineNumber As Integer, ByRef strMsg As String, ByRef blnUseVersionCode As Boolean) As Boolean
 
         'We want to parse the price list row here first, identify the parameters and 
         'then send these to sproc, rather than try to do the parsing there which seems
@@ -1153,6 +1157,7 @@ Public Class VersionsBLL
         Dim numCounter As Int64 = 0
 
         Dim aryGroupPriceLines As String() = strPriceList.Split(New Char() {"#"c})
+        Dim objVersionsBLL As New VersionsBLL
 
         For numCounter = 0 To aryGroupPriceLines.Length - 1
             Dim aryThisLine As String() = aryGroupPriceLines(numCounter).Split(New Char() {","c})
@@ -1160,7 +1165,7 @@ Public Class VersionsBLL
                 numCG_ID = CInt(aryThisLine(1))
                 If blnUseVersionCode Then
                     'We need to lookup the version ID from the code
-                    numCGP_VersionID = VersionsBLL._GetVersionIDByCodeNumber(aryThisLine(2))
+                    numCGP_VersionID = objVersionsBLL._GetVersionIDByCodeNumber(aryThisLine(2))
                 Else
                     numCGP_VersionID = CInt(aryThisLine(2))
                 End If
@@ -1201,7 +1206,7 @@ Public Class VersionsBLL
         Return True
     End Function
 
-    Public Shared Function _UpdatePriceList(strPriceList As String, ByRef numLineNumber As Integer, ByRef strMsg As String) As Boolean
+    Public Function _UpdatePriceList(strPriceList As String, ByRef numLineNumber As Integer, ByRef strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
             Dim cmd As SqlCommand = sqlConn.CreateCommand

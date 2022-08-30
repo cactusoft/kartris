@@ -292,6 +292,8 @@ Partial Class Admin_GenerateFeeds
         End If
 
         'Add lines for each item
+        Dim objProductsBLL As New ProductsBLL
+        Dim objVersionsBLL As New VersionsBLL
         For Each node As SiteMapNode In SiteMap.Providers("CategorySiteMapProvider").RootNode.GetAllNodes
 
             Dim intCategoryID As Integer = CInt(Mid(node.Key, InStrRev(node.Key, ",") + 1))
@@ -299,7 +301,7 @@ Partial Class Admin_GenerateFeeds
                 lstAdded.Add(intCategoryID)
 
                 'Fill table with products for each category
-                tblProducts = ProductsBLL.GetProductsPageByCategory(intCategoryID, 1, 0, Short.MaxValue, 0, Short.MaxValue)
+                tblProducts = objProductsBLL.GetProductsPageByCategory(intCategoryID, 1, 0, Short.MaxValue, 0, Short.MaxValue)
 
                 'Loop through each product
                 For Each drwProduct As DataRow In tblProducts.Rows
@@ -311,7 +313,7 @@ Partial Class Admin_GenerateFeeds
 
                         Try
                             'Loop through each version
-                            For Each drwVersion As DataRow In VersionsBLL.GetByProduct(drwProduct("P_ID"), 1, 0).Rows
+                            For Each drwVersion As DataRow In objVersionsBLL.GetByProduct(drwProduct("P_ID"), 1, 0).Rows
 
                                 strVersionName = FixNullFromDB(drwVersion("V_Name"))
                                 strDesc = Replace(Replace(FixNullFromDB(drwVersion("V_Desc")), vbTab, ""), vbCrLf, "")

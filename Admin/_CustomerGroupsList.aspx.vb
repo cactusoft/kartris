@@ -102,7 +102,7 @@ Partial Class Admin_CustomerGroupsList
     End Sub
 
     Function SaveCG(ByVal enumOperation As DML_OPERATION) As Boolean
-
+        Dim objUsersBLL As New UsersBLL
         Dim tblLanguageElements As New DataTable
         tblLanguageElements = _UC_LangContainer.ReadContent()
 
@@ -111,14 +111,15 @@ Partial Class Admin_CustomerGroupsList
 
         Dim strMessage As String = ""
         Select Case enumOperation
+
             Case DML_OPERATION.UPDATE
-                If Not UsersBLL._UpdateCustomerGroups( _
+                If Not objUsersBLL._UpdateCustomerGroups(
                                 tblLanguageElements, GetCGID(), snglDiscount, blnLive, strMessage) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     Return False
                 End If
             Case DML_OPERATION.INSERT
-                If Not UsersBLL._AddCustomerGroups( _
+                If Not objUsersBLL._AddCustomerGroups(
                                 tblLanguageElements, snglDiscount, blnLive, strMessage) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     Return False

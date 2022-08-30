@@ -59,15 +59,15 @@ Partial Class UserControls_Back_EditCategory
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub AddParentCategory()
-
+        Dim objCategoriesBLL As New CategoriesBLL
         Dim numParentCategoryID As Integer = _CategorySiteMapProvider.StripParents(_GetParentCategory())
 
         lbxParentCategories.Items.Clear()
 
         If numParentCategoryID <> 0 Then '' there is a value for the strParent variable
             If lbxParentCategories.Items.FindByValue(CStr(numParentCategoryID)) Is Nothing Then
-                lbxParentCategories.Items.Add( _
-                    New ListItem(CategoriesBLL._GetNameByCategoryID(numParentCategoryID, Session("_LANG")), CStr(numParentCategoryID)))
+                lbxParentCategories.Items.Add(
+                    New ListItem(objCategoriesBLL._GetNameByCategoryID(numParentCategoryID, Session("_LANG")), CStr(numParentCategoryID)))
                 lbxParentCategories.SelectedIndex = lbxParentCategories.Items.Count - 1
             End If
         End If
@@ -82,10 +82,11 @@ Partial Class UserControls_Back_EditCategory
     ''' <remarks></remarks>
     Protected Sub lnkBtnAddCategory_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnAddCategory.Click
         Try
+            Dim objCategoriesBLL As New CategoriesBLL
             Dim strCategoryText As String = _UC_AutoComplete.GetText()
             If strCategoryText <> "" Then
                 Dim numCategoryID As Integer = CInt(Mid(strCategoryText, strCategoryText.LastIndexOf("(") + 2, strCategoryText.LastIndexOf(")") - strCategoryText.LastIndexOf("(") - 1))
-                Dim strCategoryName As String = CategoriesBLL._GetNameByCategoryID(numCategoryID, Session("_LANG"))
+                Dim strCategoryName As String = objCategoriesBLL._GetNameByCategoryID(numCategoryID, Session("_LANG"))
                 If (Not strCategoryName Is Nothing) AndAlso numCategoryID <> _GetCategoryID() Then
                     If lbxParentCategories.Items.FindByValue(CStr(numCategoryID)) Is Nothing Then
                         lbxParentCategories.Items.Add(New ListItem(strCategoryName, CStr(numCategoryID)))
@@ -128,8 +129,9 @@ Partial Class UserControls_Back_EditCategory
     ''' </summary>
     ''' <remarks></remarks>
     Private Sub LoadCategoryInfo()
+        Dim objCategoriesBLL As New CategoriesBLL
         Dim tblCategory As New DataTable
-        tblCategory = CategoriesBLL._GetByID(_GetCategoryID())
+        tblCategory = objCategoriesBLL._GetByID(_GetCategoryID())
 
         If tblCategory.Rows.Count = 0 Then RaiseEvent CategoryNotExist() : Exit Sub '' ERROR .. no category with this ID
 
@@ -146,7 +148,7 @@ Partial Class UserControls_Back_EditCategory
 
         '' Load Category Parents into the 'Parent List'
         Dim tblParents As New DataTable
-        tblParents = CategoriesBLL._GetParentsByID(Session("_LANG"), _GetCategoryID())
+        tblParents = objCategoriesBLL._GetParentsByID(Session("_LANG"), _GetCategoryID())
         lbxParentCategories.Items.Clear() '' should be cleared to read them again
         For Each rowParent In tblParents.Rows
             Dim itm As New ListItem
@@ -249,11 +251,12 @@ Partial Class UserControls_Back_EditCategory
 
         Dim strMessage As String = ""
         Dim intCategoryID As Integer = _GetCategoryID()
+        Dim objCategoriesBLL As New CategoriesBLL
         Select Case enumOperation
             Case DML_OPERATION.UPDATE
-                If Not CategoriesBLL._UpdateCategory( _
-                                tblLanguageContents, strParentList, intCategoryID, blnLive, _
-                                 chrProductDisplay, chrSubCategoryDisplay, strSortProductBy, _
+                If Not objCategoriesBLL._UpdateCategory(
+                                tblLanguageContents, strParentList, intCategoryID, blnLive,
+                                 chrProductDisplay, chrSubCategoryDisplay, strSortProductBy,
                                  chrProductsSortDirection, strSortSubcatBy, chrSubcatSortDirection, numCustomerGroup, strMessage) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     Exit Sub
@@ -264,9 +267,9 @@ Partial Class UserControls_Back_EditCategory
                 If drwLanguageContent.Length > 0 Then RaiseEvent CategoryUpdated(CStr(drwLanguageContent(0)("_LE_Value")))
                 RaiseEvent ShowMasterUpdate()
             Case DML_OPERATION.INSERT
-                If Not CategoriesBLL._AddCategory( _
-                    tblLanguageContents, strParentList, intCategoryID, blnLive, _
-                    chrProductDisplay, chrSubCategoryDisplay, strSortProductBy, _
+                If Not objCategoriesBLL._AddCategory(
+                    tblLanguageContents, strParentList, intCategoryID, blnLive,
+                    chrProductDisplay, chrSubCategoryDisplay, strSortProductBy,
                     chrProductsSortDirection, strSortSubcatBy, chrSubcatSortDirection, numCustomerGroup, strMessage) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     Exit Sub
@@ -314,9 +317,10 @@ Partial Class UserControls_Back_EditCategory
     ''' <remarks></remarks>
     Protected Sub _UC_PopupMsg_Confirmed() Handles _UC_PopupMsg.Confirmed
         Dim strMessage As String = ""
-        If CategoriesBLL._GetTotalSubCategories_s(_GetCategoryID()) = 0 Then
+        Dim objCategoriesBLL As New CategoriesBLL
+        If objCategoriesBLL._GetTotalSubCategories_s(_GetCategoryID()) = 0 Then
             '' If there is no subcategories, then use the normal delete (transaction is enabled)
-            If CategoriesBLL._DeleteCategory(_GetCategoryID(), strMessage) Then
+            If objCategoriesBLL._DeleteCategory(_GetCategoryID(), strMessage) Then
                 RefreshSiteMap()
                 'RemoveImages(IMAGE_TYPE.enum_CategoryImage, _GetCategoryID())
                 If GetKartConfig("backend.files.delete.cleanup") = "y" Then KartrisDBBLL.DeleteNotNeededFiles()
@@ -326,7 +330,7 @@ Partial Class UserControls_Back_EditCategory
             End If
         Else
             '' If there are subcategories, then use the delete cascade (transaction is disabled)
-            If CategoriesBLL._DeleteCategoryCascade(_GetCategoryID(), strMessage) Then
+            If objCategoriesBLL._DeleteCategoryCascade(_GetCategoryID(), strMessage) Then
                 RefreshSiteMap()
                 If GetKartConfig("backend.files.delete.cleanup") = "y" Then KartrisDBBLL.DeleteNotNeededFiles()
                 Response.Redirect("~/Admin/_Category.aspx?CategoryID=" & _CategorySiteMapProvider.StripParents(_GetParentCategory()))
@@ -353,9 +357,10 @@ Partial Class UserControls_Back_EditCategory
     End Sub
 
     Protected Sub lnkBtnDelete_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnDelete.Click
-        Dim strConfirmationText As String = Replace(GetGlobalResourceObject("_Kartris", "ContentText_ConfirmDeleteItem"), "[itemname]", _
-                                            CategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG")))
+        Dim objCategoriesBLL As New CategoriesBLL
+        Dim strConfirmationText As String = Replace(GetGlobalResourceObject("_Kartris", "ContentText_ConfirmDeleteItem"), "[itemname]",
+                                            objCategoriesBLL._GetNameByCategoryID(_GetCategoryID(), Session("_LANG")))
         _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.Confirmation, strConfirmationText)
-        
+
     End Sub
 End Class

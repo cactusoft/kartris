@@ -56,12 +56,14 @@ Partial Class _VersionView
         lnkImages.Visible = False
         lnkMedia.Visible = False
 
+        Dim objProductsBLL As New ProductsBLL
+
         If (Request.QueryString("strClone") <> "yes") Then
-            If ProductsBLL._GetProductType_s(_GetProductID()) = "m"c Then
+            If objProductsBLL._GetProductType_s(_GetProductID()) = "m"c Then
                 lnkImages.Visible = True
                 lnkMedia.Visible = True
                 LoadVersionImages()
-            ElseIf (ProductsBLL._GetProductType_s(_GetProductID()) = "o"c And _UC_EditVersion.GetVersionType() = "c"c) Then
+            ElseIf (objProductsBLL._GetProductType_s(_GetProductID()) = "o"c And _UC_EditVersion.GetVersionType() = "c"c) Then
                 lnkImages.Visible = True
                 LoadVersionImages()
             End If
@@ -136,13 +138,17 @@ Partial Class _VersionView
             updEditVersion.Update()
             _UC_EditVersion.CreateVersionData(GetVersionID(), blnClone)
         Else
+            Dim objVersionsBLL As New VersionsBLL
             ShowVersionTabs()
-            litVersionName.Text = VersionsBLL._GetNameByVersionID(GetVersionID(), Session("_LANG"))
+            litVersionName.Text = objVersionsBLL._GetNameByVersionID(GetVersionID(), Session("_LANG"))
             lnkBtnDelete.Visible = True
             updEditVersion.Update()
+
+            Dim objProductsBLL As New ProductsBLL
+
             _UC_EditVersion.CreateVersionData(GetVersionID(), blnClone)
             _UC_QtyDiscount.LoadVersionQuantityDiscount(GetVersionID())
-            Dim chrProductType As Char = ProductsBLL._GetProductType_s(_GetProductID())
+            Dim chrProductType As Char = objProductsBLL._GetProductType_s(_GetProductID())
             Select Case chrProductType
                 Case "s"
                     lnkBtnDelete.Visible = False
@@ -188,14 +194,16 @@ Partial Class _VersionView
         gvwViewVersions.DataSource = Nothing
         gvwViewVersions.DataBind()
 
+        Dim objProductsBLL As New ProductsBLL
+        Dim objVersionsBLL As New VersionsBLL
         Dim tblVersions As New DataTable
-        tblVersions = VersionsBLL._GetByProduct(_GetProductID(), Session("_LANG"))
+        tblVersions = objVersionsBLL._GetByProduct(_GetProductID(), Session("_LANG"))
 
         If tblVersions.Rows.Count = 0 Then ShowNoVersions() : Exit Sub
 
         If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then gvwViewVersions.Columns(4).Visible = False
 
-        Dim chrProductType As Char = ProductsBLL._GetProductType_s(_GetProductID)
+        Dim chrProductType As Char = objProductsBLL._GetProductType_s(_GetProductID)
         If chrProductType <> "m" Then
             For Each rw In tblVersions.Rows
                 rw("SortByValue") = 0
@@ -210,7 +218,7 @@ Partial Class _VersionView
         If chrProductType = "m" Then ShowHideUpDownArrowsVersions(tblVersions.Rows.Count)
 
         lnkImages.Visible = False
-        Select Case ProductsBLL._GetProductType_s(_GetProductID())
+        Select Case objProductsBLL._GetProductType_s(_GetProductID())
             Case "s", "o"
                 CType(gvwViewVersions.HeaderRow.FindControl("lnkNewVersion"), LinkButton).Visible = False
                 For i As Integer = 0 To gvwViewVersions.Rows.Count - 1
@@ -289,7 +297,8 @@ Partial Class _VersionView
             Case "MoveUp"
                 '' Will use try to avoid error in case of null values or 0 values
                 Try
-                    VersionsBLL._ChangeSortValue(e.CommandArgument, _GetProductID(), "u")
+                    Dim objVersionsBLL As New VersionsBLL
+                    objVersionsBLL._ChangeSortValue(e.CommandArgument, _GetProductID(), "u")
                     LoadVersions()
                     updVersions.Update()
                 Catch ex As Exception
@@ -298,7 +307,8 @@ Partial Class _VersionView
             Case "MoveDown"
                 '' Will use try to avoid error in case of null values or 0 values
                 Try
-                    VersionsBLL._ChangeSortValue(e.CommandArgument, _GetProductID(), "d")
+                    Dim objVersionsBLL As New VersionsBLL
+                    objVersionsBLL._ChangeSortValue(e.CommandArgument, _GetProductID(), "d")
                     LoadVersions()
                     updVersions.Update()
                 Catch ex As Exception
@@ -351,12 +361,13 @@ Partial Class _VersionView
     Protected Sub _UC_PopupMsg_Confirmed() Handles _UC_PopupMsg.Confirmed
         If Page.IsPostBack Then
             Dim strMessage As String = "", strDownloadFiles = ""
-            If VersionsBLL._DeleteVersion(GetVersionID(), strDownloadFiles, strMessage) Then
+            Dim objVersionsBLL As New VersionsBLL
+            If objVersionsBLL._DeleteVersion(GetVersionID(), strDownloadFiles, strMessage) Then
 
                 If GetKartConfig("backend.files.delete.cleanup ") = "y" Then KartrisDBBLL.DeleteNotNeededFiles()
                 RemoveDownloadFiles(strDownloadFiles)
 
-                Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & _GetProductID() & "&CategoryID=" & _GetCategoryID() & _
+                Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & _GetProductID() & "&CategoryID=" & _GetCategoryID() &
                         "&strParent=" & _GetParentCategory() & "&strTab=versions")
 
             Else
@@ -461,7 +472,7 @@ Partial Class _VersionView
     'This communicates update message for the user controls
     'that are nested within the versionview
     Protected Sub ShowMasterUpdateMessage() Handles _UC_QtyDiscount.ShowMasterUpdate,
-                                                    _UC_CustomerGroupPrices.ShowMasterUpdate, _
+                                                    _UC_CustomerGroupPrices.ShowMasterUpdate,
                                                     _UC_ObjectConfig.ShowMasterUpdate
         RaiseEvent VersionsChanged()
     End Sub

@@ -79,7 +79,8 @@ Partial Class CarryOnShopping
 
         '' Add the related products to a DataTable
         Dim tblProducts As New DataTable
-        tblProducts = ProductsBLL.GetRelatedProducts(_ProductID, _LanguageID, numCGroupID)
+        Dim objProductsBLL As New ProductsBLL
+        tblProducts = objProductsBLL.GetRelatedProducts(_ProductID, _LanguageID, numCGroupID)
 
         '' If there is no related products, then exit this section.
         If tblProducts.Rows.Count = 0 Then Exit Sub
@@ -107,7 +108,8 @@ Partial Class CarryOnShopping
         If intPeopleWhoBoughtThisMax > 0 Then
             '' Add the products to a DataTable
             Dim tblProducts As New DataTable
-            tblProducts = ProductsBLL.GetPeopleWhoBoughtThis(_ProductID, _LanguageID, intPeopleWhoBoughtThisMax)
+            Dim objProductsBLL As New ProductsBLL
+            tblProducts = objProductsBLL.GetPeopleWhoBoughtThis(_ProductID, _LanguageID, intPeopleWhoBoughtThisMax)
 
             '' If there are no products, then exit this section.
             If tblProducts.Rows.Count = 0 Then Exit Sub
@@ -137,7 +139,8 @@ Partial Class CarryOnShopping
 
         If intLinkedCategories > 0 Then
             '' Add the linked categories to a DataTable
-            Dim tblCategories As DataTable = CategoriesBLL.GetCategoriesByProductID(_ProductID, _LanguageID).Rows.Cast(Of System.Data.DataRow)().Take(intLinkedCategories).CopyToDataTable()
+            Dim objCategoriesBLL As New CategoriesBLL
+            Dim tblCategories As DataTable = objCategoriesBLL.GetCategoriesByProductID(_ProductID, _LanguageID).Rows.Cast(Of System.Data.DataRow)().Take(intLinkedCategories).CopyToDataTable()
             'dt.Rows.Cast<System.Data.DataRow>().Take(n)
 
             '' If there is no linked categories, then exit this section.

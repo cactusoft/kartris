@@ -39,8 +39,9 @@ Partial Class UserControls_Back_OrderDetails
 
             Try
                 'Get the Order ID QueryString - if it won't convert to integer then force return to Orders List page
+                Dim objOrdersBLL As New OrdersBLL
                 ViewState("numOrderID") = CType(Request.QueryString("OrderID"), Integer)
-                fvwOrderDetails.DataSource = OrdersBLL.GetOrderByID(ViewState("numOrderID"))
+                fvwOrderDetails.DataSource = objOrdersBLL.GetOrderByID(ViewState("numOrderID"))
                 fvwOrderDetails.DataBind()
                 UC_CustomerOrder.OrderID = ViewState("numOrderID")
                 UC_CustomerOrder.ShowOrderSummary = False
@@ -97,9 +98,10 @@ Partial Class UserControls_Back_OrderDetails
 
         Dim dblOrderTotalPrice As Single = CSng(litOrderTotalPrice.Text)
         Dim srtOrderCurrencyID As Short = CShort(hidOrderCurrencyID.Value)
+        Dim objOrdersBLL As New OrdersBLL
 
         'Hide edit button if order data is empty and if order is not flagged as replaced
-        If Trim(hidOrderData.Value) <> "" And OrdersBLL._GetChildOrderID(ViewState("numOrderID")) = 0 Then
+        If Trim(hidOrderData.Value) <> "" And objOrdersBLL._GetChildOrderID(ViewState("numOrderID")) = 0 Then
             DirectCast(fvwOrderDetails.FindControl("lnkBtnEdit"), LinkButton).Visible = True
         Else
             DirectCast(fvwOrderDetails.FindControl("lnkBtnEdit"), LinkButton).Visible = False
@@ -168,6 +170,8 @@ Partial Class UserControls_Back_OrderDetails
 
         Dim hidSendOrderUpdateEmail As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidSendOrderUpdateEmail"), HiddenField)
 
+        Dim objUsersBLL As New UsersBLL
+
         'Email order update?
         If hidSendOrderUpdateEmail.Value = True Then
 
@@ -178,7 +182,7 @@ Partial Class UserControls_Back_OrderDetails
                 Dim hidCustomerID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidCustomerID"), HiddenField)
 
                 Dim strEmailFrom As String = LanguagesBLL.GetEmailFrom(CInt(hidOrderLanguageID.Value))
-                Dim strEmailTo As String = UsersBLL.GetEmailByID(CInt(hidCustomerID.Value))
+                Dim strEmailTo As String = objUsersBLL.GetEmailByID(CInt(hidCustomerID.Value))
                 Dim strEmailText As String
                 Dim strSubjectLine As String = _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "EmailText_OrderUpdateFrom") & " " & Server.HtmlEncode(_GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "f", "Config_Webshopname"))
                 strEmailText = _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "EmailText_OrderStatusUpdated") & vbCrLf & WebShopURL() & "CustomerViewOrder.aspx?O_ID=" & litOrderID.Text
@@ -226,20 +230,31 @@ Partial Class UserControls_Back_OrderDetails
 
                 'build up the HTML email if template is found
                 If Not String.IsNullOrEmpty(strHTMLEmailText) Then
-                    strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
-                    strHTMLEmailText = strHTMLEmailText.Replace("[orderid]", ViewState("numOrderID"))
-                    strHTMLEmailText = strHTMLEmailText.Replace("[orderstatus]", txtOrderStatus.Text.Replace(vbCrLf, "<br />"))
-                    strHTMLEmailText = strHTMLEmailText.Replace("[orderdetails]", strOrderText)
-                    If ViewState("O_Notes") <> txtOrderNotes.Text And Trim(txtOrderNotes.Text) <> "" Then
-                        strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "<p>" & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_Notes") &
-                                                                ": <br />" & txtOrderNotes.Text & "</p>")
-                    Else
-                        strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "")
+
+                    'Before we send email to customer, we need to figure out something. We should not send a view order link to customers
+                    'who did guest checkout, since it won't work. So we need to remove link for those. 
+                    Dim strViewOrderLink As String = "<p><a href=""[webshopurl]CustomerViewOrder.aspx?O_ID=[orderid]"">[webshopurl]CustomerViewOrder.aspx?O_ID=[orderid]</a></p>"
+                    If strEmailTo.Contains("|GUEST|") Then
+                        'Remove link from email
+                        strHTMLEmailText = strHTMLEmailText.Replace(strViewOrderLink, "")
                     End If
-                    strEmailText = strHTMLEmailText
-                Else
-                    blnHTMLEmail = False
+
+                    strHTMLEmailText = strHTMLEmailText.Replace("[webshopurl]", WebShopURL)
+                        strHTMLEmailText = strHTMLEmailText.Replace("[orderid]", ViewState("numOrderID"))
+                        strHTMLEmailText = strHTMLEmailText.Replace("[orderstatus]", txtOrderStatus.Text.Replace(vbCrLf, "<br />"))
+                        strHTMLEmailText = strHTMLEmailText.Replace("[orderdetails]", strOrderText)
+                        If ViewState("O_Notes") <> txtOrderNotes.Text And Trim(txtOrderNotes.Text) <> "" Then
+                            strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "<p>" & _GetLanguageStringByNameAndLanguageID(hidOrderLanguageID.Value, "b", "ContentText_Notes") &
+                                                                    ": <br />" & txtOrderNotes.Text & "</p>")
+                        Else
+                            strHTMLEmailText = strHTMLEmailText.Replace("[ordernotesline]", "")
+                        End If
+                        strEmailText = strHTMLEmailText
+                    Else
+                        blnHTMLEmail = False
                 End If
+
+
 
                 'Send mail update to customer
                 SendEmail(strEmailFrom, strEmailTo, strSubjectLine, strEmailText, , , , , blnHTMLEmail)
@@ -247,7 +262,9 @@ Partial Class UserControls_Back_OrderDetails
         End If
 
         'This line is actually the one that updates the order - not the built-in FormView update. Gives us more flexibility - needs to catch some thingies. =)
-        If OrdersBLL._UpdateStatus(ViewState("numOrderID"), chkOrderSent.Checked, chkOrderPaid.Checked, chkOrderShipped.Checked,
+        Dim objOrdersBLL As New OrdersBLL
+
+        If objOrdersBLL._UpdateStatus(ViewState("numOrderID"), chkOrderSent.Checked, chkOrderPaid.Checked, chkOrderShipped.Checked,
                                 chkOrderInvoiced.Checked, txtOrderStatus.Text, txtOrderNotes.Text, chkOrderCancelled.Checked) > 0 Then
             If KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y" Then
                 Try
@@ -255,7 +272,7 @@ Partial Class UserControls_Back_OrderDetails
                         Dim hidOrderCurrencyID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidOrderCurrencyID"), HiddenField)
                         Dim intOrderCurrencyID As Integer = CInt(hidOrderCurrencyID.Value)
                         Dim hidCustomerID As HiddenField = DirectCast(fvwOrderDetails.FindControl("hidCustomerID"), HiddenField)
-                        Dim kartrisUser As KartrisMemberShipUser = Membership.GetUser(UsersBLL.GetEmailByID(CInt(hidCustomerID.Value)))
+                        Dim kartrisUser As KartrisMemberShipUser = Membership.GetUser(objUsersBLL.GetEmailByID(CInt(hidCustomerID.Value)))
                         Dim basketObj As Basket = GetBasket(ViewState("numOrderID"))
                         Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(kartrisUser, basketObj, CurrenciesBLL.CurrencyCode(intOrderCurrencyID))
 
@@ -290,9 +307,10 @@ Partial Class UserControls_Back_OrderDetails
 
         Dim objBasketTemp As Basket = New Basket
         Dim objBasket As Basket = New Basket
+        Dim objOrdersBLL As New OrdersBLL
 
         'Load first basket from order XML, deserialized
-        Dim dtOrderRecord As DataTable = OrdersBLL.GetOrderByID(NumOrderId)
+        Dim dtOrderRecord As DataTable = objOrdersBLL.GetOrderByID(NumOrderId)
         If dtOrderRecord IsNot Nothing Then
             Dim strOrderData As String = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_Data"))
             Dim arrOrder As Array = Split(strOrderData, "|||")
@@ -330,7 +348,8 @@ Partial Class UserControls_Back_OrderDetails
         Dim blnReturnStock As Boolean
         Dim blnOrigO_Sent As Boolean = CBool(DirectCast(fvwOrderDetails.FindControl("hidOrigOrderSent"), HiddenField).Value)
         If KartSettingsManager.GetKartConfig("backend.orders.returnstockondelete") <> "n" And blnOrigO_Sent Then blnReturnStock = True Else blnReturnStock = False
-        OrdersBLL._Delete(ViewState("numOrderID"), blnReturnStock)
+        Dim objOrdersBLL As New OrdersBLL
+        objOrdersBLL._Delete(ViewState("numOrderID"), blnReturnStock)
         RaiseEvent ShowMasterUpdate()
         Response.Redirect(ViewState("Referer"))
     End Sub

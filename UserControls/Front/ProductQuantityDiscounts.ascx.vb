@@ -52,7 +52,8 @@ Partial Class ProductQuantityDiscounts
     End Sub
 
     Protected Sub CheckForQuantityDiscount()
-        Dim tblQuantityDiscount As DataTable = VersionsBLL.GetQuantityDiscountByProduct(ProductID, Session("LANG"))
+        Dim objVersionsBLL As New VersionsBLL
+        Dim tblQuantityDiscount As DataTable = objVersionsBLL.GetQuantityDiscountByProduct(ProductID, Session("LANG"))
         If tblQuantityDiscount.Rows.Count > 0 Then
             Dim tblVersions As New DataTable
             tblVersions.Columns.Add(New DataColumn("VersionName", Type.GetType("System.String")))
@@ -102,8 +103,9 @@ Partial Class ProductQuantityDiscounts
             'Get the customer group price for this version
             Dim objBasket As New kartris.Basket
             Dim numCustomerGroupPrice As Double = BasketBLL.GetCustomerGroupPriceForVersion(numCustomerID, numVersionID)
+            Dim objVersionsBLL As New VersionsBLL
 
-            Using tblQuantityDiscount As DataTable = VersionsBLL.GetQuantityDiscountByProduct(ProductID, Session("LANG"))
+            Using tblQuantityDiscount As DataTable = objVersionsBLL.GetQuantityDiscountByProduct(ProductID, Session("LANG"))
                 Dim strVersionCode As String = CType(e.Item.FindControl("litVersionCode_Hidden"), Literal).Text
 
                 Dim drwDiscount() As DataRow = tblQuantityDiscount.Select("V_CodeNumber='" & strVersionCode & "'")
@@ -124,7 +126,7 @@ Partial Class ProductQuantityDiscounts
                             'that they won't actually have to pay
                         Else
                             'Format and add the price
-                            tblDiscounts.Rows.Add(CStr(drwDiscount(i)("QD_Quantity")) & "+", _
+                            tblDiscounts.Rows.Add(CStr(drwDiscount(i)("QD_Quantity")) & "+",
                                     CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numPrice))
                             'We keep a track that at least one row is added
                             'so if none at end, we can hide this whole thing

@@ -26,12 +26,18 @@ Partial Class UserControls_Front_RichSnippets
 
     Protected Sub UserControls_Front_RichSnippets_Load(sender As Object, e As EventArgs) Handles Me.Load
         If Not Page.IsPostBack AndAlso _ProductID > 0 Then
-            LoadSnippets()
+            Try
+                LoadSnippets()
+            Catch ex As Exception
+
+            End Try
+
         End If
     End Sub
 
     Sub LoadSnippets()
-        Dim dr As DataRow = ProductsBLL.GetRichSnippetProperties(_ProductID, Session("LANG"))(0)
+        Dim objProductsBLL As New ProductsBLL
+        Dim dr As DataRow = objProductsBLL.GetRichSnippetProperties(_ProductID, Session("LANG"))(0)
 
         Dim strURL As String = CkartrisBLL.WebShopURL.ToLower & "======" & SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, _ProductID) ' added the === bit to make it easier to remove the double slash from joining webshopURL with the page URL local
         strURL = Replace(strURL, "/======/", "/")
@@ -92,7 +98,7 @@ Partial Class UserControls_Front_RichSnippets
 
 
 
-        ''' Disable Offer if Call for Price is set
+        ''Disable Offer if Call for Price is set
         'If FixNullFromDB(dr("P_CallForPrice")) = 1 Then
         '    litOffer.Visible = False
         '    litOfferAggregate.Visible = False

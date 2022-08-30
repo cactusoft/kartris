@@ -130,6 +130,9 @@ Partial Class UserControls_Back_OrdersList
 
         If strDateQS = "" Then strDateQS = txtFilterDate.Text
 
+        'Orders BLL instance
+        Dim objOrdersBLL As New OrdersBLL
+
         'If date passed by querystring, set up page
         If IsDate(strDateQS) And Not Me.IsPostBack Then
             ViewState("_Callmode") = OrdersBLL.ORDERS_LIST_CALLMODE.BYDATE
@@ -155,8 +158,8 @@ Partial Class UserControls_Back_OrdersList
                 datValue = "01/01/2001"
             End Try
 
-            tblOrdersList = OrdersBLL._GetByStatus(ViewState("_Callmode"), intCurrentPage, 0, datValue, CDate(ViewState("_datValue2")), "", "", intRowsPerPage)
-            ViewState("intTotalRowCount") = OrdersBLL._GetByStatusCount(ViewState("_Callmode"), 0, datValue, CDate(ViewState("_datValue2")), "", "")
+            tblOrdersList = objOrdersBLL._GetByStatus(ViewState("_Callmode"), intCurrentPage, 0, datValue, CDate(ViewState("_datValue2")), "", "", intRowsPerPage)
+            ViewState("intTotalRowCount") = objOrdersBLL._GetByStatusCount(ViewState("_Callmode"), 0, datValue, CDate(ViewState("_datValue2")), "", "")
 
             If datValue = "01/01/2001" Then
                 datValue = Today
@@ -185,8 +188,8 @@ Partial Class UserControls_Back_OrdersList
             phdDateNavigation.Visible = False
             Dim intAffID As Integer = 0
             If IsNumeric(ViewState("_datValue1")) Then intAffID = CInt(ViewState("_datValue1"))
-            tblOrdersList = OrdersBLL._GetByStatus(ViewState("_Callmode"), intCurrentPage, intAffID, , , ViewState("_datValue1"), ViewState("_datValue2"), intRowsPerPage)
-            If blnRetrieveTotalCount Then ViewState("intTotalRowCount") = OrdersBLL._GetByStatusCount(ViewState("_Callmode"), intAffID, , , ViewState("_datValue1"), ViewState("_datValue2"))
+            tblOrdersList = objOrdersBLL._GetByStatus(ViewState("_Callmode"), intCurrentPage, intAffID, , , ViewState("_datValue1"), ViewState("_datValue2"), intRowsPerPage)
+            If blnRetrieveTotalCount Then ViewState("intTotalRowCount") = objOrdersBLL._GetByStatusCount(ViewState("_Callmode"), intAffID, , , ViewState("_datValue1"), ViewState("_datValue2"))
         End If
         _RowCount = tblOrdersList.Rows.Count
 
@@ -454,11 +457,13 @@ Partial Class UserControls_Back_OrdersList
         Dim hidOrderID As HiddenField = DirectCast(rowGridView.FindControl("hidOrderID"), HiddenField)
         Dim hidOrderStatus As HiddenField = DirectCast(rowGridView.FindControl("hidOrderStatus"), HiddenField)
         Dim chkOrderCancelled As CheckBox = DirectCast(rowGridView.FindControl("chkOrderCancelled"), CheckBox)
+        Dim objOrdersBLL As New OrdersBLL
 
-        OrdersBLL._UpdateStatus(hidOrderID.Value, True, chkOrderPaid.Checked, chkOrderShipped.Checked, chkOrderInvoiced.Checked, hidOrderStatus.Value, "", chkOrderCancelled.Checked)
-        
+        objOrdersBLL._UpdateStatus(hidOrderID.Value, True, chkOrderPaid.Checked, chkOrderShipped.Checked, chkOrderInvoiced.Checked, hidOrderStatus.Value, "", chkOrderCancelled.Checked)
+
         'Email order update?
         If chkInformCustomers.Checked Then
+            Dim objUsersBLL As New UsersBLL
             Dim hidOrderLanguageID As HiddenField = DirectCast(rowGridView.FindControl("hidOrderLanguageID"), HiddenField)
             Dim hidCustomerID As HiddenField = DirectCast(rowGridView.FindControl("hidOrderCustomerID"), HiddenField)
 
@@ -475,7 +480,7 @@ Partial Class UserControls_Back_OrdersList
                 strCustomOrderStatus = hidOrderStatus.Value
             End If
             Dim strEmailFrom As String = LanguagesBLL.GetEmailFrom(CInt(hidOrderLanguageID.Value))
-            Dim strEmailTo As String = UsersBLL.GetEmailByID(CInt(hidCustomerID.Value))
+            Dim strEmailTo As String = objUsersBLL.GetEmailByID(CInt(hidCustomerID.Value))
             Dim strEmailText As String
             Dim strSubjectLine As String = GetGlobalResourceObject("Email", "EmailText_OrderUpdateFrom") & " " & GetGlobalResourceObject("Kartris", "Config_Webshopname")
             strEmailText = GetGlobalResourceObject("Email", "EmailText_OrderStatusUpdated").Replace("[order_status]", strCustomOrderStatus) & vbCrLf & vbCrLf & WebShopURL() & "CustomerViewOrder.aspx?O_ID=" & intCurrentID
@@ -494,7 +499,8 @@ Partial Class UserControls_Back_OrdersList
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub _UC_PopupMsg_Confirmed() Handles _UC_PopupMsg.Confirmed
-        OrdersBLL._PurgeOrders(Today.AddDays(-CInt(GetKartConfig("backend.orders.unfinished.purgedays"))))
+        Dim objOrdersBLL As New OrdersBLL
+        objOrdersBLL._PurgeOrders(Today.AddDays(-CInt(GetKartConfig("backend.orders.unfinished.purgedays"))))
         Response.Redirect("_OrdersList.aspx?callmode=unfinished")
     End Sub
 

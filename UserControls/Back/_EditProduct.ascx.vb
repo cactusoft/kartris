@@ -95,8 +95,9 @@ Partial Class _EditProduct
     Public Sub ReloadProduct()
         If _GetProductID() = 0 Then 'new product
             '' If there is no parent category, we should make sure that we have categories in the db.
+            Dim objCategoriesBLL As New CategoriesBLL
             If _CategorySiteMapProvider.StripParents(_GetParentCategory()) = 0 Then
-                If CategoriesBLL._GetTotalCategoriesByLanguageID(Session("_LANG")) = 0 Then
+                If objCategoriesBLL._GetTotalCategoriesByLanguageID(Session("_LANG")) = 0 Then
                     phdNoCategories.Visible = True
                     phdEditProduct.Visible = False
                 Else
@@ -130,11 +131,11 @@ Partial Class _EditProduct
         End Try
 
         lbxProductCategories.Items.Clear()
-
+        Dim objCategoriesBLL As New CategoriesBLL
         If numParentCategoryID <> 0 Then
             If lbxProductCategories.Items.FindByValue(CStr(numParentCategoryID)) Is Nothing Then
-                lbxProductCategories.Items.Add( _
-                        New ListItem(CategoriesBLL._GetNameByCategoryID(numParentCategoryID, Session("_LANG")), _
+                lbxProductCategories.Items.Add(
+                        New ListItem(objCategoriesBLL._GetNameByCategoryID(numParentCategoryID, Session("_LANG")),
                         CStr(numParentCategoryID)))
                 lbxProductCategories.SelectedIndex = lbxProductCategories.Items.Count - 1
             End If
@@ -149,7 +150,10 @@ Partial Class _EditProduct
     Public Sub LoadProductInfo()
 
         Dim tblProducts As New DataTable
-        tblProducts = ProductsBLL._GetProductInfoByID(_GetProductID())
+
+        Dim objProductsBLL As New ProductsBLL
+
+        tblProducts = objProductsBLL._GetProductInfoByID(_GetProductID())
 
         '' if no product returned "not exist in the db"
         If tblProducts.Rows.Count = 0 Then RaiseEvent ProductNotExist() : Exit Sub
@@ -191,13 +195,14 @@ Partial Class _EditProduct
 
         '' -----------------------------------------
         '' Load Product's Parents into the 'Parent List'
+        Dim objCategoriesBLL As New CategoriesBLL
         Dim tblProductCategories As New DataTable
-        tblProductCategories = ProductsBLL._GetCategoriesByProductID(_GetProductID())
+        tblProductCategories = objProductsBLL._GetCategoriesByProductID(_GetProductID())
         lbxProductCategories.Items.Clear()
         For Each row In tblProductCategories.Rows
             Dim itm As New ListItem
             itm.Value = CStr(FixNullFromDB(row("PCAT_CategoryID")))
-            itm.Text = CategoriesBLL._GetNameByCategoryID(CInt(itm.Value), Session("_LANG"))
+            itm.Text = objCategoriesBLL._GetNameByCategoryID(CInt(itm.Value), Session("_LANG"))
             lbxProductCategories.Items.Add(itm)
         Next
         '' -----------------------------------------
@@ -212,9 +217,10 @@ Partial Class _EditProduct
     ''' <remarks></remarks>
     Public Sub CheckProductType()
         ddlProductType.Enabled = True '' by default always allow the changes
+        Dim objVersionsBLL As New VersionsBLL
         Select Case ddlProductType.SelectedValue
             Case "m"    '' multiple version product
-                If VersionsBLL._GetNoOfVersionsByProductID(_GetProductID()) > 1 Then
+                If objVersionsBLL._GetNoOfVersionsByProductID(_GetProductID()) > 1 Then
                     ddlProductType.Enabled = False
                 End If
                 ddlVersionDisplay.Enabled = True
@@ -239,7 +245,7 @@ Partial Class _EditProduct
                     ddlVersionDisplay.Items.Remove(ddlVersionDisplay.Items.FindByValue("l"))
                 End Try
             Case "o"    '' option product
-                If VersionsBLL._GetNoOfVersionsByProductID(_GetProductID()) > 0 Then
+                If objVersionsBLL._GetNoOfVersionsByProductID(_GetProductID()) > 0 Then
                     ddlProductType.Enabled = False
                 End If
 
@@ -319,10 +325,11 @@ Partial Class _EditProduct
     ''' <remarks></remarks>
     Protected Sub lnkBtnAddCategory_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnAddCategory.Click
         Try
+            Dim objCategoriesBLL As New CategoriesBLL
             Dim strCategoryText As String = _UC_AutoComplete.GetText()
             If strCategoryText <> "" Then
                 Dim numCategoryID As Integer = CInt(Mid(strCategoryText, strCategoryText.LastIndexOf("(") + 2, strCategoryText.LastIndexOf(")") - strCategoryText.LastIndexOf("(") - 1))
-                Dim strCategoryName As String = CategoriesBLL._GetNameByCategoryID(numCategoryID, Session("_LANG"))
+                Dim strCategoryName As String = objCategoriesBLL._GetNameByCategoryID(numCategoryID, Session("_LANG"))
                 If Not strCategoryName Is Nothing Then
                     If lbxProductCategories.Items.FindByValue(CStr(numCategoryID)) Is Nothing Then
                         lbxProductCategories.Items.Add(New ListItem(strCategoryName, CStr(numCategoryID)))
@@ -376,6 +383,8 @@ Partial Class _EditProduct
     ''' <param name="enumOperation"></param>
     ''' <remarks></remarks>
     Private Sub SaveProduct(ByVal enumOperation As DML_OPERATION)
+
+        Dim objProductsBLL As New ProductsBLL
 
         '' double check if any parent category is selected
         If lbxProductCategories.Items.Count = 0 Then
@@ -444,8 +453,8 @@ Partial Class _EditProduct
         Dim intProductID As Integer = _GetProductID()
         Select Case enumOperation
             Case DML_OPERATION.UPDATE
-                If Not ProductsBLL._UpdateProduct( _
-                                tblLanguageContents, sbdParentsList.ToString, intProductID, blnLive, numFeatured, _
+                If Not objProductsBLL._UpdateProduct(
+                                tblLanguageContents, sbdParentsList.ToString, intProductID, blnLive, numFeatured,
                                  strOrderVersionsBy, chrVersionsSortDirection, chrReviews, chrVersionDisplayType, numSupplier, chrType, numCustomerGroup, strMessage) Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
                     Exit Sub
@@ -454,7 +463,7 @@ Partial Class _EditProduct
                 If rowLanguageContents.Length > 0 Then RaiseEvent ProductUpdated(CStr(rowLanguageContents(0)("_LE_Value")))
                 RaiseEvent ProductSaved()
             Case DML_OPERATION.INSERT
-                If Not ProductsBLL._AddProduct(
+                If Not objProductsBLL._AddProduct(
                                 tblLanguageContents, sbdParentsList.ToString, intProductID, blnLive, numFeatured,
                                  strOrderVersionsBy, chrVersionsSortDirection, chrReviews, chrVersionDisplayType, numSupplier, chrType, numCustomerGroup, strMessage) > 0 Then
                     _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, strMessage)
@@ -466,7 +475,8 @@ Partial Class _EditProduct
                         Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intProductID & "&CategoryID=" & _GetCategoryID() & "&strParent=" & _GetParentCategory())
                     Else
                         Try
-                            Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intProductID & "&CategoryID=" & lbxProductCategories.Items(0).Value & "&strParent=" & CategoriesBLL._GetParentsByID(Session("_lang"), lbxProductCategories.Items(0).Value).Rows(0)("ParentID").ToString())
+                            Dim objCategoriesBLL As New CategoriesBLL
+                            Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intProductID & "&CategoryID=" & lbxProductCategories.Items(0).Value & "&strParent=" & objCategoriesBLL._GetParentsByID(Session("_lang"), lbxProductCategories.Items(0).Value).Rows(0)("ParentID").ToString())
                         Catch ex As Exception
                             Response.Redirect("~/Admin/_ModifyProduct.aspx?ProductID=" & intProductID & "&CategoryID=" & lbxProductCategories.Items(0).Value)
                         End Try
@@ -481,7 +491,7 @@ Partial Class _EditProduct
 
                     If intNumClones = 1 Then
                         'same old as before
-                        Dim intNewProductID As Integer = ProductsBLL._AddProduct(
+                        Dim intNewProductID As Integer = objProductsBLL._AddProduct(
                                     tblLanguageContents, sbdParentsList.ToString, 0, blnLive, numFeatured,
                                      strOrderVersionsBy, chrVersionsSortDirection, chrReviews, chrVersionDisplayType, numSupplier, chrType, numCustomerGroup, strMessage, True)
                         If Not intNewProductID > 0 Then
@@ -492,7 +502,7 @@ Partial Class _EditProduct
 
                         'Now we need to create the associated records, versions,
                         'related products, attribute values, etc.
-                        If Not ProductsBLL._CloneProductRecords(intProductID, intNewProductID) Then
+                        If Not objProductsBLL._CloneProductRecords(intProductID, intNewProductID) Then
                             _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, "Error cloning product linked records")
                             'Exit Sub
                         End If
@@ -503,7 +513,7 @@ Partial Class _EditProduct
                         'Note that for these new products, we set them to not live. This way
                         'admin has a chance to tweak and change them before setting them live.
                         For i = 1 To intNumClones
-                            Dim intNewProductID As Integer = ProductsBLL._AddProduct(
+                            Dim intNewProductID As Integer = objProductsBLL._AddProduct(
                                 tblLanguageContents, sbdParentsList.ToString, 0, 0, numFeatured,
                                 strOrderVersionsBy, chrVersionsSortDirection, chrReviews, chrVersionDisplayType, numSupplier, chrType, numCustomerGroup, strMessage, True)
                             If Not intNewProductID > 0 Then
@@ -514,7 +524,7 @@ Partial Class _EditProduct
 
                             'Now we need to create the associated records, versions,
                             'related products, attribute values, etc.
-                            If Not ProductsBLL._CloneProductRecords(intProductID, intNewProductID) Then
+                            If Not objProductsBLL._CloneProductRecords(intProductID, intNewProductID) Then
                                 _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, "Error cloning product linked records")
                                 'Exit Sub
                             End If
@@ -542,8 +552,9 @@ Partial Class _EditProduct
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub _UC_PopupMsg_Confirmed() Handles _UC_PopupMsg.Confirmed
+        Dim objProductsBLL As New ProductsBLL
         Dim strMessage As String = ""
-        If ProductsBLL._DeleteProduct(_GetProductID(), strMessage) Then
+        If objProductsBLL._DeleteProduct(_GetProductID(), strMessage) Then
             RefreshFeaturedProductsCache()
             If GetKartConfig("backend.files.delete.cleanup ") = "y" Then KartrisDBBLL.DeleteNotNeededFiles()
 
@@ -588,8 +599,9 @@ Partial Class _EditProduct
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub lnkBtnDelete_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles lnkBtnDelete.Click
-        Dim strMessage As String = Replace(GetGlobalResourceObject("_Kartris", "ContentText_ConfirmDeleteItem"), "[itemname]", _
-                                        ProductsBLL._GetNameByProductID(_GetProductID(), Session("_LANG")))
+        Dim objProductsBLL As New ProductsBLL
+        Dim strMessage As String = Replace(GetGlobalResourceObject("_Kartris", "ContentText_ConfirmDeleteItem"), "[itemname]",
+                                        objProductsBLL._GetNameByProductID(_GetProductID(), Session("_LANG")))
         _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.Confirmation, strMessage)
     End Sub
 
@@ -609,7 +621,8 @@ Partial Class _EditProduct
     ''' <param name="e"></param>
     ''' <remarks></remarks>
     Protected Sub btnCloneProduct_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnCloneProduct.Click
-        Dim strMessage As String = GetGlobalResourceObject("_Kartris", "FormButton_Clone") & ": <strong>" & ProductsBLL._GetNameByProductID(_GetProductID(), Session("_LANG")) & "</strong> (x" & txtCloneQty.Text & ")?"
+        Dim objProductsBLL As New ProductsBLL
+        Dim strMessage As String = GetGlobalResourceObject("_Kartris", "FormButton_Clone") & ": <strong>" & objProductsBLL._GetNameByProductID(_GetProductID(), Session("_LANG")) & "</strong> (x" & txtCloneQty.Text & ")?"
         _UC_PopupMsg_Clone.ShowConfirmation(MESSAGE_TYPE.Confirmation, strMessage)
     End Sub
 

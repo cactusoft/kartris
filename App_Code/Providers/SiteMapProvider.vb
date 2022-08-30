@@ -129,7 +129,8 @@ Public Class CategorySiteMapProvider
     ''' that contains the Site Map
     ''' </summary>
     Private Function GetSiteMapFromDB(ByVal numLANGID As Integer) As DataTable
-        Return CategoriesBLL.GetHierarchyByLanguageID(numLANGID)
+        Dim objCategoriesBLL As New CategoriesBLL
+        Return objCategoriesBLL.GetHierarchyByLanguageID(numLANGID)
     End Function
 
     ''' <summary>
@@ -957,12 +958,14 @@ Public Class SiteMapHelper
         If numCategoryID = 0 Then Return ""
         Dim strCategoryNameInURL As String = ""
         If blnCheckURLName Then
-            strCategoryNameInURL = LanguageElementsBLL.GetElementValue(
+            Dim objLanguageElementsBLL As New LanguageElementsBLL()
+            strCategoryNameInURL = objLanguageElementsBLL.GetElementValue(
             numLanguageID, CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Categories, CkartrisEnumerations.LANG_ELEM_FIELD_NAME.URLName, numCategoryID)
         End If
 
         If strCategoryNameInURL.ToLower = "# -le- #" Then
-            strCategoryNameInURL = CategoriesBLL.GetNameByCategoryID(numCategoryID, numLanguageID)
+            Dim objCategoriesBLL As New CategoriesBLL
+            strCategoryNameInURL = objCategoriesBLL.GetNameByCategoryID(numCategoryID, numLanguageID)
         End If
 
         'URL Safe
@@ -972,12 +975,14 @@ Public Class SiteMapHelper
     Private Shared Function GetProductName(ByVal numProductID As Integer, ByVal numLanguageID As Short, Optional ByVal blnCheckURLName As Boolean = False) As String
         Dim strProductNameInURL As String = ""
         If blnCheckURLName Then
-            strProductNameInURL = LanguageElementsBLL.GetElementValue(
+            Dim objLanguageElementsBLL As New LanguageElementsBLL()
+            strProductNameInURL = objLanguageElementsBLL.GetElementValue(
             numLanguageID, CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Products, CkartrisEnumerations.LANG_ELEM_FIELD_NAME.URLName, numProductID)
         End If
 
         If strProductNameInURL.ToLower = "# -le- #" Or strProductNameInURL = "" Then
-            strProductNameInURL = ProductsBLL.GetNameByProductID(numProductID, numLanguageID)
+            Dim objProductsBLL As New ProductsBLL
+            strProductNameInURL = objProductsBLL.GetNameByProductID(numProductID, numLanguageID)
         End If
 
         Return strProductNameInURL
@@ -1115,7 +1120,8 @@ Public Class _CategorySiteMapProvider
         Else
             numLANGID = CInt(HttpContext.Current.Session.Item("_LANG"))
         End If
-        Return CategoriesBLL._GetHierarchyByLanguageId(numLANGID)
+        Dim objCategoriesBLL As New CategoriesBLL
+        Return objCategoriesBLL._GetHierarchyByLanguageId(numLANGID)
     End Function
 
     ''' <summary>

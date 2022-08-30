@@ -129,7 +129,7 @@ MAIN BASKET
                         <!-- Basket Items Rows -->
                         <asp:Repeater ID="rptBasket" runat="server">
                             <HeaderTemplate>
-                                <table class="baskettable">
+                                <table class="baskettable" cellpadding="0" cellspacing="0">
                                     <thead>
                                         <tr class="headrow">
                                             <% If KartSettingsManager.GetKartConfig("frontend.basket.showimages") = "y" Then%>

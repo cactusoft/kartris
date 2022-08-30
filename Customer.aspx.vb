@@ -58,13 +58,15 @@ Partial Class Customer
         '--------------------------------------------------
         'Fill customer details
         '--------------------------------------------------
+        Dim objUsersBLL As New UsersBLL
         If Not IsPostBack Then
-            Dim arrNameAndVAT As Array = Split(UsersBLL.GetNameandEUVAT(CurrentLoggedUser.ID), "|||")
+            Dim arrNameAndVAT As Array = Split(objUsersBLL.GetNameandEUVAT(CurrentLoggedUser.ID), "|||")
             txtCustomerName.Text = arrNameAndVAT(0)
             txtEUVATNumber.Text = arrNameAndVAT(1)
 
             'v3.0001 EORI number
-            txtEORINumber.Text = ObjectConfigBLL.GetValue("K:user.EORI", CurrentLoggedUser.ID)
+            Dim objObjectConfigBLL As New ObjectConfigBLL
+            txtEORINumber.Text = objObjectConfigBLL.GetValue("K:user.EORI", CurrentLoggedUser.ID)
             litUserEmail.Text = User.Identity.Name
         End If
 
@@ -548,19 +550,19 @@ Partial Class Customer
 
         Select Case LCase(strPage)
             Case "order"
-                tblOrder = BasketBLL.GetCustomerOrders(numCustomerID, 1, Order_PageSize)
+                tblOrder = BasketBLL.GetCustomerOrders(numCustomerID, (ViewState("Order_PageIndex") - 1) * Order_PageSize, Order_PageSize)
                 rptOrder.DataSource = tblOrder
                 rptOrder.DataBind()
                 updMain.Update()
 
             Case "basket"
-                tblSavedBasket = BasketBLL.GetSavedBasket(numCustomerID, 1, SavedBasket_PageSize)
+                tblSavedBasket = BasketBLL.GetSavedBasket(numCustomerID, (ViewState("SavedBasket_PageIndex") - 1) * SavedBasket_PageSize, SavedBasket_PageSize)
                 rptSavedBasket.DataSource = tblSavedBasket
                 rptSavedBasket.DataBind()
                 updMain.Update()
 
             Case "wishlist"
-                tblWishLists = BasketBLL.GetWishLists(numCustomerID, 1, WishList_PageSize)
+                tblWishLists = BasketBLL.GetWishLists(numCustomerID, (ViewState("WishList_PageIndex") - 1) * WishList_PageSize, WishList_PageSize)
                 rptWishLists.DataSource = tblWishLists
                 rptWishLists.DataBind()
                 updMain.Update()
@@ -714,6 +716,7 @@ Partial Class Customer
     ''' </summary>
     ''' <remarks></remarks>
     Protected Sub btnPasswordSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnPasswordSubmit.Click
+        Dim objUsersBLL As New UsersBLL
         If String.IsNullOrEmpty(Request.QueryString("ref")) Then
             Dim strUserPassword As String = txtCurrentPassword.Text
             Dim strNewPassword As String = txtNewPassword.Text
@@ -721,7 +724,7 @@ Partial Class Customer
             'Only update if validators ok
             If Me.IsValid Then
                 If Membership.ValidateUser(CurrentLoggedUser.Email, strUserPassword) Then
-                    If UsersBLL.ChangePassword(CurrentLoggedUser.ID, strUserPassword, strNewPassword) > 0 Then UC_Updated.ShowAnimatedText()
+                    If objUsersBLL.ChangePassword(CurrentLoggedUser.ID, strUserPassword, strNewPassword) > 0 Then UC_Updated.ShowAnimatedText()
                 Else
                     Dim strErrorMessage As String = Replace(GetGlobalResourceObject("Kartris", "ContentText_CustomerCodeIncorrect"), "[label]", GetGlobalResourceObject("Login", "FormLabel_ExistingCustomerCode"))
                     litWrongPassword.Text = "<span class=""error"">" & strErrorMessage & "</span>"
@@ -732,7 +735,7 @@ Partial Class Customer
             Dim strRef As String = Request.QueryString("ref")
             Dim strEmailAddress As String = txtCurrentPassword.Text
 
-            Dim dtbUserDetails As DataTable = UsersBLL.GetDetails(strEmailAddress)
+            Dim dtbUserDetails As DataTable = objUsersBLL.GetDetails(strEmailAddress)
             If dtbUserDetails.Rows.Count > 0 Then
                 Dim intUserID As Integer = dtbUserDetails(0)("U_ID")
                 Dim strTempPassword As String = FixNullFromDB(dtbUserDetails(0)("U_TempPassword"))
@@ -741,8 +744,8 @@ Partial Class Customer
                 If String.IsNullOrEmpty(strTempPassword) Then datExpiry = CkartrisDisplayFunctions.NowOffset.AddMinutes(-1)
 
                 If datExpiry > CkartrisDisplayFunctions.NowOffset Then
-                    If UsersBLL.EncryptSHA256Managed(strTempPassword, UsersBLL.GetSaltByEmail(strEmailAddress)) = strRef Then
-                        Dim intSuccess As Integer = UsersBLL.ChangePasswordViaRecovery(intUserID, txtConfirmPassword.Text)
+                    If objUsersBLL.EncryptSHA256Managed(strTempPassword, objUsersBLL.GetSaltByEmail(strEmailAddress)) = strRef Then
+                        Dim intSuccess As Integer = objUsersBLL.ChangePasswordViaRecovery(intUserID, txtConfirmPassword.Text)
                         If intSuccess = intUserID Then
                             UC_Updated.ShowAnimatedText()
                             Response.Redirect(WebShopURL() & "CustomerAccount.aspx?m=u")
@@ -771,10 +774,12 @@ Partial Class Customer
     Protected Sub btnDetailsSubmit_Click(ByVal sender As Object, ByVal e As System.EventArgs) Handles btnDetailsSubmit.Click
         Page.Validate("NameAndVat")
         If Page.IsValid Then
-            If UsersBLL.UpdateNameandEUVAT(CurrentLoggedUser.ID, txtCustomerName.Text, txtEUVATNumber.Text) = CurrentLoggedUser.ID Then UC_Updated.ShowAnimatedText()
+            Dim objUsersBLL As New UsersBLL
+            If objUsersBLL.UpdateNameandEUVAT(CurrentLoggedUser.ID, txtCustomerName.Text, txtEUVATNumber.Text) = CurrentLoggedUser.ID Then UC_Updated.ShowAnimatedText()
 
             'EORI number
-            Dim blnAddedEORI As Boolean = ObjectConfigBLL._SetConfigValue(11, CurrentLoggedUser.ID, txtEORINumber.Text, "")
+            Dim objObjectConfigBLL As New ObjectConfigBLL
+            Dim blnAddedEORI As Boolean = objObjectConfigBLL._SetConfigValue(11, CurrentLoggedUser.ID, txtEORINumber.Text, "")
         End If
     End Sub
 

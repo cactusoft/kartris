@@ -93,7 +93,8 @@ Partial Class UserControls_Back_CustomersList
 
     Public Sub RefreshCustomersList(Optional ByVal blnRetrieveTotalCount As Boolean = True)
         If ViewState("intTotalRowCount") Is Nothing Then blnRetrieveTotalCount = True
-        If blnRetrieveTotalCount Then ViewState("intTotalRowCount") = UsersBLL._GetDataBySearchTermCount(ViewState("_strSearch"), _isAffiliates, _isMailingList, _CustomerGroupID, _isApproved)
+        Dim objUsersBLL As New UsersBLL
+        If blnRetrieveTotalCount Then ViewState("intTotalRowCount") = objUsersBLL._GetDataBySearchTermCount(ViewState("_strSearch"), _isAffiliates, _isMailingList, _CustomerGroupID, _isApproved)
         Dim intCurrentPage As Integer = _UC_ItemPager.CurrentPage
 
         Dim intRowsPerPage As Integer = 25
@@ -103,7 +104,7 @@ Partial Class UserControls_Back_CustomersList
             'Stays at 25
         End Try
 
-        Dim tblCustomersList As DataTable = UsersBLL._GetDataBySearchTerm(ViewState("_strSearch"), intCurrentPage, intRowsPerPage, _isAffiliates, _isMailingList, _CustomerGroupID, _isApproved)
+        Dim tblCustomersList As DataTable = objUsersBLL._GetDataBySearchTerm(ViewState("_strSearch"), intCurrentPage, intRowsPerPage, _isAffiliates, _isMailingList, _CustomerGroupID, _isApproved)
 
         'Here we filter customers by account balance if required,
         'to find those in arrears or due refunds

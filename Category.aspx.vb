@@ -39,9 +39,10 @@ Partial Class Category
 
                     UC_CategoryView.LoadCategory(intCategoryID, Session("LANG"))
                     If UC_CategoryView.IsCategoryExist OrElse intCategoryID = 0 Then
+                        Dim objCategoriesBLL As New CategoriesBLL
                         Me.CanonicalTag = CkartrisBLL.WebShopURL & Mid(SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalCategory, intCategoryID), 2)
-                        Me.MetaDescription = CategoriesBLL.GetMetaDescriptionByCategoryID(intCategoryID, numLangID)
-                        Me.MetaKeywords = CategoriesBLL.GetMetaKeywordsByCategoryID(intCategoryID, numLangID)
+                        Me.MetaDescription = objCategoriesBLL.GetMetaDescriptionByCategoryID(intCategoryID, numLangID)
+                        Me.MetaKeywords = objCategoriesBLL.GetMetaKeywordsByCategoryID(intCategoryID, numLangID)
 
                         UC_SubCategoryView.LoadSubCategories(intCategoryID, Session("LANG"), UC_CategoryView.SubCategoryDisplayType)
                         UC_CategoryProductsView.LoadCategoryProducts(intCategoryID, Session("LANG"), UC_CategoryView.ProductsDisplayType, UC_CategoryView.ProductsDisplayOrder, UC_CategoryView.ProductsSortDirection)
@@ -61,8 +62,13 @@ Partial Class Category
                             tabProducts.Visible = False
                         End If
 
+                        'If we are filtering in powerpack, always use the products tab, even if zero products/results
+                        If Request.QueryString("f") = 1 Then
+                            tabContainer.ActiveTabIndex = 1
+                        End If
+
                         If Not Page.IsPostBack AndAlso KartSettingsManager.GetKartConfig("general.products.hittracking") = "y" Then
-                            StatisticsBLL.AddNewStatsRecord("C", _
+                            StatisticsBLL.AddNewStatsRecord("C",
                                             GetIntegerQS("CategoryID"), GetIntegerQS("strParent"))
                         End If
                         'If intCategoryID = 0 Then UC_BreadCrumbTrail.SiteMapProvider = "BreadCrumbSitemap"

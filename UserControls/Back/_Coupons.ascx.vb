@@ -24,7 +24,8 @@ Partial Class UserControls_Back_KartrisCoupons
         If Not Page.IsPostBack Then LoadCouponsGroups()
     End Sub
     Protected Function GetPromotionName(numPromotionID As Integer) As String
-        Return LanguageElementsBLL.GetElementValue(Session("_lang"), CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Promotions, _
+        Dim objLanguageElementsBLL As New LanguageElementsBLL()
+        Return objLanguageElementsBLL.GetElementValue(Session("_lang"), CkartrisEnumerations.LANG_ELEM_TABLE_TYPE.Promotions,
                                                                    CkartrisEnumerations.LANG_ELEM_FIELD_NAME.Name, numPromotionID)
     End Function
     Private Sub LoadCouponsGroups()

@@ -108,18 +108,19 @@ Partial Class UserControls_Back_EditTicket
     End Sub
 
     Sub GetUserTicketsDetails(ByVal numUserID As Integer)
-        Dim drwDetails As DataRow = UsersBLL._GetTicketDetailsByUser(numUserID).Rows(0)
+        Dim objUsersBLL As New UsersBLL
+        Dim drwDetails As DataRow = objUsersBLL._GetTicketDetailsByUser(numUserID).Rows(0)
         litUserID.Text = numUserID
         lnkCustomer.NavigateUrl = "~/Admin/_ModifyCustomerStatus.aspx?CustomerID=" & numUserID
         litUserEmail.Text = FixNullFromDB(drwDetails("U_EmailAddress"))
         ViewState("CustomerEmail") = litUserEmail.Text
-        litTotalTickets.Text = FixNullFromDB(drwDetails("UserTickets")) & _
+        litTotalTickets.Text = FixNullFromDB(drwDetails("UserTickets")) &
             " (" & GetPercentage(drwDetails("UserTickets"), drwDetails("TotalTickets")) & ")"
-        litTotalMessages.Text = FixNullFromDB(drwDetails("UserMessages")) & _
+        litTotalMessages.Text = FixNullFromDB(drwDetails("UserMessages")) &
             " (" & GetPercentage(drwDetails("UserMessages"), drwDetails("TotalMessages")) & ")"
-        litTotalTime.Text = FixNullFromDB(drwDetails("UserTime")) & " " & GetGlobalResourceObject("_Kartris", "ContentText_Minutes") & _
+        litTotalTime.Text = FixNullFromDB(drwDetails("UserTime")) & " " & GetGlobalResourceObject("_Kartris", "ContentText_Minutes") &
             " (" & GetPercentage(drwDetails("UserTime"), drwDetails("TotalTime")) & ")"
-        hlnkCustomersTickets.NavigateURL = "~/Admin/_SupportTickets.aspx?c=" & numUserID
+        hlnkCustomersTickets.NavigateUrl = "~/Admin/_SupportTickets.aspx?c=" & numUserID
         updCustomerDetails.Update()
     End Sub
 

@@ -42,8 +42,8 @@ Public MustInherit Class PageBaseClass
         MyBase.Render(objHtmlWriter)
 
         'Insert Google Analytics, if necessary
-        If KartSettingsManager.GetKartConfig("general.googleanalytics.webpropertyid") <> "" Then
-            InsertGoogleAnalyticsCode(sbdPageSource, KartSettingsManager.GetKartConfig("general.googleanalytics.webpropertyid"))
+        If KartSettingsManager.GetKartConfig("general.google.analytics.webpropertyid") <> "" Then
+            InsertGoogleAnalyticsCode(sbdPageSource, KartSettingsManager.GetKartConfig("general.google.analytics.webpropertyid"))
         End If
 
         'Add copyright notice - NOTE, this should not be
@@ -110,7 +110,7 @@ Public MustInherit Class PageBaseClass
 
     'This creates the Google Analytics javascript code
     'at the foot of front end pages if there is a value
-    'in the general.googleanalytics.webpropertyid config
+    'in the general.google.analytics.webpropertyid config
     'setting.
     Protected Sub InsertGoogleAnalyticsCode(ByVal sbdPageSource As StringBuilder, ByVal strGoogleWebPropertyID As String)
         Dim blnReplacedTag As Boolean = False
@@ -118,7 +118,7 @@ Public MustInherit Class PageBaseClass
         Dim sbdLink As New StringBuilder
 
         'Newest code as of 2019-11-28
-        'If InStr(Request.RawUrl.ToLower, "/callback.aspx") = 0 AndAlso InStr(Request.RawUrl.ToLower, "/checkout.aspx") = 0 Then
+        sbdLink.Append("<!-- Google Analytics -->" & vbCrLf)
         sbdLink.Append("<script Async src=""https://www.googletagmanager.com/gtag/js?id=" & strGoogleWebPropertyID & """></script>" & vbCrLf)
         sbdLink.Append("<script>" & vbCrLf)
         sbdLink.Append("  window.dataLayer = window.dataLayer || [];" & vbCrLf)
@@ -126,9 +126,50 @@ Public MustInherit Class PageBaseClass
         sbdLink.Append("  gtag('js', new Date());" & vbCrLf)
         sbdLink.Append("  gtag('config', '" & strGoogleWebPropertyID & "');" & vbCrLf)
         sbdLink.Append("</script>" & vbCrLf)
-        'End If
+        sbdLink.Append("<!-- End Google Analytics -->" & vbCrLf)
 
         'Google Analytics works in head tag, not close body
+        Try
+            sbdPageSource.Replace("<head id=""Head1"">", "<head id=""Head1"">" & vbCrLf & sbdLink.ToString & vbCrLf)
+            blnReplacedTag = True
+        Catch ex As Exception
+            'Oh dear
+        End Try
+
+        'If they have somehow managed to remove or
+        'obscure the closing body and form tags, we
+        'just tag our code to the end of the page.
+        'It is not XHTML compliant, but it should 
+        'ensure the tag shows in any case.
+        If blnReplacedTag = False Then
+            Try
+                sbdPageSource.Append(vbCrLf & sbdLink.ToString)
+                blnReplacedTag = True
+            Catch ex As Exception
+                'Oh dear
+            End Try
+        End If
+    End Sub
+
+    'This creates the Google Tag Manager javascript code
+    'at the foot of front end pages if there is a value
+    'in the general.google.tagmanager.webpropertyid config
+    'setting.
+    Protected Sub InsertGoogleTagManagerCode(ByVal sbdPageSource As StringBuilder, ByVal strGoogleWebPropertyID As String)
+        Dim blnReplacedTag As Boolean = False
+        Dim strReplacement As String = ""
+        Dim sbdLink As New StringBuilder
+
+        'Newest code as of 2021-08-06
+        sbdLink.Append("<!-- Google Tag Manager -->" & vbCrLf)
+        sbdLink.Append("<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':" & vbCrLf)
+        sbdLink.Append("new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0]," & vbCrLf)
+        sbdLink.Append("j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=" & vbCrLf)
+        sbdLink.Append("'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);" & vbCrLf)
+        sbdLink.Append("})(window,document,'script','dataLayer','" & strGoogleWebPropertyID & "');</script>" & vbCrLf)
+        sbdLink.Append("<!-- Google Tag Manager -->" & vbCrLf)
+
+        'Google Tag Manager works in head tag, not close body
         Try
             sbdPageSource.Replace("<head id=""Head1"">", "<head id=""Head1"">" & vbCrLf & sbdLink.ToString & vbCrLf)
             blnReplacedTag = True
@@ -468,7 +509,7 @@ Public MustInherit Class PageBaseClass
         Dim strUserAccess As String = LCase(GetKartConfig("frontend.users.access"))
         If strUserAccess = "yes" And Not _
             Request.Path.ToString.Contains("/CustomerAccount.aspx") And Not _
-            Request.Path.ToString.Contains("/CustomerDetails.aspx") And Not _
+            Request.Path.ToString.Contains("/PasswordReset.aspx") And Not _
             Request.Path.ToString.ToLower.Contains("callback") And Not _
             User.Identity.IsAuthenticated Then
             Response.Redirect("CustomerAccount.aspx?return=" & HttpContext.Current.Request.RawUrl)

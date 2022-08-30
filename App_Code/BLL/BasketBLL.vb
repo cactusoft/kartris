@@ -448,6 +448,7 @@ Public Class BasketBLL
         Dim tblBasketValues As DataTable
         Dim numCurrencyID As Integer ', numLanguageId, numSessionId
         Dim BasketItems As New List(Of Kartris.BasketItem)
+        Dim objObjectConfigBLL As New ObjectConfigBLL
 
         Dim SESS_CurrencyID As Short
         If numCurrencyID > 0 Then
@@ -491,7 +492,7 @@ Public Class BasketBLL
 
                 'Added v2.9010 - lets us exclude particular products
                 'from the customer discount 
-                objItem.ExcludeFromCustomerDiscount = CBool(ObjectConfigBLL.GetValue("K:product.excustomerdiscount", drwBasketValues("ProductID")))
+                objItem.ExcludeFromCustomerDiscount = CBool(objObjectConfigBLL.GetValue("K:product.excustomerdiscount", drwBasketValues("ProductID")))
 
                 'We can tell if this is an combinations product
                 If objItem.VersionType = "c" Then
@@ -502,7 +503,7 @@ Public Class BasketBLL
                     'and any options that are selected, just like a regular options product. However,
                     'by setting the usecombination object config setting for the product to 'on', you
                     'can specify pricing individually for each combination.
-                    If ObjectConfigBLL.GetValue("K:product.usecombinationprice", objItem.ProductID) = "1" Then
+                    If objObjectConfigBLL.GetValue("K:product.usecombinationprice", objItem.ProductID) = "1" Then
                         objItem.Price = FixNullFromDB(drwBasketValues("CombinationPrice"))
                         objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
                         objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
@@ -511,7 +512,8 @@ Public Class BasketBLL
                     'We determine whether stock tracking is on or not from the
                     'base version rather than the actual combination in the
                     'basket
-                    If VersionsBLL.IsStockTrackingInBase(objItem.ProductID) Then
+                    Dim objVersionsBLL As New VersionsBLL
+                    If objVersionsBLL.IsStockTrackingInBase(objItem.ProductID) Then
                         'Nowt
                     Else
                         objItem.QtyWarnLevel = 0
@@ -529,45 +531,45 @@ Public Class BasketBLL
 
                 objItem.OptionText = GetOptionText(LanguageId, objItem.ID, objItem.OptionLink)
                 objItem.CustomText = drwBasketValues("CustomText") & ""
-                    objItem.CustomType = drwBasketValues("V_CustomizationType") & ""
-                    objItem.CustomDesc = drwBasketValues("V_CustomizationDesc") & ""
-                    objItem.CustomCost = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, FixNullFromDB(drwBasketValues("V_CustomizationCost")))), CurrencyRoundNumber)
-                    objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
-                    objItem.TableText = ""
+                objItem.CustomType = drwBasketValues("V_CustomizationType") & ""
+                objItem.CustomDesc = drwBasketValues("V_CustomizationDesc") & ""
+                objItem.CustomCost = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, FixNullFromDB(drwBasketValues("V_CustomizationCost")))), CurrencyRoundNumber)
+                objItem.Price = Math.Round(CDbl(CurrenciesBLL.ConvertCurrency(SESS_CurrencyID, objItem.Price)), CurrencyRoundNumber)
+                objItem.TableText = ""
 
-                    'Handle the price differently if basket item is from a custom product
-                    Dim strCustomControlName As String = ObjectConfigBLL.GetValue("K:product.customcontrolname", objItem.ProductID)
-                    If Not String.IsNullOrEmpty(strCustomControlName) Then
-                        Try
-                            Dim strParameterValues As String = FixNullFromDB(drwBasketValues("CustomText"))
-                            'Split the custom text field
-                            Dim arrParameters As String() = Split(strParameterValues, "|||")
+                'Handle the price differently if basket item is from a custom product
+                Dim strCustomControlName As String = objObjectConfigBLL.GetValue("K:product.customcontrolname", objItem.ProductID)
+                If Not String.IsNullOrEmpty(strCustomControlName) Then
+                    Try
+                        Dim strParameterValues As String = FixNullFromDB(drwBasketValues("CustomText"))
+                        'Split the custom text field
+                        Dim arrParameters As String() = Split(strParameterValues, "|||")
 
-                            ' arrParameters(0) contains the comma separated list of the custom control's parameters values
-                            ' we don't use this value when loading the basket, this is only needed when validating the price in the checkout
+                        ' arrParameters(0) contains the comma separated list of the custom control's parameters values
+                        ' we don't use this value when loading the basket, this is only needed when validating the price in the checkout
 
-                            ' arrParameters(1) contains the custom description of the item
-                            If Not String.IsNullOrEmpty(arrParameters(1)) Then
-                                objItem.VersionName = arrParameters(1)
-                            End If
+                        ' arrParameters(1) contains the custom description of the item
+                        If Not String.IsNullOrEmpty(arrParameters(1)) Then
+                            objItem.VersionName = arrParameters(1)
+                        End If
 
-                            ' arrParameters(2) contains the custom price
-                            objItem.Price = arrParameters(2)
+                        ' arrParameters(2) contains the custom price
+                        objItem.Price = arrParameters(2)
 
-                            'just set the option price to 0 just to be safe
-                            objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
-                        Catch ex As Exception
-                            'Failed to retrieve custom price, ignore this basket item
-                            objItem.Quantity = 0
-                        End Try
+                        'just set the option price to 0 just to be safe
+                        objItem.OptionPrice = Math.Round(0, CurrencyRoundNumber)
+                    Catch ex As Exception
+                        'Failed to retrieve custom price, ignore this basket item
+                        objItem.Quantity = 0
+                    End Try
 
-                    End If
+                End If
 
-                    'there must be something wrong if quantity is 0 so don't add this item to the basketitems array
-                    If objItem.Quantity > 0 Then BasketItems.Add(objItem)
-                Next
-            Catch ex As Exception
-                SqlConnection.ClearPool(_BasketValuesAdptr.Connection)
+                'there must be something wrong if quantity is 0 so don't add this item to the basketitems array
+                If objItem.Quantity > 0 Then BasketItems.Add(objItem)
+            Next
+        Catch ex As Exception
+            SqlConnection.ClearPool(_BasketValuesAdptr.Connection)
             CkartrisFormatErrors.LogError("BasketBLL.GetBasketItems - " & ex.Message)
         End Try
 
@@ -1042,7 +1044,7 @@ Public Class BasketBLL
     ''' <param name="numOrderID">The order we want to get data for</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function GetCustomerOrderDetails(ByVal numOrderID As Integer) As DataTable
+    Public Function GetCustomerOrderDetails(ByVal numOrderID As Integer) As DataTable
         Dim tblCustomerOrders As New DataTable
         tblCustomerOrders = _CustomersAdptr.GetOrderDetails(numOrderID)
         Return tblCustomerOrders
@@ -1081,7 +1083,7 @@ Public Class BasketBLL
     ''' <param name="numType">Defines what data should be returned. A value of 0 returns only summary and address data; any other value returns the row level detail</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function GetCustomerInvoice(ByVal numOrderID As Integer, ByVal numUserID As Integer, Optional ByVal numType As Integer = 0) As DataTable
+    Public Function GetCustomerInvoice(ByVal numOrderID As Integer, ByVal numUserID As Integer, Optional ByVal numType As Integer = 0) As DataTable
         Dim tblInvoice As New DataTable
         tblInvoice = _CustomersAdptr.GetInvoice(numOrderID, numUserID, numType)
         Return tblInvoice
@@ -1131,7 +1133,7 @@ Public Class BasketBLL
     ''' <param name="strCouponName">The coupon code.</param>
     ''' <returns></returns>
     ''' <remarks></remarks>
-    Public Shared Function GetCouponData(ByVal strCouponName As String) As DataTable
+    Public Function GetCouponData(ByVal strCouponName As String) As DataTable
         Dim tblCoupon As New DataTable
         tblCoupon = _CouponsAdptr.GetCouponCode(strCouponName)
         Return tblCoupon
@@ -1513,6 +1515,9 @@ Public Class BasketBLL
         Dim numLanguageId As Integer
 
         numLanguageId = Current.Session("LANG")
+        Dim objVersionsBLL As New VersionsBLL
+        Dim objProductsBLL As New ProductsBLL
+        Dim objCategoriesBLL As New CategoriesBLL
 
         For Each drwPromotionParts As DataRow In tblPromotionParts.Rows
 
@@ -1520,7 +1525,7 @@ Public Class BasketBLL
             Dim strStringID As String = drwPromotionParts("PS_ID")
             Dim strValue As String = CkartrisDisplayFunctions.FixDecimal(FixNullFromDB(drwPromotionParts("PP_Value")))
             Dim strItemID As String = FixNullFromDB(drwPromotionParts("PP_ItemID"))
-            Dim intProductID As Integer = VersionsBLL.GetProductID_s(CLng(strItemID))
+            Dim intProductID As Integer = objVersionsBLL.GetProductID_s(CLng(strItemID))
             Dim strItemName As String = ""
             Dim strItemLink As String = ""
 
@@ -1533,21 +1538,21 @@ Public Class BasketBLL
             End If
 
             If strText.Contains("[C]") AndAlso strItemID <> "" Then ''==== language_ID =====
-                strItemName = CategoriesBLL.GetNameByCategoryID(CInt(strItemID), numLanguageId)
+                strItemName = objCategoriesBLL.GetNameByCategoryID(CInt(strItemID), numLanguageId)
                 strItemLink = " <b><a href='" & CreateURL(Page.CanonicalCategory, strItemID) & "'>" & strItemName & "</a></b>"
                 strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
                 strText = strText.Replace("[C]", strItemLink)
             End If
 
             If strText.Contains("[P]") AndAlso strItemID <> "" Then ''==== language_ID =====
-                strItemName = ProductsBLL.GetNameByProductID(CInt(strItemID), numLanguageId)
+                strItemName = objProductsBLL.GetNameByProductID(CInt(strItemID), numLanguageId)
                 strItemLink = " <b><a href='" & CreateURL(Page.CanonicalProduct, strItemID) & "'>" & strItemName & "</a></b>"
                 strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
                 strText = strText.Replace("[P]", strItemLink)
             End If
 
             If strText.Contains("[V]") AndAlso strItemID <> "" Then ''==== language_ID =====
-                strItemName = ProductsBLL.GetNameByProductID(intProductID, numLanguageId) & " (" & VersionsBLL._GetNameByVersionID(CInt(strItemID), numLanguageId) & ")"
+                strItemName = objProductsBLL.GetNameByProductID(intProductID, numLanguageId) & " (" & objVersionsBLL._GetNameByVersionID(CInt(strItemID), numLanguageId) & ")"
                 strItemLink = " <b><a href='" & CreateURL(Page.CanonicalProduct, intProductID) & "'>" & strItemName & "</a></b>"
                 strItemLink = IIf(blnTextOnly, strItemName, strItemLink)
                 strText = strText.Replace("[V]", strItemLink)
@@ -2355,6 +2360,7 @@ Public Class BasketBLL
 
     End Sub
 
+#Region "Autosave Basket"
     ''' <summary>
     ''' Autosave basket
     ''' We trigger this when adding items to the basket, or removing them.
@@ -2405,6 +2411,48 @@ Public Class BasketBLL
 
     End Sub
 
+    ''' <summary>
+    ''' Delete AUTOSAVE basket, or in fact, any basket by NAME and user ID
+    ''' </summary>
+    ''' <param name="UserID">User ID</param>
+    ''' <param name="SBSKT_Name">Basket name</param>
+    ''' <returns>True if ok, False if some error</returns>
+    ''' <remarks></remarks>
+    Public Function DeleteSavedBasketByNameAndUserID(ByVal UserID As Integer, ByVal SBSKT_Name As String) As Boolean
+        Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
+        Using sqlConn As New SqlConnection(strConnString)
+
+            Dim cmdAddAttribute As SqlCommand = sqlConn.CreateCommand
+            cmdAddAttribute.CommandText = "spKartrisBasket_DeleteSavedBasketByNameAndUserID"
+
+            Dim savePoint As SqlTransaction = Nothing
+            cmdAddAttribute.CommandType = CommandType.StoredProcedure
+            Try
+                cmdAddAttribute.Parameters.AddWithValue("@UserID", UserID)
+                cmdAddAttribute.Parameters.AddWithValue("@SBSKT_Name", SBSKT_Name)
+
+                sqlConn.Open()
+                savePoint = sqlConn.BeginTransaction()
+                cmdAddAttribute.Transaction = savePoint
+
+                cmdAddAttribute.ExecuteNonQuery()
+
+                savePoint.Commit()
+                sqlConn.Close()
+
+                Return True
+            Catch ex As Exception
+                'ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod(), "Error")
+                If Not savePoint Is Nothing Then savePoint.Rollback()
+            Finally
+                If sqlConn.State = ConnectionState.Open Then sqlConn.Close() : savePoint.Dispose()
+            End Try
+        End Using
+        Return False
+    End Function
+#End Region
+
+
 #Region "MailingList"
 
     ''' <summary>
@@ -2441,6 +2489,7 @@ Public Class BasketBLL
 
 
     Public Shared Function ConfirmMail(ByVal numUserID As Integer, ByVal strPassword As String, Optional ByVal strIP As String = "") As Integer
+        Dim objUsersBLL As New UsersBLL
         Dim tblConfirmMail As New DataTable
         Dim UserID As Integer = 0
 
@@ -2453,7 +2502,7 @@ Public Class BasketBLL
         'If mailchimp is active, we want to add the user to the mailing list
         If KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y" Then
             'Lookup user email
-            Dim strEmail As String = UsersBLL.GetEmailByID(UserID)
+            Dim strEmail As String = objUsersBLL.GetEmailByID(UserID)
             AddListSubscriber(strEmail)
         End If
 

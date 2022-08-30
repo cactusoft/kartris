@@ -125,9 +125,11 @@ Partial Class UserControls_Front_StockNotification
     ''' </summary>
     Public Sub ShowStockNotificationsPopup()
 
+        Dim objProductsBLL As New ProductsBLL
+
         'Format full product name from lookup of product
         'name plus version name
-        Dim strProductFullName As String = ProductsBLL.GetNameByProductID(_ProductID, _LanguageID)
+        Dim strProductFullName As String = objProductsBLL.GetNameByProductID(_ProductID, _LanguageID)
 
         'Options products won't have version name, but rest will
         If _VersionName <> "" Then strProductFullName &= " - " & Server.UrlDecode(_VersionName)
@@ -164,8 +166,15 @@ Partial Class UserControls_Front_StockNotification
         Page.Validate(btnSave.ValidationGroup)
         If Page.IsValid Then
             StockNotificationsBLL.AddNewStockNotification(txtEmail.Text, hidVersionID.Value, hidPageLink.Value, hidProductName.Value, hidLanguageID.Value)
+
+            pnlSuccess.Visible = True
+            pnlStockNotification.Visible = False
+            popSuccess.Show()
+            updPnlStockNotification.Update()
         Else
             CkartrisFormatErrors.LogError("Something not valid in group " & btnSave.ValidationGroup)
         End If
     End Sub
+
+
 End Class

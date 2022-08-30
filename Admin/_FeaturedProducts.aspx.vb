@@ -42,7 +42,8 @@ Partial Class Admin_FeaturedProducts
         mvwFeaturedProducts.SetActiveView(viwProductList)
         lbxFeaturedProducts.Items.Clear()
         Try
-            Dim tblFeaturedProducts As DataTable = ProductsBLL._GetFeaturedProducts(Session("_LANG"))
+            Dim objProductsBLL As New ProductsBLL
+            Dim tblFeaturedProducts As DataTable = objProductsBLL._GetFeaturedProducts(Session("_LANG"))
             If tblFeaturedProducts.Rows.Count = 0 Then mvwFeaturedProducts.SetActiveView(viwNoItems)
             If tblFeaturedProducts.Rows.Count > 0 Then
                 tblFeaturedProducts.DefaultView.Sort = "ProductPriority DESC"
@@ -133,8 +134,8 @@ Partial Class Admin_FeaturedProducts
                 AndAlso strAutoCompleteText.Contains(")") Then
                 Try
                     numItemID = CInt(Replace(Mid(strAutoCompleteText, numIndex + 2), ")", ""))
-
-                    If ProductsBLL._GetCustomerGroup(numItemID) <> 0 Then
+                    Dim objProductsBLL As New ProductsBLL
+                    If objProductsBLL._GetCustomerGroup(numItemID) <> 0 Then
                         _UC_PopupMsg.ShowConfirmation(MESSAGE_TYPE.ErrorMessage, GetGlobalResourceObject("_Kartris", "ContentText_ProductLimitedToCustomerGroupAsFeatured"))
                         Exit Sub
                     End If

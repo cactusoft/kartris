@@ -544,7 +544,8 @@ Partial Class Templates_BasketView
             objQuantity.Focus()
         Else
             'Get the unit size for the product (integer and decimal ones)
-            Dim strUnitSize As String = ObjectConfigBLL.GetValue("K:product.unitsize", CLng(CType(sender.Parent.FindControl("litProductID_H"), Literal).Text))
+            Dim objObjectConfigBLL As New ObjectConfigBLL
+            Dim strUnitSize As String = objObjectConfigBLL.GetValue("K:product.unitsize", CLng(CType(sender.Parent.FindControl("litProductID_H"), Literal).Text))
             Dim numQuantity As Single = CSng(objQuantity.Text)
 
             'We need to check if the quantity the user has changed to
@@ -909,8 +910,8 @@ Partial Class Templates_BasketView
         If e.Item.ItemType = ListItemType.Item OrElse e.Item.ItemType = ListItemType.AlternatingItem Then
 
             objItem = e.Item.DataItem
-
-            If LCase(objItem.ProductType) = "s" AndAlso String.IsNullOrEmpty(ObjectConfigBLL.GetValue("K:product.customcontrolname", objItem.ProductID)) Then
+            Dim objObjectConfigBLL As New ObjectConfigBLL
+            If LCase(objItem.ProductType) = "s" AndAlso String.IsNullOrEmpty(objObjectConfigBLL.GetValue("K:product.customcontrolname", objItem.ProductID)) Then
                 CType(e.Item.FindControl("phdProductType1"), PlaceHolder).Visible = True
             Else
                 CType(e.Item.FindControl("phdProductType2"), PlaceHolder).Visible = True
@@ -1172,7 +1173,8 @@ Partial Class Templates_BasketView
     Private Sub ShowAddItemToBasket(ByVal numVersionID As Integer, ByVal numQuantity As Double, Optional ByVal blnDisplayPopup As Boolean = False)
 
         Dim tblVersion As DataTable
-        tblVersion = VersionsBLL._GetVersionByID(numVersionID)
+        Dim objVersionsBLL As New VersionsBLL
+        tblVersion = objVersionsBLL._GetVersionByID(numVersionID)
         If tblVersion.Rows.Count > 0 Then
             ''// add basket item quantity to new item qty and check for stock
             Dim numBasketQty As Double = 0

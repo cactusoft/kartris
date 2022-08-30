@@ -38,7 +38,8 @@ Partial Class Admin_QuickBooks
         If Not String.IsNullOrEmpty(strPass) Then
             If strPass <> KartSettingsManager.GetKartConfig("general.quickbooks.pass") Then
                 txtQBWCPassword.Attributes("value") = strPass
-                KartSettingsManager.SetKartConfig("general.quickbooks.pass", UsersBLL.EncryptSHA256Managed(txtQBWCPassword.Text, "quickbooks", True))
+                Dim objUsersBLL As New UsersBLL
+                KartSettingsManager.SetKartConfig("general.quickbooks.pass", objUsersBLL.EncryptSHA256Managed(txtQBWCPassword.Text, "quickbooks", True))
                 CType(Me.Master, Skins_Admin_Template).DataUpdated()
             End If
         End If

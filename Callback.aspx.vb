@@ -147,7 +147,9 @@ Partial Class Callback
                 If clsPlugin.CallbackSuccessful Then
 
                     Dim O_ID As Integer = clsPlugin.CallbackOrderID
-                    Dim tblOrder As DataTable = OrdersBLL.GetOrderByID(O_ID)
+                    Dim objOrdersBLL As New OrdersBLL
+                    Dim objUsersBLL As New UsersBLL
+                    Dim tblOrder As DataTable = objOrdersBLL.GetOrderByID(O_ID)
 
                     Dim O_CouponCode As String = ""
                     Dim O_TotalPriceGateway As Double = 0
@@ -157,7 +159,7 @@ Partial Class Callback
                     Dim O_CurrencyIDGateway As Integer = 0
                     Dim strBasketBLL As String = ""
                     If tblOrder.Rows.Count > 0 Then
-                        If tblOrder.Rows(0)("O_Sent") = 0 OrElse intCallbackStep = 2 Then
+                        If tblOrder.Rows(0)("O_Paid") = 0 OrElse intCallbackStep = 2 Then
                             'Store the order details
                             O_CouponCode = CStr(FixNullFromDB(tblOrder.Rows(0)("O_CouponCode")))
                             O_TotalPriceGateway = CDbl(tblOrder.Rows(0)("O_TotalPriceGateway"))
@@ -193,7 +195,7 @@ Partial Class Callback
                                     BasketBLL.RecoverAutosaveBasket(O_CustomerID)
 
                                     'Need to create a temp user for the code below to work
-                                    Dim tempKartrisUser As KartrisMemberShipUser = New KartrisMemberShipUser(O_CustomerID, UsersBLL.GetEmailByID(O_CustomerID), 0, 0, 0, 0, 1, True)
+                                    Dim tempKartrisUser As KartrisMemberShipUser = New KartrisMemberShipUser(O_CustomerID, objUsersBLL.GetEmailByID(O_CustomerID), 0, 0, 0, 0, 1, True)
                                     Dim kartrisBasket As Kartris.Basket = Session("Basket")
 
                                     CkartrisFormatErrors.LogError("Get Session Basket")
@@ -227,7 +229,7 @@ Partial Class Callback
                             'Set invoiced and received checkboxes, depending on
                             'config settings
                             '-----------------------------------------------------
-                            Dim intUpdateResult As Integer = OrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True,
+                            Dim intUpdateResult As Integer = objOrdersBLL.CallbackUpdate(O_ID, clsPlugin.CallbackReferenceCode, CkartrisDisplayFunctions.NowOffset, True,
                                                                                       blnCheckInvoicedOnPayment,
                                                                                       blnCheckReceivedOnPayment,
                                                                                       GetGlobalResourceObject("Email", "EmailText_OrderTime") & " " & CkartrisDisplayFunctions.NowOffset,
@@ -236,7 +238,7 @@ Partial Class Callback
                                 Try
                                     Dim notes As String = "Multibanco order with Entity: " & strMultibancoData(2).Split(":")(1) &
                                                        " and Reference:" & strMultibancoData(3).Split(":")(1)
-                                    OrdersBLL._UpdateStatus(O_ID,
+                                    objOrdersBLL._UpdateStatus(O_ID,
                                                             True,
                                                             True,
                                                             tblOrder.Rows(0)("O_Shipped"),
@@ -248,6 +250,14 @@ Partial Class Callback
                                 End Try
                             End If
 
+
+                            'Try to delete AUTOSAVE basket
+                            Dim objBasketBLL As New BasketBLL
+                            Try
+                                objBasketBLL.DeleteSavedBasketByNameAndUserID(O_CustomerID, "AUTOSAVE")
+                            Catch ex As Exception
+
+                            End Try
 
                             '-----------------------------------------------------
                             'FORMAT CONFIRMATION EMAIL
@@ -285,7 +295,7 @@ Partial Class Callback
                             'To customer
                             '-----------------------------------------------------
                             If KartSettingsManager.GetKartConfig("frontend.orders.emailcustomer") <> "n" Then
-                                SendEmail(strFromEmail, UsersBLL.GetEmailByID(O_CustomerID), GetGlobalResourceObject("Email", "Config_Subjectline") & " (#" & O_ID & ")", strCustomerEmailText, , , , , blnUseHTMLOrderEmail)
+                                SendEmail(strFromEmail, objUsersBLL.GetEmailByID(O_CustomerID), GetGlobalResourceObject("Email", "Config_Subjectline") & " (#" & O_ID & ")", strCustomerEmailText, , , , , blnUseHTMLOrderEmail)
                             End If
 
                             '-----------------------------------------------------
