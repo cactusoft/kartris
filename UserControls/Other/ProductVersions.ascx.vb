@@ -155,6 +155,9 @@ Partial Class ProductVersions
             Case "o", "g" 'options
                 c_blnHasPrices = False
                 mvwVersion.SetActiveView(PrepareOptionsView(tblVersions))
+                updOptions.Visible = ReturnCallForPrice(tblVersions.Rows(0)("V_ProductID"), tblVersions.Rows(0)("V_ID")) <> 1
+                numVersionID = tblVersions.Rows(0)("V_ID")
+                'updPricePanel.Visible = ReturnCallForPrice(tblVersions.Rows(0)("V_ProductID"), tblVersions.Rows(0)("V_ID")) <> 1
             Case Else
                 c_blnHasPrices = False
                 mvwVersion.SetActiveView(PrepareSelectView(tblVersions))
@@ -380,7 +383,7 @@ Partial Class ProductVersions
         If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then litTaxRateHidden.Text = CStr(ptblVersions.Rows(0)("T_TaxRate"))
 
         'calculate display price
-        PricePreview(pPrice)
+        PricePreview(pPrice, FixNullFromDB(ptblVersions.Rows(0)("V_ID")))
 
         lblVID_Options.Text = CStr(FixNullFromDB(ptblVersions.Rows(0)("V_ID")))
 
@@ -391,7 +394,10 @@ Partial Class ProductVersions
             'Call the function to check the selected combination price
             GetCombinationPrice()
         Else
-            AddOptionsPrice(UC_OptionsContainer.GetSelectedPrice())
+            'We send in Version ID because we want to show 
+            'Call For Price for both version and product
+            'settings
+            AddOptionsPrice(UC_OptionsContainer.GetSelectedPrice(), FixNullFromDB(ptblVersions.Rows(0)("V_ID")))
         End If
 
         ''// set addtobasket control's version id
@@ -761,15 +767,16 @@ Partial Class ProductVersions
         If UC_OptionsContainer.IsUsingCombinationPrices Then
             GetCombinationPrice()
         Else
-            AddOptionsPrice(pOptionPrice)
+            'We send in Version ID because we want to show 
+            'Call For Price for both version and product
+            'settings
+            AddOptionsPrice(pOptionPrice, numVersionID)
         End If
-
 
         If Not [String].IsNullOrEmpty(strOptionsList) Then
             Dim objVersionsBLL As New VersionsBLL
             numVersionID = objVersionsBLL.GetCombinationVersionID_s(ProductID, strOptionsList)
             If numVersionID <> -1 Then CheckCombinationsImages(numVersionID)
-
         End If
     End Sub
 
@@ -860,7 +867,12 @@ Partial Class ProductVersions
     ''' Calculate options price change
     ''' </summary>
     ''' <remarks></remarks>
-    Sub AddOptionsPrice(ByVal pOptionPrice As Single)
+    Sub AddOptionsPrice(ByVal pOptionPrice As Single, Optional ByVal numV_ID As Int32 = 0)
+
+        'We send in Version ID because we want to show 
+        'Call For Price for both version and product
+        'settings
+
         Trace.Warn("UC_OptionsContainerEvent IN Versions")
         RaiseEvent Event_VersionPriceChanged(pOptionPrice)
 
@@ -874,8 +886,10 @@ Partial Class ProductVersions
 
         'Reading the values of Options from the OptionsContainer in a muli-dimentional array
         Dim strOptionString As String = UC_OptionsContainer.GetSelectedOptions()
+        If numV_ID <> 0 Then
+            PricePreview(numNewPrice, numV_ID)
+        End If
 
-        PricePreview(numNewPrice)
         CheckOptionStock(strOptionString)
         updPricePanel.Update()
         updOptions.Update()
@@ -926,8 +940,12 @@ Partial Class ProductVersions
         'correspond to a particular combination that
         'exists
         phdNoValidCombinations.Visible = True  'show the no-valid-combinations message
-        Dim objObjectConfigBLL As New ObjectConfigBLL
-        If objObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) <> 1 Then
+
+        Dim objVersionsBLL As New VersionsBLL
+        numVersionID = objVersionsBLL.GetCombinationVersionID_s(_ProductID, "")
+
+        'Call for price
+        If ReturnCallForPrice(_ProductID, numVersionID) <> 1 Then
 
             If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
                 phdPrice.Visible = True
@@ -958,12 +976,12 @@ Partial Class ProductVersions
     ''' Calculates and displays the price of an options product, based on selections
     ''' </summary>
     ''' <remarks></remarks>
-    Private Sub PricePreview(ByVal pPrice As Single)
+    Private Sub PricePreview(ByVal pPrice As Single, Optional ByVal numV_ID As Int32 = 0)
 
         ''Handle 'call for prices' - determine whether to
         ''show the add to basket button or not
-        Dim objObjectConfigBLL As New ObjectConfigBLL
-        If objObjectConfigBLL.GetValue("K:product.callforprice", _ProductID) = 1 Then
+
+        If ReturnCallForPrice(_ProductID, numV_ID) = 1 Then
             'PricePreview(0)
             phdIncTax.Visible = False
             phdExTax.Visible = False
@@ -973,38 +991,37 @@ Partial Class ProductVersions
             'Hide add to basket button
             phdNotOutOfStock4.Visible = False
             UC_AddToBasketQty4.Visible = False
-            Return
-        End If
-
-        If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
-            phdPrice.Visible = True
-            litPriceView.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), pPrice)
-            Return
-        End If
-
-        Dim blnIncTax As Boolean = IIf(KartSettingsManager.GetKartConfig("general.tax.pricesinctax") = "y", True, False)
-        Dim blnShowTax As Boolean = IIf(KartSettingsManager.GetKartConfig("frontend.display.showtax") = "y", True, False)
-
-        Dim numTax As Single = litTaxRateHidden.Text
-        Dim drwCurrencies As DataRow() = GetCurrenciesFromCache().Select("CUR_ID = " & Session("CUR_ID"))
-        Dim numCalculatedTax As Single = CalculateTax(Decimal.Round(CDec(pPrice), drwCurrencies(0)("CUR_RoundNumbers")), numTax)
-        drwCurrencies = Nothing
-
-        If blnShowTax Then
-            If blnIncTax Then
-                phdIncTax.Visible = True
-                litIncTax.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), pPrice)
-                phdExTax.Visible = True
-                litExTax.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numCalculatedTax)
-            Else
-                phdExTax.Visible = True
-                litExTax.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), pPrice)
-                phdTax.Visible = True
-                litTaxRate.Text = CStr(numTax) + " %"
-            End If
         Else
-            phdPrice.Visible = True
-            litPriceView.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), pPrice)
+            If ConfigurationManager.AppSettings("TaxRegime").ToLower = "us" Or ConfigurationManager.AppSettings("TaxRegime").ToLower = "simple" Then
+                phdPrice.Visible = True
+                litPriceView.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), pPrice)
+                Return
+            End If
+
+            Dim blnIncTax As Boolean = IIf(KartSettingsManager.GetKartConfig("general.tax.pricesinctax") = "y", True, False)
+            Dim blnShowTax As Boolean = IIf(KartSettingsManager.GetKartConfig("frontend.display.showtax") = "y", True, False)
+
+            Dim numTax As Single = litTaxRateHidden.Text
+            Dim drwCurrencies As DataRow() = GetCurrenciesFromCache().Select("CUR_ID = " & Session("CUR_ID"))
+            Dim numCalculatedTax As Single = CalculateTax(Decimal.Round(CDec(pPrice), drwCurrencies(0)("CUR_RoundNumbers")), numTax)
+            drwCurrencies = Nothing
+
+            If blnShowTax Then
+                If blnIncTax Then
+                    phdIncTax.Visible = True
+                    litIncTax.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), pPrice)
+                    phdExTax.Visible = True
+                    litExTax.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), numCalculatedTax)
+                Else
+                    phdExTax.Visible = True
+                    litExTax.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), pPrice)
+                    phdTax.Visible = True
+                    litTaxRate.Text = CStr(numTax) + " %"
+                End If
+            Else
+                phdPrice.Visible = True
+                litPriceView.Text = CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), pPrice)
+            End If
         End If
 
     End Sub

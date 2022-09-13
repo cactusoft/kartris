@@ -88,7 +88,7 @@
                                                             </div>
                                                         </asp:PlaceHolder>
                                                         <user:AddPane ID="UC_AddToBasketQty1" runat="server" HasAddButton="True" CanCustomize='<%# Eval("V_CustomizationType") <> "n" %>' OnWrongQuantity="AddWrongQuantity"
-                                                            VersionID='<%# Eval("V_ID") %>' visible='<%# Iif( ReturnCallForPrice(ProductID) = 1, False, True) %>' />
+                                                            VersionID='<%# Eval("V_ID") %>' visible='<%# Iif(ReturnCallForPrice(ProductID, Eval("V_ID")) = 1, False, True) %>' />
                                                     </asp:PlaceHolder>
                                                     <asp:PlaceHolder EnableViewState="true" ID="phdOutOfStock1" runat="server" Visible='<%# Iif((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) And (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y"), True, False) %>'>
                                                         <div class="outofstock">
