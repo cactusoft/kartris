@@ -3740,6 +3740,7 @@ INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_D
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.gdpr.purgeguestaccounts', N'30', N's', N'b', N'number of days', N'Number of days until guest accounts are purged', 3, N'30', 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.google.analytics.webpropertyid', N'', N's', N't', NULL, N'This is the Google Analytics web property ID for your site', 1.0021, NULL, 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.google.tagmanager.webpropertyid', N'', N's', N's', N'', N'The web property ID of the site in Google Tag Manager ', 3.2001, N'GTM-9XXXXXX', 0)
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.google.ga4.measurementid', N'', N's', N's', '',N'The measnurement ID of the site in Google Analytics GA-4',3.3001, N'G-XXXXXXXXXX', 0);
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.imagequality', N'85', N'n', N'n', N'1-99', N'Compression quality for uploaded images. This will allow the uploaded images to be compressed to improve performance and save disk space. To disable image compression set the value to 0 or 100', 2, N'85', 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'3.3000', N's', N's', N'kartris version', N'', 3.3, N'3.3000', 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.mailchimp.apikey', N'xxxxxxxxxxxxxxxxxxxx', N's', N't', N'', N'The API key you created in your MailChimp account', 2.901, N'', 0)
@@ -28133,6 +28134,56 @@ END
 GO
 
 ALTER TABLE [dbo].[tblKartrisProducts] ENABLE TRIGGER [deleteProducts]
+GO
+
+/****** INDEX OBJECT CONFIG SETTINGS ******/
+/* This creates a new calculated column in the object config values table. The OCV_Value is nvarchar(max) to
+support large strings, as for example when it has to for the category filters in the powerpack. However, these
+types of fields cannot be indexed. This is annoying when the field is used for storing codes or alternative SKUs
+when indexes help speed up search and filter queries hugely. Having a calculated truncated version of nvarchar(50)
+lets us an an index. This version can then be used in places where a small, indexed field is required. */
+ALTER TABLE [dbo].[tblKartrisObjectConfigValue] ADD [OCV_ValueTruncated] AS CAST(LEFT(OCV_Value, 50) AS NVARCHAR(50))
+GO
+
+CREATE NONCLUSTERED INDEX [OCV_ValueTruncated] ON [dbo].[tblKartrisObjectConfigValue]
+(
+	[OCV_ValueTruncated] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+
+/****** Object:  UserDefinedFunction [dbo].[fnKartrisObjectConfig_GetValueByParent]    Script Date: 12/09/2022 14:56:59 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+-- =============================================
+-- Author:		Paul
+-- Description:	New function to retrieve the
+-- truncated indexed object config value, which
+-- can by used in queries. Useful if you have
+-- numbers or other values you want to search
+-- by or filter by in object config values.
+-- =============================================
+CREATE FUNCTION [dbo].[fnKartrisObjectConfig_GetValueTruncatedByParent] 
+(
+	@ObjectConfig as nvarchar(100),
+	@ParentID as bigint
+)
+RETURNS nvarchar(max)
+AS
+BEGIN
+	-- Declare the return variable here
+	DECLARE @Result nvarchar(max);
+	
+	SELECT @Result = OCV_ValueTruncated
+	FROM dbo.tblKartrisObjectConfig INNER JOIN dbo.tblKartrisObjectConfigValue 
+		ON OC_ID = OCV_ObjectConfigID
+	WHERE OC_Name = @ObjectConfig AND OCV_ParentID = @ParentID;
+
+	-- Return the result of the function
+	RETURN @Result
+
+END
 GO
 
 /****** Object:  StoredProcedure [dbo].[_spKartrisProducts_RebuildPriceIndex]    Script Date: 08/06/2022 08:30:50 ******/
