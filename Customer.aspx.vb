@@ -406,12 +406,16 @@ Partial Class Customer
     Sub SaveBasket_Click(ByVal Sender As Object, ByVal E As CommandEventArgs)
         If Me.IsValid Then
             Call BasketBLL.SaveBasket(numCustomerID, Trim(txtBasketName.Text), SESSION_ID)
-            UC_Updated.ShowAnimatedText()
-            accMyAccount.SelectedIndex = 2
-            phdSaveBasket.Visible = False
+
+            'Response.Redirect(WebShopURL() & "/Customer.aspx?action=home")
             phdHome.Visible = True
+            phdSaveBasket.Visible = False
+            accMyAccount.SelectedIndex = 2
             Call BuildNavigatePage("basket")
             updMain.Update()
+            UC_Updated.ShowAnimatedText()
+
+
         End If
     End Sub
 
@@ -547,6 +551,16 @@ Partial Class Customer
     End Sub
 
     Private Sub BuildNavigatePage(ByVal strPage As String)
+
+        If ViewState("Order_PageIndex") = Nothing Then
+            ViewState("Order_PageIndex") = 1
+        End If
+        If ViewState("SavedBasket_PageIndex") = Nothing Then
+            ViewState("SavedBasket_PageIndex") = 1
+        End If
+        If ViewState("WishList_PageIndex") = Nothing Then
+            ViewState("WishList_PageIndex") = 1
+        End If
 
         Select Case LCase(strPage)
             Case "order"

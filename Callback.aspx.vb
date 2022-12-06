@@ -82,22 +82,37 @@ Partial Class Callback
 
                 End If
 
-                'Loop through incoming fields if form post to this page
-                For Each fldName In Request.Form
-                    If Not String.IsNullOrEmpty(strResult) Then strResult += ":-:"
-                    strResult += "FF_" & fldName & ":*:" & Request.Form(fldName)
-                Next
-
-                'Loop through incoming fields if URL with 
-                For Each fldName In Request.QueryString
-                    If Not String.IsNullOrEmpty(strResult) Then strResult += ":-:"
-                    strResult += "QS_" & fldName & ":*:" & Request.QueryString(fldName)
-                Next
-
                 'Load in the payment gateway in question
                 'This is why it is important that the name is
                 'passed correctly when setting up the callback.aspx
                 clsPlugin = Payment.PPLoader(strGatewayName)
+
+                If clsPlugin.GatewayType = "STATICPAGE" Then
+                    'Stripe and maybe others, have a JSON response to a 
+                    'webhook. So instead of grabbing form fields or querystring
+                    'parameters, let's send the entire text received to the DLL
+                    'and then we can parse and decide our response in the DLL
+                    Response.Clear()
+                    Dim objStream As Stream = Request.InputStream
+                    Dim objStreamReader As StreamReader = New StreamReader(objStream)
+                    strResult = objStreamReader.ReadToEnd()
+                    'CkartrisFormatErrors.LogError(strResult)
+
+                Else
+                    'Loop through incoming fields if form post to this page
+                    For Each fldName In Request.Form
+                        If Not String.IsNullOrEmpty(strResult) Then strResult += ":-:"
+                        strResult += "FF_" & fldName & ":*:" & Request.Form(fldName)
+                    Next
+
+                    'Loop through incoming fields if URL with 
+                    For Each fldName In Request.QueryString
+                        If Not String.IsNullOrEmpty(strResult) Then strResult += ":-:"
+                        strResult += "QS_" & fldName & ":*:" & Request.QueryString(fldName)
+                    Next
+                End If
+
+
 
                 'According to the dictionary, 'referrer' is the
                 'correct spelling and whoever decided on 'referer'

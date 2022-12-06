@@ -17,13 +17,32 @@ Partial Class CheckoutComplete
     Inherits PageBaseClass
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
-        If Session("OrderDetails") IsNot Nothing And Session("OrderID") IsNot Nothing Then
-            Dim strOrderDetails As String = Session("OrderDetails")
-            If KartSettingsManager.GetKartConfig("general.email.enableHTML") = "y" Then
-                litOrderDetails.Text = CkartrisBLL.ExtractHTMLBodyContents(strOrderDetails)
-            Else
-                litOrderDetails.Text = Replace(strOrderDetails, vbCrLf, "<br/>")
+        Dim numO_ID As Integer = 0
+
+        numO_ID = Session("OrderID")
+
+        If Session("OrderID") IsNot Nothing Then
+
+            'PULL OUT ORDER DETAILS TO DISPLAY
+            Dim objOrdersBLL As New OrdersBLL
+            Dim dtOrderRecord As DataTable = objOrdersBLL.GetOrderByID(numO_ID)
+            Dim strOrderDetails As String = ""
+
+            If dtOrderRecord IsNot Nothing Then
+                If dtOrderRecord.Rows.Count = 1 Then
+
+                    'Process the order text
+                    strOrderDetails = CkartrisDataManipulation.FixNullFromDB(dtOrderRecord.Rows(0)("O_Details"))
+                    If InStr(Server.HtmlDecode(strOrderDetails).ToLower, "</html>") > 0 Then
+                        strOrderDetails = CkartrisBLL.ExtractHTMLBodyContents(Server.HtmlDecode(strOrderDetails))
+                        strOrderDetails = strOrderDetails.Replace("[orderid]", numO_ID)
+                    Else
+                        strOrderDetails = Replace(strOrderDetails, vbCrLf, "<br/>").Replace(vbLf, "<br/>")
+                    End If
+                End If
             End If
+
+            litOrderDetails.Text = strOrderDetails
 
             Session("OrderID") = Nothing
             Session("OrderDetails") = Nothing

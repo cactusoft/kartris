@@ -41,9 +41,15 @@ Public MustInherit Class PageBaseClass
         Dim objHtmlWriter As HtmlTextWriter = New HtmlTextWriter(objStringWriter)
         MyBase.Render(objHtmlWriter)
 
-        'Insert Google Analytics, if necessary
-        If KartSettingsManager.GetKartConfig("general.google.analytics.webpropertyid") <> "" Then
-            InsertGoogleAnalyticsCode(sbdPageSource, KartSettingsManager.GetKartConfig("general.google.analytics.webpropertyid"))
+        'Insert GA4 code
+        If KartSettingsManager.GetKartConfig("general.google.ga4.measurementid") <> "" Then
+            InsertGA4Code(sbdPageSource, KartSettingsManager.GetKartConfig("general.google.ga4.measurementid"))
+        Else
+            'Legacy google analytics, this way, we use the newer version if set
+            'and revert to old one otherwise
+            If KartSettingsManager.GetKartConfig("general.google.analytics.webpropertyid") <> "" Then
+                InsertGoogleAnalyticsCode(sbdPageSource, KartSettingsManager.GetKartConfig("general.google.analytics.webpropertyid"))
+            End If
         End If
 
         'Add copyright notice - NOTE, this should not be
@@ -155,23 +161,32 @@ Public MustInherit Class PageBaseClass
     'at the foot of front end pages if there is a value
     'in the general.google.tagmanager.webpropertyid config
     'setting.
-    Protected Sub InsertGoogleTagManagerCode(ByVal sbdPageSource As StringBuilder, ByVal strGoogleWebPropertyID As String)
+    Protected Sub InsertGA4Code(ByVal sbdPageSource As StringBuilder, ByVal strGA4MeasurementID As String)
         Dim blnReplacedTag As Boolean = False
         Dim strReplacement As String = ""
         Dim sbdLink As New StringBuilder
 
-        'Newest code as of 2021-08-06
-        sbdLink.Append("<!-- Google Tag Manager -->" & vbCrLf)
-        sbdLink.Append("<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':" & vbCrLf)
-        sbdLink.Append("new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0]," & vbCrLf)
-        sbdLink.Append("j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=" & vbCrLf)
-        sbdLink.Append("'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);" & vbCrLf)
-        sbdLink.Append("})(window,document,'script','dataLayer','" & strGoogleWebPropertyID & "');</script>" & vbCrLf)
-        sbdLink.Append("<!-- Google Tag Manager -->" & vbCrLf)
+        'Newest code as of 2022-12-01
+        sbdLink.Append("<!-- Google tag (gtag.js) -->" & vbCrLf)
+        sbdLink.Append("<script async src=""https://www.googletagmanager.com/gtag/js?id=" & strGA4MeasurementID & """></script>" & vbCrLf)
+        sbdLink.Append("<script>" & vbCrLf)
+        sbdLink.Append("  window.dataLayer = window.dataLayer || [];" & vbCrLf)
+        sbdLink.Append("  function gtag(){dataLayer.push(arguments);}" & vbCrLf)
+        sbdLink.Append("  gtag('js', new Date());" & vbCrLf)
+        sbdLink.Append("  gtag('config', '" & strGA4MeasurementID & "');" & vbCrLf)
+        sbdLink.Append("</script>" & vbCrLf)
 
         'Google Tag Manager works in head tag, not close body
         Try
             sbdPageSource.Replace("<head id=""Head1"">", "<head id=""Head1"">" & vbCrLf & sbdLink.ToString & vbCrLf)
+            blnReplacedTag = True
+        Catch ex As Exception
+            'Oh dear
+        End Try
+
+        'Just in case the HEAD tag has had ID removed
+        Try
+            sbdPageSource.Replace("<head>", "<head>" & vbCrLf & sbdLink.ToString & vbCrLf)
             blnReplacedTag = True
         Catch ex As Exception
             'Oh dear
@@ -586,7 +601,7 @@ Public MustInherit Class PageBaseClass
             If Session("Error") IsNot Nothing Then
                 If Session("Error") = "invalidrequest" Then
                     Dim strBodyText As String = "alert('" & GetGlobalResourceObject("Kartris", "ContentText_HTMLNotAllowed") & "');"
-                    ScriptManager.RegisterStartupScript(Me, Page.GetType, "AlertUser", strBodyText, True)
+        ScriptManager.RegisterStartupScript(Me, Page.GetType, "AlertUser", strBodyText, True)
                     Session("Error") = Nothing
                 End If
             End If

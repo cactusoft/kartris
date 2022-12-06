@@ -884,6 +884,12 @@ INSERT [dbo].[tblKartrisObjectConfig] ([OC_ID], [OC_Name], [OC_ObjectType], [OC_
 SET IDENTITY_INSERT [dbo].[tblKartrisObjectConfig] OFF
 GO
 
+/****** New config setting, google ga4 ******/
+INSERT INTO [tblKartrisConfig]
+(CFG_Name,CFG_Value,CFG_DataType,CFG_DisplayType,CFG_DisplayInfo,CFG_Description,CFG_VersionAdded,CFG_DefaultValue,CFG_Important)
+VALUES
+(N'general.google.ga4.measurementid', N'', N's', N's', '',N'The measnurement ID of the site in Google Analytics GA-4',3.3001, N'G-XXXXXXXXXX', 0);
+GO
 
 /****** INDEX OBJECT CONFIG SETTINGS ******/
 /* This creates a new calculated column in the object config values table. The OCV_Value is nvarchar(max) to

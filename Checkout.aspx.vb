@@ -2088,6 +2088,8 @@ Partial Class _Checkout
                                     Session("objOrder") = Nothing
                                     Server.Transfer("CheckoutComplete.aspx")
                                 Else
+                                    Session("OrderDetails") = strCallBodyText
+                                    Session("OrderID") = O_ID
                                     Session("GateWayName") = clsPlugin.GatewayName
                                     Session("_PostBackURL") = ""
                                     Session("EasypayPayment") = strEasypayPayment
@@ -2143,6 +2145,8 @@ Partial Class _Checkout
                         Catch ex As Exception
 
                         End Try
+
+                        Session("OrderID") = O_ID
 
                         '---------------------------------------
                         'FORMAT FORM TO POST TO REMOTE GATEWAY

@@ -24,6 +24,9 @@ Partial Class checkout_process
             strOutput = Session("_CallBackMessage")
             btnSubmit.PostBackUrl = Session("_PostBackURL")
         Else
+
+
+            'STANDARD REMOTE TYPE GATEWAY, FORM POST
             Dim BasketObject As Kartris.Basket = DirectCast(Session("BasketObject"), Kartris.Basket)
             strGatewayName = Session("GateWayName")
             Dim clsPlugin As Kartris.Interfaces.PaymentGateway
@@ -57,86 +60,112 @@ Partial Class checkout_process
                 BasketXML = Nothing
             End If
 
-            strOutput = clsPlugin.ProcessOrder(Session("objOrder"), BasketXML)
-            btnSubmit.PostBackUrl = clsPlugin.PostbackURL
+
+
+            If clsPlugin.GatewayType = "STATICPAGE" Then
+                '===========================================================
+                'FIXED STATIC PAGE
+                'First introduced 2022 for Stripe, this lets us create
+                'a custom HTML/JS page to inject into the 
+                'CheckoutProcess.aspx, rather than a series of form fields.
+                '===========================================================
+                form1.Visible = False
+                litStaticPage.Visible = True
+                litStaticPage.Text = clsPlugin.ProcessOrder(Session("objOrder"), BasketXML)
+
+            Else
+                '===========================================================
+                'STANDARD REMOTE TYPE GATEWAY, FORM POST
+                '===========================================================
+
+                strOutput = clsPlugin.ProcessOrder(Session("objOrder"), BasketXML)
+                btnSubmit.PostBackUrl = clsPlugin.PostbackURL
+
+
+                Select Case LCase(strGatewayStatus)
+                    Case "test"
+                        litGatewayTestForwarding.Text = GetLocalResourceObject("ContentText_GatewayTestForwarding")
+                        litGatewayTestForwarding.Visible = True
+                    Case "fake"
+                        litGatewayTestForwarding.Text = GetLocalResourceObject("ContentText_GatewayFake")
+                        litGatewayTestForwarding.Visible = True
+                    Case Else
+                        litGatewayTestForwarding.Visible = False
+                        Dim strScript As String = String.Format("document.getElementById('{0}').disabled = true;", btnSubmit.ClientID)
+                        Page.ClientScript.RegisterOnSubmitStatement(Page.GetType(), "disabledSubmitButton", strScript)
+                        Page.ClientScript.RegisterStartupScript(Page.GetType(), "Submit", String.Format("document.getElementById('{0}').click();", btnSubmit.ClientID), True)
+                        btnSubmit.Text = GetGlobalResourceObject("Basket", "ContentText_PleaseWait") '"Redirecting to payment gateway.*"
+                End Select
+
+
+                GateWayPanel.Visible = True
+                'modify submit button's properties
+                btnSubmit.UseSubmitBehavior = True
+                MainPanel.Visible = False
+                Page.Title = GetGlobalResourceObject("Basket", "FormButton_Checkout") & " | " & Server.HtmlEncode(GetGlobalResourceObject("Kartris", "Config_Webshopname"))
+
+                Session("objOrder") = Nothing
+                Session("BasketObject") = Nothing
+
+                If Not String.IsNullOrEmpty(strOutput) Then
+
+                    Dim arrOutput() As String = Split(strOutput, ":-:")
+                    Dim arrPair() As String
+
+                    If arrOutput IsNot Nothing AndAlso arrOutput.Count = 1 AndAlso InStr(arrOutput(0).ToString, ":*:") = 0 Then
+                        CkartrisFormatErrors.LogError("Can't process plugin output file - " & strGatewayName & " output:" & strOutput)
+                    End If
+
+                    For Each strPair In arrOutput
+                        arrPair = Split(strPair, ":*:")
+                        If UBound(arrPair) > 0 Then
+                            If UCase(arrPair(0)) = "FORM_NAME" Then
+                                Page.Form.Name = arrPair(1)
+                            Else
+                                If LCase(strGatewayStatus) = "fake" Then
+                                    With GateWayPanel.Controls
+                                        Dim litLineStart As New Literal
+                                        litLineStart.Text = "<li><span class=""Kartris-DetailsView-Name"">"
+                                        .Add(litLineStart)
+
+                                        Dim lblControl As Label = New Label
+                                        lblControl.Text = arrPair(0) & ": "
+                                        .Add(lblControl)
+
+                                        'Middle of line
+                                        Dim litLineMiddle As New Literal
+                                        litLineMiddle.Text = "</span><span class=""Kartris-DetailsView-Value"">"
+                                        .Add(litLineMiddle)
+
+                                        Dim txtControl As TextBox = New TextBox
+                                        txtControl.ID = arrPair(0)
+                                        txtControl.Text = arrPair(1)
+                                        .Add(txtControl)
+
+                                        'End of line
+                                        Dim litLineEnd As New Literal
+                                        litLineEnd.Text = "</span></li>"
+                                        .Add(litLineEnd)
+                                    End With
+                                Else
+                                    Dim hfPair As HiddenField = New HiddenField
+                                    Kartris.Interfaces.Utils.SetHF(hfPair, arrPair(0), arrPair(1))
+                                    GateWayPanel.Controls.Add(hfPair)
+                                End If
+                            End If
+                        End If
+                    Next
+                End If
+
+            End If
+
+
+
+
             strGatewayStatus = clsPlugin.Status
             clsPlugin = Nothing
         End If
 
-        Select Case LCase(strGatewayStatus)
-            Case "test"
-                litGatewayTestForwarding.Text = GetLocalResourceObject("ContentText_GatewayTestForwarding")
-                litGatewayTestForwarding.Visible = True
-            Case "fake"
-                litGatewayTestForwarding.Text = GetLocalResourceObject("ContentText_GatewayFake")
-                litGatewayTestForwarding.Visible = True
-            Case Else
-                litGatewayTestForwarding.Visible = False
-                Dim strScript As String = String.Format("document.getElementById('{0}').disabled = true;", btnSubmit.ClientID)
-                Page.ClientScript.RegisterOnSubmitStatement(Page.GetType(), "disabledSubmitButton", strScript)
-                Page.ClientScript.RegisterStartupScript(Page.GetType(), "Submit", String.Format("document.getElementById('{0}').click();", btnSubmit.ClientID), True)
-                btnSubmit.Text = GetGlobalResourceObject("Basket", "ContentText_PleaseWait") '"Redirecting to payment gateway.*"
-        End Select
-
-
-        GateWayPanel.Visible = True
-        'modify submit button's properties
-        btnSubmit.UseSubmitBehavior = True
-        MainPanel.Visible = False
-        Page.Title = GetGlobalResourceObject("Basket", "FormButton_Checkout") & " | " & Server.HtmlEncode(GetGlobalResourceObject("Kartris", "Config_Webshopname"))
-
-        Session("objOrder") = Nothing
-        Session("BasketObject") = Nothing
-
-        If Not String.IsNullOrEmpty(strOutput) Then
-
-            Dim arrOutput() As String = Split(strOutput, ":-:")
-            Dim arrPair() As String
-
-            If arrOutput IsNot Nothing AndAlso arrOutput.Count = 1 AndAlso InStr(arrOutput(0).ToString, ":*:") = 0 Then
-                CkartrisFormatErrors.LogError("Can't process plugin output file - " & strGatewayName & " output:" & strOutput)
-            End If
-
-            For Each strPair In arrOutput
-                arrPair = Split(strPair, ":*:")
-                If UBound(arrPair) > 0 Then
-                    If UCase(arrPair(0)) = "FORM_NAME" Then
-                        Page.Form.Name = arrPair(1)
-                    Else
-                        If LCase(strGatewayStatus) = "fake" Then
-                            With GateWayPanel.Controls
-                                Dim litLineStart As New Literal
-                                litLineStart.Text = "<li><span class=""Kartris-DetailsView-Name"">"
-                                .Add(litLineStart)
-
-                                Dim lblControl As Label = New Label
-                                lblControl.Text = arrPair(0) & ": "
-                                .Add(lblControl)
-
-                                'Middle of line
-                                Dim litLineMiddle As New Literal
-                                litLineMiddle.Text = "</span><span class=""Kartris-DetailsView-Value"">"
-                                .Add(litLineMiddle)
-
-                                Dim txtControl As TextBox = New TextBox
-                                txtControl.ID = arrPair(0)
-                                txtControl.Text = arrPair(1)
-                                .Add(txtControl)
-
-                                'End of line
-                                Dim litLineEnd As New Literal
-                                litLineEnd.Text = "</span></li>"
-                                .Add(litLineEnd)
-                            End With
-                        Else
-                            Dim hfPair As HiddenField = New HiddenField
-                            Kartris.Interfaces.Utils.SetHF(hfPair, arrPair(0), arrPair(1))
-                            GateWayPanel.Controls.Add(hfPair)
-                        End If
-                    End If
-                End If
-            Next
-        End If
     End Sub
 
 End Class

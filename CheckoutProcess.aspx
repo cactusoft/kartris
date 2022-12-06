@@ -7,6 +7,10 @@
     <meta name="referrer" content="no-referrer" />  
 </head>
 <body>
+    <!-- STATIC PAGE GATEWAY TYPE -->
+    <asp:Literal ID="litStaticPage" runat="server" Visible="false"></asp:Literal>
+
+    <!-- REMOTE GATEWAY TYPE -->
     <form id="form1" runat="server">
     <div>
      <asp:Panel ID="MainPanel" runat="server"/>
