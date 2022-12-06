@@ -410,7 +410,7 @@ Partial Class Customer
             'Response.Redirect(WebShopURL() & "/Customer.aspx?action=home")
             phdHome.Visible = True
             phdSaveBasket.Visible = False
-            accMyAccount.SelectedIndex = 2
+            SetPane(accMyAccount, "acpSavedBaskets")
             Call BuildNavigatePage("basket")
             updMain.Update()
             UC_Updated.ShowAnimatedText()
@@ -449,7 +449,7 @@ Partial Class Customer
                 Else ''// new wishlist (create it)
                     Call BasketBLL.SaveWishLists(numWishlistsID, SESSION_ID, numCustomerID, strName, strPublicPassword, strMessage)
                     UC_Updated.ShowAnimatedText()
-                    accMyAccount.SelectedIndex = 3
+                    SetPane(accMyAccount, "acpWishLists")
                     phdSaveWishLists.Visible = False
                     phdHome.Visible = True
                     Call BuildNavigatePage("wishlist")
@@ -459,7 +459,7 @@ Partial Class Customer
             Else ''// existing wishlist (update it)
                 Call BasketBLL.SaveWishLists(numWishlistsID, SESSION_ID, numCustomerID, strName, strPublicPassword, strMessage)
                 UC_Updated.ShowAnimatedText()
-                accMyAccount.SelectedIndex = 3
+                SetPane(accMyAccount, "acpWishLists")
                 phdSaveWishLists.Visible = False
                 phdHome.Visible = True
                 Call BuildNavigatePage("wishlist")
@@ -1015,6 +1015,25 @@ Partial Class Customer
             UC_BillingInstance.ShowButtons = True
             AddHandler UC_BillingInstance.btnEditClicked, AddressOf Me.btnEditAddress_Click
             AddHandler UC_BillingInstance.btnDeleteClicked, AddressOf Me.btnDeleteAddress_Click
+        Next
+    End Sub
+
+    ''' <summary>
+    ''' Select an accordion pane by ID
+    ''' We need this as some panes in the accordion can be hidden, so
+    ''' the index will change
+    ''' </summary>
+    ''' <remarks></remarks>
+    Public Sub SetPane(ByVal acc As AjaxControlToolkit.Accordion, ByVal PaneID As String)
+        Dim Index As Integer = 0
+        For Each pane As AjaxControlToolkit.AccordionPane In acc.Panes
+            If (pane.Visible = True) Then
+                If (pane.ID = PaneID) Then
+                    acc.SelectedIndex = Index
+                    Exit For
+                End If
+                Index += 1
+            End If
         Next
     End Sub
 End Class

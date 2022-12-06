@@ -3742,7 +3742,6 @@ INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_D
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.google.tagmanager.webpropertyid', N'', N's', N's', N'', N'The web property ID of the site in Google Tag Manager ', 3.2001, N'GTM-9XXXXXX', 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.google.ga4.measurementid', N'', N's', N's', '',N'The measnurement ID of the site in Google Analytics GA-4',3.3001, N'G-XXXXXXXXXX', 0);
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.imagequality', N'85', N'n', N'n', N'1-99', N'Compression quality for uploaded images. This will allow the uploaded images to be compressed to improve performance and save disk space. To disable image compression set the value to 0 or 100', 2, N'85', 0)
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'3.3000', N's', N's', N'kartris version', N'', 3.3, N'3.3000', 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.mailchimp.apikey', N'xxxxxxxxxxxxxxxxxxxx', N's', N't', N'', N'The API key you created in your MailChimp account', 2.901, N'', 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.mailchimp.apiurl', N'https://XXX.api.mailchimp.com/3.0/', N's', N't', N'', N'MailChimp API URL. Note that XXX should be replaced with the datacentre of your MailChimp account, e.g. us4', 2.901, N'https://XXX.api.mailchimp.com/3.0/', 0)
 INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.mailchimp.enabled', N'n', N's', N'b', N'y|n', N'Whether MailChimp ecommerce integration is enabled or not', 2.901, N'n', 0)
@@ -28219,6 +28218,11 @@ BEGIN
   EXEC dbo._spKartrisProducts_RecalculateMinMaxPrice @P_ID
 
 END
+GO
+
+
+/****** Set this to tell Data tool which version of db we have ******/
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'3.3000', N's', N's', N'kartris version', N'', 3.3, N'3.3000', 0)
 GO
 
 /****** Fill the Product Search Index with data ******/

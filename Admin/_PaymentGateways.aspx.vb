@@ -52,6 +52,10 @@ Partial Class Admin_PaymentGateways
         Dim aryGateways() As String = Split(LoadGateways, ",")
 
         For Each strGatewayName In aryGateways
+            'If only one gateway, let's add the marker, otherwise the code below errors
+            If Not strGatewayName.Contains("::") Then
+                strGatewayName = strGatewayName & "::"
+            End If
 
             strGatewayName = Left(strGatewayName, InStr(strGatewayName, "::") - 1)
             strDLLPath = Server.MapPath("~/Plugins/" & strGatewayName & "/" & strGatewayName & ".dll")
@@ -113,27 +117,32 @@ Partial Class Admin_PaymentGateways
         Dim strGatewayListDisplay As String = ""
         Dim files() As String = Directory.GetFiles(Server.MapPath("~/Plugins/"), "*.dll", SearchOption.AllDirectories)
         For Each File As String In files
-            If IsValidPaymentGatewayPlugin(File.ToString) And Not InStr(File.ToString, "Kartris.Interfaces.dll") Then
-                If Not String.IsNullOrEmpty(strGatewayListDisplay) Then strGatewayListDisplay += ","
-                Dim strGatewayName As String = Replace(Mid(File.ToString, File.LastIndexOf("\") + 2), ".dll", "")
-                Dim GatewayPlugin As Kartris.Interfaces.PaymentGateway = Payment.PPLoader(strGatewayName)
-                If GatewayPlugin.Status.ToLower <> "off" Then
-                    If Not String.IsNullOrEmpty(strGatewayListConfig) Then strGatewayListConfig += ","
-                    strGatewayListConfig += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::" & GatewayPlugin.AuthorizedOnly.ToLower & "::" & Payment.isAnonymousCheckoutEnabled(strGatewayName) & "::p"
+            Try
+                If IsValidPaymentGatewayPlugin(File.ToString) And Not InStr(File.ToString, "Kartris.Interfaces.dll") Then
+                    If Not String.IsNullOrEmpty(strGatewayListDisplay) Then strGatewayListDisplay += ","
+                    Dim strGatewayName As String = Replace(Mid(File.ToString, File.LastIndexOf("\") + 2), ".dll", "")
+                    Dim GatewayPlugin As Kartris.Interfaces.PaymentGateway = Payment.PPLoader(strGatewayName)
+                    If GatewayPlugin.Status.ToLower <> "off" Then
+                        If Not String.IsNullOrEmpty(strGatewayListConfig) Then strGatewayListConfig += ","
+                        strGatewayListConfig += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::" & GatewayPlugin.AuthorizedOnly.ToLower & "::" & Payment.isAnonymousCheckoutEnabled(strGatewayName) & "::p"
+                    End If
+                    strGatewayListDisplay += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::" & GatewayPlugin.AuthorizedOnly.ToLower & "::" & Payment.isAnonymousCheckoutEnabled(strGatewayName) & "::p"
+                    GatewayPlugin = Nothing
+                ElseIf IsValidShippingGatewayPlugin(File.ToString) And Not InStr(File.ToString, "Kartris.Interfaces.dll") Then
+                    If Not String.IsNullOrEmpty(strGatewayListDisplay) Then strGatewayListDisplay += ","
+                    Dim strGatewayName As String = Replace(Mid(File.ToString, File.LastIndexOf("\") + 2), ".dll", "")
+                    Dim GatewayPlugin As Kartris.Interfaces.ShippingGateway = Payment.SPLoader(strGatewayName)
+                    If GatewayPlugin.Status.ToLower <> "off" Then
+                        If Not String.IsNullOrEmpty(strGatewayListConfig) Then strGatewayListConfig += ","
+                        strGatewayListConfig += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::n::false::s"
+                    End If
+                    strGatewayListDisplay += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::n::false::s"
+                    GatewayPlugin = Nothing
                 End If
-                strGatewayListDisplay += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::" & GatewayPlugin.AuthorizedOnly.ToLower & "::" & Payment.isAnonymousCheckoutEnabled(strGatewayName) & "::p"
-                GatewayPlugin = Nothing
-            ElseIf IsValidShippingGatewayPlugin(File.ToString) And Not InStr(File.ToString, "Kartris.Interfaces.dll") Then
-                If Not String.IsNullOrEmpty(strGatewayListDisplay) Then strGatewayListDisplay += ","
-                Dim strGatewayName As String = Replace(Mid(File.ToString, File.LastIndexOf("\") + 2), ".dll", "")
-                Dim GatewayPlugin As Kartris.Interfaces.ShippingGateway = Payment.SPLoader(strGatewayName)
-                If GatewayPlugin.Status.ToLower <> "off" Then
-                    If Not String.IsNullOrEmpty(strGatewayListConfig) Then strGatewayListConfig += ","
-                    strGatewayListConfig += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::n::false::s"
-                End If
-                strGatewayListDisplay += strGatewayName & "::" & GatewayPlugin.Status.ToLower & "::n::false::s"
-                GatewayPlugin = Nothing
-            End If
+            Catch ex As Exception
+
+            End Try
+
         Next
         KartSettingsManager.SetKartConfig("frontend.payment.gatewayslist", strGatewayListConfig)
         Return strGatewayListDisplay
