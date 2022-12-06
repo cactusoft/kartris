@@ -364,13 +364,16 @@ Partial Class ProductVersions
     ''' </summary>
     ''' <remarks>by Paul</remarks>
     Private Function PrepareOptionsView(ByVal ptblVersions As DataTable) As View
+        Dim objVersionsBLL As New VersionsBLL
         Dim objProductsBLL As New ProductsBLL
+        Dim objObjectConfigBLL As New ObjectConfigBLL
+
         Dim blnIncTax As Boolean = IIf(KartSettingsManager.GetKartConfig("general.tax.pricesinctax") = "y", True, False)
         Dim blnShowTax As Boolean = IIf(KartSettingsManager.GetKartConfig("frontend.display.showtax") = "y", True, False)
         'Added check now for _NumberOfCombinations, so we don't
         'use this setting if it's an options product, not a combinations
         'product
-        Dim objObjectConfigBLL As New ObjectConfigBLL
+
         Dim blnUseCombinationPrice As Boolean = IIf(objObjectConfigBLL.GetValue("K:product.usecombinationprice", ProductID) = "1", True, False) And objProductsBLL._NumberOfCombinations(ProductID) > 0
         ptblVersions.Rows(0)("V_Price") = GetPriceWithGroupDiscount(ptblVersions.Rows(0)("V_ID"), ptblVersions.Rows(0)("V_Price"))
 
@@ -382,8 +385,11 @@ Partial Class ProductVersions
         litPriceHidden.Text = CStr(FixNullFromDB(ptblVersions.Rows(0)("V_Price")))
         If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then litTaxRateHidden.Text = CStr(ptblVersions.Rows(0)("T_TaxRate"))
 
-        'calculate display price
-        PricePreview(pPrice, FixNullFromDB(ptblVersions.Rows(0)("V_ID")))
+        'Hide price if base version is set callforprice
+        If ReturnCallForPrice(ProductID, ptblVersions.Rows(0)("V_ID")) Then
+            'Hide price and show call for price
+            updPricePanel.Visible = False
+        End If
 
         lblVID_Options.Text = CStr(FixNullFromDB(ptblVersions.Rows(0)("V_ID")))
 
@@ -394,10 +400,7 @@ Partial Class ProductVersions
             'Call the function to check the selected combination price
             GetCombinationPrice()
         Else
-            'We send in Version ID because we want to show 
-            'Call For Price for both version and product
-            'settings
-            AddOptionsPrice(UC_OptionsContainer.GetSelectedPrice(), FixNullFromDB(ptblVersions.Rows(0)("V_ID")))
+            AddOptionsPrice(UC_OptionsContainer.GetSelectedPrice())
         End If
 
         ''// set addtobasket control's version id
@@ -423,7 +426,7 @@ Partial Class ProductVersions
             btnAdd_Options.Text = GetGlobalResourceObject("Products", "FormButton_Add")
         End If
 
-        Dim objVersionsBLL As New VersionsBLL
+
         phdOptionsCustomizable.Visible = objVersionsBLL.IsVersionCustomizable(CLng(FixNullFromDB(ptblVersions.Rows(0)("V_ID"))))
 
         If UC_OptionsContainer.GetNoOfRows > 0 Then
@@ -770,7 +773,7 @@ Partial Class ProductVersions
             'We send in Version ID because we want to show 
             'Call For Price for both version and product
             'settings
-            AddOptionsPrice(pOptionPrice, numVersionID)
+            AddOptionsPrice(pOptionPrice)
         End If
 
         If Not [String].IsNullOrEmpty(strOptionsList) Then
@@ -867,12 +870,7 @@ Partial Class ProductVersions
     ''' Calculate options price change
     ''' </summary>
     ''' <remarks></remarks>
-    Sub AddOptionsPrice(ByVal pOptionPrice As Single, Optional ByVal numV_ID As Int32 = 0)
-
-        'We send in Version ID because we want to show 
-        'Call For Price for both version and product
-        'settings
-
+    Sub AddOptionsPrice(ByVal pOptionPrice As Single)
         Trace.Warn("UC_OptionsContainerEvent IN Versions")
         RaiseEvent Event_VersionPriceChanged(pOptionPrice)
 
@@ -886,10 +884,8 @@ Partial Class ProductVersions
 
         'Reading the values of Options from the OptionsContainer in a muli-dimentional array
         Dim strOptionString As String = UC_OptionsContainer.GetSelectedOptions()
-        If numV_ID <> 0 Then
-            PricePreview(numNewPrice, numV_ID)
-        End If
 
+        PricePreview(numNewPrice)
         CheckOptionStock(strOptionString)
         updPricePanel.Update()
         updOptions.Update()
@@ -982,6 +978,7 @@ Partial Class ProductVersions
         ''show the add to basket button or not
 
         If ReturnCallForPrice(_ProductID, numV_ID) = 1 Then
+
             'PricePreview(0)
             phdIncTax.Visible = False
             phdExTax.Visible = False
