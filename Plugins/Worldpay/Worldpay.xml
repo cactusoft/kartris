@@ -24,7 +24,7 @@ Worldpay
 </member>
 <member name="T:Kartris.Worldpay">
  <summary>
- Kartris WoldPay Payment Gateway Interface
+ Kartris WorldPay Payment Gateway Interface
  </summary>
 </member>
 <member name="P:Kartris.Worldpay.AcceptsPaypal">

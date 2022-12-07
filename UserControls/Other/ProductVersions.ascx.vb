@@ -389,6 +389,7 @@ Partial Class ProductVersions
         If ReturnCallForPrice(ProductID, ptblVersions.Rows(0)("V_ID")) Then
             'Hide price and show call for price
             updPricePanel.Visible = False
+            phdOptionsCallForPrice.Visible = True
         End If
 
         lblVID_Options.Text = CStr(FixNullFromDB(ptblVersions.Rows(0)("V_ID")))

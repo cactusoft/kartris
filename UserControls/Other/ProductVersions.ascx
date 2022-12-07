@@ -30,45 +30,39 @@
                                 <div id="divTax" enableviewstate="false" runat="server" visible='<%# IIf(ReturnCallForPrice(ProductID, Eval("V_ID")) = 1, False, True) %>'>
                                     <!-- ex tax / inc tax prices -->
                                     <asp:Panel EnableViewState="false" ID="pnlExIncTax" runat="server" Visible="false">
-                                        <div class="prices">
-                                            <span class="extax">
-                                                <asp:Literal ID="litLS_ExTax" runat="server" Text="<%$ Resources: Kartris, ContentText_ExTax %>" EnableViewState="false" />
-                                                <span class="figure">
-                                                    <asp:Literal ID="litCalculatedTax_Rows" runat="server" Text='<%# Eval("CalculatedTax") %>'
-                                                        Visible="false" EnableViewState="false" />
-                                                    <asp:Literal ID="litResultedCalculatedTax_Rows" runat="server" EnableViewState="false" /></span></span>
-                                            <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then%>
-                                            <span class="inctax">
-                                                <asp:Literal ID="litLS_IncTax" runat="server" Text="<%$ Resources: Kartris, ContentText_IncTax %>" EnableViewState="false" />
-                                                <span class="figure">
-                                                    <asp:Literal ID="litIncTax_Rows" runat="server" Text='<%# Eval("V_Price") %>' Visible="false" EnableViewState="false" />
-                                                    <asp:Literal ID="litResultedIncTax_Rows" runat="server" EnableViewState="false" /></span>
-                                                <% End If%>
-                                        </div>
+                                        <span class="extax">
+                                            <asp:Literal ID="litLS_ExTax" runat="server" Text="<%$ Resources: Kartris, ContentText_ExTax %>" EnableViewState="false" />
+                                            <span class="figure">
+                                                <asp:Literal ID="litCalculatedTax_Rows" runat="server" Text='<%# Eval("CalculatedTax") %>'
+                                                    Visible="false" EnableViewState="false" />
+                                                <asp:Literal ID="litResultedCalculatedTax_Rows" runat="server" EnableViewState="false" /></span></span><br />
+                                        <% If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then%>
+                                        <span class="inctax">
+                                            <asp:Literal ID="litLS_IncTax" runat="server" Text="<%$ Resources: Kartris, ContentText_IncTax %>" EnableViewState="false" />
+                                            <span class="figure">
+                                                <asp:Literal ID="litIncTax_Rows" runat="server" Text='<%# Eval("V_Price") %>' Visible="false" EnableViewState="false" />
+                                                <asp:Literal ID="litResultedIncTax_Rows" runat="server" EnableViewState="false" /></span>
+                                            <% End If%>
                                     </asp:Panel>
                                     <!-- ex tax / tax % prices -->
                                     <asp:Panel ID="pnlExTaxTax" runat="server" Visible="false" EnableViewState="false">
-
                                         <span class="price">
                                             <asp:Literal ID="litLS_ExTax2" runat="server" Text="<%$ Resources: Kartris, ContentText_ExTax %>" EnableViewState="false" />
                                             <span class="figure">
                                                 <asp:Literal ID="litExTax_Rows" runat="server" Text='<%# Eval("V_Price") %>' Visible="false" EnableViewState="false" />
-                                                <asp:Literal ID="litResultedExTax_Rows" runat="server" EnableViewState="false" /></span></span>
+                                                <asp:Literal ID="litResultedExTax_Rows" runat="server" EnableViewState="false" /></span></span><br />
                                         <span class="tax">
                                             <asp:Literal ID="litLS_Tax" runat="server" Text="<%$ Resources: Kartris, ContentText_Tax %>" EnableViewState="false" />
                                             <span class="figure">
                                                 <asp:Literal ID="litTaxRate_Rows" runat="server" Text='<%# Eval("T_TaxRate") %>'
                                                     Visible="false" EnableViewState="false" />
-                                                <asp:Literal ID="litResultedTaxRate_Rows" runat="server" EnableViewState="false" /></span></span>
-
+                                                <asp:Literal ID="litResultedTaxRate_Rows" runat="server" EnableViewState="false" /></span></span><br />
                                     </asp:Panel>
                                     <asp:Panel ID="pnlPrice" runat="server" Visible="false" EnableViewState="false">
-
                                         <span class="price">
                                             <span class="figure">
                                                 <asp:Literal ID="litPrice_Rows" runat="server" Text='<%# Eval("V_Price") %>' Visible="false" EnableViewState="false" />
-                                                <asp:Literal ID="litResultedPrice_Rows" runat="server" EnableViewState="false" /></span></span>
-
+                                                <asp:Literal ID="litResultedPrice_Rows" runat="server" EnableViewState="false" /></span></span><br />
                                     </asp:Panel>
                                 </div>
                                 <!-- single price -->
@@ -101,7 +95,10 @@
                                                         </asp:PlaceHolder>
                                                     </asp:PlaceHolder>
                                                     <asp:PlaceHolder EnableViewState="false" ID="phdCallForPrice1" runat="server" Visible='<%# IIf(Not ((Eval("V_Quantity") < 1 And Eval("V_QuantityWarnLevel") > 0) And (KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock") <> "y")) And ReturnCallForPrice(ProductID, Eval("V_ID")) = 1, True, False) %>'>
-                                                        <asp:Literal ID="litContentTextCallForPrice" runat="server" Text="<%$ Resources: Versions, ContentText_CallForPrice %>" />
+                                                        <span class="price">
+                                                            <span class="callforprice">
+                                                                <asp:Literal ID="litContentTextCallForPrice" runat="server" Text="<%$ Resources: Versions, ContentText_CallForPrice %>" />
+                                                            </span></span>
                                                     </asp:PlaceHolder>
                                                 </div>
                                                 <% End If%>
@@ -159,8 +156,7 @@
                                         <% End If%>
                                         <!-- RRP -->
                                         <%
-                                            If KartSettingsManager.GetKartConfig("frontend.versions.display.showrrp") = "y" AndAlso
-ReturnCallForPrice(ProductID) <> 1 Then
+                                            If KartSettingsManager.GetKartConfig("frontend.versions.display.showrrp") = "y" AndAlso ReturnCallForPrice(ProductID) <> 1 Then
                                         %>
                                         <th class="rrp hide-for-small">
                                             <asp:Literal ID="litLS_RRP" runat="server" Text="<%$ Resources: Versions, ContentText_RRP %>" EnableViewState="false" />
@@ -200,6 +196,7 @@ ReturnCallForPrice(ProductID) <> 1 Then
                                         <th class="price">
                                             <asp:Literal ID="litCallForPriceHeader" runat="server" EnableViewState="false" Text="<%$ Resources: Kartris, ContentText_Price %>" />
                                         </th>
+                                        <th></th>
                                         <%End If ' call for price%>
                                         <%
                                             'Hide 'add' button and selector if in cataloguemode or for partial access
@@ -380,20 +377,16 @@ ReturnCallForPrice(ProductID) <> 1 Then
 
                         <asp:UpdatePanel ID="updVersionDropdown" runat="server" UpdateMode="Conditional">
                             <ContentTemplate>
-
                                 <div class="addtobasket row">
                                     <div class="small-12 large-9 columns">
                                         <asp:DropDownList CssClass="versiondropdown" ID="ddlName_DropDown" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlName_DropDown_SelectedIndexChanged">
                                         </asp:DropDownList><asp:TextBox runat="server" ID="txtOutOfStockItems" Visible="false">
                                         </asp:TextBox>
                                     </div>
-
                                     <%  'Hide 'add' button and selector if in cataloguemode or for partial access
                                         '(hidden prices unless user logged in)
                                         If KartSettingsManager.GetKartConfig("frontend.cataloguemode") <> "y" And Not CheckHideAddButton() Then%>
                                     <div class="selector small-12 large-3 columns">
-
-
                                         <asp:Literal runat="server" ID="litShow"></asp:Literal>
                                         <asp:PlaceHolder ID="phdNotOutOfStock3" runat="server">
                                             <asp:PlaceHolder ID="phdDropdownCustomizable" runat="server">
@@ -415,9 +408,10 @@ ReturnCallForPrice(ProductID) <> 1 Then
                                             </asp:PlaceHolder>
                                         </asp:PlaceHolder>
                                         <asp:PlaceHolder ID="phdCalForPrice3" runat="server" Visible="false">
-                                            <asp:Literal ID="litCallForPrice3" runat="server" Text="<%$ Resources: Versions, ContentText_CallForPrice %>" />
+                                            <span class="callforprice">
+                                                <asp:Literal ID="litCallForPrice3" runat="server" Text="<%$ Resources: Versions, ContentText_CallForPrice %>" />
+                                            </span>
                                         </asp:PlaceHolder>
-
                                     </div>
                                     <% End If%>
                                 </div>
@@ -452,14 +446,16 @@ ReturnCallForPrice(ProductID) <> 1 Then
                                         <asp:PlaceHolder ID="phdExTax" runat="server" Visible="false"><span class="extax">
                                             <asp:Literal ID="litExTaxLabel" runat="server" Text="<%$ Resources: Kartris, ContentText_ExTax %>" />
                                             <span class="figure">
-                                                <asp:Literal ID="litExTax" runat="server" /></span></span> </asp:PlaceHolder>
+                                                <asp:Literal ID="litExTax" runat="server" /></span></span><br />
+                                        </asp:PlaceHolder>
                                         <%
                                             'inc tax
                                             If ConfigurationManager.AppSettings("TaxRegime").ToLower <> "us" And ConfigurationManager.AppSettings("TaxRegime").ToLower <> "simple" Then%>
                                         <asp:PlaceHolder ID="phdIncTax" runat="server" Visible="false"><span class="inctax">
                                             <asp:Literal ID="litIncTaxLabel" runat="server" Text="<%$ Resources: Kartris, ContentText_IncTax %>" />
                                             <span class="figure">
-                                                <asp:Literal ID="litIncTax" runat="server" /></span></span> </asp:PlaceHolder>
+                                                <asp:Literal ID="litIncTax" runat="server" /></span></span><br />
+                                        </asp:PlaceHolder>
                                         <%  End If%>
                                         <%
 'tax
@@ -467,14 +463,16 @@ ReturnCallForPrice(ProductID) <> 1 Then
                                         <asp:PlaceHolder ID="phdTax" runat="server" Visible="false"><span class="tax">
                                             <asp:Literal ID="litTaxRateLabel" runat="server" Text="<%$ Resources: Kartris, ContentText_Tax %>" />
                                             <span class="figure">
-                                                <asp:Literal ID="litTaxRate" runat="server" /></span></span></asp:PlaceHolder>
+                                                <asp:Literal ID="litTaxRate" runat="server" /></span></span><br />
+                                        </asp:PlaceHolder>
                                         <%
 'price
                                         %>
                                         <asp:PlaceHolder ID="phdPrice" runat="server" Visible="false"><span class="price">
                                             <%--<asp:Literal ID="litPriceLabel" runat="server" Text="<%$ Resources: Kartris, ContentText_Price %>" />--%>
                                             <span class="figure">
-                                                <asp:Literal ID="litPriceView" runat="server" /></span></span></asp:PlaceHolder>
+                                                <asp:Literal ID="litPriceView" runat="server" /></span></span><br />
+                                        </asp:PlaceHolder>
 
                                         <asp:PlaceHolder ID="phdNoValidCombinations" runat="server" Visible="false">
                                             <span class="novalidcombinations">
@@ -482,6 +480,11 @@ ReturnCallForPrice(ProductID) <> 1 Then
                                             </span></asp:PlaceHolder>
                                     </ContentTemplate>
                                 </asp:UpdatePanel>
+                                <asp:PlaceHolder ID="phdOptionsCallForPrice" runat="server" Visible="false">
+                                    <span class="callforprice">
+                                        <asp:Literal ID="litOptionsCallForPrice" runat="server" Text="<%$ Resources: Versions, ContentText_CallForPrice %>" />
+                                    </span>
+                                </asp:PlaceHolder>
                             </div>
                             <div class="selector">
                                 <asp:UpdatePanel ID="updOptions" runat="server" UpdateMode="Conditional" RenderMode="Block">

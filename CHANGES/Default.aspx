@@ -23,6 +23,8 @@
 	* Support for newer GA-4, Google Analytics support (older version will be deprecated in Jun 2023)
 	* Netbanx upgraded for 3ds-v2 (needs to pass some extra JSON info within form)
 	* CallForPrice now can be set at Version, as well as Product, level
+	* Some CSS improvements in display of products and versions in default skin
+	* Removing some old deprecated payment gateways
 	  </improvements>
 	</item>	
 

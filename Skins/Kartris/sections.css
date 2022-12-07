@@ -257,6 +257,7 @@ PRODUCTS - EXTENDED FORMAT
 .products_extended .item p.description  { padding: 0 }
 .products_extended .item a.link2        { font-size: 90% }
 .products_extended .item .optionpricing	{ margin: 0 0 0 0; }
+.products_extended .item .optionpricing span.callforprice	{ float: left; }
 /* 
 ------------------------------------------------------------------------
 PRODUCTS - HOME PAGE CAROUSEL FORMAT
@@ -310,14 +311,17 @@ VERSIONS
 .versions span.tax,
 .versions span.price,
 .versions span.extax,
-.versions span.inctax                   { display: block; padding: 0 0 0 0; clear: both; font-size: 0.99em; }
-.versions span.weight                   { font-weight: normal; color: #89a; width: 10%; white-space: nowrap; }
-.versions span.rrp                      { font-weight: normal; color: #777; width: 10%; white-space: nowrap; text-decoration: line-through; display: inline-block; padding: 10px 0; }
+.versions span.inctax                   { display: inline-block; padding: 0 0 5px 0; clear: both; font-size: 0.99em; }
+.versions span.weight                   { display: inline-block; padding: 0 0 10px 0; font-weight: normal; color: #89a; white-space: nowrap; }
+.versions span.rrp                      { display: inline-block; padding: 0 0 10px 0; font-weight: normal; color: #777; white-space: nowrap; text-decoration: line-through; }
 .versions span.rrp span.figure          { font-size: 130%; }
-.versions span.tax span.figure          { color: #000; float: left; font-weight: normal; font-size: 1.2em; padding: 0 10px 0 0; width: 100px; }
-.versions span.price span.figure        { color: #000; float: left; font-weight: bold; font-size: 1.8em; padding: 0 10px 0 0; width: 100px; margin-top: -10px; }
-.versions span.extax span.figure        { color: #000; float: left; font-weight: bold; font-size: 1.8em; padding: 0 10px 0 0; width: 100px; margin-top: -10px; }
-.versions span.inctax span.figure       { color: #000; float: left; font-weight: bold; font-size: 1.8em; padding: 0 10px 30px 0; }
+.versions span.tax span.figure          { color: #000; float: left; font-weight: normal; font-size: 1.5em; padding: 0 10px 0 0; width: 100px; margin-top: -5px; }
+.versions span.price span.figure        { color: #000; float: left; font-weight: bold; font-size: 1.8em; padding: 0 10px 0 0; width: 100px; margin-top: -5px; }
+.versions span.extax span.figure        { color: #000; float: left; font-weight: bold; font-size: 1.8em; padding: 0 10px 0 0; width: 100px; margin-top: -5px; }
+.versions span.inctax span.figure       { color: #000; float: left; font-weight: bold; font-size: 1.8em; padding: 0 10px 0 0; width: 100px; margin-top: -5px; }
+.versions span.callforprice				{ color: #000; float: right; font-weight: bold; font-size: 1.8em; padding: 0 10px 0 0; width: 100px; margin-top: -5px; }
+.versions .optionpricing span.callforprice
+										{ float: left; }
 .versions .line                         { text-align: left; padding: 0 0 0 0; }
 .versions .multipleversiondropdown      {  }
 .versions .multipleversiondropdown .large-9 select
