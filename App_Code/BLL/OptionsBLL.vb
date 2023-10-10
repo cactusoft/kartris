@@ -16,6 +16,8 @@ Imports System.Web.HttpContext
 Imports kartrisOptionsDataTableAdapters
 Imports CkartrisEnumerations
 Imports CkartrisFormatErrors
+Imports CkartrisDataManipulation
+Imports System.Drawing
 
 Public Class OptionsBLL
 
@@ -101,7 +103,7 @@ Public Class OptionsBLL
         Return ProductOptionAdptr._GetOptionsByProductAndGroup(pProductID, pGroupID, pLanguageID)
     End Function
 
-    Public Shared Function _AddOptionGrp(ByVal pBackendName As String, ByVal pDisplayType As Char, _
+    Public Shared Function _AddOptionGrp(ByVal pBackendName As String, ByVal pDisplayType As Char,
                                     ByVal pOrderByValue As Integer, ByVal ptblElements As DataTable, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -123,7 +125,7 @@ Public Class OptionsBLL
 
                 cmdOptionGrp.ExecuteNonQuery()
 
-                If cmdOptionGrp.Parameters("@NewID").Value Is DBNull.Value OrElse _
+                If cmdOptionGrp.Parameters("@NewID").Value Is DBNull.Value OrElse
                     cmdOptionGrp.Parameters("@NewID").Value Is Nothing Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
@@ -131,8 +133,8 @@ Public Class OptionsBLL
                 Dim numNewGrpID As Integer = CInt(cmdOptionGrp.Parameters("@NewID").Value)
 
                 numNewGrpID = CInt(cmdOptionGrp.Parameters("@NewID").Value)
-                If Not LanguageElementsBLL._AddLanguageElements( _
-                        ptblElements, LANG_ELEM_TABLE_TYPE.OptionGroups, _
+                If Not LanguageElementsBLL._AddLanguageElements(
+                        ptblElements, LANG_ELEM_TABLE_TYPE.OptionGroups,
                         numNewGrpID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
@@ -151,7 +153,7 @@ Public Class OptionsBLL
         Return False
 
     End Function
-    Public Shared Function _UpdateOptionGrp(ByVal pOptionGrpID As Integer, ByVal pBackendName As String, ByVal pDisplayType As Char, _
+    Public Shared Function _UpdateOptionGrp(ByVal pOptionGrpID As Integer, ByVal pBackendName As String, ByVal pDisplayType As Char,
                                     ByVal pOrderByValue As Integer, ByVal ptblElements As DataTable, ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -172,7 +174,7 @@ Public Class OptionsBLL
 
                 cmdOptionGrp.ExecuteNonQuery()
 
-                If Not LanguageElementsBLL._UpdateLanguageElements( _
+                If Not LanguageElementsBLL._UpdateLanguageElements(
                                     ptblElements, LANG_ELEM_TABLE_TYPE.OptionGroups, pOptionGrpID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
@@ -225,8 +227,8 @@ Public Class OptionsBLL
 
     End Function
 
-    Public Shared Function _AddOption(ByVal pOptionGrpID As Integer, ByVal pSelected As Boolean, ByVal pPriceChange As Single, _
-                            ByVal pWeightChange As Single, ByVal pOrderByValue As Integer, ByVal ptblElements As DataTable, _
+    Public Shared Function _AddOption(ByVal pOptionGrpID As Integer, ByVal pSelected As Boolean, ByVal pPriceChange As Single,
+                            ByVal pWeightChange As Single, ByVal pOrderByValue As Integer, ByVal ptblElements As DataTable,
                             ByRef strMsg As String) As Boolean
 
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
@@ -249,15 +251,15 @@ Public Class OptionsBLL
 
                 cmdOptionGrp.ExecuteNonQuery()
 
-                If cmdOptionGrp.Parameters("@NewID").Value Is DBNull.Value OrElse _
+                If cmdOptionGrp.Parameters("@NewID").Value Is DBNull.Value OrElse
                     cmdOptionGrp.Parameters("@NewID").Value Is Nothing Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
 
                 Dim numNewOptionID As Integer = CInt(cmdOptionGrp.Parameters("@NewID").Value)
 
-                If Not LanguageElementsBLL._AddLanguageElements( _
-                        ptblElements, LANG_ELEM_TABLE_TYPE.Options, _
+                If Not LanguageElementsBLL._AddLanguageElements(
+                        ptblElements, LANG_ELEM_TABLE_TYPE.Options,
                         numNewOptionID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
@@ -276,7 +278,7 @@ Public Class OptionsBLL
 
         Return False
     End Function
-    Public Shared Function _UpdateOption(ByVal pOriginalOptionID As Integer, ByVal pOptionGrpID As Integer, ByVal pSelected As Boolean, ByVal pPriceChange As Single, _
+    Public Shared Function _UpdateOption(ByVal pOriginalOptionID As Integer, ByVal pOptionGrpID As Integer, ByVal pSelected As Boolean, ByVal pPriceChange As Single,
                                 ByVal pWeightChange As Single, ByVal pOrderByValue As Integer, ByVal ptblElements As DataTable, ByRef strMsg As String) As Boolean
         Dim strConnString As String = ConfigurationManager.ConnectionStrings("KartrisSQLConnection").ToString()
         Using sqlConn As New SqlConnection(strConnString)
@@ -298,8 +300,8 @@ Public Class OptionsBLL
 
                 cmdOptionGrp.ExecuteNonQuery()
 
-                If Not LanguageElementsBLL._UpdateLanguageElements( _
-                                    ptblElements, LANG_ELEM_TABLE_TYPE.Options, _
+                If Not LanguageElementsBLL._UpdateLanguageElements(
+                                    ptblElements, LANG_ELEM_TABLE_TYPE.Options,
                                     pOriginalOptionID, sqlConn, savePoint) Then
                     Throw New ApplicationException(GetGlobalResourceObject("_Kartris", "ContentText_ErrorMsgDBCustom"))
                 End If
@@ -353,7 +355,7 @@ Public Class OptionsBLL
 
     End Function
 
-    Public Shared Function _CreateProductOptions(ByVal pProductID As Integer, ByVal ptblOptionGroupList As DataTable, _
+    Public Shared Function _CreateProductOptions(ByVal pProductID As Integer, ByVal ptblOptionGroupList As DataTable,
                                                  ByVal ptblOptionsList As DataTable, ByRef strMsg As String) As Boolean
         '' To Create/Re-Create Options for the Product
         ''  --> 1. Delete the existing product's Options from ProductOptionLink.
@@ -390,10 +392,13 @@ Public Class OptionsBLL
 
     Private Shared Function _AddProductOptionGroupLink(ByVal tblProductOptionGroup As DataTable, ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean
         Try
+            Dim numP_ID As Integer = 0
             Dim cmd As New SqlCommand("_spKartrisProductOptionGroupLink_Add", sqlConn)
             cmd.CommandType = CommandType.StoredProcedure
             cmd.Transaction = savePoint
             For Each row As DataRow In tblProductOptionGroup.Rows
+                numP_ID = CInt(row("P_OPTG_ProductID"))
+
                 cmd.Parameters.AddWithValue("@ProductID", CInt(row("P_OPTG_ProductID")))
                 cmd.Parameters.AddWithValue("@GroupID", CShort(row("P_OPTG_OptionGroupID")))
                 cmd.Parameters.AddWithValue("@OrderBy", CInt(row("P_OPTG_OrderByValue")))
@@ -401,6 +406,11 @@ Public Class OptionsBLL
                 cmd.ExecuteNonQuery()
                 cmd.Parameters.Clear()
             Next
+
+            KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.ExecuteQuery,
+                     "_AddProductOptionGroupLink was run on product " & numP_ID,
+                     CreateQuery(cmd), numP_ID, sqlConn, savePoint)
+
             Return True
             'End Using
         Catch ex As Exception
@@ -411,10 +421,13 @@ Public Class OptionsBLL
     End Function
     Private Shared Function _AddProductOptionLink(ByVal tblProductOptionLink As DataTable, ByVal sqlConn As SqlConnection, ByVal savePoint As SqlTransaction) As Boolean
         Try
+            Dim numP_ID As Integer = 0
             Dim cmd As New SqlCommand("_spKartrisProductOptionLink_Add", sqlConn)
             cmd.CommandType = CommandType.StoredProcedure
             cmd.Transaction = savePoint
             For Each row As DataRow In tblProductOptionLink.Rows
+                numP_ID = CInt(row("P_OPT_ProductID"))
+
                 cmd.Parameters.AddWithValue("@OptionID", CInt(row("P_OPT_OptionID")))
                 cmd.Parameters.AddWithValue("@ProductID", CInt(row("P_OPT_ProductID")))
                 cmd.Parameters.AddWithValue("@OrderBy", CInt(row("P_OPT_OrderByValue")))
@@ -424,6 +437,11 @@ Public Class OptionsBLL
                 cmd.ExecuteNonQuery()
                 cmd.Parameters.Clear()
             Next
+
+            KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.ExecuteQuery,
+                     "_AddProductOptionLink was run on product " & numP_ID,
+                     CreateQuery(cmd), numP_ID, sqlConn, savePoint)
+
             Return True
             'End Using
         Catch ex As Exception
@@ -432,7 +450,7 @@ Public Class OptionsBLL
 
         Return False
     End Function
-    Public Shared Function _DeleteProductOptionsByProductID(ByVal pProductID As Integer, ByVal pConn As SqlConnection, _
+    Public Shared Function _DeleteProductOptionsByProductID(ByVal pProductID As Integer, ByVal pConn As SqlConnection,
                                                       ByVal savePoint As SqlTransaction) As Boolean
         Try
             Dim cmd As New SqlCommand("_spKartrisProductOptionLink_DeleteByProductID", pConn)
@@ -440,6 +458,11 @@ Public Class OptionsBLL
             cmd.Transaction = savePoint
             cmd.Parameters.AddWithValue("@ProductID", pProductID)
             cmd.ExecuteNonQuery()
+
+            KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.ExecuteQuery,
+                     "_DeleteProductOptionsByProductID was run on product " & pProductID,
+                     CreateQuery(cmd), pProductID, pConn, savePoint)
+
             Return True
         Catch ex As Exception
             ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
@@ -447,7 +470,7 @@ Public Class OptionsBLL
 
         Return False
     End Function
-    Public Shared Function _DeleteProductOptionGroupByProductID(ByVal pProductID As Integer, ByVal pConn As SqlConnection, _
+    Public Shared Function _DeleteProductOptionGroupByProductID(ByVal pProductID As Integer, ByVal pConn As SqlConnection,
                                                       ByVal savePoint As SqlTransaction) As Boolean
         Try
             Dim cmd As New SqlCommand("_spKartrisProductOptionGroupLink_DeleteByProductID", pConn)
@@ -455,6 +478,11 @@ Public Class OptionsBLL
             cmd.Transaction = savePoint
             cmd.Parameters.AddWithValue("@ProductID", pProductID)
             cmd.ExecuteNonQuery()
+
+            KartrisDBBLL._AddAdminLog(HttpContext.Current.Session("_User"), ADMIN_LOG_TABLE.ExecuteQuery,
+                     "_DeleteProductOptionGroupByProductID was run on product " & pProductID,
+                     CreateQuery(cmd), pProductID, pConn, savePoint)
+
             Return True
         Catch ex As Exception
             ReportHandledError(ex, Reflection.MethodBase.GetCurrentMethod())
@@ -462,7 +490,7 @@ Public Class OptionsBLL
 
         Return False
     End Function
-    Private Shared Function _SuspendProductVersions(ByVal pProductID As Integer, ByVal pConn As SqlConnection, _
+    Private Shared Function _SuspendProductVersions(ByVal pProductID As Integer, ByVal pConn As SqlConnection,
                                                       ByVal savePoint As SqlTransaction) As Boolean
         Try
             Dim cmd As New SqlCommand("_spKartrisVersions_SuspendProductVersions", pConn)

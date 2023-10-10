@@ -15,6 +15,7 @@
 Imports KartSettingsManager
 Imports CkartrisBLL
 Imports CkartrisDataManipulation
+Imports Org.BouncyCastle.Utilities
 
 ''' <summary>
 ''' Ecommerce Tracking control
@@ -41,7 +42,7 @@ Partial Class UserControls_Front_EcommerceTracking
         'Only need ecommerce tracking if there is a 
         'webproperty ID (site identifier) set in 
         'the config settings of Kartris
-        If KartSettingsManager.GetKartConfig("general.google.analytics.webpropertyid") <> "" Then
+        If KartSettingsManager.GetKartConfig("general.google.ga4.measurementid") <> "" Then
             'Declare variables
             Dim tblOrder As System.Data.DataTable
 
@@ -49,6 +50,7 @@ Partial Class UserControls_Front_EcommerceTracking
 
             'Fill datatable width basket items
             tblOrder = objBasketBLL.GetCustomerOrderDetails(_OrderID)
+
 
             'Examine data of order, if exists
             If tblOrder.Rows.Count > 0 Then
@@ -62,28 +64,19 @@ Partial Class UserControls_Front_EcommerceTracking
                 'logged in user, and tracking is
                 'enabled.
                 '================================
-                phdEcommerceTracking.Visible = True
+                phdGoogleGA4.Visible = True
 
                 Dim numShippingTotal As Single = tblOrder.Rows(0).Item("O_ShippingPrice") + tblOrder.Rows(0).Item("O_OrderHandlingCharge")
                 Dim numTotalItems As Single = tblOrder.Rows(0).Item("O_AffiliateTotalPrice")
                 Dim numTax As Single = tblOrder.Rows(0).Item("O_TotalPrice") - numTotalItems - numShippingTotal
 
-                'Set currency ID, need to use this
-                'elsewhere
-                hidCurrencyID.Value = tblOrder.Rows(0).Item("O_CurrencyID")
 
-                litHeader.Text = vbCrLf & vbCrLf & "<script type=""text/javascript"">" & vbCrLf
-                litHeader.Text &= "gtag('event', 'purchase', {" & vbCrLf
+                Dim transactionId As String = _OrderID
+                Dim transactionValue As String = CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numTotalItems, False))
+                Dim transactionTax As String = CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numTax, False))
+                Dim transactionShipping As String = CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numShippingTotal, False))
+                Dim transactionCurrency As String = CurrenciesBLL.CurrencyCode(hidCurrencyID.Value)
 
-                'Fill out the items in the javascript
-                litOrderID.Text = ("""transaction_id"": """ & _OrderID & """")
-                litWebShopName.Text = ("""affiliation"": """ & GetGlobalResourceObject("Kartris", "Config_Webshopname") & """")
-                litTotal.Text = ("""value"": " & CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numTotalItems, False)))
-                litCurrencyIsoCode.Text = ("""currency"": """ & CurrenciesBLL.CurrencyCode(hidCurrencyID.Value) & """")
-                litTax.Text = ("""tax"": " & CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numTax, False)))
-                litShipping.Text = ("""shipping"": " & CkartrisDataManipulation.HandleDecimalValuesString(CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, numShippingTotal, False)))
-
-                'Clear order details
                 tblOrder.Dispose()
 
                 'Fill order with details of customer invoice,
@@ -91,55 +84,69 @@ Partial Class UserControls_Front_EcommerceTracking
                 'records
                 tblOrder = objBasketBLL.GetCustomerInvoice(_OrderID, _UserID, 1)
 
-                'Bind data to repeater control
-                rptOrderItems.DataSource = tblOrder
-                rptOrderItems.DataBind()
+                Dim items As New List(Of String)()
 
-                litFooter.Text = "});" & vbCrLf
-                litFooter.Text &= "</script>"
+                For Each row As DataRow In tblOrder.Rows
+                    'Declare variables
+                    Dim strVersionCode, strItemName, strItemOptions As String
+                    Dim numItemPrice, numItemQuantity As Single
+
+                    strVersionCode = row("IR_VersionCode")
+                    strItemName = row("IR_VersionName")
+                    strItemOptions = row("IR_OptionsText")
+                    numItemPrice = CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, row("IR_PricePerItem"), False)
+                    numItemQuantity = row("IR_Quantity")
+
+                    Dim itemString As String = $"{{ item_id: ""{strVersionCode}"", 
+                                    item_name: ""{strItemName}"", 
+                                    item_variant: ""{strItemOptions}"", 
+                                    price: {numItemPrice}, 
+                                    quantity: {numItemQuantity} }}"
+                    items.Add(itemString)
+                Next
+
+                'affiliation: ""{affiliation}"", 
+                'coupon: ""{coupon}"", 
+                'discount: {discount}, 
+                'index: {Index}, 
+                'item_brand: ""{itemBrand}"", 
+                'item_category: ""{itemCategory}"", 
+                'item_category2: ""{itemCategory2}"", 
+                'item_category3: ""{itemCategory3}"", 
+                'item_category4: ""{itemCategory4}"", 
+                'item_category5: ""{itemCategory5}"", 
+                'item_list_id: ""{itemListId}"", 
+                'item_list_name: ""{itemListName}"", 
+                'item_variant: ""{itemVariant}"", 
+                'location_id: ""{locationId}"", 
+
+                Dim itemsString As String = String.Join(",", items)
+
+                Dim trackingCode As String = $"dataLayer.push({{ ecommerce: null }});
+                dataLayer.push({{
+                  event: ""purchase"",
+                  ecommerce: {{
+                      transaction_id: ""{transactionId}"",
+                      value: {transactionValue},
+                      tax: {transactionTax},
+                      shipping: {transactionShipping},
+                      currency: ""{transactionCurrency}"",
+                      items: [{itemsString}]
+                  }}
+                }});"
+
+                litTrackingCode.Text = "<script>" & vbCrLf & trackingCode & vbCrLf & "<script>"
+
             Else
                 'Order not found - hide code
-                phdEcommerceTracking.Visible = False
+                phdGoogleGA4.Visible = False
                 litHiddenBecause.Text = "<!-- GOOGLE ANALYTICS: _OrderID " & _OrderID & " was not found in db -->"
             End If
         Else
             'Ecommerce tracking not enabled
-            phdEcommerceTracking.Visible = False
+            phdGoogleGA4.Visible = False
             litHiddenBecause.Text = "<!-- GOOGLE ANALYTICS: general.google.analytics.webpropertyid is not set -->"
         End If
-
-    End Sub
-
-    ''' <summary>
-    ''' Repeater gets data bound
-    ''' </summary>
-    ''' <remarks>By Paul</remarks>
-    Protected Sub rptOrderItems_ItemDataBound(ByVal sender As Object, ByVal e As System.Web.UI.WebControls.RepeaterItemEventArgs) Handles rptOrderItems.ItemDataBound
-
-        Try
-            'Declare variables
-            Dim strVersionCode, strItemName, strItemOptions As String
-            Dim numItemPrice, numItemQuantity As Single
-
-            'Set variable values from data in
-            'invoice row records of this order
-            strVersionCode = e.Item.DataItem("IR_VersionCode")
-            strItemName = e.Item.DataItem("IR_VersionName")
-            strItemOptions = e.Item.DataItem("IR_OptionsText")
-            numItemPrice = CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, e.Item.DataItem("IR_PricePerItem"), False)
-            numItemQuantity = e.Item.DataItem("IR_Quantity")
-
-            'Find the controls within the repeater
-            'and set their values
-            CType(e.Item.FindControl("litVersionCode"), Literal).Text = ("""id"": """ & strVersionCode & """")
-            CType(e.Item.FindControl("litItemName"), Literal).Text = ("""name"": """ & strItemName & """")
-            CType(e.Item.FindControl("litItemOptions"), Literal).Text = ("""variant"": """ & Replace(strItemOptions, "<br />", "/") & """")
-            CType(e.Item.FindControl("litItemQuantity"), Literal).Text = ("""quantity"": " & numItemQuantity)
-            CType(e.Item.FindControl("litItemPrice"), Literal).Text = ("""price"": " & CkartrisDataManipulation.HandleDecimalValuesString(numItemPrice.ToString))
-        Catch ex As Exception
-            'Catch the error
-        End Try
-
 
     End Sub
 
