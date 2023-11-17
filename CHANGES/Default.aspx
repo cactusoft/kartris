@@ -10,9 +10,24 @@
 
 	<item>
 	  <majorVersion>3</majorVersion>
+	  <minorVersion>3.3002</minorVersion>
+	  <beta>False</beta>
+	  <releaseDate>Fri, 17 Nov 2023 09:27:00 GMT</releaseDate>
+	 <type>Recommended</type>
+	  <bugFixes>
+	* Minor tweaks
+	  </bugFixes>
+	  <improvements>
+	* Worldpay updated to add MD5 hashing
+	* Opayo (SagePay /  Elavon) URLs updated
+	  </improvements>
+	</item>	
+
+	<item>
+	  <majorVersion>3</majorVersion>
 	  <minorVersion>3.3001</minorVersion>
 	  <beta>False</beta>
-	  <releaseDate></releaseDate>
+	  <releaseDate>Wed, 10 May 2023 11:05:00 GMT</releaseDate>
 	 <type>Recommended</type>
 	  <bugFixes>
 	* Fixed issue with savedbaskets table clearing after new one saved, select accordion panes by name to allow for some being hidden

@@ -28221,8 +28221,29 @@ END
 GO
 
 
+/****** Object:  View [dbo].[vKartrisRichSnippets]    Script Date: 2023-11-11 12:44:26 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE VIEW [dbo].[vKartrisRichSnippets]
+AS
+SELECT   dbo.vKartrisProductsVersions.P_ID, dbo.vKartrisProductsVersions.P_Type, dbo.vKartrisProductsVersions.P_Live, dbo.vKartrisProductsVersions.V_CodeNumber, dbo.vKartrisProductsVersions.V_Name, dbo.vKartrisProductsVersions.P_Name, 
+                dbo.vKartrisProductsVersions.V_Desc, dbo.vKartrisProductsVersions.P_Desc, dbo.tblKartrisSuppliers.SUP_Name, dbo.vKartrisProductsVersions.V_Price, dbo.tblKartrisTaxRates.T_Taxrate, dbo.vKartrisProductsVersions.T_TaxRate2, 
+                dbo.tblKartrisCurrencies.CUR_ISOCode, dbo.vKartrisProductsVersions.LANG_ID, dbo.vKartrisProductsVersions.V_Quantity, dbo.vKartrisProductsVersions.V_QuantityWarnLevel
+FROM      dbo.vKartrisProductsVersions INNER JOIN
+                dbo.tblKartrisTaxRates ON dbo.vKartrisProductsVersions.V_Tax = dbo.tblKartrisTaxRates.T_ID LEFT OUTER JOIN
+                dbo.tblKartrisSuppliers ON dbo.vKartrisProductsVersions.P_SupplierID = dbo.tblKartrisSuppliers.SUP_ID CROSS JOIN
+                dbo.tblKartrisCurrencies
+WHERE   (dbo.tblKartrisCurrencies.CUR_ID = 1)
+GO
+
+
 /****** Set this to tell Data tool which version of db we have ******/
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'3.3000', N's', N's', N'kartris version', N'', 3.3, N'3.3000', 0)
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'3.3002', N's', N's', N'kartris version', N'', 3.3002, N'3.3002', 0)
 GO
 
 /****** Fill the Product Search Index with data ******/

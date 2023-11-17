@@ -35,6 +35,19 @@ Partial Class UserControls_Front_EcommerceTracking
     ''' <remarks>By Paul</remarks>
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As System.EventArgs) Handles Me.Load
 
+        Try
+
+            RunTrackingCode()
+
+        Catch ex As Exception
+            'LOG ERROR
+            CkartrisFormatErrors.LogError(ex.Message)
+        End Try
+
+    End Sub
+
+    Private Sub RunTrackingCode()
+
         Dim _OrderID As Integer = CInt(Session("OrderID"))
 
         Dim _UserID As Integer = 0
@@ -43,14 +56,13 @@ Partial Class UserControls_Front_EcommerceTracking
         'webproperty ID (site identifier) set in 
         'the config settings of Kartris
         If KartSettingsManager.GetKartConfig("general.google.ga4.measurementid") <> "" Then
-            'Declare variables
+
             Dim tblOrder As System.Data.DataTable
 
             Dim objBasketBLL As New BasketBLL
 
             'Fill datatable width basket items
             tblOrder = objBasketBLL.GetCustomerOrderDetails(_OrderID)
-
 
             'Examine data of order, if exists
             If tblOrder.Rows.Count > 0 Then
@@ -97,43 +109,32 @@ Partial Class UserControls_Front_EcommerceTracking
                     numItemPrice = CurrenciesBLL.FormatCurrencyPrice(hidCurrencyID.Value, row("IR_PricePerItem"), False)
                     numItemQuantity = row("IR_Quantity")
 
-                    Dim itemString As String = $"{{ item_id: ""{strVersionCode}"", 
-                                    item_name: ""{strItemName}"", 
-                                    item_variant: ""{strItemOptions}"", 
-                                    price: {numItemPrice}, 
-                                    quantity: {numItemQuantity} }}"
+                    Dim itemString As String = "{{ item_id: """ & strVersionCode & """, " & vbCrLf &
+                           "item_name: """ & strItemName & """, " & vbCrLf &
+                           "item_variant: """ & strItemOptions & """, " & vbCrLf &
+                           "price: " & numItemPrice & ", " & vbCrLf &
+                           "quantity: " & numItemQuantity & " }}"
+
                     items.Add(itemString)
                 Next
 
-                'affiliation: ""{affiliation}"", 
-                'coupon: ""{coupon}"", 
-                'discount: {discount}, 
-                'index: {Index}, 
-                'item_brand: ""{itemBrand}"", 
-                'item_category: ""{itemCategory}"", 
-                'item_category2: ""{itemCategory2}"", 
-                'item_category3: ""{itemCategory3}"", 
-                'item_category4: ""{itemCategory4}"", 
-                'item_category5: ""{itemCategory5}"", 
-                'item_list_id: ""{itemListId}"", 
-                'item_list_name: ""{itemListName}"", 
-                'item_variant: ""{itemVariant}"", 
-                'location_id: ""{locationId}"", 
-
                 Dim itemsString As String = String.Join(",", items)
 
-                Dim trackingCode As String = $"dataLayer.push({{ ecommerce: null }});
-                dataLayer.push({{
-                  event: ""purchase"",
-                  ecommerce: {{
-                      transaction_id: ""{transactionId}"",
-                      value: {transactionValue},
-                      tax: {transactionTax},
-                      shipping: {transactionShipping},
-                      currency: ""{transactionCurrency}"",
-                      items: [{itemsString}]
-                  }}
-                }});"
+                Dim trackingCode As String = ""
+
+                trackingCode = "dataLayer.push({ ecommerce: null });" & vbCrLf &
+                  "dataLayer.push({" & vbCrLf &
+                  "  event: ""purchase""," & vbCrLf &
+                  "  ecommerce: {" & vbCrLf &
+                  "    transaction_id: """ & transactionId & """," & vbCrLf &
+                  "    value: " & transactionValue & "," & vbCrLf &
+                  "    tax: " & transactionTax & "," & vbCrLf &
+                  "    shipping: " & transactionShipping & "," & vbCrLf &
+                  "    currency: """ & transactionCurrency & ",""," & vbCrLf &
+                  "    items: [" & itemsString & "]" & vbCrLf &
+                  "  }" & vbCrLf &
+                  "});"
+
 
                 litTrackingCode.Text = "<script>" & vbCrLf & trackingCode & vbCrLf & "<script>"
 
@@ -149,6 +150,5 @@ Partial Class UserControls_Front_EcommerceTracking
         End If
 
     End Sub
-
 
 End Class

@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2021 CACTUSOFT
+'Copyright 2023 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -26,83 +26,104 @@ Partial Class UserControls_Front_RichSnippets
 
     Protected Sub UserControls_Front_RichSnippets_Load(sender As Object, e As EventArgs) Handles Me.Load
         If Not Page.IsPostBack AndAlso _ProductID > 0 Then
-            Try
-                LoadSnippets()
-            Catch ex As Exception
-
-            End Try
-
+            LoadSnippets()
         End If
     End Sub
 
     Sub LoadSnippets()
-        Dim objProductsBLL As New ProductsBLL
-        Dim dr As DataRow = objProductsBLL.GetRichSnippetProperties(_ProductID, Session("LANG"))(0)
 
-        Dim strURL As String = CkartrisBLL.WebShopURL.ToLower & "======" & SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, _ProductID) ' added the === bit to make it easier to remove the double slash from joining webshopURL with the page URL local
-        strURL = Replace(strURL, "/======/", "/")
+        Try
 
-        '' Name, SKU and Category
-        litProductMain.Text = litProductMain.Text.Replace("[product_name]", Replace(CkartrisDisplayFunctions.StripHTML(FixNullFromDB(dr("P_Name"))), """", "\"""))
-        litProductMain.Text = litProductMain.Text.Replace("[product_desc]", Replace(CkartrisDisplayFunctions.StripHTML(FixNullFromDB(dr("P_Desc"))), """", "\"""))
-        litProductMain.Text = litProductMain.Text.Replace("[sku]", FixNullFromDB(dr("P_SKU")))
-        litProductMain.Text = litProductMain.Text.Replace("[category]", FixNullFromDB(dr("P_Category")))
-        litProductMain.Text = litProductMain.Text.Replace("/", "\/") 'JSON needs forward slashes escaped, could be in product name, description or SKU, or even category
+            Dim objVersionsBLL As New VersionsBLL
+            Dim dtbVersions As DataTable = objVersionsBLL.GetRichSnippetsPropertiesMulti(_ProductID, Session("LANG"))
 
-        '' Image
-        Dim dirFolder As New DirectoryInfo(Server.MapPath(CkartrisImages.strProductImagesPath & "/" & _ProductID & "/"))
-        If dirFolder.Exists Then
-            If dirFolder.GetFiles().Length > 0 Then
-                For Each objFile In dirFolder.GetFiles()
-                    litImage.Text = litImage.Text.Replace(
-                        "[image_source]", Replace(CkartrisImages.strProductImagesPath, "~/", CkartrisBLL.WebShopURL()) & "/" & _ProductID & "/" & objFile.Name)
-                    litImage.Text = litImage.Text.Replace("/", "\/") 'JSON needs forward slashes escaped
-                    Exit For
-                Next
-            Else
-                litImage.Visible = False
+            Dim strURL As String = CkartrisBLL.WebShopURL.ToLower & "======" & SiteMapHelper.CreateURL(SiteMapHelper.Page.CanonicalProduct, _ProductID) ' added the === bit to make it easier to remove the double slash from joining webshopURL with the page URL local
+            strURL = Replace(strURL, "/======/", "/")
+
+            ' Create a StringBuilder to build the JSON-LD snippet
+            Dim sb As New StringBuilder()
+
+            sb.Append("<script type=""application/ld+json"">")
+            sb.Append("[") ' Start an array of products
+
+            '' Image
+            Dim strImageLink As String = ""
+            Dim dirFolder As New DirectoryInfo(Server.MapPath(CkartrisImages.strProductImagesPath & "/" & _ProductID & "/"))
+            If dirFolder.Exists Then
+                If dirFolder.GetFiles().Length > 0 Then
+                    For Each objFile In dirFolder.GetFiles()
+                        strImageLink = Replace(CkartrisImages.strProductImagesPath, "~/", CkartrisBLL.WebShopURL()) & "/" & _ProductID & "/" & objFile.Name
+                        'strImageLink = strImageLink.Replace("/", "\/") 'JSON escape forward slash,  not required
+                        Exit For
+                    Next
+                End If
             End If
-        Else
-            litImage.Visible = False
-        End If
 
-        '' Reviews
-        If FixNullFromDB(dr("P_TotalReview")) > 0 Then
-            litReview.Text = litReview.Text.Replace("[review_avg]", FixNullFromDB(dr("P_AverageReview")))
-            litReview.Text = litReview.Text.Replace("[review_total]", FixNullFromDB(dr("P_TotalReview")))
-        Else
-            litReview.Visible = False
-        End If
-
-        '' Price
-        If FixNullFromDB(dr("P_Type")) = "s" Then
-            '' Single Version
-            litOffer.Text = litOffer.Text.Replace("[currency]", CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
-            litOffer.Text = litOffer.Text.Replace("[price]", CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), FixNullFromDB(dr("P_Price")), False))
-            litOffer.Text = litOffer.Text.Replace("[url]", strURL)
-            litOfferAggregate.Visible = False
-
-        ElseIf FixNullFromDB(dr("P_MinPrice")) = FixNullFromDB(dr("P_MaxPrice")) Then
-            litOffer.Text = litOffer.Text.Replace("[currency]", CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
-            litOffer.Text = litOffer.Text.Replace("[price]", CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), FixNullFromDB(dr("P_MinPrice")), False))
-            litOffer.Text = litOffer.Text.Replace("[url]", strURL)
-            litOfferAggregate.Visible = False
-        Else
-            litOfferAggregate.Text = litOfferAggregate.Text.Replace("[currency]", CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
-            litOfferAggregate.Text = litOfferAggregate.Text.Replace("[lowprice]", CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), FixNullFromDB(dr("P_MinPrice"))), False))
-            litOfferAggregate.Text = litOfferAggregate.Text.Replace("[highprice]", CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), CurrenciesBLL.ConvertCurrency(Session("CUR_ID"), FixNullFromDB(dr("P_MaxPrice"))), False))
-            litOfferAggregate.Text = litOfferAggregate.Text.Replace("[url]", strURL)
-            litOffer.Visible = False
-        End If
+            Dim blnFirstProduct As Boolean = True ' Initialize a flag for the first product
 
 
+            For Each dr In dtbVersions.Rows
+                '------ LOOP THROUGH VERSIONS -----------
+
+                If dr("V_Price") <> 0 Then
+
+                    sb.AppendLine(If(blnFirstProduct, "{", ",{")) ' Add a comma before the product JSON section if it's not the first product
+                    sb.AppendLine("""@context"": ""http://schema.org"",")
+                    sb.AppendLine("""@type"": ""Product"",")
+                    sb.AppendLine("""name"": """ + Replace(CkartrisDisplayFunctions.StripHTML(FixNullFromDB(dr("V_Name"))), """", "\""") + """,")
+                    sb.AppendLine("""description"": """ + Replace(CkartrisDisplayFunctions.StripHTML(FixNullFromDB(dr("P_Desc"))), """", "\""") + """,")
+                    sb.AppendLine("""mpn"": """ + Replace(CkartrisDisplayFunctions.StripHTML(FixNullFromDB(dr("V_CodeNumber"))), """", "\""") + """,")
+                    sb.AppendLine("""sku"": """ + Replace(CkartrisDisplayFunctions.StripHTML(FixNullFromDB(dr("V_CodeNumber"))), """", "\""") + """,")
+                    sb.AppendLine("""image"": [""" + strImageLink + """],")
+                    sb.AppendLine("""brand"": {")
+                    sb.AppendLine("  ""@type"": ""Brand"",")
+                    sb.AppendLine("  ""name"": """ + Replace(CkartrisDisplayFunctions.StripHTML(FixNullFromDB(dr("SUP_Name"))), """", "\""") + """")
+                    sb.AppendLine("  },")
+                    sb.AppendLine("""offers"": {")
+                    sb.AppendLine("  ""@type"": ""Offer"",")
+                    sb.AppendLine("  ""url"": """ + strURL + """,")
+                    sb.AppendLine("  ""price"": """ + CurrenciesBLL.FormatCurrencyPrice(Session("CUR_ID"), FixNullFromDB(dr("V_Price")), False) + """,")
+                    sb.AppendLine("  ""priceCurrency"": """ + FixNullFromDB(dr("CUR_ISOCode")) + """,")
+
+                    'Availability
+                    If dr("V_QuantityWarnLevel") = 0 Then
+                        sb.AppendLine("  ""availability"": ""http://schema.org/InStock""")
+                    Else
+                        'Allowpurchaseoutstock?
+                        If LCase(KartSettingsManager.GetKartConfig("frontend.orders.allowpurchaseoutofstock")) = "y" Then
+                            If dr("V_Quantity") < 1 Then
+                                sb.AppendLine("  ""availability"": ""http://schema.org/BackOrder""")
+                            Else
+                                sb.AppendLine("  ""availability"": ""http://schema.org/InStock""")
+                            End If
+                        Else
+                            If dr("V_Quantity") < 1 Then
+                                sb.AppendLine("  ""availability"": ""http://schema.org/OutOfStock""")
+                            Else
+                                sb.AppendLine("  ""availability"": ""http://schema.org/InStock""")
+                            End If
+                        End If
+                    End If
+
+                    sb.AppendLine("  }")
+                    sb.AppendLine("}")
+                    blnFirstProduct = False
+
+                End If
+
+                '------ / END OF LOOP -----------
+            Next
+
+            sb.AppendLine("]") ' Start an array of products
+            sb.AppendLine("</script>")
+
+            litJSONLD.Text = sb.ToString()
 
 
-        ''Disable Offer if Call for Price is set
-        'If FixNullFromDB(dr("P_CallForPrice")) = 1 Then
-        '    litOffer.Visible = False
-        '    litOfferAggregate.Visible = False
-        'End If
+        Catch ex As Exception
+
+        End Try
+
 
     End Sub
 End Class

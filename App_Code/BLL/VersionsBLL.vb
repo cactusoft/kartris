@@ -1,6 +1,6 @@
 ﻿'========================================================================
 'Kartris - www.kartris.com
-'Copyright 2021 CACTUSOFT
+'Copyright 2023 CACTUSOFT
 
 'GNU GENERAL PUBLIC LICENSE v2
 'This program is free software distributed under the GPL without any
@@ -223,6 +223,11 @@ Public Class VersionsBLL
 
     Public Function _GetDownloadableLinks(ByVal numLanguageID As Byte) As DataTable
         Return Adptr._GetDownloadableLinks(numLanguageID)
+    End Function
+
+    'NEW RICH SNIPPETS
+    Public Function GetRichSnippetsPropertiesMulti(ByVal ProductID As Integer, ByVal LanguageID As Byte) As DataTable
+        Return Adptr.GetRichSnippetsPropertiesMulti(ProductID, LanguageID)
     End Function
 #Region "Markup Prices"
 
