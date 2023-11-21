@@ -59,6 +59,10 @@ ECHO Deleting DefaultBuildFiles folder...
 rd "c:\CleanKartris\Kartris\DefaultBuildFiles" /S /Q
 ECHO DONE!
 ECHO **
+ECHO Deleting packages folder...
+rd "c:\CleanKartris\Kartris\packages" /S /Q
+ECHO DONE!
+ECHO **
 ECHO -----------------------------------------------------
 ECHO Files inside "C:\CleanKartris\" ready for zipping! =)
 ECHO -----------------------------------------------------
