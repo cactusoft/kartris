@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PdfSharp.WPFonts</name>
+    </assembly>
+    <members>
+        <member name="T:PdfSharp.WPFonts.FontDataHelper">
+            <summary>
+            Windows Phone fonts helper class.
+            </summary>
+        </member>
+        <member name="P:PdfSharp.WPFonts.FontDataHelper.SegoeWPLight">
+            <summary>
+            Gets the font face of Segoe WP light.
+            </summary>
+        </member>
+        <member name="P:PdfSharp.WPFonts.FontDataHelper.SegoeWPSemilight">
+            <summary>
+            Gets the font face of Segoe WP semilight.
+            </summary>
+        </member>
+        <member name="P:PdfSharp.WPFonts.FontDataHelper.SegoeWP">
+            <summary>
+            Gets the font face of Segoe WP.
+            </summary>
+        </member>
+        <member name="P:PdfSharp.WPFonts.FontDataHelper.SegoeWPSemibold">
+            <summary>
+            Gets the font face of Segoe WP semibold.
+            </summary>
+        </member>
+        <member name="P:PdfSharp.WPFonts.FontDataHelper.SegoeWPBold">
+            <summary>
+            Gets the font face of Segoe WP bold.
+            </summary>
+        </member>
+        <member name="P:PdfSharp.WPFonts.FontDataHelper.SegoeWPBlack">
+            <summary>
+            Gets the font face of Segoe WP black.
+            </summary>
+        </member>
+        <member name="M:PdfSharp.WPFonts.FontDataHelper.LoadFontData(System.String)">
+            <summary>
+            Returns the specified font from an embedded resource.
+            </summary>
+        </member>
+    </members>
+</doc>

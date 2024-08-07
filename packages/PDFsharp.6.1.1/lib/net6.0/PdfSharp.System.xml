@@ -1,0 +1,109 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PdfSharp.System</name>
+    </assembly>
+    <members>
+        <member name="T:PdfSharp.Diagnostics.NRT">
+            <summary>
+            Helper class for code migration to nullable reference types.
+            </summary>
+        </member>
+        <member name="M:PdfSharp.Diagnostics.NRT.ThrowOnNull(System.String)">
+            <summary>
+            Throws an InvalidOperationException because an expression which must not be null is null.
+            </summary>
+            <param name="message">The message.</param>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:PdfSharp.Diagnostics.NRT.ThrowOnNull``1(System.String)">
+            <summary>
+            Throws InvalidOperationException. Use this function during the transition from older C# code
+            to new code that uses nullable reference types.
+            </summary>
+            <typeparam name="TResult">The type this function must return to be compiled correctly.</typeparam>
+            <param name="message">An optional message used for the exception.</param>
+            <returns>Nothing, always throws.</returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="M:PdfSharp.Diagnostics.NRT.ThrowOnNull``2(System.String)">
+            <summary>
+            Throws InvalidOperationException. Use this function during the transition from older C# code
+            to new code that uses nullable reference types.
+            </summary>
+            <typeparam name="TResult">The type this function must return to be compiled correctly.</typeparam>
+            <typeparam name="TType">The type of the object that is null.</typeparam>
+            <param name="message">An optional message used for the exception.</param>
+            <returns>Nothing, always throws.</returns>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="T:PdfSharp.Internal.TH">
+            <summary>
+            Experimental throw helper.
+            </summary>
+        </member>
+        <member name="T:PdfSharp.Internal.UrlLiterals">
+            <summary>
+            URLs used in PDFsharp are maintained only here.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Internal.UrlLiterals.LinkToAssetsDoc">
+            <summary>
+            URL for missing assets error message.
+            "https://docs.pdfsharp.net/link/download-assets.html"
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Internal.UrlLiterals.LinkToFontResolving">
+            <summary>
+            URL for missing font resolver.
+            "https://docs.pdfsharp.net/link/font-resolving.html"
+            </summary>
+        </member>
+        <member name="T:PdfSharp.Logging.LogCategory">
+            <summary>
+            Defines the logging categories of PDFsharp.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Logging.LogCategory.PdfSharp">
+            <summary>
+            Default category for standard logger.
+            </summary>
+        </member>
+        <member name="T:PdfSharp.Logging.LogHost">
+            <summary>
+            Provides a single global logger factory used for logging in PDFsharp.
+            </summary>
+        </member>
+        <member name="P:PdfSharp.Logging.LogHost.Factory">
+            <summary>
+            Gets or sets the current global logger factory singleton for PDFsharp.
+            Every logger used in PDFsharp code is created by this factory.
+            You can change the logger factory at any one time you want.
+            If no factory is provided the NullLoggerFactory is used as the default.
+            </summary>
+        </member>
+        <member name="P:PdfSharp.Logging.LogHost.Logger">
+            <summary>
+            Gets the global PDFsharp default logger.
+            </summary>
+        </member>
+        <member name="M:PdfSharp.Logging.LogHost.CreateLogger(System.String)">
+            <summary>
+            Creates a logger with a given category name.
+            </summary>
+        </member>
+        <member name="M:PdfSharp.Logging.LogHost.CreateLogger``1">
+            <summary>
+            Creates a logger with the full name of the given type as category name.
+            </summary>
+        </member>
+        <member name="M:PdfSharp.Logging.LogHost.ResetLogging">
+            <summary>
+            Resets the logging host to the state it has immediately after loading the PDFsharp library.
+            </summary>
+            <remarks>
+            This function is only useful in unit test scenarios and not intended to be called from application code.
+            </remarks>
+        </member>
+    </members>
+</doc>
