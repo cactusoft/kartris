@@ -21,8 +21,7 @@ Imports CkartrisBLL
 Imports CkartrisDataManipulation
 Imports MailChimp.Net.Models
 Imports System.Threading.Tasks
-Imports Braintree
-Imports PaymentsBLL
+
 
 ''' <summary>
 ''' Checkout - this page handles users checking out,
@@ -912,57 +911,9 @@ Partial Class _Checkout
                 'Show Credit Card Input Usercontrol if payment gateway type is local
                 If LCase(clsPlugin.GatewayType) = "local" And
                     Not (clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
-                    clsPlugin.GatewayName.ToLower = "bitcoin" Or
-                    clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
-                    clsPlugin.GatewayName.ToLower = "braintreepayment") Then
+                    clsPlugin.GatewayName.ToLower = "bitcoin") Then
                     UC_CreditCardInput.AcceptsPaypal = clsPlugin.AcceptsPaypal
                     phdCreditCardInput.Visible = True
-                ElseIf clsPlugin.GatewayName.ToLower = "braintreepayment" Then  ' show BrainTree input form
-                    Dim clientToken As String = ""
-                    Try
-                        clientToken = PaymentsBLL.GenerateClientToken()
-                    Catch ex As Exception
-                        Try
-                            clientToken = ""
-                            Throw New BrainTreeException("Something went wrong, please contact an Administrator.", "")
-                        Catch bEx As BrainTreeException
-                            UC_PopUpErrors.SetTextMessage = If(bEx.CustomMessage IsNot Nothing, bEx.CustomMessage, bEx.Message)
-                            UC_PopUpErrors.SetTitle = GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors")
-                            UC_PopUpErrors.ShowPopup()
-                            mvwCheckout.ActiveViewIndex = 1
-                            isOk = False
-                        End Try
-                    End Try
-
-                    'Mailchimp library
-                    Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
-
-                    'Mailchimp
-                    Dim blnMailChimp As Boolean = KartSettingsManager.GetKartConfig("general.mailchimp.enabled") = "y"
-
-                    If Not clientToken.Equals("") Then
-                        'MAILCHIMP Adding Cart to BrainTree Payments
-                        'If the User is Logged
-                        If blnMailChimp Then
-                            If CurrentLoggedUser IsNot Nothing Then
-                                Session("BraintreeCartId") = mailChimpLib.AddCartToCustomerToStore().Result
-                            End If
-                        End If
-
-                        phdBrainTree.Visible = True
-                        phdCreditCardInput.Visible = False
-                        phdPONumber.Visible = False
-                        txtPurchaseOrderNo.Text = ""
-                        litPONumberText.Text = ""
-                        tbClientToken.Value = clientToken
-                        tbAmount.Value = objBasket.FinalPriceIncTax
-                        ScriptManager.RegisterStartupScript(
-                        Me,
-                        GetType(Page),
-                        "BrainTreeSelected",
-                        "var clientToken = $(""input[name*='tbClientToken']"")[0]; $(clientToken).on('input', function () {clientTokenChanged();});$(clientToken).trigger(""input"");",
-                        True)
-                    End If
                 Else
                     phdCreditCardInput.Visible = False
                 End If
@@ -1021,9 +972,7 @@ Partial Class _Checkout
             'details and will pay offline.
             If LCase(clsPlugin.GatewayType) <> "local" Or
             blnValid Or clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
-            clsPlugin.GatewayName.ToLower = "bitcoin" Or
-            clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
-            clsPlugin.GatewayName.ToLower = "braintreepayment" Then
+            clsPlugin.GatewayName.ToLower = "bitcoin" Then
 
                 'Setup variables to use later
                 Dim C_ID As Integer = 0
@@ -1782,72 +1731,14 @@ Partial Class _Checkout
                         Dim blnResult As Boolean
                         Dim strBitcoinPaymentAddress As String = ""
 
-                        Dim strEasypayPayment As String = ""
-                        Dim strBraintreePayment As String = ""
-
                         If clsPlugin.GatewayName.ToLower = "po_offlinepayment" OrElse
-                    clsPlugin.GatewayName.ToLower = "bitcoin" OrElse
-                    clsPlugin.GatewayName.ToLower = "easypaymultibanco" OrElse
-                    clsPlugin.GatewayName.ToLower = "braintreepayment" Then
+                    clsPlugin.GatewayName.ToLower = "bitcoin" Then
                             'PO orders don't need authorizing, they are
                             'effectively successful if placed as payment
                             'will come later
                             If clsPlugin.GatewayName.ToLower = "bitcoin" Then
                                 strBitcoinPaymentAddress = clsPlugin.ProcessOrder(Payment.Serialize(objOrder))
                                 blnResult = True
-                            ElseIf clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
-                                strEasypayPayment = clsPlugin.ProcessOrder(Payment.Serialize(objOrder))
-                                blnResult = True
-                                BasketBLL.DeleteBasket()
-                                Session("Basket") = Nothing
-                            ElseIf clsPlugin.GatewayName.ToLower = "braintreepayment" Then      ' if the user selected BrainTree as a paying method, retrieves some data from the form and calls PaymentsBLL to perform the transaction
-                                Dim paymentMethodNonce, output As String
-                                Dim amount As Decimal
-                                Dim CurrencyID As Short
-                                CurrencyID = Session("CUR_ID")
-                                Try
-                                    paymentMethodNonce = Request.Form("ctl00$cntMain$tbPaymentMethodNonce")
-                                    amount = Request.Form("ctl00$cntMain$tbAmount")
-                                    Try
-                                        transactionId = PaymentsBLL.BrainTreePayment(paymentMethodNonce, amount, CurrencyID)
-                                    Catch bEx As BrainTreeException
-                                        transactionId = ""
-                                        UC_PopUpErrors.SetTextMessage = If(bEx.CustomMessage IsNot Nothing, bEx.CustomMessage, bEx.Message)
-                                        UC_PopUpErrors.SetTitle = GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors")
-                                        UC_PopUpErrors.ShowPopup()
-                                        mvwCheckout.ActiveViewIndex = 1
-                                        blnResult = False
-                                    End Try
-
-
-                                    If transactionId <> "" Then
-                                        blnResult = True
-                                        Try
-                                            'Mailchimp, try to remove cart
-                                            If blnMailChimp Then
-                                                'Mailchimp library
-                                                Dim mailChimpLib As MailChimpBLL = New MailChimpBLL(CurrentLoggedUser, objBasket, CurrenciesBLL.CurrencyCode(Session("CUR_ID")))
-
-                                                Dim cartId As String = Session("BraintreeCartId")
-                                                If cartId IsNot Nothing Then
-                                                    ' Removing Cart and adding Order to successful payment made with Braintree
-                                                    Dim mcCustomer As MailChimp.Net.Models.Customer = mailChimpLib.GetCustomer(CurrentLoggedUser.ID).Result
-                                                    Dim mcOrder As Order = mailChimpLib.AddOrder(mcCustomer, cartId).Result
-                                                    Dim mcDeleteCart As Boolean = mailChimpLib.DeleteCart(cartId).Result
-                                                    Session("BraintreeCartId") = Nothing
-
-                                                End If
-                                            End If
-                                        Catch ex As Exception
-                                            Debug.Print(ex.Message)
-                                        End Try
-                                        BasketBLL.DeleteBasket()
-                                        Session("Basket") = Nothing
-
-                                    End If
-                                Catch ex As Exception
-                                    output = "Error: 81503: Amount is an invalid format."
-                                End Try
                             End If
 
                             blnResult = True
@@ -1877,12 +1768,8 @@ Partial Class _Checkout
                         If blnResult Then
                             'The transaction was authorized so update the order
                             If clsPlugin.CallbackSuccessful Or
-                                clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
-                                clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
-                                clsPlugin.GatewayName.ToLower = "braintreepayment" Then
-                                If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or
-                                    clsPlugin.GatewayName.ToLower = "easypaymultibanco" Or
-                                    clsPlugin.GatewayName.ToLower = "braintreepayment" Then
+                                clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
+                                If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Then
                                     O_ID = objOrder.ID
                                 Else
                                     'Get order ID that was passed back with callback
@@ -1992,24 +1879,19 @@ Partial Class _Checkout
                                         'not in your time zone
                                         '---------------------------------------
                                         Dim strOrderTimeText As String = GetGlobalResourceObject("Email", "EmailText_OrderTime") & " " & CkartrisDisplayFunctions.NowOffset
-                                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin" Or clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
+                                        If clsPlugin.GatewayName.ToLower = "po_offlinepayment" Or clsPlugin.GatewayName.ToLower = "bitcoin" Then
                                             blnCheckReceivedOnPayment = False
                                             blnCheckInvoicedOnPayment = False
                                         End If
 
-                                        If clsPlugin.GatewayName.ToLower = "easypaymultibanco" Then
-                                            blnCheckSent = False
-                                        End If
 
                                         '---------------------------------------
                                         'UPDATE THE ORDER RECORD
                                         '---------------------------------------
                                         Dim referenceCode As String = ""
-                                        If clsPlugin.GatewayName.ToLower = "braintreepayment" Then
-                                            referenceCode = transactionId
-                                        Else
-                                            referenceCode = clsPlugin.CallbackReferenceCode
-                                        End If
+
+                                        referenceCode = clsPlugin.CallbackReferenceCode
+
 
                                         Dim intUpdateResult As Integer = objOrdersBLL.CallbackUpdate(O_ID, referenceCode, CkartrisDisplayFunctions.NowOffset, blnCheckSent,
                                                                                               blnCheckInvoicedOnPayment,
@@ -2069,34 +1951,22 @@ Partial Class _Checkout
                                     End If
                                 End If
 
-                                If clsPlugin.GatewayName.ToLower <> "easypaymultibanco" Then
+                                '---------------------------------------
 
-                                    '---------------------------------------
-
-                                    'ORDER UPDATED
-                                    'Clear object, transfer to the 
-                                    'CheckoutComplete.aspx page
-                                    '---------------------------------------
-                                    'Dim BasketObject As Kartris.Basket = New Kartris.Basket
-
-
-                                    BasketBLL.DeleteBasket()
+                                'ORDER UPDATED
+                                'Clear object, transfer to the 
+                                'CheckoutComplete.aspx page
+                                '---------------------------------------
+                                'Dim BasketObject As Kartris.Basket = New Kartris.Basket
+                                BasketBLL.DeleteBasket()
                                     Session("Basket") = Nothing
                                     Session("OrderDetails") = strCallBodyText
                                     Session("OrderID") = O_ID
                                     Session("_NewPassword") = Nothing
                                     Session("objOrder") = Nothing
                                     Server.Transfer("CheckoutComplete.aspx")
-                                Else
-                                    Session("OrderDetails") = strCallBodyText
-                                    Session("OrderID") = O_ID
-                                    Session("GateWayName") = clsPlugin.GatewayName
-                                    Session("_PostBackURL") = ""
-                                    Session("EasypayPayment") = strEasypayPayment
-                                    Server.Transfer("VisaDetail.aspx?g=easypay&a=mbrefer")
 
-                                End If
-                            Else
+                                Else
                                 '---------------------------------------
                                 'REDIRECT TO PAYPAL OR 3D-SECURE
                                 '---------------------------------------
@@ -2120,9 +1990,7 @@ Partial Class _Checkout
                             'ERROR BACK FROM CREDIT CARD GATEWAY
                             'Show error in popup
                             '---------------------------------------
-                            If clsPlugin.GatewayName.ToLower <> "braintreepayment" Then
-                                UC_PopUpErrors.SetTextMessage = clsPlugin.CallbackMessage
-                            End If
+                            UC_PopUpErrors.SetTextMessage = clsPlugin.CallbackMessage
                             UC_PopUpErrors.SetTitle = GetGlobalResourceObject("Kartris", "ContentText_CorrectErrors")
                             UC_PopUpErrors.ShowPopup()
                             mvwCheckout.ActiveViewIndex = 1
