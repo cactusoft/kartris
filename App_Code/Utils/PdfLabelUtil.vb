@@ -110,7 +110,7 @@ Public Class PdfLabelUtil
                         ' Add the address string to the page.
                         Path.AddString(Address,
                                         New XFontFamily("Arial"),
-                                        XFontStyle.Regular,
+                                        XFontStyleEx.Regular,
                                         11,
                                         ContentRectangle,
                                         XStringFormats.TopLeft)
