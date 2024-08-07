@@ -13,15 +13,10 @@
 'www.kartris.com/t-Kartris-Commercial-License.aspx
 '========================================================================
 Imports KartSettingsManager
-Imports Microsoft.Web.Administration
 Imports System.Threading
 Imports System.Globalization
 Imports System.Net.Mail
 Imports System.Web.HttpContext
-Imports System.Web.UI
-Imports System.Text
-Imports System.Xml
-Imports MailKit.Net.Smtp 'new in v3, mail now uses MailKit (nuget)
 Imports MailKit 'new in v3, mail now uses MailKit (nuget)
 Imports MimeKit 'new in v3, mail now uses MailKit (nuget)
 
@@ -33,8 +28,8 @@ Imports MimeKit 'new in v3, mail now uses MailKit (nuget)
 ''' </summary>
 Public NotInheritable Class CkartrisEnumerations
 
-    Public Const KARTRIS_VERSION As Decimal = 3.3002
-    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #11/17/2023# '' MM/dd/yyyy 
+    Public Const KARTRIS_VERSION As Decimal = 3.4
+    Public Const KARTRIS_VERSION_ISSUE_DATE As Date = #08/07/2024# '' MM/dd/yyyy 
 
     Public Enum LANG_ELEM_TABLE_TYPE
         Versions = 1

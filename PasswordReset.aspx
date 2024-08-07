@@ -1,8 +1,6 @@
 ﻿<%@ Page Language="VB" MasterPageFile="~/Skins/Kartris/Template.master" AutoEventWireup="false"
     CodeFile="PasswordReset.aspx.vb" Inherits="PasswordReset" %>
 
-<%@ Register TagPrefix="user" TagName="AddressDetails" Src="~/UserControls/General/AddressDetails.ascx" %>
-<%@ Register TagPrefix="user" TagName="AddressInput" Src="~/UserControls/General/CustomerAddress.ascx" %>
 <%@ Register TagPrefix="user" TagName="AnimatedText" Src="~/UserControls/General/AnimatedText.ascx" %>
 <asp:Content ID="cntMain" ContentPlaceHolderID="cntMain" runat="Server">
     <h1>
