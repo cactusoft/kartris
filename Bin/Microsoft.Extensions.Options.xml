@@ -352,7 +352,7 @@
             <summary>
             Represents something that configures the <typeparamref name="TOptions"/> type.
             </summary>
-            <typeparam name="TOptions"></typeparam>
+            <typeparam name="TOptions">The options type being configured.</typeparam>
         </member>
         <member name="M:Microsoft.Extensions.Options.IConfigureNamedOptions`1.Configure(System.String,`0)">
             <summary>
@@ -366,7 +366,7 @@
             Represents something that configures the <typeparamref name="TOptions"/> type.
             Note: These are run before all <see cref="T:Microsoft.Extensions.Options.IPostConfigureOptions`1"/>.
             </summary>
-            <typeparam name="TOptions"></typeparam>
+            <typeparam name="TOptions">The options type being configured.</typeparam>
         </member>
         <member name="M:Microsoft.Extensions.Options.IConfigureOptions`1.Configure(`0)">
             <summary>
@@ -389,7 +389,7 @@
             <summary>
             Used to fetch <see cref="T:Microsoft.Extensions.Primitives.IChangeToken"/> used for tracking options changes.
             </summary>
-            <typeparam name="TOptions">Options type.</typeparam>
+            <typeparam name="TOptions">The options type being changed.</typeparam>
         </member>
         <member name="M:Microsoft.Extensions.Options.IOptionsChangeTokenSource`1.GetChangeToken">
             <summary>
@@ -410,8 +410,10 @@
         </member>
         <member name="M:Microsoft.Extensions.Options.IOptionsFactory`1.Create(System.String)">
             <summary>
-            Returns a configured <typeparamref name="TOptions"/> instance with the given name.
+            Returns a configured <typeparamref name="TOptions"/> instance with the given <paramref name="name"/>.
             </summary>
+            <param name="name">The name of the <typeparamref name="TOptions"/> instance to create.</param>
+            <returns>The created <typeparamref name="TOptions"/> instance with thw given <paramref name="name"/>.</returns>
         </member>
         <member name="T:Microsoft.Extensions.Options.IOptionsMonitor`1">
             <summary>
@@ -426,8 +428,10 @@
         </member>
         <member name="M:Microsoft.Extensions.Options.IOptionsMonitor`1.Get(System.String)">
             <summary>
-            Returns a configured <typeparamref name="TOptions"/> instance with the given name.
+            Returns a configured <typeparamref name="TOptions"/> instance with the given <paramref name="name"/>.
             </summary>
+            <param name="name">The name of the <typeparamref name="TOptions"/> instance, if a <see langword="null"/> <see cref="F:Microsoft.Extensions.Options.Options.DefaultName"/> is used.</param>
+            <returns>The <typeparamref name="TOptions"/> instance that matches the given <paramref name="name"/>.</returns>
         </member>
         <member name="M:Microsoft.Extensions.Options.IOptionsMonitor`1.OnChange(System.Action{`0,System.String})">
             <summary>
@@ -478,8 +482,10 @@
         </member>
         <member name="M:Microsoft.Extensions.Options.IOptionsSnapshot`1.Get(System.String)">
             <summary>
-            Returns a configured <typeparamref name="TOptions"/> instance with the given name.
+            Returns a configured <typeparamref name="TOptions"/> instance with the given <paramref name="name"/>.
             </summary>
+            <param name="name">The name of the <typeparamref name="TOptions"/> instance, if <see langword="null"/> <see cref="F:Microsoft.Extensions.Options.Options.DefaultName"/> is used.</param>
+            <returns>The <typeparamref name="TOptions"/> instance that matches the given <paramref name="name"/>.</returns>
         </member>
         <member name="T:Microsoft.Extensions.Options.IPostConfigureOptions`1">
             <summary>
@@ -494,6 +500,18 @@
             </summary>
             <param name="name">The name of the options instance being configured.</param>
             <param name="options">The options instance to configured.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.Options.IStartupValidator">
+            <summary>
+            Interface used by hosts to validate options during startup.
+            Options are enabled to be validated during startup by calling <see cref="M:Microsoft.Extensions.DependencyInjection.OptionsBuilderExtensions.ValidateOnStart``1(Microsoft.Extensions.Options.OptionsBuilder{``0})"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.IStartupValidator.Validate">
+            <summary>
+            Calls the <see cref="T:Microsoft.Extensions.Options.IValidateOptions`1"/> validators.
+            </summary>
+            <exception cref="T:Microsoft.Extensions.Options.OptionsValidationException">One or more <see cref="T:Microsoft.Extensions.Options.IValidateOptions`1"/> return failed <see cref="T:Microsoft.Extensions.Options.ValidateOptionsResult"/> when validating.</exception>
         </member>
         <member name="T:Microsoft.Extensions.Options.IValidateOptions`1">
             <summary>
@@ -619,6 +637,7 @@
             Note: These are run after all <seealso cref="M:Microsoft.Extensions.Options.OptionsBuilder`1.Configure(System.Action{`0})"/>.
             </summary>
             <param name="configureOptions">The action used to configure the options.</param>
+            <returns>The current <see cref="T:Microsoft.Extensions.Options.OptionsBuilder`1"/>.</returns>
         </member>
         <member name="M:Microsoft.Extensions.Options.OptionsBuilder`1.PostConfigure``1(System.Action{`0,``0})">
             <summary>
@@ -862,11 +881,18 @@
             <summary>
             Returns a configured <typeparamref name="TOptions"/> instance with the given <paramref name="name"/>.
             </summary>
+            <param name="name">The name of the <typeparamref name="TOptions"/> instance to create.</param>
+            <returns>The created <typeparamref name="TOptions"/> instance with the given <paramref name="name"/>.</returns>
+            <exception cref="T:Microsoft.Extensions.Options.OptionsValidationException">One or more <see cref="T:Microsoft.Extensions.Options.IValidateOptions`1"/> return failed <see cref="T:Microsoft.Extensions.Options.ValidateOptionsResult"/> when validating the <typeparamref name="TOptions"/> instance been created.</exception>
+            <exception cref="T:System.MissingMethodException">The <typeparamref name="TOptions"/> does not have a public parameterless constructor or <typeparamref name="TOptions"/> is <see langword="abstract"/>.</exception>
         </member>
         <member name="M:Microsoft.Extensions.Options.OptionsFactory`1.CreateInstance(System.String)">
             <summary>
-            Creates a new instance of options type
+            Creates a new instance of options type.
             </summary>
+            <param name="name">The name of the <typeparamref name="TOptions"/> instance to create.</param>
+            <returns>The created <typeparamref name="TOptions"/> instance.</returns>
+            <exception cref="T:System.MissingMethodException">The <typeparamref name="TOptions"/> does not have a public parameterless constructor or <typeparamref name="TOptions"/> is <see langword="abstract"/>.</exception>
         </member>
         <member name="T:Microsoft.Extensions.Options.OptionsManager`1">
             <summary>
@@ -889,6 +915,10 @@
             <summary>
             Returns a configured <typeparamref name="TOptions"/> instance with the given <paramref name="name"/>.
             </summary>
+            <param name="name">The name of the <typeparamref name="TOptions"/> instance, if <see langword="null"/> <see cref="F:Microsoft.Extensions.Options.Options.DefaultName"/> is used.</param>
+            <returns>The <typeparamref name="TOptions"/> instance that matches the given <paramref name="name"/>.</returns>
+            <exception cref="T:Microsoft.Extensions.Options.OptionsValidationException">One or more <see cref="T:Microsoft.Extensions.Options.IValidateOptions`1"/> return failed <see cref="T:Microsoft.Extensions.Options.ValidateOptionsResult"/> when validating the <typeparamref name="TOptions"/> instance been created.</exception>
+            <exception cref="T:System.MissingMethodException">The <typeparamref name="TOptions"/> does not have a public parameterless constructor or <typeparamref name="TOptions"/> is <see langword="abstract"/>.</exception>
         </member>
         <member name="T:Microsoft.Extensions.Options.OptionsMonitor`1">
             <summary>
@@ -906,13 +936,19 @@
         </member>
         <member name="P:Microsoft.Extensions.Options.OptionsMonitor`1.CurrentValue">
             <summary>
-            The present value of the options.
+            The present value of the options, equivalent to <c>Get(Options.DefaultName)</c>.
             </summary>
+            <exception cref="T:Microsoft.Extensions.Options.OptionsValidationException">One or more <see cref="T:Microsoft.Extensions.Options.IValidateOptions`1"/> return failed <see cref="T:Microsoft.Extensions.Options.ValidateOptionsResult"/> when validating the <typeparamref name="TOptions"/> instance been created.</exception>
+            <exception cref="T:System.MissingMethodException">The <typeparamref name="TOptions"/> does not have a public parameterless constructor or <typeparamref name="TOptions"/> is <see langword="abstract"/>.</exception>
         </member>
         <member name="M:Microsoft.Extensions.Options.OptionsMonitor`1.Get(System.String)">
             <summary>
             Returns a configured <typeparamref name="TOptions"/> instance with the given <paramref name="name"/>.
             </summary>
+            <param name="name">The name of the <typeparamref name="TOptions"/> instance, if <see langword="null"/> <see cref="F:Microsoft.Extensions.Options.Options.DefaultName"/> is used.</param>
+            <returns>The <typeparamref name="TOptions"/> instance that matches the given <paramref name="name"/>.</returns>
+            <exception cref="T:Microsoft.Extensions.Options.OptionsValidationException">One or more <see cref="T:Microsoft.Extensions.Options.IValidateOptions`1"/> return failed <see cref="T:Microsoft.Extensions.Options.ValidateOptionsResult"/> when validating the <typeparamref name="TOptions"/> instance been created.</exception>
+            <exception cref="T:System.MissingMethodException">The <typeparamref name="TOptions"/> does not have a public parameterless constructor or <typeparamref name="TOptions"/> is <see langword="abstract"/>.</exception>
         </member>
         <member name="M:Microsoft.Extensions.Options.OptionsMonitor`1.OnChange(System.Action{`0,System.String})">
             <summary>
@@ -935,6 +971,7 @@
             <summary>
             Registers a listener to be called whenever <typeparamref name="TOptions"/> changes.
             </summary>
+            <typeparam name="TOptions">The type of options instance being monitored.</typeparam>
             <param name="monitor">The IOptionsMonitor.</param>
             <param name="listener">The action to be invoked when <typeparamref name="TOptions"/> has changed.</param>
             <returns>An <see cref="T:System.IDisposable"/> which should be disposed to stop listening for changes.</returns>
@@ -972,6 +1009,11 @@
             The message is a semicolon separated list of the <see cref="P:Microsoft.Extensions.Options.OptionsValidationException.Failures"/>.
             </summary>
         </member>
+        <member name="T:Microsoft.Extensions.Options.OptionsValidatorAttribute">
+            <summary>
+            Triggers the automatic generation of the implementation of <see cref="T:Microsoft.Extensions.Options.IValidateOptions`1" /> at compile time.
+            </summary>
+        </member>
         <member name="T:Microsoft.Extensions.Options.OptionsWrapper`1">
             <summary>
             <see cref="T:Microsoft.Extensions.Options.IOptions`1"/> wrapper that returns the options instance.
@@ -980,7 +1022,7 @@
         </member>
         <member name="M:Microsoft.Extensions.Options.OptionsWrapper`1.#ctor(`0)">
             <summary>
-            Intializes the wrapper with the options instance to return.
+            Initializes the wrapper with the options instance to return.
             </summary>
             <param name="options">The options instance to return.</param>
         </member>
@@ -1303,6 +1345,64 @@
             Invoked to configure a <typeparamref name="TOptions"/> instance using the <see cref="F:Microsoft.Extensions.Options.Options.DefaultName"/>.
             </summary>
             <param name="options">The options instance to configured.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.Options.ValidateEnumeratedItemsAttribute">
+            <summary>
+            Marks a field or property to be enumerated, and each enumerated object to be validated.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateEnumeratedItemsAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Extensions.Options.ValidateEnumeratedItemsAttribute"/> class.
+            </summary>
+            <remarks>
+            Using this constructor for a field/property tells the code generator to
+            generate validation for the individual members of the enumerable's type.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateEnumeratedItemsAttribute.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Extensions.Options.ValidateEnumeratedItemsAttribute"/> class.
+            </summary>
+            <param name="validator">A type that implements <see cref="T:Microsoft.Extensions.Options.IValidateOptions`1" /> for the enumerable's type.</param>
+            <remarks>
+            Using this constructor for a field/property tells the code generator to use the given type to validate
+            the object held by the enumerable.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Extensions.Options.ValidateEnumeratedItemsAttribute.Validator">
+            <summary>
+            Gets the type to use to validate the enumerable's objects.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.Options.ValidateObjectMembersAttribute">
+            <summary>
+            Marks a field or property to be validated transitively.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateObjectMembersAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Extensions.Options.ValidateObjectMembersAttribute"/> class.
+            </summary>
+            <remarks>
+            Using this constructor for a field/property tells the code generator to
+            generate validation for the individual members of the field/property's type.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateObjectMembersAttribute.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Extensions.Options.ValidateObjectMembersAttribute"/> class.
+            </summary>
+            <param name="validator">A type that implements <see cref="T:Microsoft.Extensions.Options.IValidateOptions`1" /> for the field/property's type.</param>
+            <remarks>
+            Using this constructor for a field/property tells the code generator to use the given type to validate
+            the object held by the field/property.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.Extensions.Options.ValidateObjectMembersAttribute.Validator">
+            <summary>
+            Gets the type to use to validate a field or property.
+            </summary>
         </member>
         <member name="T:Microsoft.Extensions.Options.ValidateOptions`1">
             <summary>
@@ -1685,6 +1785,65 @@
             <param name="failures">The reasons for the failure.</param>
             <returns>The failure result.</returns>
         </member>
+        <member name="T:Microsoft.Extensions.Options.ValidateOptionsResultBuilder">
+            <summary>
+            Builds <see cref="T:Microsoft.Extensions.Options.ValidateOptionsResult"/> with support for multiple error messages.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateOptionsResultBuilder.#ctor">
+            <summary>
+            Creates new instance of the <see cref="T:Microsoft.Extensions.Options.ValidateOptionsResultBuilder"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateOptionsResultBuilder.AddError(System.String,System.String)">
+            <summary>
+            Adds a new validation error to the builder.
+            </summary>
+            <param name="error">Content of error message.</param>
+            <param name="propertyName">The property in the option object which contains an error.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateOptionsResultBuilder.AddResult(System.ComponentModel.DataAnnotations.ValidationResult)">
+            <summary>
+            Adds any validation error carried by the <see cref="T:System.ComponentModel.DataAnnotations.ValidationResult"/> instance to this instance.
+            </summary>
+            <param name="result">The instance to append the error from.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateOptionsResultBuilder.AddResults(System.Collections.Generic.IEnumerable{System.ComponentModel.DataAnnotations.ValidationResult})">
+            <summary>
+            Adds any validation error carried by the enumeration of <see cref="T:System.ComponentModel.DataAnnotations.ValidationResult"/> instances to this instance.
+            </summary>
+            <param name="results">The enumeration to consume the errors from.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateOptionsResultBuilder.AddResult(Microsoft.Extensions.Options.ValidateOptionsResult)">
+            <summary>
+            Adds any validation errors carried by the <see cref="T:Microsoft.Extensions.Options.ValidateOptionsResult"/> instance to this instance.
+            </summary>
+            <param name="result">The instance to consume the errors from.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateOptionsResultBuilder.Build">
+            <summary>
+            Builds <see cref="T:Microsoft.Extensions.Options.ValidateOptionsResult"/> based on provided data.
+            </summary>
+            <returns>New instance of <see cref="T:Microsoft.Extensions.Options.ValidateOptionsResult"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Options.ValidateOptionsResultBuilder.Clear">
+            <summary>
+            Reset the builder to the empty state
+            </summary>
+        </member>
+        <member name="T:Microsoft.Extensions.DependencyInjection.OptionsBuilderExtensions">
+            <summary>
+            Extension methods for adding configuration related options services to the DI container via <see cref="T:Microsoft.Extensions.Options.OptionsBuilder`1"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.OptionsBuilderExtensions.ValidateOnStart``1(Microsoft.Extensions.Options.OptionsBuilder{``0})">
+            <summary>
+            Enforces options validation check on start rather than in runtime.
+            </summary>
+            <typeparam name="TOptions">The type of options.</typeparam>
+            <param name="optionsBuilder">The <see cref="T:Microsoft.Extensions.Options.OptionsBuilder`1"/> to configure options instance.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.Options.OptionsBuilder`1"/> so that additional calls can be chained.</returns>
+        </member>
         <member name="T:Microsoft.Extensions.DependencyInjection.OptionsServiceCollectionExtensions">
             <summary>
             Extension methods for adding options services to the DI container.
@@ -1695,6 +1854,31 @@
             Adds services required for using options.
             </summary>
             <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.OptionsServiceCollectionExtensions.AddOptionsWithValidateOnStart``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String)">
+            <summary>
+            Adds services required for using options and enforces options validation check on start rather than in runtime.
+            </summary>
+            <remarks>
+            The <seealso cref="M:Microsoft.Extensions.DependencyInjection.OptionsBuilderExtensions.ValidateOnStart``1(Microsoft.Extensions.Options.OptionsBuilder{``0})"/> extension is called by this method.
+            </remarks>
+            <typeparam name="TOptions">The options type to be configured.</typeparam>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <param name="name">The name of the options instance.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.OptionsServiceCollectionExtensions.AddOptionsWithValidateOnStart``2(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String)">
+            <summary>
+            Adds services required for using options and enforces options validation check on start rather than in runtime.
+            </summary>
+            <remarks>
+            The <seealso cref="M:Microsoft.Extensions.DependencyInjection.OptionsBuilderExtensions.ValidateOnStart``1(Microsoft.Extensions.Options.OptionsBuilder{``0})"/> extension is called by this method.
+            </remarks>
+            <typeparam name="TOptions">The options type to be configured.</typeparam>
+            <typeparam name="TValidateOptions">The <see cref="T:Microsoft.Extensions.Options.IValidateOptions`1"/> validator type.</typeparam>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
+            <param name="name">The name of the options instance.</param>
             <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> so that additional calls can be chained.</returns>
         </member>
         <member name="M:Microsoft.Extensions.DependencyInjection.OptionsServiceCollectionExtensions.Configure``1(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{``0})">
@@ -1804,6 +1988,91 @@
             <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> to add the services to.</param>
             <param name="name">The name of the options instance.</param>
             <returns>The <see cref="T:Microsoft.Extensions.Options.OptionsBuilder`1"/> so that configure calls can be chained in it.</returns>
+        </member>
+        <member name="M:System.ThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:System.ThrowHelper.IfNullOrWhitespace(System.String,System.String)">
+            <summary>
+            Throws either an <see cref="T:System.ArgumentNullException"/> or an <see cref="T:System.ArgumentException"/>
+            if the specified string is <see langword="null"/> or whitespace respectively.
+            </summary>
+            <param name="argument">String to be checked for <see langword="null"/> or whitespace.</param>
+            <param name="paramName">The name of the parameter being checked.</param>
+            <returns>The original value of <paramref name="argument"/>.</returns>
+        </member>
+        <member name="T:System.Runtime.InteropServices.LibraryImportAttribute">
+            <summary>
+            Attribute used to indicate a source generator should create a function for marshalling
+            arguments instead of relying on the runtime to generate an equivalent marshalling function at run-time.
+            </summary>
+            <remarks>
+            This attribute is meaningless if the source generator associated with it is not enabled.
+            The current built-in source generator only supports C# and only supplies an implementation when
+            applied to static, partial, non-generic methods.
+            </remarks>
+        </member>
+        <member name="M:System.Runtime.InteropServices.LibraryImportAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Runtime.InteropServices.LibraryImportAttribute"/>.
+            </summary>
+            <param name="libraryName">Name of the library containing the import.</param>
+        </member>
+        <member name="P:System.Runtime.InteropServices.LibraryImportAttribute.LibraryName">
+            <summary>
+            Gets the name of the library containing the import.
+            </summary>
+        </member>
+        <member name="P:System.Runtime.InteropServices.LibraryImportAttribute.EntryPoint">
+            <summary>
+            Gets or sets the name of the entry point to be called.
+            </summary>
+        </member>
+        <member name="P:System.Runtime.InteropServices.LibraryImportAttribute.StringMarshalling">
+            <summary>
+            Gets or sets how to marshal string arguments to the method.
+            </summary>
+            <remarks>
+            If this field is set to a value other than <see cref="F:System.Runtime.InteropServices.StringMarshalling.Custom" />,
+            <see cref="P:System.Runtime.InteropServices.LibraryImportAttribute.StringMarshallingCustomType" /> must not be specified.
+            </remarks>
+        </member>
+        <member name="P:System.Runtime.InteropServices.LibraryImportAttribute.StringMarshallingCustomType">
+            <summary>
+            Gets or sets the <see cref="T:System.Type"/> used to control how string arguments to the method are marshalled.
+            </summary>
+            <remarks>
+            If this field is specified, <see cref="P:System.Runtime.InteropServices.LibraryImportAttribute.StringMarshalling" /> must not be specified
+            or must be set to <see cref="F:System.Runtime.InteropServices.StringMarshalling.Custom" />.
+            </remarks>
+        </member>
+        <member name="P:System.Runtime.InteropServices.LibraryImportAttribute.SetLastError">
+            <summary>
+            Gets or sets whether the callee sets an error (SetLastError on Windows or errno
+            on other platforms) before returning from the attributed method.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.InteropServices.StringMarshalling">
+            <summary>
+            Specifies how strings should be marshalled for generated p/invokes
+            </summary>
+        </member>
+        <member name="F:System.Runtime.InteropServices.StringMarshalling.Custom">
+            <summary>
+            Indicates the user is suppling a specific marshaller in <see cref="P:System.Runtime.InteropServices.LibraryImportAttribute.StringMarshallingCustomType"/>.
+            </summary>
+        </member>
+        <member name="F:System.Runtime.InteropServices.StringMarshalling.Utf8">
+            <summary>
+            Use the platform-provided UTF-8 marshaller.
+            </summary>
+        </member>
+        <member name="F:System.Runtime.InteropServices.StringMarshalling.Utf16">
+            <summary>
+            Use the platform-provided UTF-16 marshaller.
+            </summary>
         </member>
         <member name="T:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute">
              <summary>
@@ -2003,6 +2272,115 @@
             <summary>
             Gets or sets the justification for suppressing the code analysis message.
             </summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.AllowNullAttribute">
+            <summary>Specifies that null is allowed as an input even if the corresponding type disallows it.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.DisallowNullAttribute">
+            <summary>Specifies that null is disallowed as an input even if the corresponding type allows it.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MaybeNullAttribute">
+            <summary>Specifies that an output may be null even if the corresponding type disallows it.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.NotNullAttribute">
+            <summary>Specifies that an output will not be null even if the corresponding type allows it. Specifies that an input argument was not null when the call returns.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute">
+            <summary>Specifies that when a method returns <see cref="P:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.ReturnValue"/>, the parameter may be null even if the corresponding type disallows it.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.#ctor(System.Boolean)">
+            <summary>Initializes the attribute with the specified return value condition.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter may be null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.ReturnValue">
+            <summary>Gets the return value condition.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute">
+            <summary>Specifies that when a method returns <see cref="P:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.ReturnValue"/>, the parameter will not be null even if the corresponding type allows it.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.#ctor(System.Boolean)">
+            <summary>Initializes the attribute with the specified return value condition.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter will not be null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.ReturnValue">
+            <summary>Gets the return value condition.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute">
+            <summary>Specifies that the output will be non-null if the named parameter is non-null.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute.#ctor(System.String)">
+            <summary>Initializes the attribute with the associated parameter name.</summary>
+            <param name="parameterName">
+            The associated parameter name.  The output will be non-null if the argument to the parameter specified is non-null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute.ParameterName">
+            <summary>Gets the associated parameter name.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.DoesNotReturnAttribute">
+            <summary>Applied to a method that will never return under any circumstance.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute">
+            <summary>Specifies that the method will not return if the associated Boolean parameter is passed the specified value.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute.#ctor(System.Boolean)">
+            <summary>Initializes the attribute with the specified parameter value.</summary>
+            <param name="parameterValue">
+            The condition parameter value. Code after the method will be considered unreachable by diagnostics if the argument to
+            the associated parameter matches this value.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute.ParameterValue">
+            <summary>Gets the condition parameter value.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute">
+            <summary>Specifies that the method or property will ensure that the listed field and property members have not-null values.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute.#ctor(System.String)">
+            <summary>Initializes the attribute with a field or property member.</summary>
+            <param name="member">
+            The field or property member that is promised to be not-null.
+            </param>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute.#ctor(System.String[])">
+            <summary>Initializes the attribute with the list of field and property members.</summary>
+            <param name="members">
+            The list of field and property members that are promised to be not-null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute.Members">
+            <summary>Gets field or property member names.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute">
+            <summary>Specifies that the method or property will ensure that the listed field and property members have not-null values when returning with the specified return value condition.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+            <summary>Initializes the attribute with the specified return value condition and a field or property member.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter will not be null.
+            </param>
+            <param name="member">
+            The field or property member that is promised to be not-null.
+            </param>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String[])">
+            <summary>Initializes the attribute with the specified return value condition and list of field and property members.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter will not be null.
+            </param>
+            <param name="members">
+            The list of field and property members that are promised to be not-null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.ReturnValue">
+            <summary>Gets the return value condition.</summary>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.Members">
+            <summary>Gets field or property member names.</summary>
         </member>
         <member name="P:System.SR.Error_CannotActivateAbstractOrInterface">
             <summary>Cannot create instance of type '{0}' because it is either abstract or an interface.</summary>

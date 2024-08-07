@@ -130,6 +130,23 @@
             <see cref="P:Microsoft.Extensions.Http.HttpMessageHandlerBuilder.AdditionalHandlers"/>.
             </returns>
         </member>
+        <member name="M:Microsoft.Extensions.Http.HttpMessageHandlerBuilder.CreateHandlerPipeline(System.Net.Http.HttpMessageHandler,System.Collections.Generic.IEnumerable{System.Net.Http.DelegatingHandler})">
+            <summary>
+            Constructs an instance of <see cref="T:System.Net.Http.HttpMessageHandler"/> by chaining <paramref name="additionalHandlers"/> one after another with <paramref name="primaryHandler"/> in the
+            end of the chain. The resulting pipeline is used by <see cref="T:System.Net.Http.IHttpClientFactory"/> infrastructure to create <see cref="T:System.Net.Http.HttpClient"/> instances with customized message
+            handlers. The resulting pipeline can also be accessed by using <see cref="T:System.Net.Http.IHttpMessageHandlerFactory"/> instead of <see cref="T:System.Net.Http.IHttpClientFactory"/>.
+            </summary>
+            <param name="primaryHandler">An instance of <see cref="T:System.Net.Http.HttpMessageHandler"/> to operate at the bottom of the handler chain and actually handle the HTTP transport operations.</param>
+            <param name="additionalHandlers">An ordered list of <see cref="T:System.Net.Http.DelegatingHandler"/> instances to be invoked as part
+            of sending an <see cref="T:System.Net.Http.HttpRequestMessage"/> and receiving an <see cref="T:System.Net.Http.HttpResponseMessage"/>.
+            The handlers are invoked in a top-down fashion. That is, the first entry is invoked first for
+            an outbound request message but last for an inbound response message.</param>
+            <returns>The HTTP message handler chain.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="primaryHandler "/> or <paramref name="additionalHandlers "/> is <see langword="null"/>.</exception>
+            <exception cref="T:System.InvalidOperationException"><paramref name="additionalHandlers "/> contains a <see langword="null"/> entry.
+            -or-
+            The <c>DelegatingHandler.InnerHandler</c> property must be <see langword="null"/>. <c>DelegatingHandler</c> instances provided to <c>HttpMessageHandlerBuilder</c> must not be reused or cached.</exception>
+        </member>
         <member name="T:Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter">
             <summary>
             Used by the <see cref="T:Microsoft.Extensions.Http.DefaultHttpClientFactory"/> to apply additional initialization to the configure the
@@ -142,6 +159,7 @@
             Applies additional initialization to the <see cref="T:Microsoft.Extensions.Http.HttpMessageHandlerBuilder"/>
             </summary>
             <param name="next">A delegate which will run the next <see cref="T:Microsoft.Extensions.Http.IHttpMessageHandlerBuilderFilter"/>.</param>
+            <returns>The configured <see cref="T:Microsoft.Extensions.Http.HttpMessageHandlerBuilder"/>.</returns>
         </member>
         <member name="T:Microsoft.Extensions.Http.ITypedHttpClientFactory`1">
              <summary>
@@ -243,6 +261,150 @@
             associated with <typeparamref name="TClient"/>.
             </param>
             <returns>An instance of <typeparamref name="TClient"/>.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger">
+            <summary>
+            An abstraction for asyncronous custom HTTP request logging for a named <see cref="T:System.Net.Http.HttpClient"/> instances returned by <see cref="T:System.Net.Http.IHttpClientFactory"/>.
+            </summary>
+            <remarks>
+            <para>
+            Asyncronous methods (such as <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStartAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"/>) would be called from async code paths (such as
+            <see cref="M:System.Net.Http.HttpClient.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"/>), and their
+            syncronous counterparts inherited from <see cref="T:Microsoft.Extensions.Http.Logging.IHttpClientLogger"/> (such as <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStart(System.Net.Http.HttpRequestMessage)"/>)
+            would be called from the corresponding sync code paths.
+            </para>
+            <para>
+            It is up to the user implementing the interface to decide where (to <see cref="T:Microsoft.Extensions.Logging.ILogger"/>, or anything else) and what exactly to log.
+            However, the implementation should be mindful about potential adverse side effects of accessing some of the <see cref="T:System.Net.Http.HttpRequestMessage"/> or
+            <see cref="T:System.Net.Http.HttpResponseMessage"/> properties, such as reading from a content stream; if possible, such behavior should be avoided.
+            </para>
+            <para>
+            Logging implementation also should not throw any exceptions, as an unhandled exception in logging would fail the request.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStartAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            Logs before sending an HTTP request.
+            </summary>
+            <param name="request">The HTTP request message that will be sent.</param>
+            <param name="cancellationToken">The cancellation token to cancel operation.</param>
+            <returns>The task object representing the asynchronous operation. The result of the operation is a context object that will
+            be passed to a corresponding <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStopAsync(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.TimeSpan,System.Threading.CancellationToken)"/> or <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestFailedAsync(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.Exception,System.TimeSpan,System.Threading.CancellationToken)"/>. Can be `null`
+            if no context object is needed by the implementation.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStopAsync(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.TimeSpan,System.Threading.CancellationToken)">
+            <summary>
+            Logs after receiving an HTTP response.
+            </summary>
+            <param name="context">The context object that was previously returned by <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStartAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"/>.</param>
+            <param name="request">The HTTP request message that was sent.</param>
+            <param name="response">The HTTP response message that was received.</param>
+            <param name="elapsed">Time elapsed since calling <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStartAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"/>.</param>
+            <param name="cancellationToken">The cancellation token to cancel operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestFailedAsync(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.Exception,System.TimeSpan,System.Threading.CancellationToken)">
+            <summary>
+            Logs the exception happened while sending an HTTP request.
+            </summary>
+            <param name="context">The context object that was previously returned by <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStartAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"/>.</param>
+            <param name="request">The HTTP request message that was sent.</param>
+            <param name="response">If available, the HTTP response message that was received, and `null` otherwise.</param>
+            <param name="exception">Exception that happened during processing the HTTP request.</param>
+            <param name="elapsed">Time elapsed since calling <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStartAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"/>.</param>
+            <param name="cancellationToken">The cancellation token to cancel operation.</param>
+            <returns>The task object representing the asynchronous operation.</returns>
+        </member>
+        <member name="T:Microsoft.Extensions.Http.Logging.IHttpClientLogger">
+            <summary>
+            An abstraction for custom HTTP request logging for a named <see cref="T:System.Net.Http.HttpClient"/> instances returned by <see cref="T:System.Net.Http.IHttpClientFactory"/>.
+            </summary>
+            <remarks>
+            <para>
+            It is up to the user implementing the interface to decide where (to <see cref="T:Microsoft.Extensions.Logging.ILogger"/>, or anything else) and what exactly to log.
+            However, the implementation should be mindful about potential adverse side effects of accessing some of the <see cref="T:System.Net.Http.HttpRequestMessage"/> or
+            <see cref="T:System.Net.Http.HttpResponseMessage"/> properties, such as reading from a content stream; if possible, such behavior should be avoided.
+            </para>
+            <para>
+            Logging implementation also should not throw any exceptions, as an unhandled exception in logging would fail the request.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStart(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Logs before sending an HTTP request.
+            </summary>
+            <param name="request">The HTTP request message that will be sent.</param>
+            <returns>A context object that will be passed to a corresponding <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStop(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.TimeSpan)"/> or <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestFailed(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.Exception,System.TimeSpan)"/>. Can be `null`
+            if no context object is needed by the implementation.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStop(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.TimeSpan)">
+            <summary>
+            Logs after receiving an HTTP response.
+            </summary>
+            <param name="context">The context object that was previously returned by <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStart(System.Net.Http.HttpRequestMessage)"/>.</param>
+            <param name="request">The HTTP request message that was sent.</param>
+            <param name="response">The HTTP response message that was received.</param>
+            <param name="elapsed">Time elapsed since calling <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStart(System.Net.Http.HttpRequestMessage)"/>.</param>
+        </member>
+        <member name="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestFailed(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.Exception,System.TimeSpan)">
+            <summary>
+            Logs the exception happened while sending an HTTP request.
+            </summary>
+            <param name="context">The context object that was previously returned by <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStart(System.Net.Http.HttpRequestMessage)"/>.</param>
+            <param name="request">The HTTP request message that was sent.</param>
+            <param name="response">If available, the HTTP response message that was received, and `null` otherwise.</param>
+            <param name="exception">Exception that happened during processing the HTTP request.</param>
+            <param name="elapsed">Time elapsed since calling <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStart(System.Net.Http.HttpRequestMessage)"/>.</param>
+        </member>
+        <member name="T:Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler">
+            <summary>
+            Handles logging of the lifecycle for an HTTP request.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.#ctor(Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler"/> class with a specified logger.
+            </summary>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to log to.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="logger"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.#ctor(Microsoft.Extensions.Logging.ILogger,Microsoft.Extensions.Http.HttpClientFactoryOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler"/> class with a specified logger and options.
+            </summary>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to log to.</param>
+            <param name="options">The <see cref="T:Microsoft.Extensions.Http.HttpClientFactoryOptions"/> used to configure the <see cref="T:Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler"/> instance.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="logger"/> or <paramref name="options"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:Microsoft.Extensions.Http.Logging.LoggingHttpMessageHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <inheritdoc />
+            <remarks>Logs the request to and response from the sent <see cref="T:System.Net.Http.HttpRequestMessage"/>.</remarks>
+        </member>
+        <member name="T:Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler">
+            <summary>
+            Handles logging of the lifecycle for an HTTP request within a log scope.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler.#ctor(Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler"/> class with a specified logger.
+            </summary>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to log to.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="logger"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler.#ctor(Microsoft.Extensions.Logging.ILogger,Microsoft.Extensions.Http.HttpClientFactoryOptions)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler"/> class with a specified logger and options.
+            </summary>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to log to.</param>
+            <param name="options">The <see cref="T:Microsoft.Extensions.Http.HttpClientFactoryOptions"/> used to configure the <see cref="T:Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler"/> instance.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="logger"/> or <paramref name="options"/> is <see langword="null"/>.</exception>
+        </member>
+        <member name="M:Microsoft.Extensions.Http.Logging.LoggingScopeHttpMessageHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <inheritdoc />
+            <remarks>Logs the request to and response from the sent <see cref="T:System.Net.Http.HttpRequestMessage"/>.</remarks>
         </member>
         <member name="T:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions">
             <summary>
@@ -360,6 +522,21 @@
             <para>
             The <typeparamref name="THandler"/> will be resolved from a scoped service provider that shares
             the lifetime of the handler being constructed.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions.ConfigurePrimaryHttpMessageHandler(Microsoft.Extensions.DependencyInjection.IHttpClientBuilder,System.Action{System.Net.Http.HttpMessageHandler,System.IServiceProvider})">
+            <summary>
+            Adds a delegate that will be used to configure the primary <see cref="T:System.Net.Http.HttpMessageHandler"/> for a
+            named <see cref="T:System.Net.Http.HttpClient"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/>.</param>
+            <param name="configureHandler">A delegate that is used to configure a previously set or default primary <see cref="T:System.Net.Http.HttpMessageHandler"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/> that can be used to configure the client.</returns>
+            <remarks>
+            <para>
+            The <see cref="T:System.IServiceProvider"/> argument provided to <paramref name="configureHandler"/> will be
+            a reference to a scoped service provider that shares the lifetime of the handler being constructed.
             </para>
             </remarks>
         </member>
@@ -522,6 +699,103 @@
             </para>
             </remarks>
         </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions.ConfigureAdditionalHttpMessageHandlers(Microsoft.Extensions.DependencyInjection.IHttpClientBuilder,System.Action{System.Collections.Generic.IList{System.Net.Http.DelegatingHandler},System.IServiceProvider})">
+            <summary>
+            Adds a delegate that will be used to configure additional message handlers using <see cref="T:Microsoft.Extensions.Http.HttpMessageHandlerBuilder"/>
+            for a named <see cref="T:System.Net.Http.HttpClient"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/>.</param>
+            <param name="configureAdditionalHandlers">A delegate that is used to configure a collection of <see cref="T:System.Net.Http.DelegatingHandler"/>s.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/> that can be used to configure the client.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions.AddLogger(Microsoft.Extensions.DependencyInjection.IHttpClientBuilder,System.Func{System.IServiceProvider,Microsoft.Extensions.Http.Logging.IHttpClientLogger},System.Boolean)">
+            <summary>
+            Adds a delegate that will be used to create an additional logger for a named <see cref="T:System.Net.Http.HttpClient"/>. The custom logger would be invoked
+            from a dedicated logging DelegatingHandler on every request of the corresponding named <see cref="T:System.Net.Http.HttpClient"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/>.</param>
+            <param name="httpClientLoggerFactory">A delegate that is used to create a custom logger. The logger should implement
+            <see cref="T:Microsoft.Extensions.Http.Logging.IHttpClientLogger"/> or <see cref="T:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger"/>.</param>
+            <param name="wrapHandlersPipeline">Whether the logging handler with the custom logger would be added to the top
+            or to the bottom of the additional handlers chains.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/> that can be used to configure the client.</returns>
+            <remarks>
+            <para>
+            If the <see paramref="wrapHandlersPipeline"/> is `true`, <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStart(System.Net.Http.HttpRequestMessage)"/> and
+            <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStartAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"/> would be executed before all
+            other additional handlers in the chain. <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStop(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.TimeSpan)"/> and
+            <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStopAsync(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.TimeSpan,System.Threading.CancellationToken)"/> would be executed after all
+            other additional handlers, essentially wrapping the whole pipeline.
+            </para>
+            <para>
+            If the <see paramref="wrapHandlersPipeline"/> is `false`, <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStart(System.Net.Http.HttpRequestMessage)"/> and
+            <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStartAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"/> would be executed after all
+            other additional handlers in the chain, right before the primary handler. <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStop(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.TimeSpan)"/> and
+            <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStopAsync(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.TimeSpan,System.Threading.CancellationToken)"/> would be executed before all
+            other additional handlers, right after the primary handler.
+            </para>
+            <para>
+            The <see cref="T:System.IServiceProvider"/> argument provided to <paramref name="httpClientLoggerFactory"/> will be
+            a reference to a scoped service provider that shares the lifetime of the handler chain being constructed.
+            </para>
+            <para>
+            If <see cref="M:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions.AddLogger(Microsoft.Extensions.DependencyInjection.IHttpClientBuilder,System.Func{System.IServiceProvider,Microsoft.Extensions.Http.Logging.IHttpClientLogger},System.Boolean)"/> is called multiple times, multiple loggers would be added. If <see cref="M:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions.RemoveAllLoggers(Microsoft.Extensions.DependencyInjection.IHttpClientBuilder)"/> was
+            not called before calling <see cref="M:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions.AddLogger(Microsoft.Extensions.DependencyInjection.IHttpClientBuilder,System.Func{System.IServiceProvider,Microsoft.Extensions.Http.Logging.IHttpClientLogger},System.Boolean)"/>, then new logger would be added in addition to the default ones.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions.AddLogger``1(Microsoft.Extensions.DependencyInjection.IHttpClientBuilder,System.Boolean)">
+            <summary>
+            Adds a delegate that will be used to create an additional logger for a named <see cref="T:System.Net.Http.HttpClient"/>. The custom logger would be invoked
+            from a dedicated logging DelegatingHandler on every request of the corresponding named <see cref="T:System.Net.Http.HttpClient"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/>.</param>
+            <param name="wrapHandlersPipeline">Whether the logging handler with the custom logger would be added to the top
+            or to the bottom of the additional handlers chains.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/> that can be used to configure the client.</returns>
+            <typeparam name="TLogger">
+            The service type of the custom logger as it was registered in DI. The logger should implement <see cref="T:Microsoft.Extensions.Http.Logging.IHttpClientLogger"/>
+            or <see cref="T:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger"/>.
+            </typeparam>
+            <remarks>
+            <para>
+            If the <see paramref="wrapHandlersPipeline"/> is `true`, <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStart(System.Net.Http.HttpRequestMessage)"/> and
+            <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStartAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"/> would be executed before all
+            other additional handlers in the chain. <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStop(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.TimeSpan)"/> and
+            <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStopAsync(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.TimeSpan,System.Threading.CancellationToken)"/> would be executed after all
+            other additional handlers, essentially wrapping the whole pipeline.
+            </para>
+            <para>
+            If the <see paramref="wrapHandlersPipeline"/> is `false`, <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStart(System.Net.Http.HttpRequestMessage)"/> and
+            <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStartAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)"/> would be executed after all
+            other additional handlers in the chain, right before the primary handler. <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientLogger.LogRequestStop(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.TimeSpan)"/> and
+            <see cref="M:Microsoft.Extensions.Http.Logging.IHttpClientAsyncLogger.LogRequestStopAsync(System.Object,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpResponseMessage,System.TimeSpan,System.Threading.CancellationToken)"/> would be executed before all
+            other additional handlers, right after the primary handler.
+            </para>
+            <para>
+            The <typeparamref name="TLogger"/> will be resolved from a scoped service provider that shares
+            the lifetime of the handler chain being constructed.
+            </para>
+            <para>
+            If <see cref="M:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions.AddLogger``1(Microsoft.Extensions.DependencyInjection.IHttpClientBuilder,System.Boolean)"/> is called multiple times, multiple loggers would be added. If <see cref="M:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions.RemoveAllLoggers(Microsoft.Extensions.DependencyInjection.IHttpClientBuilder)"/> was
+            not called before calling <see cref="M:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions.AddLogger``1(Microsoft.Extensions.DependencyInjection.IHttpClientBuilder,System.Boolean)"/>, then new logger would be added in addition to the default ones.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions.RemoveAllLoggers(Microsoft.Extensions.DependencyInjection.IHttpClientBuilder)">
+            <summary>
+            Removes all previously added loggers for a named <see cref="T:System.Net.Http.HttpClient"/>, including default ones.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/> that can be used to configure the client.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions.AddDefaultLogger(Microsoft.Extensions.DependencyInjection.IHttpClientBuilder)">
+            <summary>
+            Adds back the default logging for a named <see cref="T:System.Net.Http.HttpClient"/>, if it was removed previously by calling <see cref="M:Microsoft.Extensions.DependencyInjection.HttpClientBuilderExtensions.RemoveAllLoggers(Microsoft.Extensions.DependencyInjection.IHttpClientBuilder)"/>.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/>.</param>
+            <returns>An <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/> that can be used to configure the client.</returns>
+        </member>
         <member name="T:Microsoft.Extensions.DependencyInjection.HttpClientFactoryServiceCollectionExtensions">
             <summary>
             Extension methods to configure an <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> for <see cref="T:System.Net.Http.IHttpClientFactory"/>.
@@ -532,6 +806,14 @@
             Adds the <see cref="T:System.Net.Http.IHttpClientFactory"/> and related services to the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.
             </summary>
             <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
+        </member>
+        <member name="M:Microsoft.Extensions.DependencyInjection.HttpClientFactoryServiceCollectionExtensions.ConfigureHttpClientDefaults(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{Microsoft.Extensions.DependencyInjection.IHttpClientBuilder})">
+            <summary>
+            Adds a delegate that will be used to configure all <see cref="T:System.Net.Http.HttpClient"/> instances.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</param>
+            <param name="configure">A delegate that is used to configure an <see cref="T:Microsoft.Extensions.DependencyInjection.IHttpClientBuilder"/>.</param>
             <returns>The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/>.</returns>
         </member>
         <member name="M:Microsoft.Extensions.DependencyInjection.HttpClientFactoryServiceCollectionExtensions.AddHttpClient(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String)">
@@ -672,8 +954,7 @@
         <member name="M:Microsoft.Extensions.DependencyInjection.HttpClientFactoryServiceCollectionExtensions.AddHttpClient``2(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String)">
             <summary>
             Adds the <see cref="T:System.Net.Http.IHttpClientFactory"/> and related services to the <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> and configures
-            a binding between the <typeparamref name="TClient" /> type and a named <see cref="T:System.Net.Http.HttpClient"/>. The client name will
-            be set to the type name of <typeparamref name="TClient"/>.
+            a binding between the <typeparamref name="TClient" /> type and a named <see cref="T:System.Net.Http.HttpClient"/>.
             </summary>
             <typeparam name="TClient">
             The type of the typed client. The type specified will be registered in the service collection as
@@ -1151,6 +1432,91 @@
             </para>
             </remarks>
         </member>
+        <member name="M:System.ThrowHelper.ThrowIfNull(System.Object,System.String)">
+            <summary>Throws an <see cref="T:System.ArgumentNullException"/> if <paramref name="argument"/> is null.</summary>
+            <param name="argument">The reference type argument to validate as non-null.</param>
+            <param name="paramName">The name of the parameter with which <paramref name="argument"/> corresponds.</param>
+        </member>
+        <member name="M:System.ThrowHelper.IfNullOrWhitespace(System.String,System.String)">
+            <summary>
+            Throws either an <see cref="T:System.ArgumentNullException"/> or an <see cref="T:System.ArgumentException"/>
+            if the specified string is <see langword="null"/> or whitespace respectively.
+            </summary>
+            <param name="argument">String to be checked for <see langword="null"/> or whitespace.</param>
+            <param name="paramName">The name of the parameter being checked.</param>
+            <returns>The original value of <paramref name="argument"/>.</returns>
+        </member>
+        <member name="T:System.Runtime.InteropServices.LibraryImportAttribute">
+            <summary>
+            Attribute used to indicate a source generator should create a function for marshalling
+            arguments instead of relying on the runtime to generate an equivalent marshalling function at run-time.
+            </summary>
+            <remarks>
+            This attribute is meaningless if the source generator associated with it is not enabled.
+            The current built-in source generator only supports C# and only supplies an implementation when
+            applied to static, partial, non-generic methods.
+            </remarks>
+        </member>
+        <member name="M:System.Runtime.InteropServices.LibraryImportAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:System.Runtime.InteropServices.LibraryImportAttribute"/>.
+            </summary>
+            <param name="libraryName">Name of the library containing the import.</param>
+        </member>
+        <member name="P:System.Runtime.InteropServices.LibraryImportAttribute.LibraryName">
+            <summary>
+            Gets the name of the library containing the import.
+            </summary>
+        </member>
+        <member name="P:System.Runtime.InteropServices.LibraryImportAttribute.EntryPoint">
+            <summary>
+            Gets or sets the name of the entry point to be called.
+            </summary>
+        </member>
+        <member name="P:System.Runtime.InteropServices.LibraryImportAttribute.StringMarshalling">
+            <summary>
+            Gets or sets how to marshal string arguments to the method.
+            </summary>
+            <remarks>
+            If this field is set to a value other than <see cref="F:System.Runtime.InteropServices.StringMarshalling.Custom" />,
+            <see cref="P:System.Runtime.InteropServices.LibraryImportAttribute.StringMarshallingCustomType" /> must not be specified.
+            </remarks>
+        </member>
+        <member name="P:System.Runtime.InteropServices.LibraryImportAttribute.StringMarshallingCustomType">
+            <summary>
+            Gets or sets the <see cref="T:System.Type"/> used to control how string arguments to the method are marshalled.
+            </summary>
+            <remarks>
+            If this field is specified, <see cref="P:System.Runtime.InteropServices.LibraryImportAttribute.StringMarshalling" /> must not be specified
+            or must be set to <see cref="F:System.Runtime.InteropServices.StringMarshalling.Custom" />.
+            </remarks>
+        </member>
+        <member name="P:System.Runtime.InteropServices.LibraryImportAttribute.SetLastError">
+            <summary>
+            Gets or sets whether the callee sets an error (SetLastError on Windows or errno
+            on other platforms) before returning from the attributed method.
+            </summary>
+        </member>
+        <member name="T:System.Runtime.InteropServices.StringMarshalling">
+            <summary>
+            Specifies how strings should be marshalled for generated p/invokes
+            </summary>
+        </member>
+        <member name="F:System.Runtime.InteropServices.StringMarshalling.Custom">
+            <summary>
+            Indicates the user is suppling a specific marshaller in <see cref="P:System.Runtime.InteropServices.LibraryImportAttribute.StringMarshallingCustomType"/>.
+            </summary>
+        </member>
+        <member name="F:System.Runtime.InteropServices.StringMarshalling.Utf8">
+            <summary>
+            Use the platform-provided UTF-8 marshaller.
+            </summary>
+        </member>
+        <member name="F:System.Runtime.InteropServices.StringMarshalling.Utf16">
+            <summary>
+            Use the platform-provided UTF-16 marshaller.
+            </summary>
+        </member>
         <member name="T:System.Diagnostics.CodeAnalysis.DynamicallyAccessedMembersAttribute">
              <summary>
              Indicates that certain members on a specified <see cref="T:System.Type"/> are accessed dynamically,
@@ -1470,6 +1836,9 @@
         </member>
         <member name="P:System.SR.HandlerLifetime_InvalidValue">
             <summary>The handler lifetime must be at least 1 second.</summary>
+        </member>
+        <member name="P:System.SR.SocketsHttpHandlerBuilder_PrimaryHandlerIsInvalid">
+            <summary>The '{0}' must be '{1}'.{2}Handler: '{3}'</summary>
         </member>
     </members>
 </doc>

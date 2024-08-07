@@ -4,11 +4,6 @@
         <name>PdfSharp.Charting</name>
     </assembly>
     <members>
-        <member name="T:PdfSharp.VersionInfo">
-            <summary>
-            Version info of this assembly.
-            </summary>
-        </member>
         <member name="T:PdfSharp.Charting.Renderers.AreaChartRenderer">
             <summary>
             Represents an area chart renderer.
@@ -22,7 +17,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.AreaChartRenderer.Init">
             <summary>
-            Returns an initialized and renderer specific rendererInfo.
+            Returns an initialized renderer-specific rendererInfo.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.AreaChartRenderer.Format">
@@ -63,8 +58,8 @@
         </member>
         <member name="T:PdfSharp.Charting.Renderers.AxisRenderer">
             <summary>
-            Represents the base for all specialized axis renderer. Initialization common too all
-            axis renderer should come here.
+            Represents the base for all specialized axis renderer. Initialization common to all
+            axis renderers should come here.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.AxisRenderer.#ctor(PdfSharp.Charting.Renderers.RendererParameters)">
@@ -101,7 +96,7 @@
         </member>
         <member name="F:PdfSharp.Charting.Renderers.AxisRenderer.DefaultGridLineWidth">
             <summary>
-            Default width for a gridlines.
+            Default width for gridlines.
             </summary>
         </member>
         <member name="F:PdfSharp.Charting.Renderers.AxisRenderer.DefaultMajorTickMarkLineWidth">
@@ -163,7 +158,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.BarChartRenderer.Init">
             <summary>
-            Returns an initialized and renderer specific rendererInfo.
+            Returns an initialized renderer-specific rendererInfo.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.BarChartRenderer.Format">
@@ -230,7 +225,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.BarClusteredPlotAreaRenderer.CalcBars">
             <summary>
-            Calculates the position, width and height of each bar of all series.
+            Calculates the position, width, and height of each bar of all series.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.BarClusteredPlotAreaRenderer.IsDataInside(System.Double,System.Double,System.Double)">
@@ -304,7 +299,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.BarPlotAreaRenderer.CalcBars">
             <summary>
-            Calculates the position, width and height of each bar of all series.
+            Calculates the position, width, and height of each bar of all series.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.BarPlotAreaRenderer.IsDataInside(System.Double,System.Double,System.Double)">
@@ -325,7 +320,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.BarStackedPlotAreaRenderer.CalcBars">
             <summary>
-            Calculates the position, width and height of each bar of all series.
+            Calculates the position, width, and height of each bar of all series.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.BarStackedPlotAreaRenderer.IsDataInside(System.Double,System.Double,System.Double)">
@@ -369,7 +364,7 @@
             Gets the color for column/bar charts from the specified index.
             </summary>
         </member>
-        <member name="F:PdfSharp.Charting.Renderers.ColumnColors._seriesColors">
+        <member name="F:PdfSharp.Charting.Renderers.ColumnColors.SeriesColorValues">
             <summary>
             Colors for column/bar charts taken from Excel.
             </summary>
@@ -384,7 +379,7 @@
             Gets the color for line charts from the specified index.
             </summary>
         </member>
-        <member name="F:PdfSharp.Charting.Renderers.LineColors._lineColors">
+        <member name="F:PdfSharp.Charting.Renderers.LineColors.LineColorValues">
             <summary>
             Colors for line charts taken from Excel.
             </summary>
@@ -399,7 +394,7 @@
             Gets the color for pie charts from the specified index.
             </summary>
         </member>
-        <member name="F:PdfSharp.Charting.Renderers.PieColors._sectorColors">
+        <member name="F:PdfSharp.Charting.Renderers.PieColors.SectorColorValues">
             <summary>
             Colors for pie charts taken from Excel.
             </summary>
@@ -417,7 +412,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.ColumnChartRenderer.Init">
             <summary>
-            Returns an initialized and renderer specific rendererInfo.
+            Returns an initialized renderer-specific rendererInfo.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.ColumnChartRenderer.Format">
@@ -463,7 +458,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.ColumnClusteredPlotAreaRenderer.CalcColumns">
             <summary>
-            Calculates the position, width and height of each column of all series.
+            Calculates the position, width, and height of each column of all series.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.ColumnClusteredPlotAreaRenderer.IsDataInside(System.Double,System.Double,System.Double)">
@@ -543,7 +538,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.ColumnLikeLegendRenderer.Init">
             <summary>
-            Initializes the legend's renderer info. Each data series will be represented through
+            Initializes the legend’s renderer info. Each data series will be represented through
             a legend entry renderer info.
             </summary>
         </member>
@@ -586,7 +581,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.ColumnPlotAreaRenderer.CalcColumns">
             <summary>
-            Calculates the position, width and height of each column of all series.
+            Calculates the position, width, and height of each column of all series.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.ColumnPlotAreaRenderer.IsDataInside(System.Double,System.Double,System.Double)">
@@ -607,7 +602,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.ColumnStackedPlotAreaRenderer.CalcColumns">
             <summary>
-            Calculates the position, width and height of each column of all series.
+            Calculates the position, width, and height of each column of all series.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.ColumnStackedPlotAreaRenderer.IsDataInside(System.Double,System.Double,System.Double)">
@@ -628,7 +623,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.CombinationChartRenderer.Init">
             <summary>
-            Returns an initialized and renderer specific rendererInfo.
+            Returns an initialized renderer-specific rendererInfo.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.CombinationChartRenderer.Format">
@@ -660,12 +655,6 @@
             <summary>
             Creates a XFont based on the font. Missing attributes will be taken from the defaultFont
             parameter.
-            </summary>
-        </member>
-        <member name="M:PdfSharp.Charting.Renderers.Converter.ToXPen(PdfSharp.Charting.LineFormat,PdfSharp.Drawing.XColor,System.Double)">
-            <summary>
-            Creates a XPen based on the specified line format. If not specified color and width will be taken
-            from the defaultColor and defaultWidth parameter.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.Converter.ToXPen(PdfSharp.Charting.LineFormat,PdfSharp.Drawing.XPen)">
@@ -774,7 +763,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.HorizontalXAxisRenderer.InitXValues(PdfSharp.Charting.Renderers.AxisRendererInfo)">
             <summary>
-            Initializes the rendererInfo's xvalues. If not set by the user xvalues will be simply numbers
+            Initializes the rendererInfo’s xvalues. If not set by the user xvalues will be simply numbers
             from minimum scale + 1 to maximum scale.
             </summary>
         </member>
@@ -914,7 +903,7 @@
         </member>
         <member name="F:PdfSharp.Charting.Renderers.LegendRenderer.DefaultLineWidth">
             <summary>
-            Default line width used for the legend's border.
+            Default line width used for the legend’s border.
             </summary>
         </member>
         <member name="T:PdfSharp.Charting.Renderers.LineChartRenderer">
@@ -929,7 +918,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.LineChartRenderer.Init">
             <summary>
-            Returns an initialized and renderer specific rendererInfo.
+            Returns an initialized renderer-specific rendererInfo.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.LineChartRenderer.Format">
@@ -959,7 +948,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.LineFormatRenderer.#ctor(PdfSharp.Drawing.XGraphics,PdfSharp.Charting.LineFormat,System.Double)">
             <summary>
-            Initializes a new instance of the LineFormatRenderer class with the specified graphics, line format
+            Initializes a new instance of the LineFormatRenderer class with the specified graphics, line format,
             and default width.
             </summary>
         </member>
@@ -1044,7 +1033,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.PieChartRenderer.Init">
             <summary>
-            Returns an initialized and renderer specific rendererInfo.
+            Returns an initialized renderer-specific rendererInfo.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.PieChartRenderer.Format">
@@ -1138,7 +1127,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.PieLegendRenderer.Init">
             <summary>
-            Initializes the legend's renderer info. Each data point will be represented through
+            Initializes the legend’s renderer info. Each data point will be represented through
             a legend entry renderer info.
             </summary>
         </member>
@@ -1201,19 +1190,19 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.PlotAreaRenderer.InitLineFormat(PdfSharp.Charting.Renderers.PlotAreaRendererInfo)">
             <summary>
-            Initializes the plot area's line format common to all derived plot area renderers.
+            Initializes the plot area’s line format common to all derived plot area renderers.
             If line format is given all uninitialized values will be set.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.PlotAreaRenderer.InitFillFormat(PdfSharp.Charting.Renderers.PlotAreaRendererInfo)">
             <summary>
-            Initializes the plot area's fill format common to all derived plot area renderers.
+            Initializes the plot area’s fill format common to all derived plot area renderers.
             If fill format is given all uninitialized values will be set.
             </summary>
         </member>
         <member name="F:PdfSharp.Charting.Renderers.PlotAreaRenderer.DefaultLineWidth">
             <summary>
-            Represents the default line width for the plot area's border.
+            Represents the default line width for the plot area’s border.
             </summary>
         </member>
         <member name="T:PdfSharp.Charting.Renderers.Renderer">
@@ -1228,13 +1217,13 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.Renderer.Init">
             <summary>
-            Derived renderer should return an initialized and renderer specific rendererInfo,
-            e. g. XAxisRenderer returns an new instance of AxisRendererInfo class.
+            Derived renderer should return an initialized and renderer-specific rendererInfo,
+            e.g. XAxisRenderer returns an new instance of AxisRendererInfo class.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.Renderer.Format">
             <summary>
-            Layouts and calculates the space used by the renderer's drawing item.
+            Layouts and calculates the space used by the renderer’s drawing item.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.Renderers.Renderer.Draw">
@@ -1281,28 +1270,28 @@
         </member>
         <member name="P:PdfSharp.Charting.Renderers.AreaRendererInfo.Size">
             <summary>
-            Gets the area's size.
+            Gets the area’s size.
             </summary>
         </member>
         <member name="P:PdfSharp.Charting.Renderers.AreaRendererInfo.Rect">
             <summary>
-            Gets the area's rectangle.
+            Gets the area’s rectangle.
             </summary>
         </member>
         <member name="T:PdfSharp.Charting.Renderers.ChartRendererInfo">
             <summary>
             A ChartRendererInfo stores information of all main parts of a chart like axis renderer info or
-            plotarea renderer info.
+            plot area renderer info.
             </summary>
         </member>
         <member name="P:PdfSharp.Charting.Renderers.ChartRendererInfo.DefaultFont">
             <summary>
-            Gets the chart's default font for rendering.
+            Gets the chart’s default font for rendering.
             </summary>
         </member>
         <member name="P:PdfSharp.Charting.Renderers.ChartRendererInfo.DefaultDataLabelFont">
             <summary>
-            Gets the chart's default font for rendering data labels.
+            Gets the chart’s default font for rendering data labels.
             </summary>
         </member>
         <member name="T:PdfSharp.Charting.Renderers.CombinationRendererInfo">
@@ -1405,9 +1394,9 @@
             Stores rendering information common to all plot area renderers.
             </summary>
         </member>
-        <member name="F:PdfSharp.Charting.Renderers.PlotAreaRendererInfo._matrix">
+        <member name="F:PdfSharp.Charting.Renderers.PlotAreaRendererInfo.Matrix">
             <summary>
-            Saves the plot area's matrix.
+            Saves the plot area’s matrix.
             </summary>
         </member>
         <member name="T:PdfSharp.Charting.Renderers.RendererParameters">
@@ -1502,7 +1491,7 @@
         </member>
         <member name="M:PdfSharp.Charting.Renderers.VerticalXAxisRenderer.InitXValues(PdfSharp.Charting.Renderers.AxisRendererInfo)">
             <summary>
-            Initializes the rendererInfo's xvalues. If not set by the user xvalues will be simply numbers
+            Initializes the rendererInfo’s xvalues. If not set by the user xvalues will be simply numbers
             from minimum scale + 1 to maximum scale.
             </summary>
         </member>
@@ -1973,12 +1962,7 @@
         </member>
         <member name="P:PdfSharp.Charting.DocumentObject.Parent">
             <summary>
-            Gets the parent object.
-            </summary>
-        </member>
-        <member name="F:PdfSharp.Charting.DocumentObject._parent">
-            <summary>
-            
+            Gets the parent object, or null if the object has no parent.
             </summary>
         </member>
         <member name="T:PdfSharp.Charting.DocumentObjectCollection">
@@ -2013,7 +1997,7 @@
         </member>
         <member name="M:PdfSharp.Charting.DocumentObjectCollection.CopyTo(System.Array,System.Int32)">
             <summary>
-            Copies the Array_List or a portion of it to a one-dimensional array.
+            Copies the Array or a portion of it to a one-dimensional array.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.DocumentObjectCollection.Clear">
@@ -2043,7 +2027,7 @@
         </member>
         <member name="P:PdfSharp.Charting.DocumentObjectCollection.Count">
             <summary>
-            Gets the number of elements actually contained in the collection.
+            Gets the number of elements contained in the collection.
             </summary>
         </member>
         <member name="P:PdfSharp.Charting.DocumentObjectCollection.First">
@@ -2053,7 +2037,7 @@
         </member>
         <member name="P:PdfSharp.Charting.DocumentObjectCollection.LastObject">
             <summary>
-            Gets the last element or null, if no such element exists.
+            Gets the last element, or null if no such element exists.
             </summary>
         </member>
         <member name="M:PdfSharp.Charting.DocumentObjectCollection.GetEnumerator">
@@ -2176,7 +2160,7 @@
         </member>
         <member name="T:PdfSharp.Charting.DockingType">
             <summary>
-            Specifies the legend's position inside the chart.
+            Specifies the legend’s position inside the chart.
             </summary>
         </member>
         <member name="F:PdfSharp.Charting.DockingType.Top">
@@ -2527,7 +2511,7 @@
         </member>
         <member name="P:PdfSharp.Charting.Legend.LineFormat">
             <summary>
-            Gets the line format of the legend's border.
+            Gets the line format of the legend’s border.
             </summary>
         </member>
         <member name="P:PdfSharp.Charting.Legend.Font">
@@ -2612,7 +2596,7 @@
         </member>
         <member name="P:PdfSharp.Charting.PlotArea.LineFormat">
             <summary>
-            Gets the line format of the plot area's border.
+            Gets the line format of the plot area’s border.
             </summary>
         </member>
         <member name="P:PdfSharp.Charting.PlotArea.FillFormat">
@@ -2655,11 +2639,6 @@
             Initializes a new instance of the Point class with a real value.
             </summary>
         </member>
-        <member name="M:PdfSharp.Charting.Point.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the Point class with a real value.
-            </summary>
-        </member>
         <member name="M:PdfSharp.Charting.Point.Clone">
             <summary>
             Creates a deep copy of this object.
@@ -2672,7 +2651,7 @@
         </member>
         <member name="P:PdfSharp.Charting.Point.LineFormat">
             <summary>
-            Gets the line format of the data point's border.
+            Gets the line format of the data point’s border.
             </summary>
         </member>
         <member name="P:PdfSharp.Charting.Point.FillFormat">
@@ -2767,7 +2746,7 @@
         </member>
         <member name="P:PdfSharp.Charting.Series.ChartType">
             <summary>
-            Gets or sets the chart type of the series if it's intended to be different than the
+            Gets or sets the chart type of the series if it’s intended to be different than the
             global chart type.
             </summary>
         </member>
@@ -2883,7 +2862,7 @@
         </member>
         <member name="P:PdfSharp.Charting.TickLabels.Format">
             <summary>
-            Gets or sets the label's number format.
+            Gets or sets the label’s number format.
             </summary>
         </member>
         <member name="P:PdfSharp.Charting.TickLabels.Font">
@@ -2944,7 +2923,7 @@
         </member>
         <member name="P:PdfSharp.Charting.XSeries.Count">
             <summary>
-            Gets the number of xvalues actually contained in the xseries.
+            Gets the number of xvalues contained in the xseries.
             </summary>
         </member>
         <member name="T:PdfSharp.Charting.XSeriesElements">
@@ -2982,24 +2961,19 @@
             Represents the actual value on the XSeries.
             </summary>
         </member>
-        <member name="M:PdfSharp.Charting.XValue.#ctor">
-            <summary>
-            Initializes a new instance of the XValue class.
-            </summary>
-        </member>
         <member name="M:PdfSharp.Charting.XValue.#ctor(System.String)">
             <summary>
             Initializes a new instance of the XValue class with the specified value.
             </summary>
         </member>
-        <member name="F:PdfSharp.Charting.XValue._value">
-            <summary>
-            The actual value of the XValue.
-            </summary>
-        </member>
         <member name="M:PdfSharp.Charting.XValue.Clone">
             <summary>
             Creates a deep copy of this object.
+            </summary>
+        </member>
+        <member name="F:PdfSharp.Charting.XValue.ValueField">
+            <summary>
+            The actual value of the XValue.
             </summary>
         </member>
         <member name="T:PdfSharp.Charting.XValues">
