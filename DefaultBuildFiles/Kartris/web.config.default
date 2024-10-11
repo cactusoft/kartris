@@ -1,4 +1,4 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
 ===============================================================================
 KARTRIS by cactusoft
@@ -8,14 +8,6 @@ All rights reserved.
 -->
 <configuration>
 	<appSettings>
-		<!--
-		VARIOUS CONFIG SETTINGS
-		Some of these will be written by the setup routine,
-		others can be changed by hand. Incorrect settings here
-		may cause errors or the total failure of the site.
-		
-		Please refer to the user manual for further information.
-		-->
 		<add key="BackEndIpLock" value=""/>
 		<add key="ErrorLogPath" value="Uploads/Logs/"/>
 		<add key="ExcludedUserAgents" value="scooter,mercator,ia_archiver,FAST-WebCrawler,Googlebot,Slurp,MSNBOT"/>
@@ -38,41 +30,33 @@ All rights reserved.
 	<location path="Admin">
 		<system.web>
 			<pages validateRequest="false" enableEventValidation="false" viewStateEncryptionMode="Always" />
-			<httpRuntime requestValidationMode="2.0" />
+			<httpRuntime requestValidationMode="2.0" targetFramework="4.8" />
 			<browserCaps userAgentCacheKeyLength="256" />
 		</system.web>
 	</location>
 	<location path="Callback.aspx">
 		<system.web>
 			<pages validateRequest="false" enableEventValidation="false" viewStateEncryptionMode="Always" />
-			<httpRuntime requestValidationMode="2.0" targetFramework="4.6" />
+			<httpRuntime requestValidationMode="2.0" targetFramework="4.8" />
 			<browserCaps userAgentCacheKeyLength="256" />
 		</system.web>
 	</location>
-	<!--
-		For a description of web.config changes see http://go.microsoft.com/fwlink/?LinkId=235367.
-
-		The following attributes can be set on the <httpRuntime> tag.
-			<system.Web>
-				<httpRuntime targetFramework="4.6" />
-			</system.Web>
-	-->
 	<system.web>
 		<caching>
 			<cache disableExpiration="true" />
 		</caching>
 		<profile enabled="false" />
-		<trace enabled="true" localOnly="false" pageOutput="false" requestLimit="20" mostRecent="true" traceMode="SortByTime" />
+		<trace enabled="false" localOnly="false" pageOutput="false" requestLimit="20" mostRecent="true" traceMode="SortByTime" />
 		<trust level="Full" originUrl=".*" processRequestInApplicationTrust="true" />
 		<!-- IMPORTANT!!  UNCOMMENT THE GLOBALIZATION TAG BELOW IF YOU WANT TO SKIP THE INSTALLATION SCRIPT-->
-		<!--<globalization resourceProviderFactoryType="SqlResourceProviderFactory" culture="auto" uiCulture="auto" enableClientBasedCulture="true" />-->
+		<globalization resourceProviderFactoryType="SqlResourceProviderFactory" culture="auto" uiCulture="auto" enableClientBasedCulture="true" />
 		<identity impersonate="false" />
 		<!-- 
-		Set compilation debug="true" to insert debugging 
-		symbols into the compiled page. Because this 
-		affects performance, set this value to true only 
-		during development.
-		-->
+    Set compilation debug="true" to insert debugging 
+    symbols into the compiled page. Because this 
+    affects performance, set this value to true only 
+    during development.
+    -->
 		<httpRuntime requestValidationMode="2.0" />
 		<browserCaps userAgentCacheKeyLength="256" />
 		<pages validateRequest="true" enableEventValidation="false" viewStateEncryptionMode="Always" controlRenderingCompatibilityVersion="3.5" clientIDMode="Predictable">
@@ -212,10 +196,10 @@ All rights reserved.
 			</providers>
 		</siteMap>
 		<!--
-		The <authentication> section enables configuration 
-		of the security authentication mode used by 
-		ASP.NET to identify an incoming user. 
-		-->
+    The <authentication> section enables configuration 
+    of the security authentication mode used by 
+    ASP.NET to identify an incoming user. 
+    -->
 		<authentication mode="Forms">
 			<forms loginUrl="~/CustomerAccount.aspx" name="KartrisLogin" enableCrossAppRedirects="false" cookieless="UseCookies" protection="All" timeout="3600" />
 		</authentication>
@@ -227,16 +211,16 @@ All rights reserved.
 		</membership>
 		<authorization />
 		<!--
-		The <customErrors> section enables configuration 
-		of what to do if/when an unhandled error occurs 
-		during the execution of a request. Specifically, 
-		it enables developers to configure html error pages 
-		to be displayed in place of a error stack trace.
-		 -->
+    The <customErrors> section enables configuration 
+    of what to do if/when an unhandled error occurs 
+    during the execution of a request. Specifically, 
+    it enables developers to configure html error pages 
+    to be displayed in place of a error stack trace.
+     -->
 		<customErrors defaultRedirect="Error.aspx" redirectMode="ResponseRewrite" mode="RemoteOnly">
 			<error statusCode="404" redirect="~/404.aspx" />
 		</customErrors>
-		<compilation debug="true" batch="false" targetFramework="4.7.2">
+		<compilation debug="true" batch="false" targetFramework="4.8">
 			<assemblies>
 				<add assembly="System.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=B03F5F7F11D50A3A" />
 				<add assembly="System.Web.Extensions.Design, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31BF3856AD364E35" />
@@ -254,14 +238,15 @@ All rights reserved.
 				<add assembly="System.Security, Version=4.0.0.0, Culture=neutral, PublicKeyToken=B03F5F7F11D50A3A" />
 				<add assembly="System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=B03F5F7F11D50A3A" />
 				<add assembly="System.Numerics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=B77A5C561934E089" />
+				<add assembly="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
 			</assemblies>
 			<!--<buildProviders>
-				<add extension=".resx" type="System.Web.Compilation.IgnoreFileBuildProvider" />
-			</buildProviders>-->
+        <add extension=".resx" type="System.Web.Compilation.IgnoreFileBuildProvider" />
+      </buildProviders>-->
 		</compilation>
 		<!-- 
-				IMPORTANT!!  Uncomment the sessionState tag below ONLY if you want to change Kartris' Session State from InProc to StateServer
-		-->
+        IMPORTANT!!  Uncomment the sessionState tag below ONLY if you want to change Kartris' Session State from InProc to StateServer
+    -->
 		<!--<sessionState mode="StateServer" stateConnectionString="tcpip=127.0.0.1:42424" cookieless="false" timeout="20"/>-->
 		<httpHandlers>
 			<add path="ChartImg.axd" verb="GET,HEAD,POST" type="System.Web.UI.DataVisualization.Charting.ChartHttpHandler, System.Web.DataVisualization, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" validate="false" />
@@ -310,9 +295,9 @@ All rights reserved.
 					<serviceCredentials>
 						<!-- NEED TO UNCOMMENT THE TAG BELOW WHEN ENABLING SSL-->
 						<!--<serviceCertificate findValue="MyWebSite"
-													storeLocation="LocalMachine"
-													storeName="My"
-													x509FindType="FindBySubjectName" />-->
+                          storeLocation="LocalMachine"
+                          storeName="My"
+                          x509FindType="FindBySubjectName" />-->
 						<userNameAuthentication userNamePasswordValidationMode="Custom" customUserNamePasswordValidatorType="UserNamePassValidator, App_Code" />
 					</serviceCredentials>
 				</behavior>
@@ -332,8 +317,8 @@ All rights reserved.
 				<binding name="DefaultHttpBinding">
 					<!-- NEED TO UNCOMMENT THE TAG BELOW WHEN ENABLING SSL-->
 					<!--<security mode="Transport">
-						<transport clientCredentialType="None" />
-					</security>-->
+            <transport clientCredentialType="None" />
+          </security>-->
 				</binding>
 			</basicHttpBinding>
 		</bindings>
@@ -342,11 +327,11 @@ All rights reserved.
 		<assemblyBinding xmlns="urn:schemas-microsoft-com:asm.v1">
 			<dependentAssembly>
 				<assemblyIdentity name="Newtonsoft.Json" publicKeyToken="30ad4fe6b2a6aeed" culture="neutral" />
-				<bindingRedirect oldVersion="0.0.0.0-12.0.0.0" newVersion="12.0.0.0" />
+				<bindingRedirect oldVersion="0.0.0.0-13.0.0.0" newVersion="13.0.0.0" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.Extensions.DependencyInjection.Abstractions" publicKeyToken="adb9793829ddae60" culture="neutral" />
-				<bindingRedirect oldVersion="0.0.0.0-5.0.0.0" newVersion="5.0.0.0" />
+				<bindingRedirect oldVersion="0.0.0.0-8.0.0.2" newVersion="8.0.0.2" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.Extensions.Configuration.Abstractions" publicKeyToken="adb9793829ddae60" culture="neutral" />
@@ -358,19 +343,19 @@ All rights reserved.
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.Extensions.Options" publicKeyToken="adb9793829ddae60" culture="neutral" />
-				<bindingRedirect oldVersion="0.0.0.0-3.1.8.0" newVersion="3.1.8.0" />
+				<bindingRedirect oldVersion="0.0.0.0-8.0.0.2" newVersion="8.0.0.2" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.Extensions.Logging.Abstractions" publicKeyToken="adb9793829ddae60" culture="neutral" />
-				<bindingRedirect oldVersion="0.0.0.0-3.1.8.0" newVersion="3.1.8.0" />
+				<bindingRedirect oldVersion="0.0.0.0-8.0.0.2" newVersion="8.0.0.2" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.Extensions.DependencyInjection" publicKeyToken="adb9793829ddae60" culture="neutral" />
-				<bindingRedirect oldVersion="0.0.0.0-5.0.0.1" newVersion="5.0.0.1" />
+				<bindingRedirect oldVersion="0.0.0.0-8.0.0.1" newVersion="8.0.0.1" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="System.Runtime.CompilerServices.Unsafe" publicKeyToken="b03f5f7f11d50a3a" culture="neutral" />
-				<bindingRedirect oldVersion="0.0.0.0-5.0.0.0" newVersion="5.0.0.0" />
+				<bindingRedirect oldVersion="0.0.0.0-6.0.0.0" newVersion="6.0.0.0" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="System.Threading.Tasks.Extensions" publicKeyToken="cc7b13ffcd2ddd51" culture="neutral" />
@@ -390,15 +375,31 @@ All rights reserved.
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="Microsoft.Extensions.Http" publicKeyToken="adb9793829ddae60" culture="neutral" />
-				<bindingRedirect oldVersion="0.0.0.0-5.0.0.0" newVersion="5.0.0.0" />
+				<bindingRedirect oldVersion="0.0.0.0-8.0.0.1" newVersion="8.0.0.1" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="System.Diagnostics.DiagnosticSource" publicKeyToken="cc7b13ffcd2ddd51" culture="neutral" />
-				<bindingRedirect oldVersion="0.0.0.0-5.0.0.1" newVersion="5.0.0.1" />
+				<bindingRedirect oldVersion="0.0.0.0-8.0.0.1" newVersion="8.0.0.1" />
 			</dependentAssembly>
 			<dependentAssembly>
 				<assemblyIdentity name="PdfSharp" publicKeyToken="f94615aa0424f9eb" culture="neutral" />
 				<bindingRedirect oldVersion="0.0.0.0-1.32.2608.0" newVersion="1.32.2608.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="Microsoft.Bcl.AsyncInterfaces" publicKeyToken="cc7b13ffcd2ddd51" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-8.0.0.0" newVersion="8.0.0.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="System.Text.Json" publicKeyToken="cc7b13ffcd2ddd51" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-8.0.0.5" newVersion="8.0.0.5" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="System.ValueTuple" publicKeyToken="cc7b13ffcd2ddd51" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-4.0.3.0" newVersion="4.0.3.0" />
+			</dependentAssembly>
+			<dependentAssembly>
+				<assemblyIdentity name="System.Memory" publicKeyToken="cc7b13ffcd2ddd51" culture="neutral" />
+				<bindingRedirect oldVersion="0.0.0.0-4.0.1.2" newVersion="4.0.1.2" />
 			</dependentAssembly>
 		</assemblyBinding>
 	</runtime>
