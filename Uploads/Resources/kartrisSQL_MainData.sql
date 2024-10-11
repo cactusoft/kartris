@@ -10763,24 +10763,23 @@ BEGIN
 
 	DECLARE @Cmd as nvarchar(MAX);
 	
-	SET @Cmd = 'SELECT tblKartrisOrders.O_ID,
-							tblKartrisOrders.O_CustomerID,
-							tblKartrisUsers.U_EmailAddress,
-							tblKartrisUsers.U_AccountHolderName, 
-							tblKartrisOrders.O_Date, 
-							'
+   SET @Cmd = 'SELECT tblKartrisOrders.O_ID,
+                        tblKartrisOrders.O_CustomerID,
+                        tblKartrisUsers.U_EmailAddress,
+                        tblKartrisUsers.U_AccountHolderName, 
+                        FORMAT(tblKartrisOrders.O_Date, ''yyyy-MM-dd'') AS O_Date '
 	
 	IF @IncludeDetails = 1	BEGIN
 
-	SET @Cmd = @Cmd +		', (SELECT CASE
+	SET @Cmd = @Cmd +		', Cast(Round((SELECT CASE
 								WHEN tblKartrisOrders.O_PricesIncTax = 1
 								   THEN
-										(SELECT SUM(IR_PricePerItem * IR_Quantity) FROM tblKartrisInvoiceRows WHERE IR_OrderNumberID=tblKartrisOrders.O_ID) - (SELECT SUM(IR_TaxPerItem * IR_Quantity) FROM tblKartrisInvoiceRows WHERE IR_OrderNumberID=tblKartrisOrders.O_ID)
+										(SELECT Round(SUM(IR_PricePerItem * IR_Quantity),4) FROM tblKartrisInvoiceRows WHERE IR_OrderNumberID=tblKartrisOrders.O_ID) - (SELECT SUM(IR_TaxPerItem * IR_Quantity) FROM tblKartrisInvoiceRows WHERE IR_OrderNumberID=tblKartrisOrders.O_ID)
 								   ELSE
-										(SELECT SUM(IR_PricePerItem * IR_Quantity) FROM tblKartrisInvoiceRows WHERE IR_OrderNumberID=tblKartrisOrders.O_ID)
-							END) As ItemsExTax,
+										(SELECT Round(SUM(IR_PricePerItem * IR_Quantity),4) FROM tblKartrisInvoiceRows WHERE IR_OrderNumberID=tblKartrisOrders.O_ID)
+							END), 4) As Decimal(18,4)) As ItemsExTax,
 
-							(SELECT SUM(IR_TaxPerItem * IR_Quantity) FROM tblKartrisInvoiceRows WHERE IR_OrderNumberID=tblKartrisOrders.O_ID)
+							Cast(Round((SELECT Round(SUM(IR_TaxPerItem * IR_Quantity),4) FROM tblKartrisInvoiceRows WHERE IR_OrderNumberID=tblKartrisOrders.O_ID), 4) As Decimal(18,4))
 							As ItemsTax,
 
 							Cast(SUBSTRING(O_Data,CHARINDEX(''|||'', O_Data) + 3, CHARINDEX(''</Basket>'', O_Data) - (CHARINDEX(''|||'', O_Data) + 3 - 9)) As XML).value(''(Basket/CouponDiscount/ExTax)[1]'', ''decimal(18,4)'') as CouponDiscountExTax,
@@ -10794,11 +10793,11 @@ BEGIN
 							Cast(SUBSTRING(O_Data,CHARINDEX(''|||'', O_Data) + 3, CHARINDEX(''</Basket>'', O_Data) - (CHARINDEX(''|||'', O_Data) + 3 - 9)) As XML).value(''(Basket/PromotionDiscount/ExTax)[1]'', ''decimal(18,4)'') as PromotionDiscountTax,
 
 							Cast(SUBSTRING(O_Data,CHARINDEX(''|||'', O_Data) + 3, CHARINDEX(''</Basket>'', O_Data) - (CHARINDEX(''|||'', O_Data) + 3 - 9)) As XML).value(''(Basket/ShippingPrice/ExTax)[1]'', ''decimal(18,4)'') as ShippingPriceExTax,
-							tblKartrisOrders.O_ShippingTax, 
-							tblKartrisOrders.O_TotalPrice 
+							Cast(tblKartrisOrders.O_ShippingTax As Decimal(18,4)) As O_ShippingTax, 
+							Cast(tblKartrisOrders.O_TotalPrice As Decimal(18,4)) As O_TotalPrice,
 							tblKartrisOrders.O_DiscountPercentage, tblKartrisOrders.O_AffiliatePercentage, 
 							tblKartrisOrders.O_PurchaseOrderNo, tblKartrisOrders.O_SecurityID, tblKartrisOrders.O_Sent, tblKartrisOrders.O_Invoiced, 
-							tblKartrisOrders.O_Shipped, tblKartrisOrders.O_Paid,tblKartrisOrders.O_Status, tblKartrisOrders.O_LastModified, tblKartrisOrders.O_WishListID, 
+							tblKartrisOrders.O_Shipped, tblKartrisOrders.O_Paid,tblKartrisOrders.O_Status, FORMAT(tblKartrisOrders.O_LastModified, ''yyyy-MM-dd'') AS O_LastModified, tblKartrisOrders.O_WishListID, 
 							tblKartrisOrders.O_CouponCode, tblKartrisOrders.O_CouponDiscountTotal, tblKartrisOrders.O_PricesIncTax, tblKartrisOrders.O_TaxDue, 
 							tblKartrisOrders.O_PaymentGateWay, tblKartrisOrders.O_ReferenceCode, tblKartrisLanguages.LANG_BackName, tblKartrisCurrencies.CUR_Symbol, 
 							tblKartrisOrders.O_TotalPriceGateway, tblKartrisOrders.O_AffiliatePaymentID, tblKartrisOrders.O_AffiliateTotalPrice, tblKartrisOrders.O_SendOrderUpdateEmail '
@@ -10830,6 +10829,7 @@ BEGIN
 	SET @Cmd = @Cmd + ' ORDER BY O_Date'
 	
 	EXECUTE(@Cmd);
+	
 	
 END
 GO
@@ -28243,7 +28243,7 @@ GO
 
 
 /****** Set this to tell Data tool which version of db we have ******/
-INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'3.3002', N's', N's', N'kartris version', N'', 3.3002, N'3.3002', 0)
+INSERT [dbo].[tblKartrisConfig] ([CFG_Name], [CFG_Value], [CFG_DataType], [CFG_DisplayType], [CFG_DisplayInfo], [CFG_Description], [CFG_VersionAdded], [CFG_DefaultValue], [CFG_Important]) VALUES (N'general.kartrisinfo.versionadded', N'3.4000', N's', N's', N'kartris version', N'', 3.4000, N'3.4000', 0)
 GO
 
 /****** Fill the Product Search Index with data ******/
