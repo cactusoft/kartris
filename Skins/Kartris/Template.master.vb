@@ -1,6 +1,6 @@
 '========================================================================
 'KARTRIS by cactusoft
-'Copyright 2023 CACTUSOFT - www.kartris.com
+'Copyright 2024 CACTUSOFT - www.kartris.com
 'This skin is licensed under a
 'Creative Commons Attribution-ShareAlike 3.0 Unported License
 
