@@ -30,7 +30,7 @@ Public Class KartrisDBBLL
     Public Shared Function GetSearchResult(ByVal pSearchText As String, ByVal pKeyList As String, ByVal pLanguageID As Short, ByVal pPageIndx As Short, _
                                     ByVal pRowsPerPage As Short, ByRef pTotalSearchResult As Integer, ByVal pMinPrice As Single, ByVal pMaxPrice As Single, _
                                     ByVal pSearchMethod As String, ByVal pCustomerGroupID As Short) As DataTable
-        pSearchText = Current.Server.UrlDecode(pSearchText)
+        'pSearchText = Current.Server.UrlDecode(pSearchText)
         Dim adptr As New SearchTblAdptr
         If GetKartConfig("general.fts.enabled") = "y" Then
             Try
